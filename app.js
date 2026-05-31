@@ -21,7 +21,6 @@ var KEYS = {
   TRACK: 'viaggio2026_track',
   SLEEP: 'viaggio2026_sleep',
   SHARE_ACTIVE: 'viaggio2026_share_active',
-  FAMILY_ID: 'viaggio2026_family_id',
   DAY_OVERRIDE: 'viaggio2026_day_override',
   ZAINO: 'viaggio2026_zaino',
   IOS_DISMISSED: 'ios-install-dismissed',
@@ -149,18 +148,14 @@ function escapeHtml(str) {
 
 // ─── Firebase Initialization (safe — app works offline without Firebase) ───
 var db = null;
-var FAMILY_ID = localStorage.getItem(KEYS.FAMILY_ID) || null;
+var FAMILY_ID = 'europa2026';
 var dbRef = null;
 var firebaseUser = null; // Will hold the authenticated user (owner) or null (viewer)
 try {
   if (typeof firebase !== 'undefined' && firebaseConfig.apiKey) {
     firebase.initializeApp(firebaseConfig);
     db = firebase.database();
-    if (FAMILY_ID) {
-      dbRef = db.ref('trips/' + FAMILY_ID);
-    } else {
-      console.info('[Firebase] No Family ID set — sync disabled until configured.');
-    }
+    dbRef = db.ref('trips/' + FAMILY_ID);
   }
 } catch(e) {
   console.warn('[Firebase] Init failed (offline?):', e.message);
@@ -184,8 +179,7 @@ function checkOwnerStatus() {
 
       // ─── Owner: check for pending user requests (badge + toast) ───
       if (isOwner && typeof firebase !== 'undefined' && firebase.database) {
-        var famId = localStorage.getItem('viaggio2026_family_id') || 'default';
-        firebase.database().ref('trips/' + famId + '/pendingUsers').once('value', function(snap) {
+        firebase.database().ref('trips/' + FAMILY_ID + '/pendingUsers').once('value', function(snap) {
           var pending = snap.val();
           var count = pending ? Object.keys(pending).length : 0;
           if (count > 0) {
@@ -1754,26 +1748,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        // ─── Settings: Family ID ───
-        var familySave = document.getElementById('pos-family-save');
-        var familyInput = document.getElementById('pos-family-id');
-        if (familyInput) familyInput.value = FAMILY_ID || '';
-        if (familySave) {
-            familySave.addEventListener('click', function() {
-                var val = familyInput.value.trim();
-                if (!val) { showToast(isEN ? 'Enter a Family ID.' : 'Inserisci un ID Famiglia.', 'info'); return; }
-                localStorage.setItem(KEYS.FAMILY_ID, val);
-                FAMILY_ID = val;
-                dbRef = db ? db.ref('trips/' + FAMILY_ID) : null;
-                showToast('💾 Family ID: ' + val, 'success');
-                // Reload data from new family
-                loadCheckins();
-                renderParkingList();
-                renderDailySummaries();
-                loadTrackLine();
-                listenLivePositions();
-            });
-        }
+
 
         // ─── Settings: Share link copy ───
         var shareCopy = document.getElementById('pos-share-copy');
@@ -2859,11 +2834,7 @@ if ('serviceWorker' in navigator) {
 
     console.log('[Firebase] Sync module loaded. Family ID:', FAMILY_ID);
 })();
-// ─── Family ID change (from settings) — MUST be outside IIFE so it's always available ───
-window.firebaseSetFamilyId = function(id) {
-  localStorage.setItem(KEYS.FAMILY_ID, id);
-  location.reload();
-};
+
 
 
 // ─── Day Override Controls ───
@@ -2913,36 +2884,7 @@ window.firebaseSetFamilyId = function(id) {
 })();
 
 
-// ─── Family ID Settings (in Posizione tab) ───
-// Only visible for owners
-(function() {
-  var familySection = document.getElementById('pos-family-section');
-  var input = document.getElementById('pos-family-id');
-  var saveBtn = document.getElementById('pos-family-save');
-  // Show only for owners
-  window.addEventListener('authStateChanged', function(e) {
-    if (familySection) familySection.style.display = e.detail.isOwner ? '' : 'none';
-  });
-  if (input) {
-    input.value = localStorage.getItem(KEYS.FAMILY_ID) || '';
-  }
-  if (saveBtn) {
-    saveBtn.addEventListener('click', function() {
-      var id = (input.value || '').trim().replace(/[^a-zA-Z0-9_-]/g, '_');
-      if (id.length < 3) { alert(isEN ? 'Too short (min 3 chars)' : 'ID troppo corto (min 3 caratteri)'); return; }
-      if (window.firebaseSetFamilyId) window.firebaseSetFamilyId(id);
-      // Visual feedback
-      saveBtn.textContent = '✅';
-      saveBtn.style.pointerEvents = 'none';
-      input.style.borderColor = 'var(--success)';
-      setTimeout(function() {
-        saveBtn.textContent = '💾';
-        saveBtn.style.pointerEvents = '';
-        input.style.borderColor = '';
-      }, 2000);
-    });
-  }
-})();
+
 
 
 // ═══════════════════════════════════════════════════════════════
@@ -4074,8 +4016,7 @@ window.firebaseSetFamilyId = function(id) {
         updatePresence();
       } else {
         // Unified approval: check approvedUsers (exists = approved)
-        var famId = localStorage.getItem('viaggio2026_family_id') || 'default';
-        firebase.database().ref('trips/' + famId + '/approvedUsers/' + user.uid).once('value').then(function(snap) {
+        firebase.database().ref('trips/' + FAMILY_ID + '/approvedUsers/' + user.uid).once('value').then(function(snap) {
           if (snap.exists()) {
             // User is approved (unified system: existence = approved)
             chatInputBar.style.display = 'flex';

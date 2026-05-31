@@ -11,7 +11,7 @@ var TRIP_DAYS = 54;
 var TAB_ORDER = ['home', 'riepilogo', 'giorni', 'posizione', 'diario', 'cibo', 'cultura', 'attivita', 'piano', 'zaino', 'chat'];
 
 // Owner UIDs — only these can write to Firebase
-var OWNER_UIDS = ['RxlVlsfeaEeSwFUVYbKQujEsbBo1', 'btjYHrR9NzMOKzLoxHH11YYEn8F2'];
+var OWNER_UIDS = ['RxlVlsfeaEeSwFUVYbKQujEsbBo1', 'QzXokvLGw2VgEAp4OTdgcmRTBPC3'];
 
 // ─── Itinerario completo (54 giorni) ───
 // Ogni entry alimenta: tabella, timeline, mappa, countdown
