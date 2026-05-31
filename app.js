@@ -1377,6 +1377,12 @@ document.addEventListener('DOMContentLoaded', function() {
         if (stopBtn) stopBtn.addEventListener('click', function() {
             if (confirm(isEN ? 'End today\'s trip?' : 'Terminare il viaggio di oggi?')) stopLive();
         });
+        // Quick-start inline button (admin shortcut)
+        var quickStartBtn = document.getElementById('pos-quick-start');
+        if (quickStartBtn) quickStartBtn.addEventListener('click', function() {
+            startLive();
+            quickStartBtn.style.display = 'none';
+        });
 
         // ─── Auto-start (optional) ───
         function initAutoStart() {
@@ -1775,6 +1781,11 @@ document.addEventListener('DOMContentLoaded', function() {
             var isDriver = firebaseUser && DRIVER_UID && firebaseUser.uid === DRIVER_UID;
             if (startBtn) startBtn.style.display = (isOwner && isDriver) ? '' : 'none';
             if (stopBtn && !liveActive) stopBtn.style.display = 'none';
+            // Quick-start button (inline, admin only, hidden when live)
+            var quickStartBtn = document.getElementById('pos-quick-start');
+            if (quickStartBtn) {
+                quickStartBtn.style.display = (isOwner && isDriver && !liveActive) ? 'inline-flex' : 'none';
+            }
             // Generate share link when live
             if (liveActive && shareUrl) {
                 shareUrl.value = window.location.origin + window.location.pathname + '?family=' + (FAMILY_ID || '');
@@ -2154,7 +2165,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     })();
 
-    /* ─── Wrap Itinerario accordions in timeline container ─── */
+    /* ─── Wrap Itinerario accordions in timeline container (Layout C) ─── */
     (function() {
         var giorniTab = document.getElementById('tab-giorni');
         if (!giorniTab) return;
@@ -2164,8 +2175,35 @@ document.addEventListener('DOMContentLoaded', function() {
         timeline.className = 'itinerary-timeline';
         // Insert timeline before the first accordion header
         headers[0].parentNode.insertBefore(timeline, headers[0]);
-        // Move all accordion headers and bodies into timeline
+
+        // Region labels (IT / EN)
+        var isEN = document.documentElement.lang === 'en' || window.location.pathname.indexOf('_en') !== -1;
+        var regionLabels = {
+            central: { flags: '🇮🇹🇦🇹', it: 'Europa Centrale', en: 'Central Europe' },
+            baltic:  { flags: '🇵🇱🇱🇹🇱🇻🇪🇪', it: 'Paesi Baltici', en: 'Baltic States' },
+            finland: { flags: '🇫🇮', it: 'Finlandia', en: 'Finland' },
+            norway:  { flags: '🇳🇴', it: 'Norvegia', en: 'Norway' },
+            denmark: { flags: '🇩🇰', it: 'Danimarca', en: 'Denmark' },
+            france:  { flags: '🇫🇷', it: 'Francia', en: 'France' },
+            spain:   { flags: '🇪🇸', it: 'Spagna', en: 'Spain' },
+            'return': { flags: '🇮🇹', it: 'Ritorno', en: 'Return' }
+        };
+
+        var lastRegion = '';
+        // Move all accordion headers and bodies into timeline, inserting region separators
         headers.forEach(function(h) {
+            var region = h.getAttribute('data-region') || '';
+            if (region && region !== lastRegion) {
+                var sep = document.createElement('div');
+                sep.className = 'region-separator';
+                sep.setAttribute('data-region', region);
+                var label = regionLabels[region];
+                if (label) {
+                    sep.innerHTML = '<span class="region-flags">' + label.flags + '</span> ' + (isEN ? label.en : label.it);
+                }
+                timeline.appendChild(sep);
+                lastRegion = region;
+            }
             var body = h.nextElementSibling;
             timeline.appendChild(h);
             if (body && body.classList.contains('accordion-body')) timeline.appendChild(body);
@@ -5246,8 +5284,9 @@ window.firebaseSetFamilyId = function(id) {
         // Photos
         if (entry.photos && Object.keys(entry.photos).length > 0) {
           html += '    <div class="diario-photos">';
-          Object.values(entry.photos).forEach(function(photo) {
-            html += '      <img src="' + photo.url + '" alt="' + escapeHtml(photo.caption || '') + '" class="diario-photo" loading="lazy">';
+          Object.keys(entry.photos).forEach(function(photoKey) {
+            var photo = entry.photos[photoKey];
+            html += '      <img src="' + photo.url + '" alt="' + escapeHtml(photo.caption || '') + '" class="diario-photo" loading="lazy" data-entry-key="' + key + '" data-photo-key="' + photoKey + '">';
           });
           html += '    </div>';
         }
@@ -5326,6 +5365,62 @@ window.firebaseSetFamilyId = function(id) {
         showEditModal(key);
       });
     });
+
+    // Photo lightbox (tap to view full + delete option)
+    timelineEl.querySelectorAll('.diario-photo').forEach(function(img) {
+      img.addEventListener('click', function() {
+        var entryKey = img.getAttribute('data-entry-key');
+        var photoKey = img.getAttribute('data-photo-key');
+        showPhotoLightbox(img.src, entryKey, photoKey);
+      });
+    });
+  }
+
+  // ─── Photo Lightbox with Delete ───
+  function showPhotoLightbox(src, entryKey, photoKey) {
+    // Create overlay
+    var overlay = document.createElement('div');
+    overlay.className = 'diario-lightbox';
+    overlay.innerHTML = '<div class="diario-lightbox-content">' +
+      '<img src="' + src + '" class="diario-lightbox-img">' +
+      '<div class="diario-lightbox-actions">' +
+        (isOwner ? '<button class="diario-lightbox-del">' + (isEN ? '🗑️ Delete photo' : '🗑️ Elimina foto') + '</button>' : '') +
+        '<button class="diario-lightbox-close">' + (isEN ? '✕ Close' : '✕ Chiudi') + '</button>' +
+      '</div>' +
+    '</div>';
+
+    document.body.appendChild(overlay);
+    // Prevent scroll
+    document.body.style.overflow = 'hidden';
+
+    // Close on overlay click
+    overlay.addEventListener('click', function(e) {
+      if (e.target === overlay || e.target.classList.contains('diario-lightbox-close')) {
+        closeLightbox();
+      }
+    });
+    overlay.querySelector('.diario-lightbox-close').addEventListener('click', closeLightbox);
+
+    // Delete
+    var delBtn = overlay.querySelector('.diario-lightbox-del');
+    if (delBtn) {
+      delBtn.addEventListener('click', function() {
+        if (confirm(isEN ? 'Delete this photo?' : 'Eliminare questa foto?')) {
+          diarioRef.child(entryKey + '/photos/' + photoKey).remove().then(function() {
+            if (window.showToast) showToast(isEN ? 'Photo deleted' : 'Foto eliminata', 'success');
+            closeLightbox();
+          }).catch(function(err) {
+            console.error('[Diario] Delete photo error:', err);
+            if (window.showToast) showToast(isEN ? 'Error deleting' : 'Errore eliminazione', 'error');
+          });
+        }
+      });
+    }
+
+    function closeLightbox() {
+      document.body.style.overflow = '';
+      if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+    }
   }
 
   // ─── Photo Upload ───

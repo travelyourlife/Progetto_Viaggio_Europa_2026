@@ -603,53 +603,79 @@ tr:nth-child(even) { background: var(--bg-alt); }
 .nav-index-pills a:active { transform: scale(0.95); }
 .nav-index-pills a .nip-icon { font-size: 16px; }
 
-/* ─── Itinerario Timeline ─── */
+/* ─── Itinerario Timeline — Layout C (Grouped by Region) ─── */
 #tab-giorni .itinerary-timeline {
-    position: relative; padding-left: 32px; margin-top: 8px;
+    position: relative; padding-left: 0; margin-top: 12px;
 }
-#tab-giorni .itinerary-timeline::before {
-    content: ''; position: absolute; left: 12px; top: 0; bottom: 0; width: 3px;
-    background: linear-gradient(to bottom, #3182ce, #805ad5, #dd6b20, #38a169);
-    border-radius: 2px;
+/* No vertical line in Layout C */
+#tab-giorni .itinerary-timeline::before { display: none; }
+
+/* Region separator headers */
+#tab-giorni .itinerary-timeline .region-separator {
+    display: flex; align-items: center; gap: 10px;
+    margin: 28px 0 12px; padding: 0 4px;
+    font-size: 13px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.8px; color: var(--text-muted);
 }
+#tab-giorni .itinerary-timeline .region-separator:first-child {
+    margin-top: 8px;
+}
+#tab-giorni .itinerary-timeline .region-separator::after {
+    content: ''; flex: 1; height: 1px; background: var(--border);
+}
+#tab-giorni .itinerary-timeline .region-separator .region-flags {
+    font-size: 18px; letter-spacing: 2px;
+}
+
+/* Region color accents on separator */
+#tab-giorni .itinerary-timeline .region-separator[data-region="central"] { color: #6366f1; }
+#tab-giorni .itinerary-timeline .region-separator[data-region="baltic"] { color: #0ea5e9; }
+#tab-giorni .itinerary-timeline .region-separator[data-region="finland"] { color: #06b6d4; }
+#tab-giorni .itinerary-timeline .region-separator[data-region="norway"] { color: #2563eb; }
+#tab-giorni .itinerary-timeline .region-separator[data-region="denmark"] { color: #dc2626; }
+#tab-giorni .itinerary-timeline .region-separator[data-region="france"] { color: #7c3aed; }
+#tab-giorni .itinerary-timeline .region-separator[data-region="spain"] { color: #ea580c; }
+#tab-giorni .itinerary-timeline .region-separator[data-region="return"] { color: #16a34a; }
+
+/* Accordion cards with left dot indicator */
 #tab-giorni .itinerary-timeline .accordion-header {
-    position: relative; margin-left: 0;
+    position: relative; margin-left: 24px; padding-left: 18px;
 }
 #tab-giorni .itinerary-timeline .accordion-header::before {
-    content: ''; position: absolute; left: -26px; top: 50%; transform: translateY(-50%);
-    width: 14px; height: 14px; border-radius: 50%;
-    background: var(--bg-card); border: 3px solid #3182ce;
-    z-index: 1; transition: all 0.2s ease;
+    content: ''; position: absolute; left: -12px; top: 50%; transform: translateY(-50%);
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--border); border: 2px solid var(--border);
+    transition: all 0.2s ease;
 }
 #tab-giorni .itinerary-timeline .accordion-header.open::before {
-    background: #3182ce; box-shadow: 0 0 0 4px rgba(49,130,206,0.2);
+    transform: translateY(-50%) scale(1.3);
 }
 /* Region-specific dot colors */
-#tab-giorni .itinerary-timeline .accordion-header[data-region="central"]::before { border-color: #6366f1; }
-#tab-giorni .itinerary-timeline .accordion-header[data-region="central"].open::before { background: #6366f1; box-shadow: 0 0 0 4px rgba(99,102,241,0.2); }
-#tab-giorni .itinerary-timeline .accordion-header[data-region="baltic"]::before { border-color: #0ea5e9; }
-#tab-giorni .itinerary-timeline .accordion-header[data-region="baltic"].open::before { background: #0ea5e9; box-shadow: 0 0 0 4px rgba(14,165,233,0.2); }
-#tab-giorni .itinerary-timeline .accordion-header[data-region="finland"]::before { border-color: #06b6d4; }
-#tab-giorni .itinerary-timeline .accordion-header[data-region="finland"].open::before { background: #06b6d4; box-shadow: 0 0 0 4px rgba(6,182,212,0.2); }
-#tab-giorni .itinerary-timeline .accordion-header[data-region="norway"]::before { border-color: #2563eb; }
-#tab-giorni .itinerary-timeline .accordion-header[data-region="norway"].open::before { background: #2563eb; box-shadow: 0 0 0 4px rgba(37,99,235,0.2); }
-#tab-giorni .itinerary-timeline .accordion-header[data-region="denmark"]::before { border-color: #dc2626; }
-#tab-giorni .itinerary-timeline .accordion-header[data-region="denmark"].open::before { background: #dc2626; box-shadow: 0 0 0 4px rgba(220,38,38,0.2); }
-#tab-giorni .itinerary-timeline .accordion-header[data-region="france"]::before { border-color: #7c3aed; }
-#tab-giorni .itinerary-timeline .accordion-header[data-region="france"].open::before { background: #7c3aed; box-shadow: 0 0 0 4px rgba(124,58,237,0.2); }
-#tab-giorni .itinerary-timeline .accordion-header[data-region="spain"]::before { border-color: #ea580c; }
-#tab-giorni .itinerary-timeline .accordion-header[data-region="spain"].open::before { background: #ea580c; box-shadow: 0 0 0 4px rgba(234,88,12,0.2); }
-#tab-giorni .itinerary-timeline .accordion-header[data-region="return"]::before { border-color: #16a34a; }
-#tab-giorni .itinerary-timeline .accordion-header[data-region="return"].open::before { background: #16a34a; box-shadow: 0 0 0 4px rgba(22,163,74,0.2); }
+#tab-giorni .itinerary-timeline .accordion-header[data-region="central"]::before { background: #6366f1; border-color: #6366f1; }
+#tab-giorni .itinerary-timeline .accordion-header[data-region="central"].open::before { box-shadow: 0 0 0 4px rgba(99,102,241,0.2); }
+#tab-giorni .itinerary-timeline .accordion-header[data-region="baltic"]::before { background: #0ea5e9; border-color: #0ea5e9; }
+#tab-giorni .itinerary-timeline .accordion-header[data-region="baltic"].open::before { box-shadow: 0 0 0 4px rgba(14,165,233,0.2); }
+#tab-giorni .itinerary-timeline .accordion-header[data-region="finland"]::before { background: #06b6d4; border-color: #06b6d4; }
+#tab-giorni .itinerary-timeline .accordion-header[data-region="finland"].open::before { box-shadow: 0 0 0 4px rgba(6,182,212,0.2); }
+#tab-giorni .itinerary-timeline .accordion-header[data-region="norway"]::before { background: #2563eb; border-color: #2563eb; }
+#tab-giorni .itinerary-timeline .accordion-header[data-region="norway"].open::before { box-shadow: 0 0 0 4px rgba(37,99,235,0.2); }
+#tab-giorni .itinerary-timeline .accordion-header[data-region="denmark"]::before { background: #dc2626; border-color: #dc2626; }
+#tab-giorni .itinerary-timeline .accordion-header[data-region="denmark"].open::before { box-shadow: 0 0 0 4px rgba(220,38,38,0.2); }
+#tab-giorni .itinerary-timeline .accordion-header[data-region="france"]::before { background: #7c3aed; border-color: #7c3aed; }
+#tab-giorni .itinerary-timeline .accordion-header[data-region="france"].open::before { box-shadow: 0 0 0 4px rgba(124,58,237,0.2); }
+#tab-giorni .itinerary-timeline .accordion-header[data-region="spain"]::before { background: #ea580c; border-color: #ea580c; }
+#tab-giorni .itinerary-timeline .accordion-header[data-region="spain"].open::before { box-shadow: 0 0 0 4px rgba(234,88,12,0.2); }
+#tab-giorni .itinerary-timeline .accordion-header[data-region="return"]::before { background: #16a34a; border-color: #16a34a; }
+#tab-giorni .itinerary-timeline .accordion-header[data-region="return"].open::before { box-shadow: 0 0 0 4px rgba(22,163,74,0.2); }
 
-/* Prettier accordion cards */
+/* Prettier accordion cards — more spacing */
 #tab-giorni .accordion-header {
     border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    transition: all 0.25s ease;
+    margin-top: 10px; transition: all 0.25s ease;
 }
 #tab-giorni .accordion-header:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); transform: translateX(2px); }
 #tab-giorni .accordion-header.open { border-radius: 12px 12px 0 0; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-#tab-giorni .accordion-body { border-radius: 0 0 12px 12px; }
+#tab-giorni .accordion-body { border-radius: 0 0 12px 12px; margin-left: 24px; }
 
 /* ─── Accordion Sections ─── */
 .accordion-header {
@@ -1797,14 +1823,14 @@ table { max-width: 100%; }
 
 /* Map buttons */
 .pos-map-btn {
-    position: absolute; bottom: 8px; right: 8px; z-index: 1001;
+    position: absolute; bottom: 12px; right: 8px; z-index: 1001;
     background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px;
     width: 34px; height: 34px; font-size: 16px; cursor: pointer;
     box-shadow: 0 2px 6px rgba(0,0,0,0.15); display: flex; align-items: center; justify-content: center;
     transition: transform 0.2s, box-shadow 0.2s;
 }
 .pos-map-btn:active { transform: scale(0.9); }
-.pos-map-btn-right { bottom: 48px; }
+.pos-map-btn-right { bottom: 52px; }
 
 /* Live status card */
 .pos-live-card {
@@ -1815,6 +1841,23 @@ table { max-width: 100%; }
     display: flex; align-items: center; gap: 10px; margin-bottom: 8px;
     font-size: 15px; font-weight: 700;
 }
+/* Quick Start Button (admin only, inline) */
+.pos-quick-start-btn {
+  margin-left: 8px;
+  background: var(--primary, #2563eb);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 28px; height: 28px;
+  font-size: 12px;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s, transform 0.2s;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.pos-quick-start-btn:hover { opacity: 1; }
+.pos-quick-start-btn:active { transform: scale(0.9); }
+
 .pos-live-indicator {
     width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0;
 }
@@ -1878,7 +1921,7 @@ table { max-width: 100%; }
 }
 
 /* Satellite button */
-.pos-map-btn-sat { bottom: 88px; font-size: 14px; }
+.pos-map-btn-sat { bottom: 92px; font-size: 14px; }
 
 /* ===== Voice Recording Button & Bar ===== */
 .chat-voice-btn {
@@ -2835,7 +2878,47 @@ table { max-width: 100%; }
   border-radius: 8px;
   scroll-snap-align: start;
   flex-shrink: 0;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
+.diario-photo:active {
+  transform: scale(0.95);
+}
+
+/* Lightbox */
+.diario-lightbox {
+  position: fixed; inset: 0; z-index: 99999;
+  background: rgba(0,0,0,0.85);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.2s ease;
+}
+.diario-lightbox-content {
+  display: flex; flex-direction: column; align-items: center;
+  max-width: 90vw; max-height: 85vh;
+}
+.diario-lightbox-img {
+  max-width: 100%; max-height: 70vh;
+  border-radius: 12px; object-fit: contain;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+.diario-lightbox-actions {
+  display: flex; gap: 12px; margin-top: 16px;
+}
+.diario-lightbox-close, .diario-lightbox-del {
+  padding: 10px 20px; border-radius: 8px; border: none;
+  font-size: 14px; font-weight: 600; cursor: pointer;
+  transition: transform 0.2s;
+}
+.diario-lightbox-close {
+  background: rgba(255,255,255,0.15); color: white;
+}
+.diario-lightbox-close:hover { background: rgba(255,255,255,0.25); }
+.diario-lightbox-del {
+  background: #e53e3e; color: white;
+}
+.diario-lightbox-del:hover { background: #c53030; }
+.diario-lightbox-close:active, .diario-lightbox-del:active { transform: scale(0.95); }
 
 /* Text */
 .diario-text {

@@ -178,7 +178,6 @@
         <button class="menu-close" id="menuClose">✕</button>
     </div>
     <a class="menu-item active" data-tab="home"><span class="menu-icon">🏠</span><span class="menu-text">Home</span></a>
-    <a class="menu-item" data-tab="riepilogo"><span class="menu-icon">📌</span><span class="menu-text">Riepilogo</span></a>
     <a class="menu-item" data-tab="giorni"><span class="menu-icon">🗺️</span><span class="menu-text">Itinerario</span></a>
     <a class="menu-item" data-tab="posizione"><span class="menu-icon">🚐</span><span class="menu-text">In viaggio</span></a>
     <a class="menu-item" data-tab="diario"><span class="menu-icon">📖</span><span class="menu-text">Diario</span></a>
@@ -187,6 +186,7 @@
     <a class="menu-item" data-tab="cultura"><span class="menu-icon">🏛️</span><span class="menu-text">Cultura</span></a>
     <a class="menu-item" data-tab="attivita"><span class="menu-icon">🥾</span><span class="menu-text">Attività</span></a>
     <div class="menu-divider"></div>
+    <a class="menu-item" data-tab="riepilogo"><span class="menu-icon">📌</span><span class="menu-text">Riepilogo</span></a>
     <a class="menu-item" data-tab="piano"><span class="menu-icon">🗺️</span><span class="menu-text">Piano</span></a>
     <a class="menu-item" data-tab="zaino"><span class="menu-icon">🎒</span><span class="menu-text">Zaino</span></a>
     <a class="menu-item" data-tab="chat"><span class="menu-icon">💬</span><span class="menu-text">Chat</span></a>
@@ -195,9 +195,9 @@
 <!-- ─── Bottom Tab Bar ─── -->
 <div class="bottom-bar" id="bottomBar" role="tablist" aria-label="Navigazione principale">
     <button class="bottom-tab active" data-tab="home"><span class="tab-icon">🏠</span><span class="tab-label">Home</span></button>
-    <button class="bottom-tab" data-tab="riepilogo"><span class="tab-icon">📌</span><span class="tab-label">Riepilogo</span></button>
     <button class="bottom-tab" data-tab="giorni"><span class="tab-icon tab-cal-icon"><img src="./icons/icon-giorni.png" alt="" width="22" height="22"><span class="tab-cal-day" id="tab-cal-day"></span></span><span class="tab-label">Itinerario</span></button>
     <button class="bottom-tab" data-tab="posizione"><span class="tab-icon">🚐</span><span class="tab-label">In viaggio</span></button>
+    <button class="bottom-tab" data-tab="diario"><span class="tab-icon">📖</span><span class="tab-label">Diario</span></button>
     <button class="bottom-tab" data-tab="cibo"><span class="tab-icon">🍝</span><span class="tab-label">Cibo</span></button>
     <button class="bottom-tab" data-tab="cultura"><span class="tab-icon">🏛️</span><span class="tab-label">Cultura</span></button>
     <button class="bottom-tab" id="altroBtn"><span class="tab-icon">⋯</span><span class="tab-label">Altro</span></button>
@@ -207,13 +207,13 @@
 <div class="altro-overlay" id="altroOverlay"></div>
 <div class="altro-sheet" id="altroSheet">
     <div class="altro-handle"></div>
-    <button class="altro-item" data-tab="diario">
-        <span class="altro-item-icon">📖</span>
-        <span class="altro-item-text"><span class="altro-item-label">Diario</span><span class="altro-item-sub">Racconto del viaggio</span></span>
-    </button>
     <button class="altro-item" data-tab="attivita">
         <span class="altro-item-icon">🥾</span>
         <span class="altro-item-text"><span class="altro-item-label">Attività</span><span class="altro-item-sub">Trekking &amp; sport</span></span>
+    </button>
+    <button class="altro-item" data-tab="riepilogo">
+        <span class="altro-item-icon">📌</span>
+        <span class="altro-item-text"><span class="altro-item-label">Riepilogo</span><span class="altro-item-sub">Statistiche viaggio</span></span>
     </button>
     <button class="altro-item" data-tab="piano">
         <span class="altro-item-icon">🗺️</span>
@@ -534,7 +534,7 @@
 <a href="#g40" data-region="france">G40–G42 Francia</a>
 <a href="#g43" data-region="spain">G43–G49 Spagna</a>
 <a href="#g50" data-region="return">G50–G53 Rientro</a>
-<a href="#meteo" data-region="weather">☀️ Meteo</a>
+<a href="#meteo-per-zona-e-giorno" data-region="weather">☀️ Meteo</a>
 <a href="#secB" data-region="alt">🗺️ Alternative</a>
 <a href="#pioggia" data-region="rain">☔ Piano Pioggia</a>
 <a href="#feste" data-region="events">🎉 Feste ed Eventi</a>
@@ -9744,6 +9744,7 @@
     <div class="pos-info-status">
         <span class="pos-live-indicator pos-live-off" id="pos-live-dot"></span>
         <span id="pos-live-label">Viaggio non attivo</span>
+        <button id="pos-quick-start" class="pos-quick-start-btn" style="display:none;" title="Avvia viaggio">▶</button>
     </div>
 </div>
 
