@@ -52,7 +52,6 @@
     /* ─── GLOBAL TEXT: all body text white/light ─── */
     body, p, span, li, label, strong, em, small, div { color: #e2e8f0; }
     h1, h2, h3, h4, h5, h6 { color: #ffffff; }
-    h2 { border-bottom-color: #63b3ed; }
     a { color: #90cdf4; }
 
     /* ─── Tab-index pills ─── */
@@ -773,7 +772,7 @@ mark.search-hl.current { background: #f97316; color: white; }
 
 /* ─── General Content Styles ─── */
 h1 { font-size: 1.6em; margin: 0 0 16px 0; color: var(--text); }
-h2 { font-size: 1.3em; margin: 24px 0 12px 0; color: var(--primary); border-bottom: 2px solid var(--accent); padding-bottom: 6px; }
+h2 { font-size: 1.3em; margin: 24px 0 12px 0; color: var(--primary); }
 h3 { font-size: 1.1em; margin: 16px 0 8px 0; }
 h4 { font-size: 1em; margin: 12px 0 6px 0; }
 p { margin: 0 0 12px 0; }
