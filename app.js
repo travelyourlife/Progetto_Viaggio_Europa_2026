@@ -181,6 +181,32 @@ function checkOwnerStatus() {
         if (user) console.info('[Auth] Authenticated but not owner: ' + user.email);
       }
       window.dispatchEvent(new CustomEvent('authStateChanged', { detail: { user: user, isOwner: isOwner } }));
+
+      // ─── Owner: check for pending user requests (badge + toast) ───
+      if (isOwner && typeof firebase !== 'undefined' && firebase.database) {
+        var famId = localStorage.getItem('viaggio2026_family_id') || 'default';
+        firebase.database().ref('trips/' + famId + '/pendingUsers').once('value', function(snap) {
+          var pending = snap.val();
+          var count = pending ? Object.keys(pending).length : 0;
+          if (count > 0) {
+            // Toast notification (C)
+            setTimeout(function() {
+              if (window.showToast) {
+                var msg = isEN
+                  ? '👥 ' + count + ' pending access request' + (count > 1 ? 's' : '')
+                  : '👥 ' + count + ' richiesta' + (count > 1 ? 'e' : '') + ' di accesso in attesa';
+                showToast(msg, 'info');
+              }
+            }, 2000);
+            // Badge on manage-users button (A)
+            var badge = document.getElementById('pending-badge');
+            if (badge) {
+              badge.textContent = count;
+              badge.style.display = 'inline-flex';
+            }
+          }
+        });
+      }
     });
   }
 }
@@ -407,7 +433,37 @@ document.addEventListener('DOMContentLoaded', function() {
                 sessionStorage.setItem(DISMISS_KEY, '1');
             });
         }
+        // Action button: hard refresh (unregister SW + reload)
+        var actionBtn = document.getElementById('updateBannerAction');
+        if (actionBtn) {
+            actionBtn.addEventListener('click', function() {
+                hardRefresh();
+            });
+        }
     })();
+
+    // ─── Hard Refresh Utility ───
+    function hardRefresh() {
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                var promises = registrations.map(function(r) { return r.unregister(); });
+                return Promise.all(promises);
+            }).then(function() {
+                if ('caches' in window) {
+                    return caches.keys().then(function(names) {
+                        return Promise.all(names.map(function(n) { return caches.delete(n); }));
+                    });
+                }
+            }).then(function() {
+                window.location.reload(true);
+            }).catch(function() {
+                window.location.reload(true);
+            });
+        } else {
+            window.location.reload(true);
+        }
+    }
+    window.hardRefresh = hardRefresh; // expose globally for Altro menu button
 
     // ─── Dynamic Home Status ───
     (function() {
@@ -1377,11 +1433,16 @@ document.addEventListener('DOMContentLoaded', function() {
         if (stopBtn) stopBtn.addEventListener('click', function() {
             if (confirm(isEN ? 'End today\'s trip?' : 'Terminare il viaggio di oggi?')) stopLive();
         });
-        // Quick-start inline button (admin shortcut)
+        // Quick-start inline button (admin shortcut) — toggles start/stop
         var quickStartBtn = document.getElementById('pos-quick-start');
         if (quickStartBtn) quickStartBtn.addEventListener('click', function() {
-            startLive();
-            quickStartBtn.style.display = 'none';
+            if (liveActive) {
+                if (confirm(isEN ? 'End today\'s trip?' : 'Terminare il viaggio di oggi?')) {
+                    stopLive();
+                }
+            } else {
+                startLive();
+            }
         });
 
         // ─── Auto-start (optional) ───
@@ -1781,10 +1842,19 @@ document.addEventListener('DOMContentLoaded', function() {
             var isDriver = firebaseUser && DRIVER_UID && firebaseUser.uid === DRIVER_UID;
             if (startBtn) startBtn.style.display = (isOwner && isDriver) ? '' : 'none';
             if (stopBtn && !liveActive) stopBtn.style.display = 'none';
-            // Quick-start button (inline, admin only, hidden when live)
+            // Quick-start button (inline, admin only) — toggles between ▶ and ⏹
             var quickStartBtn = document.getElementById('pos-quick-start');
             if (quickStartBtn) {
-                quickStartBtn.style.display = (isOwner && isDriver && !liveActive) ? 'inline-flex' : 'none';
+                quickStartBtn.style.display = (isOwner && isDriver) ? 'inline-flex' : 'none';
+                if (liveActive) {
+                    quickStartBtn.textContent = '\u23F9';
+                    quickStartBtn.classList.add('stop-mode');
+                    quickStartBtn.title = isEN ? 'Stop trip' : 'Ferma viaggio';
+                } else {
+                    quickStartBtn.textContent = '\u25B6';
+                    quickStartBtn.classList.remove('stop-mode');
+                    quickStartBtn.title = isEN ? 'Start trip' : 'Avvia viaggio';
+                }
             }
             // Generate share link when live
             if (liveActive && shareUrl) {
@@ -4003,28 +4073,33 @@ window.firebaseSetFamilyId = function(id) {
         chatMessages.style.display = '';
         updatePresence();
       } else {
-        // Check approval status from Firebase
+        // Unified approval: check approvedUsers (exists = approved)
         var famId = localStorage.getItem('viaggio2026_family_id') || 'default';
         firebase.database().ref('trips/' + famId + '/approvedUsers/' + user.uid).once('value').then(function(snap) {
-          if (snap.exists() && snap.val().status === 'approved') {
+          if (snap.exists()) {
+            // User is approved (unified system: existence = approved)
             chatInputBar.style.display = 'flex';
             chatLoginPrompt.style.display = 'none';
             if (chatPendingPrompt) chatPendingPrompt.style.display = 'none';
             chatMessages.style.display = '';
             updatePresence();
           } else {
-            // Register as pending if not already
-            firebase.database().ref('trips/' + famId + '/approvedUsers/' + user.uid).set({
-              name: user.displayName || 'Utente',
-              email: user.email || '',
-              photo: user.photoURL || '',
-              status: 'pending',
-              requestedAt: Date.now()
+            // Check if already pending
+            firebase.database().ref('trips/' + famId + '/pendingUsers/' + user.uid).once('value').then(function(pSnap) {
+              if (!pSnap.exists()) {
+                // Auto-submit pending request
+                firebase.database().ref('trips/' + famId + '/pendingUsers/' + user.uid).set({
+                  displayName: user.displayName || 'Utente',
+                  email: user.email || '',
+                  photoURL: user.photoURL || '',
+                  requestedAt: firebase.database.ServerValue.TIMESTAMP
+                });
+              }
+              chatInputBar.style.display = 'none';
+              chatMessages.style.display = 'none';
+              chatLoginPrompt.style.display = 'none';
+              if (chatPendingPrompt) chatPendingPrompt.style.display = 'block';
             });
-            chatInputBar.style.display = 'none';
-            chatMessages.style.display = 'none';
-            chatLoginPrompt.style.display = 'none';
-            if (chatPendingPrompt) chatPendingPrompt.style.display = 'block';
           }
         });
       }

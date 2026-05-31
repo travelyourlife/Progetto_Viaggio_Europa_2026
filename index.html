@@ -43,7 +43,7 @@
     <link rel="apple-touch-icon" sizes="152x152" href="./icon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="./icon.png">
     <link rel="apple-touch-icon" sizes="167x167" href="./icon.png">
-    <title>Viaggio Europa 2026 — V8.4</title>
+    <title>Viaggio Europa 2026 — V8.6</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <link rel="stylesheet" href="style.css">
 <!-- Firebase SDK (compat mode for single-file app) -->
@@ -57,7 +57,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = '8.3';
+  var EXPECTED_VERSION = '8.6';
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
   var r = false;
@@ -125,13 +125,12 @@
 
 <!-- ─── Update Required Banner ─── -->
 <div class="update-banner" id="updateBanner" style="display:none;">
-    <span class="update-banner-icon">⚠️</span>
+    <span class="update-banner-icon">🔄</span>
     <div class="update-banner-text">
-        <strong>Aggiornamento necessario</strong><br>
-        Svuota la cache del browser una volta per ricevere gli aggiornamenti automatici.<br>
-        <small><b>Android:</b> Impostazioni → App → Chrome → Archiviazione → Cancella cache<br>
-        <b>iPhone:</b> Chiudi e riapri l'app, oppure vai in Impostazioni → Safari → Cancella dati siti</small>
+        <strong>Aggiornamento disponibile!</strong><br>
+        <span id="updateBannerMsg">Tocca per aggiornare all'ultima versione.</span>
     </div>
+    <button class="update-banner-action" id="updateBannerAction">🔄 Aggiorna</button>
     <button class="update-banner-close" id="updateBannerClose">✕</button>
 </div>
 
@@ -179,7 +178,7 @@
     </div>
     <a class="menu-item active" data-tab="home"><span class="menu-icon">🏠</span><span class="menu-text">Home</span></a>
     <a class="menu-item" data-tab="giorni"><span class="menu-icon">🗺️</span><span class="menu-text">Itinerario</span></a>
-    <a class="menu-item" data-tab="posizione"><span class="menu-icon">🚐</span><span class="menu-text">In viaggio</span></a>
+    <a class="menu-item" data-tab="posizione"><span class="menu-icon"><img src="./icons/icon-posizione.png" alt="" width="22" height="22" style="vertical-align:middle;"></span><span class="menu-text">In viaggio</span></a>
     <a class="menu-item" data-tab="diario"><span class="menu-icon">📖</span><span class="menu-text">Diario</span></a>
     <div class="menu-divider"></div>
     <a class="menu-item" data-tab="cibo"><span class="menu-icon">🍝</span><span class="menu-text">Cibo</span></a>
@@ -196,7 +195,7 @@
 <div class="bottom-bar" id="bottomBar" role="tablist" aria-label="Navigazione principale">
     <button class="bottom-tab active" data-tab="home"><span class="tab-icon">🏠</span><span class="tab-label">Home</span></button>
     <button class="bottom-tab" data-tab="giorni"><span class="tab-icon tab-cal-icon"><img src="./icons/icon-giorni.png" alt="" width="22" height="22"><span class="tab-cal-day" id="tab-cal-day"></span></span><span class="tab-label">Itinerario</span></button>
-    <button class="bottom-tab" data-tab="posizione"><span class="tab-icon">🚐</span><span class="tab-label">In viaggio</span></button>
+    <button class="bottom-tab" data-tab="posizione"><span class="tab-icon"><img src="./icons/icon-posizione.png" alt="" width="22" height="22" style="vertical-align:middle;"></span><span class="tab-label">In viaggio</span></button>
     <button class="bottom-tab" data-tab="diario"><span class="tab-icon">📖</span><span class="tab-label">Diario</span></button>
     <button class="bottom-tab" data-tab="cibo"><span class="tab-icon">🍝</span><span class="tab-label">Cibo</span></button>
     <button class="bottom-tab" data-tab="cultura"><span class="tab-icon">🏛️</span><span class="tab-label">Cultura</span></button>
@@ -226,6 +225,11 @@
     <button class="altro-item" data-tab="chat">
         <span class="altro-item-icon">💬</span>
         <span class="altro-item-text"><span class="altro-item-label">Chat</span><span class="altro-item-sub">Messaggi viaggio</span></span>
+    </button>
+    <hr style="border:none;border-top:1px solid var(--border-color,#e2e8f0);margin:4px 16px;">
+    <button class="altro-item" id="hardRefreshBtn" onclick="if(window.hardRefresh)window.hardRefresh();else window.location.reload(true);">
+        <span class="altro-item-icon">🔄</span>
+        <span class="altro-item-text"><span class="altro-item-label">Aggiorna App</span><span class="altro-item-sub">Forza aggiornamento e svuota cache</span></span>
     </button>
 </div>
 
@@ -547,7 +551,7 @@
 <p>Ogni blocco include: tragitto, pedaggi/traghetti, meteo, POI, alternative, pesca 🎣 dove possibile, keyword Maps.</p>
 </blockquote>
 <hr>
-<h3 id="g0">G0 · 26/06 pm · Selvazzano → Villach 🇮🇹→🇦🇹</h3>
+<h3 id="g0">G0 · 26/06 · Selvazzano → Villach 🇮🇹→🇦🇹</h3>
 <p><strong>280 km · 3h · Pedaggi A4+A23 ~€15 + <a href="https://www.asfinag.at" target="_blank" rel="noopener">Vignetta AT digitale</a> €12,80 (10gg)</strong></p>
 <p class="meteo-day" data-day="0" data-lat="46.6103" data-lon="13.8558" data-static-high="25" data-static-low="15" data-static-cond="Bel tempo" data-daylight="16h di luce">☀️ 25°C / 15°C · Bel tempo · 16h di luce <span class="meteo-badge">(media storica)</span></p>
 <p>🚗 Partenza nel pomeriggio, arrivo sera a Villach
@@ -669,6 +673,9 @@
 🏛️ <strong>Città Vecchia</strong> Tallinn (Unesco)
 🌭 <strong>Tallinn street food:</strong> <em>Kompressor</em> (Rataskaevu 3) — pancake giganti salati/dolci ~€6-8, take-away! Street food al <em>Balti Jaama Turg</em> — bancarelle internazionali ~€7-10. <em>Kohuke</em> (barrette ricotta+cioccolato, €0.50!) al Selver. <strong>Mercato:</strong> Balti Jaama Turg (Kopli 1) — street food + prodotti freschi + artigianato. Lun-Dom.</p>
 <p>🛴 <strong>Monopattini:</strong> Tallinn Pirita promenade e centro storico → <a href="#noleggi">vedi noleggi</a></p>
+<div class="evento-giorno">
+<p>🎉 <strong>Evento: Õllesummer</strong> (01–04/07) — Il più grande festival musicale e della birra dell'Estonia, al Song Festival Grounds. Concerti dal vivo, birrifici artigianali, street food. Atmosfera familiare di giorno, più festosa la sera. Ingresso ~€15-25. <a href="https://ollesummer.ee" target="_blank" rel="noopener">ollesummer.ee</a></p>
+</div>
 <div class="bambini-section">
 <p>👶 <strong>Bambini:</strong> Children's Museum Miiamilla nel Kadriorg Park (attività creative e parco giochi) — <a href="https://maps.google.com/?q=Children's+Museum+Miiamilla+Tallinn" target="_blank" rel="noopener">📍 Maps</a>. Alternativa al coperto: Super Skypark — <a href="https://maps.google.com/?q=Super+Skypark+Tallinn" target="_blank" rel="noopener">📍 Maps</a>.</p>
 </div>
@@ -6694,7 +6701,7 @@
   <!-- Owner toolbar -->
   <div id="diario-owner-toolbar" class="diario-owner-toolbar" style="display:none;">
     <button id="diario-add-entry" class="diario-add-btn">+ Aggiungi giorno</button>
-    <button id="diario-manage-users" class="diario-manage-btn">👥 Gestisci accessi</button>
+    <button id="diario-manage-users" class="diario-manage-btn">👥 Gestisci accessi <span id="pending-badge" class="pending-badge" style="display:none;"></span></button>
   </div>
 
   <!-- Timeline container -->
@@ -9850,7 +9857,7 @@
 
 <!-- ═══ PANNELLO ADMIN (solo organizzatori) ═══ -->
 <div id="pos-admin-panel" class="pos-admin-panel" style="display:none;">
-<details id="pos-admin-details" open>
+<details id="pos-admin-details">
 <summary class="pos-admin-summary">⚙️ Controlli Viaggio <span class="owner-badge">🔒 Admin</span></summary>
 
 <!-- Controlli Live -->

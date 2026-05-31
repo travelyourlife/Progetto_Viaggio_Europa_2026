@@ -85,16 +85,81 @@
     .tab-index a[data-region="alt"] { border-color: #c4b5fd; }
     .tab-index a[data-region="rain"] { border-color: #a5b4fc; }
     .tab-index a[data-region="events"] { border-color: #fda4af; }
-    /* Home cards in dark mode */
-    .home-card { background: #2d3748; border-color: #4a5568; }
+    /* Home cards in dark mode — disable neumorphism, use flat dark style */
+    .home-card {
+        background: #2d3748;
+        border-color: #4a5568;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3) !important;
+    }
+    .home-card:hover {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.4) !important;
+    }
+    .home-card:focus, .home-card:focus-visible {
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3) !important;
+    }
+    .hc-label { color: #e2e8f0; }
+    /* Hero card in dark mode */
+    .home-hero-card {
+        background: #2d3748;
+        border-color: #4a5568;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    }
+    .hero-card-number { color: #63b3ed; }
+    .hero-card-text { color: #e2e8f0; }
+    .hero-card-label { color: #90cdf4; }
+    /* Home stats in dark mode */
+    .hs-item { background: #2d3748; border-color: #4a5568; }
+    .hs-value { color: #63b3ed; }
+    .hs-value small { color: #a0aec0; }
+    .hs-label { color: #a0aec0; }
+    /* Progress bar in dark mode */
+    .home-progress { background: #2d3748; border-color: #4a5568; }
+    .home-progress-bar { background: #4a5568; }
+    .home-progress-text { color: #a0aec0; }
     /* Search bar in dark mode */
     .search-input { background: #2d3748; color: #e2e8f0; border-color: #4a5568; }
+    /* Search highlight in dark mode */
+    mark.search-hl { background: #b7791f; color: #fff; }
+    mark.search-hl.current { background: #dd6b20; color: #fff; }
     /* Top bar in dark mode */
     .top-bar { background: #1a365d; }
+    /* Stat cards (Posizione) in dark mode */
+    .pos-stat-card, .pos-stat-card-v2 { background: #2d3748; border-color: #4a5568; }
+    .pos-stat-number { color: #63b3ed; }
+    .pos-stat-label { color: #e2e8f0; }
+    .pos-stat-sub { color: #a0aec0; }
+    /* Day info cards in dark mode — ensure text legibility */
+    .day-info-card { color: #e2e8f0; }
+    .day-info-card a { color: #90cdf4; }
+    /* Colored chips in dark mode */
+    .pos-chip-green { background: rgba(56,161,105,0.15) !important; border-color: #68d391 !important; }
+    .pos-chip-green strong { color: #9ae6b4 !important; }
+    .pos-chip-blue { background: rgba(49,130,206,0.15) !important; border-color: #63b3ed !important; }
+    .pos-chip-blue strong { color: #90cdf4 !important; }
+    .pos-chip-orange { background: rgba(221,107,32,0.15) !important; border-color: #f6ad55 !important; }
+    .pos-chip-orange strong { color: #fbd38d !important; }
+    /* Home language switch in dark mode */
+    .home-lang-switch { background: #2d3748; border-color: #4a5568; }
+    /* Zaino progress in dark mode */
+    .zaino-progress-bar { background: #2d3748; border-color: #4a5568; }
+    .zaino-progress-bar .zp-bar { background: #4a5568; }
+    .zaino-progress-bar .zp-text { color: #e2e8f0; }
+    .zaino-progress-bar .zp-sub { color: #a0aec0; }
+    /* Diario in dark mode */
+    .diario-entry { background: #2d3748; border-color: #4a5568; }
+    /* General links in dark mode */
+    a { color: #90cdf4; }
     /* V4.8: Allinea colore cella sticky nelle righe pari (dark mode) */
     table.table-large tr:nth-child(even) td:first-child { 
         background: #323d50;
     }
+    /* Responsive table card header in dark mode */
+    table:not(.compact-table):not(.no-responsive) tr td:first-child {
+        background: #2b6cb0;
+        color: #fff;
+    }
+    /* Lightbox in dark mode */
+    .lightbox-overlay { background: rgba(0,0,0,0.92); }
 }
 
 * { box-sizing: border-box; margin: 0; }
@@ -791,6 +856,20 @@ tr:nth-child(even) { background: var(--bg-alt); }
     .card-icon-wrap { width: 44px; height: 44px; font-size: 20px; }
     .pos-stats-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
 }
+/* Small screens: 4-column tools row becomes 2x2 */
+@media (max-width: 360px) {
+    .hg-group.hg-tools {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media (max-width: 480px) {
+    .hg-group.hg-tools .home-card {
+        padding: 10px 4px;
+    }
+    .hg-group.hg-tools .hc-icon { font-size: 26px; }
+    .hg-group.hg-tools .hc-icon img { width: 32px; height: 32px; }
+    .hg-group.hg-tools .hc-label { font-size: 10px; }
+}
 
 /* ─── Zaino checkbox styles ─── */
 input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer; }
@@ -1307,6 +1386,12 @@ table { max-width: 100%; }
 .update-banner-text { flex: 1; line-height: 1.4; }
 .update-banner-text strong { font-weight: 700; font-size: 13px; }
 .update-banner-text small { opacity: 0.9; display: block; margin-top: 4px; line-height: 1.5; }
+.update-banner-action {
+    background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.5);
+    color: white; font-size: 12px; font-weight: 700; padding: 6px 12px;
+    border-radius: 6px; cursor: pointer; flex-shrink: 0; white-space: nowrap;
+}
+.update-banner-action:hover { background: rgba(255,255,255,0.35); }
 .update-banner-close {
     background: none; border: none; color: rgba(255,255,255,0.7);
     font-size: 20px; cursor: pointer; padding: 4px; flex-shrink: 0;
@@ -1823,14 +1908,14 @@ table { max-width: 100%; }
 
 /* Map buttons */
 .pos-map-btn {
-    position: absolute; bottom: 12px; right: 8px; z-index: 1001;
+    position: absolute; bottom: 80px; right: 8px; z-index: 1001;
     background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px;
     width: 34px; height: 34px; font-size: 16px; cursor: pointer;
     box-shadow: 0 2px 6px rgba(0,0,0,0.15); display: flex; align-items: center; justify-content: center;
     transition: transform 0.2s, box-shadow 0.2s;
 }
 .pos-map-btn:active { transform: scale(0.9); }
-.pos-map-btn-right { bottom: 52px; }
+.pos-map-btn-right { bottom: 120px; }
 
 /* Live status card */
 .pos-live-card {
@@ -1849,11 +1934,18 @@ table { max-width: 100%; }
   border: none;
   border-radius: 50%;
   width: 28px; height: 28px;
-  font-size: 12px;
+  font-size: 13px;
+  line-height: 1;
+  padding: 0;
+  padding-left: 2px;
   cursor: pointer;
-  opacity: 0.7;
+  opacity: 0.85;
   transition: opacity 0.2s, transform 0.2s;
   display: inline-flex; align-items: center; justify-content: center;
+}
+.pos-quick-start-btn.stop-mode {
+  background: #e53e3e;
+  padding-left: 0;
 }
 .pos-quick-start-btn:hover { opacity: 1; }
 .pos-quick-start-btn:active { transform: scale(0.9); }
@@ -1921,7 +2013,7 @@ table { max-width: 100%; }
 }
 
 /* Satellite button */
-.pos-map-btn-sat { bottom: 92px; font-size: 14px; }
+.pos-map-btn-sat { bottom: 160px; font-size: 14px; }
 
 /* ===== Voice Recording Button & Bar ===== */
 .chat-voice-btn {
@@ -2793,6 +2885,22 @@ table { max-width: 100%; }
   color: #1a4b8c;
 }
 .diario-manage-btn:hover { background: #e0e8f0; }
+.diario-manage-btn { position: relative; }
+.pending-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
+  background: #e53935;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  margin-left: 6px;
+  vertical-align: middle;
+}
 
 /* Timeline */
 .diario-timeline {

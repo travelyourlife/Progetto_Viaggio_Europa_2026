@@ -43,7 +43,7 @@
     <link rel="apple-touch-icon" sizes="152x152" href="./icon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="./icon.png">
     <link rel="apple-touch-icon" sizes="167x167" href="./icon.png">
-    <title>Europe Trip 2026 — V8.4</title>
+    <title>Europe Trip 2026 — V8.6</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <link rel="stylesheet" href="style.css">
 
@@ -58,7 +58,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = '8.3';
+  var EXPECTED_VERSION = '8.6';
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
   var r = false;
@@ -126,13 +126,12 @@
 
 <!-- ─── Update Required Banner ─── -->
 <div class="update-banner" id="updateBanner" style="display:none;">
-    <span class="update-banner-icon">⚠️</span>
+    <span class="update-banner-icon">🔄</span>
     <div class="update-banner-text">
-        <strong>Update required</strong><br>
-        Clear your browser cache once to enable automatic updates.<br>
-        <small><b>Android:</b> Settings → Apps → Chrome → Storage → Clear cache<br>
-        <b>iPhone:</b> Close and reopen the app, or go to Settings → Safari → Clear website data</small>
+        <strong>Update available!</strong><br>
+        <span id="updateBannerMsg">Tap to update to the latest version.</span>
     </div>
+    <button class="update-banner-action" id="updateBannerAction">🔄 Update</button>
     <button class="update-banner-close" id="updateBannerClose">✕</button>
 </div>
 
@@ -180,7 +179,7 @@
     </div>
     <a class="menu-item active" data-tab="home"><span class="menu-icon">🏠</span><span class="menu-text">Home</span></a>
     <a class="menu-item" data-tab="giorni"><span class="menu-icon">🗺️</span><span class="menu-text">Itinerary</span></a>
-    <a class="menu-item" data-tab="posizione"><span class="menu-icon">🚐</span><span class="menu-text">On the road</span></a>
+    <a class="menu-item" data-tab="posizione"><span class="menu-icon"><img src="./icons/icon-posizione.png" alt="" width="22" height="22" style="vertical-align:middle;"></span><span class="menu-text">On the road</span></a>
     <a class="menu-item" data-tab="diario"><span class="menu-icon">📖</span><span class="menu-text">Journal</span></a>
     <div class="menu-divider"></div>
     <a class="menu-item" data-tab="cibo"><span class="menu-icon">🍝</span><span class="menu-text">Food</span></a>
@@ -197,7 +196,7 @@
 <div class="bottom-bar" id="bottomBar" role="tablist" aria-label="Main navigation">
     <button class="bottom-tab active" data-tab="home"><span class="tab-icon">🏠</span><span class="tab-label">Home</span></button>
     <button class="bottom-tab" data-tab="giorni"><span class="tab-icon tab-cal-icon"><img src="./icons/icon-giorni.png" alt="" width="22" height="22"><span class="tab-cal-day" id="tab-cal-day"></span></span><span class="tab-label">Itinerary</span></button>
-    <button class="bottom-tab" data-tab="posizione"><span class="tab-icon">🚐</span><span class="tab-label">On the road</span></button>
+    <button class="bottom-tab" data-tab="posizione"><span class="tab-icon"><img src="./icons/icon-posizione.png" alt="" width="22" height="22" style="vertical-align:middle;"></span><span class="tab-label">On the road</span></button>
     <button class="bottom-tab" data-tab="diario"><span class="tab-icon">📖</span><span class="tab-label">Journal</span></button>
     <button class="bottom-tab" data-tab="cibo"><span class="tab-icon">🍝</span><span class="tab-label">Food</span></button>
     <button class="bottom-tab" data-tab="cultura"><span class="tab-icon">🏛️</span><span class="tab-label">Culture</span></button>
@@ -227,6 +226,11 @@
     <button class="altro-item" data-tab="chat">
         <span class="altro-item-icon">💬</span>
         <span class="altro-item-text"><span class="altro-item-label">Chat</span><span class="altro-item-sub">Trip messages</span></span>
+    </button>
+    <hr style="border:none;border-top:1px solid var(--border-color,#e2e8f0);margin:4px 16px;">
+    <button class="altro-item" id="hardRefreshBtn" onclick="if(window.hardRefresh)window.hardRefresh();else window.location.reload(true);">
+        <span class="altro-item-icon">🔄</span>
+        <span class="altro-item-text"><span class="altro-item-label">Update App</span><span class="altro-item-sub">Force update and clear cache</span></span>
     </button>
 </div>
 
@@ -551,7 +555,7 @@
 <p>Each block includes: route, tolls/ferries, weather, POI, alternatives, fishing 🎣 where possible, Maps keywords.</p>
 </blockquote>
 <hr>
-<h3 id="g0">D0 · 26/06 pm · Selvazzano → Villach 🇮🇹→🇦🇹</h3>
+<h3 id="g0">D0 · 26/06 · Selvazzano → Villach 🇮🇹→🇦🇹</h3>
 <p><strong>280 km · 3h · Tolls A4+A23 ~€15 + digital AT vignette €12.80 (10 days)</strong></p>
 <p>☀️ 25°C / 15°C · Good weather · 16h daylight</p>
 <p>🚗 Departure in the afternoon, arrival evening in Villach
@@ -6140,7 +6144,7 @@
   <!-- Owner toolbar -->
   <div id="diario-owner-toolbar" class="diario-owner-toolbar" style="display:none;">
     <button id="diario-add-entry" class="diario-add-btn">+ Add day</button>
-    <button id="diario-manage-users" class="diario-manage-btn">👥 Manage access</button>
+    <button id="diario-manage-users" class="diario-manage-btn">👥 Manage access <span id="pending-badge" class="pending-badge" style="display:none;"></span></button>
   </div>
 
   <!-- Timeline container -->
@@ -9330,7 +9334,7 @@
 
 <!-- ═══ ADMIN PANEL (organizers only) ═══ -->
 <div id="pos-admin-panel" class="pos-admin-panel" style="display:none;">
-<details id="pos-admin-details" open>
+<details id="pos-admin-details">
 <summary class="pos-admin-summary">⚙️ Trip Controls <span class="owner-badge">🔒 Admin</span></summary>
 <!-- Live Tracking -->
 <div class="pos-admin-section">
