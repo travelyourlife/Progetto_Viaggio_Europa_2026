@@ -856,19 +856,33 @@ tr:nth-child(even) { background: var(--bg-alt); }
     .card-icon-wrap { width: 44px; height: 44px; font-size: 20px; }
     .pos-stats-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
 }
-/* Small screens: 4-column tools row becomes 2x2 */
+/* Responsive home grid for small screens */
+@media (max-width: 480px) {
+    .home-grid { gap: 10px; }
+    .hg-group { gap: 8px; }
+    .home-card {
+        padding: 10px 6px;
+        border-radius: 12px;
+    }
+    .hc-icon { font-size: clamp(28px, 8vw, 36px); margin-bottom: 4px; }
+    .hc-icon img { width: clamp(32px, 9vw, 44px); height: clamp(32px, 9vw, 44px); }
+    .hc-label { font-size: clamp(10px, 2.8vw, 12px); }
+    .hg-group.hg-tools .home-card { padding: 8px 4px; }
+    .hg-group.hg-tools .hc-icon { font-size: 24px; }
+    .hg-group.hg-tools .hc-icon img { width: 28px; height: 28px; }
+    .hg-group.hg-tools .hc-label { font-size: 9px; }
+}
 @media (max-width: 360px) {
     .hg-group.hg-tools {
         grid-template-columns: repeat(2, 1fr);
     }
-}
-@media (max-width: 480px) {
-    .hg-group.hg-tools .home-card {
-        padding: 10px 4px;
+    .home-card {
+        padding: 8px 4px;
+        border-radius: 10px;
     }
-    .hg-group.hg-tools .hc-icon { font-size: 26px; }
-    .hg-group.hg-tools .hc-icon img { width: 32px; height: 32px; }
-    .hg-group.hg-tools .hc-label { font-size: 10px; }
+    .hc-icon { font-size: clamp(24px, 7vw, 32px); margin-bottom: 2px; }
+    .hc-icon img { width: clamp(28px, 8vw, 36px); height: clamp(28px, 8vw, 36px); }
+    .hc-label { font-size: 10px; }
 }
 
 /* ─── Zaino checkbox styles ─── */
@@ -1805,12 +1819,13 @@ table { max-width: 100%; }
 @media (max-width: 480px) {
   #tab-chat { padding: 0; }
   .chat-container { border-radius: 0; border-left: none; border-right: none; margin: 0; }
-  .chat-input-bar { padding: 6px 8px; gap: 4px; }
-  .chat-send-btn { width: 36px; height: 36px; font-size: 14px; }
-  .chat-attach-btn { width: 32px; height: 32px; font-size: 16px; }
-  .chat-voice-btn { width: 36px; height: 36px; }
-  .chat-voice-btn::before { width: 18px; height: 18px; }
-  .chat-location-btn { padding: 2px 4px; font-size: 18px; }
+  .chat-input-bar { padding: 6px 6px; gap: 4px; }
+  .chat-input { font-size: 15px; padding: 10px 12px; min-height: 40px; }
+  .chat-send-btn { width: 34px; height: 34px; font-size: 13px; }
+  .chat-attach-btn { width: 30px; height: 30px; font-size: 14px; }
+  .chat-voice-btn { width: 34px; height: 34px; }
+  .chat-voice-btn::before { width: 16px; height: 16px; }
+  .chat-location-btn { padding: 2px 4px; font-size: 16px; }
 }
 .chat-attach-btn {
     width: 38px; height: 38px;
@@ -1908,14 +1923,14 @@ table { max-width: 100%; }
 
 /* Map buttons */
 .pos-map-btn {
-    position: absolute; bottom: 80px; right: 8px; z-index: 1001;
+    position: absolute; top: 10px; right: 10px; z-index: 1001;
     background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px;
     width: 34px; height: 34px; font-size: 16px; cursor: pointer;
     box-shadow: 0 2px 6px rgba(0,0,0,0.15); display: flex; align-items: center; justify-content: center;
     transition: transform 0.2s, box-shadow 0.2s;
 }
 .pos-map-btn:active { transform: scale(0.9); }
-.pos-map-btn-right { bottom: 120px; }
+.pos-map-btn-right { top: 50px; }
 
 /* Live status card */
 .pos-live-card {
@@ -2013,7 +2028,7 @@ table { max-width: 100%; }
 }
 
 /* Satellite button */
-.pos-map-btn-sat { bottom: 160px; font-size: 14px; }
+.pos-map-btn-sat { top: 90px; font-size: 14px; }
 
 /* ===== Voice Recording Button & Bar ===== */
 .chat-voice-btn {

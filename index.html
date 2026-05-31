@@ -9810,9 +9810,8 @@
 <!-- ─── MAPPA (sotto le card) ─── -->
 <div id="pos-map" style="width:100%;height:350px;border-radius:12px;border:1px solid var(--border);margin:16px 0;background:var(--bg-alt);position:relative;">
     <div class="map-spinner" id="mapSpinner"></div>
-    <button id="pos-center-me" class="pos-map-btn" title="Centra su di me" aria-label="Centra su di me">📍</button>
+    <button id="pos-center-me" class="pos-map-btn" title="Centra su di me" aria-label="Centra su di me">🧑</button>
     <button id="pos-center-van" class="pos-map-btn pos-map-btn-right" title="Centra sul furgone" aria-label="Centra sul furgone">🚐</button>
-    <button id="pos-satellite" class="pos-map-btn pos-map-btn-sat" title="Apri in Google Maps Satellite" aria-label="Vista Satellite">🛰️</button>
 </div>
 
 <!-- ─── METEO PROSSIME TAPPE ─── -->
@@ -9936,10 +9935,8 @@
 
     <div style="padding:12px;background:var(--bg-alt);border-radius:var(--radius);border:1px solid var(--border);margin-bottom:12px;">
         <p style="font-size:13px;margin:0 0 8px;"><strong>🔗 Link condivisione</strong></p>
-        <div style="display:flex;gap:8px;">
-            <input type="text" id="pos-share-url" readonly style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;font-size:12px;" value="Avvia il viaggio per generare il link">
-            <button id="pos-share-copy" class="pos-btn pos-btn-gray">📋 Copia</button>
-        </div>
+        <input type="text" id="pos-share-url" readonly style="width:100%;padding:8px;border:1px solid var(--border);border-radius:6px;font-size:11px;margin-bottom:8px;background:var(--bg-card);color:var(--text);" value="Avvia il viaggio per generare il link">
+        <button id="pos-share-copy" class="pos-btn pos-btn-gray" style="width:100%;padding:8px;">📋 Copia link</button>
     </div>
     <div style="padding:12px;background:var(--bg-alt);border-radius:var(--radius);border:1px solid var(--border);">
         <p style="font-size:13px;margin:0 0 8px;"><strong>📅 Override giorno corrente</strong></p>

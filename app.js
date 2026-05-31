@@ -148,7 +148,7 @@ function escapeHtml(str) {
 
 // ─── Firebase Initialization (safe — app works offline without Firebase) ───
 var db = null;
-var FAMILY_ID = 'europa2026';
+var FAMILY_ID = 'viaggio-europa-2026';
 var dbRef = null;
 var firebaseUser = null; // Will hold the authenticated user (owner) or null (viewer)
 try {
@@ -1268,6 +1268,10 @@ document.addEventListener('DOMContentLoaded', function() {
             liveStartTime = Date.now();
             todayKm = 0;
             todayPoints = [];
+
+            // Persist tracking state to Firebase for resume after refresh
+            var sessionRef = getFamilyRef('liveSession/' + (firebaseUser ? firebaseUser.uid : 'driver'));
+            if (sessionRef) sessionRef.set({ active: true, startTime: liveStartTime, todayKm: 0 });
             lastMovementTime = Date.now();
 
             // UI
@@ -1295,6 +1299,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (dist >= MIN_TRACK_DIST) {
                         todayKm += dist;
                         todayPoints.push(pt);
+                        // Update session km for resume
+                        var sessKmRef = getFamilyRef('liveSession/' + (firebaseUser ? firebaseUser.uid : 'driver') + '/todayKm');
+                        if (sessKmRef) sessKmRef.set(todayKm);
                         // Save to Firebase
                         var trackRef = getFamilyRef('tracks/' + todayStr() + '/points');
                         if (trackRef) trackRef.set(todayPoints);
@@ -1379,6 +1386,10 @@ document.addEventListener('DOMContentLoaded', function() {
             if (liveWatchId) { navigator.geolocation.clearWatch(liveWatchId); liveWatchId = null; }
             if (liveTimer) { clearInterval(liveTimer); liveTimer = null; }
             if (idleCheckTimer) { clearInterval(idleCheckTimer); idleCheckTimer = null; }
+
+            // Clear tracking session from Firebase
+            var sessionRef = getFamilyRef('liveSession/' + (firebaseUser ? firebaseUser.uid : 'driver'));
+            if (sessionRef) sessionRef.set({ active: false, stoppedAt: Date.now(), todayKm: todayKm });
 
             // UI
             if (startBtn) startBtn.style.display = '';
@@ -1844,9 +1855,142 @@ document.addEventListener('DOMContentLoaded', function() {
         loadCheckins();
         updateStats();
 
+        // ─── Auto-resume tracking after refresh ───
+        function resumeTracking() {
+            if (liveActive) return;
+            if (!firebaseUser || !isOwner) return;
+            var DRIVER_UID = (typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.length > 0) ? OWNER_UIDS[0] : null;
+            if (DRIVER_UID && firebaseUser.uid !== DRIVER_UID) return;
+            var sessionRef = getFamilyRef('liveSession/' + firebaseUser.uid);
+            if (!sessionRef) return;
+            sessionRef.once('value', function(snap) {
+                var session = snap.val();
+                if (session && session.active === true) {
+                    // Resume: restore state and restart GPS
+                    console.info('[Tracking] Resuming session from Firebase');
+                    liveStartTime = session.startTime || Date.now();
+                    todayKm = session.todayKm || 0;
+                    // Load today's track points from Firebase
+                    var trackRef = getFamilyRef('tracks/' + todayStr() + '/points');
+                    if (trackRef) {
+                        trackRef.once('value', function(tSnap) {
+                            todayPoints = tSnap.val() || [];
+                            startLive_resume();
+                        });
+                    } else {
+                        startLive_resume();
+                    }
+                } else {
+                    // Not active, try auto-start
+                    setTimeout(initAutoStart, 3000);
+                }
+            });
+        }
+
+        // startLive without resetting counters (for resume)
+        function startLive_resume() {
+            liveActive = true;
+            lastMovementTime = Date.now();
+
+            // UI
+            if (startBtn) startBtn.style.display = 'none';
+            if (stopBtn) stopBtn.style.display = '';
+            if (liveDot) { liveDot.className = 'pos-live-indicator pos-live-on'; }
+            if (liveLabel) liveLabel.textContent = isEN ? 'Trip active' : 'Viaggio attivo';
+
+            initMap();
+
+            var isEco = optEco && optEco.checked;
+            var gpsOpts = { enableHighAccuracy: true, maximumAge: isEco ? ECO_INTERVAL : NORMAL_INTERVAL };
+
+            liveWatchId = navigator.geolocation.watchPosition(function(pos) {
+                var lat = pos.coords.latitude;
+                var lng = pos.coords.longitude;
+                var speed = pos.coords.speed != null ? pos.coords.speed * 3.6 : 0;
+                var heading = pos.coords.heading || 0;
+                var pt = { lat: lat, lng: lng, speed: speed, heading: heading, time: Date.now() };
+
+                if (todayPoints.length > 0) {
+                    var last = todayPoints[todayPoints.length - 1];
+                    var dist = haversine(last.lat, last.lng, lat, lng);
+                    if (dist >= MIN_TRACK_DIST) {
+                        todayKm += dist;
+                        todayPoints.push(pt);
+                        var sessKmRef = getFamilyRef('liveSession/' + (firebaseUser ? firebaseUser.uid : 'driver') + '/todayKm');
+                        if (sessKmRef) sessKmRef.set(todayKm);
+                        var trackRef = getFamilyRef('tracks/' + todayStr() + '/points');
+                        if (trackRef) trackRef.set(todayPoints);
+                        if (map) {
+                            if (trackLine) map.removeLayer(trackLine);
+                            var latlngs = todayPoints.map(function(p) { return [p.lat, p.lng]; });
+                            trackLine = L.polyline(latlngs, { color: '#e53e3e', weight: 4, opacity: 0.8 }).addTo(map);
+                        }
+                    }
+                } else {
+                    todayPoints.push(pt);
+                }
+
+                // Update live position in Firebase
+                var liveRef = getFamilyRef('live/' + firebaseUser.uid);
+                if (liveRef) {
+                    liveRef.set({
+                        lat: lat, lng: lng, speed: speed, heading: heading,
+                        time: Date.now(),
+                        name: firebaseUser.displayName || 'Furgone',
+                        status: speed > 3 ? 'moving' : 'stopped',
+                        todayKm: todayKm,
+                        startTime: liveStartTime
+                    });
+                }
+
+                if (map) {
+                    if (!vanMarker) {
+                        vanMarker = L.marker([lat, lng], { icon: createVanIcon(heading), zIndexOffset: 2000 }).addTo(map);
+                    } else {
+                        vanMarker.setLatLng([lat, lng]);
+                        vanMarker.setIcon(createVanIcon(heading));
+                    }
+                }
+
+                checkGeofence(lat, lng);
+                if (speed > 3) lastMovementTime = Date.now();
+
+                var elapsed = Date.now() - liveStartTime;
+                var avgSpeed = elapsed > 0 ? (todayKm / (elapsed / 3600000)) : 0;
+                var status = speed > 3 ? 'moving' : 'stopped';
+                updateLiveUI(speed, avgSpeed, todayKm, formatTime(elapsed), status);
+
+            }, function(err) {
+                console.warn('[GPS Resume] Error:', err.message);
+            }, gpsOpts);
+
+            // Timer
+            liveTimer = setInterval(function() {
+                if (!liveActive) return;
+                var elapsed = Date.now() - liveStartTime;
+                var avgSpeed = elapsed > 0 ? (todayKm / (elapsed / 3600000)) : 0;
+                document.getElementById('live-time-today').textContent = formatTime(elapsed);
+                document.getElementById('live-speed-avg').textContent = Math.round(avgSpeed);
+            }, 5000);
+
+            // Auto-stop
+            if (optAutostop && optAutostop.checked) {
+                idleCheckTimer = setInterval(function() {
+                    if (!liveActive) return;
+                    if (Date.now() - lastMovementTime > IDLE_TIMEOUT) {
+                        showToast(isEN ? '⏹️ Auto-stopped (idle 10 min)' : '⏹️ Auto-stop (fermo da 10 min)', 'info');
+                        stopLive();
+                    }
+                }, 30000);
+            }
+
+            showToast(isEN ? '🔄 Trip resumed!' : '🔄 Viaggio ripreso!', 'success');
+            updatePosAuthUI();
+        }
+
         // Auto-start if enabled
         window.addEventListener('authStateChanged', function(e) {
-            if (e.detail.isOwner) { setTimeout(initAutoStart, 3000); }
+            if (e.detail.isOwner) { setTimeout(resumeTracking, 1500); }
         });
 
     })();
@@ -4026,10 +4170,10 @@ if ('serviceWorker' in navigator) {
             updatePresence();
           } else {
             // Check if already pending
-            firebase.database().ref('trips/' + famId + '/pendingUsers/' + user.uid).once('value').then(function(pSnap) {
+            firebase.database().ref('trips/' + FAMILY_ID + '/pendingUsers/' + user.uid).once('value').then(function(pSnap) {
               if (!pSnap.exists()) {
                 // Auto-submit pending request
-                firebase.database().ref('trips/' + famId + '/pendingUsers/' + user.uid).set({
+                firebase.database().ref('trips/' + FAMILY_ID + '/pendingUsers/' + user.uid).set({
                   displayName: user.displayName || 'Utente',
                   email: user.email || '',
                   photoURL: user.photoURL || '',
