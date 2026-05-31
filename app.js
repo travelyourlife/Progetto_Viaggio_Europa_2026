@@ -449,12 +449,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
                 }
             }).then(function() {
-                window.location.reload(true);
+                window.location.href = window.location.pathname.indexOf('index_en') > -1 ? 'index_en.html' : 'index.html';
             }).catch(function() {
-                window.location.reload(true);
+                window.location.href = window.location.pathname.indexOf('index_en') > -1 ? 'index_en.html' : 'index.html';
             });
         } else {
-            window.location.reload(true);
+            window.location.href = window.location.pathname.indexOf('index_en') > -1 ? 'index_en.html' : 'index.html';
         }
     }
     window.hardRefresh = hardRefresh; // expose globally for Altro menu button
@@ -788,6 +788,53 @@ document.addEventListener('DOMContentLoaded', function() {
             return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
         }
 
+        // ─── OSRM Gap Estimation ───
+        // When GPS resumes after a gap, estimate the road distance via OSRM
+        // Thresholds: 30s gap + 100m distance — catches screen-off pauses
+        var GAP_MIN_TIME = 30000; // 30 seconds
+        var GAP_MIN_DIST = 0.1; // 0.1 km = 100m
+        function estimateGapDistance(lastPt, newLat, newLng) {
+            if (!lastPt || !lastPt.lat || !lastPt.lng) return;
+            var timeDiff = Date.now() - (lastPt.time || 0);
+            var straightDist = haversine(lastPt.lat, lastPt.lng, newLat, newLng);
+            if (timeDiff < GAP_MIN_TIME || straightDist < GAP_MIN_DIST) return;
+            // Call OSRM for road-based distance estimate
+            var url = 'https://router.project-osrm.org/route/v1/driving/' +
+                lastPt.lng + ',' + lastPt.lat + ';' + newLng + ',' + newLat + '?overview=full&geometries=geojson';
+            fetch(url).then(function(r) { return r.json(); }).then(function(data) {
+                if (data.code === 'Ok' && data.routes && data.routes.length > 0) {
+                    var routeKm = data.routes[0].distance / 1000;
+                    // Only use if reasonable (not more than 3x straight-line)
+                    if (routeKm > straightDist && routeKm < straightDist * 3) {
+                        var gapKm = routeKm;
+                        todayKm += gapKm;
+                        console.info('[GPS Gap] Estimated ' + gapKm.toFixed(1) + ' km via OSRM (straight: ' + straightDist.toFixed(1) + ' km, gap: ' + Math.round(timeDiff/60000) + ' min)');
+                        // Add intermediate points from OSRM geometry to track
+                        var coords = data.routes[0].geometry.coordinates;
+                        var gapTime = lastPt.time || Date.now();
+                        var timeStep = timeDiff / (coords.length || 1);
+                        coords.forEach(function(c, i) {
+                            todayPoints.push({ lat: c[1], lng: c[0], speed: 0, heading: 0, time: gapTime + (i * timeStep), estimated: true });
+                        });
+                        // Update Firebase
+                        var sessKmRef = getFamilyRef('liveSession/' + (firebaseUser ? firebaseUser.uid : 'driver') + '/todayKm');
+                        if (sessKmRef) sessKmRef.set(todayKm);
+                        var trackRef = getFamilyRef('tracks/' + todayStr() + '/points');
+                        if (trackRef) trackRef.set(todayPoints);
+                        showToast((isEN ? '🛣️ Estimated ' : '🛣️ Stimati ') + gapKm.toFixed(1) + ' km ' + (isEN ? 'for GPS gap' : 'per buco GPS'), 'info');
+                    } else {
+                        // Fallback: use straight-line distance
+                        todayKm += straightDist;
+                        console.info('[GPS Gap] OSRM unreasonable, using straight-line: ' + straightDist.toFixed(1) + ' km');
+                    }
+                }
+            }).catch(function(err) {
+                // Fallback: use straight-line if OSRM fails
+                todayKm += straightDist;
+                console.warn('[GPS Gap] OSRM failed, using straight-line: ' + straightDist.toFixed(1) + ' km', err);
+            });
+        }
+
         function todayStr() { return new Date().toISOString().slice(0, 10); }
 
         function formatTime(ms) {
@@ -1009,7 +1056,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 ref.once('value', function(snap) {
                     var summaries = snap.val() || {};
                     var totalKm = 0; var days = 0;
-                    Object.values(summaries).forEach(function(s) { totalKm += (s.km || 0); days++; });
+                    Object.values(summaries).forEach(function(s) { totalKm += (s.odometerKm != null ? s.odometerKm : (s.km || 0)); days++; });
                     // Get live todayKm from Firebase (not local var)
                     var liveRef = getFamilyRef('live');
                     if (liveRef) {
@@ -1168,8 +1215,8 @@ document.addEventListener('DOMContentLoaded', function() {
         function updateInfoCard(d) {
             // Last update time
             var lastUpdateEl = document.getElementById('pos-last-update');
-            if (lastUpdateEl && d.ts) {
-                var ago = Math.round((Date.now() - d.ts) / 60000);
+            if (lastUpdateEl && (d.time || d.ts)) {
+                var ago = Math.round((Date.now() - (d.time || d.ts)) / 60000);
                 if (ago < 1) lastUpdateEl.textContent = isEN ? 'Just now' : 'Adesso';
                 else if (ago < 60) lastUpdateEl.textContent = ago + (isEN ? ' min ago' : ' min fa');
                 else lastUpdateEl.textContent = Math.round(ago/60) + (isEN ? 'h ago' : 'h fa');
@@ -1194,9 +1241,18 @@ document.addEventListener('DOMContentLoaded', function() {
             // Live dot status
             var dot = document.getElementById('pos-live-dot');
             var label = document.getElementById('pos-live-label');
-            if (dot && d.speed > 0) {
-                dot.classList.remove('pos-live-off'); dot.classList.add('pos-live-on');
-                if (label) label.textContent = isEN ? 'Travelling' : 'In viaggio';
+            var isRecent = (d.time || d.ts) && (Date.now() - (d.time || d.ts)) < 300000; // 5 min
+            if (dot && isRecent) {
+                if (d.status === 'moving' || d.speed > 3) {
+                    dot.className = 'pos-live-indicator pos-live-on';
+                    if (label) label.textContent = isEN ? 'Travelling' : 'In viaggio';
+                } else if (d.status === 'stopped') {
+                    dot.className = 'pos-live-indicator pos-live-on';
+                    if (label) label.textContent = isEN ? 'Trip active (stopped)' : 'Viaggio attivo (fermo)';
+                }
+            } else if (dot && !isRecent) {
+                dot.className = 'pos-live-indicator pos-live-off';
+                if (label) label.textContent = isEN ? 'Trip not active' : 'Viaggio non attivo';
             }
         }
 
@@ -1295,8 +1351,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 var pt = { lat: lat, lng: lng, speed: speed, heading: heading, time: Date.now() };
                 if (todayPoints.length > 0) {
                     var last = todayPoints[todayPoints.length - 1];
+                    var timeSinceLast = Date.now() - (last.time || 0);
                     var dist = haversine(last.lat, last.lng, lat, lng);
-                    if (dist >= MIN_TRACK_DIST) {
+                    // Check for GPS gap (>2min, >500m) — estimate via OSRM
+                    if (timeSinceLast > GAP_MIN_TIME && dist > GAP_MIN_DIST) {
+                        estimateGapDistance(last, lat, lng);
+                        todayPoints.push(pt);
+                    } else if (dist >= MIN_TRACK_DIST) {
                         todayKm += dist;
                         todayPoints.push(pt);
                         // Update session km for resume
@@ -1379,6 +1440,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             showToast(isEN ? '▶️ Trip started!' : '▶️ Viaggio avviato!', 'success');
             if(window.haptic) window.haptic(15);
+            updatePosAuthUI();
         }
 
         function stopLive() {
@@ -1431,6 +1493,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             liveStartTime = null;
+            updatePosAuthUI();
         }
 
         // Button handlers
@@ -1671,12 +1734,17 @@ document.addEventListener('DOMContentLoaded', function() {
                     var date = entry[0]; var s = entry[1];
                     var card = document.createElement('div');
                     card.className = 'pos-card';
+                    var displayKm = s.odometerKm != null ? s.odometerKm : (s.km || 0);
+                    var kmLabel = s.odometerKm != null ? (displayKm.toFixed(1) + ' km <small style="color:var(--accent);font-size:10px;">(contachilometri)</small>') : ((s.km || 0).toFixed(1) + ' km');
                     var dhtml = '<div class="pos-card-row">';
                     dhtml += '<div class="pos-card-main">';
                     dhtml += '<div class="pos-card-header"><strong>\uD83D\uDCC5 ' + date + '</strong></div>';
-                    dhtml += '<div class="pos-card-info">\uD83D\uDE97 ' + (s.km || 0).toFixed(1) + ' km \u00B7 \u23F1\uFE0F ' + formatTime(s.time || 0) + ' \u00B7 \u26A1 ' + Math.round(s.avgSpeed || 0) + ' km/h ' + (isEN ? 'avg' : 'media') + '</div>';
+                    dhtml += '<div class="pos-card-info">\uD83D\uDE97 ' + kmLabel + ' \u00B7 \u23F1\uFE0F ' + formatTime(s.time || 0) + ' \u00B7 \u26A1 ' + Math.round(s.avgSpeed || 0) + ' km/h ' + (isEN ? 'avg' : 'media') + '</div>';
                     dhtml += '</div>';
-                    if (isOwner) dhtml += '<button class="pos-del-btn" data-dkey="' + date + '" title="' + (isEN ? 'Delete' : 'Elimina') + '">\uD83D\uDDD1\uFE0F</button>';
+                    if (isOwner) {
+                        dhtml += '<button class="pos-edit-km-btn" data-dkey="' + date + '" data-km="' + displayKm.toFixed(1) + '" title="' + (isEN ? 'Edit km' : 'Modifica km') + '" style="background:none;border:none;font-size:16px;cursor:pointer;padding:4px 6px;">✏️</button>';
+                        dhtml += '<button class="pos-del-btn" data-dkey="' + date + '" title="' + (isEN ? 'Delete' : 'Elimina') + '">\uD83D\uDDD1\uFE0F</button>';
+                    }
                     dhtml += '</div>';
                     card.innerHTML = dhtml;
                     container.appendChild(card);
@@ -1690,9 +1758,58 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     });
                 });
+                // Edit km handler (odometer override)
+                container.querySelectorAll('.pos-edit-km-btn').forEach(function(btn) {
+                    btn.addEventListener('click', function() {
+                        var dkey = btn.getAttribute('data-dkey');
+                        var currentKm = btn.getAttribute('data-km');
+                        showEditKmModal(dkey, currentKm);
+                    });
+                });
             });
         }
         renderDailySummaries();
+
+        // ─── Edit Km Modal (odometer override) ───
+        function showEditKmModal(dateKey, currentKm) {
+            var overlay = document.createElement('div');
+            overlay.className = 'manual-km-overlay';
+            overlay.innerHTML = '<div class="manual-km-modal">' +
+              '<h3>' + (isEN ? '✏️ Edit daily km' : '✏️ Modifica km giornalieri') + '</h3>' +
+              '<p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">' + (isEN ? 'Enter the odometer reading for ' + dateKey + '. This overrides the GPS value.' : 'Inserisci i km dal contachilometri per il ' + dateKey + '. Sovrascrive il valore GPS.') + '</p>' +
+              '<label>' + (isEN ? 'Km (odometer)' : 'Km (contachilometri)') + '</label>' +
+              '<input type="number" id="edit-km-value" step="0.1" min="0" max="9999" value="' + currentKm + '" style="font-size:18px;text-align:center;">' +
+              '<div class="manual-km-actions">' +
+              '  <button class="manual-km-cancel">' + (isEN ? 'Cancel' : 'Annulla') + '</button>' +
+              '  <button class="manual-km-save">' + (isEN ? 'Save' : 'Salva') + '</button>' +
+              '</div>' +
+              '</div>';
+            document.body.appendChild(overlay);
+
+            overlay.querySelector('.manual-km-cancel').addEventListener('click', function() { overlay.remove(); });
+            overlay.addEventListener('click', function(e) { if (e.target === overlay) overlay.remove(); });
+
+            overlay.querySelector('.manual-km-save').addEventListener('click', function() {
+                var newKm = parseFloat(document.getElementById('edit-km-value').value);
+                if (isNaN(newKm) || newKm < 0) {
+                    showToast(isEN ? 'Enter a valid value' : 'Inserisci un valore valido', 'error');
+                    return;
+                }
+                var sumRef = getFamilyRef('dailySummaries/' + dateKey + '/odometerKm');
+                if (sumRef) {
+                    sumRef.set(newKm).then(function() {
+                        showToast(isEN ? '✅ Km updated!' : '✅ Km aggiornati!', 'success');
+                        overlay.remove();
+                        // Refresh all stats
+                        updateStats();
+                        if (typeof refreshHomeStats === 'function') refreshHomeStats();
+                    });
+                }
+            });
+
+            // Auto-focus
+            setTimeout(function() { document.getElementById('edit-km-value').select(); }, 100);
+        }
 
         // ─── Map buttons ───
         var centerMeBtn = document.getElementById('pos-center-me');
@@ -1912,8 +2029,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 if (todayPoints.length > 0) {
                     var last = todayPoints[todayPoints.length - 1];
+                    var timeSinceLast = Date.now() - (last.time || 0);
                     var dist = haversine(last.lat, last.lng, lat, lng);
-                    if (dist >= MIN_TRACK_DIST) {
+                    // Check for GPS gap (>2min, >500m) — estimate via OSRM
+                    if (timeSinceLast > GAP_MIN_TIME && dist > GAP_MIN_DIST) {
+                        estimateGapDistance(last, lat, lng);
+                        todayPoints.push(pt);
+                    } else if (dist >= MIN_TRACK_DIST) {
                         todayKm += dist;
                         todayPoints.push(pt);
                         var sessKmRef = getFamilyRef('liveSession/' + (firebaseUser ? firebaseUser.uid : 'driver') + '/todayKm');
@@ -3184,20 +3306,7 @@ if ('serviceWorker' in navigator) {
             if (countdownEl) countdownEl.textContent = daysLeft;
         }
 
-        // Dynamic calendar icon day number + month
-        var calDayEl = document.getElementById('calendar-day-num');
-        if (calDayEl) {
-            calDayEl.textContent = now.getDate();
-        }
-        var calMonthEl = document.getElementById('calendar-month');
-        var monthsIT = ['GEN','FEB','MAR','APR','MAG','GIU','LUG','AGO','SET','OTT','NOV','DIC'];
-        var monthsEN = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
-        if (calMonthEl) {
-            calMonthEl.textContent = isEN ? monthsEN[now.getMonth()] : monthsIT[now.getMonth()];
-        }
-        // Bottom bar calendar day
-        var tabCalDay = document.getElementById('tab-cal-day');
-        if (tabCalDay) tabCalDay.textContent = now.getDate();
+        // Calendar icon is now a static emoji 📅 (no dynamic JS needed)
 
 
         // km from Firebase (dailySummaries + live todayKm)
@@ -3206,7 +3315,7 @@ if ('serviceWorker' in navigator) {
             kmRef.once('value', function(snap) {
                 var summaries = snap.val() || {};
                 var totalKm = 0;
-                Object.values(summaries).forEach(function(s) { totalKm += (s.km || 0); });
+                Object.values(summaries).forEach(function(s) { totalKm += (s.odometerKm != null ? s.odometerKm : (s.km || 0)); });
                 // Add live todayKm
                 var liveRef = db.ref('trips/' + FAMILY_ID + '/live');
                 liveRef.once('value', function(liveSnap) {
@@ -5721,7 +5830,7 @@ if ('serviceWorker' in navigator) {
         dailySummRef.child(today).once('value', function(dsSnap) {
           var ds = dsSnap.val();
           if (ds) {
-            entryData.kmDriven = ds.km || ds.totalKm || 0;
+            entryData.kmDriven = ds.odometerKm != null ? ds.odometerKm : (ds.km || ds.totalKm || 0);
           }
 
           // Try to get activities for today
@@ -5776,7 +5885,7 @@ if ('serviceWorker' in navigator) {
     pendingRef.once('value', function(snap) {
       var users = snap.val();
       if (!users || Object.keys(users).length === 0) {
-        pendingListEl.innerHTML = '<p style="color:#999;">' + (isEN ? 'No pending requests' : 'Nessuna richiesta in attesa') + '</p>';
+        pendingListEl.innerHTML = '<p style="color:var(--text-muted);">' + (isEN ? 'No pending requests' : 'Nessuna richiesta in attesa') + '</p>';
       } else {
         var html = '<h4>' + (isEN ? 'Pending requests' : 'Richieste in attesa') + '</h4>';
         Object.keys(users).forEach(function(uid) {
@@ -5824,7 +5933,7 @@ if ('serviceWorker' in navigator) {
     approvedRef.once('value', function(snap) {
       var users = snap.val();
       if (!users || Object.keys(users).length === 0) {
-        approvedListEl.innerHTML = '<p style="color:#999;">' + (isEN ? 'No approved users yet' : 'Nessun utente approvato') + '</p>';
+        approvedListEl.innerHTML = '<p style="color:var(--text-muted);">' + (isEN ? 'No approved users yet' : 'Nessun utente approvato') + '</p>';
       } else {
         var html = '<h4>' + (isEN ? 'Approved users' : 'Utenti approvati') + '</h4>';
         Object.keys(users).forEach(function(uid) {

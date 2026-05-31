@@ -178,7 +178,7 @@
         <button class="menu-close" id="menuClose">✕</button>
     </div>
     <a class="menu-item active" data-tab="home"><span class="menu-icon">🏠</span><span class="menu-text">Home</span></a>
-    <a class="menu-item" data-tab="giorni"><span class="menu-icon">🗺️</span><span class="menu-text">Itinerary</span></a>
+    <a class="menu-item" data-tab="giorni"><span class="menu-icon">📅</span><span class="menu-text">Itinerary</span></a>
     <a class="menu-item" data-tab="posizione"><span class="menu-icon"><img src="./icons/icon-posizione.png" alt="" width="22" height="22" style="vertical-align:middle;"></span><span class="menu-text">On the road</span></a>
     <a class="menu-item" data-tab="diario"><span class="menu-icon">📖</span><span class="menu-text">Journal</span></a>
     <div class="menu-divider"></div>
@@ -195,7 +195,7 @@
 <!-- ─── Bottom Tab Bar ─── -->
 <div class="bottom-bar" id="bottomBar" role="tablist" aria-label="Main navigation">
     <button class="bottom-tab active" data-tab="home"><span class="tab-icon">🏠</span><span class="tab-label">Home</span></button>
-    <button class="bottom-tab" data-tab="giorni"><span class="tab-icon tab-cal-icon"><img src="./icons/icon-giorni.png" alt="" width="22" height="22"><span class="tab-cal-day" id="tab-cal-day"></span></span><span class="tab-label">Itinerary</span></button>
+    <button class="bottom-tab" data-tab="giorni"><span class="tab-icon">📅</span><span class="tab-label">Itinerary</span></button>
     <button class="bottom-tab" data-tab="posizione"><span class="tab-icon"><img src="./icons/icon-posizione.png" alt="" width="22" height="22" style="vertical-align:middle;"></span><span class="tab-label">On the road</span></button>
     <button class="bottom-tab" data-tab="diario"><span class="tab-icon">📖</span><span class="tab-label">Journal</span></button>
     <button class="bottom-tab" data-tab="cibo"><span class="tab-icon">🍝</span><span class="tab-label">Food</span></button>
@@ -295,7 +295,7 @@
     <!-- ⭐ Essentials -->
     <div class="hg-group hg-essential">
         <a class="home-card hc-highlight" data-tab="giorni" href="#" onclick="event.preventDefault(); switchTabFromHome('giorni');">
-            <span class="hc-icon hc-icon-calendar"><img src="./icons/icon-giorni.png" alt="" width="48" height="48"><span class="calendar-month" id="calendar-month"></span><span class="calendar-day-num" id="calendar-day-num"></span></span>
+            <span class="hc-icon">📅</span>
             <span class="hc-label">Itinerary</span>
         </a>
         <a class="home-card hc-highlight" data-tab="posizione" href="#" onclick="event.preventDefault(); switchTabFromHome('posizione');">
@@ -9285,7 +9285,7 @@
 </div>
 
 <!-- ─── MAP (below cards) ─── -->
-<div id="pos-map" style="width:100%;height:350px;border-radius:12px;border:1px solid var(--border);margin:16px 0;background:var(--bg-alt);position:relative;">
+<div id="pos-map" style="width:100%;height:min(350px, calc(100svh - 200px));border-radius:12px;border:1px solid var(--border);margin:16px 0;background:var(--bg-alt);position:relative;">
     <div class="map-spinner" id="mapSpinner"></div>
     <button id="pos-center-me" class="pos-map-btn" title="Center on me" aria-label="Center on me">🧑</button>
     <button id="pos-center-van" class="pos-map-btn pos-map-btn-right" title="Center on van" aria-label="Center on van">🚐</button>
