@@ -3380,3 +3380,32 @@ table { max-width: 100%; }
     .route-map-container.open { max-height: 360px; }
     .route-map { height: 340px; }
 }
+
+/* ─── Fullscreen Map Overlay ─── */
+.map-fullscreen-btn {
+    position: absolute; top: 10px; right: 10px; z-index: 1002;
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px;
+    width: 34px; height: 34px; font-size: 16px; cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15); display: flex; align-items: center; justify-content: center;
+    transition: transform 0.2s, box-shadow 0.2s; line-height: 1;
+}
+.map-fullscreen-btn:active { transform: scale(0.9); }
+.map-fs-overlay {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    z-index: 10000; background: var(--bg); display: flex; flex-direction: column;
+    animation: mapFsIn 0.25s ease;
+}
+@keyframes mapFsIn { from { opacity: 0; } to { opacity: 1; } }
+.map-fs-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 16px; background: var(--bg-card); border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+}
+.map-fs-header h3 { margin: 0; font-size: 16px; font-weight: 700; }
+.map-fs-close {
+    background: none; border: none; font-size: 22px; cursor: pointer;
+    color: var(--text); padding: 4px 8px; border-radius: 8px;
+}
+.map-fs-close:hover { background: var(--bg-alt); }
+.map-fs-body { flex: 1; position: relative; }
+.map-fs-body .leaflet-container { width: 100%; height: 100%; border-radius: 0; border: none; }

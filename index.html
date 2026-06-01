@@ -43,7 +43,7 @@
     <link rel="apple-touch-icon" sizes="152x152" href="./icon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="./icon.png">
     <link rel="apple-touch-icon" sizes="167x167" href="./icon.png">
-    <title>Viaggio Europa 2026 — V10.3</title>
+    <title>Viaggio Europa 2026 — V10.5</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <link rel="stylesheet" href="style.css">
 <!-- Firebase SDK (compat mode for single-file app) -->
@@ -57,7 +57,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = '10.3';
+  var EXPECTED_VERSION = '10.5';
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
   var r = false;
@@ -369,6 +369,7 @@
 <a href="#sintesi">📋 Sintesi</a>
 <a href="#curiosita-dati-geografici">🌍 Curiosità</a>
 <a href="#legenda">🏷️ Legenda</a>
+<a href="#mappa">🗺️ Mappa</a>
 <a href="#itinerario-54-giorni">🌟 Itinerario</a>
 </div></div>
 <h2 id="sintesi">📋 Sintesi — Equipaggio e Mezzo</h2>
@@ -9850,6 +9851,7 @@
     <div class="map-spinner" id="mapSpinner"></div>
     <button id="pos-center-me" class="pos-map-btn" title="Centra su di me" aria-label="Centra su di me">🧑</button>
     <button id="pos-center-van" class="pos-map-btn pos-map-btn-right" title="Centra sul furgone" aria-label="Centra sul furgone">🚐</button>
+    <button id="pos-map-fullscreen" class="map-fullscreen-btn" title="Schermo intero" aria-label="Schermo intero">⛶</button>
 </div>
 
 <!-- ─── METEO PROSSIME TAPPE ─── -->

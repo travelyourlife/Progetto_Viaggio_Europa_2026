@@ -170,58 +170,68 @@ var isStandalonePWA = (window.matchMedia && window.matchMedia('(display-mode: st
                      (document.referrer.includes('android-app://'));
 
 // ─── Unified Google Sign-In (works in browser, PWA standalone, all platforms) ───
+// Strategy: ALWAYS try popup first (works on Chrome Android PWA too).
+// Only fallback to redirect if popup is truly unsupported.
+// signInWithRedirect on Android PWA opens external Chrome and never returns to the PWA.
 function doGoogleSignIn(successCb) {
   if (typeof firebase === 'undefined' || !firebase.auth) return;
   var provider = new firebase.auth.GoogleAuthProvider();
 
   // Ensure LOCAL persistence so auth survives page reloads & PWA restarts
   firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(function() {
-    if (isStandalonePWA) {
-      // In standalone PWA: signInWithRedirect is the only reliable method
-      try { localStorage.setItem('firebase_redirect_pending', '1'); } catch(e) {}
-      firebase.auth().signInWithRedirect(provider);
-    } else {
-      // In browser: try popup first, fallback to redirect
-      firebase.auth().signInWithPopup(provider).then(function(result) {
-        if (successCb) successCb(result.user);
-      }).catch(function(err) {
-        if (err.code === 'auth/popup-blocked' || err.code === 'auth/cancelled-popup-request' || err.code === 'auth/operation-not-supported-in-this-environment') {
-          try { localStorage.setItem('firebase_redirect_pending', '1'); } catch(e) {}
-          firebase.auth().signInWithRedirect(provider);
-        } else if (err.code !== 'auth/popup-closed-by-user') {
-          if (window.showToast) showToast((isEN ? 'Login error: ' : 'Errore login: ') + err.message, 'error');
-        }
-      });
-    }
+    attemptSignIn(provider, successCb);
   }).catch(function(err) {
     console.warn('[Auth] setPersistence error:', err);
-    // Fallback: try sign-in anyway
-    if (isStandalonePWA) {
+    attemptSignIn(provider, successCb);
+  });
+}
+
+function attemptSignIn(provider, successCb) {
+  // Always try popup first — it works on Chrome Android, Chrome desktop, Safari iOS
+  firebase.auth().signInWithPopup(provider).then(function(result) {
+    if (result && result.user) {
+      console.info('[Auth] Popup login success:', result.user.email);
+      if (successCb) successCb(result.user);
+    }
+  }).catch(function(err) {
+    console.warn('[Auth] Popup sign-in error:', err.code, err.message);
+    if (err.code === 'auth/popup-blocked' ||
+        err.code === 'auth/cancelled-popup-request' ||
+        err.code === 'auth/operation-not-supported-in-this-environment') {
+      // Popup truly not supported — fallback to redirect (rare: some in-app browsers)
+      console.info('[Auth] Falling back to signInWithRedirect');
+      try { localStorage.setItem('firebase_redirect_pending', '1'); } catch(e) {}
       firebase.auth().signInWithRedirect(provider);
+    } else if (err.code === 'auth/popup-closed-by-user') {
+      // User closed the popup — no error needed
+      console.info('[Auth] User closed popup');
+    } else if (err.code === 'auth/network-request-failed') {
+      if (window.showToast) showToast(isEN ? 'Network error. Check your connection.' : 'Errore di rete. Controlla la connessione.', 'error');
     } else {
-      firebase.auth().signInWithPopup(provider).then(function(result) {
-        if (successCb) successCb(result.user);
-      }).catch(function() {});
+      // Show error to user so they know something went wrong
+      var msg = err.message || err.code || 'Unknown error';
+      if (window.showToast) showToast((isEN ? 'Login error: ' : 'Errore login: ') + msg, 'error');
     }
   });
 }
 
-// ─── Handle redirect result (runs ALWAYS on page load for PWA/redirect flows) ───
+// ─── Handle redirect result (fallback for rare cases where popup is unavailable) ───
 (function() {
   try {
     if (typeof firebase === 'undefined' || !firebase.auth) return;
-    // Always call getRedirectResult — on Android PWA sessionStorage may be lost
-    // between the redirect and the return, so we cannot rely on a flag alone
     firebase.auth().getRedirectResult().then(function(result) {
       if (result && result.user) {
         console.info('[Auth] Redirect login success:', result.user.email);
         try { localStorage.removeItem('firebase_redirect_pending'); } catch(e) {}
+        if (window.showToast) showToast((isEN ? 'Welcome, ' : 'Benvenuto, ') + (result.user.displayName || result.user.email), 'success');
       }
     }).catch(function(err) {
-      if (err.code !== 'auth/credential-already-in-use') {
-        console.warn('[Auth] Redirect result error:', err.code, err.message);
-      }
+      console.warn('[Auth] Redirect result error:', err.code, err.message);
       try { localStorage.removeItem('firebase_redirect_pending'); } catch(e) {}
+      // Show error to user if redirect failed
+      if (err.code && err.code !== 'auth/credential-already-in-use') {
+        if (window.showToast) showToast((isEN ? 'Login error: ' : 'Errore login: ') + (err.message || err.code), 'error');
+      }
     });
   } catch(e) { console.warn('[Auth] Redirect check error:', e); }
 })();
@@ -242,7 +252,21 @@ function checkOwnerStatus() {
       }
       window.dispatchEvent(new CustomEvent('authStateChanged', { detail: { user: user, isOwner: isOwner } }));
 
-      // ─── Owner: check for pending user requests (badge + toast) ───
+      // ─── Owner: save profile to approvedUsers (so Gestisci shows name, not UID) ───
+      if (isOwner && user && typeof firebase !== 'undefined' && firebase.database) {
+        firebase.database().ref('trips/' + FAMILY_ID + '/approvedUsers/' + user.uid).update({
+          email: user.email || '',
+          displayName: user.displayName || '',
+          photoURL: user.photoURL || '',
+          approvedAt: firebase.database.ServerValue.TIMESTAMP
+        }).then(function() {
+          console.info('[Auth] Owner profile saved to approvedUsers');
+        }).catch(function(e) {
+          console.warn('[Auth] Could not save owner profile:', e.message);
+        });
+      }
+
+      // ─── Owner: check for pending user requests (badge + toast + push) ───
       if (isOwner && typeof firebase !== 'undefined' && firebase.database) {
         // Realtime listener: notify owner whenever a new pending request arrives
         var _lastPendingCount = 0;
@@ -265,6 +289,16 @@ function checkOwnerStatus() {
                 showToast(msg, 'info', 6000);
               }
             }, 1000);
+            // Push notification to owner (even if app is closed)
+            if (window.queuePushNotification) {
+              queuePushNotification('access_request', {
+                title: isEN ? '👥 New access request' : '👥 Nuova richiesta di accesso',
+                body: isEN ? count + ' user(s) waiting for approval' : count + ' utente/i in attesa di approvazione',
+                target: 'owner',
+                url: './#tab-diario',
+                tag: 'access-request'
+              });
+            }
           }
           _lastPendingCount = count;
         });
@@ -437,6 +471,70 @@ const places = itinerario.map(function(t) {
 // ─── ROUTE MAP (Collapsible in Itinerario tab) ───
 // ═══════════════════════════════════════════════════════════════
 
+// ─── Global fullscreen map helper ───
+function openMapFullscreen(mapInstance, title) {
+    if (!mapInstance) return;
+    var overlay = document.createElement('div');
+    overlay.className = 'map-fs-overlay';
+    overlay.innerHTML = '<div class="map-fs-header">' +
+        '<h3>' + (title || (isEN ? 'Map' : 'Mappa')) + '</h3>' +
+        '<button class="map-fs-close" aria-label="Close">&times;</button>' +
+    '</div>' +
+    '<div class="map-fs-body"><div id="map-fs-container" style="width:100%;height:100%;"></div></div>';
+    document.body.appendChild(overlay);
+    document.body.style.overflow = 'hidden';
+
+    // Clone the map into fullscreen
+    var fsMapDiv = overlay.querySelector('#map-fs-container');
+    var center = mapInstance.getCenter();
+    var zoom = mapInstance.getZoom();
+
+    var fsMap = L.map(fsMapDiv, {
+        zoomControl: true,
+        attributionControl: false,
+        scrollWheelZoom: true,
+        dragging: true,
+        tap: true
+    }).setView(center, zoom);
+
+    // Copy tile layer
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        maxZoom: 19
+    }).addTo(fsMap);
+
+    // Copy all layers (markers, polylines) from original map
+    mapInstance.eachLayer(function(layer) {
+        if (layer instanceof L.TileLayer) return; // skip tile layer (already added)
+        try {
+            var cloned = null;
+            if (layer instanceof L.CircleMarker && !(layer instanceof L.Circle)) {
+                cloned = L.circleMarker(layer.getLatLng(), layer.options);
+                if (layer.getPopup()) cloned.bindPopup(layer.getPopup().getContent(), layer.getPopup().options);
+            } else if (layer instanceof L.Marker) {
+                cloned = L.marker(layer.getLatLng(), { icon: layer.getIcon ? layer.getIcon() : layer.options.icon });
+                if (layer.getPopup()) cloned.bindPopup(layer.getPopup().getContent(), layer.getPopup().options);
+            } else if (layer instanceof L.Polyline) {
+                cloned = L.polyline(layer.getLatLngs(), layer.options);
+            }
+            if (cloned) cloned.addTo(fsMap);
+        } catch(e) { /* skip non-clonable layers */ }
+    });
+
+    setTimeout(function() { fsMap.invalidateSize(); }, 100);
+
+    function closeFs() {
+        fsMap.remove();
+        overlay.remove();
+        document.body.style.overflow = '';
+        // Refresh original map
+        setTimeout(function() { mapInstance.invalidateSize(); }, 100);
+    }
+    overlay.querySelector('.map-fs-close').addEventListener('click', closeFs);
+    // Escape key
+    function onEsc(e) { if (e.key === 'Escape') { closeFs(); document.removeEventListener('keydown', onEsc); } }
+    document.addEventListener('keydown', onEsc);
+}
+
 function initRouteMap() {
     var toggle = document.getElementById('routeMapToggle');
     var container = document.getElementById('routeMapContainer');
@@ -574,6 +672,20 @@ function initRouteMap() {
 
         // Add small zoom control bottom-right
         L.control.zoom({ position: 'bottomright' }).addTo(routeMapInstance);
+
+        // Add fullscreen button
+        var fsBtn = document.createElement('button');
+        fsBtn.className = 'map-fullscreen-btn';
+        fsBtn.innerHTML = '⛶';
+        fsBtn.title = isEN ? 'Fullscreen' : 'Schermo intero';
+        fsBtn.setAttribute('aria-label', fsBtn.title);
+        fsBtn.style.position = 'absolute';
+        mapDiv.style.position = 'relative';
+        mapDiv.appendChild(fsBtn);
+        fsBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            openMapFullscreen(routeMapInstance, isEN ? 'Route Map' : 'Mappa Percorso');
+        });
     }
 }
 
@@ -2392,6 +2504,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
+        // ─── Fullscreen map (pos-map) ───
+        var posFullscreenBtn = document.getElementById('pos-map-fullscreen');
+        if (posFullscreenBtn) {
+            posFullscreenBtn.addEventListener('click', function() {
+                initMap();
+                openMapFullscreen(map, isEN ? 'Live Map' : 'Mappa Live');
+            });
+        }
+
         // ─── Settings: Day Override ───
         var dayPrev = document.getElementById('pos-day-prev');
         var dayNext = document.getElementById('pos-day-next');
@@ -4085,21 +4206,23 @@ if ('serviceWorker' in navigator) {
 // Avatar click-to-enlarge (Home hero card)
 // ═══════════════════════════════════════════════════════════════
 (function() {
-    var avatar = document.querySelector('.hero-card-avatar');
-    if (!avatar) return;
-    avatar.style.cursor = 'pointer';
-    avatar.addEventListener('click', function() {
-        var overlay = document.createElement('div');
-        overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;z-index:99999;animation:fadeIn .2s ease;cursor:pointer;';
-        var img = document.createElement('img');
-        img.src = avatar.src;
-        img.style.cssText = 'max-width:90vw;max-height:90vh;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,0.5);animation:scaleIn .3s ease;';
-        overlay.appendChild(img);
-        overlay.addEventListener('click', function() {
-            overlay.style.animation = 'fadeOut .2s ease forwards';
-            setTimeout(function() { overlay.remove(); }, 200);
+    var avatars = document.querySelectorAll('.hero-card-avatar');
+    if (!avatars.length) return;
+    avatars.forEach(function(avatar) {
+        avatar.style.cursor = 'pointer';
+        avatar.addEventListener('click', function() {
+            var overlay = document.createElement('div');
+            overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;z-index:99999;animation:fadeIn .2s ease;cursor:pointer;';
+            var img = document.createElement('img');
+            img.src = avatar.src;
+            img.style.cssText = 'max-width:90vw;max-height:90vh;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,0.5);animation:scaleIn .3s ease;';
+            overlay.appendChild(img);
+            overlay.addEventListener('click', function() {
+                overlay.style.animation = 'fadeOut .2s ease forwards';
+                setTimeout(function() { overlay.remove(); }, 200);
+            });
+            document.body.appendChild(overlay);
         });
-        document.body.appendChild(overlay);
     });
 })();
 
@@ -4644,6 +4767,136 @@ if ('serviceWorker' in navigator) {
       'info',
       function() { var g = document.querySelector('[data-tab="tab-giorni"]'); if(g) g.click(); }
     );
+  }
+
+  // ─── 7) Pre-trip checklist reminders (vignette, traghetti, etc.) ───
+  if (diffToStart > 0 && diffToStart <= 30) {
+    // Check uncompleted Piano checklist items
+    var pianoChecks = document.querySelectorAll('#tab-piano input[type="checkbox"][data-idx]');
+    var uncheckedPiano = [];
+    pianoChecks.forEach(function(cb) {
+      if (!cb.checked) {
+        var li = cb.closest('li');
+        if (li) uncheckedPiano.push(li.textContent.trim().substring(0, 60));
+      }
+    });
+    if (uncheckedPiano.length > 0) {
+      var pianoText = isEN
+        ? '<strong>' + uncheckedPiano.length + ' task' + (uncheckedPiano.length > 1 ? 's' : '') + '</strong> still to complete before departure!'
+        : '<strong>' + uncheckedPiano.length + ' attività</strong> ancora da completare prima della partenza!';
+      addNotif('piano-check-' + todayStr, '📋', pianoText, 'warning',
+        function() { var p = document.querySelector('[data-tab="tab-piano"]'); if(p) p.click(); }
+      );
+
+      // Push notification for owner at 7 and 3 days before departure
+      if ((diffToStart === 7 || diffToStart === 3) && window.queuePushNotification) {
+        queuePushNotification('checklist_reminder', {
+          title: isEN ? '📋 ' + uncheckedPiano.length + ' tasks to complete!' : '📋 ' + uncheckedPiano.length + ' attività da completare!',
+          body: uncheckedPiano.slice(0, 3).join(', ') + (uncheckedPiano.length > 3 ? '...' : ''),
+          target: 'owner',
+          url: './#tab-piano',
+          tag: 'checklist-' + todayStr
+        });
+      }
+    }
+  }
+
+  // ─── 8) Countdown push notifications (7, 3, 1 day before) ───
+  if (window.queuePushNotification) {
+    var countdownKey = 'countdown_push_' + todayStr;
+    if (!sessionStorage.getItem(countdownKey)) {
+      if (diffToStart === 7) {
+        queuePushNotification('countdown', {
+          title: isEN ? '🎉 7 days to go!' : '🎉 Mancano 7 giorni!',
+          body: isEN ? 'One week until the adventure begins! Check your packing list.' : 'Una settimana alla partenza! Controlla lo zaino.',
+          target: 'family',
+          url: './#tab-zaino',
+          tag: 'countdown-7'
+        });
+        sessionStorage.setItem(countdownKey, '1');
+      } else if (diffToStart === 3) {
+        queuePushNotification('countdown', {
+          title: isEN ? '⏳ 3 days to go!' : '⏳ Mancano 3 giorni!',
+          body: isEN ? 'Almost there! Final preparations time.' : 'Ci siamo quasi! Ultimi preparativi.',
+          target: 'family',
+          url: './#tab-piano',
+          tag: 'countdown-3'
+        });
+        sessionStorage.setItem(countdownKey, '1');
+      } else if (diffToStart === 1) {
+        queuePushNotification('countdown', {
+          title: isEN ? '🚀 Tomorrow you leave!' : '🚀 Domani si parte!',
+          body: isEN ? 'Check your backpack one last time. The adventure awaits!' : 'Controlla lo zaino un\'ultima volta. L\'avventura aspetta!',
+          target: 'family',
+          url: './#tab-zaino',
+          tag: 'countdown-1'
+        });
+        sessionStorage.setItem(countdownKey, '1');
+      }
+    }
+  }
+
+  // ─── 9) Zaino push notification (3 days before, if items unchecked) ───
+  if (diffToStart <= 3 && diffToStart >= 1 && window.queuePushNotification) {
+    var zainoAllCbs = document.querySelectorAll('#tab-zaino input[type="checkbox"][data-idx]');
+    var zainoUnchecked = 0;
+    zainoAllCbs.forEach(function(cb) { if (!cb.checked) zainoUnchecked++; });
+    if (zainoUnchecked > 10) {
+      var zainoPushKey = 'zaino_push_' + todayStr;
+      if (!sessionStorage.getItem(zainoPushKey)) {
+        queuePushNotification('zaino_reminder', {
+          title: isEN ? '🎒 ' + zainoUnchecked + ' items unchecked!' : '🎒 ' + zainoUnchecked + ' oggetti non spuntati!',
+          body: isEN ? 'Your backpack list needs attention before departure.' : 'Lo zaino ha bisogno di attenzione prima della partenza.',
+          target: 'owner',
+          url: './#tab-zaino',
+          tag: 'zaino-' + todayStr
+        });
+        sessionStorage.setItem(zainoPushKey, '1');
+      }
+    }
+  }
+
+  // ─── 10) Next stage evening reminder (during trip, after 19:00) ───
+  if (tripDay >= 0 && tripDay < TRIP_DAYS - 1) {
+    var nowHour = new Date().getHours();
+    var tomorrow = tripDay + 1;
+    if (nowHour >= 19 && itinerario[tomorrow]) {
+      var nextData = itinerario[tomorrow];
+      var nextRoute = isEN ? nextData.tragittoEn : nextData.tragitto;
+      var nextKm = nextData.km ? nextData.km + ' km' : '';
+      var nextOre = isEN ? (nextData.oreEn || nextData.ore) : nextData.ore;
+      var nextText = isEN
+        ? '<strong>Tomorrow:</strong> ' + nextRoute + (nextKm ? ' (' + nextKm + ', ' + nextOre + ')' : '')
+        : '<strong>Domani:</strong> ' + nextRoute + (nextKm ? ' (' + nextKm + ', ' + nextOre + ')' : '');
+      addNotif('next-stage-' + todayStr, '🛣️', nextText, 'info',
+        function() {
+          var giorniLink = document.querySelector('[data-tab="tab-giorni"]');
+          if (giorniLink) giorniLink.click();
+          setTimeout(function() {
+            var target = document.getElementById(nextData.id);
+            if (target) {
+              if (!target.classList.contains('open')) target.click();
+              target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+          }, 200);
+        }
+      );
+
+      // Push notification for next stage (once per evening)
+      if (window.queuePushNotification) {
+        var nextPushKey = 'next_stage_push_' + todayStr;
+        if (!sessionStorage.getItem(nextPushKey)) {
+          queuePushNotification('next_stage', {
+            title: isEN ? '🛣️ Tomorrow: ' + nextRoute : '🛣️ Domani: ' + nextRoute,
+            body: nextKm ? nextKm + ' — ' + nextOre : (isEN ? 'Check the details' : 'Controlla i dettagli'),
+            target: 'family',
+            url: './#tab-giorni',
+            tag: 'next-stage-' + todayStr
+          });
+          sessionStorage.setItem(nextPushKey, '1');
+        }
+      }
+    }
   }
 
 })();
@@ -7025,12 +7278,24 @@ if ('serviceWorker' in navigator) {
       if (window.showToast) showToast(isEN ? 'Microphone not supported' : 'Microfono non supportato', 'error');
       return;
     }
+    // Inject pulse animation if not already present
+    if (!document.getElementById('audio-rec-pulse-style')) {
+      var pulseStyle = document.createElement('style');
+      pulseStyle.id = 'audio-rec-pulse-style';
+      pulseStyle.textContent = '@keyframes audioRecPulse{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(255,68,68,0.5);}50%{transform:scale(1.06);box-shadow:0 0 0 16px rgba(255,68,68,0);}}';
+      document.head.appendChild(pulseStyle);
+    }
+
     var overlay = document.createElement('div');
     overlay.className = 'diario-edit-overlay';
     overlay.innerHTML = '<div class="diario-edit-modal" style="text-align:center;">' +
       '<h3>' + (isEN ? '🎤 Record Voice Note' : '🎤 Registra Nota Vocale') + '</h3>' +
-      '<p id="audio-rec-status" style="font-size:14px;color:var(--text-muted);">' + (isEN ? 'Tap to start recording' : 'Tocca per iniziare') + '</p>' +
-      '<button id="audio-rec-toggle" style="width:80px;height:80px;border-radius:50%;border:none;background:var(--accent);color:#fff;font-size:32px;cursor:pointer;margin:16px auto;display:block;">⏺</button>' +
+      '<p id="audio-rec-status" style="font-size:14px;color:var(--text-muted);min-height:20px;">' + (isEN ? 'Tap the microphone to start' : 'Tocca il microfono per iniziare') + '</p>' +
+      '<div style="position:relative;width:100px;height:100px;margin:16px auto;">' +
+        '<div id="audio-rec-ring" style="position:absolute;top:0;left:0;width:100%;height:100%;border-radius:50%;border:3px solid var(--accent);transition:all 0.3s;"></div>' +
+        '<button id="audio-rec-toggle" style="position:absolute;top:5px;left:5px;width:90px;height:90px;border-radius:50%;border:none;background:var(--accent);color:#fff;font-size:36px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.3s;">🎙️</button>' +
+      '</div>' +
+      '<div id="audio-rec-timer" style="font-size:28px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--text);margin:8px 0;display:none;">0:00</div>' +
       '<div id="audio-rec-player" style="display:none;margin:12px 0;"></div>' +
       '<div class="diario-edit-actions">' +
         '<button class="diario-edit-cancel">' + (isEN ? 'Cancel' : 'Annulla') + '</button>' +
@@ -7040,27 +7305,64 @@ if ('serviceWorker' in navigator) {
     document.body.appendChild(overlay);
 
     var toggleBtn = overlay.querySelector('#audio-rec-toggle');
+    var ringEl = overlay.querySelector('#audio-rec-ring');
     var statusEl = overlay.querySelector('#audio-rec-status');
+    var timerEl = overlay.querySelector('#audio-rec-timer');
     var playerEl = overlay.querySelector('#audio-rec-player');
     var saveBtn = overlay.querySelector('#audio-rec-save');
     var _recorder = null, _chunks = [], _blob = null, _recording = false;
+    var _timerInterval = null, _seconds = 0;
 
-    overlay.querySelector('.diario-edit-cancel').addEventListener('click', function() {
+    function updateTimer() {
+      _seconds++;
+      var m = Math.floor(_seconds / 60);
+      var s = _seconds % 60;
+      timerEl.textContent = m + ':' + (s < 10 ? '0' : '') + s;
+    }
+
+    function stopTimer() {
+      if (_timerInterval) { clearInterval(_timerInterval); _timerInterval = null; }
+    }
+
+    function cleanup() {
+      stopTimer();
       if (_recorder && _recorder.state !== 'inactive') _recorder.stop();
       overlay.remove();
-    });
-    overlay.addEventListener('click', function(e) { if (e.target === overlay) { if (_recorder && _recorder.state !== 'inactive') _recorder.stop(); overlay.remove(); } });
+    }
+
+    overlay.querySelector('.diario-edit-cancel').addEventListener('click', cleanup);
+    overlay.addEventListener('click', function(e) { if (e.target === overlay) cleanup(); });
 
     toggleBtn.addEventListener('click', function() {
       if (_recording) {
+        // STATE: RECORDING → DONE
         _recorder.stop();
         _recording = false;
-        toggleBtn.textContent = '\u23fa';
+        stopTimer();
+        toggleBtn.innerHTML = '🎙️';
+        toggleBtn.style.background = 'var(--success)';
+        toggleBtn.style.animation = 'none';
+        ringEl.style.borderColor = 'var(--success)';
+        statusEl.textContent = isEN ? 'Listen and save, or record again' : 'Riascolta e salva, o registra di nuovo';
+      } else if (_blob) {
+        // STATE: DONE → RE-RECORD (reset)
+        _blob = null;
+        _seconds = 0;
+        timerEl.textContent = '0:00';
+        playerEl.style.display = 'none';
+        playerEl.innerHTML = '';
+        saveBtn.disabled = true;
+        toggleBtn.innerHTML = '🎙️';
         toggleBtn.style.background = 'var(--accent)';
-        statusEl.textContent = isEN ? 'Recording saved' : 'Registrazione salvata';
+        toggleBtn.style.animation = 'none';
+        ringEl.style.borderColor = 'var(--accent)';
+        statusEl.textContent = isEN ? 'Tap the microphone to start' : 'Tocca il microfono per iniziare';
+        timerEl.style.display = 'none';
       } else {
+        // STATE: READY → RECORDING
         navigator.mediaDevices.getUserMedia({ audio: true }).then(function(stream) {
           _chunks = [];
+          _seconds = 0;
           _recorder = new MediaRecorder(stream, { mimeType: 'audio/webm;codecs=opus' });
           _recorder.ondataavailable = function(e) { if (e.data.size > 0) _chunks.push(e.data); };
           _recorder.onstop = function() {
@@ -7073,9 +7375,14 @@ if ('serviceWorker' in navigator) {
           };
           _recorder.start();
           _recording = true;
-          toggleBtn.textContent = '\u23f9';
+          timerEl.style.display = '';
+          timerEl.textContent = '0:00';
+          _timerInterval = setInterval(updateTimer, 1000);
+          toggleBtn.innerHTML = '⏹';
           toggleBtn.style.background = '#ff4444';
-          statusEl.textContent = isEN ? 'Recording... tap to stop' : 'Registrazione... tocca per fermare';
+          toggleBtn.style.animation = 'audioRecPulse 1.5s ease-in-out infinite';
+          ringEl.style.borderColor = '#ff4444';
+          statusEl.textContent = isEN ? 'Recording...' : 'Registrazione in corso...';
         }).catch(function() {
           if (window.showToast) showToast(isEN ? 'Microphone access denied' : 'Accesso microfono negato', 'error');
         });
@@ -7363,17 +7670,34 @@ if ('serviceWorker' in navigator) {
           var u = users[uid];
           var name = '';
           var photo = '';
+          var isOwnerUser = (typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.indexOf(uid) !== -1);
           if (u && typeof u === 'object') {
             name = u.displayName || u.email || uid.substring(0, 8) + '...';
             photo = u.photoURL || '';
           } else {
-            // Old format: uid: true — show UID abbreviated
-            name = uid.substring(0, 12) + '...';
+            // Old format: uid: true — try to resolve from current auth user
+            if (firebaseUser && firebaseUser.uid === uid) {
+              name = firebaseUser.displayName || firebaseUser.email || uid.substring(0, 8) + '...';
+              photo = firebaseUser.photoURL || '';
+              // Migrate old format to new format in background
+              approvedRef.child(uid).set({
+                email: firebaseUser.email || '',
+                displayName: firebaseUser.displayName || '',
+                photoURL: firebaseUser.photoURL || '',
+                approvedAt: firebase.database.ServerValue.TIMESTAMP
+              });
+            } else {
+              name = uid.substring(0, 12) + '...';
+            }
           }
+          var roleBadge = isOwnerUser ? ' <span style="font-size:0.75em;background:var(--accent);color:#fff;padding:1px 6px;border-radius:8px;margin-left:4px;">Owner</span>' : '';
           html += '<div class="diario-user-row">';
           if (photo) html += '<img src="' + photo + '" class="diario-user-avatar">';
-          html += '<span class="diario-user-name">' + escapeHtml(name) + '</span>';
-          html += '<button class="diario-revoke-btn" data-uid="' + uid + '">\ud83d\udeab</button>';
+          html += '<span class="diario-user-name">' + escapeHtml(name) + roleBadge + '</span>';
+          // Don't show revoke button for owners
+          if (!isOwnerUser) {
+            html += '<button class="diario-revoke-btn" data-uid="' + uid + '">\ud83d\udeab</button>';
+          }
           html += '</div>';
         });
         approvedListEl.innerHTML = html;
