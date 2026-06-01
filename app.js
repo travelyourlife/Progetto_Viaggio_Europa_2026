@@ -3099,12 +3099,19 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }
 
-                // Double scroll: first immediate to approximate position, then after reflow for precision
+                // Scroll with offset to account for top bar + safe area
                 setTimeout(function() {
-                    scrollTarget.scrollIntoView({ behavior: 'auto', block: 'start' });
+                    var topBarH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--top-bar-height')) || 52;
+                    var safeTop = parseInt(getComputedStyle(document.documentElement).getPropertyValue('safe-area-inset-top')) || 0;
+                    var offset = topBarH + safeTop + 16;
+                    var rect = scrollTarget.getBoundingClientRect();
+                    var scrollY = window.pageYOffset + rect.top - offset;
+                    window.scrollTo({ top: scrollY, behavior: 'auto' });
                     // Second scroll after layout settles (accordion open/close reflow)
                     setTimeout(function() {
-                        scrollTarget.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        var rect2 = scrollTarget.getBoundingClientRect();
+                        var scrollY2 = window.pageYOffset + rect2.top - offset;
+                        window.scrollTo({ top: scrollY2, behavior: 'smooth' });
                     }, 200);
                 }, 50);
 
@@ -5156,10 +5163,42 @@ if ('serviceWorker' in navigator) {
     notifToggle.addEventListener('click', function() {
       var perm = typeof Notification !== 'undefined' ? Notification.permission : 'unsupported';
       if (perm === 'granted') {
-        // Already granted — explain how to disable
-        alert(isEN ? 'Notifications are active. To disable, go to your browser or OS notification settings for this site.' : 'Le notifiche sono attive. Per disattivarle, vai nelle impostazioni notifiche del browser o del sistema operativo per questo sito.');
+        // Already granted — show platform-specific instructions to disable
+        var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        var isAndroid = /Android/.test(navigator.userAgent);
+        var msgOn, msgOff;
+        if (isIOS) {
+          msgOn = isEN
+            ? '✅ Notifications active.\nTo disable: Settings → Notifications → find this app → toggle off.'
+            : '✅ Notifiche attive.\nPer disattivare: Impostazioni → Notifiche → cerca questa app → disattiva.';
+        } else if (isAndroid) {
+          msgOn = isEN
+            ? '✅ Notifications active.\nTo disable: long-press the app icon → App info → Notifications → toggle off. Or: Chrome → ⋮ → Settings → Notifications → find this site.'
+            : '✅ Notifiche attive.\nPer disattivare: tieni premuto sull\'icona → Info app → Notifiche → disattiva. Oppure: Chrome → ⋮ → Impostazioni → Notifiche → cerca questo sito.';
+        } else {
+          msgOn = isEN
+            ? '✅ Notifications active.\nTo disable: click the 🔒 icon in the address bar → Notifications → Block.'
+            : '✅ Notifiche attive.\nPer disattivare: clicca l\'icona 🔒 nella barra indirizzi → Notifiche → Blocca.';
+        }
+        showToast(msgOn, 'success', 8000);
       } else if (perm === 'denied') {
-        alert(isEN ? 'Notifications are blocked. To enable, go to your browser settings and allow notifications for this site.' : 'Le notifiche sono bloccate. Per abilitarle, vai nelle impostazioni del browser e consenti le notifiche per questo sito.');
+        var isIOS2 = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        var isAndroid2 = /Android/.test(navigator.userAgent);
+        var msgBlocked;
+        if (isIOS2) {
+          msgBlocked = isEN
+            ? '🚫 Notifications blocked.\nTo enable: Settings → Notifications → find this app → toggle on.'
+            : '🚫 Notifiche bloccate.\nPer abilitare: Impostazioni → Notifiche → cerca questa app → attiva.';
+        } else if (isAndroid2) {
+          msgBlocked = isEN
+            ? '🚫 Notifications blocked.\nTo enable: long-press the app icon → App info → Notifications → toggle on. Or: Chrome → ⋮ → Settings → Notifications → find this site → Allow.'
+            : '🚫 Notifiche bloccate.\nPer abilitare: tieni premuto sull\'icona → Info app → Notifiche → attiva. Oppure: Chrome → ⋮ → Impostazioni → Notifiche → cerca questo sito → Consenti.';
+        } else {
+          msgBlocked = isEN
+            ? '🚫 Notifications blocked.\nTo enable: click the 🔒 icon in the address bar → Notifications → Allow.'
+            : '🚫 Notifiche bloccate.\nPer abilitare: clicca l\'icona 🔒 nella barra indirizzi → Notifiche → Consenti.';
+        }
+        showToast(msgBlocked, 'error', 8000);
       } else if (perm === 'default') {
         // Clear dismissed flag and request permission
         localStorage.removeItem('push-banner-dismissed');
