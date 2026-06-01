@@ -7674,7 +7674,7 @@ if ('serviceWorker' in navigator) {
           entryData.stops = todayStops;
 
           // Get today's custom stops
-          var customRef = getFamilyRef('customCheckins');
+          var customRef = firebase.database().ref('trips/' + FAMILY_ID + '/customCheckins');
           var customPromise = customRef ? customRef.once('value') : Promise.resolve(null);
           customPromise.then(function(ccSnap) {
             var cc = ccSnap ? ccSnap.val() : null;
@@ -7687,7 +7687,7 @@ if ('serviceWorker' in navigator) {
             }
 
             // Get today's parking
-            var parkRef = getFamilyRef('parkings');
+            var parkRef = firebase.database().ref('trips/' + FAMILY_ID + '/parkings');
             var parkPromise = parkRef ? parkRef.once('value') : Promise.resolve(null);
             parkPromise.then(function(pSnap) {
               var parks = pSnap ? pSnap.val() : null;

@@ -1,12 +1,12 @@
 // ═══════════════════════════════════════════════════════════════
-// Service Worker — Viaggio Europa 2026 V1.11
+// Service Worker — Viaggio Europa 2026 V1.12
 // Strategy: Stale-While-Revalidate for own assets (instant load + background update)
 //           Cache-First for CDN (stable, versioned)
 //           Network-Only for API calls
 // ═══════════════════════════════════════════════════════════════
 'use strict';
 
-const CACHE_NAME = 'quo-vadis-v1.11';
+const CACHE_NAME = 'quo-vadis-v1.12';
 const IMAGE_CACHE_NAME = 'quo-vadis-images-v1';
 const IMAGE_CACHE_LIMIT = 80;
 const STATIC_ASSETS = [
@@ -35,6 +35,7 @@ const CDN_ASSETS = [
   'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js',
   'https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js',
   'https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js',
+  'https://www.gstatic.com/firebasejs/10.12.2/firebase-installations-compat.js',
   'https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js'
 ];
 
@@ -42,7 +43,7 @@ const CDN_ASSETS = [
 self.addEventListener('install', function(event) {
   event.waitUntil(
     caches.open(CACHE_NAME).then(function(cache) {
-      console.log('[SW] Installing v1.11 — caching all assets (CDN + Static)');
+      console.log('[SW] Installing v1.12 — caching all assets (CDN + Static)');
       return cache.addAll(CDN_ASSETS.concat(STATIC_ASSETS));
     }).then(function() {
       // Force immediate activation — don't wait for old SW to release
@@ -207,6 +208,7 @@ self.addEventListener('message', function(event) {
 
 importScripts('https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js');
 importScripts('https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js');
+importScripts('https://www.gstatic.com/firebasejs/10.12.2/firebase-installations-compat.js');
 
 firebase.initializeApp({
   apiKey: 'AIzaSyCuUYGu_5PlIlDbxwYsFYL5y4OmoGehzzg',
