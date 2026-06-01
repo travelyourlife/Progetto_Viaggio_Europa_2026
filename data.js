@@ -1,4 +1,4 @@
-use strict';
+'use strict';
 // ═══════════════════════════════════════════════════════════════
 // data.js — Unica fonte di verità per Viaggio Europa 2026 V4.8
 // ═══════════════════════════════════════════════════════════════
@@ -11,7 +11,7 @@ var TRIP_DAYS = 54;
 var TAB_ORDER = ['home', 'riepilogo', 'giorni', 'posizione', 'diario', 'cibo', 'cultura', 'attivita', 'piano', 'zaino', 'chat'];
 
 // Owner UIDs — only these can write to Firebase
-var OWNER_UIDS = ['RxlVlsfeaEeSwFUVYbKQujEsbBo1'];
+var OWNER_UIDS = ['RxlVlsfeaEeSwFUVYbKQujEsbBo1', 'QzXokvLGw2VgEAp4OTdgcmRTBPC3'];
 
 // ─── Itinerario completo (54 giorni) ───
 // Ogni entry alimenta: tabella, timeline, mappa, countdown
