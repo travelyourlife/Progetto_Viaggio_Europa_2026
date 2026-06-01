@@ -850,6 +850,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // ─── Version tag (v10.8) ───
+    (function() {
+        var vt = document.getElementById('versionTag');
+        if (vt) vt.textContent = 'v' + (window.__EXPECTED_VERSION__ || '?');
+    })();
+
     // ─── Tab switching ───
     var menuItems = document.querySelectorAll('.side-menu .menu-item[data-tab]');
     var bottomTabs = document.querySelectorAll('.bottom-tab[data-tab]');
@@ -4216,6 +4222,51 @@ if ('serviceWorker' in navigator) {
 })();
 
 // ═══════════════════════════════════════════════════════════════
+// v1.11: Collapsible tab-index (all except Itinerario which has none)
+(function() {
+    // Skip Itinerario (tab-giorni) and Backpack (tab-zaino) — they have no tab-index now
+    var collapsibleSections = ['tab-riepilogo', 'tab-cultura', 'tab-cibo', 'tab-attivita', 'tab-piano'];
+    var isIT = !document.documentElement.lang || document.documentElement.lang === 'it';
+    var toggleLabel = isIT ? '📑 Vai a sezione...' : '📑 Go to section...';
+
+    collapsibleSections.forEach(function(sectionId) {
+        var section = document.getElementById(sectionId);
+        if (!section) return;
+        var wrapper = section.querySelector('.tab-index-wrapper');
+        if (!wrapper) return;
+        var tabIndex = wrapper.querySelector('.tab-index');
+        if (!tabIndex) return;
+
+        // Mark as collapsible
+        wrapper.classList.add('collapsible');
+
+        // Create toggle button
+        var toggle = document.createElement('button');
+        toggle.className = 'tab-index-toggle';
+        toggle.innerHTML = '<span>' + toggleLabel + '</span><span class="chevron">▼</span>';
+        wrapper.insertBefore(toggle, tabIndex);
+
+        // Click handler
+        toggle.addEventListener('click', function() {
+            var isOpen = tabIndex.classList.contains('open');
+            tabIndex.classList.toggle('open');
+            toggle.classList.toggle('open');
+            if (window.haptic) window.haptic(10);
+        });
+
+        // Auto-close when a link inside is clicked
+        tabIndex.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', function() {
+                setTimeout(function() {
+                    tabIndex.classList.remove('open');
+                    toggle.classList.remove('open');
+                }, 300);
+            });
+        });
+    });
+})();
+
+// ═══════════════════════════════════════════════════════════════
 // Avatar click-to-enlarge (Home hero card)
 // ═══════════════════════════════════════════════════════════════
 (function() {
@@ -5040,21 +5091,24 @@ if ('serviceWorker' in navigator) {
   function showPushBanner() {
     if (Notification.permission !== 'default') return;
     if (document.getElementById('push-permission-banner')) return;
+    if (localStorage.getItem('push-banner-dismissed')) return;
     var banner = document.createElement('div');
     banner.id = 'push-permission-banner';
     banner.className = 'notif-banner notif-info';
     banner.style.cssText = 'cursor:pointer;animation:slideIn 0.3s ease;';
     banner.innerHTML = '<span class="notif-icon">🔔</span>' +
       '<span class="notif-text">' + (isEN ? 'Get trip updates?' : 'Vuoi ricevere aggiornamenti sul viaggio?') + '</span>' +
-      '<button class="notif-close" style="background:var(--accent);color:#fff;border:none;border-radius:6px;padding:4px 12px;font-weight:600;">' + (isEN ? 'Yes' : 'S\u00ec') + '</button>';
-    banner.querySelector('.notif-close').addEventListener('click', function(e) {
+      '<button class="notif-yes" style="background:var(--accent);color:#fff;border:none;border-radius:6px;padding:4px 12px;font-weight:600;">' + (isEN ? 'Yes' : 'S\u00ec') + '</button>' +
+      '<button class="notif-dismiss" style="background:none;border:none;color:var(--text-light);font-size:18px;padding:4px 8px;cursor:pointer;opacity:0.6;">✕</button>';
+    banner.querySelector('.notif-yes').addEventListener('click', function(e) {
       e.stopPropagation();
       requestPushPermission();
       banner.style.opacity = '0';
       setTimeout(function() { if (banner.parentNode) banner.remove(); }, 300);
     });
-    // Dismiss on tap anywhere else on banner
-    banner.addEventListener('click', function() {
+    banner.querySelector('.notif-dismiss').addEventListener('click', function(e) {
+      e.stopPropagation();
+      localStorage.setItem('push-banner-dismissed', '1');
       banner.style.opacity = '0';
       setTimeout(function() { if (banner.parentNode) banner.remove(); }, 300);
     });
@@ -5076,6 +5130,52 @@ if ('serviceWorker' in navigator) {
       if (savedToken) saveFcmToken(savedToken);
     }
   });
+
+  // ─── v1.11: Notification toggle in side menu ───
+  var notifToggle = document.getElementById('notif-toggle');
+  var notifStatusEl = document.getElementById('notif-status');
+  function updateNotifStatus() {
+    if (!notifStatusEl) return;
+    var perm = typeof Notification !== 'undefined' ? Notification.permission : 'unsupported';
+    if (perm === 'granted') {
+      notifStatusEl.textContent = isEN ? 'ON' : 'ON';
+      notifStatusEl.style.color = '#4caf50';
+    } else if (perm === 'denied') {
+      notifStatusEl.textContent = isEN ? 'Blocked' : 'Bloccate';
+      notifStatusEl.style.color = '#e53935';
+    } else if (perm === 'default') {
+      notifStatusEl.textContent = isEN ? 'OFF' : 'OFF';
+      notifStatusEl.style.color = 'var(--text-light)';
+    } else {
+      notifStatusEl.textContent = isEN ? 'N/A' : 'N/D';
+      notifStatusEl.style.color = 'var(--text-light)';
+    }
+  }
+  updateNotifStatus();
+  if (notifToggle) {
+    notifToggle.addEventListener('click', function() {
+      var perm = typeof Notification !== 'undefined' ? Notification.permission : 'unsupported';
+      if (perm === 'granted') {
+        // Already granted — explain how to disable
+        alert(isEN ? 'Notifications are active. To disable, go to your browser or OS notification settings for this site.' : 'Le notifiche sono attive. Per disattivarle, vai nelle impostazioni notifiche del browser o del sistema operativo per questo sito.');
+      } else if (perm === 'denied') {
+        alert(isEN ? 'Notifications are blocked. To enable, go to your browser settings and allow notifications for this site.' : 'Le notifiche sono bloccate. Per abilitarle, vai nelle impostazioni del browser e consenti le notifiche per questo sito.');
+      } else if (perm === 'default') {
+        // Clear dismissed flag and request permission
+        localStorage.removeItem('push-banner-dismissed');
+        requestPushPermission();
+        setTimeout(updateNotifStatus, 1000);
+      }
+    });
+  }
+
+  // ─── v1.11: Version tag in side menu ───
+  var versionTag = document.getElementById('app-version-tag');
+  if (versionTag) {
+    fetch('./version.json?t=' + Date.now()).then(function(r) { return r.json(); }).then(function(v) {
+      versionTag.textContent = 'v' + v.version;
+    }).catch(function() { versionTag.textContent = ''; });
+  }
 
 })();
 

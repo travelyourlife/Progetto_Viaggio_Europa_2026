@@ -371,8 +371,19 @@ body.on-home {
     padding-top: 16px;
     padding-bottom: calc(var(--bottom-bar-height) + env(safe-area-inset-bottom, 0px) + 16px);
 }
-/* v8.2: bottom bar always visible, including on Home */
-/* body.on-home .bottom-bar { transform: translateY(100%); pointer-events: none; } */
+/* v10.8: bottom bar hidden on Home */
+body.on-home .bottom-bar { transform: translateY(100%); pointer-events: none; }
+
+/* Version tag — discrete indicator at bottom of Home */
+.version-tag {
+    text-align: center;
+    font-size: 11px;
+    color: #aab;
+    margin: 24px 0 8px;
+    letter-spacing: 0.5px;
+    opacity: 0.6;
+    user-select: none;
+}
 
 /* ─── Splash Screen ─── */
 .splash-screen {
@@ -1279,6 +1290,43 @@ table { max-width: 100%; }
 
 /* FIX: Improve touch targets for tab-index pills */
 .tab-index a { min-height: 36px; min-width: 36px; padding: 8px 14px; }
+
+/* v1.11: Collapsible tab-index */
+.tab-index-toggle {
+    display: flex; align-items: center; justify-content: space-between;
+    width: 100%; padding: 10px 16px;
+    background: var(--bg-card); border: 2px dashed var(--accent);
+    border-radius: var(--radius); color: var(--accent);
+    font-size: 14px; font-weight: 600; cursor: pointer;
+    margin-bottom: 0; transition: all 0.2s;
+}
+.tab-index-toggle:hover { background: var(--bg-alt); }
+.tab-index-toggle .chevron { transition: transform 0.3s; font-size: 12px; }
+.tab-index-toggle.open .chevron { transform: rotate(180deg); }
+.tab-index-toggle.open { border-radius: var(--radius) var(--radius) 0 0; border-bottom: none; }
+.tab-index-wrapper.collapsible .tab-index {
+    max-height: 0; overflow: hidden; opacity: 0;
+    margin-bottom: 0; border: 2px dashed var(--accent); border-top: none;
+    border-radius: 0 0 var(--radius) var(--radius);
+    transition: max-height 0.35s ease, opacity 0.25s ease, padding 0.3s ease;
+    padding: 0 12px; flex-wrap: wrap;
+}
+.tab-index-wrapper.collapsible .tab-index.open {
+    max-height: 500px; opacity: 1; padding: 10px 12px;
+    margin-bottom: 16px;
+}
+.tab-index-wrapper.collapsible { margin-bottom: 16px; }
+.tab-index-wrapper.collapsible::after { display: none; }
+
+/* v1.11: Version tag in side menu */
+.menu-version {
+    padding: 12px 20px 16px;
+    font-size: 11px;
+    color: var(--text-light);
+    opacity: 0.5;
+    text-align: center;
+    letter-spacing: 0.5px;
+}
 
 /* FIX: Bottom bar scroll indicator */
 /* Fade gradients — reduced to 12px to avoid covering icons */
