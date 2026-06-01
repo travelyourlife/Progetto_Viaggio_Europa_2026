@@ -170,9 +170,11 @@ var isStandalonePWA = (window.matchMedia && window.matchMedia('(display-mode: st
                      (document.referrer.includes('android-app://'));
 
 // ─── Unified Google Sign-In (works in browser, PWA standalone, all platforms) ───
-// Strategy: ALWAYS try popup first (works on Chrome Android PWA too).
-// Only fallback to redirect if popup is truly unsupported.
-// signInWithRedirect on Android PWA opens external Chrome and never returns to the PWA.
+// Strategy: Android standalone PWA → signInWithRedirect (proven to work).
+// Desktop/mobile browser → signInWithPopup (smoother UX).
+// Detect Android: UA contains 'Android' and is standalone PWA.
+var isAndroidStandalone = isStandalonePWA && /Android/i.test(navigator.userAgent);
+
 function doGoogleSignIn(successCb) {
   if (typeof firebase === 'undefined' || !firebase.auth) return;
   var provider = new firebase.auth.GoogleAuthProvider();
@@ -187,7 +189,15 @@ function doGoogleSignIn(successCb) {
 }
 
 function attemptSignIn(provider, successCb) {
-  // Always try popup first — it works on Chrome Android, Chrome desktop, Safari iOS
+  if (isAndroidStandalone) {
+    // Android PWA standalone: redirect works, popup does NOT return results
+    console.info('[Auth] Android standalone PWA → using signInWithRedirect');
+    try { localStorage.setItem('firebase_redirect_pending', '1'); } catch(e) {}
+    firebase.auth().signInWithRedirect(provider);
+    return;
+  }
+
+  // Desktop / mobile browser / iOS: try popup first
   firebase.auth().signInWithPopup(provider).then(function(result) {
     if (result && result.user) {
       console.info('[Auth] Popup login success:', result.user.email);
@@ -198,17 +208,15 @@ function attemptSignIn(provider, successCb) {
     if (err.code === 'auth/popup-blocked' ||
         err.code === 'auth/cancelled-popup-request' ||
         err.code === 'auth/operation-not-supported-in-this-environment') {
-      // Popup truly not supported — fallback to redirect (rare: some in-app browsers)
+      // Popup not supported — fallback to redirect
       console.info('[Auth] Falling back to signInWithRedirect');
       try { localStorage.setItem('firebase_redirect_pending', '1'); } catch(e) {}
       firebase.auth().signInWithRedirect(provider);
     } else if (err.code === 'auth/popup-closed-by-user') {
-      // User closed the popup — no error needed
       console.info('[Auth] User closed popup');
     } else if (err.code === 'auth/network-request-failed') {
       if (window.showToast) showToast(isEN ? 'Network error. Check your connection.' : 'Errore di rete. Controlla la connessione.', 'error');
     } else {
-      // Show error to user so they know something went wrong
       var msg = err.message || err.code || 'Unknown error';
       if (window.showToast) showToast((isEN ? 'Login error: ' : 'Errore login: ') + msg, 'error');
     }
@@ -3085,9 +3093,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }
 
+                // Double scroll: first immediate to approximate position, then after reflow for precision
                 setTimeout(function() {
-                    scrollTarget.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }, 100);
+                    scrollTarget.scrollIntoView({ behavior: 'auto', block: 'start' });
+                    // Second scroll after layout settles (accordion open/close reflow)
+                    setTimeout(function() {
+                        scrollTarget.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 200);
+                }, 50);
 
                 history.pushState(null, '', '#' + targetId);
             });
