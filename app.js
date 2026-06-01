@@ -169,11 +169,9 @@ var isStandalonePWA = (window.matchMedia && window.matchMedia('(display-mode: st
                      (window.navigator.standalone === true) ||
                      (document.referrer.includes('android-app://'));
 
-// ─── Unified Google Sign-In (works in browser, PWA standalone, all platforms) ───
-// Strategy: Android standalone PWA → signInWithRedirect (proven to work).
-// Desktop/mobile browser → signInWithPopup (smoother UX).
-// Detect Android: UA contains 'Android' and is standalone PWA.
-var isAndroidStandalone = isStandalonePWA && /Android/i.test(navigator.userAgent);
+// ─── Unified Google Sign-In — always use signInWithRedirect ───
+// signInWithRedirect avoids cross-origin cookie issues on GitHub Pages.
+// The result is handled by getRedirectResult() on page reload.
 
 function doGoogleSignIn(successCb) {
   if (typeof firebase === 'undefined' || !firebase.auth) return;
@@ -181,49 +179,17 @@ function doGoogleSignIn(successCb) {
 
   // Ensure LOCAL persistence so auth survives page reloads & PWA restarts
   firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(function() {
-    attemptSignIn(provider, successCb);
-  }).catch(function(err) {
-    console.warn('[Auth] setPersistence error:', err);
-    attemptSignIn(provider, successCb);
-  });
-}
-
-function attemptSignIn(provider, successCb) {
-  if (isAndroidStandalone) {
-    // Android PWA standalone: redirect works, popup does NOT return results
-    console.info('[Auth] Android standalone PWA → using signInWithRedirect');
+    console.info('[Auth] Using signInWithRedirect (all platforms)');
     try { localStorage.setItem('firebase_redirect_pending', '1'); } catch(e) {}
     firebase.auth().signInWithRedirect(provider);
-    return;
-  }
-
-  // Desktop / mobile browser / iOS: try popup first
-  firebase.auth().signInWithPopup(provider).then(function(result) {
-    if (result && result.user) {
-      console.info('[Auth] Popup login success:', result.user.email);
-      if (successCb) successCb(result.user);
-    }
   }).catch(function(err) {
-    console.warn('[Auth] Popup sign-in error:', err.code, err.message);
-    if (err.code === 'auth/popup-blocked' ||
-        err.code === 'auth/cancelled-popup-request' ||
-        err.code === 'auth/operation-not-supported-in-this-environment') {
-      // Popup not supported — fallback to redirect
-      console.info('[Auth] Falling back to signInWithRedirect');
-      try { localStorage.setItem('firebase_redirect_pending', '1'); } catch(e) {}
-      firebase.auth().signInWithRedirect(provider);
-    } else if (err.code === 'auth/popup-closed-by-user') {
-      console.info('[Auth] User closed popup');
-    } else if (err.code === 'auth/network-request-failed') {
-      if (window.showToast) showToast(isEN ? 'Network error. Check your connection.' : 'Errore di rete. Controlla la connessione.', 'error');
-    } else {
-      var msg = err.message || err.code || 'Unknown error';
-      if (window.showToast) showToast((isEN ? 'Login error: ' : 'Errore login: ') + msg, 'error');
-    }
+    console.warn('[Auth] setPersistence error:', err);
+    try { localStorage.setItem('firebase_redirect_pending', '1'); } catch(e) {}
+    firebase.auth().signInWithRedirect(provider);
   });
 }
 
-// ─── Handle redirect result (fallback for rare cases where popup is unavailable) ───
+// ─── Handle redirect result (primary auth flow) ───
 (function() {
   try {
     if (typeof firebase === 'undefined' || !firebase.auth) return;
