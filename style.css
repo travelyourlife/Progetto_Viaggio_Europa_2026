@@ -1148,9 +1148,8 @@ input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent);
 .wc-reliability.red { background: #e53e3e; }
 
 /* ─── Mobile Timeline (B3) for summary table ─── */
-/* ─── Mobile Timeline (B3) for summary table ─── */
 @media (max-width: 600px) {
-    #tab-riepilogo table:first-of-type {
+    #tab-riepilogo table.table-large {
         display: none !important;
     }
     .mobile-timeline { display: block !important; }

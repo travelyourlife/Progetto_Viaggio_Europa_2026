@@ -43,7 +43,7 @@
     <link rel="apple-touch-icon" sizes="152x152" href="./icon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="./icon.png">
     <link rel="apple-touch-icon" sizes="167x167" href="./icon.png">
-    <title>Viaggio Europa 2026 — V1.18</title>
+    <title>Viaggio Europa 2026 — V1.19</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <link rel="stylesheet" href="style.css">
 <!-- Firebase SDK (compat mode for single-file app) -->
@@ -191,6 +191,7 @@
     <a class="menu-item" data-tab="cibo"><span class="menu-icon">🍝</span><span class="menu-text">Cibo</span></a>
     <a class="menu-item" data-tab="cultura"><span class="menu-icon">🏛️</span><span class="menu-text">Cultura</span></a>
     <a class="menu-item" data-tab="attivita"><span class="menu-icon">🥾</span><span class="menu-text">Attività</span></a>
+    <a class="menu-item" data-tab="luoghi"><span class="menu-icon">🧭</span><span class="menu-text">Luoghi</span></a>
     <div class="menu-divider"></div>
     <a class="menu-item" data-tab="riepilogo"><span class="menu-icon">📌</span><span class="menu-text">Riepilogo</span></a>
     <a class="menu-item" data-tab="piano"><span class="menu-icon">🗺️</span><span class="menu-text">Piano</span></a>
@@ -219,6 +220,10 @@
     <button class="altro-item" data-tab="attivita">
         <span class="altro-item-icon">🥾</span>
         <span class="altro-item-text"><span class="altro-item-label">Attività</span><span class="altro-item-sub">Trekking &amp; sport</span></span>
+    </button>
+    <button class="altro-item" data-tab="luoghi">
+        <span class="altro-item-icon">🧭</span>
+        <span class="altro-item-text"><span class="altro-item-label">Luoghi</span><span class="altro-item-sub">Parchi, musei, panorami</span></span>
     </button>
     <button class="altro-item" data-tab="riepilogo">
         <span class="altro-item-icon">📌</span>
@@ -343,6 +348,10 @@
         <a class="home-card" data-tab="attivita" href="#" onclick="event.preventDefault(); switchTabFromHome('attivita');">
             <span class="hc-icon"><img src="./icons/icon-attivita.png" alt="" width="48" height="48"></span>
             <span class="hc-label">Attività</span>
+        </a>
+        <a class="home-card" data-tab="luoghi" href="#" onclick="event.preventDefault(); switchTabFromHome('luoghi');">
+            <span class="hc-icon"><img src="./icons/icon-luoghi.png" alt="" width="48" height="48"></span>
+            <span class="hc-label">Luoghi</span>
         </a>
     </div>
     <!-- 🧰 Strumenti -->
@@ -674,6 +683,7 @@
 <p class="meteo-day" data-day="4" data-lat="56.9496" data-lon="24.1052" data-static-high="22" data-static-low="12" data-static-cond="Bel tempo" data-daylight="18h di luce">☀️ 22°C / 12°C · Bel tempo · 18h di luce <span class="meteo-badge">(media storica)</span></p>
 <p>🏛️ ⭐ <strong>Collina delle Croci</strong> (Šiauliai) — sosta 30 min, impressionante
 🏛️ ‍👩‍👧‍👦 <strong>Riga Motor Museum</strong> — auto sovietiche pazzesche
+🏛️ <strong>Museo dell'Occupazione</strong> (Raiņa bulvāris 7) — storia delle occupazioni sovietica e nazista, toccante — <a href="https://maps.google.com/?q=Museum+of+the+Occupation+of+Latvia+Riga" target="_blank" rel="noopener">📍 Maps</a> → <a href="#musei-attrazioni">vedi Musei</a>
 🏛️ <strong>Art Nouveau</strong> quartiere Alberta iela
 🌭 <strong>Riga street food:</strong> <em>Piragi</em> (panini al bacon) dai banchi del Mercato Centrale ~€1-2 l'uno. <em>Lido</em> (Krasta iela 76) — self-service enorme ~€8/pax, parco giochi per bambini! <strong>Mercato:</strong> Rīgas Centrāltirgus (Nēģu iela 7, hangar Zeppelin!) — 5 padiglioni: pesce, carne, latticini, pane nero, verdure. Lun-Dom. Imperdibile!
 🛍️ <strong>Mercatino delle pulci:</strong> <em>Latgale Tirgus</em> (Firsa Sadovņikova iela 9) — leggendario mercato dell'usato baltico! Memorabilia sovietica, vinili, monete, oggetti vintage. Mar-Dom 8:00-17:00 — <a href="https://maps.google.com/?q=Latgale+Tirgus+Riga" target="_blank" rel="noopener">📍 Maps</a></p>
@@ -822,6 +832,7 @@
 <p><strong>160 km · 2h · Gratis</strong></p>
 <p class="meteo-day" data-day="10" data-lat="65.9294" data-lon="26.511" data-static-high="20" data-static-low="10" data-static-cond="Variabile" data-daylight="22h di luce">☀️ 20°C / 10°C · Variabile · 22h di luce <span class="meteo-badge">(media storica)</span></p>
 <p>🌲 ‍👩‍👧‍👦 ⭐ <strong>Ranua Wildlife Park</strong> — orso polare artico, linci, ghiottoni. €24,50 adulto, €20 bambino (4-14) online. Famiglia ~€74 online.
+🌅 <strong>Aavasaksa Hill</strong> (deviazione ~1h da Oulu, Ylitornio) — punto più meridionale per il sole di mezzanotte, torre panoramica — <a href="https://maps.google.com/?q=Aavasaksa+Hill" target="_blank" rel="noopener">📍 Maps</a> → <a href="#viewpoint">vedi Viewpoint</a>
 🎯 Arrivo nel pomeriggio, relax
 🎯 <strong>Lapponia:</strong> raccogliere mirtilli nei boschi (gratis, Jokamiehenoikeus!). Comprare carne di renna affumicata al mercato locale</p>
 <div class="bambini-section">
@@ -1235,7 +1246,7 @@
 <h3 id="g28-2407-molde-geiranger">G28 · 24/07 · Molde → Geiranger 🇳🇴</h3>
 <p><strong>180 km · 4h · AutoPASS</strong></p>
 <p class="meteo-day" data-day="28" data-lat="62.1042" data-lon="7.2055" data-static-high="16" data-static-low="11" data-static-cond="Nebbia possibile in quota" data-daylight="19h di luce">☀️ 16°C / 11°C · Nebbia possibile in quota · 19h di luce <span class="meteo-badge">(media storica)</span></p>
-<p>🥾 <strong>Trekking:</strong> ⭐ Skageflå Mountain Farm a strapiombo sul fiordo (solo, 4-5h) · Trollstigen Viewpoint piattaforma panoramica (famiglia, 20 min) · Flydalsjuvet vista classica Geiranger (famiglia, 15 min) → <a href="#trek-geiranger">dettagli sentieri</a></p>
+<p>🥾 <strong>Trekking:</strong> ⭐ Skageflå Mountain Farm a strapiombo sul fiordo (solo, 4-5h) · Trollstigen Viewpoint piattaforma panoramica (famiglia, 20 min) · Flydalsjuvet vista classica Geiranger (famiglia, 15 min) · 🌅 Ørnesvingen viewpoint (vista a strapiombo sul fiordo UNESCO, accessibile in auto) → <a href="#viewpoint">vedi Viewpoint</a> → <a href="#trek-geiranger">dettagli sentieri</a></p>
 <p>🛣️ ⭐ <em><a href="https://maps.google.com/?q=62.4567,7.6700" target="_blank" rel="noopener noreferrer">📍 Trollstigen</a></em> — 11 tornanti con cascate, piattaforma panoramica
 ➕ alt: <strong>Dalsnibba viewpoint</strong> (+1h) → vedi <a href="#b5">➕ dettagli</a>
 ➕ alt: <strong>Flåm Railway</strong> (deviazione 1 giorno) → vedi <a href="#b5">➕ dettagli</a></p>
@@ -1258,7 +1269,8 @@
 <h3 id="g29-2507-geiranger-bergen">G29 · 25/07 · Geiranger → Bergen 🇳🇴</h3>
 <p><strong>380 km · 7h · <a href="https://www.autopass.no" target="_blank" rel="noopener">AutoPASS</a> + traghetti interni</strong></p>
 <p class="meteo-day" data-day="29" data-lat="60.3913" data-lon="5.3221" data-static-high="16" data-static-low="11" data-static-cond="⚠️ Bergen: pioggia quasi certa" data-daylight="19h di luce">☀️ 16°C / 11°C · ⚠️ Bergen: pioggia quasi certa · 19h di luce <span class="meteo-badge">(media storica)</span></p>
-<p>🛣️ <strong>Hardanger NTR</strong> (fiordi, cascate e ghiacciai — Nasjonale Turistveg, 195 km)
+<p>🌅 <strong>Stegastein Viewpoint</strong> (Aurlandsfjord) — piattaforma in vetro sospesa a 650m, accessibile in auto — <a href="https://maps.google.com/?q=Stegastein+Viewpoint" target="_blank" rel="noopener">📍 Maps</a> → <a href="#viewpoint">vedi Viewpoint</a>
+🛣️ <strong>Hardanger NTR</strong> (fiordi, cascate e ghiacciai — Nasjonale Turistveg, 195 km)
 🛣️ Viaggio panoramico tra i fiordi (traghetti + strade costiere)
 🌭 <strong>Bergen (arrivo sera):</strong> primo pølse da <em>Trekroneren</em> (Kong Oscars gate 1) ~NOK 80 (~€7.4) — il chiosco hot dog più famoso di Bergen!
 ➕ alt: giornata di trasferimento — la pioggia non impatta. Cascate di Hardanger ancora più imponenti con pioggia! Arrivo Bergen: <strong>Aquarium</strong> (Akvariet, aperto fino alle 18)</p>
@@ -1382,7 +1394,7 @@
 <p>🛴 <strong>Monopattini:</strong> Copenhagen piattissima, piste ciclabili ovunque (marciapiede per legge) → <a href="#noleggi">vedi noleggi</a>
 🚴 <strong>Noleggio cargo bike:</strong> Family Bike (~DKK 400/giorno, 2 bambini) — prenotare 2-3gg prima! → <a href="#noleggi">vedi noleggi</a></p>
 <div class="bambini-section">
-<p>👶 <strong>Bambini:</strong> 1. Giardini di Tivoli: storico parco divertimenti in centro — <a href="https://maps.google.com/?q=Tivoli+Gardens+Copenhagen" target="_blank" rel="noopener">📍 Maps</a>. 2. The Blue Planet (Den Blå Planet): acquario nazionale, ottimo per i giorni di pioggia — <a href="https://maps.google.com/?q=Den+Bla+Planet+Copenhagen" target="_blank" rel="noopener">📍 Maps</a>. 3. Experimentarium: centro scientifico interattivo a Hellerup — <a href="https://maps.google.com/?q=Experimentarium+Hellerup" target="_blank" rel="noopener">📍 Maps</a>.</p>
+<p>👶 <strong>Bambini:</strong> 1. Giardini di Tivoli: storico parco divertimenti in centro — <a href="https://maps.google.com/?q=Tivoli+Gardens+Copenhagen" target="_blank" rel="noopener">📍 Maps</a>. 2. The Blue Planet (Den Blå Planet): acquario nazionale, ottimo per i giorni di pioggia — <a href="https://maps.google.com/?q=Den+Bla+Planet+Copenhagen" target="_blank" rel="noopener">📍 Maps</a>. 3. Nationalmuseet (museo nazionale, sezione bambini eccezionale, gratis) — <a href="https://maps.google.com/?q=Nationalmuseet+Copenhagen" target="_blank" rel="noopener">📍 Maps</a>. 4. Experimentarium: centro scientifico interattivo a Hellerup — <a href="https://maps.google.com/?q=Experimentarium+Hellerup" target="_blank" rel="noopener">📍 Maps</a>.</p>
 </div>
 <div class="practical-info">
 <h4 style="margin:12px 0 8px 0;font-size:14px;color:var(--text-muted);">📋 Info Pratiche</h4>
@@ -1773,6 +1785,7 @@
 <p>🎣 <strong>Pesca:</strong> Liguria — pesca in mare libera senza licenza (solo da riva/molo) → <a href="#pesca-italia">dettagli spot</a>
 ⚠️ <strong>TRAFFICO FERRAGOSTO:</strong> La A10 il 16/08 è ancora molto trafficata (rientri). Partite alle 7:00! Se bloccati, valutate sosta a Savona/Finale Ligure. → <a href="#rischi">vedi rischi</a>
 🏛️ ‍👩‍👧‍👦 ⭐ <em><a href="https://maps.google.com/?q=Acquario+di+Genova" target="_blank" rel="noopener noreferrer">📍 Acquario di Genova</a></em> — il più grande acquario d'Italia e tra i maggiori d'Europa (prenotare!)
+🌅 <strong>Cinque Terre sentiero</strong> (deviazione) — sentiero tra i borghi con vista sul mare ligure. Treno da Genova 1h30 — <a href="https://maps.google.com/?q=Sentiero+Azzurro+Cinque+Terre" target="_blank" rel="noopener">📍 Maps</a> → <a href="#viewpoint">vedi Viewpoint</a>
 🏛️ <strong>Galata Museo del Mare</strong> (adiacente) — €17 adulto, €12 bambino. ⚠️ Sottomarino Nazario Sauro non accessibile a bambini sotto 1 m.
 🌭 Focaccia + pesto al Porto Antico
 <strong>Prenotazione:</strong> Acquario il 16/08 (giorno dopo Ferragosto) — PRENOTARE ONLINE su <a href="https://acquariodigenova.it" target="_blank" rel="noopener noreferrer">acquariodigenova.it</a>. Biglietti: €26 adulto + €16 bambino = <strong>~€84 famiglia</strong> (2+2). Consiglio: biglietto "Open Flexi" per flessibilità data/ora.</p>
@@ -1834,438 +1847,6 @@
 <p>🏥 <strong>Emergenze:</strong> Azienda Ospedale Università Padova — <a href="https://maps.google.com/?q=Azienda+Ospedale+Università+Padova+Padova" target="_blank" rel="noopener">📍 Maps</a> · Tel: 112</p>
 <p>💰 <strong>Budget:</strong> ~€100-130/giorno</p>
 </div>
-<span id="meteo"></span>
-<h3 id="meteo-per-zona-e-giorno">☀️🌧️ Meteo — per Zona e Giorno</h3>
-<blockquote>
-<p>Medie climatiche storiche per le <strong>date esatte</strong> in cui sarete in ogni zona (26/06 → 18/08). Fonti: WeatherSpark, Climate-Data.org, VisitNorway, VisitFinland, AccuWeather.</p>
-</blockquote>
-<h4 id="meteo-tabella-riassuntiva" style="font-size:1.2em;margin-top:1.5em;">📊 Meteo — Tabella Riassuntiva</h4>
-<table>
-<thead>
-<tr>
-<th>Giorni</th>
-<th>Zona</th>
-<th>T max</th>
-<th>T min</th>
-<th>Pioggia (mm/mese)</th>
-<th>Gg pioggia</th>
-<th>Ore luce</th>
-<th>Rischio meteo</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td data-label="Giorni"><a href="#g0">G0</a>-<a href="#g1">G1</a> (26-27/06)</td>
-<td data-label="Zona">Austria 🇦🇹</td>
-<td data-label="T max">25°C</td>
-<td data-label="T min">15°C</td>
-<td data-label="Pioggia (mm/mese)">~80</td>
-<td data-label="Gg pioggia">10</td>
-<td data-label="Ore luce">16h</td>
-<td data-label="Rischio meteo">Temporali pom.</td>
-</tr>
-<tr>
-<td data-label="Giorni"><a href="#g2">G2</a> (28/06)</td>
-<td data-label="Zona">CZ → PL 🇨🇿🇵🇱</td>
-<td data-label="T max">23°C</td>
-<td data-label="T min">13°C</td>
-<td data-label="Pioggia (mm/mese)">~70</td>
-<td data-label="Gg pioggia">9</td>
-<td data-label="Ore luce">17h</td>
-<td data-label="Rischio meteo">Temporali pom.</td>
-</tr>
-<tr>
-<td data-label="Giorni"><a href="#g3">G3</a>-<a href="#g5">G5</a> (29/06–01/07)</td>
-<td data-label="Zona">Baltico 🇱🇹🇱🇻🇪🇪</td>
-<td data-label="T max">21-22°C</td>
-<td data-label="T min">12°C</td>
-<td data-label="Pioggia (mm/mese)">~65</td>
-<td data-label="Gg pioggia">9</td>
-<td data-label="Ore luce">18h+</td>
-<td data-label="Rischio meteo">Piogge brevi</td>
-</tr>
-<tr>
-<td data-label="Giorni"><a href="#g6">G6</a> (02/07)</td>
-<td data-label="Zona">Helsinki → Finlandia 🇫🇮</td>
-<td data-label="T max">20°C</td>
-<td data-label="T min">12°C</td>
-<td data-label="Pioggia (mm/mese)">~60</td>
-<td data-label="Gg pioggia">8</td>
-<td data-label="Ore luce">19h</td>
-<td data-label="Rischio meteo">Variabile</td>
-</tr>
-<tr>
-<td data-label="Giorni"><a href="#g7">G7</a>-<a href="#g9">G9</a> (03-05/07)</td>
-<td data-label="Zona">Laghi / Oulu 🇫🇮</td>
-<td data-label="T max">20-22°C</td>
-<td data-label="T min">10-12°C</td>
-<td data-label="Pioggia (mm/mese)">~65</td>
-<td data-label="Gg pioggia">10</td>
-<td data-label="Ore luce">20h+</td>
-<td data-label="Rischio meteo">⚠️ Zanzare! Piogge brevi</td>
-</tr>
-<tr>
-<td data-label="Giorni"><a href="#g10">G10</a>-<a href="#g14">G14</a> (06-10/07)</td>
-<td data-label="Zona">Lapponia 🇫🇮</td>
-<td data-label="T max">18-22°C</td>
-<td data-label="T min">8-12°C</td>
-<td data-label="Pioggia (mm/mese)">~55</td>
-<td data-label="Gg pioggia">9</td>
-<td data-label="Ore luce">22-24h</td>
-<td data-label="Rischio meteo">⚠️ Zanzare al picco</td>
-</tr>
-<tr>
-<td data-label="Giorni"><a href="#g15">G15</a> (11/07)</td>
-<td data-label="Zona">Tromsø 🇳🇴</td>
-<td data-label="T max">15°C</td>
-<td data-label="T min">9°C</td>
-<td data-label="Pioggia (mm/mese)">~60</td>
-<td data-label="Gg pioggia">10</td>
-<td data-label="Ore luce">24h ☀️</td>
-<td data-label="Rischio meteo">Vento, pioggia possibile</td>
-</tr>
-<tr>
-<td data-label="Giorni"><a href="#g16">G16</a>-<a href="#g23">G23</a> (12-19/07)</td>
-<td data-label="Zona">Senja + Vesterålen + Lofoten 🇳🇴</td>
-<td data-label="T max">14-16°C</td>
-<td data-label="T min">10-12°C</td>
-<td data-label="Pioggia (mm/mese)">~80</td>
-<td data-label="Gg pioggia">12-14</td>
-<td data-label="Ore luce">22-24h</td>
-<td data-label="Rischio meteo">⚠️ Pioggia frequente, vento</td>
-</tr>
-<tr>
-<td data-label="Giorni"><a href="#g24">G24</a>-<a href="#g25">G25</a> (20-21/07)</td>
-<td data-label="Zona">Mo i Rana → Trondheim 🇳🇴</td>
-<td data-label="T max">17-19°C</td>
-<td data-label="T min">10-12°C</td>
-<td data-label="Pioggia (mm/mese)">~70</td>
-<td data-label="Gg pioggia">10</td>
-<td data-label="Ore luce">20h</td>
-<td data-label="Rischio meteo">Pioggia possibile</td>
-</tr>
-<tr>
-<td data-label="Giorni"><a href="#g26">G26</a> (22/07)</td>
-<td data-label="Zona">Trondheim 🇳🇴</td>
-<td data-label="T max">19°C</td>
-<td data-label="T min">11°C</td>
-<td data-label="Pioggia (mm/mese)">~70</td>
-<td data-label="Gg pioggia">10</td>
-<td data-label="Ore luce">20h</td>
-<td data-label="Rischio meteo">Variabile</td>
-</tr>
-<tr>
-<td data-label="Giorni"><a href="#g27">G27</a>-<a href="#g29">G29</a> (23-25/07)</td>
-<td data-label="Zona">Atlantic Rd → Bergen 🇳🇴</td>
-<td data-label="T max">16-17°C</td>
-<td data-label="T min">11°C</td>
-<td data-label="Pioggia (mm/mese)">~150-170</td>
-<td data-label="Gg pioggia">15-17</td>
-<td data-label="Ore luce">19h</td>
-<td data-label="Rischio meteo">⚠️ Bergen: pioggia quasi certa</td>
-</tr>
-<tr>
-<td data-label="Giorni"><a href="#g30">G30</a> (26/07)</td>
-<td data-label="Zona">Bergen 🇳🇴</td>
-<td data-label="T max">17°C</td>
-<td data-label="T min">11°C</td>
-<td data-label="Pioggia (mm/mese)">~170</td>
-<td data-label="Gg pioggia">17</td>
-<td data-label="Ore luce">19h</td>
-<td data-label="Rischio meteo">⚠️ Pioggia molto probabile</td>
-</tr>
-<tr>
-<td data-label="Giorni"><a href="#g31">G31</a>-<a href="#g32">G32</a> (27-28/07)</td>
-<td data-label="Zona">Stavanger → K.sand 🇳🇴</td>
-<td data-label="T max">17-18°C</td>
-<td data-label="T min">11-12°C</td>
-<td data-label="Pioggia (mm/mese)">~100</td>
-<td data-label="Gg pioggia">12</td>
-<td data-label="Ore luce">18h 30m</td>
-<td data-label="Rischio meteo">Nuvoloso 50%</td>
-</tr>
-<tr>
-<td data-label="Giorni"><a href="#g33">G33</a> (29/07)</td>
-<td data-label="Zona">Traghetto → Copenhagen 🇩🇰</td>
-<td data-label="T max">22°C</td>
-<td data-label="T min">14°C</td>
-<td data-label="Pioggia (mm/mese)">~60</td>
-<td data-label="Gg pioggia">9</td>
-<td data-label="Ore luce">17h</td>
-<td data-label="Rischio meteo">Piogge sporadiche</td>
-</tr>
-<tr>
-<td data-label="Giorni"><a href="#g34">G34</a>-<a href="#g35">G35</a> (30-31/07)</td>
-<td data-label="Zona">Copenhagen 🇩🇰</td>
-<td data-label="T max">22°C</td>
-<td data-label="T min">14°C</td>
-<td data-label="Pioggia (mm/mese)">~60</td>
-<td data-label="Gg pioggia">9</td>
-<td data-label="Ore luce">17h</td>
-<td data-label="Rischio meteo">Piogge sporadiche</td>
-</tr>
-<tr>
-<td data-label="Giorni"><a href="#g36">G36</a>-<a href="#g38">G38</a> (01-03/08)</td>
-<td data-label="Zona">Billund 🇩🇰</td>
-<td data-label="T max">21°C</td>
-<td data-label="T min">13°C</td>
-<td data-label="Pioggia (mm/mese)">~65</td>
-<td data-label="Gg pioggia">10</td>
-<td data-label="Ore luce">16h 30m</td>
-<td data-label="Rischio meteo">Variabile</td>
-</tr>
-<tr>
-<td data-label="Giorni"><a href="#g39">G39</a> (04/08)</td>
-<td data-label="Zona">Brema 🇩🇪</td>
-<td data-label="T max">22°C</td>
-<td data-label="T min">13°C</td>
-<td data-label="Pioggia (mm/mese)">~65</td>
-<td data-label="Gg pioggia">10</td>
-<td data-label="Ore luce">16h</td>
-<td data-label="Rischio meteo">Variabile</td>
-</tr>
-<tr>
-<td data-label="Giorni"><a href="#g40">G40</a> (05/08)</td>
-<td data-label="Zona">Amiens 🇫🇷</td>
-<td data-label="T max">23°C</td>
-<td data-label="T min">13°C</td>
-<td data-label="Pioggia (mm/mese)">~55</td>
-<td data-label="Gg pioggia">8</td>
-<td data-label="Ore luce">15h 30m</td>
-<td data-label="Rischio meteo">Piogge brevi</td>
-</tr>
-<tr>
-<td data-label="Giorni"><a href="#g41">G41</a>-<a href="#g42">G42</a> (06-07/08)</td>
-<td data-label="Zona">Loira 🇫🇷</td>
-<td data-label="T max">25-26°C</td>
-<td data-label="T min">13-14°C</td>
-<td data-label="Pioggia (mm/mese)">~52</td>
-<td data-label="Gg pioggia">7</td>
-<td data-label="Ore luce">15h</td>
-<td data-label="Rischio meteo">Bello</td>
-</tr>
-<tr>
-<td data-label="Giorni"><a href="#g43">G43</a> (08/08)</td>
-<td data-label="Zona">San Sebastián 🇪🇸</td>
-<td data-label="T max">24-27°C</td>
-<td data-label="T min">16-18°C</td>
-<td data-label="Pioggia (mm/mese)">~72</td>
-<td data-label="Gg pioggia">9</td>
-<td data-label="Ore luce">14h 30m</td>
-<td data-label="Rischio meteo">Umido, pioggia possibile</td>
-</tr>
-<tr>
-<td data-label="Giorni"><a href="#g44">G44</a> (09/08)</td>
-<td data-label="Zona">Bilbao 🇪🇸</td>
-<td data-label="T max">25-27°C</td>
-<td data-label="T min">17°C</td>
-<td data-label="Pioggia (mm/mese)">~60</td>
-<td data-label="Gg pioggia">7</td>
-<td data-label="Ore luce">14h 30m</td>
-<td data-label="Rischio meteo">Meno pioggia</td>
-</tr>
-<tr>
-<td data-label="Giorni"><a href="#g45">G45</a> (10/08)</td>
-<td data-label="Zona">Picos de Europa 🇪🇸</td>
-<td data-label="T max">20-25°C / 10-15°C</td>
-<td data-label="T min">10-12°C</td>
-<td data-label="Pioggia (mm/mese)">~50</td>
-<td data-label="Gg pioggia">7</td>
-<td data-label="Ore luce">14h</td>
-<td data-label="Rischio meteo">Temporali in quota</td>
-</tr>
-<tr>
-<td data-label="Giorni"><a href="#g46">G46</a>-<a href="#g48">G48</a> (11-13/08)</td>
-<td data-label="Zona">Palencia 🇪🇸</td>
-<td data-label="T max"><strong>29-31°C</strong></td>
-<td data-label="T min">13-14°C</td>
-<td data-label="Pioggia (mm/mese)"><strong>15</strong></td>
-<td data-label="Gg pioggia"><strong>2-3</strong></td>
-<td data-label="Ore luce">14h</td>
-<td data-label="Rischio meteo">☀️ Cielo sereno</td>
-</tr>
-<tr>
-<td data-label="Giorni"><a href="#g49">G49</a> (14/08)</td>
-<td data-label="Zona">Costa Brava 🇪🇸</td>
-<td data-label="T max">28-30°C</td>
-<td data-label="T min">19-20°C</td>
-<td data-label="Pioggia (mm/mese)">~40</td>
-<td data-label="Gg pioggia">4</td>
-<td data-label="Ore luce">14h</td>
-<td data-label="Rischio meteo">Bello e caldo</td>
-</tr>
-<tr>
-<td data-label="Giorni"><a href="#g50">G50</a> (15/08)</td>
-<td data-label="Zona">Costa Azzurra 🇫🇷</td>
-<td data-label="T max">28-31°C</td>
-<td data-label="T min">17-19°C</td>
-<td data-label="Pioggia (mm/mese)">~25</td>
-<td data-label="Gg pioggia">3</td>
-<td data-label="Ore luce">14h</td>
-<td data-label="Rischio meteo">☀️ Molto bello</td>
-</tr>
-<tr>
-<td data-label="Giorni"><a href="#g51">G51</a>-<a href="#g52">G52</a> (16-17/08)</td>
-<td data-label="Zona">Genova 🇮🇹</td>
-<td data-label="T max">28-30°C</td>
-<td data-label="T min">20-22°C</td>
-<td data-label="Pioggia (mm/mese)">~40</td>
-<td data-label="Gg pioggia">4</td>
-<td data-label="Ore luce">14h</td>
-<td data-label="Rischio meteo">Caldo umido</td>
-</tr>
-<tr>
-<td data-label="Giorni"><a href="#g53">G53</a> (18/08)</td>
-<td data-label="Zona">Genova → Padova 🇮🇹</td>
-<td data-label="T max">30-32°C</td>
-<td data-label="T min">20°C</td>
-<td data-label="Pioggia (mm/mese)">~45</td>
-<td data-label="Gg pioggia">4</td>
-<td data-label="Ore luce">14h</td>
-<td data-label="Rischio meteo">Temporali padani pom.</td>
-</tr>
-</tbody>
-</table>
-<hr>
-<h4 id="meteo-profilo-termico" style="font-size:1.2em;margin-top:1.5em;">🌡️ Meteo — Profilo Termico</h4>
-<p class="weather-reliability-note">🔵 Fresco (≤17°C) · 🟢 Mite (18-23°C) · 🟡 Caldo (24-27°C) · 🔴 Molto caldo (≥28°C)</p>
-<div class="weather-chart" id="weatherChart">
-    <div class="wc-bars">
-        <div class="wc-bar-wrap" title="Austria 🇦🇹: 25°C max, 15°C min, 10 rain days">
-            <span class="wc-label">D0-D1</span>
-            <div class="wc-bar" style="width:70%;background:#d69e2e"></div>
-            <span class="wc-temp">25°</span>
-        </div>
-        <div class="wc-bar-wrap" title="CZ → PL 🇨🇿🇵🇱: 23°C max, 13°C min, 9 rain days">
-            <span class="wc-label">D2</span>
-            <div class="wc-bar" style="width:62%;background:#d69e2e"></div>
-            <span class="wc-temp">23°</span>
-        </div>
-        <div class="wc-bar-wrap" title="Baltic 🇱🇹🇱🇻🇪🇪: 22°C max, 12°C min, 9 rain days">
-            <span class="wc-label">D3-D5</span>
-            <div class="wc-bar" style="width:58%;background:#38a169"></div>
-            <span class="wc-temp">22°</span>
-        </div>
-        <div class="wc-bar-wrap" title="Helsinki 🇫🇮: 20°C max, 12°C min, 8 rain days">
-            <span class="wc-label">D6</span>
-            <div class="wc-bar" style="width:50%;background:#38a169"></div>
-            <span class="wc-temp">20°</span>
-        </div>
-        <div class="wc-bar-wrap" title="Lakes/Oulu 🇫🇮: 22°C max, 12°C min, 10 rain days">
-            <span class="wc-label">D7-D9</span>
-            <div class="wc-bar" style="width:58%;background:#38a169"></div>
-            <span class="wc-temp">22°</span>
-        </div>
-        <div class="wc-bar-wrap" title="Lapland 🇫🇮: 20°C max, 10°C min, 9 rain days">
-            <span class="wc-label">D10-D14</span>
-            <div class="wc-bar" style="width:50%;background:#38a169"></div>
-            <span class="wc-temp">20°</span>
-        </div>
-        <div class="wc-bar-wrap" title="Tromsø 🇳🇴: 15°C max, 9°C min, 10 rain days">
-            <span class="wc-label">D15</span>
-            <div class="wc-bar" style="width:29%;background:#3182ce"></div>
-            <span class="wc-temp">15°</span>
-        </div>
-        <div class="wc-bar-wrap" title="Lofoten 🇳🇴: 15°C max, 11°C min, 13 rain days">
-            <span class="wc-label">D16-D23</span>
-            <div class="wc-bar" style="width:29%;background:#3182ce"></div>
-            <span class="wc-temp">15°</span>
-        </div>
-        <div class="wc-bar-wrap" title="Mo→Trondheim 🇳🇴: 18°C max, 11°C min, 10 rain days">
-            <span class="wc-label">D24-D25</span>
-            <div class="wc-bar" style="width:41%;background:#38a169"></div>
-            <span class="wc-temp">18°</span>
-        </div>
-        <div class="wc-bar-wrap" title="Trondheim 🇳🇴: 19°C max, 11°C min, 10 rain days">
-            <span class="wc-label">D26</span>
-            <div class="wc-bar" style="width:45%;background:#38a169"></div>
-            <span class="wc-temp">19°</span>
-        </div>
-        <div class="wc-bar-wrap" title="Atlantic→Bergen 🇳🇴: 17°C max, 11°C min, 16 rain days">
-            <span class="wc-label">D27-D29</span>
-            <div class="wc-bar" style="width:37%;background:#3182ce"></div>
-            <span class="wc-temp">17°</span>
-        </div>
-        <div class="wc-bar-wrap" title="Bergen 🇳🇴: 17°C max, 11°C min, 17 rain days">
-            <span class="wc-label">D30</span>
-            <div class="wc-bar" style="width:37%;background:#3182ce"></div>
-            <span class="wc-temp">17°</span>
-        </div>
-        <div class="wc-bar-wrap" title="Stavanger 🇳🇴: 18°C max, 12°C min, 12 rain days">
-            <span class="wc-label">D31-D32</span>
-            <div class="wc-bar" style="width:41%;background:#38a169"></div>
-            <span class="wc-temp">18°</span>
-        </div>
-        <div class="wc-bar-wrap" title="→Copenhagen 🇩🇰: 22°C max, 14°C min, 9 rain days">
-            <span class="wc-label">D33</span>
-            <div class="wc-bar" style="width:58%;background:#38a169"></div>
-            <span class="wc-temp">22°</span>
-        </div>
-        <div class="wc-bar-wrap" title="Copenhagen 🇩🇰: 22°C max, 14°C min, 9 rain days">
-            <span class="wc-label">D34-D35</span>
-            <div class="wc-bar" style="width:58%;background:#38a169"></div>
-            <span class="wc-temp">22°</span>
-        </div>
-        <div class="wc-bar-wrap" title="Billund 🇩🇰: 20°C max, 12°C min, 10 rain days">
-            <span class="wc-label">D36-D37</span>
-            <div class="wc-bar" style="width:50%;background:#38a169"></div>
-            <span class="wc-temp">20°</span>
-        </div>
-        <div class="wc-bar-wrap" title="Hamburg→Amiens: 22°C max, 13°C min, 9 rain days">
-            <span class="wc-label">D38-D39</span>
-            <div class="wc-bar" style="width:58%;background:#38a169"></div>
-            <span class="wc-temp">22°</span>
-        </div>
-        <div class="wc-bar-wrap" title="Amiens 🇫🇷: 23°C max, 13°C min, 8 rain days">
-            <span class="wc-label">D40</span>
-            <div class="wc-bar" style="width:62%;background:#d69e2e"></div>
-            <span class="wc-temp">23°</span>
-        </div>
-        <div class="wc-bar-wrap" title="Loire 🇫🇷: 26°C max, 14°C min, 7 rain days">
-            <span class="wc-label">D41-D42</span>
-            <div class="wc-bar" style="width:75%;background:#d69e2e"></div>
-            <span class="wc-temp">26°</span>
-        </div>
-        <div class="wc-bar-wrap" title="San Sebastián 🇪🇸: 26°C max, 17°C min, 9 rain days">
-            <span class="wc-label">D43</span>
-            <div class="wc-bar" style="width:75%;background:#d69e2e"></div>
-            <span class="wc-temp">26°</span>
-        </div>
-        <div class="wc-bar-wrap" title="Bilbao 🇪🇸: 26°C max, 17°C min, 7 rain days">
-            <span class="wc-label">D44</span>
-            <div class="wc-bar" style="width:75%;background:#d69e2e"></div>
-            <span class="wc-temp">26°</span>
-        </div>
-        <div class="wc-bar-wrap" title="Picos 🇪🇸: 23°C max, 11°C min, 7 rain days">
-            <span class="wc-label">D45</span>
-            <div class="wc-bar" style="width:62%;background:#d69e2e"></div>
-            <span class="wc-temp">23°</span>
-        </div>
-        <div class="wc-bar-wrap" title="Palencia 🇪🇸: 30°C max, 14°C min, 3 rain days">
-            <span class="wc-label">D46-D48</span>
-            <div class="wc-bar" style="width:91%;background:#e53e3e"></div>
-            <span class="wc-temp">30°</span>
-        </div>
-        <div class="wc-bar-wrap" title="Costa Brava 🇪🇸: 29°C max, 20°C min, 4 rain days">
-            <span class="wc-label">D49-D50</span>
-            <div class="wc-bar" style="width:87%;background:#e53e3e"></div>
-            <span class="wc-temp">29°</span>
-        </div>
-        <div class="wc-bar-wrap" title="→Genoa→Home 🇫🇷🇮🇹: 30°C max, 20°C min, 4 rain days">
-            <span class="wc-label">D51-D53</span>
-            <div class="wc-bar" style="width:91%;background:#e53e3e"></div>
-            <span class="wc-temp">30°</span>
-        </div>
-    </div>
-</div>
-<div id="weatherRealtime" class="weather-realtime">
-    <p class="wc-loading">Caricamento previsioni real-time...</p>
-</div>
-<p class="weather-source"><em>Fonte: Open-Meteo API (real-time) + dati climatici storici</em></p>
-<blockquote>
-<p><strong>App consigliate:</strong> <a href="https://www.yr.no" target="_blank" rel="noopener noreferrer">Yr.no</a> (Scandinavia) · <a href="https://www.aemet.es" target="_blank" rel="noopener noreferrer">AEMET</a> (Spagna) · <a href="https://meteofrance.com" target="_blank" rel="noopener noreferrer">Météo-France</a> (Francia)</p>
-</blockquote>
-<hr>
 <h2 id="secB">🗺️ Alternative — Tappe e Deviazioni</h2>
 <h3 id="b1">Europa Centrale</h3>
 <p><strong>Agganci:</strong> <a href="#g2">G2</a></p>
@@ -2705,128 +2286,6 @@
 <td data-label="Luogo">Costa Azzurra / Liguria 🇫🇷🇮🇹</td>
 <td data-label="Attività indoor"><strong>Musée Océanographique</strong> (Monaco), <strong>Acquario di Genova</strong> (il più grande d'Europa)</td>
 <td data-label="Note">Genova: mezza giornata intera</td>
-</tr>
-</tbody>
-</table>
-<hr>
-<h2 id="feste">🎉 Feste — Eventi e Festival lungo il Percorso</h2>
-<p>Il viaggio (26 giugno – 18 agosto) coincide con l'alta stagione di festival e feste popolari in tutta Europa. Ecco gli eventi che <strong>cadono esattamente nei giorni in cui sarete sul posto</strong> o raggiungibili con una breve deviazione.</p>
-<h3 id="coincidenze-confermate">Coincidenze confermate</h3>
-<table>
-<thead>
-<tr>
-<th>Giorno</th>
-<th>Data</th>
-<th>Luogo</th>
-<th>Evento</th>
-<th>Tipo</th>
-<th>Link</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td data-label="Giorno"><a href="#g5">G5</a></td>
-<td data-label="Data">01/07</td>
-<td data-label="Luogo">Tallinn 🇪🇪</td>
-<td data-label="Evento"><strong>Õllesummer</strong> (01–04/07) — festival musica + birra al Song Festival Grounds</td>
-<td data-label="Tipo">Musica/Popolare</td>
-<td data-label="Link"><a href="https://www.piletilevi.ee" target="_blank" rel="noopener noreferrer">piletilevi.ee</a></td>
-</tr>
-<tr>
-<td data-label="Giorno"><a href="#g9">G9</a></td>
-<td data-label="Data">05/07</td>
-<td data-label="Luogo">Oulu 🇫🇮</td>
-<td data-label="Evento"><strong>Oulu2026 Capitale Europea della Cultura</strong> — eventi speciali tutta estate</td>
-<td data-label="Tipo">Cultura</td>
-<td data-label="Link"><a href="https://oulu2026.eu" target="_blank" rel="noopener noreferrer">oulu2026.eu</a></td>
-</tr>
-<tr>
-<td data-label="Giorno"><a href="#g13">G13</a></td>
-<td data-label="Data">09/07</td>
-<td data-label="Luogo">Tromsø 🇳🇴</td>
-<td data-label="Evento"><strong>Midnight Sun Marathon</strong> (settimana eventi sportivi)</td>
-<td data-label="Tipo">Sport</td>
-<td data-label="Link"><a href="https://www.msm.no" target="_blank" rel="noopener noreferrer">msm.no</a></td>
-</tr>
-<tr>
-<td data-label="Giorno"><a href="#g26">G26</a></td>
-<td data-label="Data">22/07</td>
-<td data-label="Luogo">Trondheim 🇳🇴</td>
-<td data-label="Evento"><strong>Tall Ships Races</strong> — velieri in porto prima della partenza per Aalborg</td>
-<td data-label="Tipo">Velieri/Spettacolo</td>
-<td data-label="Link"><a href="https://sailtraininginternational.org" target="_blank" rel="noopener noreferrer">sailtraininginternational.org</a></td>
-</tr>
-<tr>
-<td data-label="Giorno"><a href="#g36">G36</a>–<a href="#g38">G38</a></td>
-<td data-label="Data">01–03/08</td>
-<td data-label="Luogo">Billund → Aalborg 🇩🇰</td>
-<td data-label="Evento"><strong>Tall Ships Races Aalborg</strong> (30/07–02/08) — raggiungibile in 1.5h da Billund!</td>
-<td data-label="Tipo">Velieri/Spettacolo</td>
-<td data-label="Link"><a href="https://www.tsraalborg.dk/en/" target="_blank" rel="noopener noreferrer">tsraalborg.dk</a></td>
-</tr>
-<tr>
-<td data-label="Giorno"><a href="#g44">G44</a></td>
-<td data-label="Data">09/08</td>
-<td data-label="Luogo">San Sebastián 🇪🇸</td>
-<td data-label="Evento"><strong>Semana Grande / Aste Nagusia</strong> (08–15/08) — la festa più grande dei Paesi Baschi: fuochi artificiali, concerti, fiere</td>
-<td data-label="Tipo">Popolare</td>
-<td data-label="Link"><a href="https://www.sansebastianturismoa.eus" target="_blank" rel="noopener noreferrer">sansebastianturismoa.eus</a></td>
-</tr>
-<tr>
-<td data-label="Giorno"><a href="#g50">G50</a></td>
-<td data-label="Data">15/08</td>
-<td data-label="Luogo">Costa Brava 🇪🇸🇫🇷🇮🇹</td>
-<td data-label="Evento"><strong>Ferragosto / Assunzione</strong> — festivo in IT/FR/ES, feste patronali ovunque</td>
-<td data-label="Tipo">Religioso/Popolare</td>
-<td data-label="Link">—</td>
-</tr>
-</tbody>
-</table>
-<h3 id="da-non-perdere-consiglio">Da non perdere (consiglio)</h3>
-<blockquote>
-<p><strong>Tall Ships Aalborg (G36–G38):</strong> Siete a Billund il 01–03/08 — Aalborg è a soli 100 km (1h15). I velieri più belli del mondo sono in porto dal 30/07 al 02/08. Vale una mezza giornata di deviazione, specialmente per i bambini!</p>
-<p><strong>Semana Grande San Sebastián (G44):</strong> Arrivate nel pieno della festa più importante della città. Fuochi artificiali sul mare ogni sera alle 22:30 (concorso internazionale pirotecnico), concerti gratuiti, fiere per bambini in Plaza de la Constitución. Parcheggio fuori centro consigliato.</p>
-<p><strong>Oulu2026 (G9):</strong> Oulu è Capitale Europea della Cultura 2026 — ci saranno installazioni artistiche, eventi speciali e concerti gratuiti in tutta la città. Controllate il programma su <a href="https://oulu2026.eu" target="_blank" rel="noopener noreferrer">oulu2026.eu</a> prima di arrivare.</p>
-</blockquote>
-<h3 id="feste-patronali-in-spagna-g43g49">Feste patronali in Spagna (G43–G49)</h3>
-<p>In agosto quasi ogni pueblo spagnolo ha la sua <strong>fiesta patronal</strong> con processioni, fuochi artificiali, musica e bancarelle. Non serve pianificare: basta fermarsi dove vedete bandierine colorate! Particolarmente belle:</p>
-<p>🎉 <strong>Asturie</strong> (G43): feste della sidra nei villaggi</p>
-<p>🎉 <strong>Burgos</strong> (G45): Fiestas de San Lorenzo (10/08)</p>
-<p>🎉 <strong>Segovia</strong> (G46): mercati medievali estivi</p>
-<h3 id="eventi-appena-mancati-per-pochi-giorni">Eventi appena mancati (per pochi giorni)</h3>
-<table>
-<thead>
-<tr>
-<th>Evento</th>
-<th>Date</th>
-<th>Dove</th>
-<th>Distanza temporale</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td data-label="Evento">Donauinselfest Vienna</td>
-<td data-label="Date">03–05/07</td>
-<td data-label="Dove">Vienna</td>
-<td data-label="Distanza temporale">Partite il 26/06, mancate di 7 giorni</td>
-</tr>
-<tr>
-<td data-label="Evento">Bukta Festival</td>
-<td data-label="Date">17–18/07</td>
-<td data-label="Dove">Tromsø</td>
-<td data-label="Distanza temporale">Partite il 11/07, mancate di 6 giorni</td>
-</tr>
-<tr>
-<td data-label="Evento">Olavsfestdagene</td>
-<td data-label="Date">28/07–03/08</td>
-<td data-label="Dove">Trondheim</td>
-<td data-label="Distanza temporale">Passate il 22/07, mancate di 6 giorni</td>
-</tr>
-<tr>
-<td data-label="Evento">Copenhagen Jazz Festival</td>
-<td data-label="Date">03–12/07</td>
-<td data-label="Dove">Copenhagen</td>
-<td data-label="Distanza temporale">Arrivate il 30/07, mancate di 18 giorni</td>
 </tr>
 </tbody>
 </table>
@@ -7440,10 +6899,8 @@
 <a href="#trekking">🥾 Trekking</a>
 <a href="#pesca">🎣 Pesca</a>
 <a href="#noleggi">🚴 Noleggi Outdoor</a>
-<a href="#secA">♨️ Terme</a>
 <a href="#drone">🛸 Drone</a>
 <a href="#inreach">📡 Garmin inReach</a>
-<a href="#poi-esplora">🗺️ Esplora</a>
 </div></div>
 <h2 id="campeggio">🚐 Campeggio — Regole per Paese</h2>
 <table>
@@ -8579,61 +8036,6 @@
 </table>
 <hr>
 
-<h2 id="secA">♨️ Terme — Bagni Termali per Paese</h2>
-<p><span id="a1"></span></p>
-<h3 id="terme-vienna">Therme Wien Oberlaa 🇦🇹</h3>
-<p><strong>Aggancio:</strong> <a href="#g1">G1</a> (Vienna, sera)</p>
-<p>Complesso termale moderno con <strong>Area Famiglia</strong> (scivoli, zona toddler)</p>
-<p>Biglietto giornaliero: <strong>€39</strong> adulto, <strong>€23,10</strong> bambino (ragazzi 8-13)</p>
-<p>In metro dal centro (U1 → Oberlaa)</p>
-<p>Sito: <a href="https://www.thermewien.at/en/" target="_blank" rel="noopener noreferrer">thermewien.at</a></p>
-<p>♨️ <a href="https://maps.google.com/?q=48.1420,16.4020(Therme+Wien+Oberlaa)" target="_blank" rel="noopener noreferrer">Apri in Maps</a></p>
-<p><span id="a2"></span></p>
-<h3 id="terme-finlandia">Sauna finlandese sul lago 🇫🇮</h3>
-<p><strong>Aggancio:</strong> <a href="#g8">G8</a> (Saimaa)</p>
-<p>Esperienza autentica: sauna a legna + tuffo nel lago</p>
-<p>Noleggiabile nelle strutture locali (~€20-40/famiglia)</p>
-<p>Non è una "terma" classica ma è L'esperienza termale del viaggio</p>
-<p>♨️ <a href="https://maps.google.com/?q=Saimaa+lakeside+sauna+Finland" target="_blank" rel="noopener noreferrer">Apri in Maps</a></p>
-<p><span id="a3"></span></p>
-<h3 id="terme-tromso">Pust Tromsø 🇳🇴</h3>
-<p><strong>Aggancio:</strong> <a href="#g15">G15</a> (Tromsø) 🥾</p>
-<p>Sauna galleggiante sul fiordo artico</p>
-<p>Tuffo nell'acqua a 8°C dopo la sauna!</p>
-<p>Prenotare su <a href="https://www.pust.no" target="_blank" rel="noopener noreferrer">pust.no</a> — 150 NOK adulto (~€13), 79 NOK bambino (~€7). Famiglia ~€40 totale!</p>
-<p>Esperienza unica, sole di mezzanotte incluso</p>
-<p>♨️ <a href="https://maps.google.com/?q=69.6470,18.9620(Pust+Tromsø)" target="_blank" rel="noopener noreferrer">Apri in Maps</a></p>
-<p><span id="a4"></span></p>
-<h3 id="terme-danimarca">Lalandia Aquadome 🇩🇰</h3>
-<p><strong>Aggancio:</strong> <a href="#g38">G38</a> (Billund, pomeriggio)</p>
-<p>Il più grande parco acquatico coperto della Scandinavia</p>
-<p>Scivoli, onde, zona bambini, temperatura tropicale</p>
-<p>♨️ Attaccato a Legoland — combo perfetto</p>
-<p>Biglietto giornaliero: DKK 299 adulto (~€40), DKK 249 bambino (~€33). Bambini &lt;3 gratis.</p>
-<p>Sito: <a href="https://www.lalandia.dk/en/billund" target="_blank" rel="noopener noreferrer">lalandia.dk</a></p>
-<p>♨️ <a href="https://maps.google.com/?q=55.7350,9.1250(Lalandia+Billund)" target="_blank" rel="noopener noreferrer">Apri in Maps</a></p>
-<p><span id="a5"></span></p>
-<h3 id="terme-sansebastian">La Perla San Sebastián 🇪🇸</h3>
-<p><strong>Aggancio:</strong> <a href="#g43">G43</a> (San Sebastián)</p>
-<p>Talassoterapia sulla spiaggia della Concha</p>
-<p>Piscina con vista sull'oceano</p>
-<p>~€30/persona, bambini ammessi in alcune zone</p>
-<p>♨️ <a href="https://maps.google.com/?q=43.3180,-1.9870(La+Perla+San+Sebastian)" target="_blank" rel="noopener noreferrer">Apri in Maps</a></p>
-<p><span id="a6"></span></p>
-<h3 id="terme-hermida">Balneario La Hermida 🇪🇸</h3>
-<p><strong>Aggancio:</strong> <a href="#g45">G45</a> (Picos de Europa) 🥾</p>
-<p>Acque a 60°C nella gola del Deva</p>
-<p>A 30 km da Fuente Dé — si abbina alla funivia mattutina</p>
-<p>Storico (XIX secolo), ristrutturato</p>
-<p>♨️ <a href="https://maps.google.com/?q=43.2250,-4.6100(Balneario+La+Hermida)" target="_blank" rel="noopener noreferrer">Apri in Maps</a></p>
-<p><span id="a7"></span></p>
-<h3 id="terme-castilla">Castilla Termal 🇪🇸</h3>
-<p><strong>Aggancio:</strong> <a href="#g47">G47</a> (Palencia)</p>
-<p>Terme in convento restaurato</p>
-<p>Acque minerali a 36°C</p>
-<p>♨️ Relax pre-eclissi perfetto</p>
-<p>♨️ <a href="https://maps.google.com/?q=Castilla+Termal+Palencia" target="_blank" rel="noopener noreferrer">Apri in Maps</a></p>
-<hr>
 <h2 id="drone">🛸 Drone — Regolamenti per Paese</h2>
 <blockquote>
 <p>Regole EASA (Open Category) valide in tutta l’UE/SEE: max <strong>120m AGL</strong>, volo a vista (VLOS), registrazione nel proprio Paese EU (valida ovunque). Droni <strong>sub-250g con camera</strong> (es. DJI Mini 4 Pro): categoria C0/A1, nessun patentino richiesto, si può volare vicino a persone (non assembramenti).</p>
@@ -8939,6 +8341,22 @@
 </tbody>
 </table>
 <p><strong>Fonti:</strong> <a href="https://www.garmin.com/en-US/p/765374" target="_blank" rel="noopener">Garmin inReach Mini 2</a> | <a href="https://explore.garmin.com" target="_blank" rel="noopener">Garmin Explore</a> | <a href="https://www.dekkinga.com" target="_blank" rel="noopener">Copertura Iridium</a></p>
+<hr>
+
+</section>
+
+
+<section id="tab-luoghi" class="tab-content">
+
+<h1 style="text-align:center; margin-top:16px;">🧭 Luoghi — Da Visitare</h1>
+<div class="tab-index-wrapper"><div class="tab-index">
+<a href="#poi-esplora">🎢 Parchi & Mercati</a>
+<a href="#feste">🎉 Festival</a>
+<a href="#secA">♨️ Terme</a>
+<a href="#musei-attrazioni">🏛️ Musei</a>
+<a href="#viewpoint">🌅 Viewpoint</a>
+</div></div>
+
 <h2 id="poi-esplora">🗺️ Esplora — Parchi, Mercati & Natura</h2>
 <p>Punti di interesse lungo il percorso del viaggio. Filtra per categoria e tocca 📍 per aprire in Google Maps.</p>
 <div id="poi-filters" style="display:flex; gap:8px; flex-wrap:wrap; margin:12px 0;">
@@ -8972,10 +8390,241 @@
 <a href="https://www.parconazionale5terre.it/en/" target="_blank" rel="noopener">Cinque Terre</a>
 </p>
 <hr>
+
+<h2 id="feste">🎉 Feste — Eventi e Festival lungo il Percorso</h2>
+<p>Il viaggio (26 giugno – 18 agosto) coincide con l'alta stagione di festival e feste popolari in tutta Europa. Ecco gli eventi che <strong>cadono esattamente nei giorni in cui sarete sul posto</strong> o raggiungibili con una breve deviazione.</p>
+<h3 id="coincidenze-confermate">Coincidenze confermate</h3>
+<table>
+<thead>
+<tr>
+<th>Evento</th>
+<th>Date</th>
+<th>Dove</th>
+<th>Giorno viaggio</th>
+<th>Note</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Evento">🎵 <strong>Õllesummer</strong></td>
+<td data-label="Date">01–04/07</td>
+<td data-label="Dove">Tallinn 🇪🇪</td>
+<td data-label="Giorno viaggio"><a href="#g5">G5</a></td>
+<td data-label="Note">Festival birra e musica più grande d'Estonia. Ingresso ~€15-25. <a href="https://ollesummer.ee" target="_blank" rel="noopener">ollesummer.ee</a></td>
+</tr>
+<tr>
+<td data-label="Evento">🎵 <strong>Ruisrock</strong></td>
+<td data-label="Date">04–06/07</td>
+<td data-label="Dove">Turku 🇫🇮</td>
+<td data-label="Giorno viaggio"><a href="#g8">G8</a> (deviazione)</td>
+<td data-label="Note">Uno dei festival rock più antichi d'Europa (1970). <a href="https://www.ruisrock.fi/en" target="_blank" rel="noopener">ruisrock.fi</a></td>
+</tr>
+<tr>
+<td data-label="Evento">🎪 <strong>Midnight Sun Film Festival</strong></td>
+<td data-label="Date">09–13/07</td>
+<td data-label="Dove">Sodankylä 🇫🇮</td>
+<td data-label="Giorno viaggio"><a href="#g13">G13</a></td>
+<td data-label="Note">Cinema sotto il sole di mezzanotte. Fondato da Aki Kaurismäki. <a href="https://msfilmfestival.fi/en/" target="_blank" rel="noopener">msfilmfestival.fi</a></td>
+</tr>
+<tr>
+<td data-label="Evento">🎵 <strong>Bukta Festival</strong></td>
+<td data-label="Date">17–19/07</td>
+<td data-label="Dove">Tromsø 🇳🇴</td>
+<td data-label="Giorno viaggio"><a href="#g21">G21</a> (vicino)</td>
+<td data-label="Note">Festival musica all'aperto nell'Artico. <a href="https://bukta.no" target="_blank" rel="noopener">bukta.no</a></td>
+</tr>
+<tr>
+<td data-label="Evento">🎵 <strong>Olavsfestdagene</strong></td>
+<td data-label="Date">28/07–03/08</td>
+<td data-label="Dove">Trondheim 🇳🇴</td>
+<td data-label="Giorno viaggio"><a href="#g26">G26</a></td>
+<td data-label="Note">Festival medievale di St. Olav. Concerti, mercato medievale, pellegrinaggio. <a href="https://www.olavsfestdagene.no/en" target="_blank" rel="noopener">olavsfestdagene.no</a></td>
+</tr>
+<tr>
+<td data-label="Evento">🎵 <strong>Copenhagen Jazz Festival</strong></td>
+<td data-label="Date">04–13/07</td>
+<td data-label="Dove">Copenhagen 🇩🇰</td>
+<td data-label="Giorno viaggio"><a href="#g34">G34</a> (appena dopo)</td>
+<td data-label="Note">1.000+ concerti in tutta la città, molti gratuiti. <a href="https://jazz.dk" target="_blank" rel="noopener">jazz.dk</a></td>
+</tr>
+<tr>
+<td data-label="Evento">🎪 <strong>Semana Grande</strong></td>
+<td data-label="Date">09–16/08</td>
+<td data-label="Dove">San Sebastián 🇪🇸</td>
+<td data-label="Giorno viaggio"><a href="#g43">G43</a>–<a href="#g44">G44</a></td>
+<td data-label="Note">La festa più grande dei Paesi Baschi. Fuochi d'artificio, concerti, tamborrada. <a href="https://www.donostia.eus/info/ciudadano/fiestas" target="_blank" rel="noopener">donostia.eus</a></td>
+</tr>
+<tr>
+<td data-label="Evento">🎪 <strong>Aste Nagusia Bilbao</strong></td>
+<td data-label="Date">16–24/08</td>
+<td data-label="Dove">Bilbao 🇪🇸</td>
+<td data-label="Giorno viaggio"><a href="#g44">G44</a> (inizio)</td>
+<td data-label="Note">9 giorni di festa: tori, concerti, fuochi. Inizia il sabato dopo il 15/08.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="da-non-perdere-consiglio">Da non perdere (consiglio)</h3>
+<p>🎪 <strong>Semana Grande + Aste Nagusia</strong> — Siete nel Paese Basco nel momento perfetto. San Sebastián e Bilbao in festa contemporaneamente. Fuochi d'artificio sulla Concha ogni sera alle 22:30!</p>
+<h3 id="feste-patronali-in-spagna-g43g49">Feste patronali in Spagna (G43–G49)</h3>
+<p>🇪🇸 In agosto quasi ogni città spagnola ha la sua festa patronale. Aspettatevi: musica in piazza fino a tardi, bancarelle, fuochi d'artificio. I bambini adorano l'atmosfera!</p>
+<h3 id="eventi-appena-mancati-per-pochi-giorni">Eventi appena mancati (per pochi giorni)</h3>
+<table>
+<thead>
+<tr>
+<th>Evento</th>
+<th>Date</th>
+<th>Dove</th>
+<th>Distanza temporale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Evento">Midsommar (Svezia)</td>
+<td data-label="Date">20–21/06</td>
+<td data-label="Dove">Tutta la Svezia</td>
+<td data-label="Distanza temporale">Partite il 26/06, mancate di 5 giorni</td>
+</tr>
+<tr>
+<td data-label="Evento">Juhannus (Finlandia)</td>
+<td data-label="Date">20–21/06</td>
+<td data-label="Dove">Tutta la Finlandia</td>
+<td data-label="Distanza temporale">Arrivate il 02/07, mancate di 11 giorni</td>
+</tr>
+<tr>
+<td data-label="Evento">Roskilde Festival</td>
+<td data-label="Date">28/06–05/07</td>
+<td data-label="Dove">Roskilde 🇩🇰</td>
+<td data-label="Distanza temporale">Arrivate il 30/07, mancate di 25 giorni</td>
+</tr>
+<tr>
+<td data-label="Evento">Copenhagen Distortion</td>
+<td data-label="Date">03–07/06</td>
+<td data-label="Dove">Copenhagen</td>
+<td data-label="Distanza temporale">Arrivate il 30/07, mancate di ~7 settimane</td>
+</tr>
+<tr>
+<td data-label="Evento">Gladmat Festival</td>
+<td data-label="Date">03–06/07</td>
+<td data-label="Dove">Stavanger 🇳🇴</td>
+<td data-label="Distanza temporale">Arrivate il 27/07, mancate di 21 giorni</td>
+</tr>
+<tr>
+<td data-label="Evento">Copenhagen Cooking</td>
+<td data-label="Date">03–12/07</td>
+<td data-label="Dove">Copenhagen</td>
+<td data-label="Distanza temporale">Arrivate il 30/07, mancate di 18 giorni</td>
+</tr>
+</tbody>
+</table>
+<hr>
+
+<h2 id="secA">♨️ Terme — Bagni Termali per Paese</h2>
+<p><span id="a1"></span></p>
+<h3 id="terme-vienna">Therme Wien Oberlaa 🇦🇹</h3>
+<p><strong>Aggancio:</strong> <a href="#g1">G1</a> (Vienna, sera)</p>
+<p>Complesso termale moderno con <strong>Area Famiglia</strong> (scivoli, zona toddler)</p>
+<p>Biglietto giornaliero: <strong>€39</strong> adulto, <strong>€23,10</strong> bambino (ragazzi 8-13)</p>
+<p>In metro dal centro (U1 → Oberlaa)</p>
+<p>Sito: <a href="https://www.thermewien.at/en/" target="_blank" rel="noopener noreferrer">thermewien.at</a></p>
+<p>♨️ <a href="https://maps.google.com/?q=48.1420,16.4020(Therme+Wien+Oberlaa)" target="_blank" rel="noopener noreferrer">Apri in Maps</a></p>
+<p><span id="a2"></span></p>
+<h3 id="terme-finlandia">Sauna finlandese sul lago 🇫🇮</h3>
+<p><strong>Aggancio:</strong> <a href="#g8">G8</a> (Saimaa)</p>
+<p>Esperienza autentica: sauna a legna + tuffo nel lago</p>
+<p>Noleggiabile nelle strutture locali (~€20-40/famiglia)</p>
+<p>Non è una "terma" classica ma è L'esperienza termale del viaggio</p>
+<p>♨️ <a href="https://maps.google.com/?q=Saimaa+lakeside+sauna+Finland" target="_blank" rel="noopener noreferrer">Apri in Maps</a></p>
+<p><span id="a3"></span></p>
+<h3 id="terme-tromso">Pust Tromsø 🇳🇴</h3>
+<p><strong>Aggancio:</strong> <a href="#g15">G15</a> (Tromsø) 🥾</p>
+<p>Sauna galleggiante sul fiordo artico</p>
+<p>Tuffo nell'acqua a 8°C dopo la sauna!</p>
+<p>Prenotare su <a href="https://www.pust.no" target="_blank" rel="noopener noreferrer">pust.no</a> — 150 NOK adulto (~€13), 79 NOK bambino (~€7). Famiglia ~€40 totale!</p>
+<p>Esperienza unica, sole di mezzanotte incluso</p>
+<p>♨️ <a href="https://maps.google.com/?q=69.6470,18.9620(Pust+Tromsø)" target="_blank" rel="noopener noreferrer">Apri in Maps</a></p>
+<p><span id="a4"></span></p>
+<h3 id="terme-danimarca">Lalandia Aquadome 🇩🇰</h3>
+<p><strong>Aggancio:</strong> <a href="#g38">G38</a> (Billund, pomeriggio)</p>
+<p>Il più grande parco acquatico coperto della Scandinavia</p>
+<p>Scivoli, onde, zona bambini, temperatura tropicale</p>
+<p>♨️ Attaccato a Legoland — combo perfetto</p>
+<p>Biglietto giornaliero: DKK 299 adulto (~€40), DKK 249 bambino (~€33). Bambini &lt;3 gratis.</p>
+<p>Sito: <a href="https://www.lalandia.dk/en/billund" target="_blank" rel="noopener noreferrer">lalandia.dk</a></p>
+<p>♨️ <a href="https://maps.google.com/?q=55.7350,9.1250(Lalandia+Billund)" target="_blank" rel="noopener noreferrer">Apri in Maps</a></p>
+<p><span id="a5"></span></p>
+<h3 id="terme-sansebastian">La Perla San Sebastián 🇪🇸</h3>
+<p><strong>Aggancio:</strong> <a href="#g43">G43</a> (San Sebastián)</p>
+<p>Talassoterapia sulla spiaggia della Concha</p>
+<p>Piscina con vista sull'oceano</p>
+<p>~€30/persona, bambini ammessi in alcune zone</p>
+<p>♨️ <a href="https://maps.google.com/?q=43.3180,-1.9870(La+Perla+San+Sebastian)" target="_blank" rel="noopener noreferrer">Apri in Maps</a></p>
+<p><span id="a6"></span></p>
+<h3 id="terme-hermida">Balneario La Hermida 🇪🇸</h3>
+<p><strong>Aggancio:</strong> <a href="#g45">G45</a> (Picos de Europa) 🥾</p>
+<p>Acque a 60°C nella gola del Deva</p>
+<p>A 30 km da Fuente Dé — si abbina alla funivia mattutina</p>
+<p>Storico (XIX secolo), ristrutturato</p>
+<p>♨️ <a href="https://maps.google.com/?q=43.2250,-4.6100(Balneario+La+Hermida)" target="_blank" rel="noopener noreferrer">Apri in Maps</a></p>
+<p><span id="a7"></span></p>
+<h3 id="terme-castilla">Castilla Termal 🇪🇸</h3>
+<p><strong>Aggancio:</strong> <a href="#g47">G47</a> (Palencia)</p>
+<p>Terme in convento restaurato</p>
+<p>Acque minerali a 36°C</p>
+<p>♨️ Relax pre-eclissi perfetto</p>
+<p>♨️ <a href="https://maps.google.com/?q=Castilla+Termal+Palencia" target="_blank" rel="noopener noreferrer">Apri in Maps</a></p>
+<hr>
+
+<h2 id="musei-attrazioni">🏛️ Musei e Attrazioni</h2>
+<p>Musei, monumenti e attrazioni culturali imperdibili lungo il percorso. Molti sono già citati nei singoli giorni dell'itinerario.</p>
+<h3 id="musei-austria">🇦🇹 Austria (G0–G1)</h3>
+<p>🏛️ <strong>Kunsthalle Leoben</strong> — Museo interattivo per bambini 6-14 anni. Mostre temporanee coinvolgenti. <a href="https://maps.google.com/?q=Kunsthalle+Leoben" target="_blank" rel="noopener">📍 Maps</a></p>
+<h3 id="musei-baltico">🇱🇹🇱🇻🇪🇪 Paesi Baltici (G3–G5)</h3>
+<p>🏛️ <strong>Museo dell'Occupazione</strong> (Riga) — Storia delle occupazioni sovietica e nazista. Coinvolgente e toccante. <a href="https://maps.google.com/?q=Museum+of+the+Occupation+of+Latvia+Riga" target="_blank" rel="noopener">📍 Maps</a></p>
+<p>🏛️ <strong>Lennusadam (Seaplane Harbour)</strong> (Tallinn) — Museo marittimo in hangar per idrovolanti. Sottomarino vero, simulatori. Perfetto per bambini. <a href="https://maps.google.com/?q=Lennusadam+Tallinn" target="_blank" rel="noopener">📍 Maps</a></p>
+<h3 id="musei-finlandia">🇫🇮 Finlandia (G6–G14)</h3>
+<p>🏛️ <strong>Suomenlinna</strong> (Helsinki) — Fortezza marina UNESCO raggiungibile in traghetto (15 min). Musei, tunnel, picnic. <a href="https://maps.google.com/?q=Suomenlinna+Helsinki" target="_blank" rel="noopener">📍 Maps</a></p>
+<p>🏛️ <strong>Arktikum</strong> (Rovaniemi) — Museo sulla vita artica e cultura Sámi. Architettura spettacolare. <a href="https://maps.google.com/?q=Arktikum+Rovaniemi" target="_blank" rel="noopener">📍 Maps</a></p>
+<h3 id="musei-norvegia">🇳🇴 Norvegia (G15–G33)</h3>
+<p>🏛️ <strong>Polaria</strong> (Tromsø) — Acquario artico con foche barbute e cinema panoramico. <a href="https://maps.google.com/?q=Polaria+Tromsø" target="_blank" rel="noopener">📍 Maps</a></p>
+<p>🏛️ <strong>Lofotr Viking Museum</strong> (Lofoten) — Ricostruzione di una longhouse vichinga. Attività interattive per bambini. <a href="https://maps.google.com/?q=Lofotr+Viking+Museum" target="_blank" rel="noopener">📍 Maps</a></p>
+<p>🏛️ <strong>Bryggen</strong> (Bergen) — Quartiere anseatico UNESCO. Edifici in legno colorati del XIV secolo. <a href="https://maps.google.com/?q=Bryggen+Bergen" target="_blank" rel="noopener">📍 Maps</a></p>
+<p>🏛️ <strong>Museo Petrolio Norvegese</strong> (Stavanger) — Interattivo e sorprendente. Piattaforme petrolifere, simulatori. <a href="https://maps.google.com/?q=Norwegian+Petroleum+Museum+Stavanger" target="_blank" rel="noopener">📍 Maps</a></p>
+<h3 id="musei-danimarca">🇩🇰 Danimarca (G34–G38)</h3>
+<p>🏛️ <strong>Nationalmuseet</strong> (Copenhagen) — Museo nazionale danese. Sezione bambini eccezionale (gratis). <a href="https://maps.google.com/?q=Nationalmuseet+Copenhagen" target="_blank" rel="noopener">📍 Maps</a></p>
+<p>🏛️ <strong>Experimentarium</strong> (Copenhagen) — Science center interattivo. 300+ exhibit hands-on. Perfetto per bambini 6-12. <a href="https://maps.google.com/?q=Experimentarium+Copenhagen" target="_blank" rel="noopener">📍 Maps</a></p>
+<h3 id="musei-francia">🇫🇷 Francia (G40–G42, G50)</h3>
+<p>🏛️ <strong>Château de Chambord</strong> (Loira) — Il più grande castello della Loira. Scala a doppia elica di Leonardo da Vinci. <a href="https://maps.google.com/?q=Château+de+Chambord" target="_blank" rel="noopener">📍 Maps</a></p>
+<p>🏛️ <strong>Château de Chenonceau</strong> (Loira) — "Castello delle Dame", sul fiume Cher. Giardini spettacolari. <a href="https://maps.google.com/?q=Château+de+Chenonceau" target="_blank" rel="noopener">📍 Maps</a></p>
+<h3 id="musei-spagna">🇪🇸 Spagna (G43–G49)</h3>
+<p>🏛️ <strong>Museo Guggenheim</strong> (Bilbao) — Architettura iconica di Frank Gehry. Collezione arte contemporanea. Scultura "Puppy" all'ingresso. <a href="https://maps.google.com/?q=Guggenheim+Museum+Bilbao" target="_blank" rel="noopener">📍 Maps</a></p>
+<p>🏛️ <strong>San Telmo Museoa</strong> (San Sebastián) — Museo della società basca in un convento del XVI secolo. <a href="https://maps.google.com/?q=San+Telmo+Museoa+San+Sebastian" target="_blank" rel="noopener">📍 Maps</a></p>
+<h3 id="musei-italia">🇮🇹 Italia (G51–G53)</h3>
+<p>🏛️ <strong>Acquario di Genova</strong> — Il più grande d'Europa. 70 vasche, delfini, squali, pinguini. <a href="https://maps.google.com/?q=Acquario+di+Genova" target="_blank" rel="noopener">📍 Maps</a></p>
+<p>🏛️ <strong>Galata Museo del Mare</strong> (Genova) — Museo marittimo interattivo. Sottomarino visitabile. <a href="https://maps.google.com/?q=Galata+Museo+del+Mare+Genova" target="_blank" rel="noopener">📍 Maps</a></p>
+<hr>
+
+<h2 id="viewpoint">🌅 Viewpoint — Punti Panoramici</h2>
+<p>I punti panoramici più spettacolari lungo il percorso. Molti sono raggiungibili in auto o con brevi camminate.</p>
+<h3 id="vp-norvegia">🇳🇴 Norvegia</h3>
+<p>🌅 <strong>Segla</strong> (Senja, <a href="#g16">G16</a>) — Vetta iconica di Senja. Escursione 4h A/R, vista mozzafiato sui fiordi. <a href="https://maps.google.com/?q=Segla+Senja" target="_blank" rel="noopener">📍 Maps</a></p>
+<p>🌅 <strong>Reinebringen</strong> (Lofoten, <a href="#g20">G20</a>) — Vista iconica su Reine e i fiordi. Scalinata in pietra (1h salita). <a href="https://maps.google.com/?q=Reinebringen+Lofoten" target="_blank" rel="noopener">📍 Maps</a></p>
+<p>🌅 <strong>Trollstigen Viewpoint</strong> (<a href="#g28">G28</a>) — Piattaforma panoramica sulla strada dei troll. Tornanti vertiginosi e cascate. <a href="https://maps.google.com/?q=Trollstigen+Viewpoint" target="_blank" rel="noopener">📍 Maps</a></p>
+<p>🌅 <strong>Geirangerfjord Viewpoint (Ørnesvingen)</strong> (<a href="#g28">G28</a>) — Vista a strapiombo sul fiordo UNESCO. Accessibile in auto. <a href="https://maps.google.com/?q=Ørnesvingen+Geiranger" target="_blank" rel="noopener">📍 Maps</a></p>
+<p>🌅 <strong>Atlantic Road</strong> (<a href="#g27">G27</a>) — Strada sull'oceano tra isolotti. Uno dei drive più scenografici al mondo. <a href="https://maps.google.com/?q=Atlantic+Road+Norway" target="_blank" rel="noopener">📍 Maps</a></p>
+<p>🌅 <strong>Preikestolen</strong> (Stavanger, <a href="#g31">G31</a>) — "Pulpito": roccia piatta a 604m sul Lysefjord. Escursione 4h A/R. <a href="https://maps.google.com/?q=Preikestolen" target="_blank" rel="noopener">📍 Maps</a></p>
+<p>🌅 <strong>Stegastein Viewpoint</strong> (Aurlandsfjord, <a href="#g29">G29</a>) — Piattaforma in vetro sospesa a 650m sopra il fiordo. Accessibile in auto. <a href="https://maps.google.com/?q=Stegastein+Viewpoint" target="_blank" rel="noopener">📍 Maps</a></p>
+<h3 id="vp-finlandia">🇫🇮 Finlandia</h3>
+<p>🌅 <strong>Punkaharju Ridge</strong> (<a href="#g8">G8</a>) — Cresta glaciale tra due laghi. Strada panoramica unica al mondo (7 km). <a href="https://maps.google.com/?q=Punkaharju+Ridge" target="_blank" rel="noopener">📍 Maps</a></p>
+<p>🌅 <strong>Aavasaksa Hill</strong> (<a href="#g10">G10</a>) — Punto più meridionale dove si vede il sole di mezzanotte. Torre panoramica. <a href="https://maps.google.com/?q=Aavasaksa+Hill" target="_blank" rel="noopener">📍 Maps</a></p>
+<h3 id="vp-spagna">🇪🇸 Spagna</h3>
+<p>🌅 <strong>Fuente Dé Cable Car</strong> (Picos, <a href="#g45">G45</a>) — Funivia a 1.823m. Vista a 360° sulle montagne calcaree. <a href="https://maps.google.com/?q=Fuente+Dé+Cable+Car" target="_blank" rel="noopener">📍 Maps</a></p>
+<p>🌅 <strong>Monte Igueldo</strong> (San Sebastián, <a href="#g43">G43</a>) — Funicolare storica con vista sulla baia della Concha. <a href="https://maps.google.com/?q=Monte+Igueldo+San+Sebastian" target="_blank" rel="noopener">📍 Maps</a></p>
+<h3 id="vp-francia">🇫🇷 Francia & 🇮🇹 Italia</h3>
+<p>🌅 <strong>Corniche Basque</strong> (<a href="#g43">G43</a>) — Strada costiera tra Hendaye e Saint-Jean-de-Luz. Scogliere sull'Atlantico. <a href="https://maps.google.com/?q=Corniche+Basque" target="_blank" rel="noopener">📍 Maps</a></p>
+<p>🌅 <strong>Cinque Terre sentiero</strong> (<a href="#g51">G51</a>) — Sentiero tra i borghi con vista sul mare ligure. <a href="https://maps.google.com/?q=Sentiero+Azzurro+Cinque+Terre" target="_blank" rel="noopener">📍 Maps</a></p>
 <hr>
 
 </section>
-
 <section id="tab-piano" class="tab-content">
 
 <h1 style="text-align:center; margin-top:16px;">🗺️ Piano — Budget, Checklist e Fonti</h1>
@@ -9890,6 +9539,443 @@
     <p style="color:var(--text-muted);font-size:13px;">Caricamento previsioni...</p>
   </div>
 </div>
+
+<!-- ─── METEO STORICO (collapsible) ─── -->
+<details id="pos-meteo-storico" style="margin-top:16px;">
+<summary style="cursor:pointer;font-size:16px;font-weight:700;padding:12px 0;user-select:none;">📊 Meteo Storico — per Zona e Giorno <span style="font-size:13px;color:var(--text-muted);font-weight:400;">(medie climatiche)</span></summary>
+<div style="padding:8px 0;">
+<span id="meteo"></span>
+<blockquote>
+<p>Medie climatiche storiche per le <strong>date esatte</strong> in cui sarete in ogni zona (26/06 → 18/08). Fonti: WeatherSpark, Climate-Data.org, VisitNorway, VisitFinland, AccuWeather.</p>
+</blockquote>
+<h4 id="meteo-tabella-riassuntiva" style="font-size:1.2em;margin-top:1.5em;">📊 Meteo — Tabella Riassuntiva</h4>
+<table>
+<thead>
+<tr>
+<th>Giorni</th>
+<th>Zona</th>
+<th>T max</th>
+<th>T min</th>
+<th>Pioggia (mm/mese)</th>
+<th>Gg pioggia</th>
+<th>Ore luce</th>
+<th>Rischio meteo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Giorni"><a href="#g0">G0</a>-<a href="#g1">G1</a> (26-27/06)</td>
+<td data-label="Zona">Austria 🇦🇹</td>
+<td data-label="T max">25°C</td>
+<td data-label="T min">15°C</td>
+<td data-label="Pioggia (mm/mese)">~80</td>
+<td data-label="Gg pioggia">10</td>
+<td data-label="Ore luce">16h</td>
+<td data-label="Rischio meteo">Temporali pom.</td>
+</tr>
+<tr>
+<td data-label="Giorni"><a href="#g2">G2</a> (28/06)</td>
+<td data-label="Zona">CZ → PL 🇨🇿🇵🇱</td>
+<td data-label="T max">23°C</td>
+<td data-label="T min">13°C</td>
+<td data-label="Pioggia (mm/mese)">~70</td>
+<td data-label="Gg pioggia">9</td>
+<td data-label="Ore luce">17h</td>
+<td data-label="Rischio meteo">Temporali pom.</td>
+</tr>
+<tr>
+<td data-label="Giorni"><a href="#g3">G3</a>-<a href="#g5">G5</a> (29/06–01/07)</td>
+<td data-label="Zona">Baltico 🇱🇹🇱🇻🇪🇪</td>
+<td data-label="T max">21-22°C</td>
+<td data-label="T min">12°C</td>
+<td data-label="Pioggia (mm/mese)">~65</td>
+<td data-label="Gg pioggia">9</td>
+<td data-label="Ore luce">18h+</td>
+<td data-label="Rischio meteo">Piogge brevi</td>
+</tr>
+<tr>
+<td data-label="Giorni"><a href="#g6">G6</a> (02/07)</td>
+<td data-label="Zona">Helsinki → Finlandia 🇫🇮</td>
+<td data-label="T max">20°C</td>
+<td data-label="T min">12°C</td>
+<td data-label="Pioggia (mm/mese)">~60</td>
+<td data-label="Gg pioggia">8</td>
+<td data-label="Ore luce">19h</td>
+<td data-label="Rischio meteo">Variabile</td>
+</tr>
+<tr>
+<td data-label="Giorni"><a href="#g7">G7</a>-<a href="#g9">G9</a> (03-05/07)</td>
+<td data-label="Zona">Laghi / Oulu 🇫🇮</td>
+<td data-label="T max">20-22°C</td>
+<td data-label="T min">10-12°C</td>
+<td data-label="Pioggia (mm/mese)">~65</td>
+<td data-label="Gg pioggia">10</td>
+<td data-label="Ore luce">20h+</td>
+<td data-label="Rischio meteo">⚠️ Zanzare! Piogge brevi</td>
+</tr>
+<tr>
+<td data-label="Giorni"><a href="#g10">G10</a>-<a href="#g14">G14</a> (06-10/07)</td>
+<td data-label="Zona">Lapponia 🇫🇮</td>
+<td data-label="T max">18-22°C</td>
+<td data-label="T min">8-12°C</td>
+<td data-label="Pioggia (mm/mese)">~55</td>
+<td data-label="Gg pioggia">9</td>
+<td data-label="Ore luce">22-24h</td>
+<td data-label="Rischio meteo">⚠️ Zanzare al picco</td>
+</tr>
+<tr>
+<td data-label="Giorni"><a href="#g15">G15</a> (11/07)</td>
+<td data-label="Zona">Tromsø 🇳🇴</td>
+<td data-label="T max">15°C</td>
+<td data-label="T min">9°C</td>
+<td data-label="Pioggia (mm/mese)">~60</td>
+<td data-label="Gg pioggia">10</td>
+<td data-label="Ore luce">24h ☀️</td>
+<td data-label="Rischio meteo">Vento, pioggia possibile</td>
+</tr>
+<tr>
+<td data-label="Giorni"><a href="#g16">G16</a>-<a href="#g23">G23</a> (12-19/07)</td>
+<td data-label="Zona">Senja + Vesterålen + Lofoten 🇳🇴</td>
+<td data-label="T max">14-16°C</td>
+<td data-label="T min">10-12°C</td>
+<td data-label="Pioggia (mm/mese)">~80</td>
+<td data-label="Gg pioggia">12-14</td>
+<td data-label="Ore luce">22-24h</td>
+<td data-label="Rischio meteo">⚠️ Pioggia frequente, vento</td>
+</tr>
+<tr>
+<td data-label="Giorni"><a href="#g24">G24</a>-<a href="#g25">G25</a> (20-21/07)</td>
+<td data-label="Zona">Mo i Rana → Trondheim 🇳🇴</td>
+<td data-label="T max">17-19°C</td>
+<td data-label="T min">10-12°C</td>
+<td data-label="Pioggia (mm/mese)">~70</td>
+<td data-label="Gg pioggia">10</td>
+<td data-label="Ore luce">20h</td>
+<td data-label="Rischio meteo">Pioggia possibile</td>
+</tr>
+<tr>
+<td data-label="Giorni"><a href="#g26">G26</a> (22/07)</td>
+<td data-label="Zona">Trondheim 🇳🇴</td>
+<td data-label="T max">19°C</td>
+<td data-label="T min">11°C</td>
+<td data-label="Pioggia (mm/mese)">~70</td>
+<td data-label="Gg pioggia">10</td>
+<td data-label="Ore luce">20h</td>
+<td data-label="Rischio meteo">Variabile</td>
+</tr>
+<tr>
+<td data-label="Giorni"><a href="#g27">G27</a>-<a href="#g29">G29</a> (23-25/07)</td>
+<td data-label="Zona">Atlantic Rd → Bergen 🇳🇴</td>
+<td data-label="T max">16-17°C</td>
+<td data-label="T min">11°C</td>
+<td data-label="Pioggia (mm/mese)">~150-170</td>
+<td data-label="Gg pioggia">15-17</td>
+<td data-label="Ore luce">19h</td>
+<td data-label="Rischio meteo">⚠️ Bergen: pioggia quasi certa</td>
+</tr>
+<tr>
+<td data-label="Giorni"><a href="#g30">G30</a> (26/07)</td>
+<td data-label="Zona">Bergen 🇳🇴</td>
+<td data-label="T max">17°C</td>
+<td data-label="T min">11°C</td>
+<td data-label="Pioggia (mm/mese)">~170</td>
+<td data-label="Gg pioggia">17</td>
+<td data-label="Ore luce">19h</td>
+<td data-label="Rischio meteo">⚠️ Pioggia molto probabile</td>
+</tr>
+<tr>
+<td data-label="Giorni"><a href="#g31">G31</a>-<a href="#g32">G32</a> (27-28/07)</td>
+<td data-label="Zona">Stavanger → K.sand 🇳🇴</td>
+<td data-label="T max">17-18°C</td>
+<td data-label="T min">11-12°C</td>
+<td data-label="Pioggia (mm/mese)">~100</td>
+<td data-label="Gg pioggia">12</td>
+<td data-label="Ore luce">18h 30m</td>
+<td data-label="Rischio meteo">Nuvoloso 50%</td>
+</tr>
+<tr>
+<td data-label="Giorni"><a href="#g33">G33</a> (29/07)</td>
+<td data-label="Zona">Traghetto → Copenhagen 🇩🇰</td>
+<td data-label="T max">22°C</td>
+<td data-label="T min">14°C</td>
+<td data-label="Pioggia (mm/mese)">~60</td>
+<td data-label="Gg pioggia">9</td>
+<td data-label="Ore luce">17h</td>
+<td data-label="Rischio meteo">Piogge sporadiche</td>
+</tr>
+<tr>
+<td data-label="Giorni"><a href="#g34">G34</a>-<a href="#g35">G35</a> (30-31/07)</td>
+<td data-label="Zona">Copenhagen 🇩🇰</td>
+<td data-label="T max">22°C</td>
+<td data-label="T min">14°C</td>
+<td data-label="Pioggia (mm/mese)">~60</td>
+<td data-label="Gg pioggia">9</td>
+<td data-label="Ore luce">17h</td>
+<td data-label="Rischio meteo">Piogge sporadiche</td>
+</tr>
+<tr>
+<td data-label="Giorni"><a href="#g36">G36</a>-<a href="#g38">G38</a> (01-03/08)</td>
+<td data-label="Zona">Billund 🇩🇰</td>
+<td data-label="T max">21°C</td>
+<td data-label="T min">13°C</td>
+<td data-label="Pioggia (mm/mese)">~65</td>
+<td data-label="Gg pioggia">10</td>
+<td data-label="Ore luce">16h 30m</td>
+<td data-label="Rischio meteo">Variabile</td>
+</tr>
+<tr>
+<td data-label="Giorni"><a href="#g39">G39</a> (04/08)</td>
+<td data-label="Zona">Brema 🇩🇪</td>
+<td data-label="T max">22°C</td>
+<td data-label="T min">13°C</td>
+<td data-label="Pioggia (mm/mese)">~65</td>
+<td data-label="Gg pioggia">10</td>
+<td data-label="Ore luce">16h</td>
+<td data-label="Rischio meteo">Variabile</td>
+</tr>
+<tr>
+<td data-label="Giorni"><a href="#g40">G40</a> (05/08)</td>
+<td data-label="Zona">Amiens 🇫🇷</td>
+<td data-label="T max">23°C</td>
+<td data-label="T min">13°C</td>
+<td data-label="Pioggia (mm/mese)">~55</td>
+<td data-label="Gg pioggia">8</td>
+<td data-label="Ore luce">15h 30m</td>
+<td data-label="Rischio meteo">Piogge brevi</td>
+</tr>
+<tr>
+<td data-label="Giorni"><a href="#g41">G41</a>-<a href="#g42">G42</a> (06-07/08)</td>
+<td data-label="Zona">Loira 🇫🇷</td>
+<td data-label="T max">25-26°C</td>
+<td data-label="T min">13-14°C</td>
+<td data-label="Pioggia (mm/mese)">~52</td>
+<td data-label="Gg pioggia">7</td>
+<td data-label="Ore luce">15h</td>
+<td data-label="Rischio meteo">Bello</td>
+</tr>
+<tr>
+<td data-label="Giorni"><a href="#g43">G43</a> (08/08)</td>
+<td data-label="Zona">San Sebastián 🇪🇸</td>
+<td data-label="T max">24-27°C</td>
+<td data-label="T min">16-18°C</td>
+<td data-label="Pioggia (mm/mese)">~72</td>
+<td data-label="Gg pioggia">9</td>
+<td data-label="Ore luce">14h 30m</td>
+<td data-label="Rischio meteo">Umido, pioggia possibile</td>
+</tr>
+<tr>
+<td data-label="Giorni"><a href="#g44">G44</a> (09/08)</td>
+<td data-label="Zona">Bilbao 🇪🇸</td>
+<td data-label="T max">25-27°C</td>
+<td data-label="T min">17°C</td>
+<td data-label="Pioggia (mm/mese)">~60</td>
+<td data-label="Gg pioggia">7</td>
+<td data-label="Ore luce">14h 30m</td>
+<td data-label="Rischio meteo">Meno pioggia</td>
+</tr>
+<tr>
+<td data-label="Giorni"><a href="#g45">G45</a> (10/08)</td>
+<td data-label="Zona">Picos de Europa 🇪🇸</td>
+<td data-label="T max">20-25°C / 10-15°C</td>
+<td data-label="T min">10-12°C</td>
+<td data-label="Pioggia (mm/mese)">~50</td>
+<td data-label="Gg pioggia">7</td>
+<td data-label="Ore luce">14h</td>
+<td data-label="Rischio meteo">Temporali in quota</td>
+</tr>
+<tr>
+<td data-label="Giorni"><a href="#g46">G46</a>-<a href="#g48">G48</a> (11-13/08)</td>
+<td data-label="Zona">Palencia 🇪🇸</td>
+<td data-label="T max"><strong>29-31°C</strong></td>
+<td data-label="T min">13-14°C</td>
+<td data-label="Pioggia (mm/mese)"><strong>15</strong></td>
+<td data-label="Gg pioggia"><strong>2-3</strong></td>
+<td data-label="Ore luce">14h</td>
+<td data-label="Rischio meteo">☀️ Cielo sereno</td>
+</tr>
+<tr>
+<td data-label="Giorni"><a href="#g49">G49</a> (14/08)</td>
+<td data-label="Zona">Costa Brava 🇪🇸</td>
+<td data-label="T max">28-30°C</td>
+<td data-label="T min">19-20°C</td>
+<td data-label="Pioggia (mm/mese)">~40</td>
+<td data-label="Gg pioggia">4</td>
+<td data-label="Ore luce">14h</td>
+<td data-label="Rischio meteo">Bello e caldo</td>
+</tr>
+<tr>
+<td data-label="Giorni"><a href="#g50">G50</a> (15/08)</td>
+<td data-label="Zona">Costa Azzurra 🇫🇷</td>
+<td data-label="T max">28-31°C</td>
+<td data-label="T min">17-19°C</td>
+<td data-label="Pioggia (mm/mese)">~25</td>
+<td data-label="Gg pioggia">3</td>
+<td data-label="Ore luce">14h</td>
+<td data-label="Rischio meteo">☀️ Molto bello</td>
+</tr>
+<tr>
+<td data-label="Giorni"><a href="#g51">G51</a>-<a href="#g52">G52</a> (16-17/08)</td>
+<td data-label="Zona">Genova 🇮🇹</td>
+<td data-label="T max">28-30°C</td>
+<td data-label="T min">20-22°C</td>
+<td data-label="Pioggia (mm/mese)">~40</td>
+<td data-label="Gg pioggia">4</td>
+<td data-label="Ore luce">14h</td>
+<td data-label="Rischio meteo">Caldo umido</td>
+</tr>
+<tr>
+<td data-label="Giorni"><a href="#g53">G53</a> (18/08)</td>
+<td data-label="Zona">Genova → Padova 🇮🇹</td>
+<td data-label="T max">30-32°C</td>
+<td data-label="T min">20°C</td>
+<td data-label="Pioggia (mm/mese)">~45</td>
+<td data-label="Gg pioggia">4</td>
+<td data-label="Ore luce">14h</td>
+<td data-label="Rischio meteo">Temporali padani pom.</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h4 id="meteo-profilo-termico" style="font-size:1.2em;margin-top:1.5em;">🌡️ Meteo — Profilo Termico</h4>
+<p class="weather-reliability-note">🔵 Fresco (≤17°C) · 🟢 Mite (18-23°C) · 🟡 Caldo (24-27°C) · 🔴 Molto caldo (≥28°C)</p>
+<div class="weather-chart" id="weatherChart">
+    <div class="wc-bars">
+        <div class="wc-bar-wrap" title="Austria 🇦🇹: 25°C max, 15°C min, 10 rain days">
+            <span class="wc-label">D0-D1</span>
+            <div class="wc-bar" style="width:70%;background:#d69e2e"></div>
+            <span class="wc-temp">25°</span>
+        </div>
+        <div class="wc-bar-wrap" title="CZ → PL 🇨🇿🇵🇱: 23°C max, 13°C min, 9 rain days">
+            <span class="wc-label">D2</span>
+            <div class="wc-bar" style="width:62%;background:#d69e2e"></div>
+            <span class="wc-temp">23°</span>
+        </div>
+        <div class="wc-bar-wrap" title="Baltic 🇱🇹🇱🇻🇪🇪: 22°C max, 12°C min, 9 rain days">
+            <span class="wc-label">D3-D5</span>
+            <div class="wc-bar" style="width:58%;background:#38a169"></div>
+            <span class="wc-temp">22°</span>
+        </div>
+        <div class="wc-bar-wrap" title="Helsinki 🇫🇮: 20°C max, 12°C min, 8 rain days">
+            <span class="wc-label">D6</span>
+            <div class="wc-bar" style="width:50%;background:#38a169"></div>
+            <span class="wc-temp">20°</span>
+        </div>
+        <div class="wc-bar-wrap" title="Lakes/Oulu 🇫🇮: 22°C max, 12°C min, 10 rain days">
+            <span class="wc-label">D7-D9</span>
+            <div class="wc-bar" style="width:58%;background:#38a169"></div>
+            <span class="wc-temp">22°</span>
+        </div>
+        <div class="wc-bar-wrap" title="Lapland 🇫🇮: 20°C max, 10°C min, 9 rain days">
+            <span class="wc-label">D10-D14</span>
+            <div class="wc-bar" style="width:50%;background:#38a169"></div>
+            <span class="wc-temp">20°</span>
+        </div>
+        <div class="wc-bar-wrap" title="Tromsø 🇳🇴: 15°C max, 9°C min, 10 rain days">
+            <span class="wc-label">D15</span>
+            <div class="wc-bar" style="width:29%;background:#3182ce"></div>
+            <span class="wc-temp">15°</span>
+        </div>
+        <div class="wc-bar-wrap" title="Lofoten 🇳🇴: 15°C max, 11°C min, 13 rain days">
+            <span class="wc-label">D16-D23</span>
+            <div class="wc-bar" style="width:29%;background:#3182ce"></div>
+            <span class="wc-temp">15°</span>
+        </div>
+        <div class="wc-bar-wrap" title="Mo→Trondheim 🇳🇴: 18°C max, 11°C min, 10 rain days">
+            <span class="wc-label">D24-D25</span>
+            <div class="wc-bar" style="width:41%;background:#38a169"></div>
+            <span class="wc-temp">18°</span>
+        </div>
+        <div class="wc-bar-wrap" title="Trondheim 🇳🇴: 19°C max, 11°C min, 10 rain days">
+            <span class="wc-label">D26</span>
+            <div class="wc-bar" style="width:45%;background:#38a169"></div>
+            <span class="wc-temp">19°</span>
+        </div>
+        <div class="wc-bar-wrap" title="Atlantic→Bergen 🇳🇴: 17°C max, 11°C min, 16 rain days">
+            <span class="wc-label">D27-D29</span>
+            <div class="wc-bar" style="width:37%;background:#3182ce"></div>
+            <span class="wc-temp">17°</span>
+        </div>
+        <div class="wc-bar-wrap" title="Bergen 🇳🇴: 17°C max, 11°C min, 17 rain days">
+            <span class="wc-label">D30</span>
+            <div class="wc-bar" style="width:37%;background:#3182ce"></div>
+            <span class="wc-temp">17°</span>
+        </div>
+        <div class="wc-bar-wrap" title="Stavanger 🇳🇴: 18°C max, 12°C min, 12 rain days">
+            <span class="wc-label">D31-D32</span>
+            <div class="wc-bar" style="width:41%;background:#38a169"></div>
+            <span class="wc-temp">18°</span>
+        </div>
+        <div class="wc-bar-wrap" title="→Copenhagen 🇩🇰: 22°C max, 14°C min, 9 rain days">
+            <span class="wc-label">D33</span>
+            <div class="wc-bar" style="width:58%;background:#38a169"></div>
+            <span class="wc-temp">22°</span>
+        </div>
+        <div class="wc-bar-wrap" title="Copenhagen 🇩🇰: 22°C max, 14°C min, 9 rain days">
+            <span class="wc-label">D34-D35</span>
+            <div class="wc-bar" style="width:58%;background:#38a169"></div>
+            <span class="wc-temp">22°</span>
+        </div>
+        <div class="wc-bar-wrap" title="Billund 🇩🇰: 20°C max, 12°C min, 10 rain days">
+            <span class="wc-label">D36-D37</span>
+            <div class="wc-bar" style="width:50%;background:#38a169"></div>
+            <span class="wc-temp">20°</span>
+        </div>
+        <div class="wc-bar-wrap" title="Hamburg→Amiens: 22°C max, 13°C min, 9 rain days">
+            <span class="wc-label">D38-D39</span>
+            <div class="wc-bar" style="width:58%;background:#38a169"></div>
+            <span class="wc-temp">22°</span>
+        </div>
+        <div class="wc-bar-wrap" title="Amiens 🇫🇷: 23°C max, 13°C min, 8 rain days">
+            <span class="wc-label">D40</span>
+            <div class="wc-bar" style="width:62%;background:#d69e2e"></div>
+            <span class="wc-temp">23°</span>
+        </div>
+        <div class="wc-bar-wrap" title="Loire 🇫🇷: 26°C max, 14°C min, 7 rain days">
+            <span class="wc-label">D41-D42</span>
+            <div class="wc-bar" style="width:75%;background:#d69e2e"></div>
+            <span class="wc-temp">26°</span>
+        </div>
+        <div class="wc-bar-wrap" title="San Sebastián 🇪🇸: 26°C max, 17°C min, 9 rain days">
+            <span class="wc-label">D43</span>
+            <div class="wc-bar" style="width:75%;background:#d69e2e"></div>
+            <span class="wc-temp">26°</span>
+        </div>
+        <div class="wc-bar-wrap" title="Bilbao 🇪🇸: 26°C max, 17°C min, 7 rain days">
+            <span class="wc-label">D44</span>
+            <div class="wc-bar" style="width:75%;background:#d69e2e"></div>
+            <span class="wc-temp">26°</span>
+        </div>
+        <div class="wc-bar-wrap" title="Picos 🇪🇸: 23°C max, 11°C min, 7 rain days">
+            <span class="wc-label">D45</span>
+            <div class="wc-bar" style="width:62%;background:#d69e2e"></div>
+            <span class="wc-temp">23°</span>
+        </div>
+        <div class="wc-bar-wrap" title="Palencia 🇪🇸: 30°C max, 14°C min, 3 rain days">
+            <span class="wc-label">D46-D48</span>
+            <div class="wc-bar" style="width:91%;background:#e53e3e"></div>
+            <span class="wc-temp">30°</span>
+        </div>
+        <div class="wc-bar-wrap" title="Costa Brava 🇪🇸: 29°C max, 20°C min, 4 rain days">
+            <span class="wc-label">D49-D50</span>
+            <div class="wc-bar" style="width:87%;background:#e53e3e"></div>
+            <span class="wc-temp">29°</span>
+        </div>
+        <div class="wc-bar-wrap" title="→Genoa→Home 🇫🇷🇮🇹: 30°C max, 20°C min, 4 rain days">
+            <span class="wc-label">D51-D53</span>
+            <div class="wc-bar" style="width:91%;background:#e53e3e"></div>
+            <span class="wc-temp">30°</span>
+        </div>
+    </div>
+</div>
+<div id="weatherRealtime" class="weather-realtime">
+    <p class="wc-loading">Caricamento previsioni real-time...</p>
+</div>
+<p class="weather-source"><em>Fonte: Open-Meteo API (real-time) + dati climatici storici</em></p>
+<blockquote>
+<p><strong>App consigliate:</strong> <a href="https://www.yr.no" target="_blank" rel="noopener noreferrer">Yr.no</a> (Scandinavia) · <a href="https://www.aemet.es" target="_blank" rel="noopener noreferrer">AEMET</a> (Spagna) · <a href="https://meteofrance.com" target="_blank" rel="noopener noreferrer">Météo-France</a> (Francia)</p>
+</blockquote>
+</div>
+</details>
 
 <hr>
 

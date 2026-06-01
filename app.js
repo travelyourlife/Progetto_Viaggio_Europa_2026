@@ -195,8 +195,11 @@ function doGoogleSignIn(successCb) {
       var credential = firebase.auth.GoogleAuthProvider.credential(response.credential);
       firebase.auth().signInWithCredential(credential).then(function(result) {
         console.info('[Auth] GIS login success:', result.user.email);
-        if (_gisSuccessCb) _gisSuccessCb(result.user);
-        if (window.showToast) showToast((isEN ? 'Welcome, ' : 'Benvenuto, ') + (result.user.displayName || result.user.email), 'success');
+        if (_gisSuccessCb) {
+          _gisSuccessCb(result.user);
+        } else {
+          if (window.showToast) showToast((isEN ? 'Welcome, ' : 'Benvenuto, ') + (result.user.displayName || result.user.email), 'success');
+        }
       }).catch(function(err) {
         console.error('[Auth] signInWithCredential error:', err);
         if (window.showToast) showToast((isEN ? 'Login error: ' : 'Errore login: ') + err.message, 'error');
@@ -3018,7 +3021,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // ═══════════════════════════════════════════════════════════════
     (function() {
         // Apply accordion to these tabs
-        var accordionTabs = ['tab-riepilogo', 'tab-giorni', 'tab-cultura', 'tab-cibo', 'tab-attivita', 'tab-piano', 'tab-zaino'];
+        var accordionTabs = ['tab-riepilogo', 'tab-giorni', 'tab-cultura', 'tab-cibo', 'tab-attivita', 'tab-luoghi', 'tab-piano', 'tab-zaino'];
         accordionTabs.forEach(function(tabId) {
             var section = document.getElementById(tabId);
             if (!section) return;
@@ -5182,11 +5185,14 @@ if ('serviceWorker' in navigator) {
 
   // Also request when owner logs in, and refresh token for any logged-in user
   window.addEventListener('authStateChanged', function(e) {
-    if (e.detail && e.detail.isOwner && Notification.permission !== 'denied') {
-      requestPushPermission();
-    } else if (e.detail && e.detail.user && Notification.permission === 'granted') {
-      // Non-owner logged in with permission already granted — refresh token
-      getToken();
+    if (e.detail && e.detail.user && Notification.permission !== 'denied') {
+      // Request push permission for any authenticated user (owner or family)
+      if (Notification.permission === 'granted') {
+        getToken();
+      } else if (Notification.permission === 'default') {
+        // Show push banner immediately for newly logged-in users
+        setTimeout(showPushBanner, 1500);
+      }
     }
     // Re-save token with updated user info (role may have changed)
     if (Notification.permission === 'granted') {
@@ -7983,7 +7989,7 @@ if ('serviceWorker' in navigator) {
 
 
 // ═══════════════════════════════════════════════════════════════
-// ─── POI: Esplora — Render cards in Attività tab ───
+// ─── POI: Esplora — Render cards in Luoghi tab ───
 // ═══════════════════════════════════════════════════════════════
 
 (function() {
