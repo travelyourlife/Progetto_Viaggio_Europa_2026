@@ -169,46 +169,45 @@ var isStandalonePWA = (window.matchMedia && window.matchMedia('(display-mode: st
                      (window.navigator.standalone === true) ||
                      (document.referrer.includes('android-app://'));
 
-// ─── Unified Google Sign-In — always use signInWithRedirect ───
-// signInWithRedirect avoids cross-origin cookie issues on GitHub Pages.
-// The result is handled by getRedirectResult() on page reload.
+// ─── Google Identity Services (GIS) + signInWithCredential ───
+// Uses Google's native One Tap / account chooser. No popup, no redirect.
+// Bypasses cross-origin cookie issues on GitHub Pages completely.
+var GIS_CLIENT_ID = '859844907239-37bfciedotbio68fao159vja04ggd7c5.apps.googleusercontent.com';
+var _gisSuccessCb = null;
 
 function doGoogleSignIn(successCb) {
-  if (typeof firebase === 'undefined' || !firebase.auth) return;
-  var provider = new firebase.auth.GoogleAuthProvider();
-
-  // Ensure LOCAL persistence so auth survives page reloads & PWA restarts
-  firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(function() {
-    console.info('[Auth] Using signInWithRedirect (all platforms)');
+  if (typeof firebase === 'undefined' || !firebase.auth) {
+    if (window.showToast) showToast('Firebase non disponibile', 'error');
+    return;
+  }
+  if (typeof google === 'undefined' || !google.accounts) {
+    // GIS library not loaded yet — fallback to signInWithRedirect
+    console.warn('[Auth] GIS not loaded, falling back to signInWithRedirect');
+    var provider = new firebase.auth.GoogleAuthProvider();
     try { localStorage.setItem('firebase_redirect_pending', '1'); } catch(e) {}
     firebase.auth().signInWithRedirect(provider);
-  }).catch(function(err) {
-    console.warn('[Auth] setPersistence error:', err);
-    try { localStorage.setItem('firebase_redirect_pending', '1'); } catch(e) {}
-    firebase.auth().signInWithRedirect(provider);
+    return;
+  }
+  _gisSuccessCb = successCb || null;
+  google.accounts.id.initialize({
+    client_id: GIS_CLIENT_ID,
+    callback: function(response) {
+      var credential = firebase.auth.GoogleAuthProvider.credential(response.credential);
+      firebase.auth().signInWithCredential(credential).then(function(result) {
+        console.info('[Auth] GIS login success:', result.user.email);
+        if (_gisSuccessCb) _gisSuccessCb(result.user);
+        if (window.showToast) showToast((isEN ? 'Welcome, ' : 'Benvenuto, ') + (result.user.displayName || result.user.email), 'success');
+      }).catch(function(err) {
+        console.error('[Auth] signInWithCredential error:', err);
+        if (window.showToast) showToast((isEN ? 'Login error: ' : 'Errore login: ') + err.message, 'error');
+      });
+    },
+    auto_select: false,
+    cancel_on_tap_outside: true
   });
+  google.accounts.id.prompt(); // Show One Tap / account chooser
 }
 
-// ─── Handle redirect result (primary auth flow) ───
-(function() {
-  try {
-    if (typeof firebase === 'undefined' || !firebase.auth) return;
-    firebase.auth().getRedirectResult().then(function(result) {
-      if (result && result.user) {
-        console.info('[Auth] Redirect login success:', result.user.email);
-        try { localStorage.removeItem('firebase_redirect_pending'); } catch(e) {}
-        if (window.showToast) showToast((isEN ? 'Welcome, ' : 'Benvenuto, ') + (result.user.displayName || result.user.email), 'success');
-      }
-    }).catch(function(err) {
-      console.warn('[Auth] Redirect result error:', err.code, err.message);
-      try { localStorage.removeItem('firebase_redirect_pending'); } catch(e) {}
-      // Show error to user if redirect failed
-      if (err.code && err.code !== 'auth/credential-already-in-use') {
-        if (window.showToast) showToast((isEN ? 'Login error: ' : 'Errore login: ') + (err.message || err.code), 'error');
-      }
-    });
-  } catch(e) { console.warn('[Auth] Redirect check error:', e); }
-})();
 
 // ─── Owner/Viewer Auth State (V4.8) ───
 // Viewers see everything read-only without login. Owners (Google Auth) can write.
