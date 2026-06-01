@@ -7177,7 +7177,12 @@ if ('serviceWorker' in navigator) {
 
       var html = '';
       var sortedKeys = Object.keys(entries).sort(function(a, b) {
-        return (entries[b].dayNumber || 0) - (entries[a].dayNumber || 0);
+        var diff = (entries[b].dayNumber || 0) - (entries[a].dayNumber || 0);
+        if (diff !== 0) return diff;
+        // Tiebreaker: sort by date descending when dayNumber is the same
+        var dateA = entries[a].date || '';
+        var dateB = entries[b].date || '';
+        return dateB.localeCompare(dateA);
       });
 
       sortedKeys.forEach(function(key) {
