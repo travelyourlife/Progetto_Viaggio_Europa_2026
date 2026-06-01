@@ -1841,6 +1841,25 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('live-speed-avg').textContent = Math.round(avgSpeed);
             }, 5000);
 
+            // ─── Periodic auto-save to dailySummaries (every 5 min) ───
+            // Prevents data loss if user closes app without pressing Stop
+            if (window._autoSaveTimer) clearInterval(window._autoSaveTimer);
+            window._autoSaveTimer = setInterval(function() {
+                if (!liveActive || todayKm <= 0) return;
+                var sessionElapsed = Date.now() - (liveStartTime || Date.now());
+                var totalElapsed = _prevElapsed + sessionElapsed;
+                var summary = {
+                    km: todayKm,
+                    time: totalElapsed,
+                    avgSpeed: totalElapsed > 0 ? (todayKm / (totalElapsed / 3600000)) : 0,
+                    points: todayPoints.length,
+                    date: todayStr()
+                };
+                var autoSaveRef = getFamilyRef('dailySummaries/' + todayStr());
+                if (autoSaveRef) autoSaveRef.set(summary);
+                console.info('[Tracking] Auto-saved dailySummary:', todayKm.toFixed(1), 'km');
+            }, 5 * 60 * 1000); // every 5 minutes
+
             // Auto-stop check
             if (optAutostop && optAutostop.checked) {
                 idleCheckTimer = setInterval(function() {
@@ -1857,11 +1876,33 @@ document.addEventListener('DOMContentLoaded', function() {
             updatePosAuthUI();
         }
 
+        // ─── Save on background/close (prevents data loss) ───
+        function _emergencySave() {
+            if (!liveActive || todayKm <= 0) return;
+            var sessionElapsed = Date.now() - (liveStartTime || Date.now());
+            var totalElapsed = _prevElapsed + sessionElapsed;
+            var summary = {
+                km: todayKm,
+                time: totalElapsed,
+                avgSpeed: totalElapsed > 0 ? (todayKm / (totalElapsed / 3600000)) : 0,
+                points: todayPoints.length,
+                date: todayStr()
+            };
+            var saveRef = getFamilyRef('dailySummaries/' + todayStr());
+            if (saveRef) saveRef.set(summary);
+        }
+        document.addEventListener('visibilitychange', function() {
+            if (document.visibilityState === 'hidden') _emergencySave();
+        });
+        window.addEventListener('beforeunload', _emergencySave);
+        window.addEventListener('pagehide', _emergencySave);
+
         function stopLive() {
             liveActive = false;
             if (liveWatchId) { navigator.geolocation.clearWatch(liveWatchId); liveWatchId = null; }
             if (liveTimer) { clearInterval(liveTimer); liveTimer = null; }
             if (idleCheckTimer) { clearInterval(idleCheckTimer); idleCheckTimer = null; }
+            if (window._autoSaveTimer) { clearInterval(window._autoSaveTimer); window._autoSaveTimer = null; }
 
             // Clear tracking session from Firebase
             var sessionRef = getFamilyRef('liveSession/' + (firebaseUser ? firebaseUser.uid : 'driver'));
@@ -6257,8 +6298,8 @@ if ('serviceWorker' in navigator) {
 
   // Reset height after send
   var origSendMessage = sendMessage;
-  sendMessage = function(text) {
-    origSendMessage(text);
+  sendMessage = function(text, mediaUrl, mediaType, msgType) {
+    origSendMessage(text, mediaUrl, mediaType, msgType);
     chatInput.style.height = 'auto';
   };
 
