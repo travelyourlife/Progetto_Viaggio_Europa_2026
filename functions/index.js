@@ -61,11 +61,6 @@ exports.sendPushNotification = onValueCreated(
         if (role === "owner" || role === "family") {
           targetTokens.push(entry.token);
         }
-      } else if (target === "owner") {
-        // Owner only
-        if (role === "owner") {
-          targetTokens.push(entry.token);
-        }
       } else if (target === "visitor") {
         // Visitors only
         if (role === "visitor") {

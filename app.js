@@ -242,21 +242,7 @@ function checkOwnerStatus() {
       }
       window.dispatchEvent(new CustomEvent('authStateChanged', { detail: { user: user, isOwner: isOwner } }));
 
-      // ─── Owner: save profile to approvedUsers (so Gestisci shows name, not UID) ───
-      if (isOwner && user && typeof firebase !== 'undefined' && firebase.database) {
-        firebase.database().ref('trips/' + FAMILY_ID + '/approvedUsers/' + user.uid).update({
-          email: user.email || '',
-          displayName: user.displayName || '',
-          photoURL: user.photoURL || '',
-          approvedAt: firebase.database.ServerValue.TIMESTAMP
-        }).then(function() {
-          console.info('[Auth] Owner profile saved to approvedUsers');
-        }).catch(function(e) {
-          console.warn('[Auth] Could not save owner profile:', e.message);
-        });
-      }
-
-      // ─── Owner: check for pending user requests (badge + toast + push) ───
+      // ─── Owner: check for pending user requests (badge + toast) ───
       if (isOwner && typeof firebase !== 'undefined' && firebase.database) {
         // Realtime listener: notify owner whenever a new pending request arrives
         var _lastPendingCount = 0;
@@ -279,16 +265,6 @@ function checkOwnerStatus() {
                 showToast(msg, 'info', 6000);
               }
             }, 1000);
-            // Push notification to owner (even if app is closed)
-            if (window.queuePushNotification) {
-              queuePushNotification('access_request', {
-                title: isEN ? '👥 New access request' : '👥 Nuova richiesta di accesso',
-                body: isEN ? count + ' user(s) waiting for approval' : count + ' utente/i in attesa di approvazione',
-                target: 'owner',
-                url: './#tab-diario',
-                tag: 'access-request'
-              });
-            }
           }
           _lastPendingCount = count;
         });
@@ -7387,34 +7363,17 @@ if ('serviceWorker' in navigator) {
           var u = users[uid];
           var name = '';
           var photo = '';
-          var isOwnerUser = (typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.indexOf(uid) !== -1);
           if (u && typeof u === 'object') {
             name = u.displayName || u.email || uid.substring(0, 8) + '...';
             photo = u.photoURL || '';
           } else {
-            // Old format: uid: true — try to resolve from current auth user
-            if (firebaseUser && firebaseUser.uid === uid) {
-              name = firebaseUser.displayName || firebaseUser.email || uid.substring(0, 8) + '...';
-              photo = firebaseUser.photoURL || '';
-              // Migrate old format to new format in background
-              approvedRef.child(uid).set({
-                email: firebaseUser.email || '',
-                displayName: firebaseUser.displayName || '',
-                photoURL: firebaseUser.photoURL || '',
-                approvedAt: firebase.database.ServerValue.TIMESTAMP
-              });
-            } else {
-              name = uid.substring(0, 12) + '...';
-            }
+            // Old format: uid: true — show UID abbreviated
+            name = uid.substring(0, 12) + '...';
           }
-          var roleBadge = isOwnerUser ? ' <span style="font-size:0.75em;background:var(--accent);color:#fff;padding:1px 6px;border-radius:8px;margin-left:4px;">Owner</span>' : '';
           html += '<div class="diario-user-row">';
           if (photo) html += '<img src="' + photo + '" class="diario-user-avatar">';
-          html += '<span class="diario-user-name">' + escapeHtml(name) + roleBadge + '</span>';
-          // Don't show revoke button for owners
-          if (!isOwnerUser) {
-            html += '<button class="diario-revoke-btn" data-uid="' + uid + '">\ud83d\udeab</button>';
-          }
+          html += '<span class="diario-user-name">' + escapeHtml(name) + '</span>';
+          html += '<button class="diario-revoke-btn" data-uid="' + uid + '">\ud83d\udeab</button>';
           html += '</div>';
         });
         approvedListEl.innerHTML = html;
