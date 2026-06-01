@@ -528,7 +528,31 @@ function openMapFullscreen(mapInstance, title) {
         } catch(e) { /* skip non-clonable layers */ }
     });
 
-    setTimeout(function() { fsMap.invalidateSize(); }, 100);
+    // Auto-zoom to fit all route content
+    setTimeout(function() {
+        fsMap.invalidateSize();
+        // Collect all latlngs from polylines and markers to compute bounds
+        var allLatLngs = [];
+        fsMap.eachLayer(function(layer) {
+            if (layer instanceof L.Polyline) {
+                var latlngs = layer.getLatLngs();
+                // Handle nested arrays (multipolyline)
+                (function flatten(arr) {
+                    arr.forEach(function(item) {
+                        if (Array.isArray(item)) flatten(item);
+                        else if (item.lat !== undefined) allLatLngs.push(item);
+                    });
+                })(latlngs);
+            } else if (layer instanceof L.CircleMarker || layer instanceof L.Marker) {
+                allLatLngs.push(layer.getLatLng());
+            }
+        });
+        if (allLatLngs.length > 1) {
+            fsMap.fitBounds(L.latLngBounds(allLatLngs), { padding: [30, 30] });
+        } else if (allLatLngs.length === 1) {
+            fsMap.setView(allLatLngs[0], 10);
+        }
+    }, 150);
 
     function closeFs() {
         fsMap.remove();
