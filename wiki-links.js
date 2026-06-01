@@ -3,7 +3,7 @@
 
 // ─── Per-day links (used by renderTimeline in tab Giorni) ───
 var WIKI_LINKS = {
-  "g0": { label: "Villach", wiki: "https://it.wikipedia.org/wiki/Villach", wikiEn: "https://en.wikipedia.org/wiki/Villach" },
+  "g0": { label: "Leoben", wiki: "https://it.wikipedia.org/wiki/Leoben", wikiEn: "https://en.wikipedia.org/wiki/Leoben" },
   "g1": [
     { label: "Vienna", wiki: "https://it.wikipedia.org/wiki/Vienna", wikiEn: "https://en.wikipedia.org/wiki/Vienna" },
     { label: "Prater", wiki: "https://it.wikipedia.org/wiki/Prater", wikiEn: "https://en.wikipedia.org/wiki/Prater" }

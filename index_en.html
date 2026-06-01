@@ -43,7 +43,7 @@
     <link rel="apple-touch-icon" sizes="152x152" href="./icon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="./icon.png">
     <link rel="apple-touch-icon" sizes="167x167" href="./icon.png">
-    <title>Europe Trip 2026 — V10.2</title>
+    <title>Europe Trip 2026 — V10.3</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <link rel="stylesheet" href="style.css">
 
@@ -58,7 +58,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = '10.2';
+  var EXPECTED_VERSION = '10.3';
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
   var r = false;
@@ -249,31 +249,45 @@
     <a href="./index.html" class="home-lang-switch" aria-label="Passa all'italiano">🇮🇹</a>
 </div>
 
-<!-- ─── Hero Countdown Card ─── -->
+<!-- ─── Hero Card ─── -->
 <div class="home-hero-card">
-    <div class="hero-card-content">
+    <!-- Pre-trip content -->
+    <div class="hero-card-content" id="hero-pre-trip">
         <span class="hero-card-label">NEXT ADVENTURE</span>
         <div class="hero-card-countdown">
             <span class="hero-card-number" id="home-countdown-num">--</span>
-            <span class="hero-card-text">days<br>to departure</span>
+            <span class="hero-card-text">days to departure</span>
         </div>
         <div class="hero-card-date">📅 June 26, 2026</div>
     </div>
-    <img src="./icon.png" alt="" class="hero-card-avatar">
-</div>
-
-<!-- ─── Weather Widget ─── -->
-<div class="weather-widget" id="weather-widget" style="display:none;">
-    <div class="weather-location" id="weather-location"></div>
-    <div class="weather-pills">
-        <div class="weather-pill weather-pill-temp" id="weather-pill-temp">
-            <span class="weather-pill-icon" id="weather-icon"></span>
-            <span class="weather-pill-text" id="weather-temp"></span>
+    <!-- During-trip content (hidden by default) -->
+    <div class="hero-card-trip" id="hero-during-trip" style="display:none;">
+        <div class="hero-trip-top">
+            <span class="hero-trip-label">🟢 ON THE ROAD</span>
         </div>
-        <div class="weather-pill weather-pill-light" id="weather-pill-light">
-            <span class="weather-pill-icon">🌅</span>
-            <span class="weather-pill-text" id="weather-light"></span>
+        <div class="hero-trip-main">
+            <div class="hero-trip-city-block">
+                <div class="hero-trip-city" id="hero-trip-city">📍 --</div>
+                <div class="hero-trip-country" id="hero-trip-country"></div>
+            </div>
+            <div class="hero-trip-date" id="hero-trip-date">
+                <div class="hero-trip-date-day" id="hero-trip-date-day">--</div>
+                <div class="hero-trip-date-month" id="hero-trip-date-month"></div>
+            </div>
+            <img src="./icon.png" alt="" class="hero-card-avatar">
         </div>
+    </div>
+    <!-- Avatar for pre-trip (shown by default) -->
+    <img src="./icon.png" alt="" class="hero-card-avatar" id="hero-pre-avatar">
+    <!-- Weather row (integrated, shown in both states) -->
+    <div class="hero-weather-row" id="hero-weather-row" style="display:none;">
+        <span id="hero-weather-loc"></span>
+        <span class="hero-weather-sep">·</span>
+        <span id="hero-weather-icon"></span>
+        <span id="hero-weather-temp" class="hero-weather-bold"></span>
+        <span class="hero-weather-sep">·</span>
+        <span>🌅</span>
+        <span id="hero-weather-light"></span>
     </div>
 </div>
 
@@ -503,6 +517,17 @@
 </tbody>
 </table>
 
+<!-- Route Map (collapsible) -->
+<div id="routeMapWrapper" class="route-map-wrapper">
+  <button id="routeMapToggle" class="route-map-toggle" aria-expanded="false">
+    <span class="route-map-toggle-left"><span class="route-map-icon">🗺️</span> <span id="routeMapLabel">Route Map</span></span>
+    <span class="route-map-arrow" id="routeMapArrow">▼</span>
+  </button>
+  <div class="route-map-container" id="routeMapContainer">
+    <div id="routeMap" class="route-map"></div>
+  </div>
+</div>
+
 <h2 id="itinerario-54-giorni">🌟 Itinerary — 54 Days</h2>
 <p><strong>Legend:</strong> ♨️ = thermal spa accessible (see <a href="#secA">Spas</a>) · ➕ = alternative detour (see <a href="#secB">Alternatives</a>) · 🎣 = fishing possible (see <a href="#pesca">Fishing Guide</a>) · 🥾 = trekking (see <a href="#trekking">Trekking Guide</a>)</p>
 <p><strong>Click the Dx to jump to details.</strong></p>
@@ -560,33 +585,33 @@
 <p>Each block includes: route, tolls/ferries, weather, POI, alternatives, fishing 🎣 where possible, Maps keywords.</p>
 </blockquote>
 <hr>
-<h3 id="g0">D0 · 26/06 · Selvazzano → Villach 🇮🇹→🇦🇹</h3>
-<p><strong>280 km · 3h · Tolls A4+A23 ~€15 + digital AT vignette €12.80 (10 days)</strong></p>
-<p>☀️ 25°C / 15°C · Good weather · 16h daylight</p>
-<p>🚗 Departure in the afternoon, arrival evening in Villach
-🌭 <strong>Villach street food:</strong> <em>Würstelstand</em> downtown — Käsekrainer or Bosna (spicy hot dog) ~€4-5. Or Gasthof with <em>Wiener Schnitzel</em> take-away ~€10. <strong>Market:</strong> Villacher Wochenmarkt (Hauptplatz) — Carinthian products, speck, cheeses. Wed and Sat mornings.
+<h3 id="g0">D0 · 26/06 · Selvazzano → Leoben 🇮🇹→🇦🇹</h3>
+<p><strong>350 km · 3h 30m · Tolls A4+A23 ~€15 + digital AT vignette €12.80 (10 days)</strong></p>
+<p>☀️ 25°C / 14°C · Good weather · 16h daylight</p>
+<p>🚗 Departure in the afternoon, arrival evening in Leoben — where it all began 🌒 This is where we saw our first total solar eclipse (August 11, 1999). The trip begins and ends with an eclipse!
+🌭 <strong>Leoben street food:</strong> Gasthäuser in Hauptplatz — Styrian cuisine: <em>Brettljause</em> (cold cuts and cheese board) ~€10-14, <em>Backhendl</em> (Styrian fried chicken) ~€12, <em>Steirischer Schweinsbraten</em> (roast pork) ~€11. Everything drizzled with the famous <em>Kürbiskernöl</em> (pumpkin seed oil). <strong>Beer:</strong> Gösser Bräu — Gösser beer was born here!
 </p>
 <div class="bambini-section" style="margin:12px 0;padding:10px 14px;background:linear-gradient(135deg, #fff5f5, #fffaf0);border-left:4px solid #ed8936;border-radius:8px;">
-<p>👶 <strong>Kids:</strong> 1. Kärnten Therme Villach: A great indoor/outdoor thermal bath and water park, perfect for kids and a good rainy day alternative. 2. PLANET LOLLIPOP at ATRIO Villach: A 600 m² indoor children's adventure world for fun and games.</p>
+<p>👶 <strong>Kids:</strong> 1. Leopark (St. Michael bei Leoben): Indoor playground with activities for all ages. 2. Kunsthalle Leoben: Interactive museum for children aged 6-14, a museum within a museum!</p>
 </div>
 <div class="practical-info">
 <details>
 <summary>📋 <strong>Practical Info</strong></summary>
-<p>🅿️ <strong>Accommodation:</strong> 1. Seecamping Berghof (Villach/Ossiacher See) - <a href="https://maps.google.com/?q=46.6531,13.9014" target="_blank" rel="noopener">📍 Maps</a> Approx. €40-60/night. Features: electricity, water, WiFi, playground, direct lake access. 2. Camping Gerli (Villach) - <a href="https://maps.google.com/?q=46.5833,13.8667" target="_blank" rel="noopener">📍 Maps</a> Approx. €35-50/night. Features: electricity, water, pool, close to cycling paths.</p>
-<p>⛽ <strong>Fuel:</strong> Main fuel station chains in Austria include OMV, BP, Shell, and Eni. There are no significant remote stretches without fuel on this highway route. The approximate diesel price in Austria is €1.88 - €1.95 per liter (as of mid-2026).</p>
-<p>🛣️ <strong>Tolls:</strong> In Italy, standard highway tolls apply (approx. €15-20 from Padova to the border). In Austria, a vignette is mandatory for vehicles up to 3.5 tons (approx. €11.50 for 10 days). If the camper is over 3.5 tons, a GO-Box is required for mileage-based tolls. Total estimated toll cost for the day: €25-35.</p>
-<p>⏰ <strong>Timing:</strong> Suggested departure from Selvazzano (Padova) in the early afternoon (e.g., 14:00). The drive takes about 2.5 to 3 hours (approx. 275 km). Expected arrival in Villach around 16:30 - 17:00. This allows time to settle at the campsite and perhaps visit the Kärnten Therme or take a short walk by the lake before dinner.</p>
-<p>🛒 <strong>Supermarkets:</strong> Main supermarket chains in Austria include SPAR (e.g., Interspar, SPAR Ertl Villach), Billa, Hofer, and Lidl. There are several options in Villach, such as the Interspar at ATRIO shopping center, which is convenient for stocking up.</p>
-<p>🧺 <strong>Laundry:</strong> Self-service laundry is available at larger campgrounds like Seecamping Berghof. Alternatively, look for Green & Clean laundromats in the region or use local services like Umlauft Textilservice in Villach (Peraustr. 31).</p>
-<p>💧 <strong>Water/Dump:</strong> Most campgrounds in Villach (like Seecamping Berghof) offer fresh water fill and grey/black water dump stations for guests. Alternatively, dedicated camper stops like the one in Velden or Arnoldstein may have basic service points. Verify locally for standalone public dump stations.</p>
-<p>🏥 <strong>Safety:</strong> Nearest hospital: Landeskrankenhaus Villach (Nikolaigasse 43, 9500 Villach). Emergency numbers in Austria: 144 for Ambulance, 133 for Police, 122 for Fire, 112 for General European Emergency. Warning: Ensure you have the Austrian vignette before entering the highway in Austria to avoid heavy fines.</p>
-<p>💰 <strong>Daily budget:</strong> €130-170</p>
+<p>🅿️ <strong>Accommodation:</strong> Campingclub Hinterberg (Hinterbergstr. 47, Leoben) - <a href="https://maps.google.com/?q=47.3611,15.0656" target="_blank" rel="noopener">📍 Maps</a> From €25/night (all inclusive). Children under 15 free, pets free. Family-run, quiet. Check-in 7AM-9PM.</p>
+<p>⛽ <strong>Fuel:</strong> Main fuel station chains in Austria include OMV, BP, Shell, and Eni. No significant remote stretches without fuel on this highway route. Approximate diesel price: €1.88-1.95/L (AT).</p>
+<p>🛣️ <strong>Tolls:</strong> In Italy, standard highway tolls apply (approx. €15-20 from Padova to the border). In Austria, a vignette is mandatory for vehicles up to 3.5 tons (approx. €12.80 for 10 days). If the camper is over 3.5 tons, a GO-Box is required for mileage-based tolls.</p>
+<p>⏰ <strong>Timing:</strong> Suggested departure from Selvazzano (Padova) in the early afternoon (e.g., 14:00). The drive takes about 3.5 hours (approx. 350 km via A4+A23+S6). Expected arrival in Leoben around 17:30. This allows time to settle at the campsite and take a stroll through the beautiful Hauptplatz before dinner.</p>
+<p>🛒 <strong>Supermarkets:</strong> Interspar at LCS Leoben City Shopping — <a href="https://maps.google.com/?q=Interspar+Leoben" target="_blank" rel="noopener">📍 Maps</a>; Merkur Markt (Pichlmayergasse 16) — <a href="https://maps.google.com/?q=Merkur+Markt+Leoben" target="_blank" rel="noopener">📍 Maps</a></p>
+<p>🧺 <strong>Laundry:</strong> Self-service laundry available at Campingclub Hinterberg.</p>
+<p>💧 <strong>Water/Dump:</strong> Campingclub Hinterberg offers fresh water fill and grey/black water dump stations for guests.</p>
+<p>🏥 <strong>Safety:</strong> Nearest hospital: LKH Hochsteiermark Leoben (regional state hospital) — <a href="https://maps.google.com/?q=LKH+Hochsteiermark+Leoben" target="_blank" rel="noopener">📍 Maps</a>. Emergency numbers: 144 (Ambulance), 133 (Police), 122 (Fire), 112 (European Emergency). Note: Austrian vignette required on motorways.</p>
+<p>💰 <strong>Daily budget:</strong> €100-140</p>
 </details>
 </div>
 
 <p><strong>Tolls:</strong> Italian highway A4+A23 (~€15) + digital Austrian vignette to buy on <a href="https://www.asfinag.at" target="_blank" rel="noopener noreferrer">asfinag.at</a> (€12.80 for 10 days, 2026 price).</p>
-<p>🛴 <strong>Scooters:</strong> Villach city center — flat, ideal for exploring → <a href="#noleggi">see rentals</a></p>
-<p><strong>Maps:</strong> <a href="https://maps.google.com/?q=Villach+Austria" target="_blank" rel="noopener noreferrer">📍 Villach</a></p>
+<p>🛴 <strong>Scooters:</strong> Leoben city center — compact old town, ideal for an evening stroll → <a href="#noleggi">see rentals</a></p>
+<p><strong>Maps:</strong> <a href="https://maps.google.com/?q=Leoben+Austria" target="_blank" rel="noopener noreferrer">📍 Leoben</a></p>
 <div class="bambini-section" style="margin:12px 0;padding:10px 14px;background:linear-gradient(135deg, #fff5f5, #fffaf0);border-left:4px solid #ed8936;border-radius:8px;">
 <p>👶 <strong>Kids:</strong> 1. Schönbrunn Palace and Gardens (including the Labyrinth and Gloriette) - great for kids to explore. 2. Vienna Zoo (Schönbrunner Tiergarten) - the oldest zoo in the world, very kid-friendly. 3. Prater Amusement Park - features the famous Giant Ferris Wheel and many rides.</p>
 </div>
@@ -594,9 +619,9 @@
 <details>
 <summary>📋 <strong>Practical Info</strong></summary>
 <p>🅿️ <strong>Accommodation:</strong> 1. Reisemobilstellplatz Wien (Perfektastraße 49-53, 1230 Wien). <a href="https://maps.google.com/?q=48.13673,16.316459" target="_blank" rel="noopener">📍 Maps</a> Price: ~€27-30/night. Features: electricity, water, disposal, open 24h. 2. MICAMPA Wien Wienerwald (Hüttelbergstr. 80, 1140 Wien). Features: near Vienna Woods, hiking trails, family-friendly.</p>
-<p>⛽ <strong>Fuel:</strong> Main fuel station chains in Austria include OMV, BP, Shell, and Eni. No major remote stretches without fuel on the A2 motorway from Villach to Vienna. Approximate diesel price: €1.88 - €1.95 per liter.</p>
+<p>⛽ <strong>Fuel:</strong> Main fuel station chains in Austria include OMV, BP, Shell, and Eni. No major remote stretches without fuel on the S6/A2 motorway from Leoben to Vienna. Approximate diesel price: €1.88 - €1.95 per liter.</p>
 <p>🛣️ <strong>Tolls:</strong> A vignette is mandatory for vehicles up to 3.5 tons on Austrian motorways. A 1-day digital vignette costs €8.60. For vehicles over 3.5 tons, a GO-Box is required for mileage-based tolls.</p>
-<p>⏰ <strong>Timing:</strong> Suggest departing Villach around 09:00. The drive to Vienna is about 3.5 to 4 hours (approx. 360 km). Expected arrival in Vienna around 13:00-14:00, allowing time for a lunch stop. Afternoon can be spent setting up at the campsite and visiting a nearby attraction like Schönbrunn Palace (check closing times, usually around 17:00-17:30).</p>
+<p>⏰ <strong>Timing:</strong> Suggest departing Leoben around 09:00. The drive to Vienna is about 1h 45m (approx. 150 km via S6/A2). Expected arrival in Vienna around 11:00, allowing plenty of time for sightseeing. Afternoon can be spent setting up at the campsite and visiting a nearby attraction like Schönbrunn Palace (check closing times, usually around 17:00-17:30).</p>
 <p>🛒 <strong>Supermarkets:</strong> Main supermarket chains in Austria: Spar (Interspar, Eurospar), Billa (Billa Plus), Hofer (discount), and Lidl. You will find many of these along the route and near the campsites in Vienna.</p>
 <p>🧺 <strong>Laundry:</strong> Green & Clean (self-service laundromat chain in Vienna, e.g., near U-Bahn stations, approx. €15 per load). Verify locally for the closest branch to your campsite.</p>
 <p>💧 <strong>Water/Dump:</strong> Available at Reisemobilstellplatz Wien (included in pitch price) and Camping Wien West. Dedicated service points for fresh water fill and grey/black water dump are provided at these campsites.</p>
@@ -606,8 +631,8 @@
 </div>
 <hr>
 <span id="g1"></span>
-<h3 id="g1-2706-villach-vienna">D1 · 27/06 · Villach → Vienna 🇦🇹</h3>
-<p><strong>350 km · 3h 30m · AT vignette (already active)</strong></p>
+<h3 id="g1-2706-leoben-vienna">D1 · 27/06 · Leoben → Vienna 🇦🇹</h3>
+<p><strong>150 km · 1h 45m · AT vignette (already active)</strong></p>
 <p>☀️ 25°C / 15°C · Possible afternoon thunderstorms · 16h daylight</p>
 <p>🛣️ ‍👩‍👧‍👦 ⭐ <strong>Prater</strong> — Ferris wheel + vintage rides
 🏛️ <strong>Haus der Musik</strong> — conduct the Vienna Philharmonic (interactive!)

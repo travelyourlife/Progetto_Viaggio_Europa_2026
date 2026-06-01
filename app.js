@@ -434,6 +434,151 @@ const places = itinerario.map(function(t) {
 
 
 // ═══════════════════════════════════════════════════════════════
+// ─── ROUTE MAP (Collapsible in Itinerario tab) ───
+// ═══════════════════════════════════════════════════════════════
+
+function initRouteMap() {
+    var toggle = document.getElementById('routeMapToggle');
+    var container = document.getElementById('routeMapContainer');
+    var arrow = document.getElementById('routeMapArrow');
+    var mapDiv = document.getElementById('routeMap');
+    if (!toggle || !container || !mapDiv) return;
+
+    var routeMapInstance = null;
+    var mapInitialized = false;
+
+    toggle.addEventListener('click', function() {
+        var isOpen = container.classList.toggle('open');
+        arrow.classList.toggle('open', isOpen);
+        toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+
+        if (isOpen && !mapInitialized) {
+            setTimeout(function() { buildRouteMap(); }, 120);
+            mapInitialized = true;
+        } else if (isOpen && routeMapInstance) {
+            setTimeout(function() { routeMapInstance.invalidateSize(); }, 150);
+        }
+    });
+
+    function buildRouteMap() {
+        if (typeof L === 'undefined' || typeof TRIP_COORDS === 'undefined') {
+            mapDiv.innerHTML = '<p style="padding:20px;text-align:center;color:#999;">Map unavailable</p>';
+            return;
+        }
+
+        routeMapInstance = L.map('routeMap', {
+            zoomControl: false,
+            attributionControl: false,
+            scrollWheelZoom: true,
+            dragging: true,
+            tap: true
+        });
+
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+            maxZoom: 18
+        }).addTo(routeMapInstance);
+
+        // Build route polyline from TRIP_COORDS
+        var routeCoords = TRIP_COORDS.map(function(c) { return [c.lat, c.lng]; });
+
+        // Draw dashed route line
+        L.polyline(routeCoords, {
+            color: '#2c5282',
+            weight: 2.5,
+            opacity: 0.7,
+            dashArray: '8,6',
+            lineJoin: 'round'
+        }).addTo(routeMapInstance);
+
+        // Determine current trip day for coloring
+        var now = new Date();
+        var tripStart = typeof TRIP_START !== 'undefined' ? TRIP_START : new Date('2026-06-26');
+        var currentDay = Math.floor((now - tripStart) / 86400000);
+        var tripActive = currentDay >= 0 && currentDay < (typeof TRIP_DAYS !== 'undefined' ? TRIP_DAYS : 54);
+
+        // Group consecutive days at same location to avoid overlapping markers
+        var stops = [];
+        var prev = null;
+        TRIP_COORDS.forEach(function(c, i) {
+            var key = c.lat.toFixed(2) + ',' + c.lng.toFixed(2);
+            if (prev && prev.key === key) {
+                prev.endIdx = i;
+                prev.days.push(i);
+            } else {
+                prev = { key: key, lat: c.lat, lng: c.lng, startIdx: i, endIdx: i, days: [i] };
+                stops.push(prev);
+            }
+        });
+
+        // Add markers for each unique stop
+        stops.forEach(function(stop) {
+            var dayIdx = stop.startIdx;
+            var c = TRIP_COORDS[dayIdx];
+            var city = isEN ? c.cityEn : c.city;
+
+            // Determine marker color
+            var color, radius;
+            var isStart = stop.startIdx === 0;
+            var isEnd = stop.endIdx === TRIP_COORDS.length - 1;
+            var isCurrent = tripActive && currentDay >= stop.startIdx && currentDay <= stop.endIdx;
+
+            if (isStart || isEnd) {
+                color = '#e53e3e'; radius = 6; // Red for start/end
+            } else if (isCurrent) {
+                color = '#e53e3e'; radius = 7; // Red pulsing for current
+            } else if (tripActive && currentDay > stop.endIdx) {
+                color = '#38a169'; radius = 4; // Green for visited
+            } else {
+                color = '#2c5282'; radius = 4; // Blue for future
+            }
+
+            var marker = L.circleMarker([stop.lat, stop.lng], {
+                radius: radius,
+                fillColor: color,
+                color: '#fff',
+                weight: 1.5,
+                fillOpacity: 0.9
+            }).addTo(routeMapInstance);
+
+            // Build popup content with day info
+            var dayLabel, dayRoute, dayDesc, dayFlags;
+            if (stop.days.length > 1) {
+                var firstDay = itinerario[stop.startIdx];
+                var lastDay = itinerario[stop.endIdx];
+                dayLabel = (isEN ? firstDay.labelEn : firstDay.label) + '–' + (isEN ? lastDay.labelEn : lastDay.label);
+                dayRoute = city;
+                dayDesc = (isEN ? firstDay.descEn : firstDay.desc);
+                if (stop.days.length > 2) dayDesc += ' ...';
+                dayFlags = firstDay.paesi;
+            } else {
+                var day = itinerario[dayIdx];
+                if (!day) return;
+                dayLabel = isEN ? day.labelEn : day.label;
+                dayRoute = isEN ? day.tragittoEn : day.tragitto;
+                dayDesc = isEN ? day.descEn : day.desc;
+                dayFlags = day.paesi;
+            }
+
+            var popupHtml = '<div class="route-popup">' +
+                '<div class="rp-day">' + dayLabel + ' <span class="rp-flags">' + dayFlags + '</span></div>' +
+                '<div class="rp-city">' + city + '</div>' +
+                '<div class="rp-desc">' + dayDesc + '</div>' +
+                '</div>';
+
+            marker.bindPopup(popupHtml, { maxWidth: 200, closeButton: false });
+        });
+
+        // Fit bounds to show entire route
+        var bounds = L.latLngBounds(routeCoords);
+        routeMapInstance.fitBounds(bounds, { padding: [15, 15] });
+
+        // Add small zoom control bottom-right
+        L.control.zoom({ position: 'bottomright' }).addTo(routeMapInstance);
+    }
+}
+
+
+// ═══════════════════════════════════════════════════════════════
 // ─── MAIN APPLICATION LOGIC ───
 // ═══════════════════════════════════════════════════════════════
 
@@ -446,6 +591,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // ─── Render data-driven components ───
     try { renderTable(); } catch(e) { console.error('[renderTable]', e); }
     try { renderTimeline(); } catch(e) { console.error('[renderTimeline]', e); }
+    try { initRouteMap(); } catch(e) { console.error('[initRouteMap]', e); }
 
     // ─── Timeline day-tap hint banner ───
     (function() {
@@ -3772,12 +3918,21 @@ if ('serviceWorker' in navigator) {
 (function() {
     if (typeof TRIP_COORDS === 'undefined') return;
 
-    var widget = document.getElementById('weather-widget');
-    var locEl = document.getElementById('weather-location');
-    var iconEl = document.getElementById('weather-icon');
-    var tempEl = document.getElementById('weather-temp');
-    var lightEl = document.getElementById('weather-light');
-    if (!widget || !locEl) return;
+    // New integrated hero weather row
+    var heroWeatherRow = document.getElementById('hero-weather-row');
+    var heroWeatherLoc = document.getElementById('hero-weather-loc');
+    var heroWeatherIcon = document.getElementById('hero-weather-icon');
+    var heroWeatherTemp = document.getElementById('hero-weather-temp');
+    var heroWeatherLight = document.getElementById('hero-weather-light');
+    // During-trip hero elements
+    var heroPreTrip = document.getElementById('hero-pre-trip');
+    var heroDuringTrip = document.getElementById('hero-during-trip');
+    var heroPreAvatar = document.getElementById('hero-pre-avatar');
+    var heroTripCity = document.getElementById('hero-trip-city');
+    var heroTripCountry = document.getElementById('hero-trip-country');
+    var heroTripDateDay = document.getElementById('hero-trip-date-day');
+    var heroTripDateMonth = document.getElementById('hero-trip-date-month');
+    if (!heroWeatherRow) return;
 
     // WMO weather code to emoji
     function wmoToEmoji(code) {
@@ -3824,28 +3979,28 @@ if ('serviceWorker' in navigator) {
     function fetchWeather() {
         var dayIdx = getDayIndex();
         if (dayIdx < 0 || dayIdx >= TRIP_COORDS.length) {
-            widget.style.display = 'none';
+            heroWeatherRow.style.display = 'none';
             return;
         }
 
         var coord = TRIP_COORDS[dayIdx];
         var cityName = isEN ? coord.cityEn : coord.city;
 
-        // Update location text
-        locEl.innerHTML = '📍 ' + cityName;
-
-        // Update hero card for during-trip state
         var now = new Date();
-        var countdownEl = document.getElementById('home-countdown-num');
-        var heroText = document.querySelector('.hero-card-text');
-        var heroDate = document.querySelector('.hero-card-date');
-        if (now >= TRIP_START && now <= TRIP_END && countdownEl && heroText) {
-            var dayNum = dayIdx + 1;
-            countdownEl.textContent = dayNum;
-            heroText.innerHTML = (isEN ? 'Day' : 'Giorno') + '<br>' + (isEN ? 'of ' : 'di ') + TRIP_DAYS;
-            if (heroDate) {
-                var dateStr = now.toLocaleDateString(isEN ? 'en-GB' : 'it-IT', { day: 'numeric', month: 'long' });
-                heroDate.innerHTML = '📅 ' + dateStr;
+        var isDuringTrip = now >= TRIP_START && now <= TRIP_END;
+
+        // Switch hero card layout
+        if (isDuringTrip && heroPreTrip && heroDuringTrip) {
+            heroPreTrip.style.display = 'none';
+            if (heroPreAvatar) heroPreAvatar.style.display = 'none';
+            heroDuringTrip.style.display = '';
+            // Set city
+            if (heroTripCity) heroTripCity.textContent = '📍 ' + cityName;
+            if (heroTripCountry) heroTripCountry.textContent = (coord.country || '') + ' ' + (coord.flag || '');
+            // Set date
+            if (heroTripDateDay) heroTripDateDay.textContent = now.getDate();
+            if (heroTripDateMonth) {
+                heroTripDateMonth.textContent = now.toLocaleDateString(isEN ? 'en-GB' : 'it-IT', { month: 'long' });
             }
         }
 
@@ -3871,7 +4026,7 @@ if ('serviceWorker' in navigator) {
             .then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
             .then(function(data) {
                 if (!data.daily || !data.daily.temperature_2m_max) {
-                    widget.style.display = 'none';
+                    heroWeatherRow.style.display = 'none';
                     return;
                 }
 
@@ -3886,15 +4041,17 @@ if ('serviceWorker' in navigator) {
                 var sunsetTime = new Date(sunset);
                 var daylightMin = (sunsetTime - sunriseTime) / 60000;
 
-                iconEl.textContent = wmoToEmoji(wCode);
-                tempEl.innerHTML = tMax + '° / ' + tMin + '° <small>' + wmoToText(wCode) + '</small>';
-                lightEl.innerHTML = formatHoursMinutes(daylightMin) + ' <small>' + (isEN ? 'daylight' : 'di luce') + '</small>';
+                // Update integrated hero weather row
+                if (heroWeatherLoc) heroWeatherLoc.textContent = '📍 ' + cityName;
+                if (heroWeatherIcon) heroWeatherIcon.textContent = wmoToEmoji(wCode);
+                if (heroWeatherTemp) heroWeatherTemp.textContent = tMax + '°/' + tMin + '°';
+                if (heroWeatherLight) heroWeatherLight.textContent = formatHoursMinutes(daylightMin);
 
-                widget.style.display = '';
+                heroWeatherRow.style.display = '';
             })
             .catch(function(err) {
                 console.warn('[Weather]', err);
-                widget.style.display = 'none';
+                heroWeatherRow.style.display = 'none';
             });
     }
 

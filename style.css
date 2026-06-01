@@ -575,9 +575,11 @@ mark.search-hl.current { background: #f97316; color: white; }
     border-radius: 20px; padding: 24px;
     margin-bottom: 20px;
     display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap;
     box-shadow: 8px 8px 16px rgba(0,0,0,0.06), -4px -4px 12px rgba(255,255,255,0.8);
     border: 1px solid rgba(255,255,255,0.6);
 }
+.home-hero-card .hero-weather-row { width: 100%; }
 .hero-card-content { flex: 1; }
 .hero-card-label {
     display: block; font-size: 11px; font-weight: 700; letter-spacing: 1.2px;
@@ -2556,60 +2558,45 @@ table { max-width: 100%; }
   line-height: 1.2;
 }
 
-/* ─── Weather Widget (Mockup 3: two pills) ─── */
-.weather-widget {
-  margin: 16px 0 8px;
-  padding: 0 4px;
+/* ─── Hero Card: During-trip layout ─── */
+.hero-card-trip { flex: 1; }
+.hero-trip-top { margin-bottom: 6px; }
+.hero-trip-label {
+  font-size: 11px; font-weight: 700; letter-spacing: 1.2px;
+  color: var(--success); text-transform: uppercase;
 }
-.weather-location {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--text-main);
-  margin-bottom: 10px;
+.hero-trip-main {
+  display: flex; align-items: center; gap: 12px;
 }
-.weather-pills {
-  display: flex;
-  gap: 10px;
+.hero-trip-city-block { flex-shrink: 0; }
+.hero-trip-city {
+  font-size: 22px; font-weight: 700; color: var(--primary);
+}
+.hero-trip-country {
+  font-size: 13px; color: var(--text-muted); margin-top: 2px;
+}
+.hero-trip-date {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+}
+.hero-trip-date-day {
+  font-size: 30px; font-weight: 800; color: var(--primary); line-height: 1;
+}
+.hero-trip-date-month {
+  font-size: 11px; color: var(--text-muted); font-weight: 600;
+  margin-top: 2px; text-transform: uppercase; letter-spacing: 0.5px;
+}
+
+/* ─── Hero Weather Row (integrated) ─── */
+.hero-weather-row {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 13px; color: var(--text-muted);
+  margin-top: 10px; padding-top: 10px;
+  border-top: 1px solid var(--border);
   flex-wrap: wrap;
 }
-.weather-pill {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 14px;
-  border-radius: 20px;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--text-main);
-}
-.weather-pill small {
-  font-weight: 400;
-  font-size: 12px;
-  color: #5a6a7e;
-  margin-left: 4px;
-}
-.weather-pill-icon {
-  font-size: 18px;
-}
-.weather-pill-temp {
-  background: rgba(214,158,46,0.15);
-  border: 1px solid rgba(214,158,46,0.4);
-  color: var(--text);
-}
-.weather-pill-light {
-  background: rgba(237,137,54,0.15);
-  border: 1px solid rgba(237,137,54,0.4);
-  color: var(--text);
-}
-@media (max-width: 480px) {
-  .weather-pills {
-    gap: 8px;
-  }
-  .weather-pill {
-    padding: 6px 10px;
-    font-size: 13px;
-  }
-}
+.hero-weather-sep { opacity: 0.4; }
+.hero-weather-bold { font-weight: 600; color: var(--text); }
 
 /* ─── Dynamic Calendar Day Number ─── */
 /* Dynamic calendar icon removed — using 📅 emoji */
@@ -3321,3 +3308,75 @@ table { max-width: 100%; }
 
 /* 9th home card animation delay */
 /* removed old nth-child(9-10) animation delays - now handled by hg-group selectors */
+
+/* ─── Route Map (Collapsible) ─── */
+.route-map-wrapper {
+    margin: 12px 0 16px;
+}
+.route-map-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 11px 16px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: #fff;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition);
+    box-shadow: var(--shadow-sm);
+}
+.route-map-toggle:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+}
+.route-map-toggle:active {
+    transform: translateY(0);
+}
+.route-map-toggle-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.route-map-icon {
+    font-size: 18px;
+}
+.route-map-arrow {
+    font-size: 12px;
+    transition: transform 0.35s ease;
+}
+.route-map-arrow.open {
+    transform: rotate(180deg);
+}
+.route-map-container {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 0 0 var(--radius) var(--radius);
+}
+.route-map-container.open {
+    max-height: 260px;
+}
+.route-map {
+    height: 240px;
+    width: 100%;
+    border-radius: 0 0 var(--radius) var(--radius);
+    border: 1px solid var(--border);
+    border-top: none;
+    z-index: 1;
+}
+/* Leaflet popup styling for route map */
+.route-popup { font-size: 13px; line-height: 1.4; }
+.route-popup .rp-day { font-weight: 700; color: var(--primary); }
+.route-popup .rp-city { font-size: 14px; margin: 2px 0; }
+.route-popup .rp-desc { color: var(--text-muted); font-size: 12px; margin-top: 3px; }
+.route-popup .rp-flags { font-size: 14px; }
+
+/* Desktop: slightly taller map */
+@media (min-width: 768px) {
+    .route-map-container.open { max-height: 360px; }
+    .route-map { height: 340px; }
+}

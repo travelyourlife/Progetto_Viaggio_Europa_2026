@@ -43,7 +43,7 @@
     <link rel="apple-touch-icon" sizes="152x152" href="./icon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="./icon.png">
     <link rel="apple-touch-icon" sizes="167x167" href="./icon.png">
-    <title>Viaggio Europa 2026 — V10.2</title>
+    <title>Viaggio Europa 2026 — V10.3</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <link rel="stylesheet" href="style.css">
 <!-- Firebase SDK (compat mode for single-file app) -->
@@ -57,7 +57,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = '10.2';
+  var EXPECTED_VERSION = '10.3';
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
   var r = false;
@@ -248,31 +248,45 @@
     <a href="./index_en.html" class="home-lang-switch" aria-label="Switch to English">🇬🇧</a>
 </div>
 
-<!-- ─── Hero Countdown Card ─── -->
+<!-- ─── Hero Card ─── -->
 <div class="home-hero-card">
-    <div class="hero-card-content">
+    <!-- Pre-trip content -->
+    <div class="hero-card-content" id="hero-pre-trip">
         <span class="hero-card-label">PROSSIMA AVVENTURA</span>
         <div class="hero-card-countdown">
             <span class="hero-card-number" id="home-countdown-num">--</span>
-            <span class="hero-card-text">giorni<br>alla partenza</span>
+            <span class="hero-card-text">giorni alla partenza</span>
         </div>
         <div class="hero-card-date">📅 26 giugno 2026</div>
     </div>
-    <img src="./icon.png" alt="" class="hero-card-avatar">
-</div>
-
-<!-- ─── Weather Widget ─── -->
-<div class="weather-widget" id="weather-widget" style="display:none;">
-    <div class="weather-location" id="weather-location"></div>
-    <div class="weather-pills">
-        <div class="weather-pill weather-pill-temp" id="weather-pill-temp">
-            <span class="weather-pill-icon" id="weather-icon"></span>
-            <span class="weather-pill-text" id="weather-temp"></span>
+    <!-- During-trip content (hidden by default) -->
+    <div class="hero-card-trip" id="hero-during-trip" style="display:none;">
+        <div class="hero-trip-top">
+            <span class="hero-trip-label">🟢 IN VIAGGIO</span>
         </div>
-        <div class="weather-pill weather-pill-light" id="weather-pill-light">
-            <span class="weather-pill-icon">🌅</span>
-            <span class="weather-pill-text" id="weather-light"></span>
+        <div class="hero-trip-main">
+            <div class="hero-trip-city-block">
+                <div class="hero-trip-city" id="hero-trip-city">📍 --</div>
+                <div class="hero-trip-country" id="hero-trip-country"></div>
+            </div>
+            <div class="hero-trip-date" id="hero-trip-date">
+                <div class="hero-trip-date-day" id="hero-trip-date-day">--</div>
+                <div class="hero-trip-date-month" id="hero-trip-date-month"></div>
+            </div>
+            <img src="./icon.png" alt="" class="hero-card-avatar">
         </div>
+    </div>
+    <!-- Avatar for pre-trip (shown by default) -->
+    <img src="./icon.png" alt="" class="hero-card-avatar" id="hero-pre-avatar">
+    <!-- Weather row (integrated, shown in both states) -->
+    <div class="hero-weather-row" id="hero-weather-row" style="display:none;">
+        <span id="hero-weather-loc"></span>
+        <span class="hero-weather-sep">·</span>
+        <span id="hero-weather-icon"></span>
+        <span id="hero-weather-temp" class="hero-weather-bold"></span>
+        <span class="hero-weather-sep">·</span>
+        <span>🌅</span>
+        <span id="hero-weather-light"></span>
     </div>
 </div>
 
@@ -501,6 +515,17 @@
 </tbody>
 </table>
 
+<!-- Route Map (collapsible) -->
+<div id="routeMapWrapper" class="route-map-wrapper">
+  <button id="routeMapToggle" class="route-map-toggle" aria-expanded="false">
+    <span class="route-map-toggle-left"><span class="route-map-icon">🗺️</span> <span id="routeMapLabel">Mappa Percorso</span></span>
+    <span class="route-map-arrow" id="routeMapArrow">▼</span>
+  </button>
+  <div class="route-map-container" id="routeMapContainer">
+    <div id="routeMap" class="route-map"></div>
+  </div>
+</div>
+
 <h2 id="itinerario-54-giorni">🌟 Itinerario — 54 Giorni</h2>
 <p><strong>Legenda:</strong> ♨️ = terma agganciabile (vedi <a href="#secA">Terme</a>) · ➕ = deviazione alternativa (vedi <a href="#secB">Alternative</a>) · 🎣 = pesca possibile (vedi <a href="#pesca">Guida Pesca</a>) · 🥾 = trekking (vedi <a href="#trekking">Guida Trekking</a>)</p>
 <p><strong>Clicca il Gx per saltare ai dettagli.</strong></p>
@@ -556,29 +581,29 @@
 <p>Ogni blocco include: tragitto, pedaggi/traghetti, meteo, POI, alternative, pesca 🎣 dove possibile, keyword Maps.</p>
 </blockquote>
 <hr>
-<h3 id="g0">G0 · 26/06 · Selvazzano → Villach 🇮🇹→🇦🇹</h3>
-<p><strong>280 km · 3h · Pedaggi A4+A23 ~€15 + <a href="https://www.asfinag.at" target="_blank" rel="noopener">Vignetta AT digitale</a> €12,80 (10gg)</strong></p>
-<p class="meteo-day" data-day="0" data-lat="46.6103" data-lon="13.8558" data-static-high="25" data-static-low="15" data-static-cond="Bel tempo" data-daylight="16h di luce">☀️ 25°C / 15°C · Bel tempo · 16h di luce <span class="meteo-badge">(media storica)</span></p>
-<p>🚗 Partenza nel pomeriggio, arrivo sera a Villach
-🌭 <strong>Villach street food:</strong> <em>Würstelstand</em> in centro — Käsekrainer o Bosna (hot dog speziato) ~€4-5. Oppure Gasthof con <em>Wiener Schnitzel</em> take-away ~€10. <strong>Mercato:</strong> Villacher Wochenmarkt (Hauptplatz) — prodotti carinziani, speck, formaggi. Mer e Sab mattina.</p>
-<p>🛴 <strong>Monopattini:</strong> Villach centro — piatto, ideale per esplorare → <a href="#noleggi">vedi noleggi</a></p>
+<h3 id="g0">G0 · 26/06 · Selvazzano → Leoben 🇮🇹→🇦🇹</h3>
+<p><strong>350 km · 3h 30m · Pedaggi A4+A23 ~€15 + <a href="https://www.asfinag.at" target="_blank" rel="noopener">Vignetta AT digitale</a> €12,80 (10gg)</strong></p>
+<p class="meteo-day" data-day="0" data-lat="47.3765" data-lon="15.0914" data-static-high="25" data-static-low="14" data-static-cond="Bel tempo" data-daylight="16h di luce">☀️ 25°C / 14°C · Bel tempo · 16h di luce <span class="meteo-badge">(media storica)</span></p>
+<p>🚗 Partenza nel pomeriggio, arrivo sera a Leoben — dove tutto è iniziato 🌒 Qui abbiamo visto la nostra prima eclissi totale di sole (11 agosto 1999). Il viaggio inizia e finisce con un'eclissi!
+🌭 <strong>Leoben street food:</strong> Gasthäuser in Hauptplatz — cucina stiriana: <em>Brettljause</em> (tagliere di salumi e formaggi) ~€10-14, <em>Backhendl</em> (pollo fritto stiriano) ~€12, <em>Steirischer Schweinsbraten</em> (arrosto di maiale) ~€11. Tutto condito con il famoso <em>Kürbiskernöl</em> (olio di semi di zucca). <strong>Birra:</strong> Gösser Bräu — la birra Gösser nasce qui!</p>
+<p>🛴 <strong>Monopattini:</strong> Leoben centro — Hauptplatz e centro storico compatto, ideale per passeggiata serale → <a href="#noleggi">vedi noleggi</a></p>
 <div class="bambini-section">
-<p>👶 <strong>Bambini:</strong> Kärnten Therme Villach (parco acquatico termale) — <a href="https://maps.google.com/?q=Kärnten+Therme+Villach" target="_blank" rel="noopener">📍 Maps</a>; PLANET LOLLIPOP ATRIO Villach (area giochi al coperto) — <a href="https://maps.google.com/?q=PLANET+LOLLIPOP+ATRIO+Villach" target="_blank" rel="noopener">📍 Maps</a></p>
+<p>👶 <strong>Bambini:</strong> Leopark (St. Michael bei Leoben) — parco giochi al coperto, attività per tutte le età — <a href="https://maps.google.com/?q=Leopark+St+Michael+Leoben" target="_blank" rel="noopener">📍 Maps</a>; Kunsthalle Leoben — museo interattivo per bambini 6-14 anni — <a href="https://maps.google.com/?q=Kunsthalle+Leoben" target="_blank" rel="noopener">📍 Maps</a></p>
 </div>
 <div class="practical-info">
 <h4 style="margin:12px 0 8px 0;font-size:14px;color:var(--text-muted);">📋 Info Pratiche</h4>
-<p>🅿️ <strong>Pernottamento:</strong> Seecamping Berghof (Villach/Ossiacher See) — <a href="https://maps.google.com/?q=46.6531,13.9014" target="_blank" rel="noopener">📍 Maps</a> · ~€40-60/notte. Elettricità, acqua, WiFi, parco giochi, accesso diretto al lago. / Camping Gerli (Villach) — <a href="https://maps.google.com/?q=46.5833,13.8667" target="_blank" rel="noopener">📍 Maps</a> · ~€35-50/notte. Elettricità, acqua, piscina, vicino a piste ciclabili.</p>
+<p>🅿️ <strong>Pernottamento:</strong> Campingclub Hinterberg (Hinterbergstr. 47, Leoben) — <a href="https://maps.google.com/?q=47.3611,15.0656" target="_blank" rel="noopener">📍 Maps</a> · da €25/notte (tutto incluso). Bambini sotto 15 anni gratis, animali gratis. Gestione familiare, tranquillo. Check-in 7-21.</p>
 <p>⛽ <strong>Carburante:</strong> OMV, BP, Shell, Eni, diesel ~€1.95-2.00/L (IT) / ~€1.88-1.95/L (AT). Nessun tratto remoto senza carburante in autostrada.</p>
-<p>🛒 <strong>Spesa:</strong> Interspar ATRIO Villach — <a href="https://maps.google.com/?q=Interspar+ATRIO+Villach" target="_blank" rel="noopener">📍 Maps</a></p>
-<p>🧺 <strong>Lavanderia:</strong> Umlauft Textilservice (Peraustr. 31, Villach) — <a href="https://maps.google.com/?q=Umlauft+Textilservice+Villach" target="_blank" rel="noopener">📍 Maps</a></p>
-<p>💧 <strong>Servizi camper:</strong> Seecamping Berghof (carico/scarico) — <a href="https://maps.google.com/?q=Seecamping+Berghof+Villach" target="_blank" rel="noopener">📍 Maps</a></p>
-<p>🏥 <strong>Emergenze:</strong> Landeskrankenhaus Villach — <a href="https://maps.google.com/?q=Landeskrankenhaus+Villach" target="_blank" rel="noopener">📍 Maps</a> · Tel: 144 (Ambulanza), 133 (Polizia), 122 (Vigili del Fuoco), 112 (Emergenza UE). Nota: Necessaria vignetta autostradale austriaca.</p>
-<p>💰 <strong>Budget:</strong> ~€130-170/giorno</p>
+<p>🛒 <strong>Spesa:</strong> Interspar Leoben (LCS Leoben City Shopping) — <a href="https://maps.google.com/?q=Interspar+Leoben" target="_blank" rel="noopener">📍 Maps</a>; Merkur Markt (Pichlmayergasse 16) — <a href="https://maps.google.com/?q=Merkur+Markt+Leoben" target="_blank" rel="noopener">📍 Maps</a></p>
+<p>🧺 <strong>Lavanderia:</strong> Lavanderia self-service disponibile al Campingclub Hinterberg</p>
+<p>💧 <strong>Servizi camper:</strong> Campingclub Hinterberg (carico/scarico acqua, elettricità) — <a href="https://maps.google.com/?q=Campingclub+Hinterberg+Leoben" target="_blank" rel="noopener">📍 Maps</a></p>
+<p>🏥 <strong>Emergenze:</strong> LKH Hochsteiermark Leoben (Ospedale regionale) — <a href="https://maps.google.com/?q=LKH+Hochsteiermark+Leoben" target="_blank" rel="noopener">📍 Maps</a> · Tel: 144 (Ambulanza), 133 (Polizia), 122 (Vigili del Fuoco), 112 (Emergenza UE). Nota: Necessaria vignetta autostradale austriaca.</p>
+<p>💰 <strong>Budget:</strong> ~€100-140/giorno</p>
 </div>
 <hr>
 <span id="g1"></span>
-<h3 id="g1-2706-villach-vienna">G1 · 27/06 · Villach → Vienna 🇦🇹</h3>
-<p><strong>350 km · 3h 30m · Vignetta AT (già attiva)</strong></p>
+<h3 id="g1-2706-leoben-vienna">G1 · 27/06 · Leoben → Vienna 🇦🇹</h3>
+<p><strong>150 km · 1h 45m · Vignetta AT (già attiva)</strong></p>
 <p class="meteo-day" data-day="1" data-lat="48.2082" data-lon="16.3738" data-static-high="25" data-static-low="15" data-static-cond="Temporali pomeridiani possibili" data-daylight="16h di luce">☀️ 25°C / 15°C · Temporali pomeridiani possibili · 16h di luce <span class="meteo-badge">(media storica)</span></p>
 <p>🛣️ ‍👩‍👧‍👦 ⭐ <strong>Prater</strong> — ruota panoramica + giostre vintage
 🏛️ <strong>Haus der Musik</strong> — dirigere i Wiener Philharmoniker (interattivo!)
@@ -592,7 +617,7 @@
 <div class="practical-info">
 <h4 style="margin:12px 0 8px 0;font-size:14px;color:var(--text-muted);">📋 Info Pratiche</h4>
 <p>🅿️ <strong>Pernottamento:</strong> Reisemobilstellplatz Wien — <a href="https://maps.google.com/?q=48.13673,16.316459" target="_blank" rel="noopener">📍 Maps</a> · ~€27-30/notte. Elettricità, acqua, scarico, aperto 24h. MICAMPA Wien Wienerwald — <a href="https://maps.google.com/?q=Hüttelbergstr.+80+Wien" target="_blank" rel="noopener">📍 Maps</a>. Vicino al bosco, sentieri, adatto alle famiglie.</p>
-<p>⛽ <strong>Carburante:</strong> OMV, BP, Shell, Eni, diesel ~€1.88-1.95/L. Nessun tratto senza carburante sulla A2 da Villach a Vienna.</p>
+<p>⛽ <strong>Carburante:</strong> OMV, BP, Shell, Eni, diesel ~€1.88-1.95/L. Nessun tratto senza carburante sulla S6/A2 da Leoben a Vienna.</p>
 <p>🛒 <strong>Spesa:</strong> Spar, Billa, Hofer, Lidl — <a href="https://maps.google.com/?q=Supermarket+Wien" target="_blank" rel="noopener">📍 Maps</a></p>
 <p>🧺 <strong>Lavanderia:</strong> Green & Clean — <a href="https://maps.google.com/?q=Green+%26+Clean+Wien" target="_blank" rel="noopener">📍 Maps</a></p>
 <p>💧 <strong>Servizi camper:</strong> Reisemobilstellplatz Wien e Camping Wien West — <a href="https://maps.google.com/?q=Reisemobilstellplatz+Wien" target="_blank" rel="noopener">📍 Maps</a></p>
