@@ -43,7 +43,7 @@
     <link rel="apple-touch-icon" sizes="152x152" href="./icon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="./icon.png">
     <link rel="apple-touch-icon" sizes="167x167" href="./icon.png">
-    <title>Viaggio Europa 2026 — V10.6</title>
+    <title>Viaggio Europa 2026 — V10.7</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <link rel="stylesheet" href="style.css">
 <!-- Firebase SDK (compat mode for single-file app) -->
@@ -57,7 +57,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = '10.6';
+  var EXPECTED_VERSION = '10.7';
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
   var r = false;
@@ -516,16 +516,7 @@
 </tbody>
 </table>
 
-<!-- Route Map (collapsible) -->
-<div id="routeMapWrapper" class="route-map-wrapper">
-  <button id="routeMapToggle" class="route-map-toggle" aria-expanded="false">
-    <span class="route-map-toggle-left"><span class="route-map-icon">🗺️</span> <span id="routeMapLabel">Mappa Percorso</span></span>
-    <span class="route-map-arrow" id="routeMapArrow">▼</span>
-  </button>
-  <div class="route-map-container" id="routeMapContainer">
-    <div id="routeMap" class="route-map"></div>
-  </div>
-</div>
+
 
 <h2 id="itinerario-54-giorni">🌟 Itinerario — 54 Giorni</h2>
 <p><strong>Legenda:</strong> ♨️ = terma agganciabile (vedi <a href="#secA">Terme</a>) · ➕ = deviazione alternativa (vedi <a href="#secB">Alternative</a>) · 🎣 = pesca possibile (vedi <a href="#pesca">Guida Pesca</a>) · 🥾 = trekking (vedi <a href="#trekking">Guida Trekking</a>)</p>
@@ -577,6 +568,18 @@
 <div id="goto-today-box" style="text-align:center; margin-bottom:16px; display:none;">
     <button id="goto-today-btn" class="pos-btn pos-btn-blue" style="font-size:15px; padding:12px 24px;">📅 Vai al giorno di oggi</button>
 </div>
+
+<!-- Route Map (collapsible) -->
+<div id="routeMapWrapper" class="route-map-wrapper">
+  <button id="routeMapToggle" class="route-map-toggle" aria-expanded="false">
+    <span class="route-map-toggle-left"><span class="route-map-icon">🗺️</span> <span id="routeMapLabel">Mappa Percorso</span></span>
+    <span class="route-map-arrow" id="routeMapArrow">▼</span>
+  </button>
+  <div class="route-map-container" id="routeMapContainer">
+    <div id="routeMap" class="route-map"></div>
+  </div>
+</div>
+
 <h2 id="dettagli-giorno-per-giorno">🛣️ Dettagli — Giorno per Giorno</h2>
 <blockquote>
 <p>Ogni blocco include: tragitto, pedaggi/traghetti, meteo, POI, alternative, pesca 🎣 dove possibile, keyword Maps.</p>

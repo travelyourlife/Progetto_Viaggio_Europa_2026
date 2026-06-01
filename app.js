@@ -4793,24 +4793,15 @@ if ('serviceWorker' in navigator) {
         if (li) uncheckedPiano.push(li.textContent.trim().substring(0, 60));
       }
     });
-    if (uncheckedPiano.length > 0) {
-      var pianoText = isEN
-        ? '<strong>' + uncheckedPiano.length + ' task' + (uncheckedPiano.length > 1 ? 's' : '') + '</strong> still to complete before departure!'
-        : '<strong>' + uncheckedPiano.length + ' attività</strong> ancora da completare prima della partenza!';
-      addNotif('piano-check-' + todayStr, '📋', pianoText, 'warning',
-        function() { var p = document.querySelector('[data-tab="tab-piano"]'); if(p) p.click(); }
-      );
-
-      // Push notification for owner at 7 and 3 days before departure
-      if ((diffToStart === 7 || diffToStart === 3) && window.queuePushNotification) {
-        queuePushNotification('checklist_reminder', {
-          title: isEN ? '📋 ' + uncheckedPiano.length + ' tasks to complete!' : '📋 ' + uncheckedPiano.length + ' attività da completare!',
-          body: uncheckedPiano.slice(0, 3).join(', ') + (uncheckedPiano.length > 3 ? '...' : ''),
-          target: 'owner',
-          url: './#tab-piano',
-          tag: 'checklist-' + todayStr
-        });
-      }
+    // Push notification only (no in-app banner) for owner at 7 and 3 days before departure
+    if (uncheckedPiano.length > 0 && (diffToStart === 7 || diffToStart === 3) && window.queuePushNotification) {
+      queuePushNotification('checklist_reminder', {
+        title: isEN ? '📋 ' + uncheckedPiano.length + ' tasks to complete!' : '📋 ' + uncheckedPiano.length + ' attività da completare!',
+        body: uncheckedPiano.slice(0, 3).join(', ') + (uncheckedPiano.length > 3 ? '...' : ''),
+        target: 'owner',
+        url: './#tab-piano',
+        tag: 'checklist-' + todayStr
+      });
     }
   }
 
@@ -4955,13 +4946,24 @@ if ('serviceWorker' in navigator) {
   function getToken() {
     // VAPID key from Firebase Console > Project Settings > Cloud Messaging > Web Push certificates
     var VAPID_KEY = 'BBW43ENkLgM_oXOaCCyo_m3voilbfw2fdlqjtopognVCmyiGXAibwedF94Og56uQdh6IIvLqokMfIeROBYhYkis';
-    var vapidOpts = { vapidKey: VAPID_KEY };
-    messaging.getToken(vapidOpts).then(function(token) {
+    // Must pass the SW registration so Firebase uses our sw.js (not default firebase-messaging-sw.js)
+    navigator.serviceWorker.getRegistration().then(function(swReg) {
+      if (!swReg) {
+        console.warn('[FCM] No SW registration found — registering sw.js');
+        return navigator.serviceWorker.register('./sw.js');
+      }
+      return swReg;
+    }).then(function(swReg) {
+      var vapidOpts = { vapidKey: VAPID_KEY, serviceWorkerRegistration: swReg };
+      return messaging.getToken(vapidOpts);
+    }).then(function(token) {
       if (token) {
         console.info('[FCM] Token:', token.substring(0, 20) + '...');
         localStorage.setItem(FCM_TOKEN_KEY, token);
         // Save token to Firebase DB for the owner to send push notifications
         saveFcmToken(token);
+      } else {
+        console.warn('[FCM] No token returned (permission may not be granted)');
       }
     }).catch(function(err) {
       console.warn('[FCM] Token retrieval failed:', err.message);
@@ -4971,6 +4973,10 @@ if ('serviceWorker' in navigator) {
   function saveFcmToken(token) {
     if (!db) return;
     var user = firebaseUser;
+    if (!user || !user.uid) {
+      console.info('[FCM] No authenticated user — skipping token save');
+      return;
+    }
     var deviceId = localStorage.getItem(KEYS.DEVICE_ID);
     if (!deviceId) {
       deviceId = 'dev_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
@@ -4988,13 +4994,15 @@ if ('serviceWorker' in navigator) {
       device: deviceId,
       userAgent: navigator.userAgent.substring(0, 100),
       lang: LANG,
-      uid: user ? user.uid : 'anonymous',
-      name: user ? (user.displayName || user.email || 'Unknown') : 'Viewer',
+      uid: user.uid,
+      name: user.displayName || user.email || 'Unknown',
       role: role,
       updatedAt: new Date().toISOString()
     };
-    db.ref('fcm_tokens/' + deviceId).set(tokenData).then(function() {
-      console.info('[FCM] Token saved to Firebase (role: ' + role + ')');
+    // Save under uid/deviceId so one user can have multiple devices
+    // Firebase rules: fcm_tokens/$uid writable by auth.uid === $uid
+    db.ref('fcm_tokens/' + user.uid + '/' + deviceId).set(tokenData).then(function() {
+      console.info('[FCM] Token saved to Firebase (role: ' + role + ', uid: ' + user.uid.substring(0,8) + '...)');
     }).catch(function(err) {
       console.warn('[FCM] Token save failed:', err.message);
     });
@@ -5020,9 +5028,12 @@ if ('serviceWorker' in navigator) {
   if (Notification.permission === 'granted') {
     // Already granted, just refresh token
     getToken();
-  } else if (visitCount >= 2 && Notification.permission !== 'denied') {
-    // Show lightweight in-app banner on second visit
-    setTimeout(showPushBanner, 3000);
+  } else if (Notification.permission !== 'denied') {
+    // Show lightweight in-app banner (on second visit, or immediately for owners)
+    var isOwnerUser = typeof isOwner !== 'undefined' && isOwner;
+    if (isOwnerUser || visitCount >= 2) {
+      setTimeout(showPushBanner, isOwnerUser ? 1500 : 3000);
+    }
   }
 
   // Lightweight push permission banner (triggers native OS popup on click)
@@ -5051,14 +5062,19 @@ if ('serviceWorker' in navigator) {
     if (container) container.prepend(banner);
   }
 
-  // Also request when owner logs in
+  // Also request when owner logs in, and refresh token for any logged-in user
   window.addEventListener('authStateChanged', function(e) {
     if (e.detail && e.detail.isOwner && Notification.permission !== 'denied') {
       requestPushPermission();
+    } else if (e.detail && e.detail.user && Notification.permission === 'granted') {
+      // Non-owner logged in with permission already granted — refresh token
+      getToken();
     }
-    // Re-save token with updated user info
-    var savedToken = localStorage.getItem(FCM_TOKEN_KEY);
-    if (savedToken) saveFcmToken(savedToken);
+    // Re-save token with updated user info (role may have changed)
+    if (Notification.permission === 'granted') {
+      var savedToken = localStorage.getItem(FCM_TOKEN_KEY);
+      if (savedToken) saveFcmToken(savedToken);
+    }
   });
 
 })();
@@ -5817,12 +5833,21 @@ if ('serviceWorker' in navigator) {
                   email: user.email || '',
                   photoURL: user.photoURL || '',
                   requestedAt: firebase.database.ServerValue.TIMESTAMP
+                }).then(function() {
+                  chatInputBar.style.display = 'none';
+                  chatMessages.style.display = 'none';
+                  chatLoginPrompt.style.display = 'none';
+                  if (chatPendingPrompt) chatPendingPrompt.style.display = 'block';
+                }).catch(function(err) {
+                  console.error('Chat pending write failed:', err);
+                  if (typeof showToast === 'function') showToast('Errore nell\'invio della richiesta. Riprova.', 'error');
                 });
+              } else {
+                chatInputBar.style.display = 'none';
+                chatMessages.style.display = 'none';
+                chatLoginPrompt.style.display = 'none';
+                if (chatPendingPrompt) chatPendingPrompt.style.display = 'block';
               }
-              chatInputBar.style.display = 'none';
-              chatMessages.style.display = 'none';
-              chatLoginPrompt.style.display = 'none';
-              if (chatPendingPrompt) chatPendingPrompt.style.display = 'block';
             });
           }
         });

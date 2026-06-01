@@ -1,12 +1,12 @@
 // ═══════════════════════════════════════════════════════════════
-// Service Worker — Viaggio Europa 2026 V10.6
+// Service Worker — Viaggio Europa 2026 V10.7
 // Strategy: Stale-While-Revalidate for own assets (instant load + background update)
 //           Cache-First for CDN (stable, versioned)
 //           Network-Only for API calls
 // ═══════════════════════════════════════════════════════════════
 'use strict';
 
-const CACHE_NAME = 'quo-vadis-v10.6';
+const CACHE_NAME = 'quo-vadis-v10.7';
 const IMAGE_CACHE_NAME = 'quo-vadis-images-v1';
 const IMAGE_CACHE_LIMIT = 80;
 const STATIC_ASSETS = [
@@ -41,7 +41,7 @@ const CDN_ASSETS = [
 self.addEventListener('install', function(event) {
   event.waitUntil(
     caches.open(CACHE_NAME).then(function(cache) {
-      console.log('[SW] Installing v10.6 — caching all assets (CDN + Static)');
+      console.log('[SW] Installing v10.7 — caching all assets (CDN + Static)');
       return cache.addAll(CDN_ASSETS.concat(STATIC_ASSETS));
     }).then(function() {
       // Force immediate activation — don't wait for old SW to release
