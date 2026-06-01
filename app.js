@@ -6194,7 +6194,15 @@ if ('serviceWorker' in navigator) {
 
   // ─── Send message ───
   function sendMessage(text, mediaUrl, mediaType, msgType) {
-    if (!chatUser) return;
+    // Fallback: if chatUser lost due to timing, re-read from Firebase Auth
+    if (!chatUser && typeof firebase !== 'undefined' && firebase.auth) {
+      chatUser = firebase.auth().currentUser;
+    }
+    if (!chatUser) {
+      console.warn('[Chat] sendMessage blocked: no chatUser');
+      if (window.showToast) showToast(isEN ? 'Please sign in first' : 'Accedi prima di inviare', 'info');
+      return;
+    }
     if (!text && !mediaUrl) return;
 
     var msg = {
@@ -6229,9 +6237,15 @@ if ('serviceWorker' in navigator) {
   }
 
   // ─── Send button ───
-  chatSendBtn.addEventListener('click', function() {
+  function handleSend() {
     var text = chatInput.value.trim();
     if (text) sendMessage(text);
+  }
+  chatSendBtn.addEventListener('click', handleSend);
+  // Android PWA: touchend as fallback (click sometimes not fired)
+  chatSendBtn.addEventListener('touchend', function(e) {
+    e.preventDefault();
+    handleSend();
   });
 
   // Auto-resize textarea
