@@ -683,6 +683,33 @@ function initRouteMap() {
             e.stopPropagation();
             openMapFullscreen(routeMapInstance, isEN ? 'Route Map' : 'Mappa Percorso');
         });
+
+        // ─── POI Layer on Route Map ───
+        if (typeof POI_ATTIVITA !== 'undefined' && POI_ATTIVITA.length) {
+            var catColors = { park: '#e53e3e', market: '#dd6b20', nature: '#38a169' };
+            var catIcons = { park: '🎢', market: '🛒', nature: '🌲' };
+            POI_ATTIVITA.forEach(function(poi) {
+                var name = isEN ? poi.nameEn : poi.name;
+                var desc = isEN ? poi.descEn : poi.desc;
+                var price = isEN ? poi.priceEn : poi.price;
+                var color = catColors[poi.cat];
+                var marker = L.circleMarker([poi.lat, poi.lng], {
+                    radius: 5,
+                    fillColor: color,
+                    color: '#fff',
+                    weight: 1.5,
+                    fillOpacity: 0.85
+                }).addTo(routeMapInstance);
+                var popupHtml = '<div style="max-width:220px">' +
+                    '<strong>' + catIcons[poi.cat] + ' ' + name + '</strong> ' + poi.country + '<br>' +
+                    '<small>' + desc.substring(0, 120) + (desc.length > 120 ? '...' : '') + '</small><br>' +
+                    '<small>💰 ' + price + '</small><br>' +
+                    '<a href="' + poi.mapsUrl + '" target="_blank" rel="noopener">📍 ' + (isEN ? 'Maps' : 'Maps') + '</a>' +
+                    (poi.url ? ' · <a href="' + poi.url + '" target="_blank" rel="noopener">🌐</a>' : '') +
+                '</div>';
+                marker.bindPopup(popupHtml);
+            });
+        }
     }
 }
 
@@ -7952,4 +7979,62 @@ if ('serviceWorker' in navigator) {
     }
   });
 
+})();
+
+
+// ═══════════════════════════════════════════════════════════════
+// ─── POI: Esplora — Render cards in Attività tab ───
+// ═══════════════════════════════════════════════════════════════
+
+(function() {
+    if (typeof POI_ATTIVITA === 'undefined' || !POI_ATTIVITA.length) return;
+
+    var catIcons = { park: '🎢', market: '🛒', nature: '🌲' };
+    var catColors = { park: '#e53e3e', market: '#dd6b20', nature: '#38a169' };
+    var catLabels = { park: isEN ? 'Theme Park' : 'Parco divertimenti', market: isEN ? 'Market' : 'Mercato', nature: isEN ? 'National Park' : 'Parco Nazionale' };
+
+    function renderPOIList(filter) {
+        var container = document.getElementById('poi-list');
+        if (!container) return;
+        var items = filter === 'all' ? POI_ATTIVITA : POI_ATTIVITA.filter(function(p) { return p.cat === filter; });
+        var html = '';
+        items.forEach(function(poi) {
+            var name = isEN ? poi.nameEn : poi.name;
+            var desc = isEN ? poi.descEn : poi.desc;
+            var price = isEN ? poi.priceEn : poi.price;
+            html += '<div class="poi-card" data-cat="' + poi.cat + '">' +
+                '<div class="poi-card-header">' +
+                    '<span class="poi-icon" style="color:' + catColors[poi.cat] + '; font-size:1.5em;">' + catIcons[poi.cat] + '</span>' +
+                    '<div class="poi-card-title">' +
+                        '<strong>' + name + '</strong> ' + poi.country +
+                        '<br><small style="color:#718096">' + catLabels[poi.cat] + ' · ' + (isEN ? 'Day ' : 'Giorno ') + poi.nearDay.replace('g','') + '</small>' +
+                    '</div>' +
+                '</div>' +
+                '<p class="poi-card-desc">' + desc + '</p>' +
+                '<div class="poi-card-footer">' +
+                    '<span class="poi-price">💰 ' + price + '</span>' +
+                    '<span class="poi-links">' +
+                        '<a href="' + poi.mapsUrl + '" target="_blank" rel="noopener" title="Google Maps">📍</a>' +
+                        (poi.url ? ' <a href="' + poi.url + '" target="_blank" rel="noopener" title="' + (isEN ? 'Website' : 'Sito web') + '">🌐</a>' : '') +
+                    '</span>' +
+                '</div>' +
+            '</div>';
+        });
+        container.innerHTML = html;
+    }
+
+    // Chip filter click handler
+    var filtersDiv = document.getElementById('poi-filters');
+    if (filtersDiv) {
+        filtersDiv.addEventListener('click', function(e) {
+            var btn = e.target.closest('.poi-chip');
+            if (!btn) return;
+            filtersDiv.querySelectorAll('.poi-chip').forEach(function(c) { c.classList.remove('active'); });
+            btn.classList.add('active');
+            renderPOIList(btn.getAttribute('data-cat'));
+        });
+    }
+
+    // Initial render
+    renderPOIList('all');
 })();

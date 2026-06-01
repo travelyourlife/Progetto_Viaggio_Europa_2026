@@ -138,3 +138,219 @@ var firebaseConfig = {
 
 var VAPID_KEY = 'BBW43ENkLgM_oXOaCCyo_m3voilbfw2fdlqjtopognVCmyiGXAibwedF94Og56uQdh61lvLqokMfleROBYhYkis';
 
+// ─── POI: Parchi Divertimento, Mercati, Parchi Nazionali ───
+// Categorie: "park" = Parchi divertimento, "market" = Mercati, "nature" = Parchi nazionali
+var POI_ATTIVITA = [
+  // ═══ PARCHI DIVERTIMENTO ═══
+  { id: "poi-prater", cat: "park", name: "Wiener Prater", nameEn: "Vienna Prater", lat: 48.2134, lng: 16.4042, country: "🇦🇹", nearDay: "g1",
+    desc: "Parco divertimenti storico (1897). Ruota panoramica Riesenrad, 250+ attrazioni. Ingresso gratuito, singole attrazioni a pagamento.",
+    descEn: "Historic amusement park (1897). Giant Ferris wheel Riesenrad, 250+ rides. Free entry, pay per ride.",
+    price: "Ingresso gratuito, giostre €3-6", priceEn: "Free entry, rides €3-6",
+    url: "https://www.praterwien.com", mapsUrl: "https://maps.google.com/?q=Wurstelprater+Vienna" },
+
+  { id: "poi-linnanmaki", cat: "park", name: "Linnanmäki", nameEn: "Linnanmäki", lat: 60.1878, lng: 24.9400, country: "🇫🇮", nearDay: "g6",
+    desc: "Il parco divertimenti più antico e popolare della Finlandia (1950). 40+ attrazioni, ingresso gratuito. Ricavato va in beneficenza.",
+    descEn: "Finland's oldest and most popular amusement park (1950). 40+ rides, free entry. Profits go to charity.",
+    price: "Ingresso gratuito, braccialetto giostre ~€44", priceEn: "Free entry, ride wristband ~€44",
+    url: "https://www.linnanmaki.fi/en/", mapsUrl: "https://maps.google.com/?q=Linnanmäki+Helsinki" },
+
+  { id: "poi-ranua", cat: "park", name: "Ranua Wildlife Park", nameEn: "Ranua Wildlife Park", lat: 65.9300, lng: 26.5100, country: "🇫🇮", nearDay: "g10",
+    desc: "Zoo artico con 50 specie boreali: orsi polari, linci, lupi, ghiottoni. Unico zoo con orsi polari in Finlandia.",
+    descEn: "Arctic zoo with 50 boreal species: polar bears, lynx, wolves, wolverines. Only zoo with polar bears in Finland.",
+    price: "Adulti €22, bambini €18", priceEn: "Adults €22, children €18",
+    url: "https://www.ranuazoo.com/en/", mapsUrl: "https://maps.google.com/?q=Ranua+Wildlife+Park" },
+
+  { id: "poi-santapark", cat: "park", name: "SantaPark", nameEn: "SantaPark", lat: 66.5436, lng: 25.8473, country: "🇫🇮", nearDay: "g12",
+    desc: "Grotta sotterranea di Babbo Natale a Rovaniemi. Attività per famiglie, Ice Gallery, Elf School.",
+    descEn: "Underground Santa Claus cave in Rovaniemi. Family activities, Ice Gallery, Elf School.",
+    price: "Adulti €39, bambini €33", priceEn: "Adults €39, children €33",
+    url: "https://santaparkarcticworld.com/santapark/", mapsUrl: "https://maps.google.com/?q=SantaPark+Rovaniemi" },
+
+  { id: "poi-polaria", cat: "park", name: "Polaria", nameEn: "Polaria", lat: 69.6480, lng: 18.9570, country: "🇳🇴", nearDay: "g15",
+    desc: "Acquario artico a Tromsø. Foche barbute, cinema panoramico, esposizioni su clima artico.",
+    descEn: "Arctic aquarium in Tromsø. Bearded seals, panoramic cinema, Arctic climate exhibitions.",
+    price: "Adulti NOK 180, bambini NOK 90", priceEn: "Adults NOK 180, children NOK 90",
+    url: "https://www.polaria.no/en/", mapsUrl: "https://maps.google.com/?q=Polaria+Tromsø" },
+
+  { id: "poi-kristiansand", cat: "park", name: "Kristiansand Dyrepark", nameEn: "Kristiansand Zoo", lat: 58.1850, lng: 8.0700, country: "🇳🇴", nearDay: "g32",
+    desc: "Zoo e parco divertimenti #1 in Norvegia. Mondo di Cardamom, Kaptein Sabeltann, animali da 5 continenti.",
+    descEn: "Norway's #1 zoo and theme park. Cardamom Town, Captain Sabertooth, animals from 5 continents.",
+    price: "Adulti NOK 499, bambini NOK 399", priceEn: "Adults NOK 499, children NOK 399",
+    url: "https://www.dyreparken.no/english/", mapsUrl: "https://maps.google.com/?q=Dyreparken+Kristiansand" },
+
+  { id: "poi-tivoli", cat: "park", name: "Tivoli Gardens", nameEn: "Tivoli Gardens", lat: 55.6736, lng: 12.5681, country: "🇩🇰", nearDay: "g34",
+    desc: "Storico parco divertimenti di Copenhagen (1843). 30+ attrazioni, giardini, concerti. Secondo parco più antico al mondo.",
+    descEn: "Historic Copenhagen amusement park (1843). 30+ rides, gardens, concerts. Second oldest park in the world.",
+    price: "Ingresso DKK 155, giostre extra", priceEn: "Entry DKK 155, rides extra",
+    url: "https://www.tivoli.dk/en/", mapsUrl: "https://maps.google.com/?q=Tivoli+Gardens+Copenhagen" },
+
+  { id: "poi-legoland", cat: "park", name: "Legoland Billund", nameEn: "Legoland Billund", lat: 55.7354, lng: 9.1268, country: "🇩🇰", nearDay: "g37",
+    desc: "Il Legoland originale (1968). 50+ attrazioni, Miniland con monumenti in LEGO, aree tematiche per tutte le età.",
+    descEn: "The original Legoland (1968). 50+ rides, Miniland with LEGO monuments, themed areas for all ages.",
+    price: "DKK 449 online, bambini <2 gratis", priceEn: "DKK 449 online, children <2 free",
+    url: "https://www.legoland.dk/en/", mapsUrl: "https://maps.google.com/?q=Legoland+Billund" },
+
+  { id: "poi-lalandia", cat: "park", name: "Lalandia Aquadome", nameEn: "Lalandia Aquadome", lat: 55.7300, lng: 9.1200, country: "🇩🇰", nearDay: "g38",
+    desc: "Il parco acquatico più grande della Scandinavia. Scivoli, piscina onde, area bambini, wellness. Clima tropicale tutto l'anno.",
+    descEn: "Scandinavia's largest waterpark. Slides, wave pool, kids area, wellness. Tropical climate year-round.",
+    price: "DKK 249/giorno (ospiti resort gratis)", priceEn: "DKK 249/day (resort guests free)",
+    url: "https://www.lalandia.dk/en/billund/go-exploring/the-aquadome", mapsUrl: "https://maps.google.com/?q=Lalandia+Billund" },
+
+  { id: "poi-heidepark", cat: "park", name: "Heide Park Resort", nameEn: "Heide Park Resort", lat: 53.0244, lng: 9.8781, country: "🇩🇪", nearDay: "g39",
+    desc: "Il più grande parco divertimenti della Germania del nord. Colossos (montagna russa in legno), Krake, Flug der Dämonen.",
+    descEn: "Northern Germany's largest theme park. Colossos (wooden coaster), Krake, Flug der Dämonen.",
+    price: "€52 online, bambini <3 gratis", priceEn: "€52 online, children <3 free",
+    url: "https://www.heide-park.de/en/", mapsUrl: "https://maps.google.com/?q=Heide+Park+Soltau" },
+
+  { id: "poi-futuroscope", cat: "park", name: "Futuroscope", nameEn: "Futuroscope", lat: 46.6683, lng: 0.3678, country: "🇫🇷", nearDay: "g41",
+    desc: "Parco tematico sulla tecnologia e multimedia vicino a Poitiers. Attrazioni immersive, cinema 4D, realtà virtuale.",
+    descEn: "Technology and multimedia theme park near Poitiers. Immersive attractions, 4D cinema, virtual reality.",
+    price: "€42 adulti, €36 bambini", priceEn: "€42 adults, €36 children",
+    url: "https://www.futuroscope.com/en", mapsUrl: "https://maps.google.com/?q=Futuroscope+Poitiers" },
+
+  { id: "poi-acquario-genova", cat: "park", name: "Acquario di Genova", nameEn: "Genoa Aquarium", lat: 44.4097, lng: 8.9268, country: "🇮🇹", nearDay: "g51",
+    desc: "Il più grande acquario d'Europa. 70 vasche, 12.000 animali, 600 specie. Delfini, squali, pinguini.",
+    descEn: "Europe's largest aquarium. 70 tanks, 12,000 animals, 600 species. Dolphins, sharks, penguins.",
+    price: "€29 adulti, €21 bambini", priceEn: "€29 adults, €21 children",
+    url: "https://www.acquariodigenova.it/en/", mapsUrl: "https://maps.google.com/?q=Acquario+di+Genova" },
+
+  // ═══ MERCATI ═══
+  { id: "poi-naschmarkt", cat: "market", name: "Naschmarkt", nameEn: "Naschmarkt", lat: 48.1988, lng: 16.3630, country: "🇦🇹", nearDay: "g1",
+    desc: "Il mercato più famoso di Vienna (dal 1780). 120+ bancarelle: spezie, formaggi, olive, ristoranti etnici. Mercatino delle pulci il sabato.",
+    descEn: "Vienna's most famous market (since 1780). 120+ stalls: spices, cheeses, olives, ethnic restaurants. Flea market on Saturdays.",
+    price: "Ingresso libero", priceEn: "Free entry",
+    url: "https://www.wien.info/en/shopping-wining-dining/markets/naschmarkt", mapsUrl: "https://maps.google.com/?q=Naschmarkt+Vienna" },
+
+  { id: "poi-hala-mirowska", cat: "market", name: "Hala Mirowska", nameEn: "Hala Mirowska", lat: 52.2380, lng: 20.9920, country: "🇵🇱", nearDay: "g2",
+    desc: "Storico mercato coperto di Varsavia (1901). Frutta, verdura, carne, formaggi locali. Atmosfera autentica polacca.",
+    descEn: "Historic covered market in Warsaw (1901). Fruits, vegetables, meat, local cheeses. Authentic Polish atmosphere.",
+    price: "Ingresso libero", priceEn: "Free entry",
+    url: "https://halamirowska.pl", mapsUrl: "https://maps.google.com/?q=Hala+Mirowska+Warsaw" },
+
+  { id: "poi-hales-market", cat: "market", name: "Halės Turgus", nameEn: "Halės Market", lat: 54.6730, lng: 25.2830, country: "🇱🇹", nearDay: "g3",
+    desc: "Il mercato centrale di Vilnius. Prodotti freschi lituani, pane nero, formaggi cagliati, miele. Sezione gastronomia moderna.",
+    descEn: "Vilnius central market. Fresh Lithuanian products, black bread, curd cheese, honey. Modern gastronomy section.",
+    price: "Ingresso libero", priceEn: "Free entry",
+    url: "https://www.halesturgus.lt", mapsUrl: "https://maps.google.com/?q=Halės+Turgus+Vilnius" },
+
+  { id: "poi-riga-central", cat: "market", name: "Mercato Centrale di Riga", nameEn: "Riga Central Market", lat: 56.9422, lng: 24.1131, country: "🇱🇻", nearDay: "g4",
+    desc: "Il mercato più grande d'Europa (UNESCO). 5 padiglioni in ex-hangar Zeppelin. Pesce, carne, latticini, verdure, gastronomia.",
+    descEn: "Europe's largest market (UNESCO). 5 pavilions in former Zeppelin hangars. Fish, meat, dairy, vegetables, gastronomy.",
+    price: "Ingresso libero", priceEn: "Free entry",
+    url: "https://www.centraltirgus.lv/en/", mapsUrl: "https://maps.google.com/?q=Riga+Central+Market" },
+
+  { id: "poi-balti-jaam", cat: "market", name: "Balti Jaama Turg", nameEn: "Balti Jaam Market", lat: 59.4400, lng: 24.7370, country: "🇪🇪", nearDay: "g5",
+    desc: "Mercato moderno di Tallinn vicino alla stazione. Street food, prodotti locali estoni, artigianato, bar sul rooftop.",
+    descEn: "Modern Tallinn market near the station. Street food, local Estonian products, crafts, rooftop bar.",
+    price: "Ingresso libero", priceEn: "Free entry",
+    url: "https://astfrm.ee/en/", mapsUrl: "https://maps.google.com/?q=Balti+Jaama+Turg+Tallinn" },
+
+  { id: "poi-kauppatori", cat: "market", name: "Kauppatori", nameEn: "Helsinki Market Square", lat: 60.1675, lng: 24.9525, country: "🇫🇮", nearDay: "g6",
+    desc: "Piazza del mercato sul porto di Helsinki. Pesce fresco, frutti di bosco, artigianato finlandese. Old Market Hall adiacente.",
+    descEn: "Market square on Helsinki harbour. Fresh fish, berries, Finnish crafts. Adjacent Old Market Hall.",
+    price: "Ingresso libero", priceEn: "Free entry",
+    url: "https://www.myhelsinki.fi/en/see-and-do/sights/market-square", mapsUrl: "https://maps.google.com/?q=Kauppatori+Helsinki" },
+
+  { id: "poi-bergen-fish", cat: "market", name: "Fisketorget Bergen", nameEn: "Bergen Fish Market", lat: 60.3943, lng: 5.3259, country: "🇳🇴", nearDay: "g30",
+    desc: "Storico mercato del pesce di Bergen (dal 1200). Granchio reale, salmone, gamberoni. Anche indoor con ristoranti.",
+    descEn: "Historic Bergen fish market (since 1200). King crab, salmon, prawns. Also indoor with restaurants.",
+    price: "Ingresso libero, piatti €15-30", priceEn: "Free entry, dishes €15-30",
+    url: "https://www.visitbergen.com/things-to-do/fish-market-in-bergen-p822253", mapsUrl: "https://maps.google.com/?q=Fisketorget+Bergen" },
+
+  { id: "poi-torvehallerne", cat: "market", name: "Torvehallerne", nameEn: "Torvehallerne", lat: 55.6839, lng: 12.5711, country: "🇩🇰", nearDay: "g34",
+    desc: "Food hall di Copenhagen con 60+ bancarelle gourmet. Smørrebrød, pasticceria danese, caffè specialty, prodotti nordici.",
+    descEn: "Copenhagen food hall with 60+ gourmet stalls. Smørrebrød, Danish pastries, specialty coffee, Nordic products.",
+    price: "Ingresso libero", priceEn: "Free entry",
+    url: "https://torvehallernekbh.dk/en/", mapsUrl: "https://maps.google.com/?q=Torvehallerne+Copenhagen" },
+
+  { id: "poi-reffen", cat: "market", name: "Reffen Street Food", nameEn: "Reffen Street Food", lat: 55.6930, lng: 12.6100, country: "🇩🇰", nearDay: "g35",
+    desc: "Il più grande mercato street food all'aperto dei Paesi Nordici. 50+ cucine dal mondo, birre artigianali, vista sul porto.",
+    descEn: "The largest outdoor street food market in the Nordics. 50+ world cuisines, craft beers, harbour views.",
+    price: "Ingresso libero, piatti DKK 80-130", priceEn: "Free entry, dishes DKK 80-130",
+    url: "https://reframetheworld.com/en/reffen/", mapsUrl: "https://maps.google.com/?q=Reffen+Copenhagen" },
+
+  { id: "poi-bretxa", cat: "market", name: "Mercado de la Bretxa", nameEn: "La Bretxa Market", lat: 43.3240, lng: -1.9870, country: "🇪🇸", nearDay: "g43",
+    desc: "Mercato storico di San Sebastián (1870). Pesce fresco del Cantabrico, pintxos, prodotti baschi. Nel cuore della Parte Vieja.",
+    descEn: "Historic San Sebastián market (1870). Fresh Cantabrian fish, pintxos, Basque products. In the heart of Parte Vieja.",
+    price: "Ingresso libero", priceEn: "Free entry",
+    url: "https://www.donostia.eus/ataria/es/web/mercadodelabretxa", mapsUrl: "https://maps.google.com/?q=Mercado+de+la+Bretxa+San+Sebastian" },
+
+  { id: "poi-mercato-orientale", cat: "market", name: "Mercato Orientale", nameEn: "Mercato Orientale", lat: 44.4072, lng: 8.9422, country: "🇮🇹", nearDay: "g52",
+    desc: "Il mercato coperto più grande di Genova. Pesto fresco, focaccia, pesce, frutta. Food court al piano superiore (MOG).",
+    descEn: "Genoa's largest covered market. Fresh pesto, focaccia, fish, fruit. Food court upstairs (MOG).",
+    price: "Ingresso libero", priceEn: "Free entry",
+    url: "https://www.moggenova.it", mapsUrl: "https://maps.google.com/?q=Mercato+Orientale+Genova" },
+
+  // ═══ PARCHI NAZIONALI ═══
+  { id: "poi-abisko", cat: "nature", name: "Parco Nazionale di Abisko", nameEn: "Abisko National Park", lat: 68.3500, lng: 18.8300, country: "🇸🇪", nearDay: "g15",
+    desc: "Parco nazionale svedese in Lapponia (1909). Paesaggio montano artico, foreste di betulle, aurora boreale. Kungsleden trail. Deviazione da Tromsø (~200 km).",
+    descEn: "Swedish national park in Lapland (1909). Arctic mountain landscape, birch forests, northern lights. Kungsleden trail. Detour from Tromsø (~200 km).",
+    price: "Ingresso gratuito", priceEn: "Free entry",
+    url: "https://www.sverigesnationalparker.se/en/parks/abisko-national-park/", mapsUrl: "https://maps.google.com/?q=Abisko+National+Park+Sweden" },
+
+  { id: "poi-lemmenjoki", cat: "nature", name: "Parco Nazionale Lemmenjoki", nameEn: "Lemmenjoki National Park", lat: 68.8500, lng: 26.0000, country: "🇫🇮", nearDay: "g13",
+    desc: "La più grande riserva naturale della Finlandia (2.850 km²). Foreste vergini, fiumi per canoa, cercatori d'oro, cultura Sámi.",
+    descEn: "Finland's largest nature reserve (2,850 km²). Virgin forests, rivers for canoeing, gold panners, Sámi culture.",
+    price: "Ingresso gratuito", priceEn: "Free entry",
+    url: "https://www.nationalparks.fi/lemmenjoki", mapsUrl: "https://maps.google.com/?q=Lemmenjoki+National+Park" },
+
+  { id: "poi-urho-kekkonen", cat: "nature", name: "Parco Nazionale Urho Kekkonen", nameEn: "Urho Kekkonen National Park", lat: 68.3000, lng: 28.0000, country: "🇫🇮", nearDay: "g13",
+    desc: "Secondo parco più grande della Finlandia (2.550 km²). Tundra, foreste di pini, renne selvatiche. Sentieri segnalati e wilderness huts.",
+    descEn: "Finland's second largest park (2,550 km²). Tundra, pine forests, wild reindeer. Marked trails and wilderness huts.",
+    price: "Ingresso gratuito", priceEn: "Free entry",
+    url: "https://www.nationalparks.fi/urhokekkonennp", mapsUrl: "https://maps.google.com/?q=Urho+Kekkonen+National+Park" },
+
+  { id: "poi-anderdalen", cat: "nature", name: "Parco Nazionale Ånderdalen", nameEn: "Ånderdalen National Park", lat: 69.1000, lng: 16.9500, country: "🇳🇴", nearDay: "g16",
+    desc: "Unico parco nazionale dell'isola di Senja. Foreste costiere, laghi alpini, alci. Sentieri facili per famiglie.",
+    descEn: "Senja island's only national park. Coastal forests, alpine lakes, moose. Easy family-friendly trails.",
+    price: "Ingresso gratuito", priceEn: "Free entry",
+    url: "https://www.visitnorway.com/listings/anderdalen-national-park/200284/", mapsUrl: "https://maps.google.com/?q=Ånderdalen+National+Park+Senja" },
+
+  { id: "poi-jotunheimen", cat: "nature", name: "Parco Nazionale Jotunheimen", nameEn: "Jotunheimen National Park", lat: 61.5000, lng: 8.3670, country: "🇳🇴", nearDay: "g28",
+    desc: "\"Casa dei Giganti\": il parco più popolare della Norvegia. Le 2 montagne più alte del nord Europa, cresta Besseggen, ghiacciai.",
+    descEn: "\"Home of the Giants\": Norway's most popular park. Northern Europe's 2 highest peaks, Besseggen ridge, glaciers.",
+    price: "Ingresso gratuito", priceEn: "Free entry",
+    url: "https://jotunheimen.com/", mapsUrl: "https://maps.google.com/?q=Jotunheimen+National+Park" },
+
+  { id: "poi-hardangervidda", cat: "nature", name: "Parco Nazionale Hardangervidda", nameEn: "Hardangervidda National Park", lat: 60.1000, lng: 7.5000, country: "🇳🇴", nearDay: "g29",
+    desc: "Il più grande parco nazionale della Norvegia (3.422 km²). Altopiano più grande d'Europa, renne selvatiche, cascate spettacolari.",
+    descEn: "Norway's largest national park (3,422 km²). Europe's largest mountain plateau, wild reindeer, spectacular waterfalls.",
+    price: "Ingresso gratuito", priceEn: "Free entry",
+    url: "https://www.visitnorway.com/listings/hardangervidda-national-park/186814/", mapsUrl: "https://maps.google.com/?q=Hardangervidda+National+Park" },
+
+  { id: "poi-folgefonna", cat: "nature", name: "Parco Nazionale Folgefonna", nameEn: "Folgefonna National Park", lat: 60.0500, lng: 6.3500, country: "🇳🇴", nearDay: "g29",
+    desc: "Terzo ghiacciaio più grande della Norvegia. Escursioni sul ghiacciaio, kayak nei fiordi, cascate. Tra Bergen e Hardanger.",
+    descEn: "Norway's third largest glacier. Glacier hikes, fjord kayaking, waterfalls. Between Bergen and Hardanger.",
+    price: "Ingresso gratuito", priceEn: "Free entry",
+    url: "https://www.visitnorway.com/listings/folgefonna-national-park/186815/", mapsUrl: "https://maps.google.com/?q=Folgefonna+National+Park" },
+
+  { id: "poi-thy", cat: "nature", name: "Parco Nazionale Thy", nameEn: "Thy National Park", lat: 56.9500, lng: 8.3500, country: "🇩🇰", nearDay: "g36",
+    desc: "Il primo parco nazionale della Danimarca (2008). Dune, brughiere, foreste costiere. \"Cold Hawaii\" per il surf. Cervi e aquile.",
+    descEn: "Denmark's first national park (2008). Dunes, heathlands, coastal forests. \"Cold Hawaii\" for surfing. Deer and eagles.",
+    price: "Ingresso gratuito", priceEn: "Free entry",
+    url: "https://nationalparkthy.dk/english/", mapsUrl: "https://maps.google.com/?q=Thy+National+Park+Denmark" },
+
+  { id: "poi-picos", cat: "nature", name: "Parco Nazionale Picos de Europa", nameEn: "Picos de Europa National Park", lat: 43.1500, lng: -4.8000, country: "🇪🇸", nearDay: "g45",
+    desc: "Montagne calcaree spettacolari nel nord della Spagna. Funivia Fuente Dé (1.823m), gole del Cares, avvoltoi, camosci.",
+    descEn: "Spectacular limestone mountains in northern Spain. Fuente Dé cable car (1,823m), Cares gorge, vultures, chamois.",
+    price: "Ingresso gratuito, funivia €17", priceEn: "Free entry, cable car €17",
+    url: "https://parquenacionalpicoseuropa.es/english/", mapsUrl: "https://maps.google.com/?q=Picos+de+Europa+National+Park" },
+
+  { id: "poi-cap-creus", cat: "nature", name: "Parco Naturale Cap de Creus", nameEn: "Cap de Creus Natural Park", lat: 42.3190, lng: 3.3160, country: "🇪🇸", nearDay: "g49",
+    desc: "Il punto più orientale della penisola iberica. Scogliere vulcaniche, calette nascoste, paesaggio che ispirò Dalí.",
+    descEn: "The easternmost point of the Iberian Peninsula. Volcanic cliffs, hidden coves, landscape that inspired Dalí.",
+    price: "Ingresso gratuito", priceEn: "Free entry",
+    url: "https://parcsnaturals.gencat.cat/en/cap-de-creus/", mapsUrl: "https://maps.google.com/?q=Cap+de+Creus+Natural+Park" },
+
+  { id: "poi-calanques", cat: "nature", name: "Parco Nazionale Calanques", nameEn: "Calanques National Park", lat: 43.2100, lng: 5.4500, country: "🇫🇷", nearDay: "g50",
+    desc: "Fiordi mediterranei tra Marsiglia e Cassis. Scogliere bianche, acque turchesi, sentieri costieri. Accesso limitato in estate.",
+    descEn: "Mediterranean fjords between Marseille and Cassis. White cliffs, turquoise waters, coastal trails. Limited summer access.",
+    price: "Ingresso gratuito (prenotazione estiva)", priceEn: "Free entry (summer booking required)",
+    url: "https://www.calanques-parcnational.fr/en", mapsUrl: "https://maps.google.com/?q=Parc+National+des+Calanques" },
+
+  { id: "poi-cinque-terre", cat: "nature", name: "Parco Nazionale Cinque Terre", nameEn: "Cinque Terre National Park", lat: 44.1280, lng: 9.7100, country: "🇮🇹", nearDay: "g51",
+    desc: "5 borghi colorati sulla costa ligure (UNESCO). Sentieri tra vigneti terrazzati, mare cristallino. Tra Côte d'Azur e Genova.",
+    descEn: "5 colourful villages on the Ligurian coast (UNESCO). Trails through terraced vineyards, crystal sea. Between Côte d'Azur and Genoa.",
+    price: "Cinque Terre Card €16/giorno", priceEn: "Cinque Terre Card €16/day",
+    url: "https://www.parconazionale5terre.it/en/", mapsUrl: "https://maps.google.com/?q=Cinque+Terre+National+Park" }
+];

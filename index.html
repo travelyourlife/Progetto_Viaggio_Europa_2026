@@ -43,7 +43,7 @@
     <link rel="apple-touch-icon" sizes="152x152" href="./icon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="./icon.png">
     <link rel="apple-touch-icon" sizes="167x167" href="./icon.png">
-    <title>Viaggio Europa 2026 — V1.17</title>
+    <title>Viaggio Europa 2026 — V1.18</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <link rel="stylesheet" href="style.css">
 <!-- Firebase SDK (compat mode for single-file app) -->
@@ -7443,6 +7443,7 @@
 <a href="#secA">♨️ Terme</a>
 <a href="#drone">🛸 Drone</a>
 <a href="#inreach">📡 Garmin inReach</a>
+<a href="#poi-esplora">🗺️ Esplora</a>
 </div></div>
 <h2 id="campeggio">🚐 Campeggio — Regole per Paese</h2>
 <table>
@@ -8938,6 +8939,39 @@
 </tbody>
 </table>
 <p><strong>Fonti:</strong> <a href="https://www.garmin.com/en-US/p/765374" target="_blank" rel="noopener">Garmin inReach Mini 2</a> | <a href="https://explore.garmin.com" target="_blank" rel="noopener">Garmin Explore</a> | <a href="https://www.dekkinga.com" target="_blank" rel="noopener">Copertura Iridium</a></p>
+<h2 id="poi-esplora">🗺️ Esplora — Parchi, Mercati & Natura</h2>
+<p>Punti di interesse lungo il percorso del viaggio. Filtra per categoria e tocca 📍 per aprire in Google Maps.</p>
+<div id="poi-filters" style="display:flex; gap:8px; flex-wrap:wrap; margin:12px 0;">
+<button class="poi-chip active" data-cat="all">🌍 Tutti</button>
+<button class="poi-chip" data-cat="park">🎢 Parchi</button>
+<button class="poi-chip" data-cat="market">🛒 Mercati</button>
+<button class="poi-chip" data-cat="nature">🌲 Parchi Nazionali</button>
+</div>
+<div id="poi-list"></div>
+<p id="poi-sources" style="margin-top:16px;"><strong>Fonti:</strong>
+<a href="https://www.praterwien.com" target="_blank" rel="noopener">Prater Wien</a> |
+<a href="https://www.linnanmaki.fi/en/" target="_blank" rel="noopener">Linnanmäki</a> |
+<a href="https://www.ranuazoo.com/en/" target="_blank" rel="noopener">Ranua Zoo</a> |
+<a href="https://www.tivoli.dk/en/" target="_blank" rel="noopener">Tivoli</a> |
+<a href="https://www.legoland.dk/en/" target="_blank" rel="noopener">Legoland</a> |
+<a href="https://www.lalandia.dk/en/billund" target="_blank" rel="noopener">Lalandia</a> |
+<a href="https://www.heide-park.de/en/" target="_blank" rel="noopener">Heide Park</a> |
+<a href="https://www.futuroscope.com/en" target="_blank" rel="noopener">Futuroscope</a> |
+<a href="https://www.dyreparken.no/english/" target="_blank" rel="noopener">Dyreparken</a> |
+<a href="https://www.acquariodigenova.it/en/" target="_blank" rel="noopener">Acquario Genova</a> |
+<a href="https://www.centraltirgus.lv/en/" target="_blank" rel="noopener">Riga Central Market</a> |
+<a href="https://torvehallernekbh.dk/en/" target="_blank" rel="noopener">Torvehallerne</a> |
+<a href="https://www.visitbergen.com/things-to-do/fish-market-in-bergen-p822253" target="_blank" rel="noopener">Bergen Fish Market</a> |
+<a href="https://www.sverigesnationalparker.se/en/parks/abisko-national-park/" target="_blank" rel="noopener">Abisko NP</a> |
+<a href="https://www.nationalparks.fi/lemmenjoki" target="_blank" rel="noopener">Lemmenjoki</a> |
+<a href="https://jotunheimen.com/" target="_blank" rel="noopener">Jotunheimen</a> |
+<a href="https://www.visitnorway.com/listings/hardangervidda-national-park/186814/" target="_blank" rel="noopener">Hardangervidda</a> |
+<a href="https://nationalparkthy.dk/english/" target="_blank" rel="noopener">Thy NP</a> |
+<a href="https://parquenacionalpicoseuropa.es/english/" target="_blank" rel="noopener">Picos de Europa</a> |
+<a href="https://www.calanques-parcnational.fr/en" target="_blank" rel="noopener">Calanques</a> |
+<a href="https://www.parconazionale5terre.it/en/" target="_blank" rel="noopener">Cinque Terre</a>
+</p>
+<hr>
 <hr>
 
 </section>

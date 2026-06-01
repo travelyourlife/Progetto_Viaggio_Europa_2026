@@ -3515,3 +3515,60 @@ table { max-width: 100%; }
 .map-fs-close:hover { background: var(--bg-alt); }
 .map-fs-body { flex: 1; position: relative; }
 .map-fs-body .leaflet-container { width: 100%; height: 100%; border-radius: 0; border: none; }
+
+
+/* ─── POI Cards: Esplora section ─── */
+.poi-chip {
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1.5px solid var(--border);
+    background: var(--bg-card);
+    font-size: 0.85em;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 500;
+    color: var(--text);
+}
+.poi-chip.active {
+    background: var(--primary-light);
+    color: #fff;
+    border-color: var(--primary-light);
+}
+.poi-chip:hover { border-color: var(--primary-light); }
+
+.poi-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px;
+    margin-bottom: 12px;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.2s;
+}
+.poi-card:hover { box-shadow: var(--shadow-md); }
+
+.poi-card-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+.poi-card-title { flex: 1; line-height: 1.3; }
+.poi-card-desc {
+    font-size: 0.88em;
+    color: var(--text-muted);
+    margin: 0 0 10px 0;
+    line-height: 1.45;
+}
+.poi-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.82em;
+}
+.poi-price { color: var(--text); font-weight: 500; }
+.poi-links a {
+    text-decoration: none;
+    font-size: 1.2em;
+    margin-left: 6px;
+}

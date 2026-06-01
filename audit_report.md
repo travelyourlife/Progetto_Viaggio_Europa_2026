@@ -197,3 +197,55 @@ Tutti i bug critici e i problemi di compatibilità identificati in questo rappor
 
 ## Riferimenti
 1. [Sito Web Quo Vadis — Progetto Viaggio Europa 2026](https://travelyourlife.github.io/Progetto_Viaggio_Europa_2026/index.html)
+
+
+---
+
+## Fonti — Sezione Esplora (POI: Parchi, Mercati, Parchi Nazionali)
+
+Aggiunta v1.17 — 1 Giugno 2026
+
+### Parchi Divertimento
+| POI | Fonte |
+| :--- | :--- |
+| Wiener Prater | [praterwien.com](https://www.praterwien.com) |
+| Linnanmäki | [linnanmaki.fi](https://www.linnanmaki.fi/en/) |
+| Ranua Wildlife Park | [ranuazoo.com](https://www.ranuazoo.com/en/) |
+| SantaPark | [santaparkarcticworld.com](https://santaparkarcticworld.com/santapark/) |
+| Polaria | [polaria.no](https://www.polaria.no/en/) |
+| Kristiansand Dyrepark | [dyreparken.no](https://www.dyreparken.no/english/) |
+| Tivoli Gardens | [tivoli.dk](https://www.tivoli.dk/en/) |
+| Legoland Billund | [legoland.dk](https://www.legoland.dk/en/) |
+| Lalandia Aquadome | [lalandia.dk](https://www.lalandia.dk/en/billund/go-exploring/the-aquadome) |
+| Heide Park Resort | [heide-park.de](https://www.heide-park.de/en/) |
+| Futuroscope | [futuroscope.com](https://www.futuroscope.com/en) |
+| Acquario di Genova | [acquariodigenova.it](https://www.acquariodigenova.it/en/) |
+
+### Mercati
+| POI | Fonte |
+| :--- | :--- |
+| Naschmarkt Vienna | [wien.info](https://www.wien.info/en/shopping-wining-dining/markets/naschmarkt) |
+| Hala Mirowska Varsavia | [halamirowska.pl](https://halamirowska.pl) |
+| Halės Turgus Vilnius | [halesturgus.lt](https://www.halesturgus.lt) |
+| Mercato Centrale Riga | [centraltirgus.lv](https://www.centraltirgus.lv/en/) |
+| Balti Jaama Turg Tallinn | [astfrm.ee](https://astfrm.ee/en/) |
+| Kauppatori Helsinki | [myhelsinki.fi](https://www.myhelsinki.fi/en/see-and-do/sights/market-square) |
+| Fisketorget Bergen | [visitbergen.com](https://www.visitbergen.com/things-to-do/fish-market-in-bergen-p822253) |
+| Torvehallerne Copenhagen | [torvehallernekbh.dk](https://torvehallernekbh.dk/en/) |
+| Reffen Street Food | [reframetheworld.com](https://reframetheworld.com/en/reffen/) |
+| Mercado de la Bretxa | [donostia.eus](https://www.donostia.eus/ataria/es/web/mercadodelabretxa) |
+| Mercato Orientale Genova | [moggenova.it](https://www.moggenova.it) |
+
+### Parchi Nazionali
+| POI | Fonte |
+| :--- | :--- |
+| Abisko National Park | [sverigesnationalparker.se](https://www.sverigesnationalparker.se/en/parks/abisko-national-park/) |
+| Lemmenjoki National Park | [nationalparks.fi](https://www.nationalparks.fi/lemmenjoki) |
+| Urho Kekkonen National Park | [nationalparks.fi](https://www.nationalparks.fi/urhokekkonennp) |
+| Lofoten Islands | [visitnorway.com](https://www.visitnorway.com/places-to-go/northern-norway/the-lofoten-islands/) |
+| Jotunheimen National Park | [jotunheimen.com](https://jotunheimen.com/) |
+| Hardangervidda National Park | [visitnorway.com](https://www.visitnorway.com/listings/hardangervidda-national-park/186814/) |
+| Thy National Park | [nationalparkthy.dk](https://nationalparkthy.dk/english/) |
+| Picos de Europa | [parquenacionalpicoseuropa.es](https://parquenacionalpicoseuropa.es/english/) |
+| Calanques National Park | [calanques-parcnational.fr](https://www.calanques-parcnational.fr/en) |
+| Cinque Terre National Park | [parconazionale5terre.it](https://www.parconazionale5terre.it/en/) |
