@@ -4879,7 +4879,8 @@ if ('serviceWorker' in navigator) {
     sessionStart = now;
     currentTab = tab;
     saveData(d);
-    if (section.style.display !== 'none') renderAnalytics();
+    var adminTab = document.getElementById('tab-admin');
+    if (adminTab && adminTab.classList.contains('active')) renderAnalytics();
   });
 
   function renderAnalytics() {
@@ -8389,7 +8390,7 @@ if ('serviceWorker' in navigator) {
     if (swEl) {
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.getRegistration().then(function(reg) {
-          swEl.textContent = reg ? '✅ Active (' + reg.active.scriptURL.split('/').pop() + ')' : '❌ Not registered';
+          swEl.textContent = reg && reg.active ? '✅ Active (' + reg.active.scriptURL.split('/').pop() + ')' : reg ? '⏳ Installing...' : '❌ Not registered';
           swEl.style.color = reg ? '#38a169' : '#e53e3e';
         });
       } else {
