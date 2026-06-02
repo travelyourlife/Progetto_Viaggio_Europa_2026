@@ -510,6 +510,12 @@ var POI_ATTIVITA = [
     price: "Ingresso libero", priceEn: "Free entry",
     url: "https://www.centraltirgus.lv/en/", mapsUrl: "https://maps.google.com/?q=Riga+Central+Market" },
 
+  { id: "poi-agenskalns-market", cat: "market", name: "Āgenskalns Market", nameEn: "Āgenskalns Market", lat: 56.9383, lng: 24.0856, country: "\ud83c\uddf1\ud83c\uddfb", city: "Riga", nearDay: "g4",
+    desc: "Il mercato più antico della riva sinistra della Daugava (1898). Padiglione Art Nouveau ristrutturato. Prodotti locali, gastronomia, caffè, eventi culturali.",
+    descEn: "The oldest market on the left bank of the Daugava (1898). Renovated Art Nouveau pavilion. Local produce, gastronomy, cafés, cultural events.",
+    price: "Ingresso libero", priceEn: "Free entry",
+    url: "https://www.agenskalnatirgus.lv/en", mapsUrl: "https://maps.google.com/?q=\u0100genskalns+Market+Riga" },
+
   { id: "poi-balti-jaam", cat: "market", name: "Balti Jaama Turg", nameEn: "Balti Jaam Market", lat: 59.4400, lng: 24.7370, country: "🇪🇪", city: "Tallinn", nearDay: "g5",
     desc: "Mercato moderno di Tallinn vicino alla stazione. Street food, prodotti locali estoni, artigianato, bar sul rooftop.",
     descEn: "Modern Tallinn market near the station. Street food, local Estonian products, crafts, rooftop bar.",

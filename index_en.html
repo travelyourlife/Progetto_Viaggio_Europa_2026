@@ -70,7 +70,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = '1.44';
+  var EXPECTED_VERSION = '1.45';
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
   var r = false;
@@ -278,10 +278,10 @@
 <div class="home-header">
     <h1 class="home-brand">Quo Vadis <span class="home-compass">🧭</span></h1>
     <div class="home-header-actions">
-        <a href="./index.html" class="home-lang-switch" aria-label="Passa all'italiano">🇮🇹</a>
         <button class="home-action-btn" id="homeSearchOpen" aria-label="Search">🔍</button>
         <button class="home-action-btn notif-bell-home" id="homeNotifBell" aria-label="Notifications">🔔<span class="notif-badge" id="homeNotifBadge"></span></button>
         <button class="home-action-btn" id="homeAuthBtn" aria-label="Login" title="Sign in">👤</button>
+        <a href="./index.html" class="home-lang-switch" aria-label="Passa all'italiano">🇮🇹</a>
     </div>
 </div>
 

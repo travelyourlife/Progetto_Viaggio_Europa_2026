@@ -69,7 +69,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = '1.44';
+  var EXPECTED_VERSION = '1.45';
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
   var r = false;
@@ -277,10 +277,10 @@
 <div class="home-header">
     <h1 class="home-brand">Quo Vadis <span class="home-compass">🧭</span></h1>
     <div class="home-header-actions">
-        <a href="./index_en.html" class="home-lang-switch" aria-label="Switch to English">🇬🇧</a>
         <button class="home-action-btn" id="homeSearchOpen" aria-label="Cerca">🔍</button>
         <button class="home-action-btn notif-bell-home" id="homeNotifBell" aria-label="Notifiche">🔔<span class="notif-badge" id="homeNotifBadge"></span></button>
         <button class="home-action-btn" id="homeAuthBtn" aria-label="Login" title="Accedi">👤</button>
+        <a href="./index_en.html" class="home-lang-switch" aria-label="Switch to English">🇬🇧</a>
     </div>
 </div>
 
@@ -9168,28 +9168,7 @@
 <pre id="admin-log" style="margin-top:12px;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px;font-size:0.78em;max-height:200px;overflow-y:auto;white-space:pre-wrap;display:none;"></pre>
 </div>
 
-<!-- Analytics Console -->
-<div class="admin-card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:12px 0;">
-<h3 style="margin-bottom:12px;">📊 Analytics — Mini Console</h3>
-<div class="analytics-grid" id="analytics-grid">
-  <div class="analytics-card"><span class="analytics-value" id="an-sessions">--</span><span class="analytics-label">Sessioni oggi</span></div>
-  <div class="analytics-card"><span class="analytics-value" id="an-pageviews">--</span><span class="analytics-label">Pageviews oggi</span></div>
-  <div class="analytics-card"><span class="analytics-value" id="an-tabs">--</span><span class="analytics-label">Tab più visitato</span></div>
-  <div class="analytics-card"><span class="analytics-value" id="an-avg-time">--</span><span class="analytics-label">Tempo medio sessione</span></div>
-  <div class="analytics-card"><span class="analytics-value" id="an-unique-users">--</span><span class="analytics-label">Utenti unici oggi</span></div>
-  <div class="analytics-card"><span class="analytics-value" id="an-total-sessions">--</span><span class="analytics-label">Sessioni totali</span></div>
-</div>
-<details style="margin-top:12px;">
-<summary style="cursor:pointer;font-weight:600;">Dettaglio tab visitati</summary>
-<table class="compact-table" id="an-tab-table">
-<thead><tr><th>Tab</th><th>Visite</th><th>Tempo</th></tr></thead>
-<tbody id="an-tab-tbody"></tbody>
-</table>
-</details>
-<div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
-<button id="an-reset" class="pos-btn" style="font-size:13px;">Resetta contatori locali</button>
-</div>
-</div>
+
 
 <!-- Centralized User Management -->
 <div class="admin-card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:12px 0;">
