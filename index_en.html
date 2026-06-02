@@ -43,7 +43,7 @@
     <link rel="apple-touch-icon" sizes="152x152" href="./icon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="./icon.png">
     <link rel="apple-touch-icon" sizes="167x167" href="./icon.png">
-    <title>Europe Trip 2026 — V1.24</title>
+    <title>Europe Trip 2026 — V1.25</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <link rel="stylesheet" href="style.css">
 
@@ -60,7 +60,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = '1.24';
+  var EXPECTED_VERSION = '1.25';
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
   var r = false;
@@ -2174,7 +2174,7 @@
 <p><strong>Tolls:</strong> A7 Genoa → A21 → A4 Padua. ~€20-25 total.</p>
 <p><strong>Maps:</strong> <a href="https://maps.google.com/?q=Selvazzano+Dentro+Padova" target="_blank" rel="noopener noreferrer">📍 Selvazzano Dentro</a></p>
 <span id="meteo"></span>
-<h3 id="meteo-per-zona-e-giorno">☀️🌧️ Weather — by Zone and Day</h3>
+<h3 id="pos-meteo-storico">☀️🌧️ Weather — by Zone and Day</h3>
 <blockquote>
 <p>Historical climate averages for the <strong>exact dates</strong> you will be in each zone (26/06 → 18/08). Sources: WeatherSpark, Climate-Data.org, VisitNorway, VisitFinland, AccuWeather.</p>
 </blockquote>
@@ -3080,6 +3080,7 @@
 </blockquote>
 <hr>
 <h2 id="austria-g0-g1">🇦🇹 Austria (G0-G1)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g0')">Itinerary G0-G1</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-austriaca-g0-g1')">Food</a></div>
 <h3 id="timeline">⏳ Timeline</h3>
 <table class="no-responsive">
 <thead>
@@ -3242,14 +3243,14 @@
 <tr><td>Children's menu</td><td><strong>Kinderkarte</strong></td><td><em>kinder-karte</em></td></tr>
 </tbody>
 </table>
-<h3 id="natura-austria">🌿 Nature & Wildlife</h3>
+<h3 id="natura-fauna-austria">🌿 Nature & Wildlife</h3>
 <ul>
 <li><strong>Alpine marmot</strong> — Whistles to warn of danger. Common above 1,500m. <a href="https://en.wikipedia.org/wiki/Alpine_marmot" target="_blank" rel="noopener noreferrer">📚</a></li>
 <li><strong>Golden eagle</strong> — Wingspan up to 2.2m. Symbol of the Alps. <a href="https://en.wikipedia.org/wiki/Golden_eagle" target="_blank" rel="noopener noreferrer">📚</a></li>
 <li><strong>Edelweiss</strong> — The iconic Alpine flower, grows above 1,800m. Symbol of purity and courage. <a href="https://en.wikipedia.org/wiki/Leontopodium_nivale" target="_blank" rel="noopener noreferrer">📚</a></li>
 <li><strong>Hohe Tauern National Park</strong> — Austria's largest park with glaciers, waterfalls, ibex and chamois. <a href="https://en.wikipedia.org/wiki/Hohe_Tauern_National_Park" target="_blank" rel="noopener noreferrer">📚</a> <a href="https://maps.google.com/?q=47.0833,12.75(Hohe+Tauern)" target="_blank" rel="noopener noreferrer">📍 Maps</a></li>
 </ul>
-<h3 id="musica-austria">🎵 Music & Art</h3>
+<h3 id="musica-arte-austria">🎵 Music & Art</h3>
 <ul>
 <li><strong>Mozart</strong> — Born in Salzburg in 1756. Composed his first piece at age 5! <a href="https://en.wikipedia.org/wiki/Wolfgang_Amadeus_Mozart" target="_blank" rel="noopener noreferrer">📚</a></li>
 <li><strong>Strauss waltz</strong> — "The Blue Danube" is practically Austria's second anthem. <a href="https://en.wikipedia.org/wiki/The_Blue_Danube" target="_blank" rel="noopener noreferrer">📚</a></li>
@@ -3307,6 +3308,7 @@
 <p>A <strong>Klimt postcard</strong> from the museum — "The Kiss" is loved by everyone</p>
 <hr>
 <h2 id="repubblica-ceca-g1-transito-via-brno">🇨🇿 Czech Republic (G1 — transit via Brno)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g1')">Itinerary G1</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-ceca-g1-g2-transito')">Food</a></div>
 <h3 id="timeline_1">⏳ Timeline</h3>
 <table class="no-responsive">
 <thead>
@@ -3417,13 +3419,13 @@
 <tr><td>Bridge</td><td><strong>Most</strong></td><td><em>most</em></td></tr>
 </tbody>
 </table>
-<h3 id="natura-ceca">🌿 Nature & Wildlife</h3>
+<h3 id="natura-fauna-ceca">🌿 Nature & Wildlife</h3>
 <ul>
 <li><strong>Bohemian Switzerland NP</strong> — Sandstone arches and gorges. The Pravčická brána is Europe's largest natural arch. <a href="https://en.wikipedia.org/wiki/Bohemian_Switzerland" target="_blank" rel="noopener noreferrer">📚</a> <a href="https://maps.google.com/?q=50.8833,14.2833(Bohemian+Switzerland)" target="_blank" rel="noopener noreferrer">📍 Maps</a></li>
 <li><strong>European bison</strong> — Reintroduced in Czech forests. Europe's heaviest land animal (up to 1,000 kg!). <a href="https://en.wikipedia.org/wiki/European_bison" target="_blank" rel="noopener noreferrer">📚</a></li>
 <li><strong>White stork</strong> — Nests on rooftops and chimneys. Symbol of good luck. <a href="https://en.wikipedia.org/wiki/White_stork" target="_blank" rel="noopener noreferrer">📚</a></li>
 </ul>
-<h3 id="musica-ceca">🎵 Music & Art</h3>
+<h3 id="musica-arte-ceca">🎵 Music & Art</h3>
 <ul>
 <li><strong>Dvořák</strong> — His "New World Symphony" is one of the most performed in the world. <a href="https://en.wikipedia.org/wiki/Anton%C3%ADn_Dvo%C5%99%C3%A1k" target="_blank" rel="noopener noreferrer">📚</a></li>
 <li><strong>Alfons Mucha</strong> — Father of Art Nouveau. His posters of Sarah Bernhardt made him famous overnight. <a href="https://en.wikipedia.org/wiki/Alphonse_Mucha" target="_blank" rel="noopener noreferrer">📚</a></li>
@@ -3468,6 +3470,7 @@
 <p>🏛️ <strong>Bohemian crystal</strong> — tradition since 1300, but fragile in a van!</p>
 <hr>
 <h2 id="polonia-g2-g3">🇵🇱 Poland (G2-G3)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g2')">Itinerary G2-G3</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-polacca-g2-g3')">Food</a></div>
 <h3 id="timeline_2">⏳ Timeline</h3>
 <table class="no-responsive">
 <thead>
@@ -3608,13 +3611,13 @@
 <tr><td>Forest</td><td><strong>Las</strong></td><td><em>las</em></td></tr>
 </tbody>
 </table>
-<h3 id="natura-polonia">🌿 Nature & Wildlife</h3>
+<h3 id="natura-fauna-polonia">🌿 Nature & Wildlife</h3>
 <ul>
 <li><strong>Białowieża Forest</strong> — Europe's last primeval forest. Home to 800+ European bison. UNESCO heritage. <a href="https://en.wikipedia.org/wiki/Bia%C5%82owie%C5%BCa_Forest" target="_blank" rel="noopener noreferrer">📚</a></li>
 <li><strong>White stork</strong> — Poland has 25% of the world's white stork population! Village of Żywkowo has more storks than people. <a href="https://en.wikipedia.org/wiki/White_stork" target="_blank" rel="noopener noreferrer">📚</a></li>
 <li><strong>Red deer</strong> — Common in Polish forests. Autumn is the "roaring" season. <a href="https://en.wikipedia.org/wiki/Red_deer" target="_blank" rel="noopener noreferrer">📚</a></li>
 </ul>
-<h3 id="musica-polonia">🎵 Music & Art</h3>
+<h3 id="musica-arte-polonia">🎵 Music & Art</h3>
 <ul>
 <li><strong>Chopin</strong> — Poland's greatest composer. Born near Warsaw in 1810. His mazurkas and polonaises are Polish soul in music. <a href="https://en.wikipedia.org/wiki/Fr%C3%A9d%C3%A9ric_Chopin" target="_blank" rel="noopener noreferrer">📚</a></li>
 <li><strong>Polish poster school</strong> — Post-war Polish posters are considered the world's finest graphic art. <a href="https://en.wikipedia.org/wiki/Polish_School_of_Posters" target="_blank" rel="noopener noreferrer">📚</a></li>
@@ -3663,6 +3666,7 @@
 <p>🏛️ <strong>Oscypek</strong> — smoked cheese from the Tatra mountains (spindle-shaped, decorated)</p>
 <hr>
 <h2 id="lituania-g3-g4">🇱🇹 Lithuania (G3-G4)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g3')">Itinerary G3-G4</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-baltica-g3-g6')">Food</a></div>
 <h3 id="timeline_3">⏳ Timeline</h3>
 <table class="no-responsive">
 <thead>
@@ -3798,13 +3802,13 @@
 <tr><td>Old town</td><td><strong>Senamiestis</strong></td><td><em>senamyestis</em></td></tr>
 </tbody>
 </table>
-<h3 id="natura-lituania">🌿 Nature & Wildlife</h3>
+<h3 id="natura-fauna-lituania">🌿 Nature & Wildlife</h3>
 <ul>
 <li><strong>Curonian Spit</strong> — Sand dunes up to 60m high between lagoon and sea. UNESCO heritage. <a href="https://en.wikipedia.org/wiki/Curonian_Spit" target="_blank" rel="noopener noreferrer">📚</a> <a href="https://maps.google.com/?q=55.3,21.0(Curonian+Spit)" target="_blank" rel="noopener noreferrer">📍 Maps</a></li>
 <li><strong>European elk/moose</strong> — Common in Lithuanian forests. Can weigh up to 700 kg. <a href="https://en.wikipedia.org/wiki/Moose" target="_blank" rel="noopener noreferrer">📚</a></li>
 <li><strong>White stork</strong> — Lithuania's national bird. One of Europe's highest densities. <a href="https://en.wikipedia.org/wiki/White_stork" target="_blank" rel="noopener noreferrer">📚</a></li>
 </ul>
-<h3 id="musica-lituania">🎵 Music & Art</h3>
+<h3 id="musica-arte-lituania">🎵 Music & Art</h3>
 <ul>
 <li><strong>Sutartinės</strong> — Ancient Lithuanian polyphonic songs. UNESCO Intangible Heritage. Unique in Europe. <a href="https://en.wikipedia.org/wiki/Sutartin%C4%97" target="_blank" rel="noopener noreferrer">📚</a></li>
 <li><strong>Hill of Crosses</strong> — Over 100,000 crosses placed by pilgrims. Powerful folk art. <a href="https://en.wikipedia.org/wiki/Hill_of_Crosses" target="_blank" rel="noopener noreferrer">📚</a> <a href="https://maps.google.com/?q=56.0153,23.4167(Hill+of+Crosses)" target="_blank" rel="noopener noreferrer">📍 Maps</a></li>
@@ -3850,6 +3854,7 @@
 <p><strong>Miniature Šakotis</strong> — the tree-cake (keeps well)</p>
 <hr>
 <h2 id="lettonia-g4-g5">🇱🇻 Latvia (G4-G5)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g4')">Itinerary G4-G5</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-baltica-g3-g6')">Food</a></div>
 <h3 id="timeline_4">⏳ Timeline</h3>
 <table class="no-responsive">
 <thead>
@@ -3986,13 +3991,13 @@
 <tr><td>Old town</td><td><strong>Vecpilsēta</strong></td><td><em>vetspilseta</em></td></tr>
 </tbody>
 </table>
-<h3 id="natura-lettonia">🌿 Nature & Wildlife</h3>
+<h3 id="natura-fauna-lettonia">🌿 Nature & Wildlife</h3>
 <ul>
 <li><strong>Gauja National Park</strong> — Latvia's largest park. Sandstone cliffs, caves, medieval castles. <a href="https://en.wikipedia.org/wiki/Gauja_National_Park" target="_blank" rel="noopener noreferrer">📚</a> <a href="https://maps.google.com/?q=57.25,25.08(Gauja+NP)" target="_blank" rel="noopener noreferrer">📍 Maps</a></li>
 <li><strong>Black stork</strong> — Rare and shy. Latvia is one of Europe's best places to spot them. <a href="https://en.wikipedia.org/wiki/Black_stork" target="_blank" rel="noopener noreferrer">📚</a></li>
 <li><strong>Latvian forests</strong> — Cover 52% of the country. Wolves, lynx, and bears live here. <a href="https://en.wikipedia.org/wiki/Forests_of_Latvia" target="_blank" rel="noopener noreferrer">📚</a></li>
 </ul>
-<h3 id="musica-lettonia">🎵 Music & Art</h3>
+<h3 id="musica-arte-lettonia">🎵 Music & Art</h3>
 <ul>
 <li><strong>Song Festival</strong> — Every 5 years, 30,000+ singers perform together. UNESCO heritage. Key to Latvian identity. <a href="https://en.wikipedia.org/wiki/Latvian_Song_and_Dance_Festival" target="_blank" rel="noopener noreferrer">📚</a></li>
 <li><strong>Art Nouveau Riga</strong> — Over 800 Art Nouveau buildings. The world's highest concentration. UNESCO heritage. <a href="https://en.wikipedia.org/wiki/Art_Nouveau_architecture_in_Riga" target="_blank" rel="noopener noreferrer">📚</a></li>
@@ -4038,6 +4043,7 @@
 <p>🏛️ <strong>Wool gloves and socks</strong> — with traditional Baltic patterns</p>
 <hr>
 <h2 id="estonia-g5-g6">🇪🇪 Estonia (G5-G6)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g5')">Itinerary G5-G6</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-baltica-g3-g6')">Food</a></div>
 <h3 id="timeline_5">⏳ Timeline</h3>
 <table class="no-responsive">
 <thead>
@@ -4182,13 +4188,13 @@
 <tr><td>Tower</td><td><strong>Torn</strong></td><td><em>torn</em></td></tr>
 </tbody>
 </table>
-<h3 id="natura-estonia">🌿 Nature & Wildlife</h3>
+<h3 id="natura-fauna-estonia">🌿 Nature & Wildlife</h3>
 <ul>
 <li><strong>Lahemaa National Park</strong> — Bogs, coastal cliffs, and manor houses. Estonia's largest park. <a href="https://en.wikipedia.org/wiki/Lahemaa_National_Park" target="_blank" rel="noopener noreferrer">📚</a> <a href="https://maps.google.com/?q=59.5,25.8(Lahemaa)" target="_blank" rel="noopener noreferrer">📍 Maps</a></li>
 <li><strong>Flying squirrel</strong> — Extremely rare in Europe. Estonia is one of the few EU countries where it lives. <a href="https://en.wikipedia.org/wiki/Siberian_flying_squirrel" target="_blank" rel="noopener noreferrer">📚</a></li>
 <li><strong>Bogs</strong> — Estonia has 10,000+ bogs. Boardwalk trails let you walk over them. Unique landscapes. <a href="https://en.wikipedia.org/wiki/Bog" target="_blank" rel="noopener noreferrer">📚</a></li>
 </ul>
-<h3 id="musica-estonia">🎵 Music & Art</h3>
+<h3 id="musica-arte-estonia">🎵 Music & Art</h3>
 <ul>
 <li><strong>Singing Revolution</strong> — In 1988, 300,000 Estonians sang together to win independence from the USSR. <a href="https://en.wikipedia.org/wiki/Singing_Revolution" target="_blank" rel="noopener noreferrer">📚</a></li>
 <li><strong>Arvo Pärt</strong> — The world's most performed living composer. Invented "tintinnabuli" style. <a href="https://en.wikipedia.org/wiki/Arvo_P%C3%A4rt" target="_blank" rel="noopener noreferrer">📚</a></li>
@@ -4235,6 +4241,7 @@
 <p>🏛️ <strong>Kalev chocolate</strong> — Estonian chocolate (since 1806)</p>
 <hr>
 <h2 id="finlandia-g6-g14">🇫🇮 Finland (G6-G14)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g6')">Itinerary G6-G14</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-finlandese-g6-g14')">Food</a></div>
 <h3 id="timeline_6">⏳ Timeline</h3>
 <table class="no-responsive">
 <thead>
@@ -4391,14 +4398,14 @@
 <tr><td>Midnight sun</td><td><strong>Yötön yö</strong></td><td><em>ioeton io</em></td></tr>
 </tbody>
 </table>
-<h3 id="natura-finlandia">🌿 Nature & Wildlife</h3>
+<h3 id="natura-fauna-finlandia">🌿 Nature & Wildlife</h3>
 <ul>
 <li><strong>Saimaa ringed seal</strong> — Only 400 left! Lives only in Lake Saimaa. One of the rarest seals. <a href="https://en.wikipedia.org/wiki/Saimaa_ringed_seal" target="_blank" rel="noopener noreferrer">📚</a></li>
 <li><strong>Reindeer</strong> — 200,000 semi-wild reindeer in Lapland. Herded by Sámi people. <a href="https://en.wikipedia.org/wiki/Reindeer" target="_blank" rel="noopener noreferrer">📚</a></li>
 <li><strong>Finnish forests</strong> — Cover 73% of the country (most in Europe!). 188,000 lakes. <a href="https://en.wikipedia.org/wiki/Geography_of_Finland" target="_blank" rel="noopener noreferrer">📚</a></li>
 <li><strong>Arctic cloudberry</strong> — Golden berry growing in bogs. Rare and precious. Called "lakka" in Finnish. <a href="https://en.wikipedia.org/wiki/Rubus_chamaemorus" target="_blank" rel="noopener noreferrer">📚</a></li>
 </ul>
-<h3 id="musica-finlandia">🎵 Music & Art</h3>
+<h3 id="musica-arte-finlandia">🎵 Music & Art</h3>
 <ul>
 <li><strong>Sibelius</strong> — "Finlandia" (1899) became the soundtrack of Finnish independence. <a href="https://en.wikipedia.org/wiki/Jean_Sibelius" target="_blank" rel="noopener noreferrer">📚</a></li>
 <li><strong>Finnish metal</strong> — Finland has the most metal bands per capita in the world! Nightwish, HIM, Apocalyptica. <a href="https://en.wikipedia.org/wiki/Finnish_metal" target="_blank" rel="noopener noreferrer">📚</a></li>
@@ -4456,6 +4463,7 @@
 <p>🏛️ <strong>Blueberries and salty licorice</strong> (salmiakki) — salty licorice is an acquired taste!</p>
 <hr>
 <h2 id="norvegia-g15-g33">🇳🇴 Norway (G15-G33)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g15')">Itinerary G15-G33</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-norvegese-g14-g33')">Food</a></div>
 <h3 id="timeline_7">⏳ Timeline</h3>
 <table class="no-responsive">
 <thead>
@@ -4623,7 +4631,7 @@
 <tr><td>Camping</td><td><strong>Camping</strong></td><td><em>kemping</em></td></tr>
 </tbody>
 </table>
-<h3 id="natura-norvegia">🌿 Nature & Wildlife</h3>
+<h3 id="natura-fauna-norvegia">🌿 Nature & Wildlife</h3>
 <ul>
 <li><strong>Fjords</strong> — Carved by glaciers over millions of years. Geirangerfjord and Nærøyfjord are UNESCO heritage. <a href="https://en.wikipedia.org/wiki/Fjord" target="_blank" rel="noopener noreferrer">📚</a></li>
 <li><strong>Musk ox</strong> — Prehistoric animal surviving in Dovrefjell. Guided safaris available. <a href="https://en.wikipedia.org/wiki/Muskox" target="_blank" rel="noopener noreferrer">📚</a> <a href="https://maps.google.com/?q=62.2,9.6(Dovrefjell)" target="_blank" rel="noopener noreferrer">📍 Maps</a></li>
@@ -4631,7 +4639,7 @@
 <li><strong>Atlantic puffin</strong> — Colourful "clown of the sea". Nests on cliffs from May to August. <a href="https://en.wikipedia.org/wiki/Atlantic_puffin" target="_blank" rel="noopener noreferrer">📚</a></li>
 <li><strong>Northern lights</strong> — Visible from September to March above the Arctic Circle. <a href="https://en.wikipedia.org/wiki/Aurora" target="_blank" rel="noopener noreferrer">📚</a></li>
 </ul>
-<h3 id="musica-norvegia">🎵 Music & Art</h3>
+<h3 id="musica-arte-norvegia">🎵 Music & Art</h3>
 <ul>
 <li><strong>Edvard Grieg</strong> — "Peer Gynt" and "In the Hall of the Mountain King" are his masterpieces. <a href="https://en.wikipedia.org/wiki/Edvard_Grieg" target="_blank" rel="noopener noreferrer">📚</a></li>
 <li><strong>Edvard Munch</strong> — "The Scream" (1893) is one of the world's most iconic paintings. <a href="https://en.wikipedia.org/wiki/Edvard_Munch" target="_blank" rel="noopener noreferrer">📚</a></li>
@@ -4692,6 +4700,7 @@
 <p>🏛️ <strong>Stockfish</strong> — if you like baccalà, buy it directly in the Lofoten</p>
 <hr>
 <h2 id="danimarca-g34-g38">🇩🇰 Denmark (G34-G38)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g34')">Itinerary G34-G38</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-danese-g33-g38')">Food</a></div>
 <h3 id="timeline_8">⏳ Timeline</h3>
 <table class="no-responsive">
 <thead>
@@ -4844,14 +4853,14 @@
 <tr><td>Playground</td><td><strong>Legeplads</strong></td><td><em>laie-plas</em></td></tr>
 </tbody>
 </table>
-<h3 id="natura-danimarca">🌿 Nature & Wildlife</h3>
+<h3 id="natura-fauna-danimarca">🌿 Nature & Wildlife</h3>
 <ul>
 <li><strong>Wadden Sea</strong> — UNESCO heritage. Largest tidal flat system in the world. Millions of migratory birds. <a href="https://en.wikipedia.org/wiki/Wadden_Sea" target="_blank" rel="noopener noreferrer">📚</a></li>
 <li><strong>Red deer</strong> — Denmark's largest wild animal. Common in Jutland forests. <a href="https://en.wikipedia.org/wiki/Red_deer" target="_blank" rel="noopener noreferrer">📚</a></li>
 <li><strong>Harbour seal</strong> — Common along Danish coasts. Can be spotted from beaches. <a href="https://en.wikipedia.org/wiki/Harbor_seal" target="_blank" rel="noopener noreferrer">📚</a></li>
 <li><strong>Møns Klint</strong> — Dramatic white chalk cliffs. 128m high. Fossils from 70 million years ago! <a href="https://en.wikipedia.org/wiki/M%C3%B8ns_Klint" target="_blank" rel="noopener noreferrer">📚</a> <a href="https://maps.google.com/?q=54.97,12.55(Mons+Klint)" target="_blank" rel="noopener noreferrer">📍 Maps</a></li>
 </ul>
-<h3 id="musica-danimarca">🎵 Music & Art</h3>
+<h3 id="musica-arte-danimarca">🎵 Music & Art</h3>
 <ul>
 <li><strong>Hans Christian Andersen</strong> — The Little Mermaid, The Ugly Duckling, The Snow Queen. World's most translated author after the Bible. <a href="https://en.wikipedia.org/wiki/Hans_Christian_Andersen" target="_blank" rel="noopener noreferrer">📚</a></li>
 <li><strong>LEGO</strong> — Invented in Billund in 1932. Name from "leg godt" (play well). <a href="https://en.wikipedia.org/wiki/Lego" target="_blank" rel="noopener noreferrer">📚</a></li>
@@ -4908,6 +4917,7 @@
 <p>🏛️ <strong>Smørrebrød to go</strong> — in markets, perfect for lunch in the camper</p>
 <hr>
 <h2 id="germania-g39-transito-via-brema">🇩🇪 Germany (G39 — transit via Bremen)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g39')">Itinerary G39</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-tedesca-g39-transito-brema')">Food</a></div>
 <h3 id="timeline_9">⏳ Timeline</h3>
 <table class="no-responsive">
 <thead>
@@ -5019,13 +5029,13 @@
 <p>💡 Germans in summer live in <strong>Biergarten</strong> (beer gardens) — you can bring your own food and buy only beer!</p>
 <p>🏛️ <strong>Currywurst</strong> at kiosks — the German national fast food (sausage with curry ketchup)</p>
 <p>In Bremen: the <strong>Ratskeller</strong> under the town hall has been serving wine continuously for 600 years (world record!)</p>
-<h3 id="natura-germania">🌿 Nature & Wildlife</h3>
+<h3 id="natura-fauna-germania">🌿 Nature & Wildlife</h3>
 <ul>
 <li><strong>Wadden Sea (German part)</strong> — UNESCO heritage. Seals, migratory birds, tidal flats. <a href="https://en.wikipedia.org/wiki/Wadden_Sea" target="_blank" rel="noopener noreferrer">📚</a></li>
 <li><strong>White-tailed eagle</strong> — Germany's largest bird of prey. Recovering after near-extinction. <a href="https://en.wikipedia.org/wiki/White-tailed_eagle" target="_blank" rel="noopener noreferrer">📚</a></li>
 <li><strong>Bremen Town Musicians</strong> — The famous fairy tale! The statue is Bremen's symbol. <a href="https://en.wikipedia.org/wiki/Town_Musicians_of_Bremen" target="_blank" rel="noopener noreferrer">📚</a> <a href="https://maps.google.com/?q=53.0758,8.8072(Bremen+Musicians)" target="_blank" rel="noopener noreferrer">📍 Maps</a></li>
 </ul>
-<h3 id="musica-germania">🎵 Music & Art</h3>
+<h3 id="musica-arte-germania">🎵 Music & Art</h3>
 <ul>
 <li><strong>Beethoven</strong> — Born in Bonn. Composed his greatest works while going deaf. <a href="https://en.wikipedia.org/wiki/Ludwig_van_Beethoven" target="_blank" rel="noopener noreferrer">📚</a></li>
 <li><strong>Brothers Grimm</strong> — Collected fairy tales: Cinderella, Snow White, Hansel and Gretel. <a href="https://en.wikipedia.org/wiki/Brothers_Grimm" target="_blank" rel="noopener noreferrer">📚</a></li>
@@ -5074,6 +5084,7 @@
 <p>A magnet of the <strong>Bremen Town Musicians</strong> — the most iconic souvenir</p>
 <hr>
 <h2 id="francia-g40-g42-g50-g53">🇫🇷 France (G40-G42, G50-G53)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g40')">Itinerary G40-G42, G50-G53</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-francese-g39-g42-g50-g51')">Food</a></div>
 <h3 id="timeline_10">⏳ Timeline</h3>
 <table class="no-responsive">
 <thead>
@@ -5226,14 +5237,14 @@
 <tr><td>Castle</td><td><strong>Château</strong></td><td><em>shato</em></td></tr>
 </tbody>
 </table>
-<h3 id="natura-francia">🌿 Nature & Wildlife</h3>
+<h3 id="natura-fauna-francia">🌿 Nature & Wildlife</h3>
 <ul>
 <li><strong>Brittany coast</strong> — Pink granite coast, dramatic cliffs, tidal islands. Wild and beautiful. <a href="https://en.wikipedia.org/wiki/Brittany" target="_blank" rel="noopener noreferrer">📚</a></li>
 <li><strong>Mont Saint-Michel bay</strong> — Tides rise 14m! Fastest tides in Europe. Seals and dolphins. <a href="https://en.wikipedia.org/wiki/Mont-Saint-Michel" target="_blank" rel="noopener noreferrer">📚</a> <a href="https://maps.google.com/?q=48.636,-1.511(Mont+Saint+Michel)" target="_blank" rel="noopener noreferrer">📍 Maps</a></li>
 <li><strong>Atlantic dolphins</strong> — Common and bottlenose dolphins visible from the Breton coast. <a href="https://en.wikipedia.org/wiki/Common_dolphin" target="_blank" rel="noopener noreferrer">📚</a></li>
 <li><strong>Carnac megaliths</strong> — 3,000+ standing stones from 4500 BC. Older than Stonehenge! <a href="https://en.wikipedia.org/wiki/Carnac_stones" target="_blank" rel="noopener noreferrer">📚</a> <a href="https://maps.google.com/?q=47.5922,-3.0778(Carnac)" target="_blank" rel="noopener noreferrer">📍 Maps</a></li>
 </ul>
-<h3 id="musica-francia">🎵 Music & Art</h3>
+<h3 id="musica-arte-francia">🎵 Music & Art</h3>
 <ul>
 <li><strong>Claude Monet</strong> — Father of Impressionism. His water lilies in Giverny are world-famous. <a href="https://en.wikipedia.org/wiki/Claude_Monet" target="_blank" rel="noopener noreferrer">📚</a></li>
 <li><strong>Breton music</strong> — Celtic roots! Bagpipes (biniou), bombarde, fest-noz dances. Unique in France. <a href="https://en.wikipedia.org/wiki/Music_of_Brittany" target="_blank" rel="noopener noreferrer">📚</a></li>
@@ -5290,6 +5301,7 @@
 <p>🏛️ <strong>Savon de Marseille</strong> — traditional soap (in Camargue/Provence)</p>
 <hr>
 <h2 id="spagna-g43-g49">🇪🇸 Spain (G43-G49)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g43')">Itinerary G43-G49</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-spagnola-g43-g49')">Food</a></div>
 <h3 id="timeline_11">⏳ Timeline</h3>
 <table class="no-responsive">
 <thead>
@@ -5448,14 +5460,14 @@
 <tr><td>Camino</td><td><strong>Camino</strong></td><td><em>kamino</em></td></tr>
 </tbody>
 </table>
-<h3 id="natura-spagna">🌿 Nature & Wildlife</h3>
+<h3 id="natura-fauna-spagna">🌿 Nature & Wildlife</h3>
 <ul>
 <li><strong>Picos de Europa</strong> — Spain's first national park (1918). Dramatic limestone peaks, chamois, vultures. <a href="https://en.wikipedia.org/wiki/Picos_de_Europa" target="_blank" rel="noopener noreferrer">📚</a> <a href="https://maps.google.com/?q=43.2,-4.85(Picos+de+Europa)" target="_blank" rel="noopener noreferrer">📍 Maps</a></li>
 <li><strong>Cantabrian brown bear</strong> — ~350 bears in the Cantabrian mountains. Recovering population! <a href="https://en.wikipedia.org/wiki/Cantabrian_brown_bear" target="_blank" rel="noopener noreferrer">📚</a></li>
 <li><strong>Griffon vulture</strong> — Wingspan up to 2.8m! Common in northern Spain gorges. <a href="https://en.wikipedia.org/wiki/Griffon_vulture" target="_blank" rel="noopener noreferrer">📚</a></li>
 <li><strong>Atlantic coast</strong> — Wild beaches, rías (estuaries), cliffs. Very different from Mediterranean Spain. <a href="https://en.wikipedia.org/wiki/Green_Spain" target="_blank" rel="noopener noreferrer">📚</a></li>
 </ul>
-<h3 id="musica-spagna">🎵 Music & Art</h3>
+<h3 id="musica-arte-spagna">🎵 Music & Art</h3>
 <ul>
 <li><strong>Gaita gallega</strong> — Galician bagpipes! Celtic roots shared with Scotland and Ireland. <a href="https://en.wikipedia.org/wiki/Gaita" target="_blank" rel="noopener noreferrer">📚</a></li>
 <li><strong>Guggenheim Bilbao</strong> — Frank Gehry's titanium museum (1997). Transformed the entire city. <a href="https://en.wikipedia.org/wiki/Guggenheim_Museum_Bilbao" target="_blank" rel="noopener noreferrer">📚</a> <a href="https://maps.google.com/?q=43.2687,-2.9340(Guggenheim+Bilbao)" target="_blank" rel="noopener noreferrer">📍 Maps</a></li>
@@ -5512,6 +5524,7 @@
 <p>🏛️ <strong>Anchoas de Santoña</strong> — the best anchovies in the world (Cantabria)</p>
 <hr>
 <h2 id="italia-g51-g53">🇮🇹 Italy (G51-G53)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g51')">Itinerary G51-G53</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-italiana-rientro-g50-g53')">Food</a></div>
 <h3 id="timeline_12">⏳ Timeline</h3>
 <table class="no-responsive">
 <thead>
@@ -5630,13 +5643,13 @@
 <tr><td>Pesto</td><td><strong>Pesto</strong></td><td><em>pesto</em></td></tr>
 </tbody>
 </table>
-<h3 id="natura-italia">🌿 Nature & Wildlife</h3>
+<h3 id="natura-fauna-italia">🌿 Nature & Wildlife</h3>
 <ul>
 <li><strong>Cinque Terre NP</strong> — Five colourful villages on terraced cliffs. UNESCO heritage. <a href="https://en.wikipedia.org/wiki/Cinque_Terre" target="_blank" rel="noopener noreferrer">📚</a> <a href="https://maps.google.com/?q=44.1,9.7(Cinque+Terre)" target="_blank" rel="noopener noreferrer">📍 Maps</a></li>
 <li><strong>Dolphins</strong> — Bottlenose dolphins common in the Ligurian Sea. Whale watching from Genoa. <a href="https://en.wikipedia.org/wiki/Pelagos_sanctuary" target="_blank" rel="noopener noreferrer">📚</a></li>
 <li><strong>Mediterranean maquis</strong> — Aromatic scrubland: rosemary, lavender, myrtle. Smells incredible! <a href="https://en.wikipedia.org/wiki/Maquis_shrubland" target="_blank" rel="noopener noreferrer">📚</a></li>
 </ul>
-<h3 id="musica-italia">🎵 Music & Art</h3>
+<h3 id="musica-arte-italia">🎵 Music & Art</h3>
 <ul>
 <li><strong>Paganini</strong> — Born in Genoa. The greatest violinist ever. "Devil's violinist". <a href="https://en.wikipedia.org/wiki/Niccol%C3%B2_Paganini" target="_blank" rel="noopener noreferrer">📚</a></li>
 <li><strong>Trallalero</strong> — Traditional Genoese polyphonic singing. Male choirs imitating instruments. <a href="https://en.wikipedia.org/wiki/Trallalero" target="_blank" rel="noopener noreferrer">📚</a></li>
@@ -6195,6 +6208,7 @@
 </table>
 <hr>
 <h2 id="cucina-austriaca-g0-g1">🇦🇹 Austrian Cuisine (D0-D1)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g0')">Itinerary G0-G1</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','austria-g0-g1')">Culture</a></div>
 <h4 id="storia-cucina-austria">📜 History of Austrian cuisine</h4>
 <p>Austrian cuisine is a crossroads of empires: <a href="https://en.wikipedia.org/wiki/Austrian_cuisine" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>. The <strong>Wiener Schnitzel</strong> likely came from Milan (cotoletta alla milanese), brought to Vienna in 1857 by Field Marshal Radetzky. <strong>Kaiserschmarrn</strong> ("Emperor's mess") was invented for Franz Joseph I when his cook botched a crêpe. <strong>Kaffeehäuser</strong> (Viennese coffeehouses, <a href="https://en.wikipedia.org/wiki/Viennese_coffee_house" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) were born after the Turkish siege of 1683: coffee sacks left by the Turks became a Viennese obsession. Today they're UNESCO heritage. The <strong>Sachertorte</strong> was created in 1832 by 16-year-old Franz Sacher for Prince Metternich — the original recipe is still secret!</p>
 <h4 id="extra-piatti-austria">🍽️ More dishes to try</h4>
@@ -6237,6 +6251,7 @@
 </ul>
 <hr>
 <h2 id="cucina-ceca-g1-g2-transito">🇨🇿 Czech Cuisine (D1-D2, transit)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g1')">Itinerary G1-G2</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','repubblica-ceca-g1-transito-via-brno')">Culture</a></div>
 <h4 id="storia-cucina-ceca">📜 History of Czech cuisine</h4>
 <p>Czech cuisine (<a href="https://en.wikipedia.org/wiki/Czech_cuisine" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) is hearty and filling, born to survive long winters. <strong>Czech beer</strong> has a 1,000-year tradition: Pilsner was invented in Plzeň in 1842 (<a href="https://en.wikipedia.org/wiki/Pilsner" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — Czechs drink more beer per capita than anyone (140 litres/year!). The <strong>Trdelník</strong> (chimney cake) seen everywhere in Prague is actually Hungarian/Slovak, but has become the symbol of Prague tourism. Real Czech dishes are <strong>knedlíky</strong> (boiled bread dumplings) that accompany every meat dish.</p>
 <h4 id="extra-piatti-ceca">🍽️ More dishes to try</h4>
@@ -6273,6 +6288,7 @@
 </ul>
 <hr>
 <h2 id="cucina-polacca-g2-g3">🇵🇱 Polish Cuisine (D2-D3)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g2')">Itinerary G2-G3</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','polonia-g2-g3')">Culture</a></div>
 <h4 id="storia-cucina-polacca">📜 History of Polish cuisine</h4>
 <p>Polish cuisine (<a href="https://en.wikipedia.org/wiki/Polish_cuisine" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) blends Slavic, Jewish and noble traditions. <strong>Pierogi</strong> (<a href="https://en.wikipedia.org/wiki/Pierogi" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) are dumplings brought from China via the Silk Road in the 13th century — today they're the national dish. <strong>Polish vodka</strong> has a 500+ year history (the word "vodka" first appears in a Polish document from 1405!). <strong>Bigos</strong> ("hunter's stew") improves every time it's reheated — noble families prepared it days before feasts. The <strong>Wigilia</strong> tradition (Christmas Eve dinner) requires 12 dishes, all meatless.</p>
 <h4 id="extra-piatti-polonia">🍽️ More dishes to try</h4>
@@ -6316,6 +6332,7 @@
 </ul>
 <hr>
 <h2 id="cucina-baltica-g3-g6">🇱🇹🇱🇻🇪🇪 Baltic Cuisine (G3-G6)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g3')">Itinerary G3-G6</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','lituania-g3-g4')">Culture</a></div>
 <h4 id="storia-cucina-baltica">📜 History of Baltic cuisine</h4>
 <p>The cuisines of Lithuania, Latvia and Estonia (<a href="https://en.wikipedia.org/wiki/Lithuanian_cuisine" target="_blank" rel="noopener noreferrer">📚 Lithuanian</a>, <a href="https://en.wikipedia.org/wiki/Latvian_cuisine" target="_blank" rel="noopener noreferrer">📚 Latvian</a>, <a href="https://en.wikipedia.org/wiki/Estonian_cuisine" target="_blank" rel="noopener noreferrer">📚 Estonian</a>) share common roots: dark rye bread, potatoes, herring, fermented dairy. <strong>Dark bread</strong> (Rugpjūtis/Rupjmaize) is sacred — throwing it away brings bad luck! Lithuania's <strong>farmhouse beer</strong> tradition is ancient: unfiltered, unpasteurised beers with recipes passed down for centuries. Estonia has strong Scandinavian influence (herring, salmon), Lithuania more Polish influence (pierogi/cepelinai), Latvia is in between.</p>
 <h4 id="extra-piatti-baltici">🍽️ More dishes to try</h4>
@@ -6362,6 +6379,7 @@
 </ul>
 <hr>
 <h2 id="cucina-finlandese-g6-g14">🇫🇮 Finnish Cuisine (G6-G14)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g6')">Itinerary G6-G14</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','finlandia-g6-g14')">Culture</a></div>
 <h4 id="storia-cucina-finlandese">📜 History of Finnish cuisine</h4>
 <p>Finnish cuisine (<a href="https://en.wikipedia.org/wiki/Finnish_cuisine" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) is "from forest and lake to table". For centuries Finns lived on fishing, hunting and gathering berries and mushrooms. <strong>Kalakukko</strong> (fish baked inside a rye bread loaf) is the oldest dish — fishermen carried it as packed lunch. The <strong>sauna</strong> tradition also influences cuisine: <strong>saunapalvikinkku</strong> is ham smoked in the sauna for 24 hours! Finns consume more <strong>coffee</strong> per capita than anyone (12 kg/year!) and more <strong>milk</strong> than any country. <strong>Wild berries</strong> (blueberries, arctic cloudberries, lingonberries) are picked by everyone thanks to Jokamiehenoikeus.</p>
 <h4 id="extra-piatti-finlandia">🍽️ More dishes to try</h4>
@@ -6411,6 +6429,7 @@
 </ul>
 <hr>
 <h2 id="cucina-norvegese-g14-g33">🇳🇴 Norwegian Cuisine (G14-G33)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g15')">Itinerary G14-G33</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','norvegia-g15-g33')">Culture</a></div>
 <h4 id="storia-cucina-norvegese">📜 History of Norwegian cuisine</h4>
 <p>Norwegian cuisine (<a href="https://en.wikipedia.org/wiki/Norwegian_cuisine" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) is shaped by fjords and extreme climate. Vikings invented <strong>preservation</strong>: dried fish (tørrfisk/stockfish), smoked (røkelaks) and fermented (rakfisk). <strong>Stockfish</strong> (<a href="https://en.wikipedia.org/wiki/Stockfish" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) dried in the Lofoten Islands was Viking "currency" — exported across Europe (including Italy for baccalà!). <strong>Brunost</strong> (brown cheese) was invented in 1863 by a farm girl, Anne Hov, who had the idea of adding cream to whey. Today it's the national cheese. <strong>Norwegian salmon</strong> is the world's most exported fish — salmon sushi was "invented" by Norwegians who convinced the Japanese in the 1980s!</p>
 <h4 id="extra-piatti-norvegia">🍽️ More dishes to try</h4>
@@ -6466,6 +6485,7 @@
 </ul>
 <hr>
 <h2 id="cucina-danese-g33-g38">🇩🇰 Danish Cuisine (G33-G38)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g34')">Itinerary G33-G38</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','danimarca-g34-g38')">Culture</a></div>
 <h4 id="storia-cucina-danese">📜 History of Danish cuisine</h4>
 <p>Danish cuisine (<a href="https://en.wikipedia.org/wiki/Danish_cuisine" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) has undergone a revolution: from traditional <strong>smørrebrød</strong> (open sandwiches) to René Redzepi's "New Nordic" (Noma, 4-time world's best restaurant). <strong>Smørrebrød</strong> (<a href="https://en.wikipedia.org/wiki/Sm%C3%B8rrebr%C3%B8d" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) originated in medieval times: rye bread was the "plate" on which food was placed. <strong>Danish pastries</strong> (wienerbrød) were actually brought by Austrian bakers in 1850 during a Danish bakers' strike! <strong>Carlsberg</strong> was founded in 1847 and its laboratory discovered pure yeast for lager beer — giving the discovery to the world for free.</p>
 <h4 id="extra-piatti-danimarca">🍽️ More dishes to try</h4>
@@ -6512,6 +6532,7 @@
 </ul>
 <hr>
 <h2 id="cucina-tedesca-g39-transito-brema">🇩🇪 German Cuisine (G39 — Bremen transit)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g39')">Itinerary G39</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','germania-g39-transito-via-brema')">Culture</a></div>
 <h4 id="storia-cucina-tedesca">📜 History of German cuisine</h4>
 <p>German cuisine (<a href="https://en.wikipedia.org/wiki/German_cuisine" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) varies enormously by region. Bremen, a Hanseatic city, has a maritime tradition: herring, smoked eel, Labskaus (sailors' stew). The <strong>Reinheitsgebot</strong> (<a href="https://en.wikipedia.org/wiki/Reinheitsgebot" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) of 1516 is the world's oldest beer purity law: only water, malt, hops and yeast. Germany has 1,500+ breweries and 5,000+ different beers! <strong>Brot</strong> (German bread) is UNESCO heritage: over 3,000 registered varieties, more than any other country.</p>
 <h4 id="extra-piatti-germania">🍽️ More dishes to try</h4>
@@ -6552,6 +6573,7 @@
 </ul>
 <hr>
 <h2 id="cucina-francese-g39-g42-g50-g51">🇫🇷 French Cuisine (G39-G42, G50-G51)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g40')">Itinerary G39-G42, G50-G51</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','francia-g40-g42-g50-g53')">Culture</a></div>
 <h4 id="storia-cucina-francese">📜 History of French cuisine</h4>
 <p>French cuisine (<a href="https://en.wikipedia.org/wiki/French_cuisine" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) has been UNESCO heritage since 2010. <strong>Auguste Escoffier</strong> (<a href="https://en.wikipedia.org/wiki/Auguste_Escoffier" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) codified modern cuisine in 1903 with "Le Guide Culinaire". The <strong>baguette</strong> (<a href="https://en.wikipedia.org/wiki/Baguette" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) became UNESCO heritage in 2022 — the French consume 10 billion per year! The <strong>fromage</strong> (cheese) tradition counts 1,200+ varieties — De Gaulle said: "How can you govern a country with 246 different cheeses?". The <strong>croissant</strong> is actually Austrian (Kipferl), brought to Paris in 1838. Brittany and Normandy (on your route) are famous for crêpes, cider, salted butter and oysters.</p>
 <h4 id="extra-piatti-francia">🍽️ More dishes to try</h4>
@@ -6600,6 +6622,7 @@
 </ul>
 <hr>
 <h2 id="cucina-spagnola-g43-g49">🇪🇸 Spanish Cuisine (D43-D49)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g43')">Itinerary G43-G49</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','spagna-g43-g49')">Culture</a></div>
 <h4 id="storia-cucina-spagnola">📜 History of Spanish cuisine</h4>
 <p>Spanish cuisine (<a href="https://en.wikipedia.org/wiki/Spanish_cuisine" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) of the north is very different from Mediterranean. The <strong>Basque Country</strong> has the highest concentration of Michelin stars in the world! <strong>Pintxos</strong> (<a href="https://en.wikipedia.org/wiki/Pintxo" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) are Basque culinary art: mini gastronomic creations on bread, fixed with a toothpick. You go from bar to bar ("txikiteo"). <strong>Asturian cider</strong> (<a href="https://en.wikipedia.org/wiki/Asturian_cider" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) is poured from a metre high ("escanciar") to oxygenate it! The <strong>Camino de Santiago</strong> created a tradition of "menú del peregrino" (3 courses + wine for ~12€) along the entire north.</p>
 <h4 id="extra-piatti-spagna">🍽️ More dishes to try</h4>
@@ -6650,6 +6673,7 @@
 </ul>
 <hr>
 <h2 id="cucina-italiana-rientro-g50-g53">🇮🇹 Italian Cuisine — Return (D50-D53)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g51')">Itinerary G50-G53</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','italia-g51-g53')">Culture</a></div>
 <h4 id="storia-cucina-italiana">📜 History of Ligurian cuisine</h4>
 <p>Ligurian cuisine (<a href="https://en.wikipedia.org/wiki/Ligurian_cuisine" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) is "poor cuisine" turned gourmet. <strong>Pesto genovese</strong> (<a href="https://en.wikipedia.org/wiki/Pesto" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) descends from Roman "moretum" (garlic pounded with cheese), evolved with Genoese DOP basil — smaller and sweeter than common basil. <strong>Focaccia genovese</strong> (<a href="https://en.wikipedia.org/wiki/Focaccia" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) is eaten for breakfast dipped in cappuccino! <strong>Farinata</strong> (<a href="https://en.wikipedia.org/wiki/Farinata" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) was invented by accident: during a storm, barrels of chickpeas and oil spilled in the hold — the mixture baked by the sun became a delicacy. Genoa was "La Superba" of the Maritime Republics: spices, salted anchovies, and maritime trade shaped the cuisine.</p>
 <h4 id="extra-piatti-italia">🍽️ More dishes to try</h4>
@@ -8929,6 +8953,48 @@
 <button id="test-push-btn" class="pos-btn" style="font-size:13px;background:var(--accent);color:#fff;">🔔 Test Push</button>
 </div>
 </div>
+<!-- ═══ Admin & Test Panel (owner-only) ═══ -->
+<div id="admin-test-section" style="display:none; margin-top:32px; padding-top:24px; border-top:2px dashed var(--border);">
+<h2 style="text-align:center;">🛠️ Admin &amp; Test Panel</h2>
+<p style="text-align:center;color:var(--text-muted);font-size:0.85em;">🔒 Visible only to organizers</p>
+
+<!-- System Status -->
+<div class="admin-card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:12px 0;">
+<h3 style="margin-bottom:12px;">📊 System Status</h3>
+<div id="admin-status-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:0.88em;">
+  <div><strong>App Version:</strong></div><div id="admin-version">—</div>
+  <div><strong>Service Worker:</strong></div><div id="admin-sw-status">—</div>
+  <div><strong>Notification Permission:</strong></div><div id="admin-notif-perm">—</div>
+  <div><strong>FCM Token:</strong></div><div id="admin-fcm-status">—</div>
+  <div><strong>Firebase Auth:</strong></div><div id="admin-auth-status">—</div>
+  <div><strong>Database:</strong></div><div id="admin-db-status">—</div>
+</div>
+</div>
+
+<!-- Test Actions -->
+<div class="admin-card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:12px 0;">
+<h3 style="margin-bottom:12px;">🧪 Test Actions</h3>
+<div style="display:flex;gap:8px;flex-wrap:wrap;">
+  <button id="admin-test-push" class="pos-btn" style="font-size:13px;background:var(--accent);color:#fff;">🔔 Test Push</button>
+  <button id="admin-request-notif" class="pos-btn" style="font-size:13px;">🔓 Request Permission</button>
+  <button id="admin-refresh-token" class="pos-btn" style="font-size:13px;">🔄 Refresh FCM Token</button>
+  <button id="admin-check-db" class="pos-btn" style="font-size:13px;">📡 Check DB Tokens</button>
+</div>
+<pre id="admin-log" style="margin-top:12px;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px;font-size:0.78em;max-height:200px;overflow-y:auto;white-space:pre-wrap;display:none;"></pre>
+</div>
+
+<!-- Quick Links -->
+<div class="admin-card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:12px 0;">
+<h3 style="margin-bottom:12px;">🔗 Quick Links</h3>
+<div style="display:flex;gap:8px;flex-wrap:wrap;font-size:0.88em;">
+  <a href="https://console.firebase.google.com/project/viaggio-europa-2026/database/viaggio-europa-2026-default-rtdb/data" target="_blank" rel="noopener" class="pos-btn pos-btn-blue" style="font-size:12px;">📦 Database</a>
+  <a href="https://console.firebase.google.com/project/viaggio-europa-2026/functions" target="_blank" rel="noopener" class="pos-btn pos-btn-blue" style="font-size:12px;">⚡ Functions</a>
+  <a href="https://console.firebase.google.com/project/viaggio-europa-2026/hosting" target="_blank" rel="noopener" class="pos-btn pos-btn-blue" style="font-size:12px;">🌐 Hosting</a>
+  <a href="https://console.firebase.google.com/project/viaggio-europa-2026/authentication" target="_blank" rel="noopener" class="pos-btn pos-btn-blue" style="font-size:12px;">👤 Auth</a>
+  <a href="https://github.com/travelyourlife/Progetto_Viaggio_Europa_2026" target="_blank" rel="noopener" class="pos-btn pos-btn-blue" style="font-size:12px;">🐙 GitHub</a>
+</div>
+</div>
+</div>
 </section>
 
 <section id="tab-zaino" class="tab-content">
@@ -9357,6 +9423,7 @@
 </div>
 
 </details>
+</div>
 </div>
 
 </section>

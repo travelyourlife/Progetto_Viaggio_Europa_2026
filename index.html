@@ -43,7 +43,7 @@
     <link rel="apple-touch-icon" sizes="152x152" href="./icon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="./icon.png">
     <link rel="apple-touch-icon" sizes="167x167" href="./icon.png">
-    <title>Viaggio Europa 2026 — V1.24</title>
+    <title>Viaggio Europa 2026 — V1.25</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <link rel="stylesheet" href="style.css">
 <!-- Firebase SDK (compat mode for single-file app) -->
@@ -59,7 +59,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = '1.24';
+  var EXPECTED_VERSION = '1.25';
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
   var r = false;
@@ -2318,6 +2318,7 @@
 </blockquote>
 <hr>
 <h2 id="austria-g0-g1">🇦🇹 Austria (G0-G1)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g0')">Itinerario G0-G1</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-austriaca-g0-g1')">Cucina</a></div>
 <h3 id="timeline">⏳ Timeline</h3>
 <table>
 <thead>
@@ -2618,6 +2619,7 @@
 <p>Una <strong>cartolina di Klimt</strong> dal museo — "Il Bacio" piace a tutti</p>
 <hr>
 <h2 id="repubblica-ceca-g1-transito-via-brno">🇨🇿 Repubblica Ceca (G1 — transito via Brno)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g1')">Itinerario G1</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-ceca-g1-g2-transito')">Cucina</a></div>
 <h3 id="timeline_1">⏳ Timeline</h3>
 <table>
 <thead>
@@ -2849,6 +2851,7 @@
 <p>🏛️ <strong>Cristallo di Boemia</strong> — tradizione dal 1300, ma fragile in furgone!</p>
 <hr>
 <h2 id="polonia-g2-g3">🇵🇱 Polonia (G2-G3)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g2')">Itinerario G2-G3</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-polacca-g2-g3')">Cucina</a></div>
 <h3 id="timeline_2">⏳ Timeline</h3>
 <table>
 <thead>
@@ -3115,6 +3118,7 @@
 <p>🏛️ <strong>Oscypek</strong> — formaggio affumicato dei monti Tatra (a forma di fuso, decorato)</p>
 <hr>
 <h2 id="lituania-g3-g4">🇱🇹 Lituania (G3-G4)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g3')">Itinerario G3-G4</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-baltica-g3-g6')">Cucina</a></div>
 <h3 id="timeline_3">⏳ Timeline</h3>
 <table>
 <thead>
@@ -3373,6 +3377,7 @@
 <p><strong>Šakotis</strong> in miniatura — il dolce-albero (si conserva bene)</p>
 <hr>
 <h2 id="lettonia-g4-g5">🇱🇻 Lettonia (G4-G5)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g4')">Itinerario G4-G5</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-baltica-g3-g6')">Cucina</a></div>
 <h3 id="timeline_4">⏳ Timeline</h3>
 <table>
 <thead>
@@ -3632,6 +3637,7 @@
 <p>🏛️ <strong>Guanti e calze di lana</strong> — con pattern tradizionali baltici</p>
 <hr>
 <h2 id="estonia-g5-g6">🇪🇪 Estonia (G5-G6)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g5')">Itinerario G5-G6</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-baltica-g3-g6')">Cucina</a></div>
 <h3 id="timeline_5">⏳ Timeline</h3>
 <table>
 <thead>
@@ -3900,6 +3906,7 @@
 <p>🏛️ <strong>Kalev chocolate</strong> — il cioccolato estone (dal 1806)</p>
 <hr>
 <h2 id="finlandia-g6-g14">🇫🇮 Finlandia (G6-G14)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g6')">Itinerario G6-G14</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-finlandese-g6-g14')">Cucina</a></div>
 <h3 id="timeline_6">⏳ Timeline</h3>
 <table>
 <thead>
@@ -4196,6 +4203,7 @@
 <p>🏛️ <strong>Mirtilli e liquirizia salata</strong> (salmiakki) — la liquirizia salata è un gusto acquisito!</p>
 <hr>
 <h2 id="norvegia-g15-g33">🇳🇴 Norvegia (G15-G33)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g15')">Itinerario G15-G33</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-norvegese-g14-g33')">Cucina</a></div>
 <h3 id="timeline_7">⏳ Timeline</h3>
 <table>
 <thead>
@@ -4503,6 +4511,7 @@
 <p>🏛️ <strong>Stoccafisso</strong> — se vi piace il baccalà, compratelo direttamente alle Lofoten</p>
 <hr>
 <h2 id="danimarca-g34-g38">🇩🇰 Danimarca (G34-G38)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g34')">Itinerario G34-G38</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-danese-g33-g38')">Cucina</a></div>
 <h3 id="timeline_8">⏳ Timeline</h3>
 <table>
 <thead>
@@ -4784,6 +4793,7 @@
 <p>🏛️ <strong>Smørrebrød to go</strong> — nei mercati, perfetto per il pranzo in furgone</p>
 <hr>
 <h2 id="germania-g39-transito-via-brema">🇩🇪 Germania (G39 — transito via Brema)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g39')">Itinerario G39</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-tedesca-g39-transito-brema')">Cucina</a></div>
 <h3 id="timeline_9">⏳ Timeline</h3>
 <table>
 <thead>
@@ -5021,6 +5031,7 @@
 <p>Un magnete dei <strong>Musicanti di Brema</strong> — il souvenir più iconico</p>
 <hr>
 <h2 id="francia-g40-g42-g50-g53">🇫🇷 Francia (G40-G42, G50-G53)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g40')">Itinerario G40-G42, G50-G53</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-francese-g39-g42-g50-g51')">Cucina</a></div>
 <h3 id="timeline_10">⏳ Timeline</h3>
 <table>
 <thead>
@@ -5306,6 +5317,7 @@
 <p>🏛️ <strong>Savon de Marseille</strong> — sapone tradizionale (in Camargue/Provenza)</p>
 <hr>
 <h2 id="spagna-g43-g49">🇪🇸 Spagna (G43-G49)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g43')">Itinerario G43-G49</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-spagnola-g43-g49')">Cucina</a></div>
 <h3 id="timeline_11">⏳ Timeline</h3>
 <table>
 <thead>
@@ -5599,6 +5611,7 @@
 <p>🏛️ <strong>Anchoas de Santoña</strong> — le migliori acciughe del mondo (Cantabria)</p>
 <hr>
 <h2 id="italia-g51-g53">🇮🇹 Italia (G51-G53)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g51')">Itinerario G51-G53</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-italiana-rientro-g50-g53')">Cucina</a></div>
 <h3 id="timeline_12">⏳ Timeline</h3>
 <table>
 <thead>
@@ -6317,6 +6330,7 @@
 
 <hr>
 <h2 id="cucina-austriaca-g0-g1">🇦🇹 Cucina Austriaca (G0-G1)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g0')">Itinerario G0-G1</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','austria-g0-g1')">Cultura</a></div>
 <h4 id="storia-cucina-austria">📜 Storia della cucina austriaca</h4>
 <p>La cucina austriaca è un crocevia di imperi: <a href="https://it.wikipedia.org/wiki/Cucina_austriaca" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>. Il <strong>Wiener Schnitzel</strong> arriva probabilmente da Milano (cotoletta alla milanese), portato a Vienna nel 1857 dal feldmaresciallo Radetzky. Il <strong>Kaiserschmarrn</strong> ("frittata dell'imperatore") fu inventato per Francesco Giuseppe I quando il suo cuoco sbagliò una crêpe. I <strong>Kaffeehäuser</strong> (caffè viennesi, <a href="https://it.wikipedia.org/wiki/Kaffeehaus" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) nacquero dopo l'assedio turco del 1683: i sacchi di caffè abbandonati dai turchi divennero un'ossessione viennese. Oggi sono Patrimonio UNESCO. La <strong>Sachertorte</strong> fu creata nel 1832 dal sedicenne Franz Sacher per il principe Metternich — la ricetta originale è ancora segreta!</p>
 <h4 id="extra-piatti-austria">🍽️ Altri piatti da provare</h4>
@@ -6359,6 +6373,7 @@
 </ul>
 <hr>
 <h2 id="cucina-ceca-g1-g2-transito">🇨🇿 Cucina Ceca (G1-G2, transito)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g1')">Itinerario G1-G2</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','repubblica-ceca-g1-transito-via-brno')">Cultura</a></div>
 <h4 id="storia-cucina-ceca">📜 Storia della cucina ceca</h4>
 <p>La cucina ceca (<a href="https://it.wikipedia.org/wiki/Cucina_ceca" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) è robusta e sostanziosa, nata per resistere ai lunghi inverni. La <strong>birra ceca</strong> ha una tradizione di 1.000 anni: la Pilsner fu inventata a Plzeň nel 1842 (<a href="https://it.wikipedia.org/wiki/Pilsner" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — i cechi bevono più birra pro capite di chiunque al mondo (140 litri/anno!). Il <strong>Trdelník</strong> (dolce a camino) che si vede ovunque a Praga è in realtà ungherese/slovacco, ma è diventato il simbolo del turismo praghese. I veri piatti cechi sono i <strong>knedlíky</strong> (gnocchi di pane bolliti) che accompagnano ogni piatto di carne.</p>
 <h4 id="extra-piatti-ceca">🍽️ Altri piatti da provare</h4>
@@ -6395,6 +6410,7 @@
 </ul>
 <hr>
 <h2 id="cucina-polacca-g2-g3">🇵🇱 Cucina Polacca (G2-G3)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g2')">Itinerario G2-G3</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','polonia-g2-g3')">Cultura</a></div>
 <h4 id="storia-cucina-polacca">📜 Storia della cucina polacca</h4>
 <p>La cucina polacca (<a href="https://it.wikipedia.org/wiki/Cucina_polacca" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) fonde tradizioni slave, ebraiche e nobili. I <strong>pierogi</strong> (<a href="https://it.wikipedia.org/wiki/Pierogi" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) sono ravioli portati dalla Cina attraverso la Via della Seta nel XIII secolo — oggi sono il piatto nazionale. La <strong>vodka polacca</strong> ha una storia di 500+ anni (la parola "vodka" appare per la prima volta in un documento polacco del 1405!). Il <strong>bigos</strong> ("stufato del cacciatore") migliora ogni volta che viene riscaldato — le famiglie nobili lo preparavano giorni prima delle feste. La tradizione della <strong>Wigilia</strong> (cena della vigilia di Natale) prevede 12 piatti, tutti senza carne.</p>
 <h4 id="extra-piatti-polonia">🍽️ Altri piatti da provare</h4>
@@ -6438,6 +6454,7 @@
 </ul>
 <hr>
 <h2 id="cucina-baltica-g3-g6">🇱🇹🇱🇻🇪🇪 Cucina Baltica (G3-G6)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g3')">Itinerario G3-G6</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','lituania-g3-g4')">Cultura</a></div>
 <h4 id="storia-cucina-baltica">📜 Storia della cucina baltica</h4>
 <p>Le cucine di Lituania, Lettonia ed Estonia (<a href="https://it.wikipedia.org/wiki/Cucina_lituana" target="_blank" rel="noopener noreferrer">📚 Lituana</a>, <a href="https://it.wikipedia.org/wiki/Cucina_lettone" target="_blank" rel="noopener noreferrer">📚 Lettone</a>, <a href="https://it.wikipedia.org/wiki/Cucina_estone" target="_blank" rel="noopener noreferrer">📚 Estone</a>) condividono radici comuni: pane nero di segale, patate, aringhe, latticini fermentati. Il <strong>pane nero</strong> (Rugpjūtis/Rupjmaize) è sacro — buttarlo via porta sfortuna! La tradizione della <strong>birra artigianale</strong> lituana è antichissima: birre di fattoria non filtrate e non pastorizzate, con ricette tramandate da secoli. L'Estonia ha una forte influenza scandinava (aringhe, salmone), la Lituania più influenza polacca (pierogi/cepelinai), la Lettonia è nel mezzo.</p>
 <h4 id="extra-piatti-baltici">🍽️ Altri piatti da provare</h4>
@@ -6484,6 +6501,7 @@
 </ul>
 <hr>
 <h2 id="cucina-finlandese-g6-g14">🇫🇮 Cucina Finlandese (G6-G14)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g6')">Itinerario G6-G14</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','finlandia-g6-g14')">Cultura</a></div>
 <h4 id="storia-cucina-finlandese">📜 Storia della cucina finlandese</h4>
 <p>La cucina finlandese (<a href="https://it.wikipedia.org/wiki/Cucina_finlandese" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) è "dal bosco e dal lago alla tavola". Per secoli i finlandesi hanno vissuto di pesca, caccia e raccolta di bacche e funghi. Il <strong>Kalakukko</strong> (pesce cotto dentro una pagnotta di segale) è il piatto più antico — i pescatori lo portavano come pranzo al sacco. La tradizione della <strong>sauna</strong> influenza anche la cucina: il <strong>saunapalvikinkku</strong> è prosciutto affumicato nella sauna per 24 ore! I finlandesi consumano più <strong>caffè</strong> pro capite al mondo (12 kg/anno!) e più <strong>latte</strong> di chiunque. Le <strong>bacche selvatiche</strong> (mirtilli, lamponi artici, mirtilli rossi) sono raccolte da tutti grazie al Jokamiehenoikeus.</p>
 <h4 id="extra-piatti-finlandia">🍽️ Altri piatti da provare</h4>
@@ -6533,6 +6551,7 @@
 </ul>
 <hr>
 <h2 id="cucina-norvegese-g14-g33">🇳🇴 Cucina Norvegese (G14-G33)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g15')">Itinerario G14-G33</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','norvegia-g15-g33')">Cultura</a></div>
 <h4 id="storia-cucina-norvegese">📜 Storia della cucina norvegese</h4>
 <p>La cucina norvegese (<a href="https://it.wikipedia.org/wiki/Cucina_norvegese" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) è plasmata dai fiordi e dal clima estremo. I Vichinghi inventarono la <strong>conservazione</strong>: pesce essiccato (tørrfisk/stoccafisso), affumicato (røkelaks) e fermentato (rakfisk). Lo <strong>stoccafisso</strong> (<a href="https://it.wikipedia.org/wiki/Stoccafisso" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) essiccato alle Lofoten era la "valuta" dei Vichinghi — lo esportavano in tutta Europa (anche in Italia per il baccalà!). Il <strong>brunost</strong> (formaggio marrone) fu inventato nel 1863 da una ragazza di fattoria, Anne Hov, che ebbe l'idea di aggiungere panna al siero. Oggi è il formaggio nazionale. Il <strong>salmone norvegese</strong> è il pesce più esportato al mondo — il sushi di salmone fu "inventato" dai norvegesi che convinsero i giapponesi negli anni '80!</p>
 <h4 id="extra-piatti-norvegia">🍽️ Altri piatti da provare</h4>
@@ -6588,6 +6607,7 @@
 </ul>
 <hr>
 <h2 id="cucina-danese-g33-g38">🇩🇰 Cucina Danese (G33-G38)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g34')">Itinerario G33-G38</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','danimarca-g34-g38')">Cultura</a></div>
 <h4 id="storia-cucina-danese">📜 Storia della cucina danese</h4>
 <p>La cucina danese (<a href="https://it.wikipedia.org/wiki/Cucina_danese" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) ha vissuto una rivoluzione: dal tradizionale <strong>smørrebrød</strong> (tartine aperte) al "New Nordic" di René Redzepi (Noma, 4 volte miglior ristorante del mondo). Lo <strong>smørrebrød</strong> (<a href="https://it.wikipedia.org/wiki/Sm%C3%B8rrebr%C3%B8d" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) nasce nel medioevo: il pane di segale era il "piatto" su cui si metteva il cibo. I <strong>Danish pastries</strong> (wienerbrød) in realtà furono portati da fornai austriaci nel 1850 durante uno sciopero dei panettieri danesi! Il <strong>Carlsberg</strong> fu fondato nel 1847 e il suo laboratorio scoprì il lievito puro per la birra lager — regalando la scoperta al mondo intero.</p>
 <h4 id="extra-piatti-danimarca">🍽️ Altri piatti da provare</h4>
@@ -6634,6 +6654,7 @@
 </ul>
 <hr>
 <h2 id="cucina-tedesca-g39-transito-brema">🇩🇪 Cucina Tedesca (G39 — transito Brema)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g39')">Itinerario G39</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','germania-g39-transito-via-brema')">Cultura</a></div>
 <h4 id="storia-cucina-tedesca">📜 Storia della cucina tedesca</h4>
 <p>La cucina tedesca (<a href="https://it.wikipedia.org/wiki/Cucina_tedesca" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) varia enormemente da regione a regione. Brema, città anseatica, ha una tradizione marinara: aringhe, anguille affumicate, Labskaus (stufato di marinai). La <strong>Reinheitsgebot</strong> (<a href="https://it.wikipedia.org/wiki/Reinheitsgebot" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) del 1516 è la legge sulla purezza della birra più antica del mondo: solo acqua, malto, luppolo e lievito. La Germania ha 1.500+ birrifici e 5.000+ birre diverse! Il <strong>Brot</strong> (pane tedesco) è Patrimonio UNESCO: oltre 3.000 varietà registrate, più di qualsiasi altro paese.</p>
 <h4 id="extra-piatti-germania">🍽️ Altri piatti da provare</h4>
@@ -6674,6 +6695,7 @@
 </ul>
 <hr>
 <h2 id="cucina-francese-g39-g42-g50-g51">🇫🇷 Cucina Francese (G39-G42, G50-G51)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g40')">Itinerario G39-G42, G50-G51</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','francia-g40-g42-g50-g53')">Cultura</a></div>
 <h4 id="storia-cucina-francese">📜 Storia della cucina francese</h4>
 <p>La cucina francese (<a href="https://it.wikipedia.org/wiki/Cucina_francese" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) è Patrimonio UNESCO dal 2010. <strong>Auguste Escoffier</strong> (<a href="https://it.wikipedia.org/wiki/Auguste_Escoffier" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) codificò la cucina moderna nel 1903 con "Le Guide Culinaire". La <strong>baguette</strong> (<a href="https://it.wikipedia.org/wiki/Baguette" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) è Patrimonio UNESCO dal 2022 — i francesi ne consumano 10 miliardi l'anno! La tradizione del <strong>fromage</strong> (formaggio) conta 1.220+ varietà — De Gaulle disse: "Come si può governare un paese con 246 formaggi diversi?". Il <strong>croissant</strong> in realtà è austriaco (Kipferl), portato a Parigi nel 1838. La Bretagna e la Normandia (sul vostro percorso) sono famose per crêpes, sidro, burro salato e ostriche.</p>
 <h4 id="extra-piatti-francia">🍽️ Altri piatti da provare</h4>
@@ -6722,6 +6744,7 @@
 </ul>
 <hr>
 <h2 id="cucina-spagnola-g43-g49">🇪🇸 Cucina Spagnola (G43-G49)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g43')">Itinerario G43-G49</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','spagna-g43-g49')">Cultura</a></div>
 <h4 id="storia-cucina-spagnola">📜 Storia della cucina spagnola</h4>
 <p>La cucina spagnola (<a href="https://it.wikipedia.org/wiki/Cucina_spagnola" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) del nord è molto diversa da quella mediterranea. I <strong>Paesi Baschi</strong> hanno la più alta concentrazione di stelle Michelin al mondo! I <strong>pintxos</strong> (<a href="https://it.wikipedia.org/wiki/Pintxo" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) sono l'arte culinaria basca: mini-creazioni gastronomiche su pane, fissate con uno stuzzicadenti. Si va di bar in bar ("txikiteo"). La <strong>sidra asturiana</strong> (<a href="https://it.wikipedia.org/wiki/Sidra" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) si versa da un metro di altezza ("escanciar") per ossigenarla! Il <strong>Cammino di Santiago</strong> ha creato una tradizione di "menú del peregrino" (3 portate + vino per ~12€) lungo tutto il nord.</p>
 <h4 id="extra-piatti-spagna">🍽️ Altri piatti da provare</h4>
@@ -6772,6 +6795,7 @@
 </ul>
 <hr>
 <h2 id="cucina-italiana-rientro-g50-g53">🇮🇹 Cucina Italiana — Rientro (G50-G53)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g51')">Itinerario G50-G53</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','italia-g51-g53')">Cultura</a></div>
 <h4 id="storia-cucina-italiana">📜 Storia della cucina ligure</h4>
 <p>La cucina ligure (<a href="https://it.wikipedia.org/wiki/Cucina_ligure" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) è "cucina povera" diventata gourmet. Il <strong>pesto genovese</strong> (<a href="https://it.wikipedia.org/wiki/Pesto" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) nasce dal "moretum" romano (aglio pestato con formaggio), evoluto con il basilico genovese DOP — più piccolo e dolce di quello comune. La <strong>focaccia genovese</strong> (<a href="https://it.wikipedia.org/wiki/Focaccia_genovese" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) si mangia a colazione inzuppata nel cappuccino! La <strong>farinata</strong> (<a href="https://it.wikipedia.org/wiki/Farinata" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) di ceci fu inventata per caso: durante una tempesta, i barili di ceci e olio si rovesciarono nella stiva — la poltiglia cotta al sole divenne una prelibatezza. Genova fu la "Superba" delle Repubbliche Marinare: spezie, acciughe sotto sale, e il commercio marittimo plasmarono la cucina.</p>
 <h4 id="extra-piatti-italia">🍽️ Altri piatti da provare</h4>
@@ -9051,6 +9075,48 @@
 </div>
 </div>
 </section>
+<!-- ═══ Admin & Test Panel (owner-only) ═══ -->
+<div id="admin-test-section" style="display:none; margin-top:32px; padding-top:24px; border-top:2px dashed var(--border);">
+<h2 style="text-align:center;">🛠️ Admin &amp; Test Panel</h2>
+<p style="text-align:center;color:var(--text-muted);font-size:0.85em;">🔒 Visibile solo agli organizzatori</p>
+
+<!-- System Status -->
+<div class="admin-card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:12px 0;">
+<h3 style="margin-bottom:12px;">📊 System Status</h3>
+<div id="admin-status-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:0.88em;">
+  <div><strong>App Version:</strong></div><div id="admin-version">—</div>
+  <div><strong>Service Worker:</strong></div><div id="admin-sw-status">—</div>
+  <div><strong>Notification Permission:</strong></div><div id="admin-notif-perm">—</div>
+  <div><strong>FCM Token:</strong></div><div id="admin-fcm-status">—</div>
+  <div><strong>Firebase Auth:</strong></div><div id="admin-auth-status">—</div>
+  <div><strong>Database:</strong></div><div id="admin-db-status">—</div>
+</div>
+</div>
+
+<!-- Test Actions -->
+<div class="admin-card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:12px 0;">
+<h3 style="margin-bottom:12px;">🧪 Test Actions</h3>
+<div style="display:flex;gap:8px;flex-wrap:wrap;">
+  <button id="admin-test-push" class="pos-btn" style="font-size:13px;background:var(--accent);color:#fff;">🔔 Test Push</button>
+  <button id="admin-request-notif" class="pos-btn" style="font-size:13px;">🔓 Request Permission</button>
+  <button id="admin-refresh-token" class="pos-btn" style="font-size:13px;">🔄 Refresh FCM Token</button>
+  <button id="admin-check-db" class="pos-btn" style="font-size:13px;">📡 Check DB Tokens</button>
+</div>
+<pre id="admin-log" style="margin-top:12px;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px;font-size:0.78em;max-height:200px;overflow-y:auto;white-space:pre-wrap;display:none;"></pre>
+</div>
+
+<!-- Quick Links -->
+<div class="admin-card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:12px 0;">
+<h3 style="margin-bottom:12px;">🔗 Quick Links</h3>
+<div style="display:flex;gap:8px;flex-wrap:wrap;font-size:0.88em;">
+  <a href="https://console.firebase.google.com/project/viaggio-europa-2026/database/viaggio-europa-2026-default-rtdb/data" target="_blank" rel="noopener" class="pos-btn pos-btn-blue" style="font-size:12px;">📦 Database</a>
+  <a href="https://console.firebase.google.com/project/viaggio-europa-2026/functions" target="_blank" rel="noopener" class="pos-btn pos-btn-blue" style="font-size:12px;">⚡ Functions</a>
+  <a href="https://console.firebase.google.com/project/viaggio-europa-2026/hosting" target="_blank" rel="noopener" class="pos-btn pos-btn-blue" style="font-size:12px;">🌐 Hosting</a>
+  <a href="https://console.firebase.google.com/project/viaggio-europa-2026/authentication" target="_blank" rel="noopener" class="pos-btn pos-btn-blue" style="font-size:12px;">👤 Auth</a>
+  <a href="https://github.com/travelyourlife/Progetto_Viaggio_Europa_2026" target="_blank" rel="noopener" class="pos-btn pos-btn-blue" style="font-size:12px;">🐙 GitHub</a>
+</div>
+</div>
+</div>
 
 <section id="tab-zaino" class="tab-content">
 

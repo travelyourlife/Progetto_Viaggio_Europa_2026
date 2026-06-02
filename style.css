@@ -348,6 +348,8 @@
     /* ─── Calendar day num (on icon) ─── */
     .calendar-day-num { color: #e2e8f0; }
     .tab-cal-day { color: #e2e8f0; }
+    .cross-link-bar { background: #2d3748; color: #cbd5e0; }
+    .cross-link-bar a { color: #63b3ed; }
 }
 
 * { box-sizing: border-box; margin: 0; }
@@ -3574,3 +3576,23 @@ table { max-width: 100%; }
     font-size: 1.2em;
     margin-left: 6px;
 }
+
+/* Cross-link navigation bars */
+.cross-link-bar {
+    margin: 0.3em 0 1em 0;
+    padding: 0.4em 0.8em;
+    background: #edf2f7;
+    border-radius: 6px;
+    font-size: 0.85em;
+    color: #4a5568;
+}
+.cross-link-bar a {
+    color: #2b6cb0;
+    text-decoration: none;
+    font-weight: 500;
+    cursor: pointer;
+}
+.cross-link-bar a:hover {
+    text-decoration: underline;
+}
+.poi-card-meta { color: var(--text-muted); }

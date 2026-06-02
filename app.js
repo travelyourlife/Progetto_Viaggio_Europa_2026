@@ -931,6 +931,8 @@ document.addEventListener('DOMContentLoaded', function() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
         window.dispatchEvent(new CustomEvent('tabSwitched', { detail: tabId }));
+        // Tab memory: save last visited tab
+        try { localStorage.setItem('qv_lastTab', tabId); } catch(e) {}
     }
 
     window.switchTab = switchTab;
@@ -979,11 +981,17 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Hash handling
+    // Hash handling (with tab memory fallback)
     var hash = window.location.hash;
     if (hash) {
         if (hash.startsWith('#tab-')) { switchTab(hash.replace('#tab-', '')); }
         else { var tid = hash.substring(1); var tt = anchorTabMap[tid]; if (tt) switchTab(tt, tid); }
+    } else {
+        // Restore last visited tab if no hash
+        try {
+            var lastTab = localStorage.getItem('qv_lastTab');
+            if (lastTab && document.getElementById('tab-' + lastTab)) { switchTab(lastTab); }
+        } catch(e) {}
     }
     window.addEventListener('popstate', function() {
         var h = window.location.hash;
@@ -3345,7 +3353,7 @@ document.addEventListener('DOMContentLoaded', function() {
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
         navigator.serviceWorker.register('./sw.js').then(function(reg) {
-            console.log('[App] SW registrato:', reg.scope);
+            console.debug('[App] SW registrato:', reg.scope);
             // Force check for updates every time the app opens
             reg.update();
             // If a new SW is already waiting, activate it immediately
@@ -3363,7 +3371,7 @@ if ('serviceWorker' in navigator) {
             });
             // Also check for updates periodically (every 60 seconds)
             setInterval(function() { reg.update(); }, 60000);
-        }).catch(function(err) { console.log('[App] SW errore:', err); });
+        }).catch(function(err) { console.debug('[App] SW errore:', err); });
     });
 }
 
@@ -3825,7 +3833,7 @@ if ('serviceWorker' in navigator) {
     }
   });
 
-    console.log('[Firebase] Sync module loaded. Family ID:', FAMILY_ID);
+    console.debug('[Firebase] Sync module loaded. Family ID:', FAMILY_ID);
 })();
 
 
@@ -4748,7 +4756,7 @@ if ('serviceWorker' in navigator) {
   var testPushBtn = document.getElementById('test-push-btn');
   if (testPushBtn) {
     testPushBtn.addEventListener('click', function() {
-      console.log('[TestPush] clicked. isOwner=' + isOwner + ', db=' + !!db);
+      console.debug('[TestPush] clicked. isOwner=' + isOwner + ', db=' + !!db);
       if (!isOwner) { alert('Solo owner possono testare le notifiche.'); return; }
       if (!db) { alert('Firebase non disponibile. Sei offline?'); return; }
       testPushBtn.disabled = true;
@@ -8062,7 +8070,7 @@ if ('serviceWorker' in navigator) {
                     '<span class="poi-icon" style="color:' + catColors[poi.cat] + '; font-size:1.5em;">' + catIcons[poi.cat] + '</span>' +
                     '<div class="poi-card-title">' +
                         '<strong>' + name + '</strong> ' + poi.country +
-                        '<br><small style="color:#718096">' + catLabels[poi.cat] + (poi.period ? ' · 📅 ' + poi.period : '') + ' · ' + (isEN ? 'Day ' : 'Giorno ') + poi.nearDay.replace('g','') + '</small>' +
+                        '<br><small class="poi-card-meta">' + catLabels[poi.cat] + (poi.city ? ' · ' + poi.city : '') + (poi.period ? ' · 📅 ' + poi.period : '') + ' · ' + (isEN ? 'Day ' : 'Giorno ') + poi.nearDay.replace('g','') + '</small>' +
                     '</div>' +
                 '</div>' +
                 '<p class="poi-card-desc">' + desc + '</p>' +
@@ -8084,4 +8092,198 @@ if ('serviceWorker' in navigator) {
         var container = document.getElementById('poi-list-' + cat);
         renderPOICards(POI_ATTIVITA.filter(function(p) { return p.cat === cat; }), container);
     });
+})();
+
+// ═══════════════════════════════════════════════════════════════
+// ADMIN & TEST PANEL
+// ═══════════════════════════════════════════════════════════════
+(function() {
+  var adminSection = document.getElementById('admin-test-section');
+  if (!adminSection) return;
+
+  // Show only for owners
+  window.addEventListener('authStateChanged', function(e) {
+    if (e.detail && e.detail.user && typeof isOwner !== 'undefined' && isOwner) {
+      adminSection.style.display = 'block';
+      updateAdminStatus();
+    }
+  });
+  if (typeof isOwner !== 'undefined' && isOwner) {
+    adminSection.style.display = 'block';
+  }
+
+  function adminLog(msg) {
+    var log = document.getElementById('admin-log');
+    if (!log) return;
+    log.style.display = 'block';
+    log.textContent += '[' + new Date().toLocaleTimeString() + '] ' + msg + '\n';
+    log.scrollTop = log.scrollHeight;
+  }
+
+  function updateAdminStatus() {
+    // Version
+    var verEl = document.getElementById('admin-version');
+    if (verEl) verEl.textContent = (window.APP_VERSION || 'unknown');
+
+    // Service Worker
+    var swEl = document.getElementById('admin-sw-status');
+    if (swEl) {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistration().then(function(reg) {
+          swEl.textContent = reg ? '✅ Active (' + reg.active.scriptURL.split('/').pop() + ')' : '❌ Not registered';
+          swEl.style.color = reg ? '#38a169' : '#e53e3e';
+        });
+      } else {
+        swEl.textContent = '❌ Not supported';
+        swEl.style.color = '#e53e3e';
+      }
+    }
+
+    // Notification permission
+    var notifEl = document.getElementById('admin-notif-perm');
+    if (notifEl) {
+      var perm = ('Notification' in window) ? Notification.permission : 'not supported';
+      notifEl.textContent = perm === 'granted' ? '✅ Granted' : perm === 'denied' ? '❌ Denied' : '⚠️ ' + perm;
+      notifEl.style.color = perm === 'granted' ? '#38a169' : perm === 'denied' ? '#e53e3e' : '#d69e2e';
+    }
+
+    // FCM Token
+    var fcmEl = document.getElementById('admin-fcm-status');
+    if (fcmEl) {
+      var token = localStorage.getItem('viaggio2026_fcm_token');
+      fcmEl.textContent = token ? '✅ Saved (' + token.substring(0, 12) + '...)' : '❌ Not saved';
+      fcmEl.style.color = token ? '#38a169' : '#e53e3e';
+    }
+
+    // Auth
+    var authEl = document.getElementById('admin-auth-status');
+    if (authEl) {
+      var user = typeof firebaseUser !== 'undefined' ? firebaseUser : null;
+      authEl.textContent = user ? '✅ ' + (user.displayName || user.email) : '❌ Not logged in';
+      authEl.style.color = user ? '#38a169' : '#e53e3e';
+    }
+
+    // DB
+    var dbEl = document.getElementById('admin-db-status');
+    if (dbEl) {
+      dbEl.textContent = (typeof db !== 'undefined' && db) ? '✅ Connected' : '❌ Not connected';
+      dbEl.style.color = (typeof db !== 'undefined' && db) ? '#38a169' : '#e53e3e';
+    }
+  }
+
+  // Admin Test Push
+  var adminTestPush = document.getElementById('admin-test-push');
+  if (adminTestPush) {
+    adminTestPush.addEventListener('click', function() {
+      adminLog('Sending test push...');
+      if (!db) { adminLog('ERROR: db is null'); return; }
+      var ref = db.ref('trips/' + FAMILY_ID + '/notifications/queue');
+      ref.push({
+        type: 'test', title: '🧪 Admin Test', body: 'Push notification test from Admin Panel',
+        target: 'owner', url: './', tag: 'admin-test-' + Date.now(), createdAt: Date.now(), sent: false, source: 'admin-panel'
+      }).then(function() {
+        adminLog('✅ Test push queued successfully');
+      }).catch(function(err) {
+        adminLog('❌ Error: ' + err.message);
+      });
+    });
+  }
+
+  // Request Permission
+  var adminReqNotif = document.getElementById('admin-request-notif');
+  if (adminReqNotif) {
+    adminReqNotif.addEventListener('click', function() {
+      adminLog('Requesting notification permission...');
+      if (!('Notification' in window)) { adminLog('❌ Notifications not supported'); return; }
+      Notification.requestPermission().then(function(perm) {
+        adminLog('Permission result: ' + perm);
+        updateAdminStatus();
+      });
+    });
+  }
+
+  // Refresh Token
+  var adminRefreshToken = document.getElementById('admin-refresh-token');
+  if (adminRefreshToken) {
+    adminRefreshToken.addEventListener('click', function() {
+      adminLog('Refreshing FCM token...');
+      if (typeof firebase === 'undefined' || !firebase.messaging) {
+        adminLog('❌ Firebase Messaging not available');
+        return;
+      }
+      try {
+        var messaging = firebase.messaging();
+        var VAPID_KEY = 'BBW43ENkLgM_oXOaCCyo_m3voilbfw2fdlqjtopognVCmyiGXAibwedF94Og56uQdh6IIvLqokMfIeROBYhYkis';
+        navigator.serviceWorker.getRegistration().then(function(swReg) {
+          if (!swReg) {
+            adminLog('⚠️ No SW - registering...');
+            return navigator.serviceWorker.register('./sw.js');
+          }
+          return swReg;
+        }).then(function(swReg) {
+          return messaging.getToken({ vapidKey: VAPID_KEY, serviceWorkerRegistration: swReg });
+        }).then(function(token) {
+          if (token) {
+            adminLog('✅ Token: ' + token.substring(0, 30) + '...');
+            localStorage.setItem('viaggio2026_fcm_token', token);
+            // Also save to DB
+            var user = typeof firebaseUser !== 'undefined' ? firebaseUser : null;
+            if (user && db) {
+              var deviceId = localStorage.getItem('viaggio2026_device_id') || ('dev_' + Date.now());
+              localStorage.setItem('viaggio2026_device_id', deviceId);
+              db.ref('fcm_tokens/' + user.uid + '/' + deviceId).set({
+                token: token, device: deviceId, role: 'owner',
+                uid: user.uid, name: user.displayName || user.email || 'Admin',
+                userAgent: navigator.userAgent.substring(0, 100),
+                updatedAt: new Date().toISOString()
+              }).then(function() {
+                adminLog('✅ Token saved to DB');
+                updateAdminStatus();
+              }).catch(function(err) {
+                adminLog('❌ DB save failed: ' + err.message);
+              });
+            }
+          } else {
+            adminLog('❌ No token returned');
+          }
+        }).catch(function(err) {
+          adminLog('❌ Token error: ' + err.message);
+        });
+      } catch(e) {
+        adminLog('❌ Messaging error: ' + e.message);
+      }
+    });
+  }
+
+  // Check DB Tokens
+  var adminCheckDb = document.getElementById('admin-check-db');
+  if (adminCheckDb) {
+    adminCheckDb.addEventListener('click', function() {
+      adminLog('Checking fcm_tokens in database...');
+      if (!db) { adminLog('❌ db is null'); return; }
+      db.ref('fcm_tokens').once('value').then(function(snap) {
+        var data = snap.val();
+        if (!data) {
+          adminLog('⚠️ fcm_tokens is EMPTY - no devices registered');
+          return;
+        }
+        var count = 0;
+        Object.keys(data).forEach(function(uid) {
+          var devices = data[uid];
+          if (typeof devices === 'object' && devices.token) {
+            count++; // flat structure
+          } else {
+            Object.keys(devices).forEach(function() { count++; });
+          }
+        });
+        adminLog('📱 Found ' + count + ' registered device(s)');
+        adminLog(JSON.stringify(data, null, 2).substring(0, 500));
+      }).catch(function(err) {
+        adminLog('❌ DB read error: ' + err.message);
+      });
+    });
+  }
+
+  // Initial status update after short delay
+  setTimeout(updateAdminStatus, 2000);
 })();
