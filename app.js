@@ -4614,20 +4614,13 @@ if ('serviceWorker' in navigator) {
 // ═══════════════════════════════════════════════════════════════
 (function() {
   var AN_KEY = 'viaggio2026_analytics';
-  var section = document.getElementById('analytics-section');
-  if (!section) return;
-
-  // Show section + tab-index link only for owners
-  var tabLink = document.getElementById('analytics-tab-link');
+  // Analytics elements are now inside tab-admin (rendered when admin tab is shown)
   function showAnalyticsForOwner(show) {
-    section.style.display = show ? '' : 'none';
-    if (tabLink) tabLink.style.display = show ? '' : 'none';
     if (show) renderAnalytics();
   }
   window.addEventListener('authStateChanged', function(e) {
     showAnalyticsForOwner(e.detail.isOwner);
   });
-  // Also check immediately in case auth already resolved
   if (typeof isOwner !== 'undefined' && isOwner) {
     showAnalyticsForOwner(true);
   }
@@ -8098,19 +8091,19 @@ if ('serviceWorker' in navigator) {
 // ADMIN & TEST PANEL
 // ═══════════════════════════════════════════════════════════════
 (function() {
-  var adminSection = document.getElementById('admin-test-section');
-  if (!adminSection) return;
+  var adminMenuLink = document.getElementById('admin-menu-link');
 
-  // Show only for owners
-  window.addEventListener('authStateChanged', function(e) {
-    if (e.detail && e.detail.user && typeof isOwner !== 'undefined' && isOwner) {
-      adminSection.style.display = 'block';
+  // Show admin sidebar link only for owners
+  function showAdminForOwner() {
+    if (typeof isOwner !== 'undefined' && isOwner) {
+      if (adminMenuLink) adminMenuLink.style.display = '';
       updateAdminStatus();
     }
-  });
-  if (typeof isOwner !== 'undefined' && isOwner) {
-    adminSection.style.display = 'block';
   }
+  window.addEventListener('authStateChanged', function(e) {
+    if (e.detail && e.detail.user) showAdminForOwner();
+  });
+  showAdminForOwner();
 
   function adminLog(msg) {
     var log = document.getElementById('admin-log');
@@ -8123,7 +8116,7 @@ if ('serviceWorker' in navigator) {
   function updateAdminStatus() {
     // Version
     var verEl = document.getElementById('admin-version');
-    if (verEl) verEl.textContent = (window.APP_VERSION || 'unknown');
+    if (verEl) verEl.textContent = (window.__EXPECTED_VERSION__ || window.APP_VERSION || 'unknown');
 
     // Service Worker
     var swEl = document.getElementById('admin-sw-status');

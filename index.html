@@ -43,7 +43,7 @@
     <link rel="apple-touch-icon" sizes="152x152" href="./icon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="./icon.png">
     <link rel="apple-touch-icon" sizes="167x167" href="./icon.png">
-    <title>Viaggio Europa 2026 — V1.25</title>
+    <title>Viaggio Europa 2026 — V1.26</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <link rel="stylesheet" href="style.css">
 <!-- Firebase SDK (compat mode for single-file app) -->
@@ -59,7 +59,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = '1.25';
+  var EXPECTED_VERSION = '1.26';
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
   var r = false;
@@ -199,6 +199,7 @@
     <a class="menu-item" data-tab="chat"><span class="menu-icon">💬</span><span class="menu-text">Chat</span></a>
     <div class="menu-divider"></div>
     <a class="menu-item" id="notif-toggle" style="cursor:pointer;"><span class="menu-icon">🔔</span><span class="menu-text">Notifiche</span><span class="menu-badge" id="notif-status" style="margin-left:auto;font-size:11px;opacity:0.7;"></span></a>
+    <a class="menu-item" data-tab="admin" id="admin-menu-link" style="display:none;"><span class="menu-icon">🛠️</span><span class="menu-text">Admin</span></a>
     <div class="menu-version" id="app-version-tag"></div>
 </nav>
 
@@ -9050,34 +9051,11 @@
 <p><strong>Nota:</strong> prezzi e orari riflettono le fonti trovate a maggio 2026. Verificare sempre sul sito ufficiale prima della prenotazione.</p>
 </blockquote>
 </details>
-<hr>
-<!-- Analytics Console (owner-only) -->
-<div id="analytics-section" style="display:none;">
-<h2 id="analytics">📊 Analytics — Mini Console</h2>
-<p style="color:var(--text-muted);font-size:13px;margin-bottom:12px;">🔒 Visibile solo agli organizzatori</p>
-<div class="analytics-grid" id="analytics-grid">
-  <div class="analytics-card"><span class="analytics-value" id="an-sessions">--</span><span class="analytics-label">Sessioni oggi</span></div>
-  <div class="analytics-card"><span class="analytics-value" id="an-pageviews">--</span><span class="analytics-label">Pageviews oggi</span></div>
-  <div class="analytics-card"><span class="analytics-value" id="an-tabs">--</span><span class="analytics-label">Tab più visitato</span></div>
-  <div class="analytics-card"><span class="analytics-value" id="an-avg-time">--</span><span class="analytics-label">Tempo medio sessione</span></div>
-</div>
-<details style="margin-top:12px;">
-<summary style="cursor:pointer;font-weight:600;">Dettaglio tab visitati</summary>
-<table class="compact-table" id="an-tab-table">
-<thead><tr><th>Tab</th><th>Visite</th><th>Tempo</th></tr></thead>
-<tbody id="an-tab-tbody"></tbody>
-</table>
-</details>
-<div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap;">
-<a href="https://analytics.google.com/analytics/web/#/p/G-YSGVVPN5ZR" target="_blank" rel="noopener noreferrer" class="pos-btn pos-btn-blue" style="font-size:13px;">Apri Google Analytics ↗</a>
-<button id="an-reset" class="pos-btn" style="font-size:13px;">Resetta contatori locali</button>
-<button id="test-push-btn" class="pos-btn" style="font-size:13px;background:var(--accent);color:#fff;">🔔 Test Push</button>
-</div>
-</div>
+
 </section>
-<!-- ═══ Admin & Test Panel (owner-only) ═══ -->
-<div id="admin-test-section" style="display:none; margin-top:32px; padding-top:24px; border-top:2px dashed var(--border);">
-<h2 style="text-align:center;">🛠️ Admin &amp; Test Panel</h2>
+<section id="tab-admin" class="tab-content">
+
+<h1 style="text-align:center; margin-top:16px;">🛠️ Admin &amp; Test Panel</h1>
 <p style="text-align:center;color:var(--text-muted);font-size:0.85em;">🔒 Visibile solo agli organizzatori</p>
 
 <!-- System Status -->
@@ -9105,6 +9083,27 @@
 <pre id="admin-log" style="margin-top:12px;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px;font-size:0.78em;max-height:200px;overflow-y:auto;white-space:pre-wrap;display:none;"></pre>
 </div>
 
+<!-- Analytics Console -->
+<div class="admin-card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:12px 0;">
+<h3 style="margin-bottom:12px;">📊 Analytics — Mini Console</h3>
+<div class="analytics-grid" id="analytics-grid">
+  <div class="analytics-card"><span class="analytics-value" id="an-sessions">--</span><span class="analytics-label">Sessioni oggi</span></div>
+  <div class="analytics-card"><span class="analytics-value" id="an-pageviews">--</span><span class="analytics-label">Pageviews oggi</span></div>
+  <div class="analytics-card"><span class="analytics-value" id="an-tabs">--</span><span class="analytics-label">Tab più visitato</span></div>
+  <div class="analytics-card"><span class="analytics-value" id="an-avg-time">--</span><span class="analytics-label">Tempo medio sessione</span></div>
+</div>
+<details style="margin-top:12px;">
+<summary style="cursor:pointer;font-weight:600;">Dettaglio tab visitati</summary>
+<table class="compact-table" id="an-tab-table">
+<thead><tr><th>Tab</th><th>Visite</th><th>Tempo</th></tr></thead>
+<tbody id="an-tab-tbody"></tbody>
+</table>
+</details>
+<div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
+<button id="an-reset" class="pos-btn" style="font-size:13px;">Resetta contatori locali</button>
+</div>
+</div>
+
 <!-- Quick Links -->
 <div class="admin-card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:12px 0;">
 <h3 style="margin-bottom:12px;">🔗 Quick Links</h3>
@@ -9114,9 +9113,11 @@
   <a href="https://console.firebase.google.com/project/viaggio-europa-2026/hosting" target="_blank" rel="noopener" class="pos-btn pos-btn-blue" style="font-size:12px;">🌐 Hosting</a>
   <a href="https://console.firebase.google.com/project/viaggio-europa-2026/authentication" target="_blank" rel="noopener" class="pos-btn pos-btn-blue" style="font-size:12px;">👤 Auth</a>
   <a href="https://github.com/travelyourlife/Progetto_Viaggio_Europa_2026" target="_blank" rel="noopener" class="pos-btn pos-btn-blue" style="font-size:12px;">🐙 GitHub</a>
+  <a href="https://analytics.google.com/analytics/web/#/p/G-YSGVVPN5ZR" target="_blank" rel="noopener noreferrer" class="pos-btn pos-btn-blue" style="font-size:12px;">📈 Google Analytics</a>
 </div>
 </div>
-</div>
+
+</section>
 
 <section id="tab-zaino" class="tab-content">
 
