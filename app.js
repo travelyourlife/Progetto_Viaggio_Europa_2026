@@ -9670,6 +9670,11 @@ if ('serviceWorker' in navigator) {
     if (!adminUsersList) return;
     adminUsersList.innerHTML = '<p style="color:var(--text-muted);font-size:13px;">' + (isEN ? 'Loading...' : 'Caricamento...') + '</p>';
 
+    // Fetch approvedUsers and pendingUsers first, then render
+    approvedRef.once('value', function(approvedSnap) {
+    var approvedMap = approvedSnap.val() || {};
+    pendingRef.once('value', function(pendingSnap) {
+    var pendingMap = pendingSnap.val() || {};
     usersRef.once('value', function(snap) {
       var users = snap.val();
       if (!users || Object.keys(users).length === 0) {
@@ -9733,7 +9738,20 @@ if ('serviceWorker' in navigator) {
         var isBanned = !!globalBanned[uid];
         var lastSeen = u.lastSeen ? new Date(u.lastSeen).toLocaleString(isEN ? 'en-GB' : 'it-IT', {day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : '\u2014';
         var photo = u.photo ? '<img src="' + u.photo + '" style="width:28px;height:28px;border-radius:50%;vertical-align:middle;" loading="lazy">' : '<span style="font-size:20px;">\ud83d\udc64</span>';
-        var statusBadge = isOwnerUser ? '<span style="background:var(--accent,#6366f1);color:#fff;padding:2px 8px;border-radius:8px;font-size:11px;">Owner</span>' : (isBanned ? '<span style="background:var(--danger,#e53e3e);color:#fff;padding:2px 8px;border-radius:8px;font-size:11px;">' + (isEN ? 'Banned' : 'Bannato') + '</span>' : '<span style="background:var(--success,#38a169);color:#fff;padding:2px 8px;border-radius:8px;font-size:11px;">' + (isEN ? 'Active' : 'Attivo') + '</span>');
+        var isApproved = !!approvedMap[uid];
+        var isPending = !!pendingMap[uid];
+        var statusBadge;
+        if (isOwnerUser) {
+          statusBadge = '<span style="background:var(--accent,#6366f1);color:#fff;padding:2px 8px;border-radius:8px;font-size:11px;">Owner</span>';
+        } else if (isBanned) {
+          statusBadge = '<span style="background:var(--danger,#e53e3e);color:#fff;padding:2px 8px;border-radius:8px;font-size:11px;">' + (isEN ? 'Banned' : 'Bannato') + '</span>';
+        } else if (isPending) {
+          statusBadge = '<span style="background:var(--warning,#d69e2e);color:#fff;padding:2px 8px;border-radius:8px;font-size:11px;">' + (isEN ? 'Pending' : 'In attesa') + '</span>';
+        } else if (isApproved) {
+          statusBadge = '<span style="background:var(--success,#38a169);color:#fff;padding:2px 8px;border-radius:8px;font-size:11px;">' + (isEN ? 'Active' : 'Attivo') + '</span>';
+        } else {
+          statusBadge = '<span style="background:var(--text-muted,#a0aec0);color:#fff;padding:2px 8px;border-radius:8px;font-size:11px;">' + (isEN ? 'Unknown' : 'Sconosciuto') + '</span>';
+        }
         var uidShort = '<span style="font-size:10px;color:var(--text-muted);font-family:monospace;">' + uid.substring(0, 8) + '...</span>';
         var actionBtn = '';
         if (!isOwnerUser) {
@@ -9797,6 +9815,8 @@ if ('serviceWorker' in navigator) {
         });
       });
     });
+    }); // end pendingRef
+    }); // end approvedRef
   }
 
   function renderAdminPending() {
