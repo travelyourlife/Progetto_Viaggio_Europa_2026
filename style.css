@@ -2068,6 +2068,18 @@ html[lang="en"] .notif-drawer-list:empty::after {
 }
 .notif-item-dismiss:hover { opacity: 1; }
 
+/* Unread dot indicator */
+.notif-unread-dot {
+    position: absolute;
+    top: 14px;
+    left: 6px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent, #3182ce);
+    flex-shrink: 0;
+}
+
 /* Notification type accents */
 .notif-item.type-info { border-left: 4px solid var(--accent, #3182ce); }
 .notif-item.type-trip { border-left: 4px solid var(--success, #38a169); }

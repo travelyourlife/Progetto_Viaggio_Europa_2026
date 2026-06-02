@@ -5368,8 +5368,11 @@ if ('serviceWorker' in navigator) {
   // --- State ---
   var todayStr = new Date().toISOString().slice(0, 10);
   var NOTIF_KEY = 'viaggio2026_notifs_dismissed';
+  var SEEN_KEY = 'viaggio2026_notifs_seen';
   var dismissed = {};
+  var seen = {};
   try { dismissed = JSON.parse(localStorage.getItem(NOTIF_KEY)) || {}; } catch(e) {}
+  try { seen = JSON.parse(localStorage.getItem(SEEN_KEY)) || {}; } catch(e) {}
 
   // Clean old dismissed entries (older than 2 days)
   var cleanDismissed = {};
@@ -5618,7 +5621,10 @@ if ('serviceWorker' in navigator) {
       var item = document.createElement('div');
       item.className = 'notif-item type-' + n.type;
       item.setAttribute('data-notif-id', n.id);
-      var html = '<span class="notif-item-icon">' + n.icon + '</span>';
+      var isUnseen = !seen[n.id];
+      var html = '';
+      if (isUnseen) html += '<span class="notif-unread-dot"></span>';
+      html += '<span class="notif-item-icon">' + n.icon + '</span>';
       html += '<div class="notif-item-body">';
       html += '<span class="notif-item-text">' + n.text + '</span>';
       html += '<span class="notif-item-time">' + (isEN ? 'Today ' : 'Oggi ') + _notifTimestamp + '</span>';
@@ -5660,14 +5666,15 @@ if ('serviceWorker' in navigator) {
 
   // --- Badge update ---
   function updateBadge() {
-    var visibleCount = notifications.filter(function(n) {
+    // Count only UNSEEN notifications for the badge
+    var unseenCount = notifications.filter(function(n) {
       if (n.ownerOnly && !isOwner) return false;
-      return true;
+      return !seen[n.id];
     }).length;
     [badge, homeBadge].forEach(function(b) {
       if (!b) return;
-      if (visibleCount > 0) {
-        b.textContent = visibleCount > 9 ? '9+' : visibleCount;
+      if (unseenCount > 0) {
+        b.textContent = unseenCount > 9 ? '9+' : unseenCount;
         b.classList.add('visible');
       } else {
         b.textContent = '';
@@ -5678,11 +5685,19 @@ if ('serviceWorker' in navigator) {
 
   // --- Drawer open/close ---
   function openDrawer() {
+    // Mark all current notifications as seen
+    notifications.forEach(function(n) {
+      if (n.ownerOnly && !isOwner) return;
+      seen[n.id] = todayStr;
+    });
+    localStorage.setItem(SEEN_KEY, JSON.stringify(seen));
     renderDrawer();
     drawer.classList.add('open');
     drawerOverlay.classList.add('open');
     document.body.style.overflow = 'hidden';
     history.pushState({ drawerOpen: true }, '', '');
+    // Badge goes to 0 when drawer is open
+    updateBadge();
   }
 
   function closeDrawer() {
