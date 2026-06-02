@@ -1866,24 +1866,19 @@ table { max-width: 100%; }
 /* ─── Notification Bell & Drawer ─── */
 /* ═══════════════════════════════════════════════════════════════ */
 
-/* Bell button in top bar */
+/* Bell button in top bar — matches search-btn compact style */
 .notif-bell-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
+    background: none;
     border: none;
-    font-size: 15px;
-    background: rgba(255,255,255,0.1);
     color: white;
+    font-size: 18px;
     cursor: pointer;
+    padding: 6px;
+    border-radius: 8px;
     transition: background 0.2s;
     position: relative;
-    margin-right: 2px;
 }
-.notif-bell-btn:hover { background: rgba(255,255,255,0.2); }
+.notif-bell-btn:hover { background: rgba(255,255,255,0.15); }
 
 /* Bell button in home header */
 .notif-bell-home {
@@ -2028,6 +2023,12 @@ html[lang="en"] .notif-drawer-list:empty::after {
 .notif-item-text {
     color: var(--text-main, #1a202c);
     font-size: 13px;
+}
+.notif-item-time {
+    display: block;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 2px;
 }
 .notif-item-link {
     font-size: 12px;

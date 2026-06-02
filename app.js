@@ -2698,22 +2698,42 @@ document.addEventListener('DOMContentLoaded', function() {
             setTimeout(function() { document.getElementById('edit-km-value').select(); }, 100);
         }
 
-        // ─── Edit Km buttons (inline + standalone) ───
+        // ─── Edit Km buttons (inline + standalone with day selector) ───
         var editKmBtn = document.getElementById('pos-edit-km-btn');
         var editKmStandalone = document.getElementById('pos-edit-km-standalone');
+        var editKmDaySelect = document.getElementById('pos-edit-km-day-select');
+
+        // Populate day selector with all trip days up to today
+        (function populateKmDaySelect() {
+            if (!editKmDaySelect) return;
+            var now = new Date();
+            var tripDay = getCurrentTripDay();
+            var maxDay = Math.min(tripDay, TRIP_DAYS - 1);
+            if (maxDay < 0) maxDay = 0;
+            for (var d = maxDay; d >= 0; d--) {
+                var dayDate = new Date(TRIP_START.getTime() + d * 86400000);
+                var dateStr = dayDate.toISOString().slice(0, 10);
+                var label = 'G' + d + ' (' + dayDate.getDate() + '/' + (dayDate.getMonth() + 1) + ')';
+                if (d === tripDay) label += isEN ? ' — today' : ' — oggi';
+                var opt = document.createElement('option');
+                opt.value = dateStr;
+                opt.textContent = label;
+                editKmDaySelect.appendChild(opt);
+            }
+        })();
+
         function triggerEditKm() {
-            var today = todayStr();
-            var currentKm = todayKm || 0;
+            var selectedDate = editKmDaySelect ? editKmDaySelect.value : todayStr();
             // Try to get current value from Firebase
-            var ref = getFamilyRef('dailySummaries/' + today);
+            var ref = getFamilyRef('dailySummaries/' + selectedDate);
             if (ref) {
                 ref.once('value', function(snap) {
                     var data = snap.val() || {};
-                    var km = data.odometerKm != null ? data.odometerKm : (data.km || currentKm);
-                    showEditKmModal(today, km);
+                    var km = data.odometerKm != null ? data.odometerKm : (data.km || 0);
+                    showEditKmModal(selectedDate, km);
                 });
             } else {
-                showEditKmModal(today, currentKm);
+                showEditKmModal(selectedDate, 0);
             }
         }
         if (editKmBtn) editKmBtn.addEventListener('click', triggerEditKm);
@@ -4435,6 +4455,30 @@ if ('serviceWorker' in navigator) {
         }
     }
 
+    // --- Reverse geocode helper (Nominatim) ---
+    var _geoCache = {};
+    function _reverseGeocode(lat, lng, cb) {
+        var key = lat.toFixed(3) + ',' + lng.toFixed(3);
+        if (_geoCache[key]) { cb(_geoCache[key].city, _geoCache[key].country, _geoCache[key].flag); return; }
+        fetch('https://nominatim.openstreetmap.org/reverse?lat=' + lat + '&lon=' + lng + '&format=json&zoom=10&accept-language=' + (isEN ? 'en' : 'it'))
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                var addr = data.address || {};
+                var city = addr.city || addr.town || addr.village || addr.municipality || addr.county || '';
+                var country = addr.country || '';
+                var cc = (addr.country_code || '').toUpperCase();
+                var flag = _ccToFlag(cc);
+                _geoCache[key] = { city: city, country: country, flag: flag };
+                cb(city, country, flag);
+            })
+            .catch(function() { cb(null, null, null); });
+    }
+
+    function _ccToFlag(cc) {
+        if (!cc || cc.length !== 2) return '';
+        return String.fromCodePoint(0x1F1E6 + cc.charCodeAt(0) - 65) + String.fromCodePoint(0x1F1E6 + cc.charCodeAt(1) - 65);
+    }
+
     function fetchWeather() {
         var dayIdx = getDayIndex();
         if (dayIdx < 0 || dayIdx >= TRIP_COORDS.length) {
@@ -4454,9 +4498,6 @@ if ('serviceWorker' in navigator) {
             heroPreTrip.style.display = 'none';
             if (heroPreAvatar) heroPreAvatar.style.display = 'none';
             heroDuringTrip.style.display = '';
-            // Set city
-            if (heroTripCity) heroTripCity.textContent = '📍 ' + cityName;
-            if (heroTripCountry) heroTripCountry.textContent = (coord.country || '') + ' ' + (coord.flag || '');
             // Set date (use simulated date if Day Override active)
             var displayDate = (overrideVal && parseInt(overrideVal, 10) > 0)
                 ? new Date(TRIP_START.getTime() + dayIdx * 86400000)
@@ -4464,6 +4505,41 @@ if ('serviceWorker' in navigator) {
             if (heroTripDateDay) heroTripDateDay.textContent = displayDate.getDate();
             if (heroTripDateMonth) {
                 heroTripDateMonth.textContent = displayDate.toLocaleDateString(isEN ? 'en-GB' : 'it-IT', { month: 'long' });
+            }
+
+            // --- Live van position (hero big) from Firebase ---
+            // Try to read last known position from Firebase 'live' node
+            var _liveApplied = false;
+            if (typeof firebase !== 'undefined' && firebase.database && FAMILY_ID) {
+                firebase.database().ref('trips/' + FAMILY_ID + '/live').once('value', function(snap) {
+                    var liveData = snap.val();
+                    if (!liveData) { _setPlannedCity(); return; }
+                    // Find the most recent live entry
+                    var latest = null;
+                    Object.values(liveData).forEach(function(d) {
+                        if (d && d.lat && d.lng && d.time) {
+                            if (!latest || d.time > latest.time) latest = d;
+                        }
+                    });
+                    // Only use if less than 2 hours old
+                    if (latest && (Date.now() - latest.time) < 7200000) {
+                        _liveApplied = true;
+                        // Reverse geocode to get city name
+                        _reverseGeocode(latest.lat, latest.lng, function(city, country, flag) {
+                            if (heroTripCity) heroTripCity.textContent = '📍 ' + (city || (isEN ? 'On the road' : 'In viaggio'));
+                            if (heroTripCountry) heroTripCountry.textContent = (country || '') + ' ' + (flag || '');
+                        });
+                    } else {
+                        _setPlannedCity();
+                    }
+                });
+            } else {
+                _setPlannedCity();
+            }
+
+            function _setPlannedCity() {
+                if (heroTripCity) heroTripCity.textContent = '📍 ' + cityName;
+                if (heroTripCountry) heroTripCountry.textContent = (coord.country || '') + ' ' + (coord.flag || '');
             }
         }
 
@@ -4511,8 +4587,9 @@ if ('serviceWorker' in navigator) {
                 var setMM = sunsetTime.getMinutes().toString().padStart(2,'0');
                 var sunTimes = riseHH + ':' + riseMM + '–' + setHH + ':' + setMM;
 
-                // Update integrated hero weather row
-                if (heroWeatherLoc) heroWeatherLoc.textContent = '📍 ' + cityName;
+                // Update integrated hero weather row (planned destination)
+                var destLabel = (isEN ? '🎯 ' : '🎯 ') + cityName;
+                if (heroWeatherLoc) heroWeatherLoc.textContent = destLabel;
                 if (heroWeatherIcon) heroWeatherIcon.textContent = wmoToEmoji(wCode);
                 if (heroWeatherTemp) heroWeatherTemp.textContent = tMax + '°/' + tMin + '°';
                 if (heroWeatherLight) heroWeatherLight.textContent = sunTimes + ' (' + formatHoursMinutes(daylightMin) + ')';
@@ -5392,12 +5469,18 @@ if ('serviceWorker' in navigator) {
   }
 
   // --- Render drawer ---
+  var _notifTimestamp = new Date().toLocaleTimeString(isEN ? 'en-GB' : 'it-IT', { hour: '2-digit', minute: '2-digit' });
+
   function renderDrawer() {
     drawerList.innerHTML = '';
     var visibleNotifs = notifications.filter(function(n) {
       if (n.ownerOnly && !isOwner) return false;
       return true;
     });
+    if (visibleNotifs.length === 0) {
+      drawerList.innerHTML = '<div style="text-align:center;padding:32px 16px;color:var(--text-muted);font-size:14px;">' + (isEN ? 'No notifications' : 'Nessuna notifica') + '</div>';
+      return;
+    }
     visibleNotifs.forEach(function(n) {
       var item = document.createElement('div');
       item.className = 'notif-item type-' + n.type;
@@ -5405,6 +5488,7 @@ if ('serviceWorker' in navigator) {
       var html = '<span class="notif-item-icon">' + n.icon + '</span>';
       html += '<div class="notif-item-body">';
       html += '<span class="notif-item-text">' + n.text + '</span>';
+      html += '<span class="notif-item-time">' + (isEN ? 'Today ' : 'Oggi ') + _notifTimestamp + '</span>';
       if (n.actionLabel && n.action) {
         html += '<a class="notif-item-link" data-action="go">' + n.actionLabel + ' \u2192</a>';
       }
