@@ -9544,13 +9544,29 @@
     </div>
 </div>
 
-<!-- Import Google Maps Timeline -->
+<!-- Import GPS Data -->
 <div class="pos-admin-section">
-    <h4 class="pos-admin-section-title">🗺️ Data Import</h4>
+    <h4 class="pos-admin-section-title">🗺️ GPS Data Import</h4>
+
+    <!-- Google Drive Auto-Sync -->
+    <div style="padding:12px;background:var(--bg-alt);border-radius:var(--radius);border:1px solid var(--border);margin-bottom:10px;">
+        <p style="font-size:13px;margin:0 0 6px;"><strong>📡 Auto-Sync from Google Drive</strong></p>
+        <p style="font-size:12px;color:var(--text-muted);margin:0 0 8px;">GPX files uploaded by GPS Logger to Drive are automatically imported when you open the app.</p>
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;">
+            <input type="text" id="drive-folder-input" placeholder="Drive folder name (e.g. GPSLogger)" style="flex:1;padding:6px 10px;border-radius:6px;border:1px solid var(--border);font-size:12px;background:var(--bg-main);color:var(--text-color);">
+            <button onclick="saveDriveFolderConfig()" class="pos-btn pos-btn-green" style="font-size:12px;padding:6px 12px;">💾</button>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;">
+            <button onclick="triggerDriveSync()" class="pos-btn pos-btn-blue" style="font-size:12px;padding:6px 12px;">🔄 Sync now</button>
+            <span id="drive-sync-status" style="font-size:11px;color:var(--text-muted);">Not configured</span>
+        </div>
+    </div>
+
+    <!-- Manual import (JSON/GPX) -->
     <div style="padding:12px;background:var(--bg-alt);border-radius:var(--radius);border:1px solid var(--border);">
-        <p style="font-size:13px;margin:0 0 8px;"><strong>Google Maps Timeline</strong></p>
-        <p style="font-size:12px;color:var(--text-muted);margin:0 0 8px;">Import JSON from Google Takeout (multi-day, smart merge)</p>
-        <button id="pos-timeline-import" class="pos-btn pos-btn-blue" style="font-size:13px;padding:8px 16px;">📂 Import Timeline JSON</button>
+        <p style="font-size:13px;margin:0 0 6px;"><strong>📂 Manual Import</strong></p>
+        <p style="font-size:12px;color:var(--text-muted);margin:0 0 8px;">Import GPX or JSON (Google Takeout) files from your device</p>
+        <button id="pos-timeline-import" class="pos-btn pos-btn-blue" style="font-size:13px;padding:8px 16px;">📂 Import GPX / JSON</button>
     </div>
 </div>
 

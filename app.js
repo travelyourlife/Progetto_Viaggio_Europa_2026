@@ -5349,8 +5349,9 @@ if ('serviceWorker' in navigator) {
 })();
 
 
+
 // ═══════════════════════════════════════════════════════════════
-// ─── NOTIFICATION DRAWER SYSTEM (v1.34) ───
+// ─── NOTIFICATION CENTER (v1.42 — Persistent, Firebase-backed) ───
 // ═══════════════════════════════════════════════════════════════
 (function() {
   // --- DOM Elements ---
@@ -5367,42 +5368,45 @@ if ('serviceWorker' in navigator) {
 
   // --- State ---
   var todayStr = new Date().toISOString().slice(0, 10);
-  var NOTIF_KEY = 'viaggio2026_notifs_dismissed';
-  var SEEN_KEY = 'viaggio2026_notifs_seen';
-  var dismissed = {};
-  var seen = {};
-  try { dismissed = JSON.parse(localStorage.getItem(NOTIF_KEY)) || {}; } catch(e) {}
-  try { seen = JSON.parse(localStorage.getItem(SEEN_KEY)) || {}; } catch(e) {}
+  var notifications = []; // Combined: Firebase history + local computed
+  var readState = {}; // { notifId: 'read'|'dismissed' } — from Firebase
+  var firebaseNotifs = []; // From Firebase notifications/history
+  var localNotifs = []; // Computed client-side (milestones, km, etc.)
+  var _notifListenerActive = false;
+  var historyRef = null;
+  var readStateRef = null;
 
-  // Clean old dismissed entries (older than 2 days)
-  var cleanDismissed = {};
-  Object.keys(dismissed).forEach(function(k) {
-    if (dismissed[k] === todayStr || dismissed[k] === yesterday()) cleanDismissed[k] = dismissed[k];
-  });
-  dismissed = cleanDismissed;
-  localStorage.setItem(NOTIF_KEY, JSON.stringify(dismissed));
-
-  function yesterday() {
-    var d = new Date(); d.setDate(d.getDate() - 1);
-    return d.toISOString().slice(0, 10);
+  // --- Firebase paths ---
+  function getHistoryRef() {
+    if (typeof firebase === 'undefined' || !firebase.database) return null;
+    return firebase.database().ref('trips/' + FAMILY_ID + '/notifications/history');
+  }
+  function getReadStateRef(uid) {
+    if (typeof firebase === 'undefined' || !firebase.database || !uid) return null;
+    return firebase.database().ref('trips/' + FAMILY_ID + '/notifications/readState/' + uid);
   }
 
+  // --- Helpers ---
   function isDismissed(id) {
-    return dismissed[id] === todayStr;
+    return readState[id] === 'dismissed';
+  }
+  function isRead(id) {
+    return readState[id] === 'read' || readState[id] === 'dismissed';
   }
 
-  // --- Notification collection ---
-  var notifications = []; // { id, icon, text, type, actionLabel, action, ownerOnly }
-
+  // --- Local notification builder (backward compat) ---
   function addNotif(id, icon, text, type, actionLabel, action, ownerOnly) {
     if (isDismissed(id)) return;
-    notifications.push({ id: id, icon: icon, text: text, type: type || 'info', actionLabel: actionLabel || '', action: action || null, ownerOnly: !!ownerOnly });
+    localNotifs.push({
+      id: id, icon: icon, text: text, type: type || 'info',
+      actionLabel: actionLabel || '', action: action || null,
+      ownerOnly: !!ownerOnly, createdAt: Date.now(), source: 'client'
+    });
   }
 
   // --- Compute trip state (use REAL date, not position override) ---
   var now = new Date();
   now.setHours(0,0,0,0);
-  // Check for admin notification test override (separate from position nav)
   var NOTIF_DAY_OVERRIDE_KEY = 'viaggio2026_notif_day_override';
   var notifDayOverride = localStorage.getItem(NOTIF_DAY_OVERRIDE_KEY);
   var tripDay;
@@ -5485,12 +5489,10 @@ if ('serviceWorker' in navigator) {
       addNotif('zaino-' + todayStr, '\ud83c\udf92', zainoText, 'warning',
         isEN ? 'Open Backpack' : 'Apri Zaino',
         function() { window.switchTabFromHome('zaino'); },
-        true // ownerOnly
+        true
       );
     }
   }
-
-  // --- #6: Weather removed (per user request) ---
 
   // --- #7: Pre-trip checklist reminders (push only, no in-app) ---
   if (diffToStart > 0 && diffToStart <= 30) {
@@ -5512,8 +5514,6 @@ if ('serviceWorker' in navigator) {
       });
     }
   }
-
-  // --- #8: Countdown push (Cloud Scheduler) — removed from client ---
 
   // --- #9: Next stage evening reminder (owner only, during trip) ---
   if (tripDay >= 0 && tripDay < TRIP_DAYS - 1) {
@@ -5539,28 +5539,12 @@ if ('serviceWorker' in navigator) {
             }
           }, 200);
         },
-        true // ownerOnly
+        true
       );
-
-      // Push notification for next stage (once per evening)
-      if (window.queuePushNotification) {
-        var nextPushKey = 'next_stage_push_' + todayStr;
-        if (!sessionStorage.getItem(nextPushKey)) {
-          queuePushNotification('next_stage', {
-            title: isEN ? '\ud83d\udee3\ufe0f Tomorrow: ' + nextRoute : '\ud83d\udee3\ufe0f Domani: ' + nextRoute,
-            body: nextKm ? nextKm + ' \u2014 ' + nextOre : (isEN ? 'Check the details' : 'Controlla i dettagli'),
-            target: 'owner',
-            url: './#tab-giorni',
-            tag: 'next-stage-' + todayStr
-          });
-          sessionStorage.setItem(nextPushKey, '1');
-        }
-      }
     }
   }
 
   // --- #10: Pending access notification (owner only, from Firebase) ---
-  // This is populated asynchronously when auth state changes
   function checkPendingAccess() {
     if (!isOwner) return;
     if (typeof firebase === 'undefined' || !firebase.database) return;
@@ -5571,19 +5555,18 @@ if ('serviceWorker' in navigator) {
         var pendText = isEN
           ? '<strong>' + count + ' pending access request' + (count > 1 ? 's' : '') + '</strong> waiting for approval.'
           : '<strong>' + count + ' richiest' + (count > 1 ? 'e' : 'a') + ' di accesso</strong> in attesa di approvazione.';
-        // Add to notifications array and re-render
-        var exists = notifications.some(function(n) { return n.id === 'pending-access-' + todayStr; });
+        var exists = localNotifs.some(function(n) { return n.id === 'pending-access-' + todayStr; });
         if (!exists) {
-          notifications.push({
+          localNotifs.push({
             id: 'pending-access-' + todayStr,
             icon: '\ud83d\udc65',
             text: pendText,
             type: 'owner',
             actionLabel: isEN ? 'Open Admin' : 'Apri Admin',
-            action: function() {
-              window.switchTabFromHome('admin');
-            },
-            ownerOnly: true
+            action: function() { window.switchTabFromHome('admin'); },
+            ownerOnly: true,
+            createdAt: Date.now(),
+            source: 'client'
           });
           renderDrawer();
           updateBadge();
@@ -5592,34 +5575,34 @@ if ('serviceWorker' in navigator) {
     });
   }
 
-  // --- Zaino push notification (24/20/15/10/3/2/1 days before) ---
-  var zainoDays = [24, 20, 15, 10, 7, 3, 2, 1];
-  if (zainoDays.indexOf(diffToStart) !== -1 && window.queuePushNotification) {
-    var zainoAllCbs = document.querySelectorAll('#tab-zaino input[type="checkbox"][data-idx]');
-    var zainoUnchecked = 0;
-    zainoAllCbs.forEach(function(cb) { if (!cb.checked) zainoUnchecked++; });
-    if (zainoUnchecked > 10) {
-      var zainoPushKey = 'zaino_push_' + todayStr;
-      if (!sessionStorage.getItem(zainoPushKey)) {
-        queuePushNotification('zaino_reminder', {
-          title: isEN ? '\ud83c\udf92 ' + zainoUnchecked + ' items unchecked!' : '\ud83c\udf92 ' + zainoUnchecked + ' oggetti non spuntati!',
-          body: isEN ? 'Your backpack list needs attention before departure.' : 'Lo zaino ha bisogno di attenzione prima della partenza.',
-          target: 'owner',
-          url: './#tab-zaino',
-          tag: 'zaino-' + todayStr
-        });
-        sessionStorage.setItem(zainoPushKey, '1');
-      }
-    }
+  // --- Merge local + Firebase notifications ---
+  function mergeNotifications() {
+    notifications = [];
+    var thirtyDaysAgo = Date.now() - (30 * 86400000);
+    // Add Firebase history notifications
+    firebaseNotifs.forEach(function(n) {
+      if (n.createdAt < thirtyDaysAgo) return;
+      if (isDismissed(n.id)) return;
+      if (n.target === 'owner' && !isOwner) return;
+      notifications.push(n);
+    });
+    // Add local computed notifications
+    localNotifs.forEach(function(n) {
+      if (isDismissed(n.id)) return;
+      var exists = notifications.some(function(x) { return x.id === n.id; });
+      if (!exists) notifications.push(n);
+    });
+    // Sort by createdAt descending (newest first)
+    notifications.sort(function(a, b) { return (b.createdAt || 0) - (a.createdAt || 0); });
   }
 
   // --- Render drawer ---
-  var _notifTimestamp = new Date().toLocaleTimeString(isEN ? 'en-GB' : 'it-IT', { hour: '2-digit', minute: '2-digit' });
-
   function renderDrawer() {
+    mergeNotifications();
     drawerList.innerHTML = '';
     var visibleNotifs = notifications.filter(function(n) {
       if (n.ownerOnly && !isOwner) return false;
+      if (n.target === 'owner' && !isOwner) return false;
       return true;
     });
     if (visibleNotifs.length === 0) {
@@ -5628,17 +5611,33 @@ if ('serviceWorker' in navigator) {
     }
     visibleNotifs.forEach(function(n) {
       var item = document.createElement('div');
-      item.className = 'notif-item type-' + n.type;
+      item.className = 'notif-item type-' + (n.type || 'info');
       item.setAttribute('data-notif-id', n.id);
-      var isUnseen = !seen[n.id];
+      var isUnread = !isRead(n.id);
       var html = '';
-      if (isUnseen) html += '<span class="notif-unread-dot"></span>';
-      html += '<span class="notif-item-icon">' + n.icon + '</span>';
+      if (isUnread) html += '<span class="notif-unread-dot"></span>';
+      html += '<span class="notif-item-icon">' + (n.icon || '\ud83d\udd14') + '</span>';
       html += '<div class="notif-item-body">';
-      html += '<span class="notif-item-text">' + n.text + '</span>';
-      html += '<span class="notif-item-time">' + (isEN ? 'Today ' : 'Oggi ') + _notifTimestamp + '</span>';
+      // Use text for local notifs, title+body for Firebase notifs
+      var displayText = n.text || ('<strong>' + (n.title || '') + '</strong>' + (n.body ? '<br>' + n.body : ''));
+      html += '<span class="notif-item-text">' + displayText + '</span>';
+      // Time display
+      var timeStr = '';
+      if (n.createdAt) {
+        var nDate = new Date(n.createdAt);
+        var nDateStr = nDate.toISOString().slice(0, 10);
+        if (nDateStr === todayStr) {
+          timeStr = (isEN ? 'Today ' : 'Oggi ') + nDate.toLocaleTimeString(isEN ? 'en-GB' : 'it-IT', { hour: '2-digit', minute: '2-digit' });
+        } else {
+          timeStr = nDate.toLocaleDateString(isEN ? 'en-GB' : 'it-IT', { day: 'numeric', month: 'short' }) + ' ' + nDate.toLocaleTimeString(isEN ? 'en-GB' : 'it-IT', { hour: '2-digit', minute: '2-digit' });
+        }
+      }
+      html += '<span class="notif-item-time">' + timeStr + '</span>';
       if (n.actionLabel && n.action) {
         html += '<a class="notif-item-link" data-action="go">' + n.actionLabel + ' \u2192</a>';
+      } else if (n.url && n.url !== './') {
+        var linkLabel = isEN ? 'Open' : 'Apri';
+        html += '<a class="notif-item-link" data-action="url" data-url="' + n.url + '">' + linkLabel + ' \u2192</a>';
       }
       html += '</div>';
       html += '<button class="notif-item-dismiss" aria-label="' + (isEN ? 'Dismiss' : 'Chiudi') + '">&times;</button>';
@@ -5653,12 +5652,25 @@ if ('serviceWorker' in navigator) {
           setTimeout(n.action, 150);
         });
       }
+      var urlLink = item.querySelector('[data-action="url"]');
+      if (urlLink) {
+        urlLink.addEventListener('click', function(e) {
+          e.preventDefault();
+          var url = urlLink.getAttribute('data-url');
+          closeDrawer();
+          if (url.startsWith('./#tab-')) {
+            var tabName = url.replace('./#tab-', '');
+            if (window.switchTabFromHome) window.switchTabFromHome(tabName);
+          } else {
+            window.location.href = url;
+          }
+        });
+      }
 
       // Bind dismiss
       item.querySelector('.notif-item-dismiss').addEventListener('click', function(e) {
         e.stopPropagation();
-        dismissed[n.id] = todayStr;
-        localStorage.setItem(NOTIF_KEY, JSON.stringify(dismissed));
+        markDismissed(n.id);
         item.style.transition = 'opacity 0.3s, transform 0.3s';
         item.style.opacity = '0';
         item.style.transform = 'translateX(30px)';
@@ -5673,12 +5685,23 @@ if ('serviceWorker' in navigator) {
     });
   }
 
+  // --- Read/Dismiss state (Firebase-backed, synced across devices) ---
+  function markRead(id) {
+    if (readState[id]) return;
+    readState[id] = 'read';
+    if (readStateRef) readStateRef.child(id).set('read');
+  }
+  function markDismissed(id) {
+    readState[id] = 'dismissed';
+    if (readStateRef) readStateRef.child(id).set('dismissed');
+  }
+
   // --- Badge update ---
   function updateBadge() {
-    // Count only UNSEEN notifications for the badge
     var unseenCount = notifications.filter(function(n) {
       if (n.ownerOnly && !isOwner) return false;
-      return !seen[n.id];
+      if (n.target === 'owner' && !isOwner) return false;
+      return !isRead(n.id);
     }).length;
     [badge, homeBadge].forEach(function(b) {
       if (!b) return;
@@ -5694,18 +5717,17 @@ if ('serviceWorker' in navigator) {
 
   // --- Drawer open/close ---
   function openDrawer() {
-    // Mark all current notifications as seen
+    // Mark all visible notifications as read (in Firebase)
     notifications.forEach(function(n) {
       if (n.ownerOnly && !isOwner) return;
-      seen[n.id] = todayStr;
+      if (n.target === 'owner' && !isOwner) return;
+      markRead(n.id);
     });
-    localStorage.setItem(SEEN_KEY, JSON.stringify(seen));
     renderDrawer();
     drawer.classList.add('open');
     drawerOverlay.classList.add('open');
     document.body.style.overflow = 'hidden';
     history.pushState({ drawerOpen: true }, '', '');
-    // Badge goes to 0 when drawer is open
     updateBadge();
   }
 
@@ -5735,21 +5757,89 @@ if ('serviceWorker' in navigator) {
     }
   });
 
-  // --- Initial render + badge ---
+  // --- Firebase listener: load notification history + readState ---
+  function startFirebaseListener() {
+    if (_notifListenerActive) return;
+    var user = (typeof firebase !== 'undefined' && firebase.auth) ? firebase.auth().currentUser : null;
+    if (!user || !user.uid) return;
+    if (typeof firebase === 'undefined' || !firebase.database) return;
+
+    _notifListenerActive = true;
+    historyRef = getHistoryRef();
+    readStateRef = getReadStateRef(user.uid);
+
+    // Load readState first (synced across devices)
+    if (readStateRef) {
+      readStateRef.on('value', function(snap) {
+        readState = snap.val() || {};
+        renderDrawer();
+        updateBadge();
+      });
+    }
+
+    // Load notification history (last 100, ordered by createdAt)
+    if (historyRef) {
+      historyRef.orderByChild('createdAt').limitToLast(100).on('value', function(snap) {
+        firebaseNotifs = [];
+        var data = snap.val();
+        if (data) {
+          Object.keys(data).forEach(function(key) {
+            var n = data[key];
+            if (!n || !n.type) return;
+            firebaseNotifs.push({
+              id: key,
+              icon: n.icon || getIconForType(n.type),
+              title: n.title || '',
+              body: n.body || '',
+              text: n.text || '',
+              type: n.type,
+              target: n.target || 'all',
+              url: n.url || './',
+              createdAt: n.createdAt || 0,
+              source: n.source || 'server',
+              ownerOnly: (n.target === 'owner')
+            });
+          });
+        }
+        renderDrawer();
+        updateBadge();
+      });
+    }
+  }
+
+  function getIconForType(type) {
+    var icons = {
+      'access_request': '\ud83d\udc64',
+      'countdown': '\ud83d\udcc5',
+      'zaino_reminder': '\ud83c\udf92',
+      'next_stage': '\ud83d\udee3\ufe0f',
+      'checklist_reminder': '\ud83d\udccb',
+      'chat': '\ud83d\udcac',
+      'km_today': '\ud83d\ude97',
+      'milestone': '\ud83c\udf89',
+      'general': '\ud83d\udd14'
+    };
+    return icons[type] || '\ud83d\udd14';
+  }
+
+  // --- Initial render (local only, before Firebase loads) ---
   renderDrawer();
   updateBadge();
 
-  // --- Listen for auth state to check pending access ---
+  // --- Listen for auth state to start Firebase listener ---
   window.addEventListener('authStateChanged', function() {
     setTimeout(function() {
+      startFirebaseListener();
       checkPendingAccess();
-      // Re-render to show/hide owner-only notifications
       renderDrawer();
       updateBadge();
     }, 500);
   });
 
-  // Also check immediately if already logged in
+  // Start immediately if already logged in
+  if (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser) {
+    startFirebaseListener();
+  }
   if (isOwner) checkPendingAccess();
 
   // Expose for external use
@@ -6467,17 +6557,25 @@ if ('serviceWorker' in navigator) {
   window.showTimelineImport = function() {
     var input = document.createElement('input');
     input.type = 'file';
-    input.accept = '.json,application/json';
+    input.accept = '.json,.gpx,application/json,application/gpx+xml';
     input.addEventListener('change', function() {
       if (!input.files || input.files.length === 0) return;
       var file = input.files[0];
       var reader = new FileReader();
       reader.onload = function(e) {
-        try {
-          var data = JSON.parse(e.target.result);
-          processTimelineData(data);
-        } catch (err) {
-          showToast(isEN ? 'Invalid JSON file' : 'File JSON non valido', 'error');
+        var content = e.target.result;
+        var fileName = file.name.toLowerCase();
+        if (fileName.endsWith('.gpx') || content.trim().startsWith('<?xml') || content.trim().startsWith('<gpx')) {
+          // GPX file
+          processGpxData(content);
+        } else {
+          // JSON file
+          try {
+            var data = JSON.parse(content);
+            processTimelineData(data);
+          } catch (err) {
+            showToast(isEN ? 'Invalid file format' : 'Formato file non valido', 'error');
+          }
         }
       };
       reader.readAsText(file);
@@ -6486,6 +6584,12 @@ if ('serviceWorker' in navigator) {
   };
 
   function processTimelineData(data) {
+    // ─── Records.json format (raw GPS points) ───
+    if (data.locations && Array.isArray(data.locations)) {
+      processRecordsJson(data.locations);
+      return;
+    }
+
     // Google Takeout Timeline format: { timelineObjects: [...] } or { semanticSegments: [...] }
     var segments = [];
 
@@ -6715,6 +6819,528 @@ if ('serviceWorker' in navigator) {
     });
 
     showToast((isEN ? '\u2705 Imported data for ' : '\u2705 Importati dati per ') + imported + (isEN ? ' days' : ' giorni'), 'success');
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  // ─── RECORDS.JSON PARSER (raw GPS points → track polyline) ───
+  // ═══════════════════════════════════════════════════════════════
+  function processRecordsJson(locations) {
+    // Filter: only good accuracy points within trip date range
+    var MAX_ACCURACY = 150; // meters — skip cell tower garbage
+    var tripStartMs = TRIP_START.getTime();
+    var tripEndMs = tripStartMs + TRIP_DAYS * 86400000;
+
+    var pointsByDate = {}; // { 'YYYY-MM-DD': [{ lat, lng, speed, heading, time, accuracy }] }
+    var skipped = 0;
+
+    locations.forEach(function(loc) {
+      // Parse timestamp
+      var timeMs = 0;
+      if (loc.timestamp) {
+        timeMs = new Date(loc.timestamp).getTime();
+      } else if (loc.timestampMs) {
+        timeMs = parseInt(loc.timestampMs, 10);
+      }
+      if (!timeMs || isNaN(timeMs)) { skipped++; return; }
+
+      // Filter by trip date range
+      if (timeMs < tripStartMs || timeMs > tripEndMs) { skipped++; return; }
+
+      // Filter by accuracy
+      var accuracy = loc.accuracy || 9999;
+      if (accuracy > MAX_ACCURACY) { skipped++; return; }
+
+      // Parse coordinates
+      var lat = (loc.latitudeE7 || 0) / 1e7;
+      var lng = (loc.longitudeE7 || 0) / 1e7;
+      if (lat === 0 && lng === 0) { skipped++; return; }
+
+      var dateStr = new Date(timeMs).toISOString().slice(0, 10);
+      if (!pointsByDate[dateStr]) pointsByDate[dateStr] = [];
+
+      pointsByDate[dateStr].push({
+        lat: lat,
+        lng: lng,
+        speed: (loc.velocity || 0) * 3.6, // m/s → km/h
+        heading: loc.heading || 0,
+        time: timeMs,
+        accuracy: accuracy
+      });
+    });
+
+    var dates = Object.keys(pointsByDate).sort();
+    if (dates.length === 0) {
+      showToast(isEN ? 'No GPS points found in trip date range' : 'Nessun punto GPS trovato nel periodo del viaggio', 'error');
+      return;
+    }
+
+    // Sort points within each day by time
+    dates.forEach(function(d) {
+      pointsByDate[d].sort(function(a, b) { return a.time - b.time; });
+    });
+
+    // Show report before importing
+    showRecordsImportReport(pointsByDate, skipped);
+  }
+
+  function showRecordsImportReport(pointsByDate, skipped) {
+    var dates = Object.keys(pointsByDate).sort();
+    var totalPoints = 0;
+    dates.forEach(function(d) { totalPoints += pointsByDate[d].length; });
+
+    var overlay = document.createElement('div');
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;padding:16px;';
+
+    var html = '<div style="background:var(--bg-card);border-radius:16px;max-width:500px;width:100%;max-height:85vh;overflow-y:auto;padding:24px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">';
+    html += '<h3 style="margin:0 0 12px;">' + (isEN ? '\ud83d\udccd Records.json Import' : '\ud83d\udccd Import Records.json') + '</h3>';
+    html += '<p style="font-size:13px;color:var(--text-muted);margin-bottom:8px;">' + (isEN ? 'Raw GPS points for map polyline' : 'Punti GPS grezzi per tracciato mappa') + '</p>';
+    html += '<p style="font-size:13px;margin-bottom:12px;"><strong>' + totalPoints + '</strong> ' + (isEN ? 'points across' : 'punti in') + ' <strong>' + dates.length + '</strong> ' + (isEN ? 'days' : 'giorni') + '</p>';
+    if (skipped > 0) {
+      html += '<p style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">' + (isEN ? 'Skipped ' + skipped + ' points (low accuracy or outside trip)' : 'Scartati ' + skipped + ' punti (bassa precisione o fuori viaggio)') + '</p>';
+    }
+
+    html += '<div style="max-height:35vh;overflow-y:auto;border:1px solid var(--border);border-radius:8px;padding:8px;">';
+    dates.forEach(function(date) {
+      var pts = pointsByDate[date];
+      var tripDay = getTripDayFromDate(date);
+      var dayLabel = tripDay >= 0 ? ((isEN ? 'Day ' : 'G') + tripDay) : date;
+      // Calculate km from points
+      var km = 0;
+      for (var i = 1; i < pts.length; i++) {
+        var d = _haversine(pts[i-1].lat, pts[i-1].lng, pts[i].lat, pts[i].lng);
+        if (d < 5) km += d; // skip jumps > 5km (GPS glitch)
+      }
+      html += '<div style="padding:5px 0;border-bottom:1px solid var(--border);font-size:13px;">';
+      html += '<strong>' + dayLabel + '</strong> (' + date + '): ';
+      html += '\ud83d\udccd ' + pts.length + ' pts';
+      html += ' \u2022 \ud83d\ude90 ' + km.toFixed(1) + ' km';
+      html += '</div>';
+    });
+    html += '</div>';
+
+    html += '<div style="display:flex;gap:10px;margin-top:16px;">';
+    html += '<button id="records-cancel" style="flex:1;padding:12px;border:1px solid var(--border);border-radius:8px;background:var(--bg-alt);cursor:pointer;">' + (isEN ? 'Cancel' : 'Annulla') + '</button>';
+    html += '<button id="records-import" style="flex:2;padding:12px;border:none;border-radius:8px;background:var(--accent);color:#fff;cursor:pointer;font-weight:600;">' + (isEN ? '\u2705 Import GPS Points' : '\u2705 Importa Punti GPS') + '</button>';
+    html += '</div></div>';
+
+    overlay.innerHTML = html;
+    document.body.appendChild(overlay);
+
+    overlay.querySelector('#records-cancel').addEventListener('click', function() { overlay.remove(); });
+    overlay.querySelector('#records-import').addEventListener('click', function() {
+      importRecordsData(pointsByDate);
+      overlay.remove();
+    });
+  }
+
+  function importRecordsData(pointsByDate) {
+    var tracksRef = db.ref('trips/' + FAMILY_ID + '/tracks');
+    var dates = Object.keys(pointsByDate).sort();
+    var imported = 0;
+    var DEDUP_THRESHOLD = 30000; // 30 seconds — merge window
+
+    dates.forEach(function(date) {
+      var tripDay = getTripDayFromDate(date);
+      if (tripDay < 0) return; // Skip dates outside trip range
+
+      var newPoints = pointsByDate[date];
+      var dateRef = tracksRef.child(date + '/points');
+
+      // Load existing points, merge, deduplicate, save
+      dateRef.once('value', function(snap) {
+        var raw = snap.val();
+        var existing = [];
+        if (Array.isArray(raw)) {
+          existing = raw;
+        } else if (raw && typeof raw === 'object') {
+          existing = Object.values(raw);
+        }
+
+        // Merge
+        var merged = existing.concat(newPoints);
+        // Sort by time
+        merged.sort(function(a, b) { return (a.time || 0) - (b.time || 0); });
+
+        // Deduplicate: if two points within DEDUP_THRESHOLD ms, keep better accuracy
+        var deduped = [];
+        merged.forEach(function(pt) {
+          if (deduped.length === 0) { deduped.push(pt); return; }
+          var last = deduped[deduped.length - 1];
+          var timeDiff = Math.abs((pt.time || 0) - (last.time || 0));
+          if (timeDiff < DEDUP_THRESHOLD) {
+            // Keep the one with better accuracy (lower = better)
+            if ((pt.accuracy || 999) < (last.accuracy || 999)) {
+              deduped[deduped.length - 1] = pt;
+            }
+            // Otherwise keep existing (last)
+          } else {
+            deduped.push(pt);
+          }
+        });
+
+        // Clean up: remove accuracy field before saving (not needed in Firebase)
+        var cleaned = deduped.map(function(pt) {
+          return { lat: pt.lat, lng: pt.lng, speed: pt.speed || 0, heading: pt.heading || 0, time: pt.time };
+        });
+
+        // Save merged track
+        dateRef.set(cleaned);
+
+        // Also update dailySummaries km from track points (more accurate than existing)
+        var km = 0;
+        for (var i = 1; i < cleaned.length; i++) {
+          var d = _haversine(cleaned[i-1].lat, cleaned[i-1].lng, cleaned[i].lat, cleaned[i].lng);
+          if (d < 5) km += d; // skip GPS glitches
+        }
+        if (km > 0) {
+          var summRef = db.ref('trips/' + FAMILY_ID + '/dailySummaries/' + date);
+          summRef.once('value', function(sSnap) {
+            var existing = sSnap.val();
+            var existingKm = existing ? (existing.odometerKm || existing.km || 0) : 0;
+            // Only update if GPS track gives more km (it should be more accurate)
+            if (km > existingKm) {
+              summRef.update({ km: Math.round(km * 10) / 10, points: cleaned.length, source: 'records_import' });
+            } else {
+              // At least update point count
+              summRef.update({ points: cleaned.length });
+            }
+          });
+        }
+      });
+
+      imported++;
+    });
+
+    showToast((isEN ? '\u2705 GPS track imported for ' : '\u2705 Tracciato GPS importato per ') + imported + (isEN ? ' days' : ' giorni'), 'success');
+  }
+
+  // Local haversine (km) — same formula as position module
+  function _haversine(lat1, lon1, lat2, lon2) {
+    var R = 6371;
+    var dLat = (lat2 - lat1) * Math.PI / 180;
+    var dLon = (lon2 - lon1) * Math.PI / 180;
+    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1*Math.PI/180) * Math.cos(lat2*Math.PI/180) * Math.sin(dLon/2) * Math.sin(dLon/2);
+    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  // ─── GPX PARSER ───
+  // ═══════════════════════════════════════════════════════════════
+  function processGpxData(xmlString) {
+    var parser = new DOMParser();
+    var doc = parser.parseFromString(xmlString, 'application/xml');
+    var trkpts = doc.querySelectorAll('trkpt');
+    if (!trkpts || trkpts.length === 0) {
+      // Try wpt (waypoints) as fallback
+      trkpts = doc.querySelectorAll('wpt');
+    }
+    if (!trkpts || trkpts.length === 0) {
+      showToast(isEN ? 'No track points found in GPX' : 'Nessun punto trovato nel file GPX', 'error');
+      return;
+    }
+
+    var tripStartMs = TRIP_START.getTime();
+    var tripEndMs = tripStartMs + TRIP_DAYS * 86400000;
+    var pointsByDate = {};
+    var skipped = 0;
+
+    for (var i = 0; i < trkpts.length; i++) {
+      var pt = trkpts[i];
+      var lat = parseFloat(pt.getAttribute('lat'));
+      var lng = parseFloat(pt.getAttribute('lon'));
+      if (!lat || !lng || (lat === 0 && lng === 0)) { skipped++; continue; }
+
+      // Parse time
+      var timeEl = pt.querySelector('time');
+      var timeMs = 0;
+      if (timeEl && timeEl.textContent) {
+        timeMs = new Date(timeEl.textContent).getTime();
+      }
+      if (!timeMs || isNaN(timeMs)) { skipped++; continue; }
+
+      // Filter by trip range
+      if (timeMs < tripStartMs || timeMs > tripEndMs) { skipped++; continue; }
+
+      // Parse optional speed and elevation
+      var speedEl = pt.querySelector('speed');
+      var speed = speedEl ? parseFloat(speedEl.textContent) * 3.6 : 0; // m/s → km/h
+
+      var dateStr = new Date(timeMs).toISOString().slice(0, 10);
+      if (!pointsByDate[dateStr]) pointsByDate[dateStr] = [];
+
+      pointsByDate[dateStr].push({
+        lat: lat,
+        lng: lng,
+        speed: speed,
+        heading: 0,
+        time: timeMs,
+        accuracy: 10 // GPX from dedicated logger = high accuracy
+      });
+    }
+
+    var dates = Object.keys(pointsByDate).sort();
+    if (dates.length === 0) {
+      showToast(isEN ? 'No GPS points found in trip date range' : 'Nessun punto GPS trovato nel periodo del viaggio', 'error');
+      return;
+    }
+
+    // Sort points within each day
+    dates.forEach(function(d) {
+      pointsByDate[d].sort(function(a, b) { return a.time - b.time; });
+    });
+
+    // Reuse the same report + import flow as Records.json
+    showRecordsImportReport(pointsByDate, skipped);
+  }
+  // Make processGpxData available globally for Drive sync
+  window._processGpxData = processGpxData;
+
+  // ═══════════════════════════════════════════════════════════════
+  // ─── GOOGLE DRIVE AUTO-SYNC (GPX files) ───
+  // ═══════════════════════════════════════════════════════════════
+  var DRIVE_SYNC_INTERVAL = 6 * 3600000; // 6 hours between syncs
+  var DRIVE_FOLDER_KEY = 'driveSyncFolder'; // localStorage key for folder name
+  var DRIVE_LAST_SYNC_KEY = 'driveLastSync';
+  var DRIVE_IMPORTED_KEY = 'driveImportedFiles';
+
+  // Initialize Google OAuth2 Token Client for Drive access
+  var _driveTokenClient = null;
+  var _driveTokenCallback = null;
+
+  function initDriveTokenClient() {
+    if (_driveTokenClient) return;
+    if (typeof google === 'undefined' || !google.accounts || !google.accounts.oauth2) {
+      console.warn('[DriveSync] google.accounts.oauth2 not available');
+      return;
+    }
+    _driveTokenClient = google.accounts.oauth2.initTokenClient({
+      client_id: GIS_CLIENT_ID,
+      scope: 'https://www.googleapis.com/auth/drive.readonly',
+      callback: function(tokenResponse) {
+        if (tokenResponse && tokenResponse.access_token) {
+          sessionStorage.setItem('gDriveToken', tokenResponse.access_token);
+          sessionStorage.setItem('gDriveTokenExpiry', String(Date.now() + 3500000));
+          if (_driveTokenCallback) _driveTokenCallback(tokenResponse.access_token);
+        } else {
+          console.warn('[DriveSync] Token request failed', tokenResponse);
+          if (_driveTokenCallback) _driveTokenCallback(null);
+        }
+      }
+    });
+  }
+
+  function getDriveToken(callback) {
+    var stored = sessionStorage.getItem('gDriveToken');
+    var expiry = parseInt(sessionStorage.getItem('gDriveTokenExpiry') || '0', 10);
+    if (stored && Date.now() < expiry) {
+      callback(stored);
+      return;
+    }
+    // Need new token
+    initDriveTokenClient();
+    if (!_driveTokenClient) {
+      callback(null);
+      return;
+    }
+    _driveTokenCallback = callback;
+    _driveTokenClient.requestAccessToken();
+  }
+
+  // Drive sync: list GPX files, download new ones, import
+  function performDriveSync(accessToken, silent) {
+    if (!accessToken) {
+      if (!silent) showToast(isEN ? 'Drive authorization failed' : 'Autorizzazione Drive fallita', 'error');
+      return;
+    }
+
+    var folderName = localStorage.getItem(DRIVE_FOLDER_KEY) || 'GPSLogger';
+    var importedFiles = JSON.parse(localStorage.getItem(DRIVE_IMPORTED_KEY) || '[]');
+
+    // Step 1: Find the folder
+    var folderQuery = "name='" + folderName + "' and mimeType='application/vnd.google-apps.folder' and trashed=false";
+    fetch('https://www.googleapis.com/drive/v3/files?q=' + encodeURIComponent(folderQuery) + '&fields=files(id,name)', {
+      headers: { 'Authorization': 'Bearer ' + accessToken }
+    }).then(function(r) { return r.json(); }).then(function(data) {
+      if (!data.files || data.files.length === 0) {
+        // No folder found — search all Drive for .gpx files
+        searchGpxFiles(accessToken, null, importedFiles, silent);
+        return;
+      }
+      // Use first matching folder
+      searchGpxFiles(accessToken, data.files[0].id, importedFiles, silent);
+    }).catch(function(err) {
+      console.error('[DriveSync] Folder search error:', err);
+      if (!silent) showToast(isEN ? 'Drive sync error' : 'Errore sync Drive', 'error');
+    });
+  }
+
+  function searchGpxFiles(accessToken, folderId, importedFiles, silent) {
+    var query = "name contains '.gpx' and trashed=false";
+    if (folderId) {
+      query += " and '" + folderId + "' in parents";
+    }
+    // Only get files modified in the last 60 days (covers the trip)
+    var sixtyDaysAgo = new Date(Date.now() - 60 * 86400000).toISOString();
+    query += " and modifiedTime > '" + sixtyDaysAgo + "'";
+
+    fetch('https://www.googleapis.com/drive/v3/files?q=' + encodeURIComponent(query) + '&orderBy=modifiedTime desc&pageSize=100&fields=files(id,name,modifiedTime,size)', {
+      headers: { 'Authorization': 'Bearer ' + accessToken }
+    }).then(function(r) { return r.json(); }).then(function(data) {
+      if (!data.files || data.files.length === 0) {
+        if (!silent) showToast(isEN ? 'No new GPX files found on Drive' : 'Nessun nuovo file GPX trovato su Drive', 'info');
+        localStorage.setItem(DRIVE_LAST_SYNC_KEY, String(Date.now()));
+        return;
+      }
+
+      // Filter out already imported files
+      var newFiles = data.files.filter(function(f) {
+        return importedFiles.indexOf(f.id) === -1;
+      });
+
+      if (newFiles.length === 0) {
+        if (!silent) showToast(isEN ? 'All GPX files already imported' : 'Tutti i file GPX già importati', 'info');
+        localStorage.setItem(DRIVE_LAST_SYNC_KEY, String(Date.now()));
+        return;
+      }
+
+      // Download and process each new file
+      var processed = 0;
+      var total = newFiles.length;
+      if (!silent) showToast((isEN ? '📡 Syncing ' : '📡 Sincronizzazione ') + total + (isEN ? ' GPX files from Drive...' : ' file GPX da Drive...'), 'info');
+
+      newFiles.forEach(function(file) {
+        fetch('https://www.googleapis.com/drive/v3/files/' + file.id + '?alt=media', {
+          headers: { 'Authorization': 'Bearer ' + accessToken }
+        }).then(function(r) { return r.text(); }).then(function(gpxContent) {
+          // Parse and import
+          processGpxDataSilent(gpxContent);
+          // Mark as imported
+          importedFiles.push(file.id);
+          localStorage.setItem(DRIVE_IMPORTED_KEY, JSON.stringify(importedFiles));
+          processed++;
+          if (processed === total) {
+            localStorage.setItem(DRIVE_LAST_SYNC_KEY, String(Date.now()));
+            showToast((isEN ? '✅ Synced ' : '✅ Sincronizzati ') + total + (isEN ? ' GPS tracks from Drive' : ' tracciati GPS da Drive'), 'success');
+            updateDriveSyncStatus();
+          }
+        }).catch(function(err) {
+          console.warn('[DriveSync] Error downloading file:', file.name, err);
+          processed++;
+        });
+      });
+    }).catch(function(err) {
+      console.error('[DriveSync] File search error:', err);
+      if (!silent) showToast(isEN ? 'Drive sync error' : 'Errore sync Drive', 'error');
+    });
+  }
+
+  // Silent GPX processing (no report modal — auto-import directly)
+  function processGpxDataSilent(xmlString) {
+    var parser = new DOMParser();
+    var doc = parser.parseFromString(xmlString, 'application/xml');
+    var trkpts = doc.querySelectorAll('trkpt');
+    if (!trkpts || trkpts.length === 0) trkpts = doc.querySelectorAll('wpt');
+    if (!trkpts || trkpts.length === 0) return;
+
+    var tripStartMs = TRIP_START.getTime();
+    var tripEndMs = tripStartMs + TRIP_DAYS * 86400000;
+    var pointsByDate = {};
+
+    for (var i = 0; i < trkpts.length; i++) {
+      var pt = trkpts[i];
+      var lat = parseFloat(pt.getAttribute('lat'));
+      var lng = parseFloat(pt.getAttribute('lon'));
+      if (!lat || !lng) continue;
+
+      var timeEl = pt.querySelector('time');
+      var timeMs = timeEl ? new Date(timeEl.textContent).getTime() : 0;
+      if (!timeMs || isNaN(timeMs)) continue;
+      if (timeMs < tripStartMs || timeMs > tripEndMs) continue;
+
+      var speedEl = pt.querySelector('speed');
+      var speed = speedEl ? parseFloat(speedEl.textContent) * 3.6 : 0;
+
+      var dateStr = new Date(timeMs).toISOString().slice(0, 10);
+      if (!pointsByDate[dateStr]) pointsByDate[dateStr] = [];
+      pointsByDate[dateStr].push({
+        lat: lat, lng: lng, speed: speed, heading: 0, time: timeMs, accuracy: 10
+      });
+    }
+
+    var dates = Object.keys(pointsByDate);
+    if (dates.length === 0) return;
+
+    dates.forEach(function(d) {
+      pointsByDate[d].sort(function(a, b) { return a.time - b.time; });
+    });
+
+    // Import directly (same as importRecordsData but silent)
+    importRecordsData(pointsByDate);
+  }
+
+  // ─── Auto-sync trigger (owner only, on app open) ───
+  function tryAutoSync() {
+    if (!isOwner) return;
+    var lastSync = parseInt(localStorage.getItem(DRIVE_LAST_SYNC_KEY) || '0', 10);
+    if (Date.now() - lastSync < DRIVE_SYNC_INTERVAL) return; // Too recent
+
+    // Check if Drive sync is enabled
+    var folderName = localStorage.getItem(DRIVE_FOLDER_KEY);
+    if (!folderName) return; // Not configured — user must set folder name first
+
+    // Delay sync by 5 seconds to let app load
+    setTimeout(function() {
+      getDriveToken(function(token) {
+        if (token) performDriveSync(token, true); // silent mode
+      });
+    }, 5000);
+  }
+
+  // ─── Manual sync button ───
+  window.triggerDriveSync = function() {
+    getDriveToken(function(token) {
+      performDriveSync(token, false);
+    });
+  };
+
+  // ─── Drive sync status UI update ───
+  function updateDriveSyncStatus() {
+    var statusEl = document.getElementById('drive-sync-status');
+    if (!statusEl) return;
+    var lastSync = parseInt(localStorage.getItem(DRIVE_LAST_SYNC_KEY) || '0', 10);
+    var importedFiles = JSON.parse(localStorage.getItem(DRIVE_IMPORTED_KEY) || '[]');
+    if (lastSync > 0) {
+      var ago = Math.round((Date.now() - lastSync) / 60000);
+      var agoStr = ago < 60 ? (ago + ' min') : (Math.round(ago / 60) + 'h');
+      statusEl.textContent = (isEN ? 'Last sync: ' : 'Ultima sync: ') + agoStr + (isEN ? ' ago' : ' fa') + ' • ' + importedFiles.length + (isEN ? ' files imported' : ' file importati');
+    } else {
+      statusEl.textContent = isEN ? 'Not synced yet' : 'Non ancora sincronizzato';
+    }
+  }
+
+  // ─── Save Drive folder config ───
+  window.saveDriveFolderConfig = function() {
+    var input = document.getElementById('drive-folder-input');
+    if (!input) return;
+    var name = input.value.trim();
+    if (name) {
+      localStorage.setItem(DRIVE_FOLDER_KEY, name);
+      showToast((isEN ? '✅ Drive folder set: ' : '✅ Cartella Drive impostata: ') + name, 'success');
+      updateDriveSyncStatus();
+    }
+  };
+
+  // Trigger auto-sync when auth state confirms owner
+  document.addEventListener('authStateChanged', function() {
+    if (isOwner) {
+      updateDriveSyncStatus();
+      tryAutoSync();
+    }
+  });
+
+  // Also try on DOMContentLoaded (if already logged in from cache)
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    setTimeout(function() { if (isOwner) { updateDriveSyncStatus(); tryAutoSync(); } }, 3000);
   }
 
 })();

@@ -1,5 +1,5 @@
 /**
- * Quo Vadis v10.7 — Firebase Cloud Functions
+ * Quo Vadis v10.8 — Firebase Cloud Functions
  * 
  * 1. sendPushNotification: Listens to notifications/queue in Realtime Database.
  *    When a new notification is queued, sends FCM push to all registered tokens
@@ -7,6 +7,12 @@
  * 
  * 2. dailyCountdown: Cloud Scheduler — runs daily at 8:00 AM Europe/Rome.
  *    Sends countdown push notification to family members until trip starts.
+ * 
+ * 3. notifyNewPendingUser: Triggered when a new user is added to pendingUsers.
+ *    Sends push notification to owner immediately (works even if app is closed).
+ * 
+ * 4. dailyReminders: Cloud Scheduler — runs daily at 8:00 AM Europe/Rome.
+ *    Sends zaino/checklist reminders and next-stage evening reminder.
  * 
  * Deploy: firebase deploy --only functions
  * IMPORTANT: Answer N when asked about deleting Strava functions!
@@ -262,12 +268,68 @@ exports.sendPushNotification = onValueCreated(
     const successCount = await sendMessages(db, targetTokens, notification);
     await markAsSent(db, pushId, successCount);
 
+    // Also write to persistent notification history (for in-app bell)
+    // Skip chat messages from history to avoid clutter
+    if (notification.type !== 'chat') {
+      await db.ref(`trips/${FAMILY_ID}/notifications/history/${pushId}`).set({
+        type: notification.type || 'general',
+        title: notification.title || 'Quo Vadis',
+        body: notification.body || '',
+        icon: notification.icon || '',
+        target: notification.target || 'all',
+        url: notification.url || './',
+        tag: notification.tag || '',
+        createdAt: notification.createdAt || Date.now(),
+        source: notification.source || 'trigger',
+      });
+      console.log(`[Push] Written to notification history: ${pushId}`);
+    }
+
     return null;
   }
 );
 
 // ═══════════════════════════════════════════════════════════════
-// 2. DAILY COUNTDOWN PUSH (Cloud Scheduler — 8:00 AM Rome)
+// 2. NOTIFY NEW PENDING USER (triggered by database write)
+// ═══════════════════════════════════════════════════════════════
+exports.notifyNewPendingUser = onValueCreated(
+  {
+    ref: `trips/${FAMILY_ID}/pendingUsers/{uid}`,
+    instance: "viaggio-europa-2026-default-rtdb",
+    region: "europe-west1",
+  },
+  async (event) => {
+    const userData = event.data.val();
+    const uid = event.params.uid;
+
+    if (!userData) return null;
+
+    const displayName = userData.displayName || "Utente sconosciuto";
+    const email = userData.email || "";
+
+    console.log(`[PendingUser] New pending user: ${displayName} (${email}) — UID: ${uid}`);
+
+    // Queue a push notification to owner
+    const db = getDatabase();
+    await db.ref(`trips/${FAMILY_ID}/notifications/queue`).push({
+      type: "access_request",
+      title: `\ud83d\udc64 Nuova richiesta: ${displayName}`,
+      body: email ? `${email} vuole accedere all'app` : "Un nuovo utente vuole accedere all'app",
+      target: "owner",
+      url: "./#tab-diario",
+      tag: `access-request-${uid.slice(0, 8)}`,
+      createdAt: Date.now(),
+      sent: false,
+      source: "trigger",
+    });
+
+    console.log(`[PendingUser] Queued push notification for owner`);
+    return null;
+  }
+);
+
+// ═══════════════════════════════════════════════════════════════
+// 3. DAILY COUNTDOWN PUSH (Cloud Scheduler — 8:00 AM Rome)
 // ═══════════════════════════════════════════════════════════════
 exports.dailyCountdown = onSchedule(
   {
@@ -326,6 +388,155 @@ exports.dailyCountdown = onSchedule(
     });
 
     console.log(`[Countdown] Queued countdown notification: ${title}`);
+    return null;
+  }
+);
+
+// ═══════════════════════════════════════════════════════════════
+// 4. DAILY REMINDERS (Cloud Scheduler — 8:00 AM Rome)
+//    Zaino + Checklist reminders (pre-trip) and next-stage (during trip)
+// ═══════════════════════════════════════════════════════════════
+exports.dailyReminders = onSchedule(
+  {
+    schedule: "0 8 * * *", // Every day at 8:00 AM
+    timeZone: "Europe/Rome",
+    region: "europe-west1",
+  },
+  async (event) => {
+    const TRIP_START = new Date("2026-06-26T00:00:00+02:00");
+    const TRIP_DAYS = 54;
+    const now = new Date();
+    const todayStr = now.toISOString().slice(0, 10);
+
+    const diffMs = TRIP_START.getTime() - now.getTime();
+    const daysUntilStart = Math.ceil(diffMs / 86400000);
+
+    const db = getDatabase();
+    const notifications = [];
+
+    // ─── PRE-TRIP: Zaino reminder ───
+    const zainoDays = [24, 20, 15, 10, 7, 3, 2, 1];
+    if (daysUntilStart > 0 && zainoDays.includes(daysUntilStart)) {
+      // Read zaino state from Firebase
+      const zainoSnap = await db.ref(`trips/${FAMILY_ID}/zaino`).once("value");
+      const zainoData = zainoSnap.val();
+      if (zainoData && zainoData.checks) {
+        const totalChecks = Object.keys(zainoData.checks).length;
+        // We don't know total items from server, but if less than 50% checked, remind
+        // Simple heuristic: if checked count is available, compare
+        if (totalChecks < 30) {
+          notifications.push({
+            type: "zaino_reminder",
+            title: `\ud83c\udf92 Zaino: controlla prima della partenza!`,
+            body: `Mancano ${daysUntilStart} giorni — assicurati di aver spuntato tutto.`,
+            target: "owner",
+            url: "./#tab-zaino",
+            tag: `zaino-${todayStr}`,
+          });
+        }
+      } else {
+        // No zaino data at all — definitely remind
+        notifications.push({
+          type: "zaino_reminder",
+          title: `\ud83c\udf92 Zaino: ${daysUntilStart} giorni alla partenza!`,
+          body: "Non hai ancora iniziato la lista zaino. Aprila e spunta gli oggetti!",
+          target: "owner",
+          url: "./#tab-zaino",
+          tag: `zaino-${todayStr}`,
+        });
+      }
+    }
+
+    // ─── DURING TRIP: Next stage evening reminder ───
+    // This runs at 8 AM but we also schedule an evening check
+    // Actually, for next-stage we need an evening scheduler
+    // For now, skip — the client-side handles this when app is open in the evening
+    // TODO: Add a separate 19:00 scheduler for next-stage if needed
+
+    // ─── Queue all notifications ───
+    for (const notif of notifications) {
+      await db.ref(`trips/${FAMILY_ID}/notifications/queue`).push({
+        ...notif,
+        createdAt: Date.now(),
+        sent: false,
+        source: "scheduler",
+      });
+      console.log(`[DailyReminders] Queued: ${notif.type} — ${notif.title}`);
+    }
+
+    if (notifications.length === 0) {
+      console.log("[DailyReminders] No reminders to send today");
+    }
+
+    return null;
+  }
+);
+
+// ═══════════════════════════════════════════════════════════════
+// 5. EVENING NEXT-STAGE REMINDER (Cloud Scheduler — 19:00 Rome)
+//    During trip: reminds owner about tomorrow's route
+// ═══════════════════════════════════════════════════════════════
+exports.eveningNextStage = onSchedule(
+  {
+    schedule: "0 19 * * *", // Every day at 7:00 PM
+    timeZone: "Europe/Rome",
+    region: "europe-west1",
+  },
+  async (event) => {
+    const TRIP_START = new Date("2026-06-26T00:00:00+02:00");
+    const TRIP_DAYS = 54;
+    const now = new Date();
+    const todayStr = now.toISOString().slice(0, 10);
+
+    // Calculate trip day
+    const diffMs = now.getTime() - TRIP_START.getTime();
+    const tripDay = Math.floor(diffMs / 86400000);
+
+    // Only during trip and not the last day
+    if (tripDay < 0 || tripDay >= TRIP_DAYS - 1) {
+      console.log("[EveningNextStage] Not during trip or last day — skipping");
+      return null;
+    }
+
+    // Read itinerario from Firebase (stored as static data)
+    // Since itinerario is in data.js (client-side), we hardcode a minimal lookup
+    // or read from a Firebase path if available
+    const db = getDatabase();
+    
+    // Check if itinerario is stored in Firebase
+    const itinSnap = await db.ref(`trips/${FAMILY_ID}/itinerario/${tripDay + 1}`).once("value");
+    let nextRoute = "";
+    let nextKm = "";
+    let nextOre = "";
+
+    if (itinSnap.exists()) {
+      const nextData = itinSnap.val();
+      nextRoute = nextData.tragitto || "";
+      nextKm = nextData.km ? nextData.km + " km" : "";
+      nextOre = nextData.ore || "";
+    }
+
+    // If itinerario not in Firebase, send a generic reminder
+    if (!nextRoute) {
+      nextRoute = `Giorno ${tripDay + 2}`;
+    }
+
+    const title = `\ud83d\udee3\ufe0f Domani: ${nextRoute}`;
+    const body = nextKm ? `${nextKm} — ${nextOre}` : "Controlla i dettagli nell'app";
+
+    await db.ref(`trips/${FAMILY_ID}/notifications/queue`).push({
+      type: "next_stage",
+      title: title,
+      body: body,
+      target: "owner",
+      url: "./#tab-giorni",
+      tag: `next-stage-${todayStr}`,
+      createdAt: Date.now(),
+      sent: false,
+      source: "scheduler",
+    });
+
+    console.log(`[EveningNextStage] Queued: ${title}`);
     return null;
   }
 );
