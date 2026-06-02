@@ -484,7 +484,7 @@ function openMapFullscreen(mapInstance, title) {
             } else {
                 L.polyline(routeCoords, { color: '#2c5282', weight: 2.5, opacity: 0.5, dashArray: '8,6', lineJoin: 'round' }).addTo(fsMap);
             }
-            // Add stop markers
+            // Add stop markers (same style as Itinerario map)
             var stops = []; var prev = null;
             TRIP_COORDS.forEach(function(c, i) {
                 var key = c.lat.toFixed(2) + ',' + c.lng.toFixed(2);
@@ -493,17 +493,69 @@ function openMapFullscreen(mapInstance, title) {
             });
             var tripActive = currentDay >= 0 && currentDay < totalDays;
             stops.forEach(function(stop) {
+                var dayIdx = stop.startIdx;
+                var c = TRIP_COORDS[dayIdx];
                 var color, radius;
                 var isCurrent = tripActive && currentDay >= stop.startIdx && currentDay <= stop.endIdx;
-                if (stop.startIdx === 0 || stop.endIdx === TRIP_COORDS.length - 1) { color = '#e53e3e'; radius = 6; }
-                else if (isCurrent) { color = '#e53e3e'; radius = 7; }
-                else if (tripActive && currentDay > stop.endIdx) { color = '#38a169'; radius = 4; }
-                else { color = '#2c5282'; radius = 4; }
-                var city = typeof isEN !== 'undefined' && isEN ? TRIP_COORDS[stop.startIdx].cityEn : TRIP_COORDS[stop.startIdx].city;
-                L.circleMarker([stop.lat, stop.lng], { radius: radius, fillColor: color, color: '#fff', weight: 1.5, fillOpacity: 0.9 })
-                    .bindPopup('<strong>' + city + '</strong>')
+                if (stop.startIdx === 0 || stop.endIdx === TRIP_COORDS.length - 1) { color = '#e53e3e'; radius = 10; }
+                else if (isCurrent) { color = '#e53e3e'; radius = 12; }
+                else if (tripActive && currentDay > stop.endIdx) { color = '#38a169'; radius = 8; }
+                else { color = '#2c5282'; radius = 8; }
+                var city = typeof isEN !== 'undefined' && isEN ? c.cityEn : c.city;
+                var marker = L.circleMarker([stop.lat, stop.lng], { radius: radius, fillColor: color, color: '#fff', weight: 1.5, fillOpacity: 0.9 })
                     .addTo(fsMap);
+                // Build rich popup (same as Itinerario)
+                var dayLabel, dayRoute, dayDesc, dayFlags;
+                if (typeof itinerario !== 'undefined' && itinerario[dayIdx]) {
+                    if (stop.days.length > 1) {
+                        var firstDay = itinerario[stop.startIdx];
+                        var lastDay = itinerario[stop.endIdx];
+                        dayLabel = (typeof isEN !== 'undefined' && isEN ? firstDay.labelEn : firstDay.label) + '\u2013' + (typeof isEN !== 'undefined' && isEN ? lastDay.labelEn : lastDay.label);
+                        dayDesc = (typeof isEN !== 'undefined' && isEN ? firstDay.descEn : firstDay.desc);
+                        if (stop.days.length > 2) dayDesc += ' ...';
+                        dayFlags = firstDay.paesi;
+                    } else {
+                        var day = itinerario[dayIdx];
+                        dayLabel = typeof isEN !== 'undefined' && isEN ? day.labelEn : day.label;
+                        dayDesc = typeof isEN !== 'undefined' && isEN ? day.descEn : day.desc;
+                        dayFlags = day.paesi;
+                    }
+                    var popupHtml = '<div class="route-popup">' +
+                        '<div class="rp-day">' + dayLabel + ' <span class="rp-flags">' + dayFlags + '</span></div>' +
+                        '<div class="rp-city">' + city + '</div>' +
+                        '<div class="rp-desc">' + dayDesc + '</div>' +
+                        '</div>';
+                    marker.bindPopup(popupHtml, { maxWidth: 200, closeButton: false });
+                } else {
+                    marker.bindPopup('<strong>' + city + '</strong>');
+                }
             });
+            // Add POI markers (same as Itinerario)
+            if (typeof POI_ATTIVITA !== 'undefined' && POI_ATTIVITA.length) {
+                var catColors = { park: '#e53e3e', market: '#dd6b20', nature: '#38a169', museum: '#6b46c1', viewpoint: '#3182ce', festival: '#d53f8c', spa: '#e53e3e' };
+                var catIcons = { park: '\uD83C\uDFA2', market: '\uD83D\uDED2', nature: '\uD83C\uDF32', museum: '\uD83C\uDFDB\uFE0F', viewpoint: '\uD83C\uDF05', festival: '\uD83C\uDF89', spa: '\u2668\uFE0F' };
+                POI_ATTIVITA.forEach(function(poi) {
+                    var name = typeof isEN !== 'undefined' && isEN ? poi.nameEn : poi.name;
+                    var desc = typeof isEN !== 'undefined' && isEN ? poi.descEn : poi.desc;
+                    var price = typeof isEN !== 'undefined' && isEN ? poi.priceEn : poi.price;
+                    var color = catColors[poi.cat];
+                    var poiMarker = L.circleMarker([poi.lat, poi.lng], {
+                        radius: 8,
+                        fillColor: color,
+                        color: '#fff',
+                        weight: 1.5,
+                        fillOpacity: 0.85
+                    }).addTo(fsMap);
+                    var poiPopup = '<div style="max-width:220px">' +
+                        '<strong>' + (catIcons[poi.cat] || '') + ' ' + name + '</strong> ' + poi.country + '<br>' +
+                        '<small>' + desc.substring(0, 120) + (desc.length > 120 ? '...' : '') + '</small><br>' +
+                        '<small>\uD83D\uDCB0 ' + price + '</small><br>' +
+                        '<a href="' + poi.mapsUrl + '" target="_blank" rel="noopener">\uD83D\uDCCD Maps</a>' +
+                        (poi.url ? ' \u00B7 <a href="' + poi.url + '" target="_blank" rel="noopener">\uD83C\uDF10</a>' : '') +
+                    '</div>';
+                    poiMarker.bindPopup(poiPopup);
+                });
+            }
             var bounds = L.latLngBounds(routeCoords);
             setTimeout(function() { fsMap.invalidateSize(); fsMap.fitBounds(bounds, { padding: [30, 30] }); }, 150);
         }
@@ -716,13 +768,13 @@ function initRouteMap() {
             var isCurrent = tripActive && currentDay >= stop.startIdx && currentDay <= stop.endIdx;
 
             if (isStart || isEnd) {
-                color = '#e53e3e'; radius = 6; // Red for start/end
+                color = '#e53e3e'; radius = 10; // Red for start/end
             } else if (isCurrent) {
-                color = '#e53e3e'; radius = 7; // Red pulsing for current
+                color = '#e53e3e'; radius = 12; // Red pulsing for current
             } else if (tripActive && currentDay > stop.endIdx) {
-                color = '#38a169'; radius = 4; // Green for visited
+                color = '#38a169'; radius = 8; // Green for visited
             } else {
-                color = '#2c5282'; radius = 4; // Blue for future
+                color = '#2c5282'; radius = 8; // Blue for future
             }
 
             var marker = L.circleMarker([stop.lat, stop.lng], {
@@ -792,7 +844,7 @@ function initRouteMap() {
                 var price = isEN ? poi.priceEn : poi.price;
                 var color = catColors[poi.cat];
                 var marker = L.circleMarker([poi.lat, poi.lng], {
-                    radius: 5,
+                    radius: 8,
                     fillColor: color,
                     color: '#fff',
                     weight: 1.5,
@@ -1026,6 +1078,25 @@ document.addEventListener('DOMContentLoaded', function() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
         window.dispatchEvent(new CustomEvent('tabSwitched', { detail: tabId }));
+        // Invalidate Leaflet maps when switching to tabs that contain them
+        if (tabId === 'giorni' || tabId === 'posizione') {
+            setTimeout(function() {
+                document.querySelectorAll('.leaflet-container').forEach(function(el) {
+                    var mapObj = el._leaflet_map || el._leaflet;
+                    if (!mapObj) {
+                        // Try to find via Leaflet internal reference
+                        for (var key in el) {
+                            if (key.indexOf('_leaflet') === 0 && el[key] && el[key].invalidateSize) {
+                                el[key].invalidateSize(); break;
+                            }
+                        }
+                    }
+                    if (mapObj && mapObj.invalidateSize) mapObj.invalidateSize();
+                });
+                // Also try the global routeMapInstance
+                if (typeof routeMapInstance !== 'undefined' && routeMapInstance) routeMapInstance.invalidateSize();
+            }, 200);
+        }
         // Tab memory: save last visited tab
         try { localStorage.setItem('qv_lastTab', tabId); } catch(e) {}
     }
@@ -1528,7 +1599,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Total km from Firebase daily summaries + live todayKm
             var totalKmEl = document.getElementById('stat-total-km');
-            var avgKmEl = document.getElementById('stat-avg-km');
             var ref = getFamilyRef('dailySummaries');
             if (ref) {
                 ref.once('value', function(snap) {
@@ -1557,17 +1627,20 @@ document.addEventListener('DOMContentLoaded', function() {
                             });
                             totalKm += Math.max(todaySummaryKm, liveTodayKm);
                             if (totalKmEl) totalKmEl.textContent = totalKm.toFixed(0);
-                            if (avgKmEl) avgKmEl.textContent = days > 0 ? Math.round(totalKm / Math.max(days, 1)) : '0';
+                            // Sync home banner km
+                            var _hsKm = document.getElementById('hs-km');
+                            if (_hsKm) _hsKm.textContent = Math.round(totalKm).toLocaleString('it-IT');
                         });
                     } else {
                         totalKm += Math.max(todaySummaryKm, todayKm);
                         if (totalKmEl) totalKmEl.textContent = totalKm.toFixed(0);
-                        if (avgKmEl) avgKmEl.textContent = days > 0 ? Math.round(totalKm / Math.max(days, 1)) : '0';
+                        // Sync home banner km
+                        var _hsKm2 = document.getElementById('hs-km');
+                        if (_hsKm2) _hsKm2.textContent = Math.round(totalKm).toLocaleString('it-IT');
                     }
                 });
             } else {
                 if (totalKmEl) totalKmEl.textContent = todayKm.toFixed(0);
-                if (avgKmEl) avgKmEl.textContent = '0';
             }
 
             // Update total stops counters
@@ -7313,13 +7386,35 @@ if ('serviceWorker' in navigator) {
     } else {
       statsBar.classList.add('hidden');
     }
-    // Also update Garmin card in Posizione tab
+    // Update totals in Posizione tab
     var posGarminWalk = document.getElementById('pos-garmin-walk');
     var posGarminBike = document.getElementById('pos-garmin-bike');
     var posGarminElev = document.getElementById('pos-garmin-elev');
     if (posGarminWalk) posGarminWalk.textContent = kmFoot.toFixed(1);
     if (posGarminBike) posGarminBike.textContent = kmBike.toFixed(1);
     if (posGarminElev) posGarminElev.textContent = elevation.toLocaleString('it-IT');
+
+    // Update stat card "Km a piedi" (total)
+    var statKmFootTotal = document.getElementById('stat-km-foot-total');
+    if (statKmFootTotal) statKmFootTotal.textContent = kmFoot.toFixed(1);
+
+    // Update daily stats in Posizione tab
+    var today = new Date().toISOString().split('T')[0];
+    var kmFootDay = 0, kmBikeDay = 0, elevDay = 0;
+    Object.values(activities).forEach(function(act) {
+      if (!act || act.date !== today) return;
+      var dist = parseFloat(act.distance) || 0;
+      var elev = parseInt(act.elevationGain) || 0;
+      if (act.category === 'foot') kmFootDay += dist;
+      else if (act.category === 'bike') kmBikeDay += dist;
+      elevDay += elev;
+    });
+    var posGarminWalkDay = document.getElementById('pos-garmin-walk-day');
+    var posGarminBikeDay = document.getElementById('pos-garmin-bike-day');
+    var posGarminElevDay = document.getElementById('pos-garmin-elev-day');
+    if (posGarminWalkDay) posGarminWalkDay.textContent = kmFootDay.toFixed(1);
+    if (posGarminBikeDay) posGarminBikeDay.textContent = kmBikeDay.toFixed(1);
+    if (posGarminElevDay) posGarminElevDay.textContent = elevDay.toLocaleString('it-IT');
   });
 
   // ─── Activity Cards in Posizione tab ───
@@ -7495,6 +7590,92 @@ if ('serviceWorker' in navigator) {
     });
   }
   } // end owner-only block
+})();
+
+
+// ═══════════════════════════════════════════════════════════════
+// ─── v1.30: POSIZIONE (IN VIAGGIO) LOGIN GATE ───
+// ═══════════════════════════════════════════════════════════════
+(function() {
+  if (typeof firebase === 'undefined' || !firebase.database || !firebase.auth) return;
+  if (!FAMILY_ID) return;
+
+  var approvedRef = firebase.database().ref('trips/' + FAMILY_ID + '/approvedUsers');
+  var pendingRef = firebase.database().ref('trips/' + FAMILY_ID + '/pendingUsers');
+
+  // DOM elements
+  var gate = document.getElementById('posizione-gate');
+  var pendingEl = document.getElementById('posizione-pending');
+  var contentEl = document.getElementById('posizione-content');
+  var loginBtn = document.getElementById('posizione-login-btn');
+
+  if (!gate || !contentEl) return;
+
+  // ─── Approval Logic ───
+  function checkPosizioneAccess(user) {
+    if (!user) {
+      gate.style.display = '';
+      pendingEl.style.display = 'none';
+      contentEl.style.display = 'none';
+      return;
+    }
+
+    // Owners always have access
+    if (isOwner) {
+      showPosizioneContent();
+      return;
+    }
+
+    // Check if approved
+    approvedRef.child(user.uid).once('value', function(snap) {
+      if (snap.exists()) {
+        showPosizioneContent();
+      } else {
+        // Check if pending
+        pendingRef.child(user.uid).once('value', function(pSnap) {
+          if (pSnap.exists()) {
+            gate.style.display = 'none';
+            pendingEl.style.display = '';
+            contentEl.style.display = 'none';
+          } else {
+            // Auto-submit request
+            pendingRef.child(user.uid).set({
+              email: user.email || '',
+              displayName: user.displayName || '',
+              photoURL: user.photoURL || '',
+              requestedAt: firebase.database.ServerValue.TIMESTAMP
+            }).then(function() {
+              gate.style.display = 'none';
+              pendingEl.style.display = '';
+              contentEl.style.display = 'none';
+            });
+          }
+        });
+      }
+    });
+  }
+
+  function showPosizioneContent() {
+    gate.style.display = 'none';
+    pendingEl.style.display = 'none';
+    contentEl.style.display = '';
+  }
+
+  // ─── Login Button ───
+  if (loginBtn) {
+    loginBtn.addEventListener('click', function() {
+      doGoogleSignIn();
+    });
+  }
+
+  // ─── Listen for auth changes ───
+  window.addEventListener('authStateChanged', function(e) {
+    var user = e.detail.user;
+    checkPosizioneAccess(user);
+  });
+
+  // Initial check (in case auth already resolved)
+  if (firebaseUser) checkPosizioneAccess(firebaseUser);
 })();
 
 

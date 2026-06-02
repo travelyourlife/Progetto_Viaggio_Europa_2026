@@ -53,7 +53,7 @@
     <link rel="apple-touch-icon" sizes="152x152" href="./icon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="./icon.png">
     <link rel="apple-touch-icon" sizes="167x167" href="./icon.png">
-    <title>Viaggio Europa 2026 — V1.29</title>
+    <title>Viaggio Europa 2026 — V1.30</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <link rel="stylesheet" href="style.css">
 <!-- Firebase SDK (compat mode for single-file app) -->
@@ -69,7 +69,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = '1.29';
+  var EXPECTED_VERSION = '1.30';
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
   var r = false;
@@ -320,19 +320,11 @@
     </div>
 </div>
 
-<!-- ─── Activity Stats Bar (Strava/Garmin) ─── -->
-<div class="activity-stats-bar hidden" id="activityStatsBar">
-    <span class="as-chip"><span class="as-item">🥾 <span class="as-value" id="as-km-foot">0</span> km a piedi</span></span>
-    <span class="as-chip"><span class="as-item">🚴 <span class="as-value" id="as-km-bike">0</span> km in bici</span></span>
-    <span class="as-chip hidden"><span class="as-item">🚣 <span class="as-value" id="as-km-water">0</span> km in acqua</span></span>
-    <span class="as-chip"><span class="as-item">⛰️ <span class="as-value" id="as-elevation">0</span>m dislivello</span></span>
-</div>
-
 <!-- ─── In-App Notification Banners ─── -->
 <div id="notif-container" class="notif-container"></div>
 
 <!-- ─── Route Map Banner (unified with stats) ─── -->
-<div id="home-route-banner" class="home-route-banner" style="margin:12px 0;padding:14px 18px;background:linear-gradient(135deg,#1a365d,#2c5282);border-radius:14px;color:white;display:flex;align-items:center;justify-content:space-between;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.15);" onclick="try { window.openMapFullscreen(null, '🗺️ Il nostro percorso'); } catch(e) { console.error('[Banner]', e); alert('Errore apertura mappa: ' + e.message); }">
+<div id="home-route-banner" class="home-route-banner" style="margin:4px 0;padding:14px 18px;background:linear-gradient(135deg,#1a365d,#2c5282);border-radius:14px;color:white;display:flex;align-items:center;justify-content:space-between;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.15);" onclick="try { window.openMapFullscreen(null, '🗺️ Il nostro percorso'); } catch(e) { console.error('[Banner]', e); alert('Errore apertura mappa: ' + e.message); }">
   <div style="display:flex;align-items:center;gap:10px;">
     <span style="font-size:24px;">🗺️</span>
     <div>
@@ -340,7 +332,15 @@
       <div id="route-banner-stats" style="font-size:12px;opacity:0.8;">G <span id="hs-day">0</span>/54 · <span id="hs-km">0</span> km · <span id="hs-countries">0</span>/13 paesi · <span id="hs-checkins">0</span> check-in</div>
     </div>
   </div>
-  <span style="font-size:20px;opacity:0.7;">⛶</span>
+    <span style="font-size:20px;opacity:0.7;">⛶</span>
+</div>
+
+<!-- ─── Activity Stats Bar (totale viaggio) ─── -->
+<div class="activity-stats-bar hidden" id="activityStatsBar">
+    <span class="as-chip"><span class="as-item">🥾 <span class="as-value" id="as-km-foot">0</span> km a piedi</span></span>
+    <span class="as-chip"><span class="as-item">🚴 <span class="as-value" id="as-km-bike">0</span> km in bici</span></span>
+    <span class="as-chip hidden"><span class="as-item">🚣 <span class="as-value" id="as-km-water">0</span> km in acqua</span></span>
+    <span class="as-chip"><span class="as-item">⛰️ <span class="as-value" id="as-elevation">0</span>m dislivello</span></span>
 </div>
 
 <div class="home-grid">
@@ -9343,6 +9343,26 @@
 
 <h1 style="text-align:center;">🚐 In viaggio</h1>
 
+<!-- Gate: login required -->
+<div id="posizione-gate" class="diario-gate">
+  <div class="diario-gate-icon">🔒</div>
+  <p class="diario-gate-text">Accedi con Google per vedere posizione live, mappa e statistiche del viaggio.</p>
+  <button id="posizione-login-btn" class="diario-login-btn">
+    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="" width="20" height="20">
+    Accedi con Google
+  </button>
+</div>
+
+<!-- Gate: pending approval -->
+<div id="posizione-pending" class="diario-gate" style="display:none;">
+  <div class="diario-gate-icon">⏳</div>
+  <p class="diario-gate-text">Richiesta inviata! Attendi l'approvazione da parte degli organizzatori.</p>
+  <p class="diario-gate-sub">Riceverai accesso appena confermato.</p>
+</div>
+
+<!-- Content: visible only to approved users -->
+<div id="posizione-content" style="display:none;">
+
 <!-- ─── STATUS CARD (visibile a tutti) ─── -->
 <div class="pos-info-card" id="pos-info-card">
     <div class="pos-info-row">
@@ -9405,8 +9425,8 @@
     </div>
     <div class="pos-stat-card-v2">
         <span class="pos-stat-icon">🥾</span>
-        <div class="pos-stat-number" id="stat-avg-km">0</div>
-        <div class="pos-stat-label">Km/giorno</div>
+        <div class="pos-stat-number" id="stat-km-foot-total">0</div>
+        <div class="pos-stat-label">Km a piedi</div>
     </div>
     <div class="pos-stat-card-v2">
         <span class="pos-stat-icon">📊</span>
@@ -9424,6 +9444,13 @@
 <!-- ─── ATTIVITÀ SPORTIVE (chip colorati) ─── -->
 <div class="pos-garmin-card" id="pos-garmin-card">
     <h3 class="pos-section-title">🏃 Attività sportive</h3>
+    <div class="pos-garmin-sub-label" style="font-size:12px;color:var(--text-muted);margin-bottom:4px;">Oggi</div>
+    <div class="pos-garmin-chips">
+        <span class="pos-garmin-chip pos-chip-green">🥾 <strong id="pos-garmin-walk-day">0</strong> km a piedi</span>
+        <span class="pos-garmin-chip pos-chip-blue">🚴 <strong id="pos-garmin-bike-day">0</strong> km in bici</span>
+        <span class="pos-garmin-chip pos-chip-orange">⛰️ <strong id="pos-garmin-elev-day">0</strong>m dislivello</span>
+    </div>
+    <div class="pos-garmin-sub-label" style="font-size:12px;color:var(--text-muted);margin:8px 0 4px;">Totale viaggio</div>
     <div class="pos-garmin-chips">
         <span class="pos-garmin-chip pos-chip-green">🥾 <strong id="pos-garmin-walk">0</strong> km a piedi</span>
         <span class="pos-garmin-chip pos-chip-blue">🚴 <strong id="pos-garmin-bike">0</strong> km in bici</span>
@@ -9677,10 +9704,10 @@
 <tr>
 <td data-label="Giorni"><a href="#g46">G46</a>-<a href="#g48">G48</a> (11-13/08)</td>
 <td data-label="Zona">Palencia 🇪🇸</td>
-<td data-label="T max"><strong>29-31°C</strong></td>
+<td data-label="T max">29-31°C</td>
 <td data-label="T min">13-14°C</td>
-<td data-label="Pioggia (mm/mese)"><strong>15</strong></td>
-<td data-label="Gg pioggia"><strong>2-3</strong></td>
+<td data-label="Pioggia (mm/mese)">15</td>
+<td data-label="Gg pioggia">2-3</td>
 <td data-label="Ore luce">14h</td>
 <td data-label="Rischio meteo">☀️ Cielo sereno</td>
 </tr>
@@ -10014,6 +10041,8 @@
 
 </details>
 </div>
+
+</div><!-- /posizione-content -->
 
 </section>
 
