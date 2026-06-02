@@ -4748,8 +4748,11 @@ if ('serviceWorker' in navigator) {
   var testPushBtn = document.getElementById('test-push-btn');
   if (testPushBtn) {
     testPushBtn.addEventListener('click', function() {
-      if (!isOwner) { showToast('Solo owner', 'error'); return; }
-      if (!db) { showToast('Firebase non disponibile', 'error'); return; }
+      console.log('[TestPush] clicked. isOwner=' + isOwner + ', db=' + !!db);
+      if (!isOwner) { alert('Solo owner possono testare le notifiche.'); return; }
+      if (!db) { alert('Firebase non disponibile. Sei offline?'); return; }
+      testPushBtn.disabled = true;
+      testPushBtn.textContent = '⏳ Invio...';
       var now = new Date();
       var testNotif = {
         type: 'test_push',
@@ -4763,9 +4766,15 @@ if ('serviceWorker' in navigator) {
         source: 'manual_test'
       };
       db.ref('trips/' + FAMILY_ID + '/notifications/queue').push(testNotif).then(function() {
-        showToast('✅ Notifica di test inviata alla coda Firebase', 'success');
+        testPushBtn.textContent = '✅ Inviata!';
+        testPushBtn.style.background = '#27ae60';
+        if (window.showToast) showToast('✅ Notifica di test inviata alla coda Firebase', 'success');
+        setTimeout(function() { testPushBtn.textContent = '🔔 Test Push'; testPushBtn.style.background = ''; testPushBtn.disabled = false; }, 3000);
       }).catch(function(err) {
-        showToast('❌ Errore: ' + err.message, 'error');
+        testPushBtn.textContent = '❌ Errore';
+        testPushBtn.style.background = '#e74c3c';
+        alert('Errore invio: ' + err.message);
+        setTimeout(function() { testPushBtn.textContent = '🔔 Test Push'; testPushBtn.style.background = ''; testPushBtn.disabled = false; }, 3000);
       });
     });
   }
