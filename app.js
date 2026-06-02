@@ -1017,12 +1017,24 @@ document.addEventListener('DOMContentLoaded', function() {
     var sideMenu = document.getElementById('sideMenu');
     var menuOverlay = document.getElementById('menuOverlay');
 
-    function openMenu() { sideMenu.classList.add('open'); menuOverlay.classList.add('open'); }
-    function closeMenu() { sideMenu.classList.remove('open'); menuOverlay.classList.remove('open'); }
+    function openMenu() {
+        sideMenu.classList.add('open'); menuOverlay.classList.add('open');
+        history.pushState({ menuOpen: true }, '', '');
+    }
+    function closeMenu() {
+        sideMenu.classList.remove('open'); menuOverlay.classList.remove('open');
+    }
 
     document.getElementById('menuOpen').addEventListener('click', openMenu);
-    document.getElementById('menuClose').addEventListener('click', closeMenu);
-    menuOverlay.addEventListener('click', closeMenu);
+    document.getElementById('menuClose').addEventListener('click', function() {
+        closeMenu();
+        // Pop the menu state we pushed
+        if (history.state && history.state.menuOpen) history.back();
+    });
+    menuOverlay.addEventListener('click', function() {
+        closeMenu();
+        if (history.state && history.state.menuOpen) history.back();
+    });
 
     // ─── Nav visibility ───
     function updateNavVisibility(tabId) {
@@ -1176,10 +1188,40 @@ document.addEventListener('DOMContentLoaded', function() {
             if (lastTab && document.getElementById('tab-' + lastTab)) { switchTab(lastTab); }
         } catch(e) {}
     }
-    window.addEventListener('popstate', function() {
-        var h = window.location.hash;
-        if (h.startsWith('#tab-')) switchTab(h.replace('#tab-', ''));
-        else if (h) { var tid = h.substring(1); var tt = anchorTabMap[tid]; if (tt) switchTab(tt, tid); }
+    window.addEventListener('popstate', function(e) {
+        // Priority 1: Close overlays
+        if (sideMenu.classList.contains('open')) {
+            closeMenu();
+            return;
+        }
+        var notifDrawer = document.getElementById('notifDrawer');
+        if (notifDrawer && notifDrawer.classList.contains('open')) {
+            var notifOverlay = document.getElementById('notifDrawerOverlay');
+            notifDrawer.classList.remove('open');
+            if (notifOverlay) notifOverlay.classList.remove('open');
+            document.body.style.overflow = '';
+            return;
+        }
+        var altroSheetEl = document.getElementById('altroSheet');
+        if (altroSheetEl && altroSheetEl.classList.contains('open')) {
+            altroSheetEl.classList.remove('open');
+            var altroOv = document.getElementById('altroOverlay');
+            if (altroOv) altroOv.classList.remove('open');
+            return;
+        }
+
+        // Priority 2: If not on Home, go to Home
+        var activeSection = document.querySelector('.tab-content.active');
+        var currentTabId = activeSection ? activeSection.id.replace('tab-', '') : 'home';
+        if (currentTabId !== 'home') {
+            switchTab('home');
+            // Replace state so next back exits the app
+            history.replaceState(null, '', '#tab-home');
+            return;
+        }
+
+        // Priority 3: On Home — let the browser handle (exits app / goes to previous page)
+        // Do nothing — default browser behavior will exit or go back
     });
 
     // ─── Wrap tables ───
@@ -5549,6 +5591,7 @@ if ('serviceWorker' in navigator) {
     drawer.classList.add('open');
     drawerOverlay.classList.add('open');
     document.body.style.overflow = 'hidden';
+    history.pushState({ drawerOpen: true }, '', '');
   }
 
   function closeDrawer() {
@@ -5560,12 +5603,21 @@ if ('serviceWorker' in navigator) {
   // Bell click handlers
   if (bellBtn) bellBtn.addEventListener('click', function() { openDrawer(); });
   if (homeBellBtn) homeBellBtn.addEventListener('click', function() { openDrawer(); });
-  if (drawerClose) drawerClose.addEventListener('click', function() { closeDrawer(); });
-  if (drawerOverlay) drawerOverlay.addEventListener('click', function() { closeDrawer(); });
+  if (drawerClose) drawerClose.addEventListener('click', function() {
+    closeDrawer();
+    if (history.state && history.state.drawerOpen) history.back();
+  });
+  if (drawerOverlay) drawerOverlay.addEventListener('click', function() {
+    closeDrawer();
+    if (history.state && history.state.drawerOpen) history.back();
+  });
 
   // Close on Escape key
   document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape' && drawer.classList.contains('open')) closeDrawer();
+    if (e.key === 'Escape' && drawer.classList.contains('open')) {
+      closeDrawer();
+      if (history.state && history.state.drawerOpen) history.back();
+    }
   });
 
   // --- Initial render + badge ---
@@ -7541,6 +7593,7 @@ if ('serviceWorker' in navigator) {
   function openAltro() {
     altroOverlay.classList.add('open');
     altroSheet.classList.add('open');
+    history.pushState({ altroOpen: true }, '', '');
     if (window.haptic) window.haptic(10);
   }
 
@@ -7553,12 +7606,16 @@ if ('serviceWorker' in navigator) {
     e.stopPropagation();
     if (altroSheet.classList.contains('open')) {
       closeAltro();
+      if (history.state && history.state.altroOpen) history.back();
     } else {
       openAltro();
     }
   });
 
-  altroOverlay.addEventListener('click', closeAltro);
+  altroOverlay.addEventListener('click', function() {
+    closeAltro();
+    if (history.state && history.state.altroOpen) history.back();
+  });
 
   // Handle item clicks inside Altro sheet
   var altroItems = altroSheet.querySelectorAll('.altro-item[data-tab]');
