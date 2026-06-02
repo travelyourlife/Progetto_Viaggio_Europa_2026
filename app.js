@@ -131,7 +131,15 @@ if (typeof TRIP_END === 'undefined') { var TRIP_END = new Date(TRIP_START.getTim
 
 function getCurrentTripDay() {
   var override = localStorage.getItem(KEYS.DAY_OVERRIDE);
-  if (override !== null && override !== '') return parseInt(override, 10);
+  if (override !== null && override !== '') {
+    var parsed = parseInt(override, 10);
+    if (!isNaN(parsed)) return parsed;
+    // Handle JSON object format {day: N, ts: ...}
+    try {
+      var obj = JSON.parse(override);
+      if (obj && typeof obj.day === 'number') return obj.day;
+    } catch(e) {}
+  }
   var now = new Date();
   var diff = Math.floor((now - TRIP_START) / 86400000);
   return Math.max(-1, Math.min(diff, TRIP_DAYS - 1));
@@ -212,6 +220,24 @@ function doGoogleSignIn(successCb) {
 }
 
 
+// ─── Global Ban Screen ───
+function showGlobalBanScreen() {
+  var overlay = document.createElement('div');
+  overlay.id = 'global-ban-overlay';
+  overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;z-index:99999;background:var(--bg-main,#f0f4f8);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;text-align:center;';
+  overlay.innerHTML = '<div style="font-size:64px;margin-bottom:16px;">🚫</div>'
+    + '<h2 style="margin:0 0 12px;color:var(--text-color,#1a1a2e);">' + (isEN ? 'Access Revoked' : 'Accesso revocato') + '</h2>'
+    + '<p style="color:var(--text-muted,#64748b);max-width:320px;">' + (isEN ? 'Your access to this app has been revoked by the organizers. If you think this is a mistake, contact the trip organizers.' : 'Il tuo accesso a questa app \u00e8 stato revocato dagli organizzatori. Se pensi sia un errore, contatta gli organizzatori del viaggio.') + '</p>';
+  document.body.appendChild(overlay);
+  // Hide everything else
+  var main = document.querySelector('main');
+  if (main) main.style.display = 'none';
+  var topBar = document.getElementById('topBar');
+  if (topBar) topBar.style.display = 'none';
+  var bottomNav = document.querySelector('.bottom-nav');
+  if (bottomNav) bottomNav.style.display = 'none';
+}
+
 // ─── Owner/Viewer Auth State (V4.8) ───
 // Viewers see everything read-only without login. Owners (Google Auth) can write.
 var isOwner = false;
@@ -226,6 +252,16 @@ function checkOwnerStatus() {
         isOwner = false;
         if (user) console.info('[Auth] Authenticated but not owner: ' + user.email);
       }
+      // ─── Global Ban Check ───
+      if (user && !isOwner && typeof firebase !== 'undefined' && firebase.database) {
+        firebase.database().ref('trips/' + FAMILY_ID + '/bannedUsers/' + user.uid).once('value', function(banSnap) {
+          if (banSnap.exists()) {
+            window._userGloballyBanned = true;
+            showGlobalBanScreen();
+          }
+        });
+      }
+
       window.dispatchEvent(new CustomEvent('authStateChanged', { detail: { user: user, isOwner: isOwner } }));
 
       // ─── Owner: save profile to approvedUsers (so Gestisci shows name, not UID) ───
@@ -3243,7 +3279,8 @@ document.addEventListener('DOMContentLoaded', function() {
             box.style.display = 'block';
             btn.textContent = '\uD83D\uDCC5 Vai a G' + tripDay + ' (oggi)';
             btn.addEventListener('click', function() {
-                var target = document.getElementById('g' + tripDay);
+                var currentDay = getCurrentTripDay();
+                var target = document.getElementById('g' + currentDay);
                 if (target) {
                     // Open accordion if target is an accordion-header
                     if (target.classList.contains('accordion-header') && !target.classList.contains('open')) {
@@ -3251,7 +3288,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         var body = target.nextElementSibling;
                         if (body && body.classList.contains('accordion-body')) body.classList.add('open');
                     }
-                    setTimeout(function() { target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 50);
+                    // Scroll with offset for top bar
+                    setTimeout(function() {
+                        var topBarH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--top-bar-height')) || 56;
+                        var y = target.getBoundingClientRect().top + window.pageYOffset - topBarH - 16;
+                        window.scrollTo({ top: y, behavior: 'smooth' });
+                    }, 100);
                 }
             });
         }
@@ -4533,8 +4575,10 @@ if ('serviceWorker' in navigator) {
     function getDayIndex() {
         // Respect Day Override from localStorage
         var override = localStorage.getItem(KEYS.DAY_OVERRIDE);
-        if (override !== null && override !== '' && parseInt(override, 10) > 0) {
-            return parseInt(override, 10);
+        if (override !== null && override !== '') {
+            var p = parseInt(override, 10);
+            if (!isNaN(p) && p > 0) return p;
+            try { var obj = JSON.parse(override); if (obj && typeof obj.day === 'number' && obj.day > 0) return obj.day; } catch(e) {}
         }
         var now = new Date();
         if (now < TRIP_START) {
@@ -4582,7 +4626,9 @@ if ('serviceWorker' in navigator) {
 
         var now = new Date();
         var overrideVal = localStorage.getItem(KEYS.DAY_OVERRIDE);
-        var isDuringTrip = (now >= TRIP_START && now <= TRIP_END) || (overrideVal !== null && parseInt(overrideVal, 10) > 0);
+        var overrideDay = 0;
+        if (overrideVal) { var _p = parseInt(overrideVal, 10); if (!isNaN(_p)) overrideDay = _p; else { try { var _o = JSON.parse(overrideVal); if (_o && typeof _o.day === 'number') overrideDay = _o.day; } catch(e){} } }
+        var isDuringTrip = (now >= TRIP_START && now <= TRIP_END) || overrideDay > 0;
 
         // Switch hero card layout
         if (isDuringTrip && heroPreTrip && heroDuringTrip) {
@@ -5521,13 +5567,9 @@ if ('serviceWorker' in navigator) {
             icon: '\ud83d\udc65',
             text: pendText,
             type: 'owner',
-            actionLabel: isEN ? 'Manage access' : 'Gestisci accessi',
+            actionLabel: isEN ? 'Open Admin' : 'Apri Admin',
             action: function() {
-              window.switchTabFromHome('diario');
-              setTimeout(function() {
-                var manageBtn = document.getElementById('diario-manage-users');
-                if (manageBtn) manageBtn.click();
-              }, 300);
+              window.switchTabFromHome('admin');
             },
             ownerOnly: true
           });
@@ -7471,10 +7513,6 @@ if ('serviceWorker' in navigator) {
   // ─── Admin Panel ───
   var USERS_REF = db.ref('chat/users');
   var BANNED_REF = db.ref('chat/banned');
-  var adminBtn = document.getElementById('chat-admin-btn');
-  var adminPanel = document.getElementById('chat-admin-panel');
-  var adminClose = document.getElementById('chat-admin-close');
-  var adminList = document.getElementById('chat-admin-list');
   var DRIVER_UID_CHAT = (typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.length > 0) ? OWNER_UIDS[0] : null;
   var bannedUIDs = {};
 
@@ -7513,11 +7551,9 @@ if ('serviceWorker' in navigator) {
     USERS_REF.child(user.uid).update({ lastSeen: firebase.database.ServerValue.TIMESTAMP });
   }
 
-  // Show admin button only for driver
+  // Show admin button only for driver (gear removed in v1.38 - admin is now centralized)
   function checkAdmin() {
-    if (chatUser && DRIVER_UID_CHAT && chatUser.uid === DRIVER_UID_CHAT) {
-      if (adminBtn) adminBtn.style.display = 'inline-block';
-    }
+    // No-op: gear button removed from chat in v1.38
   }
 
   // Check if user is banned before sending
@@ -7525,67 +7561,7 @@ if ('serviceWorker' in navigator) {
     return !!bannedUIDs[uid];
   }
 
-  // Render admin panel
-  function renderAdminPanel() {
-    if (!adminList) return;
-    adminList.innerHTML = '<p style="color:var(--text-muted);font-size:13px;">Caricamento...</p>';
-    USERS_REF.once('value', function(snap) {
-      var users = snap.val();
-      if (!users) { adminList.innerHTML = '<p>Nessun utente registrato.</p>'; return; }
-      var html = '<table class="admin-table"><thead><tr><th></th><th>' + (isEN ? 'Name' : 'Nome') + '</th><th>Email</th><th>' + (isEN ? 'Last seen' : 'Ultimo accesso') + '</th><th>' + (isEN ? 'Device' : 'Dispositivo') + '</th><th>' + (isEN ? 'Msgs' : 'Msg') + '</th><th></th></tr></thead><tbody>';
-      var uids = Object.keys(users);
-      uids.forEach(function(uid) {
-        var u = users[uid];
-        var isBanned = !!bannedUIDs[uid];
-        var lastSeen = u.lastSeen ? new Date(u.lastSeen).toLocaleString(isEN ? 'en-GB' : 'it-IT', {day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : '—';
-        var deviceIcon = u.device === 'mobile' ? '📱' : '💻';
-        var photo = u.photo ? '<img src="' + u.photo + '" class="admin-avatar">' : '👤';
-        var banBtn = uid === DRIVER_UID_CHAT ? '' : (isBanned ? '<button class="admin-unban-btn" data-uid="' + uid + '">' + (isEN ? 'Unban' : 'Sblocca') + '</button>' : '<button class="admin-ban-btn" data-uid="' + uid + '">' + (isEN ? 'Ban' : 'Blocca') + '</button>');
-        html += '<tr class="' + (isBanned ? 'admin-row-banned' : '') + '">';
-        html += '<td>' + photo + '</td>';
-        html += '<td>' + (u.name || 'Anonimo') + '</td>';
-        html += '<td class="admin-email">' + (u.email || '—') + '</td>';
-        html += '<td>' + lastSeen + '</td>';
-        html += '<td>' + deviceIcon + ' ' + (u.browser || '') + '</td>';
-        html += '<td>' + (u.msgCount || 0) + '</td>';
-        html += '<td>' + banBtn + '</td>';
-        html += '</tr>';
-      });
-      html += '</tbody></table>';
-      adminList.innerHTML = html;
-
-      // Attach ban/unban handlers
-      adminList.querySelectorAll('.admin-ban-btn').forEach(function(btn) {
-        btn.addEventListener('click', function() {
-          var uid = btn.dataset.uid;
-          showConfirm(isEN ? 'Ban this user?' : 'Bloccare questo utente?', function() {
-            BANNED_REF.child(uid).set(true);
-            renderAdminPanel();
-          });
-        });
-      });
-      adminList.querySelectorAll('.admin-unban-btn').forEach(function(btn) {
-        btn.addEventListener('click', function() {
-          var uid = btn.dataset.uid;
-          BANNED_REF.child(uid).remove();
-          renderAdminPanel();
-        });
-      });
-    });
-  }
-
-  // Admin button click
-  if (adminBtn) {
-    adminBtn.addEventListener('click', function() {
-      adminPanel.style.display = 'block';
-      renderAdminPanel();
-    });
-  }
-  if (adminClose) {
-    adminClose.addEventListener('click', function() {
-      adminPanel.style.display = 'none';
-    });
-  }
+  // (Chat admin panel removed in v1.38 — user management moved to centralized admin)
 
   // Override updateChatAuth to also track profile and check admin
   var origUpdateChatAuth = updateChatAuth;
@@ -8095,14 +8071,8 @@ if ('serviceWorker' in navigator) {
   var pendingEl = document.getElementById('diario-pending');
   var contentEl = document.getElementById('diario-content');
   var loginBtn = document.getElementById('diario-login-btn');
-  var ownerToolbar = document.getElementById('diario-owner-toolbar');
   var addEntryBtn = document.getElementById('diario-add-entry');
-  var manageUsersBtn = document.getElementById('diario-manage-users');
   var timelineEl = document.getElementById('diario-timeline');
-  var usersModal = document.getElementById('diario-users-modal');
-  var modalClose = document.getElementById('diario-modal-close');
-  var pendingListEl = document.getElementById('diario-pending-list');
-  var approvedListEl = document.getElementById('diario-approved-list');
 
   if (!gate || !contentEl) return;
 
@@ -8154,7 +8124,7 @@ if ('serviceWorker' in navigator) {
     gate.style.display = 'none';
     pendingEl.style.display = 'none';
     contentEl.style.display = '';
-    if (asOwner && ownerToolbar) ownerToolbar.style.display = '';
+    if (asOwner && addEntryBtn) addEntryBtn.style.display = '';
     loadTimeline();
   }
 
@@ -8750,126 +8720,7 @@ if ('serviceWorker' in navigator) {
     });
   }
 
-  // ─── User Management Modal ───
-  if (manageUsersBtn) {
-    manageUsersBtn.addEventListener('click', function() {
-      usersModal.style.display = '';
-      loadUserLists();
-    });
-  }
-  if (modalClose) {
-    modalClose.addEventListener('click', function() {
-      usersModal.style.display = 'none';
-    });
-  }
-
-  function loadUserLists() {
-    // Pending users
-    pendingRef.once('value', function(snap) {
-      var users = snap.val();
-      if (!users || Object.keys(users).length === 0) {
-        pendingListEl.innerHTML = '<p style="color:var(--text-muted);">' + (isEN ? 'No pending requests' : 'Nessuna richiesta in attesa') + '</p>';
-      } else {
-        var html = '<h4>' + (isEN ? 'Pending requests' : 'Richieste in attesa') + '</h4>';
-        Object.keys(users).forEach(function(uid) {
-          var u = users[uid];
-          html += '<div class="diario-user-row">';
-          if (u.photoURL) html += '<img src="' + u.photoURL + '" class="diario-user-avatar">';
-          html += '<span class="diario-user-name">' + escapeHtml(u.displayName || u.email) + '</span>';
-          html += '<button class="diario-approve-btn" data-uid="' + uid + '">\u2705</button>';
-          html += '<button class="diario-reject-btn" data-uid="' + uid + '">\u274c</button>';
-          html += '</div>';
-        });
-        pendingListEl.innerHTML = html;
-
-        // Bind approve/reject
-        pendingListEl.querySelectorAll('.diario-approve-btn').forEach(function(btn) {
-          btn.addEventListener('click', function() {
-            var uid = btn.getAttribute('data-uid');
-            var userData = users[uid];
-            approvedRef.child(uid).set({
-              email: userData.email || '',
-              displayName: userData.displayName || '',
-              photoURL: userData.photoURL || '',
-              approvedAt: firebase.database.ServerValue.TIMESTAMP
-            }).then(function() {
-              return pendingRef.child(uid).remove();
-            }).then(function() {
-              if (window.showToast) showToast(isEN ? 'User approved!' : 'Utente approvato!', 'success');
-              loadUserLists();
-            });
-          });
-        });
-        pendingListEl.querySelectorAll('.diario-reject-btn').forEach(function(btn) {
-          btn.addEventListener('click', function() {
-            var uid = btn.getAttribute('data-uid');
-            pendingRef.child(uid).remove().then(function() {
-              if (window.showToast) showToast(isEN ? 'Request rejected' : 'Richiesta rifiutata', 'info');
-              loadUserLists();
-            });
-          });
-        });
-      }
-    });
-
-    // Approved users
-    approvedRef.once('value', function(snap) {
-      var users = snap.val();
-      if (!users || Object.keys(users).length === 0) {
-        approvedListEl.innerHTML = '<p style="color:var(--text-muted);">' + (isEN ? 'No approved users yet' : 'Nessun utente approvato') + '</p>';
-      } else {
-        var html = '<h4>' + (isEN ? 'Approved users' : 'Utenti approvati') + '</h4>';
-        Object.keys(users).forEach(function(uid) {
-          var u = users[uid];
-          var name = '';
-          var photo = '';
-          var isOwnerUser = (typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.indexOf(uid) !== -1);
-          if (u && typeof u === 'object') {
-            name = u.displayName || u.email || uid.substring(0, 8) + '...';
-            photo = u.photoURL || '';
-          } else {
-            // Old format: uid: true — try to resolve from current auth user
-            if (firebaseUser && firebaseUser.uid === uid) {
-              name = firebaseUser.displayName || firebaseUser.email || uid.substring(0, 8) + '...';
-              photo = firebaseUser.photoURL || '';
-              // Migrate old format to new format in background
-              approvedRef.child(uid).set({
-                email: firebaseUser.email || '',
-                displayName: firebaseUser.displayName || '',
-                photoURL: firebaseUser.photoURL || '',
-                approvedAt: firebase.database.ServerValue.TIMESTAMP
-              });
-            } else {
-              name = uid.substring(0, 12) + '...';
-            }
-          }
-          var roleBadge = isOwnerUser ? ' <span style="font-size:0.75em;background:var(--accent);color:#fff;padding:1px 6px;border-radius:8px;margin-left:4px;">Owner</span>' : '';
-          html += '<div class="diario-user-row">';
-          if (photo) html += '<img src="' + photo + '" class="diario-user-avatar">';
-          html += '<span class="diario-user-name">' + escapeHtml(name) + roleBadge + '</span>';
-          // Don't show revoke button for owners
-          if (!isOwnerUser) {
-            html += '<button class="diario-revoke-btn" data-uid="' + uid + '">\ud83d\udeab</button>';
-          }
-          html += '</div>';
-        });
-        approvedListEl.innerHTML = html;
-
-        // Bind revoke
-        approvedListEl.querySelectorAll('.diario-revoke-btn').forEach(function(btn) {
-          btn.addEventListener('click', function() {
-            var uid = btn.getAttribute('data-uid');
-            showConfirm(isEN ? 'Revoke access for this user?' : 'Revocare l\'accesso a questo utente?', function() {
-              approvedRef.child(uid).remove().then(function() {
-                if (window.showToast) showToast(isEN ? 'Access revoked' : 'Accesso revocato', 'info');
-                loadUserLists();
-              });
-            });
-          });
-        });
-      }
-    });
-  }
+  // ─── User Management (removed in v1.38 — moved to centralized admin panel) ───
 
   // ─── Also add 'diario' to altroTabs for bottom sheet active state ───
   window.addEventListener('tabSwitched', function(e) {
@@ -9124,4 +8975,190 @@ if ('serviceWorker' in navigator) {
 
   // Initial status update after short delay
   setTimeout(updateAdminStatus, 2000);
+})();
+
+
+// ═══════════════════════════════════════════════════════════════
+// ─── v1.38: CENTRALIZED ADMIN USER MANAGEMENT ───
+// ═══════════════════════════════════════════════════════════════
+(function() {
+  if (typeof firebase === 'undefined' || !firebase.database || !firebase.auth) return;
+  if (!FAMILY_ID) return;
+
+  var db = firebase.database();
+  var usersRef = db.ref('chat/users');
+  var bannedRef = db.ref('trips/' + FAMILY_ID + '/bannedUsers');
+  var pendingRef = db.ref('trips/' + FAMILY_ID + '/pendingUsers');
+  var approvedRef = db.ref('trips/' + FAMILY_ID + '/approvedUsers');
+
+  var adminUsersList = document.getElementById('admin-users-list');
+  var adminPendingList = document.getElementById('admin-pending-list');
+  var adminUsersRefreshBtn = document.getElementById('admin-users-refresh');
+
+  if (!adminUsersList) return; // Not on admin tab
+
+  var globalBanned = {};
+
+  // Listen for banned list changes
+  bannedRef.on('value', function(snap) {
+    globalBanned = snap.val() || {};
+  });
+
+  function renderAdminUsers() {
+    if (!adminUsersList) return;
+    adminUsersList.innerHTML = '<p style="color:var(--text-muted);font-size:13px;">' + (isEN ? 'Loading...' : 'Caricamento...') + '</p>';
+
+    usersRef.once('value', function(snap) {
+      var users = snap.val();
+      if (!users || Object.keys(users).length === 0) {
+        adminUsersList.innerHTML = '<p style="color:var(--text-muted);">' + (isEN ? 'No registered users.' : 'Nessun utente registrato.') + '</p>';
+        return;
+      }
+
+      var html = '<table class="admin-table" style="width:100%;border-collapse:collapse;font-size:0.85em;">';
+      html += '<thead><tr style="border-bottom:1px solid var(--border-color,#e2e8f0);">';
+      html += '<th style="padding:6px 4px;text-align:left;"></th>';
+      html += '<th style="padding:6px 4px;text-align:left;">' + (isEN ? 'Name' : 'Nome') + '</th>';
+      html += '<th style="padding:6px 4px;text-align:left;">Email</th>';
+      html += '<th style="padding:6px 4px;text-align:left;">' + (isEN ? 'Last seen' : 'Ultimo accesso') + '</th>';
+      html += '<th style="padding:6px 4px;text-align:left;">' + (isEN ? 'Status' : 'Stato') + '</th>';
+      html += '<th style="padding:6px 4px;text-align:center;">' + (isEN ? 'Action' : 'Azione') + '</th>';
+      html += '</tr></thead><tbody>';
+
+      var uids = Object.keys(users);
+      uids.forEach(function(uid) {
+        var u = users[uid];
+        var isOwnerUser = (typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.indexOf(uid) !== -1);
+        var isBanned = !!globalBanned[uid];
+        var lastSeen = u.lastSeen ? new Date(u.lastSeen).toLocaleString(isEN ? 'en-GB' : 'it-IT', {day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : '\u2014';
+        var photo = u.photo ? '<img src="' + u.photo + '" style="width:28px;height:28px;border-radius:50%;vertical-align:middle;" loading="lazy">' : '<span style="font-size:20px;">👤</span>';
+        var statusBadge = isOwnerUser ? '<span style="background:var(--accent,#6366f1);color:#fff;padding:2px 8px;border-radius:8px;font-size:11px;">Owner</span>' : (isBanned ? '<span style="background:var(--danger,#e53e3e);color:#fff;padding:2px 8px;border-radius:8px;font-size:11px;">' + (isEN ? 'Banned' : 'Bannato') + '</span>' : '<span style="background:var(--success,#38a169);color:#fff;padding:2px 8px;border-radius:8px;font-size:11px;">' + (isEN ? 'Active' : 'Attivo') + '</span>');
+        var actionBtn = '';
+        if (!isOwnerUser) {
+          if (isBanned) {
+            actionBtn = '<button class="admin-global-unban pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--success,#38a169);color:#fff;border:none;border-radius:6px;cursor:pointer;">' + (isEN ? 'Unban' : 'Sblocca') + '</button>';
+          } else {
+            actionBtn = '<button class="admin-global-ban pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--danger,#e53e3e);color:#fff;border:none;border-radius:6px;cursor:pointer;">' + (isEN ? 'Ban' : 'Blocca') + '</button>';
+          }
+        }
+
+        html += '<tr style="border-bottom:1px solid var(--border-color,#e2e8f0);' + (isBanned ? 'opacity:0.6;' : '') + '">';
+        html += '<td style="padding:6px 4px;">' + photo + '</td>';
+        html += '<td style="padding:6px 4px;">' + (u.name || 'Anonimo') + '</td>';
+        html += '<td style="padding:6px 4px;font-size:0.85em;color:var(--text-muted);">' + (u.email || '\u2014') + '</td>';
+        html += '<td style="padding:6px 4px;">' + lastSeen + '</td>';
+        html += '<td style="padding:6px 4px;">' + statusBadge + '</td>';
+        html += '<td style="padding:6px 4px;text-align:center;">' + actionBtn + '</td>';
+        html += '</tr>';
+      });
+
+      html += '</tbody></table>';
+      adminUsersList.innerHTML = html;
+
+      // Attach ban handlers
+      adminUsersList.querySelectorAll('.admin-global-ban').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var uid = btn.dataset.uid;
+          var userName = users[uid] ? (users[uid].name || users[uid].email || uid) : uid;
+          showConfirm((isEN ? 'Globally ban ' : 'Bannare globalmente ') + userName + '?', function() {
+            bannedRef.child(uid).set(true).then(function() {
+              if (window.showToast) showToast(isEN ? 'User banned globally' : 'Utente bannato globalmente', 'success');
+              renderAdminUsers();
+            });
+          });
+        });
+      });
+
+      // Attach unban handlers
+      adminUsersList.querySelectorAll('.admin-global-unban').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var uid = btn.dataset.uid;
+          bannedRef.child(uid).remove().then(function() {
+            if (window.showToast) showToast(isEN ? 'User unbanned' : 'Utente sbloccato', 'success');
+            renderAdminUsers();
+          });
+        });
+      });
+    });
+  }
+
+  function renderAdminPending() {
+    if (!adminPendingList) return;
+    pendingRef.once('value', function(snap) {
+      var users = snap.val();
+      if (!users || Object.keys(users).length === 0) {
+        adminPendingList.innerHTML = '<p style="color:var(--text-muted);font-size:13px;">' + (isEN ? 'No pending requests.' : 'Nessuna richiesta in attesa.') + '</p>';
+        return;
+      }
+
+      var html = '';
+      Object.keys(users).forEach(function(uid) {
+        var u = users[uid];
+        var photo = u.photoURL ? '<img src="' + u.photoURL + '" style="width:28px;height:28px;border-radius:50%;vertical-align:middle;" loading="lazy">' : '<span style="font-size:20px;">👤</span>';
+        html += '<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-color,#e2e8f0);">';
+        html += photo;
+        html += '<span style="flex:1;font-size:14px;">' + (u.displayName || u.email || uid) + '</span>';
+        html += '<button class="admin-approve-btn pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--success,#38a169);color:#fff;border:none;border-radius:6px;cursor:pointer;">\u2705 ' + (isEN ? 'Approve' : 'Approva') + '</button>';
+        html += '<button class="admin-reject-btn pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--danger,#e53e3e);color:#fff;border:none;border-radius:6px;cursor:pointer;">\u274c ' + (isEN ? 'Reject' : 'Rifiuta') + '</button>';
+        html += '</div>';
+      });
+      adminPendingList.innerHTML = html;
+
+      // Bind approve
+      adminPendingList.querySelectorAll('.admin-approve-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var uid = btn.dataset.uid;
+          var userData = users[uid];
+          approvedRef.child(uid).set({
+            email: userData.email || '',
+            displayName: userData.displayName || '',
+            photoURL: userData.photoURL || '',
+            approvedAt: firebase.database.ServerValue.TIMESTAMP
+          }).then(function() {
+            return pendingRef.child(uid).remove();
+          }).then(function() {
+            if (window.showToast) showToast(isEN ? 'User approved!' : 'Utente approvato!', 'success');
+            renderAdminPending();
+          });
+        });
+      });
+
+      // Bind reject
+      adminPendingList.querySelectorAll('.admin-reject-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var uid = btn.dataset.uid;
+          pendingRef.child(uid).remove().then(function() {
+            if (window.showToast) showToast(isEN ? 'Request rejected' : 'Richiesta rifiutata', 'info');
+            renderAdminPending();
+          });
+        });
+      });
+    });
+  }
+
+  // Refresh button
+  if (adminUsersRefreshBtn) {
+    adminUsersRefreshBtn.addEventListener('click', function() {
+      renderAdminUsers();
+      renderAdminPending();
+    });
+  }
+
+  // Auto-render when admin tab is shown
+  window.addEventListener('tabSwitched', function(e) {
+    if (e.detail === 'admin') {
+      setTimeout(function() {
+        renderAdminUsers();
+        renderAdminPending();
+      }, 300);
+    }
+  });
+
+  // Initial render if already on admin tab
+  if (isOwner) {
+    setTimeout(function() {
+      renderAdminUsers();
+      renderAdminPending();
+    }, 2500);
+  }
 })();
