@@ -4190,8 +4190,8 @@ if ('serviceWorker' in navigator) {
         });
       }
       window.dispatchEvent(new CustomEvent('zainoSynced', { detail: remoteZaino }));
+      showSyncStatus(isEN ? '☁️ Synced' : '☁️ Sincronizzato', 'ok');
     }
-    showSyncStatus(isEN ? '🎒 Packing synced' : '🎒 Zaino sincronizzato', 'ok');
   });
 
   // Debounced zaino push — waits 1.5s of inactivity before writing
@@ -7067,6 +7067,13 @@ if ('serviceWorker' in navigator) {
     }
     if (!text && !mediaUrl) return;
 
+    // Security: enforce max message length (matches server-side .validate rule)
+    var MAX_MSG_LENGTH = 5000;
+    if (text && text.length > MAX_MSG_LENGTH) {
+      if (window.showToast) showToast(isEN ? 'Message too long (max 5000 chars)' : 'Messaggio troppo lungo (max 5000 caratteri)', 'error');
+      return;
+    }
+
     var msg = {
       uid: chatUser.uid,
       displayName: chatUser.displayName || chatUser.email || 'User',
@@ -7120,6 +7127,9 @@ if ('serviceWorker' in navigator) {
     e.preventDefault();
     handleSend();
   });
+
+  // Security: set maxlength on chat input
+  chatInput.setAttribute('maxlength', '5000');
 
   // Auto-resize textarea
   function autoResizeChat() {
@@ -7420,9 +7430,11 @@ if ('serviceWorker' in navigator) {
 
   // ─── Link preview (simple URL detection) ───
   function linkify(text) {
-    var urlRegex = /(https?:\/\/[^\s<]+)/g;
+    var urlRegex = /(https?:\/\/[^\s<"']+)/g;
     return text.replace(urlRegex, function(url) {
-      return '<a href="' + url + '" target="_blank" rel="noopener">' + url + '</a>';
+      // Extra sanitization: ensure no unescaped quotes in URL that could break href attribute
+      var safeUrl = url.replace(/"/g, '%22').replace(/'/g, '%27');
+      return '<a href="' + safeUrl + '" target="_blank" rel="noopener noreferrer">' + url + '</a>';
     });
   }
 
@@ -9015,7 +9027,46 @@ if ('serviceWorker' in navigator) {
         return;
       }
 
-      var html = '<table class="admin-table" style="width:100%;border-collapse:collapse;font-size:0.85em;">';
+      // Deduplicate by email: keep only the UID with the most recent lastSeen
+      var byEmail = {}; // email -> { uid, user, lastSeen }
+      var duplicateUIDs = []; // UIDs to remove
+      var uids = Object.keys(users);
+      uids.forEach(function(uid) {
+        var u = users[uid];
+        var email = (u.email || '').toLowerCase().trim();
+        if (!email) {
+          // No email — keep as unique entry keyed by uid
+          byEmail['__nomail__' + uid] = { uid: uid, user: u, lastSeen: u.lastSeen || 0 };
+          return;
+        }
+        if (!byEmail[email]) {
+          byEmail[email] = { uid: uid, user: u, lastSeen: u.lastSeen || 0 };
+        } else {
+          // Duplicate — keep the one with more recent lastSeen
+          var existing = byEmail[email];
+          if ((u.lastSeen || 0) > existing.lastSeen) {
+            duplicateUIDs.push(existing.uid);
+            byEmail[email] = { uid: uid, user: u, lastSeen: u.lastSeen || 0 };
+          } else {
+            duplicateUIDs.push(uid);
+          }
+        }
+      });
+
+      // Build deduplicated list
+      var deduped = Object.keys(byEmail).map(function(key) { return byEmail[key]; });
+      // Sort by lastSeen descending
+      deduped.sort(function(a, b) { return (b.lastSeen || 0) - (a.lastSeen || 0); });
+
+      var html = '';
+      if (duplicateUIDs.length > 0) {
+        html += '<div style="margin-bottom:10px;padding:8px 12px;background:var(--warning,#d69e2e);color:#fff;border-radius:8px;font-size:12px;display:flex;align-items:center;gap:8px;">';
+        html += '<span>\u26a0\ufe0f ' + duplicateUIDs.length + (isEN ? ' duplicate UID(s) found' : ' UID duplicati trovati') + '</span>';
+        html += '<button id="admin-cleanup-dupes" class="pos-btn" style="font-size:11px;padding:4px 10px;background:#fff;color:#d69e2e;border:none;border-radius:6px;cursor:pointer;font-weight:700;">\ud83e\uddf9 ' + (isEN ? 'Clean up' : 'Pulisci') + '</button>';
+        html += '</div>';
+      }
+
+      html += '<table class="admin-table" style="width:100%;border-collapse:collapse;font-size:0.85em;">';
       html += '<thead><tr style="border-bottom:1px solid var(--border-color,#e2e8f0);">';
       html += '<th style="padding:6px 4px;text-align:left;"></th>';
       html += '<th style="padding:6px 4px;text-align:left;">' + (isEN ? 'Name' : 'Nome') + '</th>';
@@ -9025,20 +9076,21 @@ if ('serviceWorker' in navigator) {
       html += '<th style="padding:6px 4px;text-align:center;">' + (isEN ? 'Action' : 'Azione') + '</th>';
       html += '</tr></thead><tbody>';
 
-      var uids = Object.keys(users);
-      uids.forEach(function(uid) {
-        var u = users[uid];
+      deduped.forEach(function(entry) {
+        var uid = entry.uid;
+        var u = entry.user;
         var isOwnerUser = (typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.indexOf(uid) !== -1);
         var isBanned = !!globalBanned[uid];
         var lastSeen = u.lastSeen ? new Date(u.lastSeen).toLocaleString(isEN ? 'en-GB' : 'it-IT', {day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : '\u2014';
-        var photo = u.photo ? '<img src="' + u.photo + '" style="width:28px;height:28px;border-radius:50%;vertical-align:middle;" loading="lazy">' : '<span style="font-size:20px;">👤</span>';
+        var photo = u.photo ? '<img src="' + u.photo + '" style="width:28px;height:28px;border-radius:50%;vertical-align:middle;" loading="lazy">' : '<span style="font-size:20px;">\ud83d\udc64</span>';
         var statusBadge = isOwnerUser ? '<span style="background:var(--accent,#6366f1);color:#fff;padding:2px 8px;border-radius:8px;font-size:11px;">Owner</span>' : (isBanned ? '<span style="background:var(--danger,#e53e3e);color:#fff;padding:2px 8px;border-radius:8px;font-size:11px;">' + (isEN ? 'Banned' : 'Bannato') + '</span>' : '<span style="background:var(--success,#38a169);color:#fff;padding:2px 8px;border-radius:8px;font-size:11px;">' + (isEN ? 'Active' : 'Attivo') + '</span>');
+        var uidShort = '<span style="font-size:10px;color:var(--text-muted);font-family:monospace;">' + uid.substring(0, 8) + '...</span>';
         var actionBtn = '';
         if (!isOwnerUser) {
           if (isBanned) {
-            actionBtn = '<button class="admin-global-unban pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--success,#38a169);color:#fff;border:none;border-radius:6px;cursor:pointer;">' + (isEN ? 'Unban' : 'Sblocca') + '</button>';
+            actionBtn = uidShort + ' <button class="admin-global-unban pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--success,#38a169);color:#fff;border:none;border-radius:6px;cursor:pointer;">' + (isEN ? 'Unban' : 'Sblocca') + '</button>';
           } else {
-            actionBtn = '<button class="admin-global-ban pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--danger,#e53e3e);color:#fff;border:none;border-radius:6px;cursor:pointer;">' + (isEN ? 'Ban' : 'Blocca') + '</button>';
+            actionBtn = uidShort + ' <button class="admin-global-ban pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--danger,#e53e3e);color:#fff;border:none;border-radius:6px;cursor:pointer;">' + (isEN ? 'Ban' : 'Blocca') + '</button>';
           }
         }
 
@@ -9054,6 +9106,21 @@ if ('serviceWorker' in navigator) {
 
       html += '</tbody></table>';
       adminUsersList.innerHTML = html;
+
+      // Attach cleanup handler
+      var cleanupBtn = document.getElementById('admin-cleanup-dupes');
+      if (cleanupBtn) {
+        cleanupBtn.addEventListener('click', function() {
+          showConfirm((isEN ? 'Remove ' + duplicateUIDs.length + ' duplicate UID(s)? Only the most recent per email will be kept.' : 'Rimuovere ' + duplicateUIDs.length + ' UID duplicati? Verr\u00e0 mantenuto solo il pi\u00f9 recente per email.'), function() {
+            var updates = {};
+            duplicateUIDs.forEach(function(duid) { updates[duid] = null; });
+            usersRef.update(updates).then(function() {
+              if (window.showToast) showToast(isEN ? 'Duplicates removed!' : 'Duplicati rimossi!', 'success');
+              renderAdminUsers();
+            });
+          });
+        });
+      }
 
       // Attach ban handlers
       adminUsersList.querySelectorAll('.admin-global-ban').forEach(function(btn) {
