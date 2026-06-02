@@ -27,7 +27,7 @@ var messaging = firebase.messaging();
 // ─── CACHING CONFIG ───
 // ═══════════════════════════════════════════════════════════════
 
-const CACHE_NAME = 'quo-vadis-v1.45';
+const CACHE_NAME = 'quo-vadis-v1.47';
 const IMAGE_CACHE_NAME = 'quo-vadis-images-v1';
 const IMAGE_CACHE_LIMIT = 80;
 const STATIC_ASSETS = [
@@ -36,6 +36,8 @@ const STATIC_ASSETS = [
   './index_en.html',
   './style.css',
   './data.js',
+  './days-data.js',
+  './days-renderer.js',
   './wiki-links.js',
   './weather-coords.js',
   './app.js',

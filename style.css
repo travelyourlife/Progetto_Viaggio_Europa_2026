@@ -110,7 +110,7 @@
     .tab-index a[data-region="events"] { border-color: #fda4af; }
 
     /* ─── Collapsible tab-index shadow (dark) ─── */
-    .tab-index-toggle { box-shadow: 0 2px 12px rgba(0,0,0,0.25), 0 1px 3px rgba(0,0,0,0.2); }
+    .tab-index-toggle { background: linear-gradient(135deg, #1a365d, #2a4a7f); border-color: #4299e1; color: #90cdf4; box-shadow: 0 3px 10px rgba(66, 153, 225, 0.25); }
     .tab-index-wrapper.collapsible .tab-index { box-shadow: 0 4px 16px rgba(0,0,0,0.25), 0 1px 3px rgba(0,0,0,0.2); }
 
     /* ─── Home cards — flat dark ─── */
@@ -163,7 +163,7 @@
     .pos-info-value { color: #ffffff; }
     .pos-info-row { border-bottom-color: #4a5568; }
 
-    /* ─── Day info cards ─── */
+    /* ─── Day info cards (legacy) ─── */
     .day-info-card { background: #2d3748 !important; border-color: #4a5568 !important; color: #e2e8f0; }
     .day-info-card a { color: #90cdf4; }
     .day-info-card.route { background: rgba(74,85,104,0.3) !important; }
@@ -171,6 +171,22 @@
     .day-info-card.food { background: rgba(229,62,62,0.1) !important; }
     .day-info-card.poi { background: rgba(56,161,105,0.1) !important; }
     .day-info-card.maps { background: rgba(49,130,206,0.1) !important; }
+
+    /* ─── DIC v2 Dark Mode ─── */
+    .dic { color: #e2e8f0; }
+    .dic a { color: #90cdf4; }
+    .dic strong { color: #f7fafc; }
+    .dic-route   { background: rgba(74,85,104,0.25) !important; border-color: #718096 !important; }
+    .dic-weather { background: rgba(214,158,46,0.12) !important; border-color: #ecc94b !important; }
+    .dic-narrative { color: #e2e8f0; }
+    .dic-poi     { background: rgba(56,161,105,0.12) !important; border-color: #68d391 !important; }
+    .dic-kids    { background: rgba(229,62,62,0.10) !important; border-color: #fc8181 !important; }
+    .dic-trek    { background: rgba(5,150,105,0.12) !important; border-color: #6ee7b7 !important; }
+    .dic-fish    { background: rgba(37,99,235,0.12) !important; border-color: #93c5fd !important; }
+    .dic-sport   { background: rgba(124,58,237,0.12) !important; border-color: #c4b5fd !important; }
+    .dic-food    { background: rgba(217,119,6,0.12) !important; border-color: #fbbf24 !important; }
+    .dic-event   { background: rgba(202,138,4,0.12) !important; border-color: #fde047 !important; }
+    .dic-practical { background: rgba(2,132,199,0.10) !important; border-color: #7dd3fc !important; }
 
     /* ─── Colored chips ─── */
     .pos-chip-green { background: rgba(56,161,105,0.15) !important; border-color: #68d391 !important; }
@@ -1048,6 +1064,7 @@ tr:nth-child(even) { background: var(--bg-alt); }
 }
 
 /* ─── Day Block Visual Hierarchy ─── */
+/* ─── Day Info Cards (legacy P1 — kept for backward compat) ─── */
 .day-info-card {
     border-radius: 8px; padding: 10px 14px; margin: 8px 0;
     border-left: 4px solid; font-size: 14px; line-height: 1.7;
@@ -1057,6 +1074,52 @@ tr:nth-child(even) { background: var(--bg-alt); }
 .day-info-card.food { background: #fff5f5; border-color: #e53e3e; }
 .day-info-card.poi { background: #f0fff4; border-color: #38a169; }
 .day-info-card.maps { background: #ebf8ff; border-color: #3182ce; }
+
+/* ═══════════════════════════════════════════════════════════════
+   DIC — Day Info Cards v2 (semantic, renderer-driven)
+   10 categories, each with border-left + tinted background
+   ═══════════════════════════════════════════════════════════════ */
+.dic {
+    border-radius: 8px; padding: 10px 14px; margin: 8px 0;
+    border-left: 4px solid; font-size: 14px; line-height: 1.7;
+}
+.dic p { margin: 4px 0; }
+.dic p:first-child { margin-top: 0; }
+.dic p:last-child { margin-bottom: 0; }
+
+/* 1. Route — neutral gray */
+.dic-route { background: #f7fafc; border-color: #4a5568; }
+
+/* 2. Weather — warm amber */
+.dic-weather { background: #fffff0; border-color: #d69e2e; }
+
+/* 3. Narrative — no card, just spacing */
+.dic-narrative { margin: 8px 0; font-size: 14px; line-height: 1.7; }
+
+/* 4. POI / Highlights — green (exploration) */
+.dic-poi { background: #f0fff4; border-color: #38a169; }
+
+/* 5. Kids — soft coral/pink (playful) */
+.dic-kids { background: #fff5f5; border-color: #e53e3e; }
+
+/* 6. Trekking — emerald green (nature/forest) */
+.dic-trek { background: #ecfdf5; border-color: #059669; }
+
+/* 7. Fishing — blue (water) */
+.dic-fish { background: #eff6ff; border-color: #2563eb; }
+
+/* 8. Sport / Scooter — purple (energy/active) */
+.dic-sport { background: #faf5ff; border-color: #7c3aed; }
+
+/* 9. Food / Markets — warm orange (appetite) */
+.dic-food { background: #fffbeb; border-color: #d97706; }
+
+/* 10. Events — gold (celebration) */
+.dic-event { background: #fefce8; border-color: #ca8a04; }
+
+/* 11. Practical Info — sky blue (utility/service) */
+.dic-practical { background: #f0f9ff; border-color: #0284c7; }
+.dic-practical-header { font-size: 15px; margin-bottom: 6px !important; }
 
 .accordion-body.open { display: block; animation: acc-open 0.3s ease; max-height: none; overflow: visible; }
 @keyframes acc-open { from { opacity: 0; max-height: 0; } to { opacity: 1; max-height: 5000px; } }
@@ -1375,12 +1438,13 @@ table { max-width: 100%; }
 /* v1.11: Collapsible tab-index */
 .tab-index-toggle {
     display: flex; align-items: center; justify-content: space-between;
-    width: 100%; padding: 10px 16px;
-    background: var(--bg-card); border: none;
-    border-radius: var(--radius); color: var(--accent);
+    width: 100%; padding: 12px 18px;
+    background: linear-gradient(135deg, #ebf8ff, #e1f0fd);
+    border: 2px solid #3182ce;
+    border-radius: var(--radius); color: #2c5282;
     font-size: 14px; font-weight: 600; cursor: pointer;
     margin-bottom: 0; transition: all 0.2s;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.06);
+    box-shadow: 0 3px 10px rgba(49, 130, 206, 0.15);
 }
 .tab-index-toggle:hover { background: var(--bg-alt); }
 .tab-index-toggle .chevron { transition: transform 0.3s; font-size: 12px; }

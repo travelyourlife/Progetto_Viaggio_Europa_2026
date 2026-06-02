@@ -932,6 +932,14 @@ document.addEventListener('DOMContentLoaded', function() {
     try { renderTimeline(); } catch(e) { console.error('[renderTimeline]', e); }
     try { initRouteMap(); } catch(e) { console.error('[initRouteMap]', e); }
 
+    // ─── Render days from days-data.js ───
+    try {
+      var ddc = document.getElementById('days-dynamic-content');
+      if (ddc && typeof DaysRenderer !== 'undefined') {
+        ddc.innerHTML = DaysRenderer.renderAllDays();
+      }
+    } catch(e) { console.error('[DaysRenderer]', e); }
+
     // ─── Timeline day-tap hint banner ───
     (function() {
         var HINT_KEY = 'viaggio2026_timeline_hint_seen';
@@ -3269,26 +3277,31 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     })();
 
-    // ─── GO TO TODAY (Giorni tab) ───
+    // ─── GO TO TODAY / COUNTDOWN (Giorni tab) ───
     (function() {
         var tripDay = getCurrentTripDay();
         var box = document.getElementById('goto-today-box');
         var btn = document.getElementById('goto-today-btn');
         if (!box || !btn) return;
+        var isEN = document.documentElement.lang === 'en';
+
+        // Check if day override is active (testing mode)
+        var override = localStorage.getItem(KEYS.DAY_OVERRIDE);
+        var isOverride = override !== null && override !== '' && override !== '-1';
+
         if (tripDay >= 0 && tripDay <= TRIP_DAYS - 1) {
+            // During trip: show "Vai a G[X] (oggi)"
             box.style.display = 'block';
-            btn.textContent = '\uD83D\uDCC5 Vai a G' + tripDay + ' (oggi)';
+            btn.textContent = '\uD83D\uDCC5 ' + (isEN ? 'Go to G' : 'Vai a G') + tripDay + (isEN ? ' (today)' : ' (oggi)');
             btn.addEventListener('click', function() {
                 var currentDay = getCurrentTripDay();
                 var target = document.getElementById('g' + currentDay);
                 if (target) {
-                    // Open accordion if target is an accordion-header
                     if (target.classList.contains('accordion-header') && !target.classList.contains('open')) {
                         target.classList.add('open');
                         var body = target.nextElementSibling;
                         if (body && body.classList.contains('accordion-body')) body.classList.add('open');
                     }
-                    // Scroll with offset for top bar
                     setTimeout(function() {
                         var topBarH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--top-bar-height')) || 56;
                         var y = target.getBoundingClientRect().top + window.pageYOffset - topBarH - 16;
@@ -3296,6 +3309,17 @@ document.addEventListener('DOMContentLoaded', function() {
                     }, 100);
                 }
             });
+        } else if (!isOverride) {
+            // Pre-trip (no override): show countdown
+            var now = new Date(); now.setHours(0,0,0,0);
+            var start = new Date(TRIP_START.getTime()); start.setHours(0,0,0,0);
+            var daysLeft = Math.ceil((start - now) / 86400000);
+            if (daysLeft > 0) {
+                box.style.display = 'block';
+                btn.textContent = '\u23F3 ' + (isEN ? daysLeft + ' days to departure' : 'Mancano ' + daysLeft + ' giorni alla partenza');
+                btn.style.cursor = 'default';
+                btn.style.opacity = '0.85';
+            }
         }
     })();
 
@@ -3628,10 +3652,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     })();
 
-    /* ─── P1: Day Block Visual Hierarchy ─── */
+    /* ─── P1: Day Block Visual Hierarchy (DEPRECATED — replaced by DIC v2 in days-renderer.js) ─── */
+    /* Semantic classes are now applied directly by the renderer. This legacy code is kept
+       commented out for reference only.
     (function() {
         document.querySelectorAll('.accordion-body').forEach(function(body) {
-            // Only process day blocks (inside tab-giorni)
             if (!body.closest('#tab-giorni')) return;
             const paragraphs = body.querySelectorAll('p');
             paragraphs.forEach(function(p) {
@@ -3642,12 +3667,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 else if (/🍽|🌭|street food|ristorante|cucina|piatt|Mercato|birr/i.test(text)) cls = 'food';
                 else if (/Maps:|📍/i.test(text)) cls = 'maps';
                 else if (/🏛|🎣|🛴|museo|parco|trek|spiaggia|castello|chiesa|cattedrale/i.test(text)) cls = 'poi';
-                if (cls) {
-                    p.classList.add('day-info-card', cls);
-                }
+                if (cls) p.classList.add('day-info-card', cls);
             });
         });
     })();
+    */
 
     /* ─── P2: Scroll Spy for Tab-Index ─── */
     (function() {
@@ -3781,46 +3805,7 @@ if ('serviceWorker' in navigator) {
         }, { passive: true });
     })();
 
-    // ─── SWIPE BETWEEN TABS ───
-    (function() {
-        var tabOrder = (typeof TAB_ORDER !== 'undefined') ? TAB_ORDER : ['riepilogo', 'posizione', 'giorni', 'cultura', 'cibo', 'attivita', 'piano', 'zaino'];
-        var touchStartX = 0, touchEndX = 0, touchStartY = 0, touchEndY = 0;
-        var minSwipe = 80;
-
-        document.addEventListener('touchstart', function(e) {
-            touchStartX = e.changedTouches[0].screenX;
-            touchStartY = e.changedTouches[0].screenY;
-        }, { passive: true });
-
-        document.addEventListener('touchend', function(e) {
-            touchEndX = e.changedTouches[0].screenX;
-            touchEndY = e.changedTouches[0].screenY;
-            var diffX = touchEndX - touchStartX;
-            var diffY = Math.abs(touchEndY - touchStartY);
-            // Only trigger if horizontal swipe is dominant
-            if (Math.abs(diffX) < minSwipe || diffY > Math.abs(diffX) * 0.7) return;
-            // Don't swipe if user is scrolling a horizontal element
-            if (e.target.closest('.tab-index, .mobile-timeline, table, pre, code, .table-wrapper, .weather-chart, .bottom-bar')) return;
-
-            var activeTab = document.querySelector('.tab-content.active');
-            if (!activeTab) return;
-            var currentId = activeTab.id.replace('tab-', '');
-            var idx = tabOrder.indexOf(currentId);
-            if (idx === -1) return;
-
-            if (diffX < 0 && idx < tabOrder.length - 1) {
-                // Swipe left → next tab
-                if(window.haptic) window.haptic(15);
-                switchTab(tabOrder[idx + 1]);
-                history.replaceState(null, '', '#tab-' + tabOrder[idx + 1]);
-            } else if (diffX > 0 && idx > 0) {
-                // Swipe right → previous tab
-                if(window.haptic) window.haptic(15);
-                switchTab(tabOrder[idx - 1]);
-                history.replaceState(null, '', '#tab-' + tabOrder[idx - 1]);
-            }
-        }, { passive: true });
-    })();
+    // ─── SWIPE BETWEEN TABS ─── (REMOVED v1.45: conflicts with browser back/forward, maps, accidental triggers)
 
     // ─── TODAY INDICATOR ON HOMEPAGE ───
     (function() {
