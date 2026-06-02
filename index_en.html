@@ -43,7 +43,7 @@
     <link rel="apple-touch-icon" sizes="152x152" href="./icon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="./icon.png">
     <link rel="apple-touch-icon" sizes="167x167" href="./icon.png">
-    <title>Europe Trip 2026 — V1.20</title>
+    <title>Europe Trip 2026 — V1.21</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <link rel="stylesheet" href="style.css">
 
@@ -60,7 +60,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = '1.20';
+  var EXPECTED_VERSION = '1.21';
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
   var r = false;
@@ -192,6 +192,7 @@
     <a class="menu-item" data-tab="cibo"><span class="menu-icon">🍝</span><span class="menu-text">Food</span></a>
     <a class="menu-item" data-tab="cultura"><span class="menu-icon">🏛️</span><span class="menu-text">Culture</span></a>
     <a class="menu-item" data-tab="attivita"><span class="menu-icon">🥾</span><span class="menu-text">Activities</span></a>
+    <a class="menu-item" data-tab="luoghi"><span class="menu-icon">🧭</span><span class="menu-text">Places</span></a>
     <div class="menu-divider"></div>
     <a class="menu-item" data-tab="riepilogo"><span class="menu-icon">📌</span><span class="menu-text">Summary</span></a>
     <a class="menu-item" data-tab="piano"><span class="menu-icon">🗺️</span><span class="menu-text">Plan</span></a>
@@ -220,6 +221,10 @@
     <button class="altro-item" data-tab="attivita">
         <span class="altro-item-icon">🥾</span>
         <span class="altro-item-text"><span class="altro-item-label">Activities</span><span class="altro-item-sub">Trekking &amp; sports</span></span>
+    </button>
+    <button class="altro-item" data-tab="luoghi">
+        <span class="altro-item-icon">🧭</span>
+        <span class="altro-item-text"><span class="altro-item-label">Places</span><span class="altro-item-sub">POI &amp; attractions</span></span>
     </button>
     <button class="altro-item" data-tab="riepilogo">
         <span class="altro-item-icon">📌</span>
@@ -344,6 +349,10 @@
         <a class="home-card" data-tab="attivita" href="#" onclick="event.preventDefault(); switchTabFromHome('attivita');">
             <span class="hc-icon"><img src="./icons/icon-attivita.png" alt="" width="48" height="48"></span>
             <span class="hc-label">Activities</span>
+        </a>
+        <a class="home-card" data-tab="luoghi" href="#" onclick="event.preventDefault(); switchTabFromHome('luoghi');">
+            <span class="hc-icon"><img src="./icons/icon-luoghi.png" alt="" width="48" height="48"></span>
+            <span class="hc-label">Places</span>
         </a>
     </div>
     <!-- 🧰 Tools -->
@@ -1978,7 +1987,7 @@
 <h3 id="g47-1208-eclissi-totale-di-sole">D47 · 12/08 · 🌒 TOTAL SOLAR ECLIPSE 🇪🇸</h3>
 <p><strong>0 km · Stationary day</strong></p>
 <p>☀️ <strong>31°C</strong> / 14°C · ☀️ <strong>Clear sky (prob. 80-85%)</strong> · Eclipse at 20:29 local time</p>
-<p>♨️ <strong>Thermal baths:</strong> ⭐ Caldea Andorra — largest thermal spa in southern Europe, 6,000m², perfect after trekking (€39/adult, children €24) → <a href="#terme-hermida">thermal details</a>
+<p>♨️ <strong>Thermal baths:</strong> ⭐ Caldea Andorra — largest thermal spa in southern Europe, 6,000m², perfect after trekking (€39/adult, children €24) → <a href="#secA">thermal details</a>
 <strong>⚠️ CRITICAL:</strong> Sun at ~11° altitude → requires free West horizon. No trees, buildings, hills. Spot identified the day before (G46). Use <strong>PhotoPills</strong> (AR) to check sun path on the spot.
 <strong>🌧️ Weather Plan B:</strong> If 48h forecast shows clouds in Palencia, move towards <strong>León</strong> or <strong>Valladolid</strong> (both on the path of totality, 1-1.5h away).
 🌑 ⭐⭐⭐ <strong>TOTAL ECLIPSE</strong> — totality ~1 min 50s, Sun at ~11° above West horizon
@@ -3041,130 +3050,6 @@
 </tr>
 </tbody>
 </table>
-
-<hr>
-<h2 id="feste">🎉 Festivals — Events and Festivals along the Route</h2>
-<p>The trip (June 26 – August 18) coincides with the high season for festivals and popular celebrations throughout Europe. Here are the events that <strong>fall exactly on the days you will be there</strong> or reachable with a short detour.</p>
-<h3 id="coincidenze-confermate">Confirmed Matches</h3>
-<table class="no-responsive">
-<thead>
-<tr>
-<th>Day</th>
-<th>Date</th>
-<th>Location</th>
-<th>Event</th>
-<th>Type</th>
-<th>Link</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td data-label="Day"><a href="#g5">D5</a></td>
-<td data-label="Date">01/07</td>
-<td data-label="Location">Tallinn 🇪🇪</td>
-<td data-label="Event"><strong>Õllesummer</strong> (01–04/07) — music + beer festival at the Song Festival Grounds</td>
-<td data-label="Type">Music/Folk</td>
-<td data-label="Link"><a href="https://www.piletilevi.ee" target="_blank" rel="noopener noreferrer">piletilevi.ee</a></td>
-</tr>
-<tr>
-<td data-label="Day"><a href="#g9">D9</a></td>
-<td data-label="Date">05/07</td>
-<td data-label="Location">Oulu 🇫🇮</td>
-<td data-label="Event"><strong>Oulu2026 European Capital of Culture</strong> — special events all summer</td>
-<td data-label="Type">Culture</td>
-<td data-label="Link"><a href="https://oulu2026.eu" target="_blank" rel="noopener noreferrer">oulu2026.eu</a></td>
-</tr>
-<tr>
-<td data-label="Day"><a href="#g13">D13</a></td>
-<td data-label="Date">09/07</td>
-<td data-label="Location">Tromsø 🇳🇴</td>
-<td data-label="Event"><strong>Midnight Sun Marathon</strong> (sports event week)</td>
-<td data-label="Type">Sport</td>
-<td data-label="Link"><a href="https://www.msm.no" target="_blank" rel="noopener noreferrer">msm.no</a></td>
-</tr>
-<tr>
-<td data-label="Day"><a href="#g26">D26</a></td>
-<td data-label="Date">22/07</td>
-<td data-label="Location">Trondheim 🇳🇴</td>
-<td data-label="Event"><strong>Tall Ships Races</strong> — sailing ships in port before departure to Aalborg</td>
-<td data-label="Type">Sailing/Show</td>
-<td data-label="Link"><a href="https://sailtraininginternational.org" target="_blank" rel="noopener noreferrer">sailtraininginternational.org</a></td>
-</tr>
-<tr>
-<td data-label="Day"><a href="#g36">D36</a>–<a href="#g38">D38</a></td>
-<td data-label="Date">01–03/08</td>
-<td data-label="Location">Billund → Aalborg 🇩🇰</td>
-<td data-label="Event"><strong>Tall Ships Races Aalborg</strong> (30/07–02/08) — reachable in 1.5h from Billund!</td>
-<td data-label="Type">Sailing/Show</td>
-<td data-label="Link"><a href="https://www.tsraalborg.dk/en/" target="_blank" rel="noopener noreferrer">tsraalborg.dk</a></td>
-</tr>
-<tr>
-<td data-label="Day"><a href="#g44">D44</a></td>
-<td data-label="Date">09/08</td>
-<td data-label="Location">San Sebastián 🇪🇸</td>
-<td data-label="Event"><strong>Semana Grande / Aste Nagusia</strong> (08–15/08) — the biggest festival in the Basque Country: fireworks, concerts, fairs</td>
-<td data-label="Type">Popular</td>
-<td data-label="Link"><a href="https://www.sansebastianturismoa.eus" target="_blank" rel="noopener noreferrer">sansebastianturismoa.eus</a></td>
-</tr>
-<tr>
-<td data-label="Day"><a href="#g50">D50</a></td>
-<td data-label="Date">15/08</td>
-<td data-label="Location">Costa Brava 🇪🇸🇫🇷🇮🇹</td>
-<td data-label="Event"><strong>Ferragosto / Assumption</strong> — public holiday in IT/FR/ES, patron saint festivals everywhere</td>
-<td data-label="Type">Religious/Popular</td>
-<td data-label="Link">—</td>
-</tr>
-</tbody>
-</table>
-<h3 id="da-non-perdere-consiglio">Not to Miss (Advice)</h3>
-<blockquote>
-<p><strong>Tall Ships Aalborg (G36–G38):</strong> You are in Billund on 01–03/08 — Aalborg is only 100 km away (1h15). The most beautiful sailing ships in the world are in port from 30/07 to 02/08. Worth a half-day detour, especially for kids!</p>
-<p><strong>Semana Grande San Sebastián (G44):</strong> Arrive in the middle of the city's most important festival. Fireworks over the sea every evening at 22:30 (international fireworks competition), free concerts, children's fairs in Plaza de la Constitución. Parking outside the center recommended.</p>
-<p><strong>Oulu2026 (G9):</strong> Oulu is European Capital of Culture 2026 — there will be art installations, special events, and free concerts throughout the city. Check the program at <a href="https://oulu2026.eu" target="_blank" rel="noopener noreferrer">oulu2026.eu</a> before arriving.</p>
-</blockquote>
-<h3 id="feste-patronali-in-spagna-g43g49">Patron Saint Festivals in Spain (G43–G49)</h3>
-<p>In August almost every Spanish pueblo has its own <strong>fiesta patronal</strong> with processions, fireworks, music, and stalls. No need to plan: just stop where you see colorful flags! Particularly beautiful:</p>
-<p>🎉 <strong>Asturias</strong> (G43): cider festivals in villages</p>
-<p>🎉 <strong>Burgos</strong> (G45): Fiestas de San Lorenzo (10/08)</p>
-<p>🎉 <strong>Segovia</strong> (G46): summer medieval markets</p>
-<h3 id="eventi-appena-mancati-per-pochi-giorni">Events Just Missed (by a few days)</h3>
-<table class="no-responsive">
-<thead>
-<tr>
-<th>Event</th>
-<th>Dates</th>
-<th>Where</th>
-<th>Time Distance</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td data-label="Event">Donauinselfest Vienna</td>
-<td data-label="Dates">03–05/07</td>
-<td data-label="Where">Vienna</td>
-<td data-label="Time Distance">Departed on 26/06, missed by 7 days</td>
-</tr>
-<tr>
-<td data-label="Event">Bukta Festival</td>
-<td data-label="Dates">17–18/07</td>
-<td data-label="Where">Tromsø</td>
-<td data-label="Time Distance">Departed on 11/07, missed by 6 days</td>
-</tr>
-<tr>
-<td data-label="Event">Olavsfestdagene</td>
-<td data-label="Dates">28/07–03/08</td>
-<td data-label="Where">Trondheim</td>
-<td data-label="Time Distance">Passed on 22/07, missed by 6 days</td>
-</tr>
-<tr>
-<td data-label="Event">Copenhagen Jazz Festival</td>
-<td data-label="Dates">03–12/07</td>
-<td data-label="Where">Copenhagen</td>
-<td data-label="Time Distance">Arrived on 30/07, missed by 18 days</td>
-</tr>
-</tbody>
-</table>
-
 <hr>
 </section>
 
@@ -5271,7 +5156,7 @@
 <h3 id="tradizioni-vive-in-estate_9">🎉 Living traditions in summer</h3>
 <p>🏛️ <strong>Marché</strong> — every French town has its market 2-3 times a week. Cheese, fruit, bread, rotisserie. The perfect lunch on the road!</p>
 <p><strong>14 Juillet</strong> (July 14) — National Holiday. Fireworks everywhere! If you are in France on 14/07 (G48 in Plan B), look for a show.</p>
-<p>🏛️ <strong>Boulangerie</strong> — French bread is sacred. Every village has its boulangerie. Baguette tradition (€1.20), pain au chocolat (€1.50), croissant (€1.30). Perfect breakfast!</p>
+<p>🏛️ <strong>Boulangerie</strong> — French bread is sacred. Every village has its boulangerie. Baguette tradition (€1.21), pain au chocolat (€1.50), croissant (€1.30). Perfect breakfast!</p>
 <p>🏛️ <strong>Apéro</strong> — the French aperitif: a glass of wine/pastis with olives, chips, saucisson. In summer it’s done everywhere, even in parks.</p>
 <h3 id="parole-utili_10">💬 Useful words</h3>
 <table class="no-responsive">
@@ -6679,9 +6564,9 @@
 </ul>
 <h4 id="street-food-chioschi-take-away_8">🌭 Street food / stalls / take-away</h4>
 <ul>
-<li><strong>Baguette + fromage</strong> — the perfect combo (fresh baguette every morning in boulangerie, ~€1.20!)</li>
+<li><strong>Baguette + fromage</strong> — the perfect combo (fresh baguette every morning in boulangerie, ~€1.21!)</li>
 <li><strong>Marchés</strong> (markets) — every city has at least one, 2-3 times a week. Fruit, cheeses, rotisserie (roast chicken ~€8 whole!), olives, bread. The perfect lunch</li>
-<li><strong>Boulangeries</strong> — fresh baguette (€1.20) + cheese + ham = lunch for 4 under €10</li>
+<li><strong>Boulangeries</strong> — fresh baguette (€1.21) + cheese + ham = lunch for 4 under €10</li>
 <li><strong>Crêperies</strong> — galette complète (ham/cheese/egg) ~€7-9. Also take-away!</li>
 </ul>
 <h4 id="da-comprare-al-supermercato_8">🛒 To buy at the supermarket</h4>
@@ -6690,7 +6575,7 @@
 <li><strong>Quiche Lorraine</strong> — ready savory tart (~€3-4 per portion)</li>
 <li><strong>Fromage de chèvre</strong> — goat cheeses from the Loire are among the best in the world (Sainte-Maure, Valençay, Crottin de Chavignol, ~€2-4)</li>
 <li><strong>Loire wines</strong> — Vouvray (sweet white), Chinon (light red), Crémant de Loire (sparkling, €5-8!)</li>
-<li><strong>Pain au chocolat</strong> — for kids' breakfast (~€1.20)</li>
+<li><strong>Pain au chocolat</strong> — for kids' breakfast (~€1.21)</li>
 </ul>
 <h4 id="ricette-da-furgone_8">🍳 Van recipes</h4>
 <ul>
@@ -6889,14 +6774,12 @@
 
 <h1 style="text-align:center; margin-top:16px;">🥾 Activities — Practical Guides</h1>
 <div class="tab-index-wrapper"><div class="tab-index">
-<a href="#campeggio">🚐 Campeggio Libero</a>
+<a href="#campeggio">🚐 Wild Camping</a>
 <a href="#trekking">🥾 Trekking</a>
-<a href="#pesca">🎣 Pesca</a>
-<a href="#noleggi">🚴 Noleggi Outdoor</a>
-<a href="#secA">♨️ Terme</a>
+<a href="#pesca">🎣 Fishing</a>
+<a href="#noleggi">🚴 Outdoor Rentals</a>
 <a href="#drone">🛸 Drone</a>
 <a href="#inreach">📡 Garmin inReach</a>
-<a href="#poi-esplora">🗺️ Explore</a>
 </div></div>
 <h2 id="campeggio">🚐 Camping — Rules by Country</h2>
 <table class="no-responsive">
@@ -8034,62 +7917,6 @@
 </table>
 
 <hr>
-
-<h2 id="secA">♨️ Thermal Baths — Thermal Baths by Country</h2>
-<p><span id="a1"></span></p>
-<h3 id="terme-vienna">Therme Wien Oberlaa 🇦🇹</h3>
-<p><strong>Connection:</strong> <a href="#g1">D1</a> (Vienna, evening)</p>
-<p>Modern thermal complex with <strong>Family Area</strong> (slides, toddler zone)</p>
-<p>Day ticket: <strong>€39</strong> adult, <strong>€23.10</strong> child (ages 8-13)</p>
-<p>By metro from center (U1 → Oberlaa)</p>
-<p>Website: <a href="https://www.thermewien.at/en/" target="_blank" rel="noopener noreferrer">thermewien.at</a></p>
-<p>♨️ <a href="https://maps.google.com/?q=48.1420,16.4020(Therme+Wien+Oberlaa)" target="_blank" rel="noopener noreferrer">Open in Maps</a></p>
-<p><span id="a2"></span></p>
-<h3 id="terme-finlandia">Finnish Sauna on the Lake 🇫🇮</h3>
-<p><strong>Connection:</strong> <a href="#g8">D8</a> (Saimaa)</p>
-<p>Authentic experience: wood sauna + lake plunge</p>
-<p>Rentable at local facilities (~€20-40/family)</p>
-<p>Not a classic "thermal bath" but the thermal experience of the trip</p>
-<p>♨️ <a href="https://maps.google.com/?q=Saimaa+lakeside+sauna+Finland" target="_blank" rel="noopener noreferrer">Open in Maps</a></p>
-<p><span id="a3"></span></p>
-<h3 id="terme-tromso">Pust Tromsø 🇳🇴</h3>
-<p><strong>Connection:</strong> <a href="#g15">D15</a> (Tromsø) 🥾</p>
-<p>Floating sauna on the Arctic fjord</p>
-<p>Plunge into 8°C water after sauna!</p>
-<p>Book at <a href="https://www.pust.no" target="_blank" rel="noopener noreferrer">pust.no</a> — 150 NOK adult (~€13), 79 NOK child (~€7). Family ~€40 total!</p>
-<p>Unique experience, midnight sun included</p>
-<p>♨️ <a href="https://maps.google.com/?q=69.6470,18.9620(Pust+Tromsø)" target="_blank" rel="noopener noreferrer">Open in Maps</a></p>
-<p><span id="a4"></span></p>
-<h3 id="terme-danimarca">Lalandia Aquadome 🇩🇰</h3>
-<p><strong>Connection:</strong> <a href="#g38">D38</a> (Billund, afternoon)</p>
-<p>The largest indoor water park in Scandinavia</p>
-<p>Slides, waves, kids area, tropical temperature</p>
-<p>♨️ Attached to Legoland — perfect combo</p>
-<p>Day ticket: DKK 299 adult (~€40), DKK 249 child (~€33). Children &lt;3 free.</p>
-<p>Website: <a href="https://www.lalandia.dk/en/billund" target="_blank" rel="noopener noreferrer">lalandia.dk</a></p>
-<p>♨️ <a href="https://maps.google.com/?q=55.7350,9.1250(Lalandia+Billund)" target="_blank" rel="noopener noreferrer">Open in Maps</a></p>
-<p><span id="a5"></span></p>
-<h3 id="terme-sansebastian">La Perla San Sebastián 🇪🇸</h3>
-<p><strong>Connection:</strong> <a href="#g43">D43</a> (San Sebastián)</p>
-<p>Thalassotherapy on La Concha beach</p>
-<p>Pool with ocean view</p>
-<p>~€30/person, children allowed in some areas</p>
-<p>♨️ <a href="https://maps.google.com/?q=43.3180,-1.9870(La+Perla+San+Sebastian)" target="_blank" rel="noopener noreferrer">Open in Maps</a></p>
-<p><span id="a6"></span></p>
-<h3 id="terme-hermida">Balneario La Hermida 🇪🇸</h3>
-<p><strong>Connection:</strong> <a href="#g45">D45</a> (Picos de Europa) 🥾</p>
-<p>60°C waters in the Deva gorge</p>
-<p>30 km from Fuente Dé — pairs well with the morning cable car</p>
-<p>Historic (19th century), renovated</p>
-<p>♨️ <a href="https://maps.google.com/?q=43.2250,-4.6100(Balneario+La+Hermida)" target="_blank" rel="noopener noreferrer">Open in Maps</a></p>
-<p><span id="a7"></span></p>
-<h3 id="terme-castilla">Castilla Termal 🇪🇸</h3>
-<p><strong>Connection:</strong> <a href="#g47">D47</a> (Palencia)</p>
-<p>Thermal baths in a restored convent</p>
-<p>Mineral waters at 36°C</p>
-<p>♨️ Perfect pre-eclipse relaxation</p>
-<p>♨️ <a href="https://maps.google.com/?q=Castilla+Termal+Palencia" target="_blank" rel="noopener noreferrer">Open in Maps</a></p>
-
 <hr>
 <h2 id="drone">🛸 Drone — Regulations by Country</h2>
 <blockquote>
@@ -8353,7 +8180,7 @@
 </tr>
 <tr>
 <td data-label="Zone">🇩🇪 Germany, 🇦🇹 Austria, 🇮🇹 Italy</td>
-<td data-label="Days"><a href="#g0">D0</a>–<a href="#g1">D1</a>, <a href="#g52">D52</a>–<a href="#g54">D54</a></td>
+<td data-label="Days"><a href="#g0">D0</a>–<a href="#g1">D1</a>, <a href="#g52">D52</a>–<a href="#g53">D53</a></td>
 <td data-label="Risk">✅ Low (excellent coverage)</td>
 <td data-label="Advice">Not needed</td>
 </tr>
@@ -8396,16 +8223,55 @@
 </tbody>
 </table>
 <p><strong>Sources:</strong> <a href="https://www.garmin.com/en-US/p/765374" target="_blank" rel="noopener">Garmin inReach Mini 2</a> | <a href="https://explore.garmin.com" target="_blank" rel="noopener">Garmin Explore</a> | <a href="https://www.dekkinga.com" target="_blank" rel="noopener">Iridium Coverage</a></p>
+</section>
+<section id="tab-luoghi" class="tab-content">
+
+<h1 style="text-align:center; margin-top:16px;">🧭 Places — Must Visit</h1>
+<div class="tab-index-wrapper"><div class="tab-index">
+<a href="#musei-attrazioni">🏛️ Museums</a>
+<a href="#viewpoint">🌅 Viewpoints</a>
+<a href="#feste">🎉 Festivals</a>
+<a href="#poi-parchi-nazionali">🌲 National Parks</a>
+<a href="#poi-mercati">🛒 Markets</a>
+<a href="#secA">♨️ Thermal Baths</a>
+<a href="#poi-parchi-divertimento">🎢 Theme Parks</a>
+</div></div>
+
+<h2 id="musei-attrazioni">🏛️ Museums and Attractions</h2>
+<p>Museums, monuments and must-see cultural attractions along the route. Many are already mentioned in the individual itinerary days.</p>
+<div id="poi-list-museum"></div>
 <hr>
-<h2 id="poi-esplora">🗺️ Explore — Parks, Markets & Nature</h2>
-<p>Points of interest along the trip route. Filter by category and tap 📍 to open in Google Maps.</p>
-<div id="poi-filters" style="display:flex; gap:8px; flex-wrap:wrap; margin:12px 0;">
-<button class="poi-chip active" data-cat="all">🌍 All</button>
-<button class="poi-chip" data-cat="park">🎢 Parks</button>
-<button class="poi-chip" data-cat="market">🛒 Markets</button>
-<button class="poi-chip" data-cat="nature">🌲 National Parks</button>
-</div>
-<div id="poi-list"></div>
+
+<h2 id="viewpoint">🌅 Viewpoints — Scenic Lookouts</h2>
+<p>The most spectacular viewpoints along the route. Many are reachable by car or with short walks.</p>
+<div id="poi-list-viewpoint"></div>
+<hr>
+
+<h2 id="feste">🎉 Festivals — Events along the Route</h2>
+<p>The trip (June 26 – August 18) coincides with the high season for festivals and popular celebrations across Europe. Here are the events that <strong>fall exactly on the days you will be there</strong>.</p>
+<div id="poi-list-festival"></div>
+<p style="margin-top:12px;"><strong>💡 Tip:</strong> 🇪🇸 In August almost every Spanish town has its own patron saint festival. Expect: live music in the square until late, market stalls, fireworks!</p>
+<hr>
+
+<h2 id="poi-parchi-nazionali">🌲 National Parks</h2>
+<p>National parks and nature reserves along the route. Hikes, pristine nature and breathtaking landscapes.</p>
+<div id="poi-list-nature"></div>
+<hr>
+
+<h2 id="poi-mercati">🛒 Markets</h2>
+<p>Local markets, food markets and historic markets along the route. Perfect for buying local products and experiencing the local atmosphere.</p>
+<div id="poi-list-market"></div>
+<hr>
+
+<h2 id="secA">♨️ Thermal Baths — Spas and Saunas</h2>
+<span id="a1"></span><span id="a2"></span><span id="a3"></span><span id="a4"></span><span id="a5"></span><span id="a6"></span><span id="a7"></span>
+<p>Thermal baths, saunas and water experiences along the route. Relaxation for the whole family.</p>
+<div id="poi-list-spa"></div>
+<hr>
+
+<h2 id="poi-parchi-divertimento">🎢 Theme Parks</h2>
+<p>Theme parks and amusement parks along the route. Perfect for a fun day out with the kids.</p>
+<div id="poi-list-park"></div>
 <p id="poi-sources" style="margin-top:16px;"><strong>Sources:</strong>
 <a href="https://www.praterwien.com" target="_blank" rel="noopener">Prater Wien</a> |
 <a href="https://www.linnanmaki.fi/en/" target="_blank" rel="noopener">Linnanmäki</a> |
@@ -8416,7 +8282,7 @@
 <a href="https://www.heide-park.de/en/" target="_blank" rel="noopener">Heide Park</a> |
 <a href="https://www.futuroscope.com/en" target="_blank" rel="noopener">Futuroscope</a> |
 <a href="https://www.dyreparken.no/english/" target="_blank" rel="noopener">Dyreparken</a> |
-<a href="https://www.acquariodigenova.it/en/" target="_blank" rel="noopener">Genoa Aquarium</a> |
+<a href="https://www.acquariodigenova.it/en/" target="_blank" rel="noopener">Acquario Genova</a> |
 <a href="https://www.centraltirgus.lv/en/" target="_blank" rel="noopener">Riga Central Market</a> |
 <a href="https://torvehallernekbh.dk/en/" target="_blank" rel="noopener">Torvehallerne</a> |
 <a href="https://www.visitbergen.com/things-to-do/fish-market-in-bergen-p822253" target="_blank" rel="noopener">Bergen Fish Market</a> |
@@ -8432,7 +8298,6 @@
 <hr>
 
 </section>
-
 <section id="tab-piano" class="tab-content">
 
 <h1 style="text-align:center; margin-top:16px;">🗺️ Plan — Budget, Checklist and Sources</h1>

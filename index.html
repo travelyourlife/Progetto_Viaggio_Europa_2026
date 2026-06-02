@@ -43,7 +43,7 @@
     <link rel="apple-touch-icon" sizes="152x152" href="./icon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="./icon.png">
     <link rel="apple-touch-icon" sizes="167x167" href="./icon.png">
-    <title>Viaggio Europa 2026 — V1.20</title>
+    <title>Viaggio Europa 2026 — V1.21</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <link rel="stylesheet" href="style.css">
 <!-- Firebase SDK (compat mode for single-file app) -->
@@ -59,7 +59,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = '1.20';
+  var EXPECTED_VERSION = '1.21';
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
   var r = false;
@@ -1687,7 +1687,7 @@
 <h3 id="g47-1208-eclissi-totale-di-sole">G47 · 12/08 · 🌒 ECLISSI TOTALE DI SOLE 🇪🇸</h3>
 <p><strong>0 km · Giornata stanziale</strong></p>
 <p>☀️ <strong>31°C</strong> / 14°C · ☀️ <strong>Cielo sereno (prob. 80-85%)</strong> · Eclissi h 20:29 locale</p>
-<p>♨️ <strong>Terme:</strong> ⭐ Caldea Andorra — spa termale più grande del sud Europa, 6.000m², perfetta dopo trekking (€39/adulto, bambini €24) → <a href="#terme-hermida">dettagli terme</a>
+<p>♨️ <strong>Terme:</strong> ⭐ Caldea Andorra — spa termale più grande del sud Europa, 6.000m², perfetta dopo trekking (€39/adulto, bambini €24) → <a href="#secA">dettagli terme</a>
 <strong>⚠️ CRITICO:</strong> Sole a ~11° di altezza → serve orizzonte Ovest libero. Niente alberi, edifici, colline. Spot individuato il giorno prima (G46). Usare <strong>PhotoPills</strong> (AR) per verificare la traiettoria del sole sullo spot.
 <strong>🌧️ Piano B meteo:</strong> Se le previsioni 48h prima mostrano nuvole a Palencia, spostarsi verso <strong>León</strong> o <strong>Valladolid</strong> (entrambe sulla linea di totalità, a 1-1,5h di distanza).
 🌑 ⭐⭐⭐ <strong>ECLISSI TOTALE</strong> — totalità ~1 min 50s, Sole a ~11° sopra l'orizzonte Ovest
@@ -5103,7 +5103,7 @@
 <h3 id="tradizioni-vive-in-estate_9">🎉 Tradizioni vive in estate</h3>
 <p>🏛️ <strong>Marché</strong> — ogni città francese ha il suo mercato 2-3 volte a settimana. Formaggi, frutta, pane, rotisserie. Il pranzo perfetto in viaggio!</p>
 <p><strong>14 Juillet</strong> (14 luglio) — Festa Nazionale. Fuochi d'artificio ovunque! Se siete in Francia il 14/07 (G48 nel Piano B), cercate uno spettacolo.</p>
-<p>🏛️ <strong>Boulangerie</strong> — il pane francese è sacro. Ogni villaggio ha la sua boulangerie. Baguette tradition (€1.20), pain au chocolat (€1.50), croissant (€1.30). Colazione perfetta!</p>
+<p>🏛️ <strong>Boulangerie</strong> — il pane francese è sacro. Ogni villaggio ha la sua boulangerie. Baguette tradition (€1.21), pain au chocolat (€1.50), croissant (€1.30). Colazione perfetta!</p>
 <p>🏛️ <strong>Apéro</strong> — l'aperitivo francese: un bicchiere di vino/pastis con olive, chips, saucisson. D'estate si fa ovunque, anche nei parchi.</p>
 <h3 id="parole-utili_10">💬 Parole utili</h3>
 <table>
@@ -5986,12 +5986,6 @@
 <td data-label="Per quale tappa"><a href="#g6">G6</a>-<a href="#g14">G14</a> (Finlandia)</td>
 </tr>
 <tr>
-<td data-label="Titolo"><strong>Le Fiabe dei Fratelli Grimm</strong> (audiolibro)</td>
-<td data-label="Tipo">Audiolibro</td>
-<td data-label="Durata">5h+</td>
-<td data-label="Per quale tappa"><a href="#g39">G39</a> (Germania)</td>
-</tr>
-<tr>
 <td data-label="Titolo"><strong>Le Avventure di Pippi</strong> (audiolibro)</td>
 <td data-label="Tipo">Audiolibro</td>
 <td data-label="Durata">4h</td>
@@ -6014,6 +6008,12 @@
 <td data-label="Tipo">Audiolibro</td>
 <td data-label="Durata">4h</td>
 <td data-label="Per quale tappa"><a href="#g34">G34</a>-<a href="#g38">G38</a> (Danimarca)</td>
+</tr>
+<tr>
+<td data-label="Titolo"><strong>Le Fiabe dei Fratelli Grimm</strong> (audiolibro)</td>
+<td data-label="Tipo">Audiolibro</td>
+<td data-label="Durata">5h+</td>
+<td data-label="Per quale tappa"><a href="#g39">G39</a> (Germania)</td>
 </tr>
 <tr>
 <td data-label="Titolo"><strong>20.000 Leghe sotto i Mari</strong> (versione ragazzi)</td>
@@ -6041,16 +6041,16 @@
 </thead>
 <tbody>
 <tr>
+<td data-label="Titolo"><strong>The History of Rome</strong> (Mike Duncan)</td>
+<td data-label="Tipo">Podcast</td>
+<td data-label="Durata">30 min/ep</td>
+<td data-label="Per quale tappa"><a href="#g0">G0</a>-<a href="#g1">G1</a> (Austria romana)</td>
+</tr>
+<tr>
 <td data-label="Titolo"><strong>Stuff You Should Know</strong> — "How Vikings Worked"</td>
 <td data-label="Tipo">Podcast</td>
 <td data-label="Durata">1h</td>
 <td data-label="Per quale tappa"><a href="#g15">G15</a>-<a href="#g23">G23</a></td>
-</tr>
-<tr>
-<td data-label="Titolo"><strong>99% Invisible</strong> — "The Bilbao Effect"</td>
-<td data-label="Tipo">Podcast</td>
-<td data-label="Durata">30 min</td>
-<td data-label="Per quale tappa"><a href="#g44">G44</a> (prima del Guggenheim)</td>
 </tr>
 <tr>
 <td data-label="Titolo"><strong>Dan Carlin's Hardcore History</strong> — "Thor's Angels"</td>
@@ -6059,16 +6059,10 @@
 <td data-label="Per quale tappa"><a href="#g15">G15</a>-<a href="#g33">G33</a> (Vichinghi)</td>
 </tr>
 <tr>
-<td data-label="Titolo"><strong>Radiolab</strong> — "From Tree to Shining Tree"</td>
+<td data-label="Titolo"><strong>Fall of Civilizations</strong> — "The Vikings"</td>
 <td data-label="Tipo">Podcast</td>
-<td data-label="Durata">1h</td>
-<td data-label="Per quale tappa">Qualsiasi tappa nella natura</td>
-</tr>
-<tr>
-<td data-label="Titolo"><strong>The History of Rome</strong> (Mike Duncan)</td>
-<td data-label="Tipo">Podcast</td>
-<td data-label="Durata">30 min/ep</td>
-<td data-label="Per quale tappa"><a href="#g0">G0</a>-<a href="#g1">G1</a> (Austria romana)</td>
+<td data-label="Durata">3h</td>
+<td data-label="Per quale tappa"><a href="#g15">G15</a>-<a href="#g33">G33</a></td>
 </tr>
 <tr>
 <td data-label="Titolo"><strong>Revolutions</strong> (Mike Duncan) — French Revolution</td>
@@ -6077,10 +6071,16 @@
 <td data-label="Per quale tappa"><a href="#g40">G40</a>-<a href="#g42">G42</a> (Francia)</td>
 </tr>
 <tr>
-<td data-label="Titolo"><strong>Fall of Civilizations</strong> — "The Vikings"</td>
+<td data-label="Titolo"><strong>99% Invisible</strong> — "The Bilbao Effect"</td>
 <td data-label="Tipo">Podcast</td>
-<td data-label="Durata">3h</td>
-<td data-label="Per quale tappa"><a href="#g15">G15</a>-<a href="#g33">G33</a></td>
+<td data-label="Durata">30 min</td>
+<td data-label="Per quale tappa"><a href="#g44">G44</a> (prima del Guggenheim)</td>
+</tr>
+<tr>
+<td data-label="Titolo"><strong>Radiolab</strong> — "From Tree to Shining Tree"</td>
+<td data-label="Tipo">Podcast</td>
+<td data-label="Durata">1h</td>
+<td data-label="Per quale tappa">Qualsiasi tappa nella natura</td>
 </tr>
 </tbody>
 </table>
@@ -6102,22 +6102,28 @@
 <td data-label="Quando guardarlo">La sera prima della Norvegia (G14)</td>
 </tr>
 <tr>
-<td data-label="Film"><strong>Frozen 2</strong></td>
-<td data-label="Età">6+</td>
-<td data-label="Durata">1h 43m</td>
-<td data-label="Quando guardarlo">Durante le Lofoten (G19-G23)</td>
-</tr>
-<tr>
 <td data-label="Film"><strong>Dragon Trainer</strong></td>
 <td data-label="Età">6+</td>
 <td data-label="Durata">1h 38m</td>
 <td data-label="Quando guardarlo">Sera in Norvegia (G16-G18)</td>
 </tr>
 <tr>
+<td data-label="Film"><strong>Frozen 2</strong></td>
+<td data-label="Età">6+</td>
+<td data-label="Durata">1h 43m</td>
+<td data-label="Quando guardarlo">Durante le Lofoten (G19-G23)</td>
+</tr>
+<tr>
 <td data-label="Film"><strong>Dragon Trainer 2</strong></td>
 <td data-label="Età">6+</td>
 <td data-label="Durata">1h 42m</td>
 <td data-label="Quando guardarlo">Sera in Norvegia (G19-G23)</td>
+</tr>
+<tr>
+<td data-label="Film"><strong>La Sirenetta</strong></td>
+<td data-label="Età">5+</td>
+<td data-label="Durata">1h 23m</td>
+<td data-label="Quando guardarlo">Sera a Copenhagen (G34-G35)</td>
 </tr>
 <tr>
 <td data-label="Film"><strong>LEGO Movie</strong></td>
@@ -6136,12 +6142,6 @@
 <td data-label="Età">6+</td>
 <td data-label="Durata">1h 51m</td>
 <td data-label="Quando guardarlo">La sera prima della Francia (G39)</td>
-</tr>
-<tr>
-<td data-label="Film"><strong>La Sirenetta</strong></td>
-<td data-label="Età">5+</td>
-<td data-label="Durata">1h 23m</td>
-<td data-label="Quando guardarlo">Sera a Copenhagen (G34-G35)</td>
 </tr>
 <tr>
 <td data-label="Film"><strong>Brave</strong></td>
@@ -6675,7 +6675,7 @@
 <hr>
 <h2 id="cucina-francese-g39-g42-g50-g51">🇫🇷 Cucina Francese (G39-G42, G50-G51)</h2>
 <h4 id="storia-cucina-francese">📜 Storia della cucina francese</h4>
-<p>La cucina francese (<a href="https://it.wikipedia.org/wiki/Cucina_francese" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) è Patrimonio UNESCO dal 2010. <strong>Auguste Escoffier</strong> (<a href="https://it.wikipedia.org/wiki/Auguste_Escoffier" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) codificò la cucina moderna nel 1903 con "Le Guide Culinaire". La <strong>baguette</strong> (<a href="https://it.wikipedia.org/wiki/Baguette" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) è Patrimonio UNESCO dal 2022 — i francesi ne consumano 10 miliardi l'anno! La tradizione del <strong>fromage</strong> (formaggio) conta 1.200+ varietà — De Gaulle disse: "Come si può governare un paese con 246 formaggi diversi?". Il <strong>croissant</strong> in realtà è austriaco (Kipferl), portato a Parigi nel 1838. La Bretagna e la Normandia (sul vostro percorso) sono famose per crêpes, sidro, burro salato e ostriche.</p>
+<p>La cucina francese (<a href="https://it.wikipedia.org/wiki/Cucina_francese" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) è Patrimonio UNESCO dal 2010. <strong>Auguste Escoffier</strong> (<a href="https://it.wikipedia.org/wiki/Auguste_Escoffier" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) codificò la cucina moderna nel 1903 con "Le Guide Culinaire". La <strong>baguette</strong> (<a href="https://it.wikipedia.org/wiki/Baguette" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) è Patrimonio UNESCO dal 2022 — i francesi ne consumano 10 miliardi l'anno! La tradizione del <strong>fromage</strong> (formaggio) conta 1.210+ varietà — De Gaulle disse: "Come si può governare un paese con 246 formaggi diversi?". Il <strong>croissant</strong> in realtà è austriaco (Kipferl), portato a Parigi nel 1838. La Bretagna e la Normandia (sul vostro percorso) sono famose per crêpes, sidro, burro salato e ostriche.</p>
 <h4 id="extra-piatti-francia">🍽️ Altri piatti da provare</h4>
 <ul>
 <li><strong>Crêpes bretoni</strong> — Galettes di grano saraceno (salate) e crêpes di frumento (dolci). Con sidro! <a href="https://it.wikipedia.org/wiki/Cr%C3%AApe" target="_blank" rel="noopener noreferrer">📚</a></li>
@@ -6686,9 +6686,9 @@
 </ul>
 <h4 id="street-food-chioschi-take-away_8">🌭 Street food / chioschi / take-away</h4>
 <ul>
-<li><strong>Baguette + fromage</strong> — la combo perfetta (baguette fresca ogni mattina in boulangerie, ~€1.20!)</li>
+<li><strong>Baguette + fromage</strong> — la combo perfetta (baguette fresca ogni mattina in boulangerie, ~€1.21!)</li>
 <li><strong>Marchés</strong> (mercati) — ogni città ne ha almeno uno, 2-3 volte a settimana. Frutta, formaggi, rotisserie (pollo arrosto ~€8 intero!), olive, pane. Il pranzo perfetto</li>
-<li><strong>Boulangeries</strong> — baguette fresca (€1.20) + fromage + jambon = pranzo per 4 a meno di €10</li>
+<li><strong>Boulangeries</strong> — baguette fresca (€1.21) + fromage + jambon = pranzo per 4 a meno di €10</li>
 <li><strong>Crêperies</strong> — galette complète (prosciutto/formaggio/uovo) ~€7-9. Anche take-away!</li>
 </ul>
 <h4 id="da-comprare-al-supermercato_8">🛒 Da comprare al supermercato</h4>
@@ -6697,7 +6697,7 @@
 <li><strong>Quiche Lorraine</strong> — torta salata pronta (~€3-4 a porzione)</li>
 <li><strong>Fromage de chèvre</strong> — i formaggi di capra della Loira sono tra i migliori al mondo (Sainte-Maure, Valençay, Crottin de Chavignol, ~€2-4)</li>
 <li><strong>Vini della Loira</strong> — Vouvray (bianco dolce), Chinon (rosso leggero), Crémant de Loire (spumante, €5-8!)</li>
-<li><strong>Pain au chocolat</strong> — per la colazione dei bambini (~€1.20)</li>
+<li><strong>Pain au chocolat</strong> — per la colazione dei bambini (~€1.21)</li>
 </ul>
 <h4 id="ricette-da-furgone_8">🍳 Ricette da furgone</h4>
 <ul>
@@ -8161,45 +8161,45 @@
 <tbody>
 <tr>
 <td data-label="#">1</td>
-<td data-label="Spot"><strong>Reine/Hamnøy</strong> (Lofoten)</td>
-<td data-label="Giorno"><a href="#g21">G21</a></td>
-<td data-label="Perché">Cabine rosse + montagne. Spot iconico.</td>
-<td data-label="Attenzione">FUORI dal Parco Nazionale Lofotodden! 5km da aeroporto Leknes.</td>
+<td data-label="Spot"><strong>Punkaharju Ridge</strong> (Finlandia)</td>
+<td data-label="Giorno"><a href="#g7">G7</a></td>
+<td data-label="Perché">Cresta tra due laghi, foresta boreale.</td>
+<td data-label="Attenzione">Verificare se area protetta.</td>
 </tr>
 <tr>
 <td data-label="#">2</td>
-<td data-label="Spot"><strong>Atlanterhavsveien</strong> (Atlantic Road)</td>
-<td data-label="Giorno"><a href="#g27">G27</a></td>
-<td data-label="Perché">Ponti spettacolari sull’oceano.</td>
-<td data-label="Attenzione">Vento forte frequente. Controllare meteo.</td>
-</tr>
-<tr>
-<td data-label="#">3</td>
-<td data-label="Spot"><strong>Geirangerfjord</strong></td>
-<td data-label="Giorno"><a href="#g28">G28</a></td>
-<td data-label="Perché">Fiordo UNESCO dall’alto.</td>
-<td data-label="Attenzione">Distanza da navi da crociera e cascate.</td>
-</tr>
-<tr>
-<td data-label="#">4</td>
-<td data-label="Spot"><strong>Trollstigen</strong></td>
-<td data-label="Giorno"><a href="#g28">G28</a></td>
-<td data-label="Perché">Strada a serpentina mozzafiato.</td>
-<td data-label="Attenzione">Distanza da persone al viewpoint.</td>
-</tr>
-<tr>
-<td data-label="#">5</td>
 <td data-label="Spot"><strong>Senja</strong> (Segla/Husøy)</td>
 <td data-label="Giorno"><a href="#g16">G16</a></td>
 <td data-label="Perché">Costa drammatica, villaggio su isola.</td>
 <td data-label="Attenzione">Vento in quota. Nessuna restrizione specifica.</td>
 </tr>
 <tr>
+<td data-label="#">3</td>
+<td data-label="Spot"><strong>Reine/Hamnøy</strong> (Lofoten)</td>
+<td data-label="Giorno"><a href="#g21">G21</a></td>
+<td data-label="Perché">Cabine rosse + montagne. Spot iconico.</td>
+<td data-label="Attenzione">FUORI dal Parco Nazionale Lofotodden! 5km da aeroporto Leknes.</td>
+</tr>
+<tr>
+<td data-label="#">4</td>
+<td data-label="Spot"><strong>Atlanterhavsveien</strong> (Atlantic Road)</td>
+<td data-label="Giorno"><a href="#g27">G27</a></td>
+<td data-label="Perché">Ponti spettacolari sull'oceano.</td>
+<td data-label="Attenzione">Vento forte frequente. Controllare meteo.</td>
+</tr>
+<tr>
+<td data-label="#">5</td>
+<td data-label="Spot"><strong>Geirangerfjord</strong></td>
+<td data-label="Giorno"><a href="#g28">G28</a></td>
+<td data-label="Perché">Fiordo UNESCO dall'alto.</td>
+<td data-label="Attenzione">Distanza da navi da crociera e cascate.</td>
+</tr>
+<tr>
 <td data-label="#">6</td>
-<td data-label="Spot"><strong>Punkaharju Ridge</strong> (Finlandia)</td>
-<td data-label="Giorno"><a href="#g7">G7</a></td>
-<td data-label="Perché">Cresta tra due laghi, foresta boreale.</td>
-<td data-label="Attenzione">Verificare se area protetta.</td>
+<td data-label="Spot"><strong>Trollstigen</strong></td>
+<td data-label="Giorno"><a href="#g28">G28</a></td>
+<td data-label="Perché">Strada a serpentina mozzafiato.</td>
+<td data-label="Attenzione">Distanza da persone al viewpoint.</td>
 </tr>
 </tbody>
 </table>
@@ -8255,28 +8255,16 @@
 </thead>
 <tbody>
 <tr>
-<td data-label="Zona">🇳🇴 Lofoten — sentieri remoti (Ryten, Kvalvika, Munkebu)</td>
-<td data-label="Giorni"><a href="#g19">G19</a>–<a href="#g23">G23</a></td>
-<td data-label="Rischio">⚠️ Medio-alto (fuori villaggi)</td>
-<td data-label="Consiglio"><strong>Attivare</strong> per ogni trekking remoto</td>
+<td data-label="Zona">🇩🇪 Germania, 🇦🇹 Austria, 🇮🇹 Italia</td>
+<td data-label="Giorni"><a href="#g0">G0</a>–<a href="#g1">G1</a>, <a href="#g52">G52</a>–<a href="#g53">G53</a></td>
+<td data-label="Rischio">✅ Basso (copertura eccellente)</td>
+<td data-label="Consiglio">Non necessario</td>
 </tr>
 <tr>
-<td data-label="Zona">🇳🇴 Senja — Segla, Hesten</td>
-<td data-label="Giorni"><a href="#g16">G16</a></td>
-<td data-label="Rischio">⚠️ Medio (valli senza segnale)</td>
-<td data-label="Consiglio"><strong>Attivare</strong> per trekking in quota</td>
-</tr>
-<tr>
-<td data-label="Zona">🇳🇴 Helgelandskysten — costa remota</td>
-<td data-label="Giorni"><a href="#g25">G25</a>–<a href="#g26">G26</a></td>
-<td data-label="Rischio">⚠️ Medio (isole, fiordi)</td>
-<td data-label="Consiglio">Attivare se si esce dalle strade principali</td>
-</tr>
-<tr>
-<td data-label="Zona">🇳🇴 Geirangerfjord — fondo fiordo</td>
-<td data-label="Giorni"><a href="#g28">G28</a></td>
-<td data-label="Rischio">⚠️ Medio (pareti bloccano segnale)</td>
-<td data-label="Consiglio">Utile per escursioni fuori Geiranger</td>
+<td data-label="Zona">🇪🇪🇱🇻🇱🇹 Baltici, 🇵🇱 Polonia, 🇨🇿 Rep. Ceca</td>
+<td data-label="Giorni"><a href="#g2">G2</a>–<a href="#g5">G5</a></td>
+<td data-label="Rischio">✅ Basso (paesi piccoli, buona copertura)</td>
+<td data-label="Consiglio">Non necessario</td>
 </tr>
 <tr>
 <td data-label="Zona">🇫🇮 Lapponia finlandese — wilderness (Inari, Kilpisjärvi)</td>
@@ -8291,16 +8279,28 @@
 <td data-label="Consiglio">Non necessario in città</td>
 </tr>
 <tr>
-<td data-label="Zona">🇪🇪🇱🇻🇱🇹 Baltici, 🇵🇱 Polonia, 🇨🇿 Rep. Ceca</td>
-<td data-label="Giorni"><a href="#g2">G2</a>–<a href="#g5">G5</a></td>
-<td data-label="Rischio">✅ Basso (paesi piccoli, buona copertura)</td>
-<td data-label="Consiglio">Non necessario</td>
+<td data-label="Zona">🇳🇴 Senja — Segla, Hesten</td>
+<td data-label="Giorni"><a href="#g16">G16</a></td>
+<td data-label="Rischio">⚠️ Medio (valli senza segnale)</td>
+<td data-label="Consiglio"><strong>Attivare</strong> per trekking in quota</td>
 </tr>
 <tr>
-<td data-label="Zona">🇩🇪 Germania, 🇦🇹 Austria, 🇮🇹 Italia</td>
-<td data-label="Giorni"><a href="#g0">G0</a>–<a href="#g1">G1</a>, <a href="#g52">G52</a>–<a href="#g54">G54</a></td>
-<td data-label="Rischio">✅ Basso (copertura eccellente)</td>
-<td data-label="Consiglio">Non necessario</td>
+<td data-label="Zona">🇳🇴 Lofoten — sentieri remoti (Ryten, Kvalvika, Munkebu)</td>
+<td data-label="Giorni"><a href="#g19">G19</a>–<a href="#g23">G23</a></td>
+<td data-label="Rischio">⚠️ Medio-alto (fuori villaggi)</td>
+<td data-label="Consiglio"><strong>Attivare</strong> per ogni trekking remoto</td>
+</tr>
+<tr>
+<td data-label="Zona">🇳🇴 Helgelandskysten — costa remota</td>
+<td data-label="Giorni"><a href="#g25">G25</a>–<a href="#g26">G26</a></td>
+<td data-label="Rischio">⚠️ Medio (isole, fiordi)</td>
+<td data-label="Consiglio">Attivare se si esce dalle strade principali</td>
+</tr>
+<tr>
+<td data-label="Zona">🇳🇴 Geirangerfjord — fondo fiordo</td>
+<td data-label="Giorni"><a href="#g28">G28</a></td>
+<td data-label="Rischio">⚠️ Medio (pareti bloccano segnale)</td>
+<td data-label="Consiglio">Utile per escursioni fuori Geiranger</td>
 </tr>
 </tbody>
 </table>
@@ -9047,6 +9047,7 @@
 <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap;">
 <a href="https://analytics.google.com/analytics/web/#/p/G-YSGVVPN5ZR" target="_blank" rel="noopener noreferrer" class="pos-btn pos-btn-blue" style="font-size:13px;">Apri Google Analytics ↗</a>
 <button id="an-reset" class="pos-btn" style="font-size:13px;">Resetta contatori locali</button>
+<button id="test-push-btn" class="pos-btn" style="font-size:13px;background:var(--accent);color:#fff;">🔔 Test Push</button>
 </div>
 </div>
 </section>

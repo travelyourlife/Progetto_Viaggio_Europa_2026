@@ -2001,7 +2001,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         queuePushNotification('recap_reminder', {
                             title: isEN ? '📋 Daily recap' : '📋 Riepilogo giornaliero',
                             body: isEN ? 'Tap to close today\'s diary' : 'Tocca per chiudere il diario di oggi',
-                            target: 'family'
+                            target: 'owner'
                         });
                     }
                 }, msUntil22);
@@ -4743,6 +4743,32 @@ if ('serviceWorker' in navigator) {
       }
     }
   });
+
+  // ─── Test Push button (writes directly to notifications queue) ───
+  var testPushBtn = document.getElementById('test-push-btn');
+  if (testPushBtn) {
+    testPushBtn.addEventListener('click', function() {
+      if (!isOwner) { showToast('Solo owner', 'error'); return; }
+      if (!db) { showToast('Firebase non disponibile', 'error'); return; }
+      var now = new Date();
+      var testNotif = {
+        type: 'test_push',
+        title: '🔔 Test notifica push',
+        body: 'Se vedi questo, le notifiche funzionano! ' + now.toLocaleTimeString(),
+        target: 'owner',
+        url: './#tab-piano',
+        tag: 'test-' + now.getTime(),
+        createdAt: Date.now(),
+        sent: false,
+        source: 'manual_test'
+      };
+      db.ref('trips/' + FAMILY_ID + '/notifications/queue').push(testNotif).then(function() {
+        showToast('✅ Notifica di test inviata alla coda Firebase', 'success');
+      }).catch(function(err) {
+        showToast('❌ Errore: ' + err.message, 'error');
+      });
+    });
+  }
 })();
 
 
@@ -4923,43 +4949,11 @@ if ('serviceWorker' in navigator) {
     }
   }
 
-  // ─── 8) Countdown push notifications (7, 3, 1 day before) ───
-  if (window.queuePushNotification) {
-    var countdownKey = 'countdown_push_' + todayStr;
-    if (!sessionStorage.getItem(countdownKey)) {
-      if (diffToStart === 7) {
-        queuePushNotification('countdown', {
-          title: isEN ? '🎉 7 days to go!' : '🎉 Mancano 7 giorni!',
-          body: isEN ? 'One week until the adventure begins! Check your packing list.' : 'Una settimana alla partenza! Controlla lo zaino.',
-          target: 'family',
-          url: './#tab-zaino',
-          tag: 'countdown-7'
-        });
-        sessionStorage.setItem(countdownKey, '1');
-      } else if (diffToStart === 3) {
-        queuePushNotification('countdown', {
-          title: isEN ? '⏳ 3 days to go!' : '⏳ Mancano 3 giorni!',
-          body: isEN ? 'Almost there! Final preparations time.' : 'Ci siamo quasi! Ultimi preparativi.',
-          target: 'family',
-          url: './#tab-piano',
-          tag: 'countdown-3'
-        });
-        sessionStorage.setItem(countdownKey, '1');
-      } else if (diffToStart === 1) {
-        queuePushNotification('countdown', {
-          title: isEN ? '🚀 Tomorrow you leave!' : '🚀 Domani si parte!',
-          body: isEN ? 'Check your backpack one last time. The adventure awaits!' : 'Controlla lo zaino un\'ultima volta. L\'avventura aspetta!',
-          target: 'family',
-          url: './#tab-zaino',
-          tag: 'countdown-1'
-        });
-        sessionStorage.setItem(countdownKey, '1');
-      }
-    }
-  }
+  // ─── 8) Countdown push — handled by Cloud Scheduler (dailyCountdown), removed from client ───
 
-  // ─── 9) Zaino push notification (3 days before, if items unchecked) ───
-  if (diffToStart <= 3 && diffToStart >= 1 && window.queuePushNotification) {
+  // ─── 9) Zaino push notification (24/20/15/10/3/2/1 days before, if items unchecked) ───
+  var zainoDays = [24, 20, 15, 10, 7, 3, 2, 1];
+  if (zainoDays.indexOf(diffToStart) !== -1 && window.queuePushNotification) {
     var zainoAllCbs = document.querySelectorAll('#tab-zaino input[type="checkbox"][data-idx]');
     var zainoUnchecked = 0;
     zainoAllCbs.forEach(function(cb) { if (!cb.checked) zainoUnchecked++; });
@@ -5011,7 +5005,7 @@ if ('serviceWorker' in navigator) {
           queuePushNotification('next_stage', {
             title: isEN ? '🛣️ Tomorrow: ' + nextRoute : '🛣️ Domani: ' + nextRoute,
             body: nextKm ? nextKm + ' — ' + nextOre : (isEN ? 'Check the details' : 'Controlla i dettagli'),
-            target: 'family',
+            target: 'owner',
             url: './#tab-giorni',
             tag: 'next-stage-' + todayStr
           });
@@ -5544,7 +5538,7 @@ if ('serviceWorker' in navigator) {
         queuePushNotification('evening_recap', {
           title: isEN ? '\ud83d\udcdd Day ' + Math.max(0, tripDay) + ' recap' : '\ud83d\udcdd Riepilogo giorno ' + Math.max(0, tripDay),
           body: (kmToday > 0 ? (kmToday.toFixed(0) + ' km') : '') + (highlight ? ' \u2014 ' + highlight : ''),
-          target: 'all',
+          target: 'owner',
           url: './#tab-diario',
           tag: 'recap-' + today
         });
@@ -5631,9 +5625,9 @@ if ('serviceWorker' in navigator) {
         showPlaceSuggestion(placeName, lat, lng);
         // Also queue push for family
         queuePushNotification('place_suggestion', {
-          title: isEN ? '\ud83d\udccd Stopped at ' + placeName : '\ud83d\udccd Fermo a ' + placeName,
+          title: isEN ? '📍 Stopped at ' + placeName : '📍 Fermo a ' + placeName,
           body: isEN ? 'Tap to add as a stop' : 'Tocca per aggiungere come tappa',
-          target: 'family',
+          target: 'owner',
           url: './#tab-posizione'
         });
       });

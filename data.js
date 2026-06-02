@@ -11,7 +11,7 @@ var TRIP_DAYS = 54;
 var TAB_ORDER = ['home', 'riepilogo', 'giorni', 'posizione', 'diario', 'cibo', 'cultura', 'attivita', 'piano', 'zaino', 'chat'];
 
 // Owner UIDs — only these can write to Firebase
-var OWNER_UIDS = ['RxlVlsfeaEeSwFUVYbKQujEsbBo1', 'QzXokvLGw2VgEAp4OTdgcmRTBPC3'];
+var OWNER_UIDS = ['RxlVlsfeaEeSwFUVYbKQujEsbBo1', 'Mh8BOeFPnFe7WObcsUoP6wyRgPw1']; // travelyourlife + aurora.mandara
 
 // ─── Itinerario completo (54 giorni) ───
 // Ogni entry alimenta: tabella, timeline, mappa, countdown
@@ -221,17 +221,17 @@ var POI_ATTIVITA = [
     price: "€17 adulti, €13 bambini", priceEn: "€17 adults, €13 children",
     url: "https://www.chenonceau.com/en/", mapsUrl: "https://maps.google.com/?q=Château+de+Chenonceau" },
 
-  { id: "poi-guggenheim", cat: "museum", name: "Museo Guggenheim", nameEn: "Guggenheim Museum Bilbao", lat: 43.2687, lng: -2.9340, country: "🇪🇸", nearDay: "g44",
-    desc: "Architettura iconica di Frank Gehry. Collezione arte contemporanea. Scultura \"Puppy\" all'ingresso.",
-    descEn: "Iconic Frank Gehry architecture. Contemporary art collection. \"Puppy\" sculpture at entrance.",
-    price: "€16 adulti, gratis <12", priceEn: "€16 adults, free <12",
-    url: "https://www.guggenheim-bilbao.eus/en", mapsUrl: "https://maps.google.com/?q=Guggenheim+Museum+Bilbao" },
-
   { id: "poi-san-telmo", cat: "museum", name: "San Telmo Museoa", nameEn: "San Telmo Museum", lat: 43.3240, lng: -1.9830, country: "🇪🇸", nearDay: "g43",
     desc: "Museo della società basca in un convento del XVI secolo. Storia, arte e cultura del Paese Basco.",
     descEn: "Museum of Basque society in a 16th-century convent. History, art and culture of the Basque Country.",
     price: "€8 adulti, gratis <25", priceEn: "€8 adults, free <25",
     url: "https://www.santelmomuseoa.eus/en", mapsUrl: "https://maps.google.com/?q=San+Telmo+Museoa+San+Sebastian" },
+
+  { id: "poi-guggenheim", cat: "museum", name: "Museo Guggenheim", nameEn: "Guggenheim Museum Bilbao", lat: 43.2687, lng: -2.9340, country: "🇪🇸", nearDay: "g44",
+    desc: "Architettura iconica di Frank Gehry. Collezione arte contemporanea. Scultura \"Puppy\" all'ingresso.",
+    descEn: "Iconic Frank Gehry architecture. Contemporary art collection. \"Puppy\" sculpture at entrance.",
+    price: "€16 adulti, gratis <12", priceEn: "€16 adults, free <12",
+    url: "https://www.guggenheim-bilbao.eus/en", mapsUrl: "https://maps.google.com/?q=Guggenheim+Museum+Bilbao" },
 
   { id: "poi-acquario-genova-m", cat: "museum", name: "Acquario di Genova", nameEn: "Genoa Aquarium", lat: 44.4097, lng: 8.9268, country: "🇮🇹", nearDay: "g51",
     desc: "Il più grande acquario d'Europa. 70 vasche, 12.000 animali, 600 specie. Delfini, squali, pinguini.",
@@ -246,6 +246,24 @@ var POI_ATTIVITA = [
     url: "https://www.galatamuseodelmare.it/en/", mapsUrl: "https://maps.google.com/?q=Galata+Museo+del+Mare+Genova" },
 
   // ═══ VIEWPOINT ═══
+  { id: "poi-punkaharju", cat: "viewpoint", name: "Punkaharju Ridge", nameEn: "Punkaharju Ridge", lat: 61.7667, lng: 29.3833, country: "🇫🇮", nearDay: "g7",
+    desc: "Cresta glaciale tra due laghi. Strada panoramica unica al mondo (7 km). Patrimonio naturale finlandese.",
+    descEn: "Glacial ridge between two lakes. Unique scenic road in the world (7 km). Finnish natural heritage.",
+    price: "Gratuito", priceEn: "Free",
+    url: "https://www.visitsavonlinna.fi/en/see-and-do/punkaharju/", mapsUrl: "https://maps.google.com/?q=Punkaharju+Ridge" },
+
+  { id: "poi-aavasaksa", cat: "viewpoint", name: "Aavasaksa Hill", nameEn: "Aavasaksa Hill", lat: 66.4000, lng: 23.7300, country: "🇫🇮", nearDay: "g10",
+    desc: "Punto più meridionale dove si vede il sole di mezzanotte. Torre panoramica. Vista sulla Svezia.",
+    descEn: "Southernmost point to see the midnight sun. Panoramic tower. View over Sweden.",
+    price: "Gratuito", priceEn: "Free",
+    url: "https://www.visitfinland.com/en/product/aavasaksa-hill/", mapsUrl: "https://maps.google.com/?q=Aavasaksa+Hill" },
+
+  { id: "poi-fjellheisen", cat: "viewpoint", name: "Fjellheisen Tromsø", nameEn: "Fjellheisen Tromsø", lat: 69.6400, lng: 19.0000, country: "🇳🇴", nearDay: "g15",
+    desc: "Funivia a 421m sopra Tromsø. Vista a 360° sulla città artica, fiordi e montagne. Sole di mezzanotte.",
+    descEn: "Cable car to 421m above Tromsø. 360° view over the Arctic city, fjords and mountains. Midnight sun.",
+    price: "NOK 250 adulti, NOK 120 bambini", priceEn: "NOK 250 adults, NOK 120 children",
+    url: "https://fjellheisen.no/en/", mapsUrl: "https://maps.google.com/?q=Fjellheisen+Tromsø" },
+
   { id: "poi-segla", cat: "viewpoint", name: "Segla", nameEn: "Segla", lat: 69.2950, lng: 17.0500, country: "🇳🇴", nearDay: "g16",
     desc: "Vetta iconica di Senja. Escursione 4h A/R, vista mozzafiato sui fiordi. Difficoltà media.",
     descEn: "Iconic Senja peak. 4h return hike, breathtaking fjord views. Medium difficulty.",
@@ -288,30 +306,6 @@ var POI_ATTIVITA = [
     price: "Parcheggio NOK 300", priceEn: "Parking NOK 300",
     url: "https://www.visitnorway.com/listings/preikestolen/185743/", mapsUrl: "https://maps.google.com/?q=Preikestolen" },
 
-  { id: "poi-punkaharju", cat: "viewpoint", name: "Punkaharju Ridge", nameEn: "Punkaharju Ridge", lat: 61.7667, lng: 29.3833, country: "🇫🇮", nearDay: "g7",
-    desc: "Cresta glaciale tra due laghi. Strada panoramica unica al mondo (7 km). Patrimonio naturale finlandese.",
-    descEn: "Glacial ridge between two lakes. Unique scenic road in the world (7 km). Finnish natural heritage.",
-    price: "Gratuito", priceEn: "Free",
-    url: "https://www.visitsavonlinna.fi/en/see-and-do/punkaharju/", mapsUrl: "https://maps.google.com/?q=Punkaharju+Ridge" },
-
-  { id: "poi-aavasaksa", cat: "viewpoint", name: "Aavasaksa Hill", nameEn: "Aavasaksa Hill", lat: 66.4000, lng: 23.7300, country: "🇫🇮", nearDay: "g10",
-    desc: "Punto più meridionale dove si vede il sole di mezzanotte. Torre panoramica. Vista sulla Svezia.",
-    descEn: "Southernmost point to see the midnight sun. Panoramic tower. View over Sweden.",
-    price: "Gratuito", priceEn: "Free",
-    url: "https://www.visitfinland.com/en/product/aavasaksa-hill/", mapsUrl: "https://maps.google.com/?q=Aavasaksa+Hill" },
-
-  { id: "poi-fjellheisen", cat: "viewpoint", name: "Fjellheisen Tromsø", nameEn: "Fjellheisen Tromsø", lat: 69.6400, lng: 19.0000, country: "🇳🇴", nearDay: "g15",
-    desc: "Funivia a 421m sopra Tromsø. Vista a 360° sulla città artica, fiordi e montagne. Sole di mezzanotte.",
-    descEn: "Cable car to 421m above Tromsø. 360° view over the Arctic city, fjords and mountains. Midnight sun.",
-    price: "NOK 250 adulti, NOK 120 bambini", priceEn: "NOK 250 adults, NOK 120 children",
-    url: "https://fjellheisen.no/en/", mapsUrl: "https://maps.google.com/?q=Fjellheisen+Tromsø" },
-
-  { id: "poi-fuente-de", cat: "viewpoint", name: "Fuente Dé Cable Car", nameEn: "Fuente Dé Cable Car", lat: 43.1500, lng: -4.8100, country: "🇪🇸", nearDay: "g45",
-    desc: "Funivia a 1.823m. Vista a 360° sulle montagne calcaree dei Picos de Europa.",
-    descEn: "Cable car to 1,823m. 360° view over the Picos de Europa limestone mountains.",
-    price: "€17 adulti, €6 bambini", priceEn: "€17 adults, €6 children",
-    url: "https://cantur.com/instalaciones/3-teleferico-de-fuente-de", mapsUrl: "https://maps.google.com/?q=Fuente+Dé+Cable+Car" },
-
   { id: "poi-igueldo", cat: "viewpoint", name: "Monte Igueldo", nameEn: "Monte Igueldo", lat: 43.3200, lng: -2.0050, country: "🇪🇸", nearDay: "g43",
     desc: "Funicolare storica con vista sulla baia della Concha. Piccolo parco divertimenti vintage in cima.",
     descEn: "Historic funicular with views over La Concha bay. Small vintage amusement park at the top.",
@@ -324,11 +318,17 @@ var POI_ATTIVITA = [
     price: "Gratuito", priceEn: "Free",
     url: "https://www.visitfrance.com/", mapsUrl: "https://maps.google.com/?q=Corniche+Basque" },
 
+  { id: "poi-fuente-de", cat: "viewpoint", name: "Fuente Dé Cable Car", nameEn: "Fuente Dé Cable Car", lat: 43.1500, lng: -4.8100, country: "🇪🇸", nearDay: "g45",
+    desc: "Funivia a 1.823m. Vista a 360° sulle montagne calcaree dei Picos de Europa.",
+    descEn: "Cable car to 1,823m. 360° view over the Picos de Europa limestone mountains.",
+    price: "€17 adulti, €6 bambini", priceEn: "€17 adults, €6 children",
+    url: "https://cantur.com/instalaciones/3-teleferico-de-fuente-de", mapsUrl: "https://maps.google.com/?q=Fuente+Dé+Cable+Car" },
+
   { id: "poi-cinque-terre-sentiero", cat: "viewpoint", name: "Cinque Terre sentiero", nameEn: "Cinque Terre Trail", lat: 44.1280, lng: 9.7100, country: "🇮🇹", nearDay: "g51",
     desc: "Sentiero tra i borghi colorati con vista sul mare ligure. Vigneti terrazzati e scogliere.",
     descEn: "Trail between colourful villages with views over the Ligurian sea. Terraced vineyards and cliffs.",
     price: "Cinque Terre Card €16/giorno", priceEn: "Cinque Terre Card €16/day",
-    url: "https://www.parconazionale5terre.it/en/", mapsUrl: "https://maps.google.com/?q=Sentiero+Azzurro+Cinque+Terre" },
+    url: "https://www.parconazionale5terre.it/en/sentieri/", mapsUrl: "https://maps.google.com/?q=Sentiero+Azzurro+Cinque+Terre" },
 
   // ═══ FESTIVAL ═══
   { id: "poi-ollesummer", cat: "festival", name: "Õllesummer", nameEn: "Õllesummer", lat: 59.4370, lng: 24.7530, country: "🇪🇪", nearDay: "g5",
@@ -390,7 +390,7 @@ var POI_ATTIVITA = [
     desc: "Esperienza autentica: sauna a legna + tuffo nel lago Saimaa. Noleggiabile nelle strutture locali.",
     descEn: "Authentic experience: wood-burning sauna + dip in Lake Saimaa. Available at local facilities.",
     price: "~€20-40/famiglia", priceEn: "~€20-40/family",
-    url: "", mapsUrl: "https://maps.google.com/?q=Saimaa+lakeside+sauna+Finland" },
+    url: "https://www.visitsaimaa.fi/en/finnish-sauna-by-lake-saimaa/", mapsUrl: "https://maps.google.com/?q=Saimaa+lakeside+sauna+Finland" },
 
   { id: "poi-pust", cat: "spa", name: "Pust Tromsø", nameEn: "Pust Tromsø", lat: 69.6470, lng: 18.9620, country: "🇳🇴", nearDay: "g15",
     desc: "Sauna galleggiante sul fiordo artico. Tuffo nell'acqua a 8°C! Sole di mezzanotte incluso.",
@@ -398,11 +398,6 @@ var POI_ATTIVITA = [
     price: "NOK 150 adulto (~€13), NOK 79 bambino", priceEn: "NOK 150 adult (~€13), NOK 79 child",
     url: "https://www.pust.no", mapsUrl: "https://maps.google.com/?q=69.6470,18.9620(Pust+Tromsø)" },
 
-  { id: "poi-lalandia-spa", cat: "spa", name: "Lalandia Aquadome", nameEn: "Lalandia Aquadome", lat: 55.7350, lng: 9.1250, country: "🇩🇰", nearDay: "g38",
-    desc: "Il più grande parco acquatico coperto della Scandinavia. Scivoli, onde, zona bambini, temperatura tropicale.",
-    descEn: "Scandinavia's largest indoor waterpark. Slides, waves, kids area, tropical temperature.",
-    price: "DKK 299 adulto (~€40), DKK 249 bambino", priceEn: "DKK 299 adult (~€40), DKK 249 child",
-    url: "https://www.lalandia.dk/en/billund", mapsUrl: "https://maps.google.com/?q=55.7350,9.1250(Lalandia+Billund)" },
 
   { id: "poi-la-perla", cat: "spa", name: "La Perla San Sebastián", nameEn: "La Perla San Sebastián", lat: 43.3180, lng: -1.9870, country: "🇪🇸", nearDay: "g43",
     desc: "Talassoterapia sulla spiaggia della Concha. Piscina con vista sull'oceano. Bambini ammessi in alcune zone.",
@@ -414,7 +409,7 @@ var POI_ATTIVITA = [
     desc: "Acque a 60°C nella gola del Deva. A 30 km da Fuente Dé — si abbina alla funivia mattutina. Storico (XIX sec).",
     descEn: "60°C waters in the Deva gorge. 30 km from Fuente Dé — combine with morning cable car. Historic (19th c.).",
     price: "~€20/persona", priceEn: "~€20/person",
-    url: "", mapsUrl: "https://maps.google.com/?q=43.2250,-4.6100(Balneario+La+Hermida)" },
+    url: "https://balneariolahermida.com/", mapsUrl: "https://maps.google.com/?q=43.2250,-4.6100(Balneario+La+Hermida)" },
 
   { id: "poi-castilla-termal", cat: "spa", name: "Castilla Termal", nameEn: "Castilla Termal", lat: 42.0000, lng: -4.5300, country: "🇪🇸", nearDay: "g47",
     desc: "Terme in convento restaurato. Acque minerali a 36°C. Relax pre-eclissi perfetto.",
@@ -489,11 +484,6 @@ var POI_ATTIVITA = [
     price: "€42 adulti, €36 bambini", priceEn: "€42 adults, €36 children",
     url: "https://www.futuroscope.com/en", mapsUrl: "https://maps.google.com/?q=Futuroscope+Poitiers" },
 
-  { id: "poi-acquario-genova", cat: "park", name: "Acquario di Genova", nameEn: "Genoa Aquarium", lat: 44.4097, lng: 8.9268, country: "🇮🇹", nearDay: "g51",
-    desc: "Il più grande acquario d'Europa. 70 vasche, 12.000 animali, 600 specie. Delfini, squali, pinguini.",
-    descEn: "Europe's largest aquarium. 70 tanks, 12,000 animals, 600 species. Dolphins, sharks, penguins.",
-    price: "€29 adulti, €21 bambini", priceEn: "€29 adults, €21 children",
-    url: "https://www.acquariodigenova.it/en/", mapsUrl: "https://maps.google.com/?q=Acquario+di+Genova" },
 
   // ═══ MERCATI ═══
   { id: "poi-naschmarkt", cat: "market", name: "Naschmarkt", nameEn: "Naschmarkt", lat: 48.1988, lng: 16.3630, country: "🇦🇹", nearDay: "g1",
@@ -563,12 +553,6 @@ var POI_ATTIVITA = [
     url: "https://www.moggenova.it", mapsUrl: "https://maps.google.com/?q=Mercato+Orientale+Genova" },
 
   // ═══ PARCHI NAZIONALI ═══
-  { id: "poi-abisko", cat: "nature", name: "Parco Nazionale di Abisko", nameEn: "Abisko National Park", lat: 68.3500, lng: 18.8300, country: "🇸🇪", nearDay: "g15",
-    desc: "Parco nazionale svedese in Lapponia (1909). Paesaggio montano artico, foreste di betulle, aurora boreale. Kungsleden trail. Deviazione da Tromsø (~200 km).",
-    descEn: "Swedish national park in Lapland (1909). Arctic mountain landscape, birch forests, northern lights. Kungsleden trail. Detour from Tromsø (~200 km).",
-    price: "Ingresso gratuito", priceEn: "Free entry",
-    url: "https://www.sverigesnationalparker.se/en/parks/abisko-national-park/", mapsUrl: "https://maps.google.com/?q=Abisko+National+Park+Sweden" },
-
   { id: "poi-lemmenjoki", cat: "nature", name: "Parco Nazionale Lemmenjoki", nameEn: "Lemmenjoki National Park", lat: 68.8500, lng: 26.0000, country: "🇫🇮", nearDay: "g13",
     desc: "La più grande riserva naturale della Finlandia (2.850 km²). Foreste vergini, fiumi per canoa, cercatori d'oro, cultura Sámi.",
     descEn: "Finland's largest nature reserve (2,850 km²). Virgin forests, rivers for canoeing, gold panners, Sámi culture.",
@@ -580,6 +564,12 @@ var POI_ATTIVITA = [
     descEn: "Finland's second largest park (2,550 km²). Tundra, pine forests, wild reindeer. Marked trails and wilderness huts.",
     price: "Ingresso gratuito", priceEn: "Free entry",
     url: "https://www.nationalparks.fi/urhokekkonennp", mapsUrl: "https://maps.google.com/?q=Urho+Kekkonen+National+Park" },
+
+  { id: "poi-abisko", cat: "nature", name: "Parco Nazionale di Abisko", nameEn: "Abisko National Park", lat: 68.3500, lng: 18.8300, country: "🇸🇪", nearDay: "g15",
+    desc: "Parco nazionale svedese in Lapponia (1909). Paesaggio montano artico, foreste di betulle, aurora boreale. Kungsleden trail. Deviazione da Tromsø (~200 km).",
+    descEn: "Swedish national park in Lapland (1909). Arctic mountain landscape, birch forests, northern lights. Kungsleden trail. Detour from Tromsø (~200 km).",
+    price: "Ingresso gratuito", priceEn: "Free entry",
+    url: "https://www.sverigesnationalparker.se/en/parks/abisko-national-park/", mapsUrl: "https://maps.google.com/?q=Abisko+National+Park+Sweden" },
 
   { id: "poi-anderdalen", cat: "nature", name: "Parco Nazionale Ånderdalen", nameEn: "Ånderdalen National Park", lat: 69.1000, lng: 16.9500, country: "🇳🇴", nearDay: "g16",
     desc: "Unico parco nazionale dell'isola di Senja. Foreste costiere, laghi alpini, alci. Sentieri facili per famiglie.",

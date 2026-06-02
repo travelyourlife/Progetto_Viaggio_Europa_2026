@@ -317,7 +317,7 @@ exports.dailyCountdown = onSchedule(
       type: "countdown",
       title: title,
       body: body,
-      target: "family",
+      target: "owner",
       url: "./",
       tag: `countdown-${now.toISOString().slice(0, 10)}`,
       createdAt: Date.now(),
