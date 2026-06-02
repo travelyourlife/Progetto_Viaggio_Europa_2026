@@ -8183,9 +8183,24 @@ if ('serviceWorker' in navigator) {
     bannedUIDs = snap.val() || {};
   });
 
-  // Track user profile on login
+  // Track user profile on login — only if owner or approved (no ghost users)
   function trackUserProfile(user) {
     if (!user) return;
+    // Gate: only write to chat/users if owner or approved
+    var isOwnerUser = (typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.indexOf(user.uid) !== -1);
+    if (isOwnerUser) {
+      doTrackProfile(user);
+    } else {
+      firebase.database().ref('trips/' + FAMILY_ID + '/approvedUsers/' + user.uid).once('value').then(function(snap) {
+        if (snap.exists()) {
+          doTrackProfile(user);
+        }
+        // If not approved, do NOT write to chat/users — user stays invisible until approved
+      });
+    }
+  }
+
+  function doTrackProfile(user) {
     var ua = navigator.userAgent;
     var device = /Mobile|Android|iPhone|iPad/.test(ua) ? 'mobile' : 'desktop';
     var browser = 'Unknown';
@@ -9756,9 +9771,17 @@ if ('serviceWorker' in navigator) {
         var actionBtn = '';
         if (!isOwnerUser) {
           if (isBanned) {
+            // Banned: show Unban only
             actionBtn = uidShort + ' <button class="admin-global-unban pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--success,#38a169);color:#fff;border:none;border-radius:6px;cursor:pointer;">' + (isEN ? 'Unban' : 'Sblocca') + '</button>';
-          } else {
+          } else if (isApproved) {
+            // Active/Approved: show Ban only (revoke access)
             actionBtn = uidShort + ' <button class="admin-global-ban pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--danger,#e53e3e);color:#fff;border:none;border-radius:6px;cursor:pointer;">' + (isEN ? 'Ban' : 'Blocca') + '</button>';
+          } else {
+            // Pending or Sconosciuto: show Approve + Reject + Ban
+            actionBtn = uidShort + ' ';
+            actionBtn += '<button class="admin-inline-approve pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--success,#38a169);color:#fff;border:none;border-radius:6px;cursor:pointer;margin-right:4px;">\u2705 ' + (isEN ? 'Approve' : 'Approva') + '</button>';
+            actionBtn += '<button class="admin-inline-reject pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--warning,#d69e2e);color:#fff;border:none;border-radius:6px;cursor:pointer;margin-right:4px;">\u274c ' + (isEN ? 'Reject' : 'Rifiuta') + '</button>';
+            actionBtn += '<button class="admin-global-ban pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--danger,#e53e3e);color:#fff;border:none;border-radius:6px;cursor:pointer;">' + (isEN ? 'Ban' : 'Blocca') + '</button>';
           }
         }
 
@@ -9811,6 +9834,51 @@ if ('serviceWorker' in navigator) {
           bannedRef.child(uid).remove().then(function() {
             if (window.showToast) showToast(isEN ? 'User unbanned' : 'Utente sbloccato', 'success');
             renderAdminUsers();
+          });
+        });
+      });
+
+      // Attach inline approve handlers (for Sconosciuto/Pending users)
+      adminUsersList.querySelectorAll('.admin-inline-approve').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var uid = btn.dataset.uid;
+          var u = users[uid] || {};
+          var userName = u.name || u.email || uid;
+          showConfirm((isEN ? 'Approve ' : 'Approvare ') + userName + '?', function() {
+            approvedRef.child(uid).set({
+              email: u.email || '',
+              displayName: u.name || '',
+              photoURL: u.photo || '',
+              approvedAt: firebase.database.ServerValue.TIMESTAMP
+            }).then(function() {
+              // Remove from pendingUsers if present
+              return pendingRef.child(uid).remove();
+            }).then(function() {
+              if (window.showToast) showToast(isEN ? 'User approved!' : 'Utente approvato!', 'success');
+              renderAdminUsers();
+              renderAdminPending();
+            });
+          });
+        });
+      });
+
+      // Attach inline reject handlers (for Sconosciuto/Pending users)
+      adminUsersList.querySelectorAll('.admin-inline-reject').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var uid = btn.dataset.uid;
+          var u = users[uid] || {};
+          var userName = u.name || u.email || uid;
+          showConfirm((isEN ? 'Reject ' : 'Rifiutare ') + userName + (isEN ? '? They can retry later.' : '? Potr\u00e0 riprovare in seguito.'), function() {
+            // Remove from chat/users, pendingUsers, and fcm_tokens
+            var removeOps = [];
+            removeOps.push(usersRef.child(uid).remove());
+            removeOps.push(pendingRef.child(uid).remove());
+            removeOps.push(db.ref('trips/' + FAMILY_ID + '/fcm_tokens/' + uid).remove());
+            Promise.all(removeOps).then(function() {
+              if (window.showToast) showToast(isEN ? 'User rejected (can retry)' : 'Utente rifiutato (pu\u00f2 riprovare)', 'info');
+              renderAdminUsers();
+              renderAdminPending();
+            });
           });
         });
       });
