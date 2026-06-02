@@ -2176,7 +2176,7 @@ table { max-width: 100%; }
 
 /* Leaflet zoom controls — keep above bottom nav */
 .leaflet-control-zoom {
-    margin-bottom: 70px !important;
+    margin-bottom: 10px !important;
 }
 
 /* Map buttons */

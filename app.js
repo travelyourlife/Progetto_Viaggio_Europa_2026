@@ -449,7 +449,70 @@ const places = itinerario.map(function(t) {
 
 // ─── Global fullscreen map helper ───
 function openMapFullscreen(mapInstance, title) {
-    if (!mapInstance) return;
+    console.info('[Map] openMapFullscreen called, mapInstance:', !!mapInstance, 'Leaflet:', typeof L);
+    // If no map instance provided, create a standalone route map fullscreen
+    if (!mapInstance) {
+        var overlay = document.createElement('div');
+        overlay.className = 'map-fs-overlay';
+        overlay.innerHTML = '<div class="map-fs-header">' +
+            '<h3>' + (title || (typeof isEN !== 'undefined' && isEN ? 'Map' : 'Mappa')) + '</h3>' +
+            '<button class="map-fs-close" aria-label="Close">&times;</button>' +
+        '</div>' +
+        '<div class="map-fs-body"><div id="map-fs-container" style="width:100%;height:100%;"></div></div>';
+        document.body.appendChild(overlay);
+        document.body.style.overflow = 'hidden';
+        var fsMapDiv = overlay.querySelector('#map-fs-container');
+        var fsMap = L.map(fsMapDiv, { zoomControl: false, attributionControl: false, scrollWheelZoom: true, dragging: true, tap: true }).setView([52.0, 15.0], 4);
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { maxZoom: 19 }).addTo(fsMap);
+        L.control.zoom({ position: 'bottomright' }).addTo(fsMap);
+        // Draw route from TRIP_COORDS
+        if (typeof TRIP_COORDS !== 'undefined') {
+            var HOME_COORDS = [45.39, 11.85];
+            var routeCoords = [HOME_COORDS].concat(TRIP_COORDS.map(function(c) { return [c.lat, c.lng]; }));
+            var now = new Date();
+            var tripStart = typeof TRIP_START !== 'undefined' ? TRIP_START : new Date('2026-06-26');
+            var currentDay = Math.floor((now - tripStart) / 86400000);
+            var totalDays = typeof TRIP_DAYS !== 'undefined' ? TRIP_DAYS : 54;
+            if (currentDay >= totalDays) {
+                L.polyline(routeCoords, { color: '#38a169', weight: 3, opacity: 0.8, lineJoin: 'round' }).addTo(fsMap);
+            } else if (currentDay >= 0) {
+                var splitIdx = Math.min(currentDay + 2, routeCoords.length);
+                var pastC = routeCoords.slice(0, splitIdx);
+                var futureC = routeCoords.slice(splitIdx - 1);
+                if (pastC.length > 1) L.polyline(pastC, { color: '#38a169', weight: 3, opacity: 0.9, lineJoin: 'round' }).addTo(fsMap);
+                if (futureC.length > 1) L.polyline(futureC, { color: '#2c5282', weight: 2.5, opacity: 0.5, dashArray: '8,6', lineJoin: 'round' }).addTo(fsMap);
+            } else {
+                L.polyline(routeCoords, { color: '#2c5282', weight: 2.5, opacity: 0.5, dashArray: '8,6', lineJoin: 'round' }).addTo(fsMap);
+            }
+            // Add stop markers
+            var stops = []; var prev = null;
+            TRIP_COORDS.forEach(function(c, i) {
+                var key = c.lat.toFixed(2) + ',' + c.lng.toFixed(2);
+                if (prev && prev.key === key) { prev.endIdx = i; prev.days.push(i); }
+                else { prev = { key: key, lat: c.lat, lng: c.lng, startIdx: i, endIdx: i, days: [i] }; stops.push(prev); }
+            });
+            var tripActive = currentDay >= 0 && currentDay < totalDays;
+            stops.forEach(function(stop) {
+                var color, radius;
+                var isCurrent = tripActive && currentDay >= stop.startIdx && currentDay <= stop.endIdx;
+                if (stop.startIdx === 0 || stop.endIdx === TRIP_COORDS.length - 1) { color = '#e53e3e'; radius = 6; }
+                else if (isCurrent) { color = '#e53e3e'; radius = 7; }
+                else if (tripActive && currentDay > stop.endIdx) { color = '#38a169'; radius = 4; }
+                else { color = '#2c5282'; radius = 4; }
+                var city = typeof isEN !== 'undefined' && isEN ? TRIP_COORDS[stop.startIdx].cityEn : TRIP_COORDS[stop.startIdx].city;
+                L.circleMarker([stop.lat, stop.lng], { radius: radius, fillColor: color, color: '#fff', weight: 1.5, fillOpacity: 0.9 })
+                    .bindPopup('<strong>' + city + '</strong>')
+                    .addTo(fsMap);
+            });
+            var bounds = L.latLngBounds(routeCoords);
+            setTimeout(function() { fsMap.invalidateSize(); fsMap.fitBounds(bounds, { padding: [30, 30] }); }, 150);
+        }
+        function closeFs2() { fsMap.remove(); overlay.remove(); document.body.style.overflow = ''; }
+        overlay.querySelector('.map-fs-close').addEventListener('click', closeFs2);
+        function onEsc2(e) { if (e.key === 'Escape') { closeFs2(); document.removeEventListener('keydown', onEsc2); } }
+        document.addEventListener('keydown', onEsc2);
+        return;
+    }
     var overlay = document.createElement('div');
     overlay.className = 'map-fs-overlay';
     overlay.innerHTML = '<div class="map-fs-header">' +
@@ -534,6 +597,7 @@ function openMapFullscreen(mapInstance, title) {
     function onEsc(e) { if (e.key === 'Escape') { closeFs(); document.removeEventListener('keydown', onEsc); } }
     document.addEventListener('keydown', onEsc);
 }
+window.openMapFullscreen = openMapFullscreen;
 
 function initRouteMap() {
     var toggle = document.getElementById('routeMapToggle');
@@ -564,6 +628,14 @@ function initRouteMap() {
     toggle.setAttribute('aria-expanded', 'true');
     setTimeout(function() { buildRouteMap(); }, 300);
     mapInitialized = true;
+
+    // Invalidate map size when Itinerario tab becomes visible
+    window.addEventListener('tabSwitched', function(e) {
+        if (e.detail === 'giorni' && routeMapInstance) {
+            setTimeout(function() { routeMapInstance.invalidateSize(); }, 250);
+            setTimeout(function() { routeMapInstance.invalidateSize(); }, 600);
+        }
+    });
 
     function buildRouteMap() {
         if (typeof L === 'undefined' || typeof TRIP_COORDS === 'undefined') {
@@ -4098,17 +4170,17 @@ if ('serviceWorker' in navigator) {
 
     function updateStats() {
         var now = new Date();
-        // Day counter
+        // Day counter (now inline in banner: "G 0/54")
         if (now < TRIP_START) {
             var daysUntil = Math.ceil((TRIP_START - now) / 86400000);
-            hsDay.innerHTML = '0<small>/54</small>';
+            hsDay.textContent = '0';
             if (countdownEl) countdownEl.textContent = daysUntil;
         } else if (now > TRIP_END) {
-            hsDay.innerHTML = '54<small>/54</small>';
+            hsDay.textContent = '54';
             if (countdownEl) countdownEl.textContent = '0';
         } else {
             var dayNum = Math.floor((now - TRIP_START) / 86400000) + 1;
-            hsDay.innerHTML = dayNum + '<small>/54</small>';
+            hsDay.textContent = dayNum;
             var daysLeft = TRIP_DAYS - dayNum;
             if (countdownEl) countdownEl.textContent = daysLeft;
         }
@@ -4168,7 +4240,7 @@ if ('serviceWorker' in navigator) {
                         if (flags) flags.forEach(function(f) { visitedCountries.add(f); });
                     }
                 });
-                hsCountries.innerHTML = (visitedCountries.size || '0') + '<small>/13</small>';
+                hsCountries.textContent = (visitedCountries.size || '0');
                 var totalCheckins = Object.keys(checkins).filter(function(k) { return checkins[k]; }).length;
                 hsCheckins.textContent = totalCheckins;
             });
@@ -4184,7 +4256,7 @@ if ('serviceWorker' in navigator) {
                     if (flags) flags.forEach(function(f) { visitedCountries.add(f); });
                 }
             });
-            hsCountries.innerHTML = (visitedCountries.size || '0') + '<small>/13</small>';
+            hsCountries.textContent = (visitedCountries.size || '0');
             var totalCheckins = Object.keys(checkins).filter(function(k) { return checkins[k]; }).length;
             hsCheckins.textContent = totalCheckins;
         }
@@ -4249,6 +4321,11 @@ if ('serviceWorker' in navigator) {
     }
 
     function getDayIndex() {
+        // Respect Day Override from localStorage
+        var override = localStorage.getItem(KEYS.DAY_OVERRIDE);
+        if (override !== null && override !== '' && parseInt(override, 10) > 0) {
+            return parseInt(override, 10);
+        }
         var now = new Date();
         if (now < TRIP_START) {
             return 0; // Show first destination before trip
@@ -4270,7 +4347,8 @@ if ('serviceWorker' in navigator) {
         var cityName = isEN ? coord.cityEn : coord.city;
 
         var now = new Date();
-        var isDuringTrip = now >= TRIP_START && now <= TRIP_END;
+        var overrideVal = localStorage.getItem(KEYS.DAY_OVERRIDE);
+        var isDuringTrip = (now >= TRIP_START && now <= TRIP_END) || (overrideVal !== null && parseInt(overrideVal, 10) > 0);
 
         // Switch hero card layout
         if (isDuringTrip && heroPreTrip && heroDuringTrip) {
@@ -4280,10 +4358,13 @@ if ('serviceWorker' in navigator) {
             // Set city
             if (heroTripCity) heroTripCity.textContent = '📍 ' + cityName;
             if (heroTripCountry) heroTripCountry.textContent = (coord.country || '') + ' ' + (coord.flag || '');
-            // Set date
-            if (heroTripDateDay) heroTripDateDay.textContent = now.getDate();
+            // Set date (use simulated date if Day Override active)
+            var displayDate = (overrideVal && parseInt(overrideVal, 10) > 0)
+                ? new Date(TRIP_START.getTime() + dayIdx * 86400000)
+                : now;
+            if (heroTripDateDay) heroTripDateDay.textContent = displayDate.getDate();
             if (heroTripDateMonth) {
-                heroTripDateMonth.textContent = now.toLocaleDateString(isEN ? 'en-GB' : 'it-IT', { month: 'long' });
+                heroTripDateMonth.textContent = displayDate.toLocaleDateString(isEN ? 'en-GB' : 'it-IT', { month: 'long' });
             }
         }
 
@@ -4353,8 +4434,10 @@ if ('serviceWorker' in navigator) {
     var heroCityLink = document.getElementById('hero-city-link');
     if (heroCityLink) {
         heroCityLink.addEventListener('click', function() {
-            if (typeof switchTab === 'function') switchTab('posizione');
-            else if (typeof window.switchTab === 'function') window.switchTab('posizione');
+            console.info('[Hero] City clicked, switchTab available:', typeof window.switchTab);
+            if (window.switchTab) window.switchTab('posizione');
+            else if (window.switchTabFromHome) window.switchTabFromHome('posizione');
+            else console.error('[Hero] No switchTab function available!');
         });
     }
 
@@ -4362,11 +4445,13 @@ if ('serviceWorker' in navigator) {
     var heroDateLink = document.getElementById('hero-trip-date');
     if (heroDateLink) {
         heroDateLink.addEventListener('click', function() {
+            console.info('[Hero] Date clicked, switchTab available:', typeof window.switchTab);
             var dayIdx = getDayIndex();
             if (dayIdx < 0) dayIdx = 53; // trip ended → last day
             var scrollTarget = 'g' + dayIdx;
-            if (typeof switchTab === 'function') switchTab('giorni', scrollTarget);
-            else if (typeof window.switchTab === 'function') window.switchTab('giorni', scrollTarget);
+            if (window.switchTab) window.switchTab('giorni', scrollTarget);
+            else if (window.switchTabFromHome) window.switchTabFromHome('giorni');
+            else console.error('[Hero] No switchTab function available!');
         });
     }
 })();
@@ -4425,9 +4510,20 @@ if ('serviceWorker' in navigator) {
             if (window.haptic) window.haptic(10);
         });
 
-        // Auto-close when a link inside is clicked
+        // Auto-close when a link inside is clicked + scroll with proper offset
         tabIndex.querySelectorAll('a').forEach(function(link) {
-            link.addEventListener('click', function() {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                var targetId = this.getAttribute('href').replace('#', '');
+                var target = document.getElementById(targetId);
+                if (target) {
+                    // Show header if hidden
+                    document.body.classList.remove('header-hidden');
+                    // Calculate offset: top-bar (52px) + sticky tab-index (~50px) + padding
+                    var offset = 120;
+                    var targetPos = target.getBoundingClientRect().top + window.pageYOffset - offset;
+                    window.scrollTo({ top: targetPos, behavior: 'smooth' });
+                }
                 setTimeout(function() {
                     tabIndex.classList.remove('open');
                     toggle.classList.remove('open');
@@ -5367,16 +5463,16 @@ if ('serviceWorker' in navigator) {
         var msgOn, msgOff;
         if (isIOS) {
           msgOn = isEN
-            ? '✅ Notifications active.\nTo disable: Settings → Notifications → find this app → toggle off.'
-            : '✅ Notifiche attive.\nPer disattivare: Impostazioni → Notifiche → cerca questa app → disattiva.';
+            ? '✅ Notifications active.\nTo disable: open iPhone Settings → Notifications → find "Quo Vadis" → toggle off.'
+            : '✅ Notifiche attive.\nPer disattivare: apri Impostazioni iPhone → Notifiche → cerca "Quo Vadis" → disattiva.';
         } else if (isAndroid) {
           msgOn = isEN
-            ? '✅ Notifications active.\nTo disable: long-press the app icon → App info → Notifications → toggle off. Or: Chrome → ⋮ → Settings → Notifications → find this site.'
-            : '✅ Notifiche attive.\nPer disattivare: tieni premuto sull\'icona → Info app → Notifiche → disattiva. Oppure: Chrome → ⋮ → Impostazioni → Notifiche → cerca questo sito.';
+            ? '✅ Notifications active.\nTo disable: long-press the Quo Vadis app icon on your Home screen → App info → Notifications → toggle off. Or: Chrome → ⋮ → Settings → Notifications → find this site.'
+            : '✅ Notifiche attive.\nPer disattivare: tieni premuto l\'icona dell\'app Quo Vadis sulla Home → Info app → Notifiche → disattiva. Oppure: Chrome → ⋮ → Impostazioni → Notifiche → cerca questo sito.';
         } else {
           msgOn = isEN
-            ? '✅ Notifications active.\nTo disable: click the 🔒 icon in the address bar → Notifications → Block.'
-            : '✅ Notifiche attive.\nPer disattivare: clicca l\'icona 🔒 nella barra indirizzi → Notifiche → Blocca.';
+            ? '✅ Notifications active.\nTo disable: click the 🔒 icon in the browser address bar → Notifications → Block.'
+            : '✅ Notifiche attive.\nPer disattivare: clicca l\'icona 🔒 nella barra indirizzi del browser → Notifiche → Blocca.';
         }
         showToast(msgOn, 'success', 8000);
       } else if (perm === 'denied') {
@@ -5385,16 +5481,16 @@ if ('serviceWorker' in navigator) {
         var msgBlocked;
         if (isIOS2) {
           msgBlocked = isEN
-            ? '🚫 Notifications blocked.\nTo enable: Settings → Notifications → find this app → toggle on.'
-            : '🚫 Notifiche bloccate.\nPer abilitare: Impostazioni → Notifiche → cerca questa app → attiva.';
+            ? '🚫 Notifications blocked.\nTo enable: open iPhone Settings → Notifications → find "Quo Vadis" → toggle on.'
+            : '🚫 Notifiche bloccate.\nPer abilitare: apri Impostazioni iPhone → Notifiche → cerca "Quo Vadis" → attiva.';
         } else if (isAndroid2) {
           msgBlocked = isEN
-            ? '🚫 Notifications blocked.\nTo enable: long-press the app icon → App info → Notifications → toggle on. Or: Chrome → ⋮ → Settings → Notifications → find this site → Allow.'
-            : '🚫 Notifiche bloccate.\nPer abilitare: tieni premuto sull\'icona → Info app → Notifiche → attiva. Oppure: Chrome → ⋮ → Impostazioni → Notifiche → cerca questo sito → Consenti.';
+            ? '🚫 Notifications blocked.\nTo enable: long-press the Quo Vadis app icon on your Home screen → App info → Notifications → toggle on. Or: Chrome → ⋮ → Settings → Notifications → find this site → Allow.'
+            : '🚫 Notifiche bloccate.\nPer abilitare: tieni premuto l\'icona dell\'app Quo Vadis sulla Home → Info app → Notifiche → attiva. Oppure: Chrome → ⋮ → Impostazioni → Notifiche → cerca questo sito → Consenti.';
         } else {
           msgBlocked = isEN
-            ? '🚫 Notifications blocked.\nTo enable: click the 🔒 icon in the address bar → Notifications → Allow.'
-            : '🚫 Notifiche bloccate.\nPer abilitare: clicca l\'icona 🔒 nella barra indirizzi → Notifiche → Consenti.';
+            ? '🚫 Notifications blocked.\nTo enable: click the 🔒 icon in the browser address bar → Notifications → Allow.'
+            : '🚫 Notifiche bloccate.\nPer abilitare: clicca l\'icona 🔒 nella barra indirizzi del browser → Notifiche → Consenti.';
         }
         showToast(msgBlocked, 'error', 8000);
       } else if (perm === 'default') {

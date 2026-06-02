@@ -53,7 +53,7 @@
     <link rel="apple-touch-icon" sizes="152x152" href="./icon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="./icon.png">
     <link rel="apple-touch-icon" sizes="167x167" href="./icon.png">
-    <title>Viaggio Europa 2026 — V1.27</title>
+    <title>Viaggio Europa 2026 — V1.28</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <link rel="stylesheet" href="style.css">
 <!-- Firebase SDK (compat mode for single-file app) -->
@@ -69,7 +69,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = '1.27';
+  var EXPECTED_VERSION = '1.28';
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
   var r = false;
@@ -320,14 +320,6 @@
     </div>
 </div>
 
-<!-- ─── Stats Bubbles ─── -->
-<div class="home-stats" id="homeStats">
-    <div class="hs-item"><span class="hs-value" id="hs-day">0<small>/54</small></span><span class="hs-label">Giorni</span></div>
-    <div class="hs-item"><span class="hs-value" id="hs-km">0</span><span class="hs-label">KM</span></div>
-    <div class="hs-item"><span class="hs-value" id="hs-countries">0<small>/13</small></span><span class="hs-label">Paesi</span></div>
-    <div class="hs-item"><span class="hs-value" id="hs-checkins">0</span><span class="hs-label">Check-in</span></div>
-</div>
-
 <!-- ─── Activity Stats Bar (Strava/Garmin) ─── -->
 <div class="activity-stats-bar hidden" id="activityStatsBar">
     <span class="as-chip"><span class="as-item">🥾 <span class="as-value" id="as-km-foot">0</span> km a piedi</span></span>
@@ -339,13 +331,13 @@
 <!-- ─── In-App Notification Banners ─── -->
 <div id="notif-container" class="notif-container"></div>
 
-<!-- ─── Route Map Banner ─── -->
-<div id="home-route-banner" class="home-route-banner" style="margin:12px 0;padding:14px 18px;background:linear-gradient(135deg,#1a365d,#2c5282);border-radius:14px;color:white;display:flex;align-items:center;justify-content:space-between;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.15);" onclick="openMapFullscreen(null, '🗺️ Il nostro percorso')">
+<!-- ─── Route Map Banner (unified with stats) ─── -->
+<div id="home-route-banner" class="home-route-banner" style="margin:12px 0;padding:14px 18px;background:linear-gradient(135deg,#1a365d,#2c5282);border-radius:14px;color:white;display:flex;align-items:center;justify-content:space-between;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.15);" onclick="try { window.openMapFullscreen(null, '🗺️ Il nostro percorso'); } catch(e) { console.error('[Banner]', e); alert('Errore apertura mappa: ' + e.message); }">
   <div style="display:flex;align-items:center;gap:10px;">
     <span style="font-size:24px;">🗺️</span>
     <div>
       <div style="font-weight:700;font-size:15px;">Il nostro percorso</div>
-      <div style="font-size:12px;opacity:0.8;">13 paesi · 54 giorni · 12.000 km</div>
+      <div id="route-banner-stats" style="font-size:12px;opacity:0.8;">G <span id="hs-day">0</span>/54 · <span id="hs-km">0</span> km · <span id="hs-countries">0</span>/13 paesi · <span id="hs-checkins">0</span> check-in</div>
     </div>
   </div>
   <span style="font-size:20px;opacity:0.7;">⛶</span>
@@ -9371,6 +9363,22 @@
     </div>
 </div>
 
+<!-- ─── MAPPA ─── -->
+<div id="pos-map" style="width:100%;height:min(350px, calc(100svh - 200px));border-radius:12px;border:1px solid var(--border);margin:16px 0;background:var(--bg-alt);position:relative;">
+    <div class="map-spinner" id="mapSpinner"></div>
+    <button id="pos-center-me" class="pos-map-btn" title="Centra su di me" aria-label="Centra su di me">🧑</button>
+    <button id="pos-center-van" class="pos-map-btn pos-map-btn-right" title="Centra sul furgone" aria-label="Centra sul furgone">🚐</button>
+    <button id="pos-map-fullscreen" class="map-fullscreen-btn" title="Schermo intero" aria-label="Schermo intero">⛶</button>
+</div>
+
+<!-- ─── METEO PROSSIME TAPPE ─── -->
+<div id="pos-weather-panel" style="margin-top:16px;">
+  <h3 style="font-size:16px;font-weight:700;margin-bottom:12px;">🌤️ Meteo Prossime Tappe</h3>
+  <div id="pos-weather-cards" class="pos-weather-grid">
+    <p style="color:var(--text-muted);font-size:13px;">Caricamento previsioni...</p>
+  </div>
+</div>
+
 <!-- ─── STATISTICHE VIAGGIO — griglia 3 colonne con icone ─── -->
 <div id="pos-stats-content" class="pos-stats-grid-v2">
     <div class="pos-stat-card-v2">
@@ -9421,22 +9429,6 @@
         <span class="pos-garmin-chip pos-chip-blue">🚴 <strong id="pos-garmin-bike">0</strong> km in bici</span>
         <span class="pos-garmin-chip pos-chip-orange">⛰️ <strong id="pos-garmin-elev">0</strong>m dislivello</span>
     </div>
-</div>
-
-<!-- ─── MAPPA (sotto le card) ─── -->
-<div id="pos-map" style="width:100%;height:min(350px, calc(100svh - 200px));border-radius:12px;border:1px solid var(--border);margin:16px 0;background:var(--bg-alt);position:relative;">
-    <div class="map-spinner" id="mapSpinner"></div>
-    <button id="pos-center-me" class="pos-map-btn" title="Centra su di me" aria-label="Centra su di me">🧑</button>
-    <button id="pos-center-van" class="pos-map-btn pos-map-btn-right" title="Centra sul furgone" aria-label="Centra sul furgone">🚐</button>
-    <button id="pos-map-fullscreen" class="map-fullscreen-btn" title="Schermo intero" aria-label="Schermo intero">⛶</button>
-</div>
-
-<!-- ─── METEO PROSSIME TAPPE ─── -->
-<div id="pos-weather-panel" style="margin-top:16px;">
-  <h3 style="font-size:16px;font-weight:700;margin-bottom:12px;">🌤️ Meteo Prossime Tappe</h3>
-  <div id="pos-weather-cards" class="pos-weather-grid">
-    <p style="color:var(--text-muted);font-size:13px;">Caricamento previsioni...</p>
-  </div>
 </div>
 
 <!-- ─── METEO STORICO (collapsible) ─── -->
