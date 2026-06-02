@@ -2,6 +2,16 @@
 <html lang="it">
 <head>
     <!-- Google tag (gtag.js) — deferred config to exclude owner sessions -->
+    <!-- TODO v1.27: GA continua a tracciare gli owner nonostante traffic_type='internal'.
+         Verificare: 1) Creare filtro in GA4 Admin > Data Settings > Data Filters per escludere traffic_type=internal
+         2) Oppure bloccare completamente gtag per owner (non inviare config)
+         3) Verificare se il problema è che il filtro GA4 non è attivo (va creato manualmente nella console GA) -->
+    <!-- TODO SICUREZZA (v1.28+):
+         - [ ] Applicare database.rules.json aggiornato (live read + chat write → solo approved)
+         - [ ] Verificare XSS nella chat (renderMessage usa textContent?)
+         - [ ] Rate limiting su pendingUsers (Cloud Functions)
+         - [ ] Session expiry dopo X giorni
+    -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-YSGVVPN5ZR"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -43,7 +53,7 @@
     <link rel="apple-touch-icon" sizes="152x152" href="./icon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="./icon.png">
     <link rel="apple-touch-icon" sizes="167x167" href="./icon.png">
-    <title>Viaggio Europa 2026 — V1.26</title>
+    <title>Viaggio Europa 2026 — V1.27</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <link rel="stylesheet" href="style.css">
 <!-- Firebase SDK (compat mode for single-file app) -->
@@ -59,7 +69,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = '1.26';
+  var EXPECTED_VERSION = '1.27';
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
   var r = false;
@@ -199,6 +209,7 @@
     <a class="menu-item" data-tab="chat"><span class="menu-icon">💬</span><span class="menu-text">Chat</span></a>
     <div class="menu-divider"></div>
     <a class="menu-item" id="notif-toggle" style="cursor:pointer;"><span class="menu-icon">🔔</span><span class="menu-text">Notifiche</span><span class="menu-badge" id="notif-status" style="margin-left:auto;font-size:11px;opacity:0.7;"></span></a>
+    <a class="menu-item" id="sidebar-refresh-btn" style="cursor:pointer;" onclick="if(window.hardRefresh)window.hardRefresh();else window.location.reload(true);"><span class="menu-icon">🔄</span><span class="menu-text">Aggiorna App</span></a>
     <a class="menu-item" data-tab="admin" id="admin-menu-link" style="display:none;"><span class="menu-icon">🛠️</span><span class="menu-text">Admin</span></a>
     <div class="menu-version" id="app-version-tag"></div>
 </nav>
@@ -243,9 +254,17 @@
         <span class="altro-item-text"><span class="altro-item-label">Chat</span><span class="altro-item-sub">Messaggi viaggio</span></span>
     </button>
     <hr style="border:none;border-top:1px solid var(--border-color,#e2e8f0);margin:4px 16px;">
+    <button class="altro-item" id="altro-notif-toggle">
+        <span class="altro-item-icon">🔔</span>
+        <span class="altro-item-text"><span class="altro-item-label">Notifiche</span><span class="altro-item-sub" id="altro-notif-status">Tocca per attivare/disattivare</span></span>
+    </button>
     <button class="altro-item" id="hardRefreshBtn" onclick="if(window.hardRefresh)window.hardRefresh();else window.location.reload(true);">
         <span class="altro-item-icon">🔄</span>
         <span class="altro-item-text"><span class="altro-item-label">Aggiorna App</span><span class="altro-item-sub">Forza aggiornamento e svuota cache</span></span>
+    </button>
+    <button class="altro-item" data-tab="admin" id="altro-admin-link" style="display:none;">
+        <span class="altro-item-icon">🛠️</span>
+        <span class="altro-item-text"><span class="altro-item-label">Admin</span><span class="altro-item-sub">Pannello amministrazione</span></span>
     </button>
 </div>
 
@@ -276,11 +295,11 @@
             <span class="hero-trip-label">🟢 IN VIAGGIO</span>
         </div>
         <div class="hero-trip-main">
-            <div class="hero-trip-city-block">
+            <div class="hero-trip-city-block" id="hero-city-link" style="cursor:pointer;" title="Apri In Viaggio">
                 <div class="hero-trip-city" id="hero-trip-city">📍 --</div>
                 <div class="hero-trip-country" id="hero-trip-country"></div>
             </div>
-            <div class="hero-trip-date" id="hero-trip-date">
+            <div class="hero-trip-date" id="hero-trip-date" style="cursor:pointer;" title="Vai al giorno in Itinerario">
                 <div class="hero-trip-date-day" id="hero-trip-date-day">--</div>
                 <div class="hero-trip-date-month" id="hero-trip-date-month"></div>
             </div>
@@ -319,6 +338,18 @@
 
 <!-- ─── In-App Notification Banners ─── -->
 <div id="notif-container" class="notif-container"></div>
+
+<!-- ─── Route Map Banner ─── -->
+<div id="home-route-banner" class="home-route-banner" style="margin:12px 0;padding:14px 18px;background:linear-gradient(135deg,#1a365d,#2c5282);border-radius:14px;color:white;display:flex;align-items:center;justify-content:space-between;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.15);" onclick="openMapFullscreen(null, '🗺️ Il nostro percorso')">
+  <div style="display:flex;align-items:center;gap:10px;">
+    <span style="font-size:24px;">🗺️</span>
+    <div>
+      <div style="font-weight:700;font-size:15px;">Il nostro percorso</div>
+      <div style="font-size:12px;opacity:0.8;">13 paesi · 54 giorni · 12.000 km</div>
+    </div>
+  </div>
+  <span style="font-size:20px;opacity:0.7;">⛶</span>
+</div>
 
 <div class="home-grid">
     <!-- ⭐ Essenziali -->
@@ -9091,6 +9122,8 @@
   <div class="analytics-card"><span class="analytics-value" id="an-pageviews">--</span><span class="analytics-label">Pageviews oggi</span></div>
   <div class="analytics-card"><span class="analytics-value" id="an-tabs">--</span><span class="analytics-label">Tab più visitato</span></div>
   <div class="analytics-card"><span class="analytics-value" id="an-avg-time">--</span><span class="analytics-label">Tempo medio sessione</span></div>
+  <div class="analytics-card"><span class="analytics-value" id="an-unique-users">--</span><span class="analytics-label">Utenti unici oggi</span></div>
+  <div class="analytics-card"><span class="analytics-value" id="an-total-sessions">--</span><span class="analytics-label">Sessioni totali</span></div>
 </div>
 <details style="margin-top:12px;">
 <summary style="cursor:pointer;font-weight:600;">Dettaglio tab visitati</summary>
@@ -9227,6 +9260,7 @@
 <li class="task-item"><input type="checkbox" data-idx="bagnoschiuma"> Bagnoschiuma</li>
 <li class="task-item"><input type="checkbox" data-idx="toiletries"> Toiletries</li>
 <li class="task-item"><input type="checkbox" data-idx="asciugamani"> Asciugamani</li>
+<li class="task-item"><input type="checkbox" data-idx="accappatoi"> Accappatoi</li>
 <li class="task-item"><input type="checkbox" data-idx="carta-igienica"> Carta igienica</li>
 <li class="task-item"><input type="checkbox" data-idx="rasoio"> Rasoio</li>
 <li class="task-item"><input type="checkbox" data-idx="salviette-igienizzanti"> Salviette igienizzanti</li>

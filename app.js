@@ -558,6 +558,13 @@ function initRouteMap() {
         }
     });
 
+    // Open route map by default
+    container.classList.add('open');
+    arrow.classList.add('open');
+    toggle.setAttribute('aria-expanded', 'true');
+    setTimeout(function() { buildRouteMap(); }, 300);
+    mapInitialized = true;
+
     function buildRouteMap() {
         if (typeof L === 'undefined' || typeof TRIP_COORDS === 'undefined') {
             mapDiv.innerHTML = '<p style="padding:20px;text-align:center;color:#999;">Map unavailable</p>';
@@ -577,22 +584,38 @@ function initRouteMap() {
         }).addTo(routeMapInstance);
 
         // Build route polyline from TRIP_COORDS
-        var routeCoords = TRIP_COORDS.map(function(c) { return [c.lat, c.lng]; });
-
-        // Draw dashed route line
-        L.polyline(routeCoords, {
-            color: '#2c5282',
-            weight: 2.5,
-            opacity: 0.7,
-            dashArray: '8,6',
-            lineJoin: 'round'
-        }).addTo(routeMapInstance);
+        // Prepend Casa (home) as visual starting point — not in TRIP_COORDS to keep index alignment
+        var HOME_COORDS = [45.3900, 11.8500]; // Selvazzano/Padova area
+        var routeCoords = [HOME_COORDS].concat(TRIP_COORDS.map(function(c) { return [c.lat, c.lng]; }));
 
         // Determine current trip day for coloring
         var now = new Date();
         var tripStart = typeof TRIP_START !== 'undefined' ? TRIP_START : new Date('2026-06-26');
         var currentDay = Math.floor((now - tripStart) / 86400000);
-        var tripActive = currentDay >= 0 && currentDay < (typeof TRIP_DAYS !== 'undefined' ? TRIP_DAYS : 54);
+        var tripDays = typeof TRIP_DAYS !== 'undefined' ? TRIP_DAYS : 54;
+        var tripActive = currentDay >= 0 && currentDay < tripDays;
+
+        // Draw route line: solid for past, dashed for future
+        // routeCoords[0] = HOME, routeCoords[1] = G0 (Leoben), etc.
+        if (currentDay >= tripDays) {
+            // Trip completed: all solid green
+            L.polyline(routeCoords, { color: '#38a169', weight: 2.5, opacity: 0.8, lineJoin: 'round' }).addTo(routeMapInstance);
+        } else if (currentDay < 0) {
+            // Before trip: all dashed blue
+            L.polyline(routeCoords, { color: '#2c5282', weight: 2.5, opacity: 0.5, dashArray: '8,6', lineJoin: 'round' }).addTo(routeMapInstance);
+        } else {
+            // During trip: solid past (green) + dashed future (blue)
+            // +1 offset for HOME point, +1 to include current day's destination
+            var splitIdx = Math.min(currentDay + 2, routeCoords.length);
+            var pastCoords = routeCoords.slice(0, splitIdx);
+            var futureCoords = routeCoords.slice(splitIdx - 1); // overlap 1 point for continuity
+            if (pastCoords.length > 1) {
+                L.polyline(pastCoords, { color: '#38a169', weight: 3, opacity: 0.9, lineJoin: 'round' }).addTo(routeMapInstance);
+            }
+            if (futureCoords.length > 1) {
+                L.polyline(futureCoords, { color: '#2c5282', weight: 2.5, opacity: 0.5, dashArray: '8,6', lineJoin: 'round' }).addTo(routeMapInstance);
+            }
+        }
 
         // Group consecutive days at same location to avoid overlapping markers
         var stops = [];
@@ -1509,8 +1532,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 tap: !L.Browser.mobile,
                 scrollWheelZoom: true
             }).setView([52.0, 15.0], 4);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenStreetMap', maxZoom: 18
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                attribution: '© OpenStreetMap © CARTO', maxZoom: 19
             }).addTo(map);
             var spinner = document.getElementById('mapSpinner');
             if (spinner) spinner.remove();
@@ -1529,6 +1552,31 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (e.touches.length >= 2) { map.dragging.enable(); hint.style.opacity = '0'; }
                 });
                 mapEl.addEventListener('touchend', function() { map.dragging.disable(); });
+            }
+
+            // ─── Past route line from TRIP_COORDS ───
+            if (typeof TRIP_COORDS !== 'undefined') {
+                var HOME_COORDS = { lat: 45.39, lng: 11.85 };
+                var routeCoords = [[HOME_COORDS.lat, HOME_COORDS.lng]];
+                TRIP_COORDS.forEach(function(c) { routeCoords.push([c.lat, c.lng]); });
+
+                var now = new Date();
+                var tripStart = typeof TRIP_START !== 'undefined' ? TRIP_START : new Date('2026-06-26');
+                var currentDay = Math.floor((now - tripStart) / 86400000);
+                var totalDays = typeof TRIP_DAYS !== 'undefined' ? TRIP_DAYS : 54;
+
+                if (currentDay >= totalDays) {
+                    // Trip completed: all solid green
+                    L.polyline(routeCoords, { color: '#38a169', weight: 2.5, opacity: 0.7, lineJoin: 'round' }).addTo(map);
+                } else if (currentDay >= 0) {
+                    // During trip: only show past route (solid green)
+                    var splitIdx = Math.min(currentDay + 2, routeCoords.length);
+                    var pastCoords = routeCoords.slice(0, splitIdx);
+                    if (pastCoords.length > 1) {
+                        L.polyline(pastCoords, { color: '#38a169', weight: 2.5, opacity: 0.7, lineJoin: 'round' }).addTo(map);
+                    }
+                }
+                // Before trip: no route line on pos-map (nothing to show yet)
             }
 
             updateMapMarkers();
@@ -2630,6 +2678,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // ─── Init on tab visible ───
+        // Preload map tiles in background after 2s so it's ready when user opens the tab
+        setTimeout(function() { initMap(); }, 2000);
+
         var observer = new MutationObserver(function(mutations) {
             mutations.forEach(function(m) {
                 if (m.target.id === 'tab-posizione' && m.target.classList.contains('active')) {
@@ -3526,8 +3577,10 @@ if ('serviceWorker' in navigator) {
       if (!resp.ok) return null;
       const data = await resp.json();
       if (data.daily && data.daily.temperature_2m_max) {
-        // Calculate daylight hours from sunrise/sunset
+        // Calculate daylight hours and sunrise/sunset times
         var daylightHours = '';
+        var sunriseFmt = '';
+        var sunsetFmt = '';
         if (data.daily.sunrise && data.daily.sunset) {
           var rise = new Date(data.daily.sunrise[0]);
           var set = new Date(data.daily.sunset[0]);
@@ -3535,12 +3588,16 @@ if ('serviceWorker' in navigator) {
           var hours = Math.floor(diffMs / 3600000);
           var mins = Math.round((diffMs % 3600000) / 60000);
           daylightHours = hours + 'h' + (mins > 0 ? ' ' + mins + 'm' : '');
+          sunriseFmt = rise.getHours().toString().padStart(2,'0') + ':' + rise.getMinutes().toString().padStart(2,'0');
+          sunsetFmt = set.getHours().toString().padStart(2,'0') + ':' + set.getMinutes().toString().padStart(2,'0');
         }
         return {
           high: Math.round(data.daily.temperature_2m_max[0]),
           low: Math.round(data.daily.temperature_2m_min[0]),
           code: data.daily.weathercode[0],
           daylight: daylightHours,
+          sunrise: sunriseFmt,
+          sunset: sunsetFmt,
           wind: data.daily.windspeed_10m_max ? Math.round(data.daily.windspeed_10m_max[0]) : null,
           precipProb: data.daily.precipitation_probability_max ? data.daily.precipitation_probability_max[0] : null
         };
@@ -3565,7 +3622,14 @@ if ('serviceWorker' in navigator) {
         if (forecast) {
           const wInfo = weatherCodes[forecast.code] || {it: 'Variabile', en: 'Variable', icon: '🌤️'};
           const label = isEN ? wInfo.en : wInfo.it;
-          const daylightStr = forecast.daylight ? (isEN ? forecast.daylight + ' daylight' : forecast.daylight + ' di luce') : el.dataset.daylight;
+          var daylightStr = '';
+          if (forecast.sunrise && forecast.sunset) {
+            daylightStr = '🌅 ' + forecast.sunrise + '–' + forecast.sunset + ' (' + forecast.daylight + ')';
+          } else if (forecast.daylight) {
+            daylightStr = '🌅 ' + forecast.daylight + (isEN ? ' daylight' : ' di luce');
+          } else {
+            daylightStr = el.dataset.daylight || '';
+          }
           const badge = isEN ? '(live forecast)' : '(previsione live)';
           var extra = '';
           if (forecast.wind) extra += ' · ' + (isEN ? 'Wind ' : 'Vento ') + forecast.wind + ' km/h';
@@ -3640,6 +3704,8 @@ if ('serviceWorker' in navigator) {
         var wInfo = weatherCodes[code] || {it: 'Variabile', en: 'Variable', icon: '🌤️'};
         var label = isEN ? wInfo.en : wInfo.it;
         var daylightStr = '';
+        var riseFmt = '';
+        var setFmt = '';
         if (data.daily.sunrise && data.daily.sunset) {
           var rise = new Date(data.daily.sunrise[0]);
           var set = new Date(data.daily.sunset[0]);
@@ -3647,6 +3713,8 @@ if ('serviceWorker' in navigator) {
           var hours = Math.floor(diffMs / 3600000);
           var mins = Math.round((diffMs % 3600000) / 60000);
           daylightStr = hours + 'h' + (mins > 0 ? ' ' + mins + 'm' : '');
+          riseFmt = rise.getHours().toString().padStart(2,'0') + ':' + rise.getMinutes().toString().padStart(2,'0');
+          setFmt = set.getHours().toString().padStart(2,'0') + ':' + set.getMinutes().toString().padStart(2,'0');
         }
         var wind = data.daily.windspeed_10m_max ? Math.round(data.daily.windspeed_10m_max[0]) : 0;
         var precip = data.daily.precipitation_probability_max ? data.daily.precipitation_probability_max[0] : 0;
@@ -3659,7 +3727,7 @@ if ('serviceWorker' in navigator) {
         html += '<div class="pos-weather-card-extra">';
         html += '💨 ' + wind + ' km/h';
         if (precip > 0) html += ' · 🌧️ ' + precip + '%';
-        html += ' · ☀️ ' + daylightStr + (isEN ? ' daylight' : ' luce');
+        html += ' · 🌅 ' + riseFmt + '–' + setFmt + ' (' + daylightStr + ')';
         html += '</div>';
         html += '</div>';
       } catch(e) {}
@@ -4256,11 +4324,18 @@ if ('serviceWorker' in navigator) {
                 var sunsetTime = new Date(sunset);
                 var daylightMin = (sunsetTime - sunriseTime) / 60000;
 
+                // Format sunrise/sunset times (HH:MM)
+                var riseHH = sunriseTime.getHours().toString().padStart(2,'0');
+                var riseMM = sunriseTime.getMinutes().toString().padStart(2,'0');
+                var setHH = sunsetTime.getHours().toString().padStart(2,'0');
+                var setMM = sunsetTime.getMinutes().toString().padStart(2,'0');
+                var sunTimes = riseHH + ':' + riseMM + '–' + setHH + ':' + setMM;
+
                 // Update integrated hero weather row
                 if (heroWeatherLoc) heroWeatherLoc.textContent = '📍 ' + cityName;
                 if (heroWeatherIcon) heroWeatherIcon.textContent = wmoToEmoji(wCode);
                 if (heroWeatherTemp) heroWeatherTemp.textContent = tMax + '°/' + tMin + '°';
-                if (heroWeatherLight) heroWeatherLight.textContent = formatHoursMinutes(daylightMin);
+                if (heroWeatherLight) heroWeatherLight.textContent = sunTimes + ' (' + formatHoursMinutes(daylightMin) + ')';
 
                 heroWeatherRow.style.display = '';
             })
@@ -4273,6 +4348,27 @@ if ('serviceWorker' in navigator) {
     // Fetch on load and refresh every 30 minutes
     fetchWeather();
     setInterval(fetchWeather, 1800000);
+
+    // ─── Clickable hero city → opens "In Viaggio" tab ───
+    var heroCityLink = document.getElementById('hero-city-link');
+    if (heroCityLink) {
+        heroCityLink.addEventListener('click', function() {
+            if (typeof switchTab === 'function') switchTab('posizione');
+            else if (typeof window.switchTab === 'function') window.switchTab('posizione');
+        });
+    }
+
+    // ─── Clickable hero date → opens Itinerario scrolled to current day ───
+    var heroDateLink = document.getElementById('hero-trip-date');
+    if (heroDateLink) {
+        heroDateLink.addEventListener('click', function() {
+            var dayIdx = getDayIndex();
+            if (dayIdx < 0) dayIdx = 53; // trip ended → last day
+            var scrollTarget = 'g' + dayIdx;
+            if (typeof switchTab === 'function') switchTab('giorni', scrollTarget);
+            else if (typeof window.switchTab === 'function') window.switchTab('giorni', scrollTarget);
+        });
+    }
 })();
 
 // ═══════════════════════════════════════════════════════════════
@@ -4639,10 +4735,20 @@ if ('serviceWorker' in navigator) {
   // Track session start — separate owner vs visitor
   var data = getData();
   var today = getToday();
-  if (!data[today]) data[today] = { sessions: 0, pageviews: 0, ownerSessions: 0, ownerPageviews: 0, tabs: {}, startTime: Date.now() };
+  if (!data[today]) data[today] = { sessions: 0, pageviews: 0, ownerSessions: 0, ownerPageviews: 0, tabs: {}, startTime: Date.now(), devices: [] };
   // Ensure fields exist for older data
   if (!data[today].ownerSessions) data[today].ownerSessions = 0;
   if (!data[today].ownerPageviews) data[today].ownerPageviews = 0;
+  if (!data[today].devices) data[today].devices = [];
+  // Track unique device for today
+  var _anDeviceId = localStorage.getItem(KEYS.DEVICE_ID);
+  if (!_anDeviceId) {
+    _anDeviceId = 'dev_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+    localStorage.setItem(KEYS.DEVICE_ID, _anDeviceId);
+  }
+  if (data[today].devices.indexOf(_anDeviceId) === -1) {
+    data[today].devices.push(_anDeviceId);
+  }
   if (_anIsOwner) {
     data[today].ownerSessions++;
     data[today].ownerPageviews++;
@@ -4710,6 +4816,24 @@ if ('serviceWorker' in navigator) {
     Object.keys(tabs).forEach(function(t) { totalTime += tabs[t].time || 0; });
     var avgMin = td.sessions > 0 ? Math.round(totalTime / td.sessions / 60) : 0;
     if (avgEl) avgEl.textContent = avgMin + ' min';
+
+    // Unique users today
+    var uniqueEl = document.getElementById('an-unique-users');
+    if (uniqueEl) {
+      var devicesArr = td.devices || [];
+      uniqueEl.textContent = devicesArr.length;
+    }
+
+    // Total sessions (all time)
+    var totalSessEl = document.getElementById('an-total-sessions');
+    if (totalSessEl) {
+      var allSess = 0;
+      Object.keys(d).forEach(function(dateKey) {
+        var day = d[dateKey];
+        allSess += (day.sessions || 0) + (day.ownerSessions || 0);
+      });
+      totalSessEl.textContent = allSess;
+    }
 
     // Tab detail table
     if (tbody) {
@@ -5205,24 +5329,31 @@ if ('serviceWorker' in navigator) {
     }
   });
 
-  // ─── v1.11: Notification toggle in side menu ───
+  // ─── v1.11: Notification toggle in side menu + bottom sheet ───
   var notifToggle = document.getElementById('notif-toggle');
   var notifStatusEl = document.getElementById('notif-status');
+  var altroNotifToggle = document.getElementById('altro-notif-toggle');
+  var altroNotifStatus = document.getElementById('altro-notif-status');
   function updateNotifStatus() {
-    if (!notifStatusEl) return;
     var perm = typeof Notification !== 'undefined' ? Notification.permission : 'unsupported';
+    var text, color;
     if (perm === 'granted') {
-      notifStatusEl.textContent = isEN ? 'ON' : 'ON';
-      notifStatusEl.style.color = '#4caf50';
+      text = 'ON'; color = '#4caf50';
     } else if (perm === 'denied') {
-      notifStatusEl.textContent = isEN ? 'Blocked' : 'Bloccate';
-      notifStatusEl.style.color = '#e53935';
+      text = isEN ? 'Blocked' : 'Bloccate'; color = '#e53935';
     } else if (perm === 'default') {
-      notifStatusEl.textContent = isEN ? 'OFF' : 'OFF';
-      notifStatusEl.style.color = 'var(--text-light)';
+      text = 'OFF'; color = 'var(--text-light)';
     } else {
-      notifStatusEl.textContent = isEN ? 'N/A' : 'N/D';
-      notifStatusEl.style.color = 'var(--text-light)';
+      text = isEN ? 'N/A' : 'N/D'; color = 'var(--text-light)';
+    }
+    // Update sidebar status
+    if (notifStatusEl) { notifStatusEl.textContent = text; notifStatusEl.style.color = color; }
+    // Update bottom sheet status
+    if (altroNotifStatus) {
+      var subText = perm === 'granted' ? (isEN ? 'Notifications active' : 'Notifiche attive')
+        : perm === 'denied' ? (isEN ? 'Blocked by browser' : 'Bloccate dal browser')
+        : (isEN ? 'Tap to enable' : 'Tocca per attivare');
+      altroNotifStatus.textContent = subText;
     }
   }
   updateNotifStatus();
@@ -5272,6 +5403,15 @@ if ('serviceWorker' in navigator) {
         requestPushPermission();
         setTimeout(updateNotifStatus, 1000);
       }
+    });
+  }
+
+  // Bottom sheet notification toggle — same logic as sidebar
+  if (altroNotifToggle) {
+    altroNotifToggle.addEventListener('click', function() {
+      // Reuse the same click handler as sidebar
+      if (notifToggle) { notifToggle.click(); }
+      setTimeout(updateNotifStatus, 1200);
     });
   }
 
@@ -6105,7 +6245,29 @@ if ('serviceWorker' in navigator) {
 
   // Listen for auth changes
   window.addEventListener('authStateChanged', function(e) {
-    updateChatAuth(e.detail ? e.detail.user : null);
+    var user = e.detail ? e.detail.user : null;
+    updateChatAuth(user);
+    // ─── Restore chat prefs from Firebase (cross-device sync) ───
+    if (user && db) {
+      // 1. Restore chat notification preference
+      db.ref('fcm_prefs/' + user.uid + '/chatNotif').once('value').then(function(snap) {
+        var val = snap.val();
+        if (val !== null) {
+          chatNotifEnabled = !!val;
+          localStorage.setItem(CHAT_NOTIF_KEY, chatNotifEnabled ? '1' : '0');
+          updateChatNotifToggle();
+        }
+      }).catch(function() {});
+      // 2. Restore last-read timestamp (use max of local vs Firebase)
+      db.ref('fcm_prefs/' + user.uid + '/chatLastRead').once('value').then(function(snap) {
+        var remoteTs = parseInt(snap.val() || '0', 10);
+        if (remoteTs > lastReadTimestamp) {
+          lastReadTimestamp = remoteTs;
+          localStorage.setItem(KEYS.CHAT_LAST_READ, String(lastReadTimestamp));
+          updateUnreadBadge();
+        }
+      }).catch(function() {});
+    }
   });
 
   // Initial check
@@ -6732,6 +6894,11 @@ if ('serviceWorker' in navigator) {
       unreadCount = 0;
       lastReadTimestamp = Date.now();
       localStorage.setItem(KEYS.CHAT_LAST_READ, String(lastReadTimestamp));
+      // Sync last-read to Firebase for cross-device persistence
+      var _chatUser = (typeof firebase !== 'undefined' && firebase.auth) ? firebase.auth().currentUser : null;
+      if (_chatUser && db) {
+        db.ref('fcm_prefs/' + _chatUser.uid + '/chatLastRead').set(lastReadTimestamp).catch(function() {});
+      }
       updateUnreadBadge();
       scrollToBottom();
       // Don't auto-focus input to prevent keyboard from opening on mobile
@@ -8093,10 +8260,13 @@ if ('serviceWorker' in navigator) {
 (function() {
   var adminMenuLink = document.getElementById('admin-menu-link');
 
-  // Show admin sidebar link only for owners
+  var altroAdminLink = document.getElementById('altro-admin-link');
+
+  // Show admin sidebar + bottom sheet link only for owners
   function showAdminForOwner() {
     if (typeof isOwner !== 'undefined' && isOwner) {
       if (adminMenuLink) adminMenuLink.style.display = '';
+      if (altroAdminLink) altroAdminLink.style.display = '';
       updateAdminStatus();
     }
   }
