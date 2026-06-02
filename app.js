@@ -1579,6 +1579,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // ─── Statistics ───
         function updateStats() {
+            window._posUpdateStats = updateStats;
             var visitedItinerary = Object.keys(checkins).length;
             var customCount = Object.keys(customCheckins).length;
             var visited = visitedItinerary + customCount;
@@ -5135,13 +5136,23 @@ if ('serviceWorker' in navigator) {
 
 
 // ═══════════════════════════════════════════════════════════════
-// ─── LOCAL IN-APP NOTIFICATIONS (date-based banners) ───
+// ─── NOTIFICATION DRAWER SYSTEM (v1.34) ───
 // ═══════════════════════════════════════════════════════════════
 (function() {
-  var container = document.getElementById('notif-container');
-  if (!container) return;
+  // --- DOM Elements ---
+  var drawerOverlay = document.getElementById('notifDrawerOverlay');
+  var drawer = document.getElementById('notifDrawer');
+  var drawerList = document.getElementById('notifDrawerList');
+  var drawerClose = document.getElementById('notifDrawerClose');
+  var bellBtn = document.getElementById('notifBellBtn');
+  var homeBellBtn = document.getElementById('homeNotifBell');
+  var badge = document.getElementById('notifBadge');
+  var homeBadge = document.getElementById('homeNotifBadge');
 
-  var todayStr = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+  if (!drawer || !drawerList) return;
+
+  // --- State ---
+  var todayStr = new Date().toISOString().slice(0, 10);
   var NOTIF_KEY = 'viaggio2026_notifs_dismissed';
   var dismissed = {};
   try { dismissed = JSON.parse(localStorage.getItem(NOTIF_KEY)) || {}; } catch(e) {}
@@ -5163,109 +5174,81 @@ if ('serviceWorker' in navigator) {
     return dismissed[id] === todayStr;
   }
 
-  function dismiss(id, el) {
-    dismissed[id] = todayStr;
-    localStorage.setItem(NOTIF_KEY, JSON.stringify(dismissed));
-    if (el) {
-      el.style.transition = 'opacity 0.3s, transform 0.3s';
-      el.style.opacity = '0';
-      el.style.transform = 'translateX(30px)';
-      setTimeout(function() { el.remove(); }, 300);
-    }
-  }
+  // --- Notification collection ---
+  var notifications = []; // { id, icon, text, type, actionLabel, action, ownerOnly }
 
-  function addNotif(id, icon, text, type, action) {
+  function addNotif(id, icon, text, type, actionLabel, action, ownerOnly) {
     if (isDismissed(id)) return;
-    var div = document.createElement('div');
-    div.className = 'notif-banner notif-' + (type || 'info');
-    div.innerHTML =
-      '<span class="notif-icon">' + icon + '</span>' +
-      '<span class="notif-text">' + text + '</span>' +
-      '<button class="notif-close" aria-label="' + (isEN ? 'Dismiss' : 'Chiudi') + '">&times;</button>';
-    div.querySelector('.notif-close').addEventListener('click', function(e) {
-      e.stopPropagation();
-      dismiss(id, div);
-    });
-    if (action) {
-      div.style.cursor = 'pointer';
-      div.querySelector('.notif-text').addEventListener('click', function() { action(); });
-    }
-    container.appendChild(div);
+    notifications.push({ id: id, icon: icon, text: text, type: type || 'info', actionLabel: actionLabel || '', action: action || null, ownerOnly: !!ownerOnly });
   }
 
-  // ─── Compute trip state ───
+  // --- Compute trip state ---
   var now = new Date();
   now.setHours(0,0,0,0);
   var tripDay = getCurrentTripDay();
   var diffToStart = Math.ceil((TRIP_START - now) / 86400000);
 
-  // ─── 1) Pre-trip countdown — disabled (shown in hero card instead) ───
-
-  // ─── 2) Special milestones ───
+  // --- #2: Special milestones ---
   if (diffToStart === 7) {
-    addNotif('milestone-7', '🎉',
-      isEN ? '<strong>One week to go!</strong> Time to finalize your packing list.' : '<strong>Manca una settimana!</strong> È ora di finalizzare lo zaino.',
+    addNotif('milestone-7', '\ud83c\udf89',
+      isEN ? '<strong>One week to go!</strong> Time to finalize your packing list.' : '<strong>Manca una settimana!</strong> \u00c8 ora di finalizzare lo zaino.',
       'highlight',
-      function() { var z = document.querySelector('[data-tab="tab-zaino"]'); if(z) z.click(); }
+      isEN ? 'Open Backpack' : 'Apri Zaino',
+      function() { window.switchTabFromHome('zaino'); }
     );
   }
   if (diffToStart === 1) {
-    addNotif('milestone-1', '✈️',
+    addNotif('milestone-1', '\u2708\ufe0f',
       isEN ? '<strong>Tomorrow you leave!</strong> Check your backpack one last time.' : '<strong>Domani si parte!</strong> Controlla lo zaino un\'ultima volta.',
       'highlight',
-      function() { var z = document.querySelector('[data-tab="tab-zaino"]'); if(z) z.click(); }
+      isEN ? 'Open Backpack' : 'Apri Zaino',
+      function() { window.switchTabFromHome('zaino'); }
     );
   }
   if (diffToStart === 0) {
-    addNotif('milestone-start', '🎊',
-      isEN ? '<strong>Today is the day! The adventure begins!</strong> 🗺️' : '<strong>Oggi è il grande giorno! L\'avventura comincia!</strong> 🗺️',
-      'highlight'
+    addNotif('milestone-start', '\ud83c\udf8a',
+      isEN ? '<strong>Today is the day! The adventure begins!</strong> \ud83d\uddfa\ufe0f' : '<strong>Oggi \u00e8 il grande giorno! L\'avventura comincia!</strong> \ud83d\uddfa\ufe0f',
+      'highlight',
+      isEN ? 'View Itinerary' : 'Vedi Itinerario',
+      function() { window.switchTabFromHome('giorni'); }
     );
   }
 
-  // ─── 3) During-trip: daily location notification ───
+  // --- #3: Km notification during trip (driving day) ---
   if (tripDay >= 0 && tripDay < TRIP_DAYS && itinerario[tripDay]) {
     var dayData = itinerario[tripDay];
-    var dayLabel = isEN ? dayData.labelEn : dayData.label;
-    var route = isEN ? dayData.tragittoEn : dayData.tragitto;
-    var dayText = isEN
-      ? 'Today is <strong>' + dayLabel + '</strong> — ' + route + ' ' + dayData.paesi
-      : 'Oggi è il <strong>' + dayLabel + '</strong> — ' + route + ' ' + dayData.paesi;
-    addNotif('day-' + tripDay, '📍', dayText, 'trip',
-      function() {
-        var giorniLink = document.querySelector('[data-tab="tab-giorni"]');
-        if (giorniLink) giorniLink.click();
-        setTimeout(function() {
-          var target = document.getElementById(dayData.id);
-          if (target) {
-            if (!target.classList.contains('open')) target.click();
-            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }
-        }, 200);
-      }
-    );
-
-    // Km notification (if driving day)
     if (dayData.km && parseInt(dayData.km) > 0) {
       var kmText = isEN
         ? 'Today\'s drive: <strong>' + dayData.km + ' km</strong> (' + (dayData.oreEn || dayData.ore) + ')'
         : 'Guida di oggi: <strong>' + dayData.km + ' km</strong> (' + dayData.ore + ')';
-      addNotif('km-' + tripDay, '🚗', kmText, 'info');
+      addNotif('km-' + tripDay, '\ud83d\ude97', kmText, 'info',
+        isEN ? 'View day' : 'Vedi giorno',
+        function() {
+          window.switchTabFromHome('giorni');
+          setTimeout(function() {
+            var target = document.getElementById(dayData.id);
+            if (target) {
+              if (!target.classList.contains('open')) target.click();
+              target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+          }, 200);
+        }
+      );
     }
   }
 
-  // ─── 4) Post-trip ───
+  // --- #4: Post-trip ---
   if (tripDay >= TRIP_DAYS) {
-    addNotif('post-trip', '🏠',
-      isEN ? '<strong>The trip is over!</strong> What an amazing adventure. Check your memories!' : '<strong>Il viaggio è finito!</strong> Che avventura incredibile. Rivedi i ricordi!',
+    addNotif('post-trip', '\ud83c\udfe0',
+      isEN ? '<strong>The trip is over!</strong> What an amazing adventure. Check your memories!' : '<strong>Il viaggio \u00e8 finito!</strong> Che avventura incredibile. Rivedi i ricordi!',
       'info',
-      function() { var p = document.querySelector('[data-tab="tab-posizione"]'); if(p) p.click(); }
+      isEN ? 'View Diary' : 'Vedi Diario',
+      function() { window.switchTabFromHome('diario'); }
     );
   }
 
-  // ─── 5) Zaino reminder (3 days before departure, during trip) ───
+  // --- #5: Zaino reminder (owner only) ---
   if (diffToStart <= 3 && diffToStart >= 0 || (tripDay >= 0 && tripDay <= 2)) {
-    // Count unchecked zaino items
     var allCbs = document.querySelectorAll('#tab-zaino input[type="checkbox"][data-idx]');
     var unchecked = 0;
     allCbs.forEach(function(cb) { if (!cb.checked) unchecked++; });
@@ -5273,24 +5256,18 @@ if ('serviceWorker' in navigator) {
       var zainoText = isEN
         ? 'You have <strong>' + unchecked + ' item' + (unchecked > 1 ? 's' : '') + '</strong> unchecked in your backpack!'
         : 'Hai <strong>' + unchecked + ' oggett' + (unchecked > 1 ? 'i' : 'o') + '</strong> non spuntat' + (unchecked > 1 ? 'i' : 'o') + ' nello zaino!';
-      addNotif('zaino-' + todayStr, '🎒', zainoText, 'warning',
-        function() { var z = document.querySelector('[data-tab="tab-zaino"]'); if(z) z.click(); }
+      addNotif('zaino-' + todayStr, '\ud83c\udf92', zainoText, 'warning',
+        isEN ? 'Open Backpack' : 'Apri Zaino',
+        function() { window.switchTabFromHome('zaino'); },
+        true // ownerOnly
       );
     }
   }
 
-  // ─── 6) Weather check reminder (during trip) ───
-  if (tripDay >= 0 && tripDay < TRIP_DAYS) {
-    addNotif('weather-' + todayStr, '🌤️',
-      isEN ? 'Don\'t forget to check today\'s weather!' : 'Non dimenticare di controllare il meteo di oggi!',
-      'info',
-      function() { var g = document.querySelector('[data-tab="tab-giorni"]'); if(g) g.click(); }
-    );
-  }
+  // --- #6: Weather removed (per user request) ---
 
-  // ─── 7) Pre-trip checklist reminders (vignette, traghetti, etc.) ───
+  // --- #7: Pre-trip checklist reminders (push only, no in-app) ---
   if (diffToStart > 0 && diffToStart <= 30) {
-    // Check uncompleted Piano checklist items
     var pianoChecks = document.querySelectorAll('#tab-piano input[type="checkbox"][data-idx]');
     var uncheckedPiano = [];
     pianoChecks.forEach(function(cb) {
@@ -5299,10 +5276,9 @@ if ('serviceWorker' in navigator) {
         if (li) uncheckedPiano.push(li.textContent.trim().substring(0, 60));
       }
     });
-    // Push notification only (no in-app banner) for owner at 7 and 3 days before departure
     if (uncheckedPiano.length > 0 && (diffToStart === 7 || diffToStart === 3) && window.queuePushNotification) {
       queuePushNotification('checklist_reminder', {
-        title: isEN ? '📋 ' + uncheckedPiano.length + ' tasks to complete!' : '📋 ' + uncheckedPiano.length + ' attività da completare!',
+        title: isEN ? '\ud83d\udccb ' + uncheckedPiano.length + ' tasks to complete!' : '\ud83d\udccb ' + uncheckedPiano.length + ' attivit\u00e0 da completare!',
         body: uncheckedPiano.slice(0, 3).join(', ') + (uncheckedPiano.length > 3 ? '...' : ''),
         target: 'owner',
         url: './#tab-piano',
@@ -5311,30 +5287,9 @@ if ('serviceWorker' in navigator) {
     }
   }
 
-  // ─── 8) Countdown push — handled by Cloud Scheduler (dailyCountdown), removed from client ───
+  // --- #8: Countdown push (Cloud Scheduler) — removed from client ---
 
-  // ─── 9) Zaino push notification (24/20/15/10/3/2/1 days before, if items unchecked) ───
-  var zainoDays = [24, 20, 15, 10, 7, 3, 2, 1];
-  if (zainoDays.indexOf(diffToStart) !== -1 && window.queuePushNotification) {
-    var zainoAllCbs = document.querySelectorAll('#tab-zaino input[type="checkbox"][data-idx]');
-    var zainoUnchecked = 0;
-    zainoAllCbs.forEach(function(cb) { if (!cb.checked) zainoUnchecked++; });
-    if (zainoUnchecked > 10) {
-      var zainoPushKey = 'zaino_push_' + todayStr;
-      if (!sessionStorage.getItem(zainoPushKey)) {
-        queuePushNotification('zaino_reminder', {
-          title: isEN ? '🎒 ' + zainoUnchecked + ' items unchecked!' : '🎒 ' + zainoUnchecked + ' oggetti non spuntati!',
-          body: isEN ? 'Your backpack list needs attention before departure.' : 'Lo zaino ha bisogno di attenzione prima della partenza.',
-          target: 'owner',
-          url: './#tab-zaino',
-          tag: 'zaino-' + todayStr
-        });
-        sessionStorage.setItem(zainoPushKey, '1');
-      }
-    }
-  }
-
-  // ─── 10) Next stage evening reminder (during trip, after 19:00) ───
+  // --- #9: Next stage evening reminder (owner only, during trip) ---
   if (tripDay >= 0 && tripDay < TRIP_DAYS - 1) {
     var nowHour = new Date().getHours();
     var tomorrow = tripDay + 1;
@@ -5346,10 +5301,10 @@ if ('serviceWorker' in navigator) {
       var nextText = isEN
         ? '<strong>Tomorrow:</strong> ' + nextRoute + (nextKm ? ' (' + nextKm + ', ' + nextOre + ')' : '')
         : '<strong>Domani:</strong> ' + nextRoute + (nextKm ? ' (' + nextKm + ', ' + nextOre + ')' : '');
-      addNotif('next-stage-' + todayStr, '🛣️', nextText, 'info',
+      addNotif('next-stage-' + todayStr, '\ud83d\udee3\ufe0f', nextText, 'info',
+        isEN ? 'View day' : 'Vedi giorno',
         function() {
-          var giorniLink = document.querySelector('[data-tab="tab-giorni"]');
-          if (giorniLink) giorniLink.click();
+          window.switchTabFromHome('giorni');
           setTimeout(function() {
             var target = document.getElementById(nextData.id);
             if (target) {
@@ -5357,7 +5312,8 @@ if ('serviceWorker' in navigator) {
               target.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
           }, 200);
-        }
+        },
+        true // ownerOnly
       );
 
       // Push notification for next stage (once per evening)
@@ -5365,8 +5321,8 @@ if ('serviceWorker' in navigator) {
         var nextPushKey = 'next_stage_push_' + todayStr;
         if (!sessionStorage.getItem(nextPushKey)) {
           queuePushNotification('next_stage', {
-            title: isEN ? '🛣️ Tomorrow: ' + nextRoute : '🛣️ Domani: ' + nextRoute,
-            body: nextKm ? nextKm + ' — ' + nextOre : (isEN ? 'Check the details' : 'Controlla i dettagli'),
+            title: isEN ? '\ud83d\udee3\ufe0f Tomorrow: ' + nextRoute : '\ud83d\udee3\ufe0f Domani: ' + nextRoute,
+            body: nextKm ? nextKm + ' \u2014 ' + nextOre : (isEN ? 'Check the details' : 'Controlla i dettagli'),
             target: 'owner',
             url: './#tab-giorni',
             tag: 'next-stage-' + todayStr
@@ -5376,6 +5332,180 @@ if ('serviceWorker' in navigator) {
       }
     }
   }
+
+  // --- #10: Pending access notification (owner only, from Firebase) ---
+  // This is populated asynchronously when auth state changes
+  function checkPendingAccess() {
+    if (!isOwner) return;
+    if (typeof firebase === 'undefined' || !firebase.database) return;
+    firebase.database().ref('trips/' + FAMILY_ID + '/pendingUsers').once('value', function(snap) {
+      var pending = snap.val();
+      var count = pending ? Object.keys(pending).length : 0;
+      if (count > 0 && !isDismissed('pending-access-' + todayStr)) {
+        var pendText = isEN
+          ? '<strong>' + count + ' pending access request' + (count > 1 ? 's' : '') + '</strong> waiting for approval.'
+          : '<strong>' + count + ' richiest' + (count > 1 ? 'e' : 'a') + ' di accesso</strong> in attesa di approvazione.';
+        // Add to notifications array and re-render
+        var exists = notifications.some(function(n) { return n.id === 'pending-access-' + todayStr; });
+        if (!exists) {
+          notifications.push({
+            id: 'pending-access-' + todayStr,
+            icon: '\ud83d\udc65',
+            text: pendText,
+            type: 'owner',
+            actionLabel: isEN ? 'Manage access' : 'Gestisci accessi',
+            action: function() {
+              window.switchTabFromHome('diario');
+              setTimeout(function() {
+                var manageBtn = document.getElementById('diario-manage-users');
+                if (manageBtn) manageBtn.click();
+              }, 300);
+            },
+            ownerOnly: true
+          });
+          renderDrawer();
+          updateBadge();
+        }
+      }
+    });
+  }
+
+  // --- Zaino push notification (24/20/15/10/3/2/1 days before) ---
+  var zainoDays = [24, 20, 15, 10, 7, 3, 2, 1];
+  if (zainoDays.indexOf(diffToStart) !== -1 && window.queuePushNotification) {
+    var zainoAllCbs = document.querySelectorAll('#tab-zaino input[type="checkbox"][data-idx]');
+    var zainoUnchecked = 0;
+    zainoAllCbs.forEach(function(cb) { if (!cb.checked) zainoUnchecked++; });
+    if (zainoUnchecked > 10) {
+      var zainoPushKey = 'zaino_push_' + todayStr;
+      if (!sessionStorage.getItem(zainoPushKey)) {
+        queuePushNotification('zaino_reminder', {
+          title: isEN ? '\ud83c\udf92 ' + zainoUnchecked + ' items unchecked!' : '\ud83c\udf92 ' + zainoUnchecked + ' oggetti non spuntati!',
+          body: isEN ? 'Your backpack list needs attention before departure.' : 'Lo zaino ha bisogno di attenzione prima della partenza.',
+          target: 'owner',
+          url: './#tab-zaino',
+          tag: 'zaino-' + todayStr
+        });
+        sessionStorage.setItem(zainoPushKey, '1');
+      }
+    }
+  }
+
+  // --- Render drawer ---
+  function renderDrawer() {
+    drawerList.innerHTML = '';
+    var visibleNotifs = notifications.filter(function(n) {
+      if (n.ownerOnly && !isOwner) return false;
+      return true;
+    });
+    visibleNotifs.forEach(function(n) {
+      var item = document.createElement('div');
+      item.className = 'notif-item type-' + n.type;
+      item.setAttribute('data-notif-id', n.id);
+      var html = '<span class="notif-item-icon">' + n.icon + '</span>';
+      html += '<div class="notif-item-body">';
+      html += '<span class="notif-item-text">' + n.text + '</span>';
+      if (n.actionLabel && n.action) {
+        html += '<a class="notif-item-link" data-action="go">' + n.actionLabel + ' \u2192</a>';
+      }
+      html += '</div>';
+      html += '<button class="notif-item-dismiss" aria-label="' + (isEN ? 'Dismiss' : 'Chiudi') + '">&times;</button>';
+      item.innerHTML = html;
+
+      // Bind action link
+      var link = item.querySelector('[data-action="go"]');
+      if (link && n.action) {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          closeDrawer();
+          setTimeout(n.action, 150);
+        });
+      }
+
+      // Bind dismiss
+      item.querySelector('.notif-item-dismiss').addEventListener('click', function(e) {
+        e.stopPropagation();
+        dismissed[n.id] = todayStr;
+        localStorage.setItem(NOTIF_KEY, JSON.stringify(dismissed));
+        item.style.transition = 'opacity 0.3s, transform 0.3s';
+        item.style.opacity = '0';
+        item.style.transform = 'translateX(30px)';
+        setTimeout(function() {
+          item.remove();
+          notifications = notifications.filter(function(x) { return x.id !== n.id; });
+          updateBadge();
+        }, 300);
+      });
+
+      drawerList.appendChild(item);
+    });
+  }
+
+  // --- Badge update ---
+  function updateBadge() {
+    var visibleCount = notifications.filter(function(n) {
+      if (n.ownerOnly && !isOwner) return false;
+      return true;
+    }).length;
+    [badge, homeBadge].forEach(function(b) {
+      if (!b) return;
+      if (visibleCount > 0) {
+        b.textContent = visibleCount > 9 ? '9+' : visibleCount;
+        b.classList.add('visible');
+      } else {
+        b.textContent = '';
+        b.classList.remove('visible');
+      }
+    });
+  }
+
+  // --- Drawer open/close ---
+  function openDrawer() {
+    renderDrawer();
+    drawer.classList.add('open');
+    drawerOverlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeDrawer() {
+    drawer.classList.remove('open');
+    drawerOverlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // Bell click handlers
+  if (bellBtn) bellBtn.addEventListener('click', function() { openDrawer(); });
+  if (homeBellBtn) homeBellBtn.addEventListener('click', function() { openDrawer(); });
+  if (drawerClose) drawerClose.addEventListener('click', function() { closeDrawer(); });
+  if (drawerOverlay) drawerOverlay.addEventListener('click', function() { closeDrawer(); });
+
+  // Close on Escape key
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && drawer.classList.contains('open')) closeDrawer();
+  });
+
+  // --- Initial render + badge ---
+  renderDrawer();
+  updateBadge();
+
+  // --- Listen for auth state to check pending access ---
+  window.addEventListener('authStateChanged', function() {
+    setTimeout(function() {
+      checkPendingAccess();
+      // Re-render to show/hide owner-only notifications
+      renderDrawer();
+      updateBadge();
+    }, 500);
+  });
+
+  // Also check immediately if already logged in
+  if (isOwner) checkPendingAccess();
+
+  // Expose for external use
+  window._notifDrawerUpdate = function() {
+    renderDrawer();
+    updateBadge();
+  };
 
 })();
 
@@ -7722,6 +7852,10 @@ if ('serviceWorker' in navigator) {
       // Trigger map initialization if not yet done
       if (typeof initMap === 'function') {
         try { initMap(); } catch(e) {}
+      }
+      // Refresh stats now that content is visible
+      if (typeof window._posUpdateStats === 'function') {
+        try { window._posUpdateStats(); } catch(e) {}
       }
       // invalidateSize after a bit more delay for rendering
       setTimeout(function() {

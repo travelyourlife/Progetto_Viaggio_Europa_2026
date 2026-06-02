@@ -53,7 +53,7 @@
     <link rel="apple-touch-icon" sizes="152x152" href="./icon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="./icon.png">
     <link rel="apple-touch-icon" sizes="167x167" href="./icon.png">
-    <title>Europe Trip 2026 — V1.32</title>
+    <title>Europe Trip 2026 — V1.34</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <link rel="stylesheet" href="style.css">
 
@@ -70,7 +70,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = '1.32';
+  var EXPECTED_VERSION = '1.34';
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
   var r = false;
@@ -168,6 +168,7 @@
     <button class="menu-btn" id="menuOpen" aria-label="Menu">☰</button>
     <div class="top-bar-title" onclick="switchTabFromHome('home');history.pushState(null,'','#tab-home');" style="cursor:pointer;"><img src="./icon.png" alt="">Europe Trip 2026</div>
     <button class="search-btn" id="searchOpen" aria-label="Search">🔍</button>
+    <button class="notif-bell-btn" id="notifBellBtn" aria-label="Notifications">🔔<span class="notif-badge" id="notifBadge"></span></button>
     <button class="auth-btn" id="authBtn" aria-label="Login" title="Sign in">👤</button>
     <a class="lang-btn" id="langSwitch" href="./index.html" aria-label="Italiano">🇮🇹</a>
 </div>
@@ -277,9 +278,10 @@
 <div class="home-header">
     <h1 class="home-brand">Quo Vadis <span class="home-compass">🧭</span></h1>
     <div class="home-header-actions">
-        <button class="home-action-btn" id="homeSearchOpen" aria-label="Search">🔍</button>
-        <button class="home-action-btn" id="homeAuthBtn" aria-label="Login" title="Sign in">👤</button>
         <a href="./index.html" class="home-lang-switch" aria-label="Passa all'italiano">🇮🇹</a>
+        <button class="home-action-btn" id="homeSearchOpen" aria-label="Search">🔍</button>
+        <button class="home-action-btn notif-bell-home" id="homeNotifBell" aria-label="Notifications">🔔<span class="notif-badge" id="homeNotifBadge"></span></button>
+        <button class="home-action-btn" id="homeAuthBtn" aria-label="Login" title="Sign in">👤</button>
     </div>
 </div>
 
@@ -325,8 +327,15 @@
     </div>
 </div>
 
-<!-- ─── In-App Notification Banners ─── -->
-<div id="notif-container" class="notif-container"></div>
+<!-- ─── Notification Drawer ─── -->
+<div class="notif-drawer-overlay" id="notifDrawerOverlay"></div>
+<div class="notif-drawer" id="notifDrawer">
+    <div class="notif-drawer-header">
+        <h3>🔔 Notifications</h3>
+        <button class="notif-drawer-close" id="notifDrawerClose">&times;</button>
+    </div>
+    <div class="notif-drawer-list" id="notifDrawerList"></div>
+</div>
 
 <!-- ─── Route Map Banner (unified with stats) ─── -->
 <div id="home-route-banner" class="home-route-banner" style="margin:4px 0;padding:14px 18px;background:linear-gradient(135deg,#1a365d,#2c5282);border-radius:14px;color:white;display:flex;align-items:center;justify-content:space-between;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.15);" onclick="try { var rm = document.getElementById('routeMap'); var inst = null; if (rm) { for (var k in rm) { if (k.indexOf('_leaflet_map') === 0) { inst = rm[k]; break; } } } window.openMapFullscreen(inst, '🗺️ Our route'); } catch(e) { console.error('[Banner]', e); alert('Error opening map: ' + e.message); }">
