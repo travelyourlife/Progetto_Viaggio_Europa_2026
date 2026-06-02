@@ -53,7 +53,7 @@
     <link rel="apple-touch-icon" sizes="152x152" href="./icon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="./icon.png">
     <link rel="apple-touch-icon" sizes="167x167" href="./icon.png">
-    <title>Viaggio Europa 2026 — V1.40</title>
+    <title>Viaggio Europa 2026 — V1.41</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <link rel="stylesheet" href="style.css">
 <!-- Firebase SDK (compat mode for single-file app) -->
@@ -69,7 +69,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = '1.40';
+  var EXPECTED_VERSION = '1.41';
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
   var r = false;
@@ -6934,9 +6934,9 @@
 <a href="#trekking">🥾 Trekking</a>
 <a href="#pesca">🎣 Pesca</a>
 <a href="#noleggi">🚴 Noleggi Outdoor</a>
+<a href="#minerali-fossili">⛏️ Minerali & Fossili</a>
 <a href="#drone">🛸 Drone</a>
 <a href="#inreach">📡 Garmin inReach</a>
-<a href="#minerali-fossili">⛏️ Minerali & Fossili</a>
 </div></div>
 <h2 id="campeggio">🚐 Campeggio — Regole per Paese</h2>
 <table>
@@ -8072,6 +8072,80 @@
 </table>
 <hr>
 
+<h2 id="minerali-fossili">⛏️ Ricerca Minerali e Fossili</h2>
+<blockquote>
+<p>Lungo l'itinerario ci sono diverse opportunità per cercare minerali e fossili — attività perfette per tutta la famiglia. Si può portare a casa ciò che si trova!</p>
+</blockquote>
+
+<h3>💎 Minerali — Spot lungo il Percorso</h3>
+<table>
+<thead>
+<tr>
+<th>Luogo</th>
+<th>Paese</th>
+<th>Giorno</th>
+<th>Cosa si trova</th>
+<th>Info pratiche</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Luogo"><strong>Miniera di Ametista Lampivaara</strong></td>
+<td data-label="Paese">🇫🇮 Finlandia (Luosto)</td>
+<td data-label="Giorno"><a href="#g13">G13</a> (deviazione ~1h da Sodankylä)</td>
+<td data-label="Cosa">Ametiste — si scava nella roccia e si tiene la propria pietra</td>
+<td data-label="Info">Visita guidata ~1h. €18 adulti, €10 bambini. Unica miniera di ametista attiva in Europa. Aperta in estate. <a href="https://www.amethystmine.fi/visits/" target="_blank" rel="noopener">amethystmine.fi</a></td>
+</tr>
+<tr>
+<td data-label="Luogo"><strong>Tankavaara Gold Village</strong></td>
+<td data-label="Paese">🇫🇮 Finlandia (Sodankylä)</td>
+<td data-label="Giorno"><a href="#g13">G13</a> (sulla strada Rovaniemi→Inari)</td>
+<td data-label="Cosa">Oro alluvionale — setacciatura nel fiume con padella</td>
+<td data-label="Info">Museo + gold panning 45 min. ~€15/persona. Si tiene l'oro trovato. <a href="https://www.kultamuseo.fi/en/" target="_blank" rel="noopener">kultamuseo.fi</a></td>
+</tr>
+</tbody>
+</table>
+
+<h3>🪨 Fossili — Spot lungo il Percorso</h3>
+<table>
+<thead>
+<tr>
+<th>Luogo</th>
+<th>Paese</th>
+<th>Giorno</th>
+<th>Cosa si trova</th>
+<th>Info pratiche</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Luogo"><strong>Møns Klint (GeoCenter)</strong></td>
+<td data-label="Paese">🇩🇰 Danimarca (isola di Møn)</td>
+<td data-label="Giorno"><a href="#g34">G34</a>–<a href="#g35">G35</a> (deviazione ~1,5h da Copenhagen)</td>
+<td data-label="Cosa">Fossili marini (ricci di mare, belemniti, conchiglie) nelle scogliere di gesso bianco</td>
+<td data-label="Info">Tour guidati ~1h, DKK 25 + ingresso GeoCenter. Spiaggia libera per ricerca autonoma. <a href="https://moensklint.dk/en/fossil-hunting/" target="_blank" rel="noopener">moensklint.dk</a></td>
+</tr>
+<tr>
+<td data-label="Luogo"><strong>Gram Lergrav (Clay Pit)</strong></td>
+<td data-label="Paese">🇩🇰 Danimarca (Jutland sud)</td>
+<td data-label="Giorno"><a href="#g39">G39</a> (deviazione ~45 min da Billund→Brema)</td>
+<td data-label="Cosa">Fossili marini di 10 milioni di anni: denti di squalo, conchiglie, ossa di balena</td>
+<td data-label="Info">Museo + scavo libero nella cava. ~DKK 100 adulti. Si tengono i fossili comuni. <a href="https://msj.dk/en/gram-lergrav-palaeontology/" target="_blank" rel="noopener">msj.dk</a></td>
+</tr>
+</tbody>
+</table>
+
+<h3>🎯 Consigli Pratici</h3>
+<ul>
+<li><strong>Lampivaara:</strong> Prenotare online in anticipo (posti limitati). Portare giacca — in quota fa fresco anche in estate. La miniera è raggiungibile con 2,5 km di sentiero dal parcheggio.</li>
+<li><strong>Tankavaara:</strong> Sulla E75 tra Sodankylä e Inari — sosta perfetta durante il trasferimento del G13.</li>
+<li><strong>Møns Klint:</strong> Scendere le scale fino alla spiaggia (circa 500 gradini). Portare scarpe robuste. I fossili migliori si trovano dopo le piogge quando il gesso si sgretola.</li>
+<li><strong>Gram:</strong> Portare martello e scalpello (o noleggiarli in loco). Vestiti da sporcare — si scava nell'argilla!</li>
+<li><strong>👨‍👩‍👧‍👦 Tutte queste attività sono adatte a bambini</strong> e molto coinvolgenti per i più piccoli.</li>
+</ul>
+<p><strong>Fonti:</strong> <a href="https://www.amethystmine.fi/visits/" target="_blank" rel="noopener">Amethyst Mine Lapland</a> | <a href="https://www.kultamuseo.fi/en/" target="_blank" rel="noopener">Gold Museum Tankavaara</a> | <a href="https://moensklint.dk/en/fossil-hunting/" target="_blank" rel="noopener">GeoCenter Møns Klint</a> | <a href="https://msj.dk/en/gram-lergrav-palaeontology/" target="_blank" rel="noopener">Gram Clay Pit</a></p>
+<hr>
+
 <h2 id="drone">🛸 Drone — Regolamenti per Paese</h2>
 <blockquote>
 <p>Regole EASA (Open Category) valide in tutta l’UE/SEE: max <strong>120m AGL</strong>, volo a vista (VLOS), registrazione nel proprio Paese EU (valida ovunque). Droni <strong>sub-250g con camera</strong> (es. DJI Mini 4 Pro): categoria C0/A1, nessun patentino richiesto, si può volare vicino a persone (non assembramenti).</p>
@@ -8377,80 +8451,6 @@
 </tbody>
 </table>
 <p><strong>Fonti:</strong> <a href="https://www.garmin.com/en-US/p/765374" target="_blank" rel="noopener">Garmin inReach Mini 2</a> | <a href="https://explore.garmin.com" target="_blank" rel="noopener">Garmin Explore</a> | <a href="https://www.dekkinga.com" target="_blank" rel="noopener">Copertura Iridium</a></p>
-<hr>
-
-<h2 id="minerali-fossili">⛏️ Ricerca Minerali e Fossili</h2>
-<blockquote>
-<p>Lungo l'itinerario ci sono diverse opportunità per cercare minerali e fossili — attività perfette per tutta la famiglia. Si può portare a casa ciò che si trova!</p>
-</blockquote>
-
-<h3>💎 Minerali — Spot lungo il Percorso</h3>
-<table>
-<thead>
-<tr>
-<th>Luogo</th>
-<th>Paese</th>
-<th>Giorno</th>
-<th>Cosa si trova</th>
-<th>Info pratiche</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td data-label="Luogo"><strong>Miniera di Ametista Lampivaara</strong></td>
-<td data-label="Paese">🇫🇮 Finlandia (Luosto)</td>
-<td data-label="Giorno"><a href="#g13">G13</a> (deviazione ~1h da Sodankylä)</td>
-<td data-label="Cosa">Ametiste — si scava nella roccia e si tiene la propria pietra</td>
-<td data-label="Info">Visita guidata ~1h. €18 adulti, €10 bambini. Unica miniera di ametista attiva in Europa. Aperta in estate. <a href="https://www.amethystmine.fi/visits/" target="_blank" rel="noopener">amethystmine.fi</a></td>
-</tr>
-<tr>
-<td data-label="Luogo"><strong>Tankavaara Gold Village</strong></td>
-<td data-label="Paese">🇫🇮 Finlandia (Sodankylä)</td>
-<td data-label="Giorno"><a href="#g13">G13</a> (sulla strada Rovaniemi→Inari)</td>
-<td data-label="Cosa">Oro alluvionale — setacciatura nel fiume con padella</td>
-<td data-label="Info">Museo + gold panning 45 min. ~€15/persona. Si tiene l'oro trovato. <a href="https://www.kultamuseo.fi/en/" target="_blank" rel="noopener">kultamuseo.fi</a></td>
-</tr>
-</tbody>
-</table>
-
-<h3>🪨 Fossili — Spot lungo il Percorso</h3>
-<table>
-<thead>
-<tr>
-<th>Luogo</th>
-<th>Paese</th>
-<th>Giorno</th>
-<th>Cosa si trova</th>
-<th>Info pratiche</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td data-label="Luogo"><strong>Møns Klint (GeoCenter)</strong></td>
-<td data-label="Paese">🇩🇰 Danimarca (isola di Møn)</td>
-<td data-label="Giorno"><a href="#g34">G34</a>–<a href="#g35">G35</a> (deviazione ~1,5h da Copenhagen)</td>
-<td data-label="Cosa">Fossili marini (ricci di mare, belemniti, conchiglie) nelle scogliere di gesso bianco</td>
-<td data-label="Info">Tour guidati ~1h, DKK 25 + ingresso GeoCenter. Spiaggia libera per ricerca autonoma. <a href="https://moensklint.dk/en/fossil-hunting/" target="_blank" rel="noopener">moensklint.dk</a></td>
-</tr>
-<tr>
-<td data-label="Luogo"><strong>Gram Lergrav (Clay Pit)</strong></td>
-<td data-label="Paese">🇩🇰 Danimarca (Jutland sud)</td>
-<td data-label="Giorno"><a href="#g39">G39</a> (deviazione ~45 min da Billund→Brema)</td>
-<td data-label="Cosa">Fossili marini di 10 milioni di anni: denti di squalo, conchiglie, ossa di balena</td>
-<td data-label="Info">Museo + scavo libero nella cava. ~DKK 100 adulti. Si tengono i fossili comuni. <a href="https://msj.dk/en/gram-lergrav-palaeontology/" target="_blank" rel="noopener">msj.dk</a></td>
-</tr>
-</tbody>
-</table>
-
-<h3>🎯 Consigli Pratici</h3>
-<ul>
-<li><strong>Lampivaara:</strong> Prenotare online in anticipo (posti limitati). Portare giacca — in quota fa fresco anche in estate. La miniera è raggiungibile con 2,5 km di sentiero dal parcheggio.</li>
-<li><strong>Tankavaara:</strong> Sulla E75 tra Sodankylä e Inari — sosta perfetta durante il trasferimento del G13.</li>
-<li><strong>Møns Klint:</strong> Scendere le scale fino alla spiaggia (circa 500 gradini). Portare scarpe robuste. I fossili migliori si trovano dopo le piogge quando il gesso si sgretola.</li>
-<li><strong>Gram:</strong> Portare martello e scalpello (o noleggiarli in loco). Vestiti da sporcare — si scava nell'argilla!</li>
-<li><strong>👨‍👩‍👧‍👦 Tutte queste attività sono adatte a bambini</strong> e molto coinvolgenti per i più piccoli.</li>
-</ul>
-<p><strong>Fonti:</strong> <a href="https://www.amethystmine.fi/visits/" target="_blank" rel="noopener">Amethyst Mine Lapland</a> | <a href="https://www.kultamuseo.fi/en/" target="_blank" rel="noopener">Gold Museum Tankavaara</a> | <a href="https://moensklint.dk/en/fossil-hunting/" target="_blank" rel="noopener">GeoCenter Møns Klint</a> | <a href="https://msj.dk/en/gram-lergrav-palaeontology/" target="_blank" rel="noopener">Gram Clay Pit</a></p>
 <hr>
 
 </section>
@@ -9209,6 +9209,18 @@
 <div id="admin-pending-list">
   <p style="color:var(--text-muted);font-size:13px;">Nessuna richiesta in attesa.</p>
 </div>
+</div>
+
+<!-- Notification Day Override (testing) -->
+<div class="admin-card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:12px 0;">
+<h3 style="margin-bottom:12px;">🔔 Test Notifiche</h3>
+<p style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">Simula un giorno di viaggio per testare le notifiche (0 = partenza, -1 = disattivo).</p>
+<div style="display:flex;gap:8px;align-items:center;">
+  <input type="number" id="adminNotifDayOverride" min="-1" max="53" placeholder="Giorno (es. 6)" style="width:120px;padding:6px 10px;border:1px solid var(--border);border-radius:8px;font-size:13px;">
+  <button id="adminNotifDaySet" class="pos-btn pos-btn-blue" style="font-size:12px;">Imposta</button>
+  <button id="adminNotifDayReset" class="pos-btn" style="font-size:12px;background:#e53e3e;color:#fff;">Reset</button>
+</div>
+<p id="adminNotifDayStatus" style="font-size:11px;color:var(--text-muted);margin-top:6px;"></p>
 </div>
 
 <!-- Quick Links -->

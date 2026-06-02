@@ -5399,10 +5399,19 @@ if ('serviceWorker' in navigator) {
     notifications.push({ id: id, icon: icon, text: text, type: type || 'info', actionLabel: actionLabel || '', action: action || null, ownerOnly: !!ownerOnly });
   }
 
-  // --- Compute trip state ---
+  // --- Compute trip state (use REAL date, not position override) ---
   var now = new Date();
   now.setHours(0,0,0,0);
-  var tripDay = getCurrentTripDay();
+  // Check for admin notification test override (separate from position nav)
+  var NOTIF_DAY_OVERRIDE_KEY = 'viaggio2026_notif_day_override';
+  var notifDayOverride = localStorage.getItem(NOTIF_DAY_OVERRIDE_KEY);
+  var tripDay;
+  if (notifDayOverride !== null && notifDayOverride !== '') {
+    tripDay = parseInt(notifDayOverride, 10);
+    if (isNaN(tripDay)) tripDay = Math.floor((now - TRIP_START) / 86400000);
+  } else {
+    tripDay = Math.floor((now - TRIP_START) / 86400000);
+  }
   var diffToStart = Math.ceil((TRIP_START - now) / 86400000);
 
   // --- #2: Special milestones ---
@@ -9243,4 +9252,41 @@ if ('serviceWorker' in navigator) {
       renderAdminPending();
     }, 2500);
   }
+})();
+
+// ─── Admin: Notification Day Override (for testing) ───
+(function() {
+  var NOTIF_DAY_OVERRIDE_KEY = 'viaggio2026_notif_day_override';
+  var setBtn = document.getElementById('adminNotifDaySet');
+  var resetBtn = document.getElementById('adminNotifDayReset');
+  var input = document.getElementById('adminNotifDayOverride');
+  var status = document.getElementById('adminNotifDayStatus');
+  if (!setBtn || !resetBtn || !input) return;
+
+  // Show current status on load
+  var current = localStorage.getItem(NOTIF_DAY_OVERRIDE_KEY);
+  if (current !== null && current !== '') {
+    input.value = current;
+    status.textContent = '⚠️ Override attivo: giorno ' + current + '. Ricarica la pagina per vedere le notifiche.';
+    status.style.color = '#e53e3e';
+  }
+
+  setBtn.addEventListener('click', function() {
+    var val = input.value.trim();
+    if (val === '' || isNaN(parseInt(val, 10))) {
+      status.textContent = '❌ Inserisci un numero valido.';
+      status.style.color = '#e53e3e';
+      return;
+    }
+    localStorage.setItem(NOTIF_DAY_OVERRIDE_KEY, val);
+    status.textContent = '✅ Override impostato a giorno ' + val + '. Ricarica la pagina.';
+    status.style.color = '#38a169';
+  });
+
+  resetBtn.addEventListener('click', function() {
+    localStorage.removeItem(NOTIF_DAY_OVERRIDE_KEY);
+    input.value = '';
+    status.textContent = '✅ Override rimosso. Notifiche basate sulla data reale. Ricarica la pagina.';
+    status.style.color = '#38a169';
+  });
 })();

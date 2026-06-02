@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-// Service Worker — Viaggio Europa 2026 V1.40
+// Service Worker — Viaggio Europa 2026 V1.41
 // Strategy: Stale-While-Revalidate for own assets (instant load + background update)
 //           Cache-First for CDN (stable, versioned)
 //           Network-Only for API calls
@@ -27,7 +27,7 @@ var messaging = firebase.messaging();
 // ─── CACHING CONFIG ───
 // ═══════════════════════════════════════════════════════════════
 
-const CACHE_NAME = 'quo-vadis-v1.40';
+const CACHE_NAME = 'quo-vadis-v1.41';
 const IMAGE_CACHE_NAME = 'quo-vadis-images-v1';
 const IMAGE_CACHE_LIMIT = 80;
 const STATIC_ASSETS = [
@@ -46,7 +46,8 @@ const STATIC_ASSETS = [
   './icon-maskable-192.png',
   './icon-maskable-512.png',
   './icons/van-marker.svg',
-  './firebase-messaging-sw.js'
+  './firebase-messaging-sw.js',
+  './offline.html'
 ];
 
 const CDN_ASSETS = [
@@ -158,6 +159,12 @@ function staleWhileRevalidate(request) {
       return networkResponse;
     }).catch(function() {
       console.log('[SW] Network error (offline mode)');
+      // Serve branded offline page for navigation requests
+      if (request.mode === 'navigate') {
+        return caches.match('./offline.html').then(function(offlinePage) {
+          return offlinePage || cachedResponse || new Response('Offline', { status: 503 });
+        });
+      }
       return cachedResponse || new Response('Offline', { status: 503 });
     });
     return cachedResponse || fetchPromise;

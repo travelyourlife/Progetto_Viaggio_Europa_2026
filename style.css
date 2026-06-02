@@ -1663,9 +1663,10 @@ table { max-width: 100%; }
 }
 .install-banner .install-btn:active { transform: scale(0.95); }
 .install-banner .install-close {
-    position: absolute; top: 8px; right: 12px;
+    position: absolute; top: 4px; right: 10px;
     background: none; border: none; color: rgba(255,255,255,0.7);
-    font-size: 22px; cursor: pointer; padding: 6px; flex-shrink: 0;
+    font-size: 18px; cursor: pointer; padding: 4px; flex-shrink: 0;
+    line-height: 1;
 }
 .install-banner .install-close:hover { color: white; }
 @keyframes installSlideDown {
