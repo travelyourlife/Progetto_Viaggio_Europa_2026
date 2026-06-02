@@ -1141,7 +1141,7 @@ document.addEventListener('DOMContentLoaded', function() {
         item.addEventListener('click', function(e) {
             e.preventDefault();
             switchTab(this.getAttribute('data-tab'));
-            history.pushState(null, '', '#tab-' + this.getAttribute('data-tab'));
+            history.replaceState(null, '', '#tab-' + this.getAttribute('data-tab'));
             closeMenu();
         });
     });
@@ -1152,7 +1152,7 @@ document.addEventListener('DOMContentLoaded', function() {
             var tabId = this.getAttribute('data-tab');
             // 'more' button removed in v3.6, Firebase added v3.7
             switchTab(tabId);
-            history.pushState(null, '', '#tab-' + tabId);
+            history.replaceState(null, '', '#tab-' + tabId);
         });
     });
 
@@ -1540,10 +1540,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     e.preventDefault();
                     e.stopPropagation();
                     var cidx = btn.getAttribute('data-ciidx');
-                    if (confirm(isEN ? 'Remove this check-in?' : 'Rimuovere questo check-in?')) {
+                    showConfirm(isEN ? 'Remove this check-in?' : 'Rimuovere questo check-in?', function() {
                         saveCheckin(cidx, null);
                         renderPlaces(document.getElementById('pos-search') ? document.getElementById('pos-search').value : '');
-                    }
+                    });
                 });
             });
             var countEl = document.getElementById('pos-checkin-count');
@@ -2228,14 +2228,10 @@ document.addEventListener('DOMContentLoaded', function() {
             // Parking prompt (restored from v9.9)
             if (optParking && optParking.checked && todayKm > 1) {
                 setTimeout(function() {
-                    var askParking = confirm(isEN ? 'Save current location as overnight parking?' : 'Salvare la posizione attuale come parcheggio notte?');
-                    if (askParking) {
-                        var name = prompt(isEN ? 'Parking spot name:' : 'Nome del parcheggio:', '');
-                        if (name !== null) {
-                            var lastPt = todayPoints.length > 0 ? todayPoints[todayPoints.length - 1] : null;
-                            saveParkingSpot(name || (isEN ? 'Overnight ' + todayStr() : 'Notte ' + todayStr()), lastPt ? lastPt.lat : null, lastPt ? lastPt.lng : null, 3);
-                        }
-                    }
+                    showConfirm(isEN ? 'Save current location as overnight parking?' : 'Salvare la posizione attuale come parcheggio notte?', function() {
+                        var lastPt = todayPoints.length > 0 ? todayPoints[todayPoints.length - 1] : null;
+                        saveParkingSpot(isEN ? 'Overnight ' + todayStr() : 'Notte ' + todayStr(), lastPt ? lastPt.lat : null, lastPt ? lastPt.lng : null, 3);
+                    });
                 }, 500);
             }
 
@@ -2275,15 +2271,13 @@ document.addEventListener('DOMContentLoaded', function() {
         // Button handlers
         if (startBtn) startBtn.addEventListener('click', startLive);
         if (stopBtn) stopBtn.addEventListener('click', function() {
-            if (confirm(isEN ? 'End today\'s trip?' : 'Terminare il viaggio di oggi?')) stopLive();
+            showConfirm(isEN ? 'End today\'s trip?' : 'Terminare il viaggio di oggi?', function() { stopLive(); });
         });
         // Quick-start inline button (admin shortcut) — toggles start/stop
         var quickStartBtn = document.getElementById('pos-quick-start');
         if (quickStartBtn) quickStartBtn.addEventListener('click', function() {
             if (liveActive) {
-                if (confirm(isEN ? 'End today\'s trip?' : 'Terminare il viaggio di oggi?')) {
-                    stopLive();
-                }
+                showConfirm(isEN ? 'End today\'s trip?' : 'Terminare il viaggio di oggi?', function() { stopLive(); });
             } else {
                 startLive();
             }
@@ -2383,10 +2377,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Delete handler
                 container.querySelectorAll('.pos-del-btn[data-pkey]').forEach(function(btn) {
                     btn.addEventListener('click', function() {
-                        if (confirm(isEN ? 'Delete this parking?' : 'Eliminare questo parcheggio?')) {
-                            var pRef = getFamilyRef('parking/' + btn.getAttribute('data-pkey'));
+                        var pkey = btn.getAttribute('data-pkey');
+                        showConfirm(isEN ? 'Delete this parking?' : 'Eliminare questo parcheggio?', function() {
+                            var pRef = getFamilyRef('parking/' + pkey);
                             if (pRef) pRef.remove();
-                        }
+                        });
                     });
                 });
             });
@@ -2632,14 +2627,14 @@ document.addEventListener('DOMContentLoaded', function() {
             // Delete handlers
             container.querySelectorAll('.cc-del[data-ckey]').forEach(function(btn) {
                 btn.addEventListener('click', function() {
-                    if (confirm(isEN ? 'Delete this stop?' : 'Eliminare questa tappa?')) {
-                        var cRef = getFamilyRef('customCheckins/' + btn.getAttribute('data-ckey'));
+                    var ckey = btn.getAttribute('data-ckey');
+                    showConfirm(isEN ? 'Delete this stop?' : 'Eliminare questa tappa?', function() {
+                        var cRef = getFamilyRef('customCheckins/' + ckey);
                         if (cRef) cRef.remove();
-                        // Also remove from localStorage
                         var local = loadLocal(KEYS.CUSTOM_CHECKINS, {});
-                        delete local[btn.getAttribute('data-ckey')];
+                        delete local[ckey];
                         saveLocal(KEYS.CUSTOM_CHECKINS, local);
-                    }
+                    });
                 });
             });
         }
@@ -2681,10 +2676,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Delete handler for daily summaries
                 container.querySelectorAll('.pos-del-btn[data-dkey]').forEach(function(btn) {
                     btn.addEventListener('click', function() {
-                        if (confirm(isEN ? 'Delete this daily summary?' : 'Eliminare questo riepilogo giornaliero?')) {
-                            var dRef = getFamilyRef('dailySummaries/' + btn.getAttribute('data-dkey'));
+                        var dkey = btn.getAttribute('data-dkey');
+                        showConfirm(isEN ? 'Delete this daily summary?' : 'Eliminare questo riepilogo giornaliero?', function() {
+                            var dRef = getFamilyRef('dailySummaries/' + dkey);
                             if (dRef) dRef.remove();
-                        }
+                        });
                     });
                 });
                 // Edit km handler (odometer override)
@@ -3138,6 +3134,59 @@ document.addEventListener('DOMContentLoaded', function() {
             toast.classList.add('toast-out');
             setTimeout(function() { toast.remove(); }, 300);
         }, duration);
+    };
+
+    // ─── CUSTOM CONFIRM / ALERT MODAL ───
+    window.showConfirm = function(message, onConfirm, onCancel) {
+        var overlay = document.createElement('div');
+        overlay.className = 'qv-modal-overlay';
+        var modal = document.createElement('div');
+        modal.className = 'qv-modal';
+        var msgEl = document.createElement('p');
+        msgEl.className = 'qv-modal-msg';
+        msgEl.textContent = message;
+        var btnRow = document.createElement('div');
+        btnRow.className = 'qv-modal-btns';
+        var cancelBtn = document.createElement('button');
+        cancelBtn.className = 'qv-modal-btn qv-modal-cancel';
+        cancelBtn.textContent = isEN ? 'Cancel' : 'Annulla';
+        var confirmBtn = document.createElement('button');
+        confirmBtn.className = 'qv-modal-btn qv-modal-confirm';
+        confirmBtn.textContent = isEN ? 'Confirm' : 'Conferma';
+        btnRow.appendChild(cancelBtn);
+        btnRow.appendChild(confirmBtn);
+        modal.appendChild(msgEl);
+        modal.appendChild(btnRow);
+        overlay.appendChild(modal);
+        document.body.appendChild(overlay);
+        requestAnimationFrame(function() { overlay.classList.add('open'); });
+        function close() { overlay.classList.remove('open'); setTimeout(function() { overlay.remove(); }, 200); }
+        cancelBtn.addEventListener('click', function() { close(); if (onCancel) onCancel(); });
+        confirmBtn.addEventListener('click', function() { close(); if (onConfirm) onConfirm(); });
+        overlay.addEventListener('click', function(e) { if (e.target === overlay) { close(); if (onCancel) onCancel(); } });
+    };
+    window.showAlert = function(message, onClose) {
+        var overlay = document.createElement('div');
+        overlay.className = 'qv-modal-overlay';
+        var modal = document.createElement('div');
+        modal.className = 'qv-modal';
+        var msgEl = document.createElement('p');
+        msgEl.className = 'qv-modal-msg';
+        msgEl.textContent = message;
+        var btnRow = document.createElement('div');
+        btnRow.className = 'qv-modal-btns';
+        var okBtn = document.createElement('button');
+        okBtn.className = 'qv-modal-btn qv-modal-confirm';
+        okBtn.textContent = 'OK';
+        btnRow.appendChild(okBtn);
+        modal.appendChild(msgEl);
+        modal.appendChild(btnRow);
+        overlay.appendChild(modal);
+        document.body.appendChild(overlay);
+        requestAnimationFrame(function() { overlay.classList.add('open'); });
+        function close() { overlay.classList.remove('open'); setTimeout(function() { overlay.remove(); }, 200); }
+        okBtn.addEventListener('click', function() { close(); if (onClose) onClose(); });
+        overlay.addEventListener('click', function(e) { if (e.target === overlay) { close(); if (onClose) onClose(); } });
     };
 
     // ─── HAPTIC FEEDBACK ───
@@ -3692,7 +3741,7 @@ if ('serviceWorker' in navigator) {
 
     // ─── SWIPE BETWEEN TABS ───
     (function() {
-        var tabOrder = (typeof TAB_ORDER !== 'undefined') ? TAB_ORDER : ['home', 'riepilogo', 'posizione', 'giorni', 'cultura', 'cibo', 'attivita', 'piano', 'zaino'];
+        var tabOrder = (typeof TAB_ORDER !== 'undefined') ? TAB_ORDER : ['riepilogo', 'posizione', 'giorni', 'cultura', 'cibo', 'attivita', 'piano', 'zaino'];
         var touchStartX = 0, touchEndX = 0, touchStartY = 0, touchEndY = 0;
         var minSwipe = 80;
 
@@ -3721,12 +3770,12 @@ if ('serviceWorker' in navigator) {
                 // Swipe left → next tab
                 if(window.haptic) window.haptic(15);
                 switchTab(tabOrder[idx + 1]);
-                history.pushState(null, '', '#tab-' + tabOrder[idx + 1]);
+                history.replaceState(null, '', '#tab-' + tabOrder[idx + 1]);
             } else if (diffX > 0 && idx > 0) {
                 // Swipe right → previous tab
                 if(window.haptic) window.haptic(15);
                 switchTab(tabOrder[idx - 1]);
-                history.pushState(null, '', '#tab-' + tabOrder[idx - 1]);
+                history.replaceState(null, '', '#tab-' + tabOrder[idx - 1]);
             }
         }, { passive: true });
     })();
@@ -4924,12 +4973,12 @@ if ('serviceWorker' in navigator) {
     }
     var user = firebase.auth().currentUser;
     if (user) {
-      // Show logout option
-      if (confirm((isEN ? 'Logged in as: ' : 'Connesso come: ') + (user.displayName || user.email) + '\n\n' + (isEN ? 'Sign out?' : 'Disconnettersi?'))) {
+      // Show logout option via custom modal
+      showConfirm((isEN ? 'Logged in as: ' : 'Connesso come: ') + (user.displayName || user.email) + '\n\n' + (isEN ? 'Sign out?' : 'Disconnettersi?'), function() {
         firebase.auth().signOut().then(function() {
           showToast(isEN ? 'Signed out' : 'Disconnesso', 'info');
         });
-      }
+      });
     } else {
       // Sign in with Google — unified method handles browser/PWA/standalone
       doGoogleSignIn(function(user) {
@@ -5222,8 +5271,8 @@ if ('serviceWorker' in navigator) {
   if (testPushBtn) {
     testPushBtn.addEventListener('click', function() {
       console.debug('[TestPush] clicked. isOwner=' + isOwner + ', db=' + !!db);
-      if (!isOwner) { alert('Solo owner possono testare le notifiche.'); return; }
-      if (!db) { alert('Firebase non disponibile. Sei offline?'); return; }
+      if (!isOwner) { showAlert('Solo owner possono testare le notifiche.'); return; }
+      if (!db) { showAlert('Firebase non disponibile. Sei offline?'); return; }
       testPushBtn.disabled = true;
       testPushBtn.textContent = '⏳ Invio...';
       var now = new Date();
@@ -5246,7 +5295,7 @@ if ('serviceWorker' in navigator) {
       }).catch(function(err) {
         testPushBtn.textContent = '❌ Errore';
         testPushBtn.style.background = '#e74c3c';
-        alert('Errore invio: ' + err.message);
+        showAlert('Errore invio: ' + err.message);
         setTimeout(function() { testPushBtn.textContent = '🔔 Test Push'; testPushBtn.style.background = ''; testPushBtn.disabled = false; }, 3000);
       });
     });
@@ -7412,11 +7461,11 @@ if ('serviceWorker' in navigator) {
     var isMineMsg = msgEl.classList.contains('mine');
     if (!isMineMsg && !isOwner) return;
     var confirmText = isEN ? 'Delete this message for everyone?' : 'Eliminare questo messaggio per tutti?';
-    if (confirm(confirmText)) {
+    showConfirm(confirmText, function() {
       CHAT_REF.child(key).remove().then(function() {
         if (window.showToast) showToast(isEN ? 'Message deleted' : 'Messaggio eliminato', 'info');
       });
-    }
+    });
   });
 
   // ─── Admin Panel ───
@@ -7509,10 +7558,10 @@ if ('serviceWorker' in navigator) {
       adminList.querySelectorAll('.admin-ban-btn').forEach(function(btn) {
         btn.addEventListener('click', function() {
           var uid = btn.dataset.uid;
-          if (confirm(isEN ? 'Ban this user?' : 'Bloccare questo utente?')) {
+          showConfirm(isEN ? 'Ban this user?' : 'Bloccare questo utente?', function() {
             BANNED_REF.child(uid).set(true);
             renderAdminPanel();
-          }
+          });
         });
       });
       adminList.querySelectorAll('.admin-unban-btn').forEach(function(btn) {
@@ -7623,17 +7672,10 @@ if ('serviceWorker' in navigator) {
     item.addEventListener('click', function() {
       var tabId = this.getAttribute('data-tab');
       closeAltro();
-      if (typeof switchTabFromHome === 'function') {
-        window.switchTabFromHome(tabId);
-      } else {
-        // Fallback: dispatch the same logic as bottom-tab click
-        var evt = new CustomEvent('altroTabSwitch', { detail: tabId });
-        window.dispatchEvent(evt);
-        // Use the global switchTab if available
-        if (window.switchTab) {
-          window.switchTab(tabId);
-          history.pushState(null, '', '#tab-' + tabId);
-        }
+      // Use replaceState — Altro already pushed its own state which gets consumed on close
+      if (window.switchTab) {
+        window.switchTab(tabId);
+        history.replaceState(null, '', '#tab-' + tabId);
       }
       if (window.haptic) window.haptic(15);
     });
@@ -7643,6 +7685,7 @@ if ('serviceWorker' in navigator) {
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape' && altroSheet.classList.contains('open')) {
       closeAltro();
+      if (history.state && history.state.altroOpen) history.back();
     }
   });
 
@@ -7812,9 +7855,10 @@ if ('serviceWorker' in navigator) {
     // Delete handler for activities
     actList.querySelectorAll('.act-del[data-actkey]').forEach(function(btn) {
       btn.addEventListener('click', function() {
-        if (confirm(isEN ? 'Delete this activity?' : 'Eliminare questa attività?')) {
-          activitiesRef.child(btn.getAttribute('data-actkey')).remove();
-        }
+        var actkey = btn.getAttribute('data-actkey');
+        showConfirm(isEN ? 'Delete this activity?' : 'Eliminare questa attivit\u00e0?', function() {
+          activitiesRef.child(actkey).remove();
+        });
       });
     });
   });
@@ -8255,9 +8299,9 @@ if ('serviceWorker' in navigator) {
     timelineEl.querySelectorAll('.diario-del-btn').forEach(function(btn) {
       btn.addEventListener('click', function() {
         var key = btn.getAttribute('data-key');
-        if (confirm(isEN ? 'Delete this journal entry?' : 'Eliminare questa voce del diario?')) {
+        showConfirm(isEN ? 'Delete this journal entry?' : 'Eliminare questa voce del diario?', function() {
           diarioRef.child(key).remove();
-        }
+        });
       });
     });
 
@@ -8324,7 +8368,7 @@ if ('serviceWorker' in navigator) {
     var delBtn = overlay.querySelector('.diario-lightbox-del');
     if (delBtn) {
       delBtn.addEventListener('click', function() {
-        if (confirm(isEN ? 'Delete this photo?' : 'Eliminare questa foto?')) {
+        showConfirm(isEN ? 'Delete this photo?' : 'Eliminare questa foto?', function() {
           diarioRef.child(entryKey + '/photos/' + photoKey).remove().then(function() {
             if (window.showToast) showToast(isEN ? 'Photo deleted' : 'Foto eliminata', 'success');
             closeLightbox();
@@ -8332,7 +8376,7 @@ if ('serviceWorker' in navigator) {
             console.error('[Diario] Delete photo error:', err);
             if (window.showToast) showToast(isEN ? 'Error deleting' : 'Errore eliminazione', 'error');
           });
-        }
+        });
       });
     }
 
@@ -8815,12 +8859,12 @@ if ('serviceWorker' in navigator) {
         approvedListEl.querySelectorAll('.diario-revoke-btn').forEach(function(btn) {
           btn.addEventListener('click', function() {
             var uid = btn.getAttribute('data-uid');
-            if (confirm(isEN ? 'Revoke access for this user?' : 'Revocare l\'accesso a questo utente?')) {
+            showConfirm(isEN ? 'Revoke access for this user?' : 'Revocare l\'accesso a questo utente?', function() {
               approvedRef.child(uid).remove().then(function() {
                 if (window.showToast) showToast(isEN ? 'Access revoked' : 'Accesso revocato', 'info');
                 loadUserLists();
               });
-            }
+            });
           });
         });
       }

@@ -3597,9 +3597,9 @@ html[lang="en"] .notif-drawer-list:empty::after {
     justify-content: space-between;
     width: 100%;
     padding: 11px 16px;
-    background: linear-gradient(135deg, var(--primary), var(--primary-light));
-    color: #fff;
-    border: none;
+    background: var(--card-bg, #fff);
+    color: var(--text-color, #1a1a2e);
+    border: 1px solid var(--border-color, #e2e8f0);
     border-radius: var(--radius);
     font-size: 15px;
     font-weight: 600;
@@ -3764,3 +3764,67 @@ html[lang="en"] .notif-drawer-list:empty::after {
     text-decoration: underline;
 }
 .poi-card-meta { color: var(--text-muted); }
+
+/* ─── Custom Confirm/Alert Modal ─── */
+.qv-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    padding: 24px;
+}
+.qv-modal-overlay.open { opacity: 1; }
+.qv-modal {
+    background: var(--card-bg, #fff);
+    border-radius: 16px;
+    padding: 24px;
+    max-width: 320px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    transform: scale(0.9);
+    transition: transform 0.2s ease;
+}
+.qv-modal-overlay.open .qv-modal { transform: scale(1); }
+.qv-modal-msg {
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--text-color, #1a1a2e);
+    margin: 0 0 20px;
+    text-align: center;
+    white-space: pre-line;
+}
+.qv-modal-btns {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+.qv-modal-btn {
+    flex: 1;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+.qv-modal-cancel {
+    background: var(--bg-color, #f1f5f9);
+    color: var(--text-muted, #64748b);
+}
+.qv-modal-cancel:hover { background: #e2e8f0; }
+.qv-modal-confirm {
+    background: var(--primary, #2563eb);
+    color: #fff;
+}
+.qv-modal-confirm:hover { background: var(--primary-light, #3b82f6); }
+.qv-modal-btn.qv-modal-danger {
+    background: #ef4444;
+    color: #fff;
+}
+.qv-modal-btn.qv-modal-danger:hover { background: #dc2626; }

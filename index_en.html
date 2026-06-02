@@ -2,10 +2,6 @@
 <html lang="en">
 <head>
     <!-- Google tag (gtag.js) — deferred config to exclude owner sessions -->
-    <!-- TODO v1.27: GA keeps tracking owners despite traffic_type='internal'.
-         Check: 1) Create filter in GA4 Admin > Data Settings > Data Filters to exclude traffic_type=internal
-         2) Or block gtag entirely for owners (don't send config)
-         3) Verify the GA4 filter is actually active (must be created manually in GA console) -->
     <!-- TODO SECURITY (v1.28+):
          - [ ] Apply updated database.rules.json (live read + chat write → approved only)
          - [ ] Verify XSS in chat (does renderMessage use textContent?)
@@ -17,20 +13,24 @@
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      // Defer config until Firebase Auth resolves (max 3s fallback)
+      // Block GA completely for owners — never send config if user is owner
       window._gtagConfigSent = false;
-      function sendGtagConfig(trafficType) {
-        if (window._gtagConfigSent) return;
+      window._gtagBlocked = false;
+      function sendGtagConfig() {
+        if (window._gtagConfigSent || window._gtagBlocked) return;
         window._gtagConfigSent = true;
-        var cfg = {};
-        if (trafficType) cfg.traffic_type = trafficType;
-        gtag('config', 'G-YSGVVPN5ZR', cfg);
+        gtag('config', 'G-YSGVVPN5ZR');
       }
-      // Listen for auth resolution — no fallback, wait for auth
       var INTERNAL_EMAILS = ['aurora.mandara@gmail.com'];
       window.addEventListener('authStateChanged', function(e) {
         var isInternal = e.detail.isOwner || (e.detail.user && INTERNAL_EMAILS.indexOf(e.detail.user.email) !== -1);
-        sendGtagConfig(isInternal ? 'internal' : undefined);
+        if (isInternal) {
+          // Block GA entirely for owners — disable gtag function
+          window._gtagBlocked = true;
+          window['ga-disable-G-YSGVVPN5ZR'] = true;
+        } else {
+          sendGtagConfig();
+        }
       });
       // Fallback: if auth never fires (e.g. no Firebase loaded), send after 10s
       setTimeout(function() { sendGtagConfig(); }, 10000);
@@ -53,7 +53,7 @@
     <link rel="apple-touch-icon" sizes="152x152" href="./icon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="./icon.png">
     <link rel="apple-touch-icon" sizes="167x167" href="./icon.png">
-    <title>Europe Trip 2026 — V1.36</title>
+    <title>Europe Trip 2026 — V1.37</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <link rel="stylesheet" href="style.css">
 
@@ -70,7 +70,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = '1.36';
+  var EXPECTED_VERSION = '1.37';
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
   var r = false;
@@ -338,15 +338,15 @@
 </div>
 
 <!-- ─── Route Map Banner (unified with stats) ─── -->
-<div id="home-route-banner" class="home-route-banner" style="margin:4px 0;padding:14px 18px;background:linear-gradient(135deg,#1a365d,#2c5282);border-radius:14px;color:white;display:flex;align-items:center;justify-content:space-between;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.15);" onclick="try { var rm = document.getElementById('routeMap'); var inst = null; if (rm) { for (var k in rm) { if (k.indexOf('_leaflet_map') === 0) { inst = rm[k]; break; } } } window.openMapFullscreen(inst, '🗺️ Our route'); } catch(e) { console.error('[Banner]', e); alert('Error opening map: ' + e.message); }">
+<div id="home-route-banner" class="home-route-banner" style="margin:4px 0;padding:14px 18px;background:var(--card-bg,#fff);border-radius:14px;color:var(--text-color,#1a1a2e);display:flex;align-items:center;justify-content:space-between;cursor:pointer;box-shadow:var(--shadow-sm,0 1px 3px rgba(0,0,0,0.08));border:1px solid var(--border-color,#e2e8f0);" onclick="try { var rm = document.getElementById('routeMap'); var inst = null; if (rm) { for (var k in rm) { if (k.indexOf('_leaflet_map') === 0) { inst = rm[k]; break; } } } window.openMapFullscreen(inst, '🗺️ Our route'); } catch(e) { console.error('[Banner]', e); }">
   <div style="display:flex;align-items:center;gap:10px;">
     <span style="font-size:24px;">🗺️</span>
     <div>
       <div style="font-weight:700;font-size:15px;">Our route</div>
-      <div id="route-banner-stats" style="font-size:12px;opacity:0.8;">D <span id="hs-day">0</span>/54 · <span id="hs-km">0</span> km · <span id="hs-countries">0</span>/13 countries · <span id="hs-checkins">0</span> check-ins</div>
+      <div id="route-banner-stats" style="font-size:12px;color:var(--text-muted,#64748b);">D <span id="hs-day">0</span>/54 · <span id="hs-km">0</span> km · <span id="hs-countries">0</span>/13 countries · <span id="hs-checkins">0</span> check-ins</div>
     </div>
   </div>
-  <span style="font-size:20px;opacity:0.7;">⛶</span>
+  <span style="font-size:20px;color:var(--text-muted,#64748b);">⛶</span>
 </div>
 
 
