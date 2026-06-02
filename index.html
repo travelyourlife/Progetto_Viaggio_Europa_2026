@@ -275,7 +275,11 @@
 
 <div class="home-header">
     <h1 class="home-brand">Quo Vadis <span class="home-compass">🧭</span></h1>
-    <a href="./index_en.html" class="home-lang-switch" aria-label="Switch to English">🇬🇧</a>
+    <div class="home-header-actions">
+        <button class="home-action-btn" id="homeSearchOpen" aria-label="Cerca">🔍</button>
+        <button class="home-action-btn" id="homeAuthBtn" aria-label="Login" title="Accedi">👤</button>
+        <a href="./index_en.html" class="home-lang-switch" aria-label="Switch to English">🇬🇧</a>
+    </div>
 </div>
 
 <!-- ─── Hero Card ─── -->
@@ -324,7 +328,7 @@
 <div id="notif-container" class="notif-container"></div>
 
 <!-- ─── Route Map Banner (unified with stats) ─── -->
-<div id="home-route-banner" class="home-route-banner" style="margin:4px 0;padding:14px 18px;background:linear-gradient(135deg,#1a365d,#2c5282);border-radius:14px;color:white;display:flex;align-items:center;justify-content:space-between;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.15);" onclick="try { window.openMapFullscreen(null, '🗺️ Il nostro percorso'); } catch(e) { console.error('[Banner]', e); alert('Errore apertura mappa: ' + e.message); }">
+<div id="home-route-banner" class="home-route-banner" style="margin:4px 0;padding:14px 18px;background:linear-gradient(135deg,#1a365d,#2c5282);border-radius:14px;color:white;display:flex;align-items:center;justify-content:space-between;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.15);" onclick="try { var rm = document.getElementById('routeMap'); var inst = null; if (rm) { for (var k in rm) { if (k.indexOf('_leaflet_map') === 0) { inst = rm[k]; break; } } } window.openMapFullscreen(inst, '🗺️ Il nostro percorso'); } catch(e) { console.error('[Banner]', e); alert('Errore apertura mappa: ' + e.message); }">
   <div style="display:flex;align-items:center;gap:10px;">
     <span style="font-size:24px;">🗺️</span>
     <div>
@@ -335,13 +339,6 @@
     <span style="font-size:20px;opacity:0.7;">⛶</span>
 </div>
 
-<!-- ─── Activity Stats Bar (totale viaggio) ─── -->
-<div class="activity-stats-bar hidden" id="activityStatsBar">
-    <span class="as-chip"><span class="as-item">🥾 <span class="as-value" id="as-km-foot">0</span> km a piedi</span></span>
-    <span class="as-chip"><span class="as-item">🚴 <span class="as-value" id="as-km-bike">0</span> km in bici</span></span>
-    <span class="as-chip hidden"><span class="as-item">🚣 <span class="as-value" id="as-km-water">0</span> km in acqua</span></span>
-    <span class="as-chip"><span class="as-item">⛰️ <span class="as-value" id="as-elevation">0</span>m dislivello</span></span>
-</div>
 
 <div class="home-grid">
     <!-- ⭐ Essenziali -->

@@ -674,18 +674,35 @@ function initRouteMap() {
         }
     });
 
-    // Open route map by default
+    // Open route map by default (visual state)
     container.classList.add('open');
     arrow.classList.add('open');
     toggle.setAttribute('aria-expanded', 'true');
-    setTimeout(function() { buildRouteMap(); }, 300);
-    mapInitialized = true;
 
-    // Invalidate map size when Itinerario tab becomes visible
+    // Only build map when Itinerario tab is actually visible to avoid size=0 issue
+    function ensureMapBuilt() {
+        if (!mapInitialized) {
+            buildRouteMap();
+            mapInitialized = true;
+        } else if (routeMapInstance) {
+            routeMapInstance.invalidateSize();
+            var HOME_COORDS = [45.39, 11.85];
+            var rc = [HOME_COORDS].concat(TRIP_COORDS.map(function(c) { return [c.lat, c.lng]; }));
+            routeMapInstance.fitBounds(L.latLngBounds(rc), { padding: [15, 15] });
+        }
+    }
+
+    // Check if Itinerario is already the active tab (e.g. direct link)
+    var giorniTab = document.getElementById('tab-giorni');
+    if (giorniTab && giorniTab.classList.contains('active')) {
+        setTimeout(ensureMapBuilt, 300);
+    }
+
+    // Build/refresh map when Itinerario tab becomes visible
     window.addEventListener('tabSwitched', function(e) {
-        if (e.detail === 'giorni' && routeMapInstance) {
-            setTimeout(function() { routeMapInstance.invalidateSize(); }, 250);
-            setTimeout(function() { routeMapInstance.invalidateSize(); }, 600);
+        if (e.detail === 'giorni') {
+            setTimeout(ensureMapBuilt, 150);
+            setTimeout(function() { if (routeMapInstance) routeMapInstance.invalidateSize(); }, 500);
         }
     });
 
@@ -2823,13 +2840,21 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // ─── Init on tab visible ───
-        // Preload map tiles in background after 2s so it's ready when user opens the tab
-        setTimeout(function() { initMap(); }, 2000);
+        // Preload map tiles in background after 2s — but only if posizione-content is visible
+        setTimeout(function() {
+            var posContent = document.getElementById('posizione-content');
+            if (posContent && posContent.style.display !== 'none') {
+                initMap();
+            }
+        }, 2000);
 
         var observer = new MutationObserver(function(mutations) {
             mutations.forEach(function(m) {
                 if (m.target.id === 'tab-posizione' && m.target.classList.contains('active')) {
-                    setTimeout(function() { initMap(); if (map) map.invalidateSize(); }, 100);
+                    var posContent = document.getElementById('posizione-content');
+                    if (posContent && posContent.style.display !== 'none') {
+                        setTimeout(function() { initMap(); if (map) map.invalidateSize(); }, 100);
+                    }
                 }
             });
         });
@@ -4796,6 +4821,39 @@ if ('serviceWorker' in navigator) {
   // Initial state
   if (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser) {
     updateAuthUI(firebase.auth().currentUser, isOwner);
+  }
+})();
+
+// ─── HOME SEARCH & AUTH BUTTONS ───
+(function() {
+  var homeSearch = document.getElementById('homeSearchOpen');
+  var homeAuth = document.getElementById('homeAuthBtn');
+  if (homeSearch) {
+    homeSearch.addEventListener('click', function() {
+      var overlay = document.getElementById('searchOverlay');
+      if (overlay) { overlay.classList.add('open'); document.getElementById('search-input').focus(); }
+    });
+  }
+  if (homeAuth) {
+    homeAuth.addEventListener('click', function() {
+      var mainAuth = document.getElementById('authBtn');
+      if (mainAuth) mainAuth.click();
+    });
+    // Sync logged-in state
+    window.addEventListener('authStateChanged', function(e) {
+      if (e.detail && e.detail.user && e.detail.isOwner) {
+        homeAuth.textContent = e.detail.user.displayName ? e.detail.user.displayName.charAt(0).toUpperCase() : '\u2713';
+        homeAuth.style.background = 'rgba(56,161,105,0.2)';
+        homeAuth.style.border = '2px solid var(--success)';
+      } else if (e.detail && e.detail.user) {
+        homeAuth.textContent = '\u2713';
+        homeAuth.style.background = 'rgba(56,161,105,0.15)';
+      } else {
+        homeAuth.textContent = '\ud83d\udc64';
+        homeAuth.style.background = '';
+        homeAuth.style.border = '';
+      }
+    });
   }
 })();
 
@@ -7418,7 +7476,7 @@ if ('serviceWorker' in navigator) {
   });
 
   // ─── Activity Cards in Posizione tab ───
-  var posSection = document.getElementById('tab-posizione');
+  var posSection = document.getElementById('posizione-content') || document.getElementById('tab-posizione');
   if (!posSection) return;
 
   // Create container for activity cards (appended at end of posizione)
@@ -7659,6 +7717,26 @@ if ('serviceWorker' in navigator) {
     gate.style.display = 'none';
     pendingEl.style.display = 'none';
     contentEl.style.display = '';
+    // Leaflet map needs init + invalidateSize after container becomes visible
+    setTimeout(function() {
+      // Trigger map initialization if not yet done
+      if (typeof initMap === 'function') {
+        try { initMap(); } catch(e) {}
+      }
+      // invalidateSize after a bit more delay for rendering
+      setTimeout(function() {
+        var posMapEl = document.getElementById('pos-map');
+        if (posMapEl) {
+          for (var key in posMapEl) {
+            if (key.indexOf('_leaflet') === 0 && posMapEl[key] && posMapEl[key].invalidateSize) {
+              posMapEl[key].invalidateSize();
+              break;
+            }
+          }
+        }
+        if (typeof map !== 'undefined' && map && map.invalidateSize) map.invalidateSize();
+      }, 300);
+    }, 100);
   }
 
   // ─── Login Button ───
