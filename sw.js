@@ -1,12 +1,12 @@
 // ═══════════════════════════════════════════════════════════════
-// Service Worker — Viaggio Europa 2026 V1.22
+// Service Worker — Viaggio Europa 2026 V1.23
 // Strategy: Stale-While-Revalidate for own assets (instant load + background update)
 //           Cache-First for CDN (stable, versioned)
 //           Network-Only for API calls
 // ═══════════════════════════════════════════════════════════════
 'use strict';
 
-const CACHE_NAME = 'quo-vadis-v1.22';
+const CACHE_NAME = 'quo-vadis-v1.23';
 const IMAGE_CACHE_NAME = 'quo-vadis-images-v1';
 const IMAGE_CACHE_LIMIT = 80;
 const STATIC_ASSETS = [
