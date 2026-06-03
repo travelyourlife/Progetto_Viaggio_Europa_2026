@@ -5888,7 +5888,7 @@ if ('serviceWorker' in navigator) {
     }
     var tip = document.createElement('div');
     tip.id = 'notif-blocked-tip';
-    tip.style.cssText = 'background:var(--bg-warning,#fff3cd);border:1px solid #ffc107;border-radius:10px;padding:12px 14px;margin:12px;font-size:12px;line-height:1.5;color:#664d03;';
+    tip.style.cssText = 'background:var(--bg-alt, rgba(214,158,46,0.15));border:1px solid var(--warning, #d69e2e);border-radius:10px;padding:12px 14px;margin:12px;font-size:12px;line-height:1.5;color:var(--warning, #d69e2e);';
     tip.innerHTML = '<div style="margin-bottom:6px;">⚠️ ' + helpText + '</div>' +
       '<div style="font-size:11px;opacity:0.8;">' + (isEN ? 'This way you\'ll only receive notifications from Quo Vadis, nothing else.' : 'Così riceverai notifiche solo da Quo Vadis, nient\'altro.') + '</div>';
     var container = document.getElementById('notif-container');
