@@ -9611,6 +9611,38 @@ if ('serviceWorker' in navigator) {
     });
   }
 
+  // Admin Test Push with 5s delay (to allow closing the app)
+  var adminTestPushDelay = document.getElementById('admin-test-push-delay');
+  if (adminTestPushDelay) {
+    adminTestPushDelay.addEventListener('click', function() {
+      if (!db) { adminLog('ERROR: db is null'); return; }
+      adminTestPushDelay.disabled = true;
+      var countdown = 5;
+      adminTestPushDelay.textContent = '⏱️ ' + countdown + 's...';
+      adminLog('⏱️ Push in 5 secondi — chiudi l\'app ora!');
+      var interval = setInterval(function() {
+        countdown--;
+        adminTestPushDelay.textContent = '⏱️ ' + countdown + 's...';
+        if (countdown <= 0) {
+          clearInterval(interval);
+          var ref = db.ref('trips/' + FAMILY_ID + '/notifications/queue');
+          ref.push({
+            type: 'test', title: '🧪 Admin Test (delayed)', body: 'Push dopo 5s — se vedi questo, le push in background funzionano!',
+            target: 'owner', url: './', tag: 'admin-test-delay-' + Date.now(), createdAt: Date.now(), sent: false, source: 'admin-panel'
+          }).then(function() {
+            adminLog('✅ Delayed push queued');
+            adminTestPushDelay.textContent = '✅ Inviata!';
+            setTimeout(function() { adminTestPushDelay.textContent = '⏱️ Test Push (5s)'; adminTestPushDelay.disabled = false; }, 3000);
+          }).catch(function(err) {
+            adminLog('❌ Error: ' + err.message);
+            adminTestPushDelay.textContent = '⏱️ Test Push (5s)';
+            adminTestPushDelay.disabled = false;
+          });
+        }
+      }, 1000);
+    });
+  }
+
   // Request Permission
   var adminReqNotif = document.getElementById('admin-request-notif');
   if (adminReqNotif) {
