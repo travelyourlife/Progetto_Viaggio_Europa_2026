@@ -69,7 +69,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = '1.48';
+  var EXPECTED_VERSION = '1.49';
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
   var r = false;
@@ -8870,6 +8870,7 @@
             <span id="pos-day-current" style="font-weight:700;font-size:15px;">G0</span>
             <button class="pos-btn pos-btn-gray" id="pos-day-next" style="padding:6px 12px;">▶</button>
             <button class="pos-btn pos-btn-blue" id="pos-day-sync" style="padding:6px 12px;font-size:12px;">☁️ Sincronizza</button>
+            <button class="pos-btn" id="pos-day-reset" style="padding:6px 12px;font-size:12px;background:#e53e3e;color:#fff;">↺ Auto</button>
         </div>
     </div>
 </div>

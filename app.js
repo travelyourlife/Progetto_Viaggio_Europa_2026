@@ -2913,19 +2913,37 @@ document.addEventListener('DOMContentLoaded', function() {
         var dayNext = document.getElementById('pos-day-next');
         var dayCurrent = document.getElementById('pos-day-current');
         var daySync = document.getElementById('pos-day-sync');
-        var currentDayOverride = parseInt(localStorage.getItem(KEYS.DAY_OVERRIDE)) || 0;
+        var storedOverride = localStorage.getItem(KEYS.DAY_OVERRIDE);
+        var currentDayOverride = (storedOverride !== null && storedOverride !== '' && storedOverride !== '-1') ? parseInt(storedOverride, 10) : 0;
+        if (isNaN(currentDayOverride)) currentDayOverride = 0;
 
         function updateDayDisplay() {
             if (dayCurrent) dayCurrent.textContent = (isEN ? 'D' : 'G') + currentDayOverride;
         }
         updateDayDisplay();
 
-        if (dayPrev) dayPrev.addEventListener('click', function() { currentDayOverride = Math.max(0, currentDayOverride - 1); localStorage.setItem(KEYS.DAY_OVERRIDE, currentDayOverride); updateDayDisplay(); });
-        if (dayNext) dayNext.addEventListener('click', function() { currentDayOverride = Math.min(TRIP_DAYS, currentDayOverride + 1); localStorage.setItem(KEYS.DAY_OVERRIDE, currentDayOverride); updateDayDisplay(); });
+        if (dayPrev) dayPrev.addEventListener('click', function() { currentDayOverride = Math.max(0, currentDayOverride - 1); updateDayDisplay(); });
+        if (dayNext) dayNext.addEventListener('click', function() { currentDayOverride = Math.min(TRIP_DAYS, currentDayOverride + 1); updateDayDisplay(); });
         if (daySync) {
             daySync.addEventListener('click', function() {
+                localStorage.setItem(KEYS.DAY_OVERRIDE, currentDayOverride);
                 var ref = getFamilyRef('dayOverride');
-                if (ref) { ref.set(currentDayOverride); showToast('☁️ ' + (isEN ? 'Day synced!' : 'Giorno sincronizzato!'), 'success'); }
+                if (ref) { ref.set(currentDayOverride); }
+                showToast('\u2601\ufe0f ' + (isEN ? 'Day synced to G' : 'Giorno sincronizzato a G') + currentDayOverride, 'success');
+                // Refresh the goto-today button
+                window.dispatchEvent(new CustomEvent('dayOverrideChanged', { detail: currentDayOverride }));
+            });
+        }
+        var dayReset = document.getElementById('pos-day-reset');
+        if (dayReset) {
+            dayReset.addEventListener('click', function() {
+                localStorage.removeItem(KEYS.DAY_OVERRIDE);
+                var ref = getFamilyRef('dayOverride');
+                if (ref) { ref.set(null); }
+                currentDayOverride = 0;
+                updateDayDisplay();
+                showToast('\u21ba ' + (isEN ? 'Override removed — using real date' : 'Override rimosso — uso data reale'), 'success');
+                window.dispatchEvent(new CustomEvent('dayOverrideChanged', { detail: null }));
             });
         }
 
@@ -8668,7 +8686,14 @@ if ('serviceWorker' in navigator) {
       sortedKeys.forEach(function(key) {
         var entry = entries[key];
         var dn = entry.dayNumber;
-        var dayLabel = (dn < 0) ? (isEN ? 'Pre-trip' : 'Pre-viaggio') : ((isEN ? 'Day ' : 'Giorno ') + (dn || '?'));
+        var dayLabel;
+        if (entry.customLabel) {
+          dayLabel = entry.customLabel;
+        } else if (dn < 0) {
+          dayLabel = isEN ? 'Pre-trip' : 'Pre-viaggio';
+        } else {
+          dayLabel = (isEN ? 'Day ' : 'G') + (typeof dn === 'number' ? dn : '?');
+        }
         var dateStr = entry.date || '';
         var country = entry.country || '';
         var countryCode = entry.countryCode || '';
@@ -9064,6 +9089,8 @@ if ('serviceWorker' in navigator) {
       overlay.className = 'diario-edit-overlay';
       overlay.innerHTML = '<div class="diario-edit-modal">' +
         '<h3>' + (isEN ? 'Edit entry' : 'Modifica voce') + '</h3>' +
+        '<label>' + (isEN ? 'Day name (optional)' : 'Nome giorno (opzionale)') + '</label>' +
+        '<input type="text" id="diario-edit-label" value="' + escapeHtml(entry.customLabel || '') + '" maxlength="40" placeholder="' + (isEN ? 'e.g. Departure, Rest day...' : 'es. Partenza, Giorno di riposo...') + '">' +
         '<label>' + (isEN ? 'Text / Story' : 'Testo / Racconto') + '</label>' +
         '<textarea id="diario-edit-text" rows="4" maxlength="500">' + escapeHtml(entry.text || '') + '</textarea>' +
         '<label>' + (isEN ? 'Highlight of the day' : 'Momento top del giorno') + '</label>' +
@@ -9079,9 +9106,11 @@ if ('serviceWorker' in navigator) {
       overlay.addEventListener('click', function(e) { if (e.target === overlay) overlay.remove(); });
 
       overlay.querySelector('.diario-edit-save').addEventListener('click', function() {
+        var customLabel = document.getElementById('diario-edit-label').value.trim();
         var text = document.getElementById('diario-edit-text').value.trim();
         var highlight = document.getElementById('diario-edit-highlight').value.trim();
         var updates = {};
+        updates['customLabel'] = customLabel || null;
         updates['text'] = text || null;
         updates['highlight'] = highlight || null;
         diarioRef.child(dayKey).update(updates).then(function() {
@@ -9552,7 +9581,7 @@ if ('serviceWorker' in navigator) {
       deduped.sort(function(a, b) { return (b.lastSeen || 0) - (a.lastSeen || 0); });
 
       var html = '';
-      if (duplicateUIDs.length > 0) {
+      if (duplicateUIDs.length > 0 && !localStorage.getItem('admin-dupes-dismissed')) {
         html += '<div style="margin-bottom:10px;padding:8px 12px;background:var(--warning,#d69e2e);color:#fff;border-radius:8px;font-size:12px;display:flex;align-items:center;gap:8px;">';
         html += '<span>\u26a0\ufe0f ' + duplicateUIDs.length + (isEN ? ' duplicate UID(s) found' : ' UID duplicati trovati') + '</span>';
         html += '<button id="admin-cleanup-dupes" class="pos-btn" style="font-size:11px;padding:4px 10px;background:#fff;color:#d69e2e;border:none;border-radius:6px;cursor:pointer;font-weight:700;">\ud83e\uddf9 ' + (isEN ? 'Clean up' : 'Pulisci') + '</button>';
@@ -9629,6 +9658,7 @@ if ('serviceWorker' in navigator) {
             var updates = {};
             duplicateUIDs.forEach(function(duid) { updates[duid] = null; });
             usersRef.update(updates).then(function() {
+              localStorage.setItem('admin-dupes-dismissed', '1');
               if (window.showToast) showToast(isEN ? 'Duplicates removed!' : 'Duplicati rimossi!', 'success');
               renderAdminUsers();
             });
