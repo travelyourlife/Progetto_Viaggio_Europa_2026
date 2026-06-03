@@ -79,23 +79,80 @@ var DaysRenderer = (function() {
       html += kidParts.join('. ') + '</p></div>';
     }
 
-    // 6. TREKKING
+    // 6. TREKKING (summary + detail)
     if (day.trekking) {
       html += '<div class="dic dic-trek"><p>🥾 <strong>Trekking:</strong> ' + day.trekking.text;
       if (day.trekking.link) html += ' → <a href="' + day.trekking.link + '">dettagli sentieri</a>';
-      html += '</p></div>';
+      html += '</p>';
+      // Detailed treks for this day
+      if (day.trekkingDetail && day.trekkingDetail.treks) {
+        html += '<table class="trek-detail-table"><thead><tr><th>Sentiero</th><th>Tipo</th><th>Durata</th><th>Note</th></tr></thead><tbody>';
+        day.trekkingDetail.treks.forEach(function(t) {
+          html += '<tr><td><strong>' + t.name + '</strong>';
+          if (t.maps) html += mapsLink(t.maps);
+          html += '</td><td>' + (t.type === 'family' ? '👨‍👩‍👧‍👦' : '🏃') + '</td>';
+          html += '<td>' + t.duration + '</td>';
+          html += '<td>' + (t.note || '') + '</td></tr>';
+        });
+        html += '</tbody></table>';
+      }
+      html += '</div>';
+    } else if (day.trekkingDetail && day.trekkingDetail.treks) {
+      // Day has detail but no summary trekking field
+      html += '<div class="dic dic-trek">';
+      html += '<p>🥾 <strong>Trekking — ' + day.trekkingDetail.zone + ':</strong></p>';
+      html += '<table class="trek-detail-table"><thead><tr><th>Sentiero</th><th>Tipo</th><th>Durata</th><th>Note</th></tr></thead><tbody>';
+      day.trekkingDetail.treks.forEach(function(t) {
+        html += '<tr><td><strong>' + t.name + '</strong>';
+        if (t.maps) html += mapsLink(t.maps);
+        html += '</td><td>' + (t.type === 'family' ? '👨‍👩‍👧‍👦' : '🏃') + '</td>';
+        html += '<td>' + t.duration + '</td>';
+        html += '<td>' + (t.note || '') + '</td></tr>';
+      });
+      html += '</tbody></table></div>';
     }
 
-    // 7. FISHING
-    if (day.fishing) {
-      html += '<div class="dic dic-fish"><p>🎣 <strong>Pesca:</strong> ' + day.fishing + '</p></div>';
+    // 7. FISHING (summary + detail)
+    if (day.fishing || day.fishingDetail) {
+      html += '<div class="dic dic-fish">';
+      if (day.fishing) {
+        html += '<p>🎣 <strong>Pesca:</strong> ' + day.fishing + '</p>';
+      }
+      if (day.fishingDetail) {
+        if (!day.fishing) html += '<p>🎣 <strong>Pesca — ' + day.fishingDetail.zone + '</strong></p>';
+        html += '<p><em>Licenza:</em> ' + day.fishingDetail.license + '</p>';
+        day.fishingDetail.spots.forEach(function(s) {
+          html += '<p>🎣 <strong>' + s.name + ':</strong> ' + s.text;
+          if (s.link) html += ' → <a href="' + s.link + '" target="_blank" rel="noopener">' + (s.linkLabel || 'info') + '</a>';
+          html += '</p>';
+        });
+      }
+      html += '</div>';
     }
 
-    // 8. SPORT / SCOOTER / WATER
-    if (day.scooter || day.waterSports) {
+    // 8. SPORT / SCOOTER / WATER + RENTALS
+    if (day.scooter || day.waterSports || (day.rentals && day.rentals.length)) {
       html += '<div class="dic dic-sport">';
       if (day.scooter) html += '<p>🛴 <strong>Monopattini:</strong> ' + day.scooter + '</p>';
       if (day.waterSports) html += '<p>🚣 <strong>Sport acquatici:</strong> ' + day.waterSports + '</p>';
+      if (day.rentals && day.rentals.length) {
+        day.rentals.forEach(function(r) {
+          html += '<p>' + r.icon + ' <strong>' + r.title + ':</strong> ' + r.text + '</p>';
+        });
+      }
+      html += '</div>';
+    }
+
+    // 8b. MINERALS & FOSSILS
+    if (day.minerals && day.minerals.length) {
+      html += '<div class="dic dic-minerals">';
+      day.minerals.forEach(function(m) {
+        html += '<p>' + m.icon + ' <strong>' + m.title + ':</strong> ' + m.text;
+        if (m.info) html += '<br><em>' + m.info + '</em>';
+        if (m.link) html += ' → <a href="' + m.link + '" target="_blank" rel="noopener">' + (m.linkLabel || 'info') + '</a>';
+        if (m.maps) html += mapsLink(m.maps);
+        html += '</p>';
+      });
       html += '</div>';
     }
 
