@@ -5776,7 +5776,7 @@ if ('serviceWorker' in navigator) {
 
   function getToken() {
     // VAPID key from Firebase Console > Project Settings > Cloud Messaging > Web Push certificates
-    var VAPID_KEY = 'BBW43ENkLgM_oXOaCCyo_m3voilbfw2fdlqjtopognVCmyiGXAibwedF94Og56uQdh6IIvLqokMfIeROBYhYkis';
+    var VAPID_KEY = 'BBW43ENkLgM_oXOaCCyo_m3voilbfw2fdlqjtopognVCmyiGXAibwedF94Og56uQdh61IvLqokMfIeROBYhYkis';
     // Must pass the SW registration so Firebase uses our sw.js (not default firebase-messaging-sw.js)
     navigator.serviceWorker.getRegistration().then(function(swReg) {
       if (!swReg) {
@@ -9514,7 +9514,7 @@ if ('serviceWorker' in navigator) {
       }
       try {
         var messaging = firebase.messaging();
-        var VAPID_KEY = 'BBW43ENkLgM_oXOaCCyo_m3voilbfw2fdlqjtopognVCmyiGXAibwedF94Og56uQdh6IIvLqokMfIeROBYhYkis';
+        var VAPID_KEY = 'BBW43ENkLgM_oXOaCCyo_m3voilbfw2fdlqjtopognVCmyiGXAibwedF94Og56uQdh61IvLqokMfIeROBYhYkis';
         navigator.serviceWorker.getRegistration().then(function(swReg) {
           if (!swReg) {
             adminLog('⚠️ No SW - registering...');
@@ -9957,4 +9957,235 @@ if ('serviceWorker' in navigator) {
     status.textContent = '✅ Override rimosso. Notifiche basate sulla data reale. Ricarica la pagina.';
     status.style.color = '#38a169';
   });
+})();
+
+
+// ═══════════════════════════════════════════════════════════════
+// ─── v1.52: ADMIN NOTIFICATION CONFIGURATION PANEL ───
+// ═══════════════════════════════════════════════════════════════
+(function() {
+  if (typeof firebase === 'undefined' || !firebase.database || !firebase.auth) return;
+  if (!FAMILY_ID) return;
+
+  var db = firebase.database();
+  var notifPrefsRef = db.ref('trips/' + FAMILY_ID + '/notifPrefs');
+  var notifScheduleRef = db.ref('trips/' + FAMILY_ID + '/notifSchedule');
+  var approvedRef = db.ref('trips/' + FAMILY_ID + '/approvedUsers');
+  var notifQueueRef = db.ref('trips/' + FAMILY_ID + '/notifications/queue');
+
+  var notifUsersContainer = document.getElementById('admin-notif-users');
+  var notifLogEl = document.getElementById('admin-notif-log');
+
+  // ─── Notification-specific log ───
+  function notifLog(msg) {
+    if (!notifLogEl) return;
+    notifLogEl.style.display = 'block';
+    notifLogEl.textContent += '[' + new Date().toLocaleTimeString() + '] ' + msg + '\n';
+    notifLogEl.scrollTop = notifLogEl.scrollHeight;
+  }
+
+  // ═══ SUB-SECTION 1: Per-User Notification Toggles ═══
+  function renderNotifUsers() {
+    if (!notifUsersContainer) return;
+    notifUsersContainer.innerHTML = '<p style="color:var(--text-muted);font-size:13px;">' + (isEN ? 'Loading...' : 'Caricamento...') + '</p>';
+
+    approvedRef.once('value', function(approvedSnap) {
+      var approved = approvedSnap.val() || {};
+      var uids = Object.keys(approved);
+
+      if (uids.length === 0) {
+        notifUsersContainer.innerHTML = '<p style="color:var(--text-muted);font-size:13px;">' + (isEN ? 'No approved users.' : 'Nessun utente approvato.') + '</p>';
+        return;
+      }
+
+      notifPrefsRef.once('value', function(prefsSnap) {
+        var prefs = prefsSnap.val() || {};
+
+        var html = '<table>';
+        html += '<thead><tr>';
+        html += '<th style="text-align:left;">' + (isEN ? 'User' : 'Utente') + '</th>';
+        html += '<th>' + (isEN ? 'In-App' : 'In-App') + '</th>';
+        html += '<th>Push</th>';
+        html += '</tr></thead><tbody>';
+
+        uids.forEach(function(uid) {
+          var u = approved[uid];
+          var name = u.displayName || u.email || uid.substring(0, 8);
+          var userPrefs = prefs[uid] || {};
+          var inAppOn = userPrefs.inApp !== false; // default true
+          var pushOn = userPrefs.push !== false;   // default true
+
+          html += '<tr>';
+          html += '<td style="text-align:left;font-size:13px;">' + name + '</td>';
+          html += '<td><label style="position:relative;display:inline-block;width:40px;height:22px;">';
+          html += '<input type="checkbox" class="notif-toggle-inapp" data-uid="' + uid + '"' + (inAppOn ? ' checked' : '') + ' style="opacity:0;width:0;height:0;">';
+          html += '<span style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#ccc;border-radius:22px;transition:.3s;"></span>';
+          html += '</label></td>';
+          html += '<td><label style="position:relative;display:inline-block;width:40px;height:22px;">';
+          html += '<input type="checkbox" class="notif-toggle-push" data-uid="' + uid + '"' + (pushOn ? ' checked' : '') + ' style="opacity:0;width:0;height:0;">';
+          html += '<span style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#ccc;border-radius:22px;transition:.3s;"></span>';
+          html += '</label></td>';
+          html += '</tr>';
+        });
+
+        html += '</tbody></table>';
+        notifUsersContainer.innerHTML = html;
+
+        // Attach toggle event listeners
+        notifUsersContainer.querySelectorAll('.notif-toggle-inapp').forEach(function(toggle) {
+          toggle.addEventListener('change', function() {
+            var uid = toggle.dataset.uid;
+            notifPrefsRef.child(uid).update({ inApp: toggle.checked }).then(function() {
+              notifLog((isEN ? 'In-app ' : 'In-app ') + (toggle.checked ? 'ON' : 'OFF') + ' → ' + uid.substring(0, 8));
+            }).catch(function(err) {
+              notifLog('❌ Error: ' + err.message);
+            });
+          });
+        });
+
+        notifUsersContainer.querySelectorAll('.notif-toggle-push').forEach(function(toggle) {
+          toggle.addEventListener('change', function() {
+            var uid = toggle.dataset.uid;
+            notifPrefsRef.child(uid).update({ push: toggle.checked }).then(function() {
+              notifLog('Push ' + (toggle.checked ? 'ON' : 'OFF') + ' → ' + uid.substring(0, 8));
+            }).catch(function(err) {
+              notifLog('❌ Error: ' + err.message);
+            });
+          });
+        });
+      });
+    });
+  }
+
+  // ═══ SUB-SECTION 2: Schedule Configuration ═══
+  var schedCountdown = document.getElementById('admin-sched-countdown');
+  var schedReminders = document.getElementById('admin-sched-reminders');
+  var schedEvening = document.getElementById('admin-sched-evening');
+  var schedCountdownOn = document.getElementById('admin-sched-countdown-on');
+  var schedRemindersOn = document.getElementById('admin-sched-reminders-on');
+  var schedEveningOn = document.getElementById('admin-sched-evening-on');
+  var schedSaveBtn = document.getElementById('admin-sched-save');
+  var schedStatus = document.getElementById('admin-sched-status');
+
+  function loadSchedule() {
+    notifScheduleRef.once('value', function(snap) {
+      var sched = snap.val();
+      if (!sched) return;
+      if (schedCountdown && sched.countdownTime) schedCountdown.value = sched.countdownTime;
+      if (schedReminders && sched.remindersTime) schedReminders.value = sched.remindersTime;
+      if (schedEvening && sched.eveningTime) schedEvening.value = sched.eveningTime;
+      if (schedCountdownOn) schedCountdownOn.checked = sched.countdownEnabled !== false;
+      if (schedRemindersOn) schedRemindersOn.checked = sched.remindersEnabled !== false;
+      if (schedEveningOn) schedEveningOn.checked = sched.eveningEnabled !== false;
+    });
+  }
+
+  if (schedSaveBtn) {
+    schedSaveBtn.addEventListener('click', function() {
+      var schedData = {
+        countdownTime: schedCountdown ? schedCountdown.value : '08:00',
+        remindersTime: schedReminders ? schedReminders.value : '08:00',
+        eveningTime: schedEvening ? schedEvening.value : '19:00',
+        countdownEnabled: schedCountdownOn ? schedCountdownOn.checked : true,
+        remindersEnabled: schedRemindersOn ? schedRemindersOn.checked : true,
+        eveningEnabled: schedEveningOn ? schedEveningOn.checked : true,
+        updatedAt: firebase.database.ServerValue.TIMESTAMP
+      };
+      notifScheduleRef.set(schedData).then(function() {
+        if (schedStatus) {
+          schedStatus.textContent = '✅ ' + (isEN ? 'Saved!' : 'Salvato!');
+          schedStatus.style.color = '#38a169';
+        }
+        notifLog(isEN ? 'Schedule saved to Firebase' : 'Orari salvati su Firebase');
+        setTimeout(function() { if (schedStatus) schedStatus.textContent = ''; }, 3000);
+      }).catch(function(err) {
+        if (schedStatus) {
+          schedStatus.textContent = '❌ ' + err.message;
+          schedStatus.style.color = '#e53e3e';
+        }
+        notifLog('❌ Schedule save error: ' + err.message);
+      });
+    });
+  }
+
+  // ═══ SUB-SECTION 3: Test Notification Buttons ═══
+  var testCountdownBtn = document.getElementById('admin-notif-test-countdown');
+  var testZainoBtn = document.getElementById('admin-notif-test-zaino');
+  var testEveningBtn = document.getElementById('admin-notif-test-evening');
+  var testGenericBtn = document.getElementById('admin-notif-test-generic');
+
+  function queueTestNotification(type, title, body, tag) {
+    notifLog((isEN ? 'Queuing test: ' : 'Invio test: ') + type + '...');
+    notifQueueRef.push({
+      type: type,
+      title: title,
+      body: body,
+      target: 'owner',
+      url: './',
+      tag: tag + '-' + Date.now(),
+      createdAt: Date.now(),
+      sent: false,
+      source: 'admin-test'
+    }).then(function() {
+      notifLog('✅ ' + (isEN ? 'Test queued: ' : 'Test in coda: ') + title);
+      if (window.showToast) showToast((isEN ? 'Test notification queued' : 'Notifica test in coda'), 'success');
+    }).catch(function(err) {
+      notifLog('❌ Error: ' + err.message);
+    });
+  }
+
+  if (testCountdownBtn) {
+    testCountdownBtn.addEventListener('click', function() {
+      var daysUntil = Math.ceil((new Date('2026-06-26T00:00:00+02:00').getTime() - Date.now()) / 86400000);
+      queueTestNotification('countdown',
+        '📅 ' + daysUntil + (isEN ? ' days to departure' : ' giorni alla partenza'),
+        isEN ? 'Countdown test from admin panel' : 'Test countdown dal pannello admin',
+        'test-countdown');
+    });
+  }
+
+  if (testZainoBtn) {
+    testZainoBtn.addEventListener('click', function() {
+      queueTestNotification('zaino_reminder',
+        '🎒 ' + (isEN ? 'Backpack: check before departure!' : 'Zaino: controlla prima della partenza!'),
+        isEN ? 'Zaino reminder test from admin panel' : 'Test promemoria zaino dal pannello admin',
+        'test-zaino');
+    });
+  }
+
+  if (testEveningBtn) {
+    testEveningBtn.addEventListener('click', function() {
+      queueTestNotification('next_stage',
+        '🛣️ ' + (isEN ? 'Tomorrow: Test Route' : 'Domani: Percorso Test'),
+        isEN ? 'Evening next-stage test from admin panel' : 'Test prossima tappa serale dal pannello admin',
+        'test-evening');
+    });
+  }
+
+  if (testGenericBtn) {
+    testGenericBtn.addEventListener('click', function() {
+      queueTestNotification('test',
+        '🔔 ' + (isEN ? 'Admin Test Push' : 'Test Push Admin'),
+        isEN ? 'Generic push test from notification config panel' : 'Test push generico dal pannello configurazione notifiche',
+        'test-generic');
+    });
+  }
+
+  // ═══ Initialize on admin tab switch ═══
+  window.addEventListener('tabSwitched', function(e) {
+    if (e.detail === 'admin') {
+      setTimeout(function() {
+        renderNotifUsers();
+        loadSchedule();
+      }, 400);
+    }
+  });
+
+  // Initial load if already on admin tab
+  if (typeof isOwner !== 'undefined' && isOwner) {
+    setTimeout(function() {
+      renderNotifUsers();
+      loadSchedule();
+    }, 3000);
+  }
 })();

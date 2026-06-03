@@ -53,7 +53,7 @@
     <link rel="apple-touch-icon" sizes="152x152" href="./icon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="./icon.png">
     <link rel="apple-touch-icon" sizes="167x167" href="./icon.png">
-    <title>Viaggio Europa 2026 — V1.51</title>
+    <title>Viaggio Europa 2026 — V1.52</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <link rel="stylesheet" href="style.css">
 <!-- Firebase SDK (compat mode for single-file app) -->
@@ -69,7 +69,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = '1.51';
+  var EXPECTED_VERSION = '1.52';
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
   var r = false;
@@ -7934,16 +7934,72 @@
 </div>
 </div>
 
-<!-- Notification Day Override (testing) -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- NOTIFICATION CONFIGURATION PANEL (v1.52) -->
+<!-- ═══════════════════════════════════════════════════════════ -->
 <div class="admin-card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:12px 0;">
-<h3 style="margin-bottom:12px;">🔔 Test Notifiche</h3>
-<p style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">Simula un giorno di viaggio per testare le notifiche (0 = partenza, -1 = disattivo).</p>
+<h3 style="margin-bottom:12px;">🔔 Configurazione Notifiche</h3>
+<p style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">Gestisci le preferenze di notifica per ogni utente, gli orari delle notifiche automatiche e testa il sistema.</p>
+
+<!-- Sub-section 1: Per-User Notification Toggles -->
+<details open style="margin-bottom:16px;">
+<summary style="font-weight:600;font-size:14px;cursor:pointer;margin-bottom:8px;">👥 Preferenze per Utente</summary>
+<p style="font-size:11px;color:var(--text-muted);margin-bottom:8px;">Attiva/disattiva notifiche in-app (campanella) e push (browser) per ogni utente approvato.</p>
+<div id="admin-notif-users" style="max-height:300px;overflow-y:auto;">
+  <p style="color:var(--text-muted);font-size:13px;">Caricamento utenti...</p>
+</div>
+</details>
+
+<!-- Sub-section 2: Schedule Configuration -->
+<details open style="margin-bottom:16px;">
+<summary style="font-weight:600;font-size:14px;cursor:pointer;margin-bottom:8px;">⏰ Orari Notifiche Automatiche</summary>
+<p style="font-size:11px;color:var(--text-muted);margin-bottom:10px;">Configura gli orari e lo stato delle Cloud Functions. Le modifiche vengono salvate in Firebase e lette dalle funzioni al prossimo invio.</p>
+<div style="display:grid;grid-template-columns:1fr auto auto;gap:8px 12px;align-items:center;font-size:13px;">
+  <label style="font-weight:500;">📅 Countdown (mattina)</label>
+  <input type="time" id="admin-sched-countdown" value="08:00" style="padding:4px 8px;border:1px solid var(--border);border-radius:6px;font-size:13px;width:90px;">
+  <label style="position:relative;display:inline-block;width:40px;height:22px;">
+    <input type="checkbox" id="admin-sched-countdown-on" checked style="opacity:0;width:0;height:0;">
+    <span style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#ccc;border-radius:22px;transition:.3s;"></span>
+  </label>
+
+  <label style="font-weight:500;">🎒 Zaino reminder</label>
+  <input type="time" id="admin-sched-reminders" value="08:00" style="padding:4px 8px;border:1px solid var(--border);border-radius:6px;font-size:13px;width:90px;">
+  <label style="position:relative;display:inline-block;width:40px;height:22px;">
+    <input type="checkbox" id="admin-sched-reminders-on" checked style="opacity:0;width:0;height:0;">
+    <span style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#ccc;border-radius:22px;transition:.3s;"></span>
+  </label>
+
+  <label style="font-weight:500;">🛣️ Prossima tappa (sera)</label>
+  <input type="time" id="admin-sched-evening" value="19:00" style="padding:4px 8px;border:1px solid var(--border);border-radius:6px;font-size:13px;width:90px;">
+  <label style="position:relative;display:inline-block;width:40px;height:22px;">
+    <input type="checkbox" id="admin-sched-evening-on" checked style="opacity:0;width:0;height:0;">
+    <span style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#ccc;border-radius:22px;transition:.3s;"></span>
+  </label>
+</div>
+<div style="margin-top:10px;display:flex;align-items:center;gap:8px;">
+  <button id="admin-sched-save" class="pos-btn pos-btn-blue" style="font-size:12px;">💾 Salva Orari</button>
+  <span id="admin-sched-status" style="font-size:11px;color:var(--text-muted);"></span>
+</div>
+</details>
+
+<!-- Sub-section 3: Test & Day Override -->
+<details style="margin-bottom:4px;">
+<summary style="font-weight:600;font-size:14px;cursor:pointer;margin-bottom:8px;">🧪 Test Notifiche</summary>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
+  <button id="admin-notif-test-countdown" class="pos-btn" style="font-size:12px;">📅 Test Countdown</button>
+  <button id="admin-notif-test-zaino" class="pos-btn" style="font-size:12px;">🎒 Test Zaino</button>
+  <button id="admin-notif-test-evening" class="pos-btn" style="font-size:12px;">🛣️ Test Sera</button>
+  <button id="admin-notif-test-generic" class="pos-btn" style="font-size:12px;background:var(--accent);color:#fff;">🔔 Test Push Generico</button>
+</div>
+<p style="font-size:11px;color:var(--text-muted);margin-bottom:6px;">Simula un giorno di viaggio per testare le notifiche (0 = partenza, -1 = disattivo):</p>
 <div style="display:flex;gap:8px;align-items:center;">
   <input type="number" id="adminNotifDayOverride" min="-1" max="53" placeholder="Giorno (es. 6)" style="width:120px;padding:6px 10px;border:1px solid var(--border);border-radius:8px;font-size:13px;">
   <button id="adminNotifDaySet" class="pos-btn pos-btn-blue" style="font-size:12px;">Imposta</button>
   <button id="adminNotifDayReset" class="pos-btn" style="font-size:12px;background:#e53e3e;color:#fff;">Reset</button>
 </div>
 <p id="adminNotifDayStatus" style="font-size:11px;color:var(--text-muted);margin-top:6px;"></p>
+<pre id="admin-notif-log" style="margin-top:10px;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px;font-size:0.78em;max-height:200px;overflow-y:auto;white-space:pre-wrap;display:none;"></pre>
+</details>
 </div>
 
 <!-- Quick Links -->

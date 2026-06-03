@@ -136,7 +136,7 @@ var firebaseConfig = {
   appId: "1:859844907239:web:f226b10961df1fe66fd242"
 };
 
-var VAPID_KEY = 'BBW43ENkLgM_oXOaCCyo_m3voilbfw2fdlqjtopognVCmyiGXAibwedF94Og56uQdh6IIvLqokMfIeROBYhYkis';
+var VAPID_KEY = 'BBW43ENkLgM_oXOaCCyo_m3voilbfw2fdlqjtopognVCmyiGXAibwedF94Og56uQdh61IvLqokMfIeROBYhYkis';
 
 // ─── POI: Luoghi da Visitare ───
 // Categorie: "park" = Parchi divertimento, "market" = Mercati, "nature" = Parchi nazionali,

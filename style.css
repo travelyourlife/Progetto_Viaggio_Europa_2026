@@ -3930,3 +3930,38 @@ html[lang="en"] .notif-drawer-list:empty::after {
     color: #fff;
 }
 .qv-modal-btn.qv-modal-danger:hover { background: #dc2626; }
+
+/* ═══ Notification Config Panel Toggle Switches (v1.52) ═══ */
+.admin-card label[style*="width:40px"] input[type="checkbox"]:checked + span {
+    background: var(--accent, #6366f1) !important;
+}
+.admin-card label[style*="width:40px"] span::before {
+    content: "";
+    position: absolute;
+    height: 16px;
+    width: 16px;
+    left: 3px;
+    bottom: 3px;
+    background: #fff;
+    border-radius: 50%;
+    transition: .3s;
+}
+.admin-card label[style*="width:40px"] input[type="checkbox"]:checked + span::before {
+    transform: translateX(18px);
+}
+/* Per-user notification table */
+#admin-notif-users table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85em;
+}
+#admin-notif-users th,
+#admin-notif-users td {
+    padding: 6px 4px;
+    text-align: center;
+    border-bottom: 1px solid var(--border, #e2e8f0);
+}
+#admin-notif-users th:first-child,
+#admin-notif-users td:first-child {
+    text-align: left;
+}
