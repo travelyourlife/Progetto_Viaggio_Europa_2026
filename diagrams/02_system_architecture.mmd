@@ -1,0 +1,56 @@
+flowchart TD
+    subgraph CLIENT["📱 Client (PWA)"]
+        direction TB
+        UI["🖥️ UI Layer<br/>HTML + CSS + Leaflet"]
+        APP["⚙️ App Logic<br/>app.js (Vanilla JS)"]
+        SW["🔧 Service Worker<br/>Cache + Push"]
+        DATA["📦 Data Layer<br/>data.js + days-renderer.js"]
+    end
+
+    subgraph FIREBASE["🔥 Firebase"]
+        direction TB
+        AUTH["🔐 Auth<br/>(Google OAuth)"]
+        RTDB["💾 Realtime DB<br/>(tracks, diary, chat)"]
+        FCM["📨 Cloud Messaging<br/>(Push Notifications)"]
+        STORAGE["🗄️ Storage<br/>(foto, audio)"]
+        FUNCTIONS["⚡ Cloud Functions<br/>(push dispatch, reminders)"]
+    end
+
+    subgraph EXTERNAL["🌍 Servizi Esterni"]
+        direction TB
+        DRIVE["📂 Google Drive<br/>(file GPX)"]
+        OSRM["🛣️ OSRM<br/>(routing stradale)"]
+        WEATHER["🌤️ Open-Meteo<br/>(previsioni)"]
+        NOMINATIM["📍 Nominatim<br/>(reverse geocoding)"]
+        TILES["🗺️ OpenStreetMap<br/>(tile mappa)"]
+    end
+
+    subgraph DEVICES["📡 Dispositivi"]
+        PHONE["📱 Smartphone<br/>(GPSLogger + PWA)"]
+        LAPTOP["💻 Laptop<br/>(Admin)"]
+        FAMILY["👨‍👩‍👧‍👦 Famiglia<br/>(Visualizzazione)"]
+    end
+
+    PHONE --> CLIENT
+    LAPTOP --> CLIENT
+    FAMILY --> CLIENT
+
+    UI <--> APP
+    APP <--> SW
+    APP <--> DATA
+
+    APP <-->|"Auth + DB"| FIREBASE
+    AUTH <--> RTDB
+    FUNCTIONS --> FCM
+    FCM --> SW
+
+    APP <-->|"Sync GPX"| DRIVE
+    APP <-->|"Gap estimation"| OSRM
+    APP <-->|"Meteo live"| WEATHER
+    APP <-->|"Città da coord"| NOMINATIM
+    UI <-->|"Tile layer"| TILES
+
+    style CLIENT fill:#e8eaf6,stroke:#283593
+    style FIREBASE fill:#fff8e1,stroke:#f57f17
+    style EXTERNAL fill:#e0f7fa,stroke:#00695c
+    style DEVICES fill:#fce4ec,stroke:#880e4f

@@ -53,7 +53,7 @@
     <link rel="apple-touch-icon" sizes="152x152" href="./icon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="./icon.png">
     <link rel="apple-touch-icon" sizes="167x167" href="./icon.png">
-    <title>Europe Trip 2026 — V1.65</title>
+    <title>Europe Trip 2026 — V1.66</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <link rel="stylesheet" href="style.css">
 
@@ -70,7 +70,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = '1.65';
+  var EXPECTED_VERSION = '1.66';
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
   var r = false;
@@ -597,6 +597,12 @@
 <div id="goto-today-box" style="text-align:center; margin-bottom:16px; display:none;">
     <button id="goto-today-btn" class="pos-btn pos-btn-blue" style="font-size:15px; padding:12px 24px;">📅 Go to today</button>
 </div>
+
+<!-- Quick Navigation by Region -->
+<div id="itinerary-quick-nav" class="itinerary-quick-nav" aria-label="Quick navigation by region">
+  <div class="iqn-pills" id="iqn-pills"></div>
+</div>
+
 <!-- Route Map (collapsible) -->
 <div id="routeMapWrapper" class="route-map-wrapper">
   <button id="routeMapToggle" class="route-map-toggle" aria-expanded="false">
@@ -1040,7 +1046,9 @@
     </div>
 </div>
 <div id="weatherRealtime" class="weather-realtime">
-    <p class="wc-loading">Loading real-time forecast...</p>
+    <div class="skeleton skeleton-line" style="width:80%;"></div>
+    <div class="skeleton skeleton-line" style="width:60%;"></div>
+    <div class="skeleton skeleton-block" style="height:60px;"></div>
 </div>
 <p class="weather-source"><em>Source: Open-Meteo API (real-time) + historical climate data</em></p>
 <blockquote>
@@ -7884,7 +7892,8 @@
 <div id="pos-weather-panel" style="margin-top:16px;">
   <h3 style="font-size:16px;font-weight:700;margin-bottom:12px;">🌤️ Weather Next Stops</h3>
   <div id="pos-weather-cards" class="pos-weather-grid">
-    <p style="color:var(--text-muted);font-size:13px;">Loading forecasts...</p>
+    <div class="skeleton skeleton-block" style="height:80px;"></div>
+    <div class="skeleton skeleton-block" style="height:80px;"></div>
   </div>
 </div>
 

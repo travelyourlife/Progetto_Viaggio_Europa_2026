@@ -952,6 +952,8 @@ document.addEventListener('DOMContentLoaded', function() {
       if (ddc && typeof DaysRenderer !== 'undefined') {
         ddc.innerHTML = DaysRenderer.renderAllDays();
       }
+      // No-op stub for any code that calls __forceRenderAllDays
+      window.__forceRenderAllDays = function(callback) { if (callback) callback(); };
     } catch(e) { console.error('[DaysRenderer]', e); }
 
     // ─── Timeline day-tap hint banner ───
@@ -1316,9 +1318,34 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        // Priority 3: On Home — let the browser handle (exits app / goes to previous page)
-        // Do nothing — default browser behavior will exit or go back
+        // Priority 3: On Home — show "press again to exit" toast
+        if (window._backPressedOnce) {
+            // Second press within 2s — let browser exit
+            return;
+        }
+        // First press — show toast and prevent exit
+        e.preventDefault();
+        history.pushState(null, '', location.href);
+        window._backPressedOnce = true;
+        showExitToast();
+        setTimeout(function() { window._backPressedOnce = false; }, 2000);
     });
+
+    // ─── Exit Toast Helper ───
+    function showExitToast() {
+        var existing = document.getElementById('exit-toast');
+        if (existing) existing.remove();
+        var toast = document.createElement('div');
+        toast.id = 'exit-toast';
+        toast.textContent = 'Premi ancora per uscire';
+        toast.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.85);color:#fff;padding:10px 20px;border-radius:24px;font-size:14px;z-index:99999;opacity:0;transition:opacity 0.3s;pointer-events:none;';
+        document.body.appendChild(toast);
+        requestAnimationFrame(function() { toast.style.opacity = '1'; });
+        setTimeout(function() {
+            toast.style.opacity = '0';
+            setTimeout(function() { if (toast.parentNode) toast.remove(); }, 300);
+        }, 1800);
+    }
 
     // ─── Wrap tables ───
     document.querySelectorAll('table').forEach(function(table) {
@@ -1366,6 +1393,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function doSearch(query) {
         clearSearch();
         if (!query || query.length < 2) return;
+        // All days are rendered at load time, no lazy rendering needed
         var escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         var regex = new RegExp('(' + escaped + ')', 'gi');
         sections.forEach(function(sec) {
@@ -3364,20 +3392,23 @@ document.addEventListener('DOMContentLoaded', function() {
             box.style.display = 'block';
             btn.textContent = '\uD83D\uDCC5 ' + (isEN ? 'Go to G' : 'Vai a G') + tripDay + (isEN ? ' (today)' : ' (oggi)');
             btn.addEventListener('click', function() {
-                var currentDay = getCurrentTripDay();
-                var target = document.getElementById('g' + currentDay);
-                if (target) {
-                    if (target.classList.contains('accordion-header') && !target.classList.contains('open')) {
-                        target.classList.add('open');
-                        var body = target.nextElementSibling;
-                        if (body && body.classList.contains('accordion-body')) body.classList.add('open');
+                function scrollToToday() {
+                    var currentDay = getCurrentTripDay();
+                    var target = document.getElementById('g' + currentDay);
+                    if (target) {
+                        if (target.classList.contains('accordion-header') && !target.classList.contains('open')) {
+                            target.classList.add('open');
+                            var body = target.nextElementSibling;
+                            if (body && body.classList.contains('accordion-body')) body.classList.add('open');
+                        }
+                        setTimeout(function() {
+                            var topBarH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--top-bar-height')) || 56;
+                            var y = target.getBoundingClientRect().top + window.pageYOffset - topBarH - 16;
+                            window.scrollTo({ top: y, behavior: 'smooth' });
+                        }, 100);
                     }
-                    setTimeout(function() {
-                        var topBarH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--top-bar-height')) || 56;
-                        var y = target.getBoundingClientRect().top + window.pageYOffset - topBarH - 16;
-                        window.scrollTo({ top: y, behavior: 'smooth' });
-                    }, 100);
                 }
+                scrollToToday();
             });
         } else if (!isOverride) {
             // Pre-trip (no override): show countdown
@@ -3496,10 +3527,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // ═══════════════════════════════════════════════════════════════
     // ─── ACCORDION TRANSFORM (H3 → collapsible) ───
     // ═══════════════════════════════════════════════════════════════
-    (function() {
-        // Apply accordion to these tabs
-        var accordionTabs = ['tab-riepilogo', 'tab-giorni', 'tab-cultura', 'tab-cibo', 'tab-attivita', 'tab-luoghi', 'tab-piano', 'tab-zaino'];
-        accordionTabs.forEach(function(tabId) {
+    function applyAccordionToSection(tabId) {
             var section = document.getElementById(tabId);
             if (!section) return;
             var headers = section.querySelectorAll('h3[id]');
@@ -3560,7 +3588,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (window.haptic) window.haptic(8);
                 });
             });
-        });
+    }
+    // Apply accordion to these tabs on initial load
+    (function() {
+        var accordionTabs = ['tab-riepilogo', 'tab-giorni', 'tab-cultura', 'tab-cibo', 'tab-attivita', 'tab-luoghi', 'tab-piano', 'tab-zaino'];
+        accordionTabs.forEach(function(tabId) { applyAccordionToSection(tabId); });
     })();
 
     // ═══════════════════════════════════════════════════════════════
@@ -3658,8 +3690,9 @@ document.addEventListener('DOMContentLoaded', function() {
     })();
 
     /* ─── P3: Assign region colors to accordion headers ─── */
-    (function() {
+    function assignRegionColors() {
         document.querySelectorAll('#tab-giorni .accordion-header').forEach(function(h) {
+            if (h.getAttribute('data-region')) return; // already assigned
             const id = h.id || '';
             const match = id.match(/^g(\d+)/);
             if (!match) return;
@@ -3675,12 +3708,23 @@ document.addEventListener('DOMContentLoaded', function() {
             else region = 'return';
             h.setAttribute('data-region', region);
         });
-    })();
+    }
+    assignRegionColors();
 
     /* ─── Wrap Itinerario accordions in timeline container (Layout C) ─── */
-    (function() {
+    function buildTimeline() {
         var giorniTab = document.getElementById('tab-giorni');
         if (!giorniTab) return;
+        // Remove existing timeline if re-running
+        var existingTimeline = giorniTab.querySelector('.itinerary-timeline');
+        if (existingTimeline) {
+            // Move children back to parent before removing
+            var parent = existingTimeline.parentNode;
+            while (existingTimeline.firstChild) {
+                parent.insertBefore(existingTimeline.firstChild, existingTimeline);
+            }
+            parent.removeChild(existingTimeline);
+        }
         var headers = giorniTab.querySelectorAll('.accordion-header[id^="g"]');
         if (headers.length === 0) return;
         var timeline = document.createElement('div');
@@ -3689,7 +3733,7 @@ document.addEventListener('DOMContentLoaded', function() {
         headers[0].parentNode.insertBefore(timeline, headers[0]);
 
         // Region labels (IT / EN)
-        var isEN = document.documentElement.lang === 'en' || window.location.pathname.indexOf('_en') !== -1;
+        var isENLocal = document.documentElement.lang === 'en' || window.location.pathname.indexOf('_en') !== -1;
         var regionLabels = {
             central: { flags: '🇮🇹🇦🇹', it: 'Europa Centrale', en: 'Central Europe' },
             baltic:  { flags: '🇵🇱🇱🇹🇱🇻🇪🇪', it: 'Paesi Baltici', en: 'Baltic States' },
@@ -3711,7 +3755,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 sep.setAttribute('data-region', region);
                 var label = regionLabels[region];
                 if (label) {
-                    sep.innerHTML = '<span class="region-flags">' + label.flags + '</span> ' + (isEN ? label.en : label.it);
+                    sep.innerHTML = '<span class="region-flags">' + label.flags + '</span> ' + (isENLocal ? label.en : label.it);
                 }
                 timeline.appendChild(sep);
                 lastRegion = region;
@@ -3719,6 +3763,117 @@ document.addEventListener('DOMContentLoaded', function() {
             var body = h.nextElementSibling;
             timeline.appendChild(h);
             if (body && body.classList.contains('accordion-body')) timeline.appendChild(body);
+        });
+
+    }
+    buildTimeline();
+
+    // No-op stub (lazy rendering removed in v1.66 for reliability)
+    window.__rerunItinerarySetup = function() {};
+
+    /* ─── P3b: Itinerary Quick Navigation (Region Pills) ─── */
+    (function() {
+        var pillsContainer = document.getElementById('iqn-pills');
+        if (!pillsContainer) return;
+
+        var regionDefs = [
+            { id: 'central', flags: '🇮🇹🇦🇹', it: 'Centrale', en: 'Central', days: 'G0-G2' },
+            { id: 'baltic',  flags: '🇵🇱🇱🇹🇱🇻🇪🇪', it: 'Baltici', en: 'Baltic', days: 'G3-G5' },
+            { id: 'finland', flags: '🇫🇮', it: 'Finlandia', en: 'Finland', days: 'G6-G14' },
+            { id: 'norway',  flags: '🇳🇴', it: 'Norvegia', en: 'Norway', days: 'G15-G32' },
+            { id: 'denmark', flags: '🇩🇰', it: 'Danimarca', en: 'Denmark', days: 'G33-G39' },
+            { id: 'france',  flags: '🇫🇷', it: 'Francia', en: 'France', days: 'G40-G42' },
+            { id: 'spain',   flags: '🇪🇸', it: 'Spagna', en: 'Spain', days: 'G43-G49' },
+            { id: 'return',  flags: '🇮🇹', it: 'Ritorno', en: 'Return', days: 'G50-G53' }
+        ];
+
+        // Scroll lock flag to prevent IntersectionObserver from interfering during programmatic scrolls
+        var iqnScrollLock = false;
+
+        // Build pills
+        regionDefs.forEach(function(r) {
+            var pill = document.createElement('button');
+            pill.className = 'iqn-pill';
+            pill.setAttribute('data-region', r.id);
+            pill.setAttribute('type', 'button');
+            pill.setAttribute('aria-label', (isEN ? r.en : r.it) + ' (' + r.days + ')');
+            pill.innerHTML = '<span class="iqn-flag">' + r.flags + '</span> ' +
+                             '<span class="iqn-label">' + (isEN ? r.en : r.it) + '</span>' +
+                             '<span class="iqn-days">' + r.days + '</span>';
+            pill.addEventListener('click', function() {
+                // Lock the scroll spy during programmatic navigation
+                iqnScrollLock = true;
+
+                // Find the region separator in the timeline
+                var sep = document.querySelector('.itinerary-timeline .region-separator[data-region="' + r.id + '"]');
+                if (sep) {
+                    // Open the first accordion in this region (without triggering its scrollIntoView)
+                    var firstHeader = sep.nextElementSibling;
+                    while (firstHeader && !firstHeader.classList.contains('accordion-header')) {
+                        firstHeader = firstHeader.nextElementSibling;
+                    }
+                    if (firstHeader && firstHeader.classList.contains('accordion-header') && !firstHeader.classList.contains('open')) {
+                        // Close all other open accordions in the section
+                        var section = firstHeader.closest('.tab-content') || document.getElementById('tab-giorni');
+                        if (section) {
+                            section.querySelectorAll('.accordion-header.open').forEach(function(h) {
+                                h.classList.remove('open');
+                                var body = h.nextElementSibling;
+                                if (body && body.classList.contains('accordion-body')) body.classList.remove('open');
+                            });
+                        }
+                        firstHeader.classList.add('open');
+                        var accBody = firstHeader.nextElementSibling;
+                        if (accBody && accBody.classList.contains('accordion-body')) accBody.classList.add('open');
+                    }
+
+                    // Scroll to the region separator (after DOM update settles)
+                    setTimeout(function() {
+                        var topBarH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--top-bar-height')) || 52;
+                        var navH = pillsContainer.closest('.itinerary-quick-nav').offsetHeight || 50;
+                        var y = sep.getBoundingClientRect().top + window.pageYOffset - topBarH - navH - 8;
+                        window.scrollTo({ top: y, behavior: 'instant' });
+                        // Unlock after scroll completes
+                        setTimeout(function() { iqnScrollLock = false; }, 300);
+                    }, 80);
+                } else {
+                    iqnScrollLock = false;
+                }
+
+                // Update active state
+                pillsContainer.querySelectorAll('.iqn-pill').forEach(function(p) { p.classList.remove('active'); });
+                pill.classList.add('active');
+                if (window.haptic) window.haptic(10);
+            });
+            pillsContainer.appendChild(pill);
+        });
+
+        // Scroll spy: highlight the pill matching the visible region
+        var iqnObserver = new IntersectionObserver(function(entries) {
+            if (iqnScrollLock) return; // Skip during programmatic scrolls
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    var region = entry.target.getAttribute('data-region');
+                    if (!region) return;
+                    pillsContainer.querySelectorAll('.iqn-pill').forEach(function(p) {
+                        if (p.getAttribute('data-region') === region) {
+                            p.classList.add('active');
+                            // Scroll pill into view horizontally (without affecting page scroll)
+                            var containerRect = pillsContainer.getBoundingClientRect();
+                            var pillRect = p.getBoundingClientRect();
+                            var offset = pillRect.left - containerRect.left - (containerRect.width / 2) + (pillRect.width / 2);
+                            pillsContainer.scrollBy({ left: offset, behavior: 'smooth' });
+                        } else {
+                            p.classList.remove('active');
+                        }
+                    });
+                }
+            });
+        }, { rootMargin: '-80px 0px -60% 0px', threshold: 0 });
+
+        // Observe region separators
+        document.querySelectorAll('.itinerary-timeline .region-separator').forEach(function(sep) {
+            iqnObserver.observe(sep);
         });
     })();
 
@@ -6371,8 +6526,14 @@ if ('serviceWorker' in navigator) {
 
       // Save entry first, then upload media
       var saveBtn = document.getElementById('recap-save');
-      saveBtn.textContent = isEN ? 'Saving...' : 'Salvataggio...';
       saveBtn.disabled = true;
+
+      // Offline feedback: show appropriate message
+      if (!navigator.onLine) {
+        saveBtn.textContent = isEN ? '📡 Saving locally...' : '📡 Salvataggio locale...';
+      } else {
+        saveBtn.textContent = isEN ? 'Saving...' : 'Salvataggio...';
+      }
 
       diarioRef.child(dayKey).update(entryData).then(function() {
         // Upload photos
@@ -6417,7 +6578,11 @@ if ('serviceWorker' in navigator) {
         // Mark recap as done
         sessionStorage.setItem('recap_done_' + today, '1');
         overlay.remove();
-        showToast(isEN ? '\u2705 Day saved to journal!' : '\u2705 Giorno salvato nel diario!', 'success');
+        if (!navigator.onLine) {
+          showToast(isEN ? '\ud83d\udce1 Saved locally — will sync when online' : '\ud83d\udce1 Salvato localmente — sincronizzer\u00e0 online', 'success', 4000);
+        } else {
+          showToast(isEN ? '\u2705 Day saved to journal!' : '\u2705 Giorno salvato nel diario!', 'success');
+        }
         if (window.haptic) window.haptic(15);
 
         // Queue evening push notification to visitors
@@ -7585,9 +7750,35 @@ if ('serviceWorker' in navigator) {
       replyPreview.style.display = 'none';
     }
 
+    // Optimistic UI: show pending message immediately if offline
+    var pendingId = 'pending-' + Date.now();
+    if (!navigator.onLine) {
+      var pendingDiv = document.createElement('div');
+      pendingDiv.className = 'chat-msg mine pending';
+      pendingDiv.setAttribute('data-pending-id', pendingId);
+      var pendingBubble = document.createElement('div');
+      pendingBubble.className = 'chat-bubble';
+      if (msg.text) {
+        var pText = document.createElement('span');
+        pText.className = 'chat-msg-text';
+        pText.textContent = msg.text;
+        pendingBubble.appendChild(pText);
+      }
+      var statusEl = document.createElement('div');
+      statusEl.className = 'chat-msg-status';
+      statusEl.innerHTML = '<span class="status-icon">⏳</span> <span>' + (isEN ? 'Sending...' : 'Invio in corso...') + '</span>';
+      pendingBubble.appendChild(statusEl);
+      pendingDiv.appendChild(pendingBubble);
+      chatMessages.appendChild(pendingDiv);
+      scrollToBottom();
+    }
+
     CHAT_REF.push(msg).then(function() {
       chatInput.value = '';
       chatInput.focus();
+      // Remove pending indicator if it was shown
+      var pendingEl = chatMessages.querySelector('[data-pending-id="' + pendingId + '"]');
+      if (pendingEl) pendingEl.remove();
       // Clear typing indicator
       if (TYPING_REF && chatUser) TYPING_REF.child(chatUser.uid).remove();
       // Queue push notification for chat message (other users will receive if they opted in)
@@ -7603,6 +7794,15 @@ if ('serviceWorker' in navigator) {
       }
     }).catch(function(err) {
       console.error('[Chat] Send failed:', err);
+      // Update pending message to show error state
+      var pendingEl = chatMessages.querySelector('[data-pending-id="' + pendingId + '"]');
+      if (pendingEl) {
+        pendingEl.classList.remove('pending');
+        var statusDiv = pendingEl.querySelector('.chat-msg-status');
+        if (statusDiv) {
+          statusDiv.innerHTML = '<span class="status-icon" style="color:var(--danger)">⚠️</span> <span style="color:var(--danger)">' + (isEN ? 'Failed' : 'Fallito') + '</span>';
+        }
+      }
       if (window.showToast) showToast(isEN ? 'Failed to send message' : 'Invio messaggio fallito', 'error');
     });
   }

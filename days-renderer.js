@@ -420,6 +420,15 @@ var DaysRenderer = (function() {
       var day = DAYS_DATA.find(function(d) { return d.id === id; });
       return day ? renderDayFull(day) : '<p>Giorno non trovato.</p>';
     },
+    renderDayRange: function(startIdx, endIdx) {
+      var html = '';
+      var end = Math.min(endIdx, DAYS_DATA.length);
+      for (var i = startIdx; i < end; i++) {
+        html += renderDayFull(DAYS_DATA[i]);
+      }
+      return html;
+    },
+    getDayCount: function() { return DAYS_DATA.length; },
     renderFood: renderFoodByCountry,
     renderKids: renderKidsByCountry,
     renderTrekking: renderTrekking,

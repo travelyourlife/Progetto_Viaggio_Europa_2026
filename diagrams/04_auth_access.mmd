@@ -1,0 +1,25 @@
+flowchart TD
+    A["👤 Utente visita Quo Vadis"] --> B{"Autenticato?"}
+    B -->|No| C["🌍 Accesso PUBBLICO<br/>Tutto il contenuto informativo:<br/>Home, Riepilogo, Itinerario,<br/>Giorni, Luoghi, Cibo, Cultura,<br/>Attività, Zaino, Piano, Mappa"]
+    B -->|Sì| D{"Ruolo?"}
+    
+    D -->|"Owner<br/>(organizzatore)"| E["🛠️ Accesso COMPLETO<br/>Tutto il pubblico +<br/>Pannello Admin<br/>Tracking controls<br/>Modifica km / Parcheggi<br/>Drive Sync config<br/>Diario (scrittura)<br/>Chat (scrittura)"]
+    
+    D -->|"Approved<br/>(familiare)"| F["👁️ Pubblico + Interazione<br/>Posizione live<br/>Statistiche avanzate<br/>Diario (lettura)<br/>Chat (lettura + scrittura)<br/>Notifiche Push"]
+    
+    D -->|"Pending<br/>(in attesa)"| G["⏳ Come pubblico<br/>+ In attesa approvazione"]
+    
+    D -->|"Banned"| H["🚫 Accesso Negato"]
+    
+    G -->|"Admin approva"| F
+    
+    E -->|"Firebase Rules"| I["🔥 DB: read + write completo"]
+    F -->|"Firebase Rules"| J["🔥 DB: read + chat write"]
+    C -->|"Nessun DB"| K["📄 Solo contenuto statico<br/>(HTML/JS locale)"]
+    
+    style C fill:#e3f2fd,stroke:#1565c0
+    style E fill:#c8e6c9,stroke:#2e7d32
+    style F fill:#e8f5e9,stroke:#388e3c
+    style G fill:#fff9c4,stroke:#f9a825
+    style H fill:#ffcdd2,stroke:#c62828
+    style K fill:#f5f5f5,stroke:#616161
