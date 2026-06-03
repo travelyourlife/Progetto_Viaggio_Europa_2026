@@ -498,7 +498,7 @@ function openMapFullscreen(mapInstance, title) {
         document.body.appendChild(overlay);
         document.body.style.overflow = 'hidden';
         var fsMapDiv = overlay.querySelector('#map-fs-container');
-        var fsMap = L.map(fsMapDiv, { zoomControl: false, attributionControl: false, scrollWheelZoom: true, dragging: true, tap: true }).setView([52.0, 15.0], 4);
+        var fsMap = L.map(fsMapDiv, { zoomControl: false, attributionControl: false, scrollWheelZoom: true, dragging: true, tap: true, zoomAnimation: false, fadeAnimation: false }).setView([52.0, 15.0], 4);
         L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { maxZoom: 19 }).addTo(fsMap);
         L.control.zoom({ position: 'bottomright' }).addTo(fsMap);
         // Draw route from TRIP_COORDS
@@ -593,7 +593,7 @@ function openMapFullscreen(mapInstance, title) {
                 });
             }
             var bounds = L.latLngBounds(routeCoords);
-            setTimeout(function() { fsMap.invalidateSize(); fsMap.fitBounds(bounds, { padding: [30, 30] }); }, 150);
+            setTimeout(function() { fsMap.invalidateSize(); fsMap.fitBounds(bounds, { padding: [30, 30], animate: false }); }, 50);
         }
         function closeFs2() { fsMap.remove(); overlay.remove(); document.body.style.overflow = ''; }
         overlay.querySelector('.map-fs-close').addEventListener('click', closeFs2);
@@ -621,7 +621,9 @@ function openMapFullscreen(mapInstance, title) {
         attributionControl: false,
         scrollWheelZoom: true,
         dragging: true,
-        tap: true
+        tap: true,
+        zoomAnimation: false,
+        fadeAnimation: false
     }).setView(center, zoom);
 
     // Copy tile layer
@@ -667,11 +669,11 @@ function openMapFullscreen(mapInstance, title) {
             }
         });
         if (allLatLngs.length > 1) {
-            fsMap.fitBounds(L.latLngBounds(allLatLngs), { padding: [30, 30] });
+            fsMap.fitBounds(L.latLngBounds(allLatLngs), { padding: [30, 30], animate: false });
         } else if (allLatLngs.length === 1) {
-            fsMap.setView(allLatLngs[0], 10);
+            fsMap.setView(allLatLngs[0], 10, { animate: false });
         }
-    }, 150);
+    }, 50);
 
     function closeFs() {
         fsMap.remove();
@@ -4310,7 +4312,7 @@ if ('serviceWorker' in navigator) {
 
 
 // ═══════════════════════════════════════════════════════════════
-// PWA Install Banner — v1.54 (platform-optimized, minimal steps)
+// PWA Install Banner — v1.56 (platform-optimized, minimal steps)
 // ═══════════════════════════════════════════════════════════════
 (function() {
     var banner = document.getElementById('installBanner');
@@ -5877,9 +5879,18 @@ if ('serviceWorker' in navigator) {
 
   function saveFcmToken(token) {
     if (!db) return;
-    var user = firebaseUser;
+    var user = firebaseUser || (typeof firebase !== 'undefined' && firebase.auth ? firebase.auth().currentUser : null);
     if (!user || !user.uid) {
-      console.info('[FCM] No authenticated user — skipping token save');
+      console.info('[FCM] No authenticated user — will retry on auth state change');
+      // Retry when auth becomes available
+      if (typeof firebase !== 'undefined' && firebase.auth) {
+        var unsubFcm = firebase.auth().onAuthStateChanged(function(u) {
+          if (u && u.uid) {
+            unsubFcm(); // Only retry once
+            saveFcmToken(token);
+          }
+        });
+      }
       return;
     }
     var deviceId = localStorage.getItem(KEYS.DEVICE_ID);
@@ -9408,7 +9419,7 @@ if ('serviceWorker' in navigator) {
             });
           });
         });
-      });
+      })();
     });
   }
 
@@ -9554,6 +9565,32 @@ if ('serviceWorker' in navigator) {
       dbEl.textContent = (typeof db !== 'undefined' && db) ? '✅ Connected' : '❌ Not connected';
       dbEl.style.color = (typeof db !== 'undefined' && db) ? '#38a169' : '#e53e3e';
     }
+
+    // FCM Tokens in DB — count all registered tokens
+    var fcmDbEl = document.getElementById('admin-fcm-db-count');
+    if (fcmDbEl && typeof db !== 'undefined' && db) {
+      fcmDbEl.textContent = '⏳ Loading...';
+      db.ref('fcm_tokens').once('value').then(function(snap) {
+        if (!snap.exists()) {
+          fcmDbEl.textContent = '❌ 0 tokens (nessun dispositivo registrato)';
+          fcmDbEl.style.color = '#e53e3e';
+          return;
+        }
+        var totalTokens = 0;
+        var users = [];
+        snap.forEach(function(userSnap) {
+          var uid = userSnap.key;
+          var tokenCount = userSnap.numChildren();
+          totalTokens += tokenCount;
+          users.push(uid.substring(0, 8) + '(' + tokenCount + ')');
+        });
+        fcmDbEl.textContent = '✅ ' + totalTokens + ' token' + (totalTokens !== 1 ? 's' : '') + ' — ' + users.join(', ');
+        fcmDbEl.style.color = totalTokens > 0 ? '#38a169' : '#e53e3e';
+      }).catch(function(err) {
+        fcmDbEl.textContent = '⚠️ Error: ' + err.message;
+        fcmDbEl.style.color = '#d69e2e';
+      });
+    }
   }
 
   // Admin Test Push
@@ -9587,34 +9624,87 @@ if ('serviceWorker' in navigator) {
     });
   }
 
-  // Refresh Token
+  // Refresh Token (with verbose FCM diagnostics)
   var adminRefreshToken = document.getElementById('admin-refresh-token');
   if (adminRefreshToken) {
     adminRefreshToken.addEventListener('click', function() {
-      adminLog('Refreshing FCM token...');
+      adminLog('🔍 FCM Diagnostics starting...');
+      // Step 1: Check basics
+      adminLog('1️⃣ Notification API: ' + ('Notification' in window ? '✅ available' : '❌ NOT available'));
+      adminLog('1️⃣ Permission: ' + (Notification.permission || 'unknown'));
+      adminLog('1️⃣ ServiceWorker API: ' + ('serviceWorker' in navigator ? '✅ available' : '❌ NOT available'));
+      adminLog('1️⃣ Firebase loaded: ' + (typeof firebase !== 'undefined' ? '✅' : '❌'));
+      adminLog('1️⃣ firebase.messaging: ' + (typeof firebase !== 'undefined' && firebase.messaging ? '✅' : '❌'));
+
       if (typeof firebase === 'undefined' || !firebase.messaging) {
-        adminLog('❌ Firebase Messaging not available');
+        adminLog('❌ STOP: Firebase Messaging SDK not loaded');
         return;
       }
-      try {
-        var messaging = firebase.messaging();
+
+      // Step 2: Check SW registration
+      adminLog('2️⃣ Checking SW registration...');
+      navigator.serviceWorker.getRegistrations().then(function(regs) {
+        adminLog('2️⃣ SW registrations found: ' + regs.length);
+        regs.forEach(function(r, i) {
+          adminLog('   SW[' + i + '] scope: ' + r.scope + ' | active: ' + (r.active ? r.active.scriptURL : 'none') + ' | state: ' + (r.active ? r.active.state : 'N/A'));
+        });
+
+        // Step 3: Get or register SW
+        return navigator.serviceWorker.getRegistration();
+      }).then(function(swReg) {
+        if (!swReg) {
+          adminLog('2️⃣ ⚠️ No SW found — registering ./sw.js...');
+          return navigator.serviceWorker.register('./sw.js').then(function(newReg) {
+            adminLog('2️⃣ ✅ SW registered: ' + newReg.scope);
+            return newReg;
+          });
+        }
+        adminLog('2️⃣ ✅ Using SW: ' + swReg.scope);
+        // Wait for SW to be active
+        if (swReg.active) {
+          adminLog('2️⃣ SW state: active (' + swReg.active.scriptURL + ')');
+        } else if (swReg.installing) {
+          adminLog('2️⃣ SW state: installing...');
+        } else if (swReg.waiting) {
+          adminLog('2️⃣ SW state: waiting');
+        }
+        return swReg;
+      }).then(function(swReg) {
+        // Step 4: Request permission if not granted
+        if (Notification.permission !== 'granted') {
+          adminLog('3️⃣ Requesting notification permission...');
+          return Notification.requestPermission().then(function(perm) {
+            adminLog('3️⃣ Permission result: ' + perm);
+            if (perm !== 'granted') {
+              adminLog('❌ STOP: Permission not granted');
+              return null;
+            }
+            return swReg;
+          });
+        }
+        adminLog('3️⃣ Permission already granted ✅');
+        return swReg;
+      }).then(function(swReg) {
+        if (!swReg) return;
+        // Step 5: Get FCM token
+        adminLog('4️⃣ Calling messaging.getToken()...');
         var VAPID_KEY = 'BBW43ENkLgM_oXOaCCyo_m3voilbfw2fdlqjtopognVCmyiGXAibwedF94Og56uQdh61IvLqokMfIeROBYhYkis';
-        navigator.serviceWorker.getRegistration().then(function(swReg) {
-          if (!swReg) {
-            adminLog('⚠️ No SW - registering...');
-            return navigator.serviceWorker.register('./sw.js');
-          }
-          return swReg;
-        }).then(function(swReg) {
-          return messaging.getToken({ vapidKey: VAPID_KEY, serviceWorkerRegistration: swReg });
-        }).then(function(token) {
+        var messaging;
+        try {
+          messaging = firebase.messaging();
+          adminLog('4️⃣ firebase.messaging() instance: ✅');
+        } catch(e) {
+          adminLog('❌ firebase.messaging() threw: ' + e.message);
+          return;
+        }
+        return messaging.getToken({ vapidKey: VAPID_KEY, serviceWorkerRegistration: swReg }).then(function(token) {
           if (token) {
-            adminLog('✅ Token: ' + token.substring(0, 30) + '...');
+            adminLog('5️⃣ ✅ TOKEN OBTAINED: ' + token.substring(0, 40) + '...');
             localStorage.setItem('viaggio2026_fcm_token', token);
-            // Also save to DB
-            var user = typeof firebaseUser !== 'undefined' ? firebaseUser : null;
+            // Save to DB
+            var user = typeof firebaseUser !== 'undefined' ? firebaseUser : (firebase.auth ? firebase.auth().currentUser : null);
             if (user && db) {
-              var deviceId = localStorage.getItem('viaggio2026_device_id') || ('dev_' + Date.now());
+              var deviceId = localStorage.getItem('viaggio2026_device_id') || ('dev_' + Date.now() + '_' + Math.random().toString(36).substr(2,4));
               localStorage.setItem('viaggio2026_device_id', deviceId);
               db.ref('fcm_tokens/' + user.uid + '/' + deviceId).set({
                 token: token, device: deviceId, role: 'owner',
@@ -9622,21 +9712,23 @@ if ('serviceWorker' in navigator) {
                 userAgent: navigator.userAgent.substring(0, 100),
                 updatedAt: new Date().toISOString()
               }).then(function() {
-                adminLog('✅ Token saved to DB');
+                adminLog('5️⃣ ✅ Token saved to DB (uid: ' + user.uid.substring(0,8) + '...)');
                 updateAdminStatus();
               }).catch(function(err) {
-                adminLog('❌ DB save failed: ' + err.message);
+                adminLog('5️⃣ ❌ DB save failed: ' + err.message);
               });
+            } else {
+              adminLog('5️⃣ ⚠️ No user/db — token saved locally only');
             }
           } else {
-            adminLog('❌ No token returned');
+            adminLog('5️⃣ ❌ getToken returned null/empty');
           }
-        }).catch(function(err) {
-          adminLog('❌ Token error: ' + err.message);
         });
-      } catch(e) {
-        adminLog('❌ Messaging error: ' + e.message);
-      }
+      }).catch(function(err) {
+        adminLog('❌ FCM ERROR: ' + (err.message || err));
+        adminLog('❌ Error code: ' + (err.code || 'none'));
+        adminLog('❌ Full error: ' + JSON.stringify(err, Object.getOwnPropertyNames(err)).substring(0, 300));
+      });
     });
   }
 
@@ -10046,7 +10138,7 @@ if ('serviceWorker' in navigator) {
 
 
 // ═══════════════════════════════════════════════════════════════
-// ─── v1.54: ADMIN NOTIFICATION CONFIGURATION PANEL ───
+// ─── v1.56: ADMIN NOTIFICATION CONFIGURATION PANEL ───
 // ═══════════════════════════════════════════════════════════════
 (function() {
   if (typeof firebase === 'undefined' || !firebase.database || !firebase.auth) return;

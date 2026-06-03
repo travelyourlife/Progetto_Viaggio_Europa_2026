@@ -1,0 +1,51 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // Helper: check if user is an owner
+    function isOwner() {
+      return request.auth != null && (
+        request.auth.uid == 'RxlVlsfeaEeSwFUVYbKQujEsbBo1' ||
+        request.auth.uid == 'Mh8BOeFPnFe7WObcsUoP6wyRgPw1'
+      );
+    }
+
+    // Helper: check if user is approved (via Realtime DB not available in Storage rules,
+    // so we rely on auth != null + path structure)
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Helper: max file size
+    function maxSize(mb) {
+      return request.resource.size < mb * 1024 * 1024;
+    }
+
+    // Helper: allowed image types
+    function isImage() {
+      return request.resource.contentType.matches('image/.*');
+    }
+
+    // Helper: allowed audio types
+    function isAudio() {
+      return request.resource.contentType.matches('audio/.*');
+    }
+
+    // Diary uploads: diary/{familyId}/{dayKey}/{filename}
+    match /diary/{familyId}/{allPaths=**} {
+      allow read: if isAuthenticated();
+      allow write: if isOwner() && (isImage() || isAudio()) && maxSize(10);
+    }
+
+    // Chat uploads: chat/{filename}
+    match /chat/{allPaths=**} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && (isImage() || isAudio()) && maxSize(10);
+    }
+
+    // Default: deny all other paths
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

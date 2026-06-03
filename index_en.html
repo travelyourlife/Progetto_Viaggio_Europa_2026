@@ -53,7 +53,7 @@
     <link rel="apple-touch-icon" sizes="152x152" href="./icon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="./icon.png">
     <link rel="apple-touch-icon" sizes="167x167" href="./icon.png">
-    <title>Europe Trip 2026 — V1.54</title>
+    <title>Europe Trip 2026 — V1.57</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <link rel="stylesheet" href="style.css">
 
@@ -70,7 +70,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = '1.54';
+  var EXPECTED_VERSION = '1.57';
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
   var r = false;
@@ -423,6 +423,7 @@
 <p>🎯 <strong>Trip focus:</strong> nature, parks and museums for children, scenic roads (🛣️), total eclipse, thermal experiences, fishing 🎣, trekking 🥾</p>
 <p><span id="mappa"></span>
 <span id="geo"></span></p>
+<hr>
 <h2 id="curiosita-dati-geografici">🌍 Fun Facts — Geographic Data</h2>
 <p>🌍 <strong>Countries crossed:</strong> 🇮🇹 🇦🇹 🇨🇿 🇵🇱 🇱🇹 🇱🇻 🇪🇪 🇫🇮 🇳🇴 🇩🇰 🇩🇪 🇫🇷 🇪🇸 (13)</p>
 <p>📍 <strong>Geographic extremes:</strong> North → <strong>Tromsø / Senja (🇳🇴)</strong> · South → <strong>Palencia (🇪🇸)</strong></p>
@@ -557,7 +558,7 @@
 </tr>
 </tbody>
 </table>
-
+<hr>
 <h2 id="itinerario-54-giorni">🌟 Itinerary — 54 Days</h2>
 <p><strong>Legend:</strong> ♨️ = thermal spa accessible (see <a href="#secA">Spas</a>) · ➕ = alternative detour (see <a href="#secB">Alternatives</a>) · 🎣 = fishing possible (see <a href="#pesca">Fishing Guide</a>) · 🥾 = trekking (see <a href="#trekking">Trekking Guide</a>)</p>
 <p><strong>Click the Dx to jump to details.</strong></p>
@@ -1046,6 +1047,46 @@
 <p><strong>Recommended apps:</strong> <a href="https://www.yr.no" target="_blank" rel="noopener noreferrer">Yr.no</a> (Scandinavia) · <a href="https://www.aemet.es" target="_blank" rel="noopener noreferrer">AEMET</a> (Spain) · <a href="https://meteofrance.com" target="_blank" rel="noopener noreferrer">Météo-France</a> (France)</p>
 </blockquote>
 
+<hr>
+<details class="legenda-itinerario-details">
+<summary>🏷️ Icon Legend — Itinerary</summary>
+<table class="compact-table">
+<thead>
+<tr><th>Icon</th><th>Meaning</th></tr>
+</thead>
+<tbody>
+<tr><td>🛣️</td><td>Scenic road / scenic route</td></tr>
+<tr><td>🏛️</td><td>Museum / monument / culture</td></tr>
+<tr><td>🌲</td><td>Nature / park / walk</td></tr>
+<tr><td>🍽️</td><td>Restaurant / local dish</td></tr>
+<tr><td>🌭</td><td>Street food / kiosk / take-away</td></tr>
+<tr><td>🛒</td><td>Product to buy (supermarket/market)</td></tr>
+<tr><td>🎣</td><td>Fishing possible (with license info)</td></tr>
+<tr><td>♨️</td><td>Thermal spa / hot spring</td></tr>
+<tr><td>➕</td><td>Detour or alternative stop</td></tr>
+<tr><td>🥾</td><td>Trekking available</td></tr>
+<tr><td>🌒</td><td>Total solar eclipse</td></tr>
+<tr><td>👨‍👩‍👧‍👦</td><td>Family-friendly / with children</td></tr>
+<tr><td>🏃</td><td>Solo / advanced (early start)</td></tr>
+<tr><td>🌟 / ⭐</td><td>Highlight / must-see</td></tr>
+<tr><td>☀️🌧️</td><td>Weather info</td></tr>
+<tr><td>⛴️</td><td>Ferry</td></tr>
+<tr><td>🚗</td><td>Car transfer</td></tr>
+<tr><td>🚂</td><td>Train / scenic railway</td></tr>
+<tr><td>📷</td><td>Photo spot</td></tr>
+<tr><td>🚡</td><td>Cable car / funicular</td></tr>
+<tr><td>⚠️</td><td>Warning / notice</td></tr>
+<tr><td>🎯</td><td>Practical tip</td></tr>
+<tr><td>🛴</td><td>Scooters (own)</td></tr>
+<tr><td>🚴</td><td>Bike / e-bike / cargo bike rental</td></tr>
+<tr><td>🛶</td><td>Kayak / canoe rental</td></tr>
+<tr><td>🏄</td><td>SUP rental</td></tr>
+<tr><td>💡</td><td>Tip / fun fact</td></tr>
+<tr><td>🔥</td><td>Grill / fire / picnic area</td></tr>
+<tr><td>🍳</td><td>Van recipe</td></tr>
+</tbody>
+</table>
+</details>
 <hr>
 <h2 id="secB">🗺️ Alternatives — Stops and Detours</h2>
 <h3 id="b1">Central Europe</h3>
@@ -7448,7 +7489,8 @@
   <div><strong>App Version:</strong></div><div id="admin-version">—</div>
   <div><strong>Service Worker:</strong></div><div id="admin-sw-status">—</div>
   <div><strong>Notification Permission:</strong></div><div id="admin-notif-perm">—</div>
-  <div><strong>FCM Token:</strong></div><div id="admin-fcm-status">—</div>
+  <div><strong>FCM Token (local):</strong></div><div id="admin-fcm-status">—</div>
+  <div><strong>FCM Tokens (DB):</strong></div><div id="admin-fcm-db-count">—</div>
   <div><strong>Firebase Auth:</strong></div><div id="admin-auth-status">—</div>
   <div><strong>Database:</strong></div><div id="admin-db-status">—</div>
 </div>
@@ -7510,7 +7552,7 @@
 </div>
 
 <!-- ═══════════════════════════════════════════════════════════ -->
-<!-- NOTIFICATION CONFIGURATION PANEL (v1.54) -->
+<!-- NOTIFICATION CONFIGURATION PANEL (v1.56) -->
 <!-- ═══════════════════════════════════════════════════════════ -->
 <div class="admin-card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:12px 0;">
 <h3 style="margin-bottom:12px;">🔔 Notification Configuration</h3>
