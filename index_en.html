@@ -53,7 +53,7 @@
     <link rel="apple-touch-icon" sizes="152x152" href="./icon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="./icon.png">
     <link rel="apple-touch-icon" sizes="167x167" href="./icon.png">
-    <title>Europe Trip 2026 — V1.53</title>
+    <title>Europe Trip 2026 — V1.54</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <link rel="stylesheet" href="style.css">
 
@@ -70,18 +70,20 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = '1.53';
+  var EXPECTED_VERSION = '1.54';
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
   var r = false;
+  var versionMismatch = false; // Only reload if version actually differs
   function safeReload(){
-    if(!r){ r=true; window.location.href=window.location.href.split('?')[0]+'?v='+Date.now(); }
+    if(!r && versionMismatch){ r=true; window.location.href=window.location.href.split('?')[0]+'?v='+Date.now(); }
   }
   function checkVersion(){
     fetch('./version.json?_=' + Date.now(), {cache:'no-store'}).then(function(res){
       return res.json();
     }).then(function(data){
       if(data.version && data.version !== EXPECTED_VERSION){
+        versionMismatch = true;
         if(r) return;
         caches.keys().then(function(keys){
           return Promise.all(keys.map(function(k){ return caches.delete(k); }));
@@ -103,22 +105,24 @@
       }
     }).catch(function(){});
   }
-  // Listen for controller change (new SW took over) — safe to reload now
+  // Listen for controller change — only reload if there's a version mismatch
   navigator.serviceWorker.addEventListener('controllerchange', function(){ safeReload(); });
   navigator.serviceWorker.addEventListener('message', function(e){
     if(e.data && e.data.type==='SW_UPDATED'){ safeReload(); }
   });
-  // Force update check on SW
-  navigator.serviceWorker.ready.then(function(reg){ reg.update(); });
+  // Register SW normally (no forced update check on every load)
+  navigator.serviceWorker.register('./sw.js').catch(function(){});
   // Initial version check on page load
   checkVersion();
-  // Re-check when app returns from background (Android PWA)
+  // Re-check when app returns from background — throttled to max once per 5 min
+  var lastCheck = Date.now();
   document.addEventListener('visibilitychange', function(){
     if(document.visibilityState === 'visible'){
-      if(navigator.serviceWorker.controller){
-        navigator.serviceWorker.ready.then(function(reg){ reg.update(); });
+      var now = Date.now();
+      if(now - lastCheck > 300000){ // 5 minutes minimum between checks
+        lastCheck = now;
+        checkVersion();
       }
-      checkVersion();
     }
   });
 })();
@@ -7506,7 +7510,7 @@
 </div>
 
 <!-- ═══════════════════════════════════════════════════════════ -->
-<!-- NOTIFICATION CONFIGURATION PANEL (v1.52) -->
+<!-- NOTIFICATION CONFIGURATION PANEL (v1.54) -->
 <!-- ═══════════════════════════════════════════════════════════ -->
 <div class="admin-card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:12px 0;">
 <h3 style="margin-bottom:12px;">🔔 Notification Configuration</h3>
@@ -8088,7 +8092,7 @@
   <div class="chat-input-bar" id="chat-input-bar">
     <button class="chat-attach-btn" id="chat-attach-btn" aria-label="Attach file" title="Attach photo/audio">📎</button>
     <button class="chat-location-btn" id="chat-location-btn" aria-label="Send location" title="Send location">📍</button>
-    <textarea id="chat-input" class="chat-input" placeholder="Write a message..." maxlength="500" autocomplete="off" rows="1"></textarea>
+    <textarea id="chat-input" class="chat-input" placeholder="Write a message..." maxlength="5000" autocomplete="off" rows="1"></textarea>
     <button class="chat-voice-btn" id="chat-voice-btn" aria-label="Record audio" title="Hold to record"></button>
     <button type="button" class="chat-send-btn" id="chat-send-btn" aria-label="Send"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg></button>
   </div>

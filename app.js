@@ -4310,7 +4310,7 @@ if ('serviceWorker' in navigator) {
 
 
 // ═══════════════════════════════════════════════════════════════
-// PWA Install Banner — v1.52 (platform-optimized, minimal steps)
+// PWA Install Banner — v1.54 (platform-optimized, minimal steps)
 // ═══════════════════════════════════════════════════════════════
 (function() {
     var banner = document.getElementById('installBanner');
@@ -6129,7 +6129,8 @@ if ('serviceWorker' in navigator) {
 
     var tripDay = getCurrentTripDay();
     var today = todayStr();
-    var dayKey = tripDay < 0 ? ('pre-' + today) : ('day-' + tripDay);
+    var _ts = Date.now();
+    var dayKey = tripDay < 0 ? ('pre-' + today + '-' + _ts) : ('day-' + tripDay + '-' + _ts);
 
     // Gather today's data from DOM/localStorage
     var kmEl = document.getElementById('live-km-today') || document.getElementById('home-km-today');
@@ -7726,15 +7727,25 @@ if ('serviceWorker' in navigator) {
     });
   }
 
-  // ─── Send button ───
+  // ─── Send button (with debounce to prevent double-tap) ───
+  var sendDebounce = false;
   function handleSend() {
+    if (sendDebounce) return;
     var text = chatInput.value.trim();
-    if (text) sendMessage(text);
+    if (!text) return;
+    sendDebounce = true;
+    sendMessage(text);
+    setTimeout(function() { sendDebounce = false; }, 500);
   }
-  chatSendBtn.addEventListener('click', handleSend);
+  chatSendBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    handleSend();
+  });
   // Android PWA: touchend as fallback (click sometimes not fired)
   chatSendBtn.addEventListener('touchend', function(e) {
     e.preventDefault();
+    e.stopPropagation();
     handleSend();
   });
 
@@ -9279,22 +9290,21 @@ if ('serviceWorker' in navigator) {
     addEntryBtn.addEventListener('click', function() {
       var tripDay = getCurrentTripDay();
       var dayKey, dayLabel;
+      var now = new Date();
+      var timestamp = now.getTime();
       if (tripDay < 0) {
-        // Pre-trip: use date-based key so owner can test
-        dayKey = 'pre-' + new Date().toISOString().split('T')[0];
+        // Pre-trip: use date + timestamp so multiple posts per day are allowed
+        dayKey = 'pre-' + now.toISOString().split('T')[0] + '-' + timestamp;
         dayLabel = tripDay; // negative number
       } else {
-        dayKey = 'day-' + tripDay;
+        // During trip: use day + timestamp for multiple posts per day
+        dayKey = 'day-' + tripDay + '-' + timestamp;
         dayLabel = tripDay;
       }
-      var today = new Date().toISOString().split('T')[0];
+      var today = now.toISOString().split('T')[0];
 
-      // Check if entry already exists
-      diarioRef.child(dayKey).once('value', function(snap) {
-        if (snap.exists()) {
-          if (window.showToast) showToast(isEN ? 'Entry for today already exists' : 'La voce di oggi esiste già', 'info');
-          return;
-        }
+      // Proceed directly (no duplicate check — multiple posts per day allowed)
+      (function() {
 
         // Gather auto data
         var entryData = {
@@ -9738,7 +9748,7 @@ if ('serviceWorker' in navigator) {
       deduped.sort(function(a, b) { return (b.lastSeen || 0) - (a.lastSeen || 0); });
 
       var html = '';
-      if (duplicateUIDs.length > 0 && !localStorage.getItem('admin-dupes-dismissed')) {
+      if (duplicateUIDs.length > 0 && !localStorage.getItem('admin-dupes-dismissed') && !sessionStorage.getItem('admin-dupes-cleaned')) {
         html += '<div style="margin-bottom:10px;padding:8px 12px;background:var(--warning,#d69e2e);color:#fff;border-radius:8px;font-size:12px;display:flex;align-items:center;gap:8px;">';
         html += '<span>\u26a0\ufe0f ' + duplicateUIDs.length + (isEN ? ' duplicate UID(s) found' : ' UID duplicati trovati') + '</span>';
         html += '<button id="admin-cleanup-dupes" class="pos-btn" style="font-size:11px;padding:4px 10px;background:#fff;color:#d69e2e;border:none;border-radius:6px;cursor:pointer;font-weight:700;">\ud83e\uddf9 ' + (isEN ? 'Clean up' : 'Pulisci') + '</button>';
@@ -9818,6 +9828,7 @@ if ('serviceWorker' in navigator) {
             duplicateUIDs.forEach(function(duid) { updates[duid] = null; });
             usersRef.update(updates).then(function() {
               localStorage.setItem('admin-dupes-dismissed', '1');
+              sessionStorage.setItem('admin-dupes-cleaned', '1');
               if (window.showToast) showToast(isEN ? 'Duplicates removed!' : 'Duplicati rimossi!', 'success');
               renderAdminUsers();
             });
@@ -10035,7 +10046,7 @@ if ('serviceWorker' in navigator) {
 
 
 // ═══════════════════════════════════════════════════════════════
-// ─── v1.52: ADMIN NOTIFICATION CONFIGURATION PANEL ───
+// ─── v1.54: ADMIN NOTIFICATION CONFIGURATION PANEL ───
 // ═══════════════════════════════════════════════════════════════
 (function() {
   if (typeof firebase === 'undefined' || !firebase.database || !firebase.auth) return;
@@ -10075,13 +10086,7 @@ if ('serviceWorker' in navigator) {
       notifPrefsRef.once('value', function(prefsSnap) {
         var prefs = prefsSnap.val() || {};
 
-        var html = '<table>';
-        html += '<thead><tr>';
-        html += '<th style="text-align:left;">' + (isEN ? 'User' : 'Utente') + '</th>';
-        html += '<th>' + (isEN ? 'In-App' : 'In-App') + '</th>';
-        html += '<th>Push</th>';
-        html += '</tr></thead><tbody>';
-
+        var html = '';
         uids.forEach(function(uid) {
           var u = approved[uid];
           var name = u.displayName || u.email || uid.substring(0, 8);
@@ -10089,20 +10094,26 @@ if ('serviceWorker' in navigator) {
           var inAppOn = userPrefs.inApp !== false; // default true
           var pushOn = userPrefs.push !== false;   // default true
 
-          html += '<tr>';
-          html += '<td style="text-align:left;font-size:13px;">' + name + '</td>';
-          html += '<td><label style="position:relative;display:inline-block;width:40px;height:22px;">';
+          html += '<div style="background:var(--bg-alt,#f5f5f5);border-radius:12px;padding:12px 16px;margin-bottom:10px;">';
+          html += '<div style="font-weight:600;font-size:14px;margin-bottom:8px;">' + name + '</div>';
+          html += '<div style="display:flex;justify-content:space-between;align-items:center;">';
+          // In-App toggle with label
+          html += '<div style="display:flex;align-items:center;gap:8px;">';
+          html += '<span style="font-size:12px;color:var(--text-muted,#666);">\uD83D\uDD14 In-App</span>';
+          html += '<label style="position:relative;display:inline-block;width:40px;height:22px;">';
           html += '<input type="checkbox" class="notif-toggle-inapp" data-uid="' + uid + '"' + (inAppOn ? ' checked' : '') + ' style="opacity:0;width:0;height:0;">';
           html += '<span style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#ccc;border-radius:22px;transition:.3s;"></span>';
-          html += '</label></td>';
-          html += '<td><label style="position:relative;display:inline-block;width:40px;height:22px;">';
+          html += '</label></div>';
+          // Push toggle with label
+          html += '<div style="display:flex;align-items:center;gap:8px;">';
+          html += '<span style="font-size:12px;color:var(--text-muted,#666);">\uD83D\uDCE4 Push</span>';
+          html += '<label style="position:relative;display:inline-block;width:40px;height:22px;">';
           html += '<input type="checkbox" class="notif-toggle-push" data-uid="' + uid + '"' + (pushOn ? ' checked' : '') + ' style="opacity:0;width:0;height:0;">';
           html += '<span style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#ccc;border-radius:22px;transition:.3s;"></span>';
-          html += '</label></td>';
-          html += '</tr>';
+          html += '</label></div>';
+          html += '</div></div>';
         });
 
-        html += '</tbody></table>';
         notifUsersContainer.innerHTML = html;
 
         // Attach toggle event listeners
@@ -10190,21 +10201,42 @@ if ('serviceWorker' in navigator) {
 
   function queueTestNotification(type, title, body, tag) {
     notifLog((isEN ? 'Queuing test: ' : 'Invio test: ') + type + '...');
-    notifQueueRef.push({
+    var ts = Date.now();
+    var payload = {
       type: type,
       title: title,
       body: body,
       target: 'owner',
       url: './',
-      tag: tag + '-' + Date.now(),
-      createdAt: Date.now(),
+      tag: tag + '-' + ts,
+      createdAt: ts,
       sent: false,
       source: 'admin-test'
-    }).then(function() {
-      notifLog('✅ ' + (isEN ? 'Test queued: ' : 'Test in coda: ') + title);
-      if (window.showToast) showToast((isEN ? 'Test notification queued' : 'Notifica test in coda'), 'success');
+    };
+    // Write to queue (triggers Cloud Function for push)
+    notifQueueRef.push(payload).then(function() {
+      notifLog('\u2705 ' + (isEN ? 'Test queued: ' : 'Test in coda: ') + title);
     }).catch(function(err) {
-      notifLog('❌ Error: ' + err.message);
+      notifLog('\u274c Queue error: ' + err.message);
+    });
+    // Also write to history (so it appears in the in-app notification drawer immediately)
+    var historyRef = db.ref('trips/' + FAMILY_ID + '/notifications/history');
+    historyRef.push({
+      id: tag + '-' + ts,
+      type: type,
+      title: title,
+      body: body,
+      icon: type === 'countdown' ? '\uD83D\uDCC5' : type === 'zaino_reminder' ? '\uD83C\uDF92' : type === 'next_stage' ? '\uD83D\uDEE3\uFE0F' : '\uD83D\uDD14',
+      target: 'owner',
+      createdAt: ts,
+      source: 'admin-test'
+    }).then(function() {
+      notifLog('\u2705 ' + (isEN ? 'In-app notification added' : 'Notifica in-app aggiunta'));
+      if (window.showToast) showToast((isEN ? 'Test notification sent' : 'Notifica test inviata'), 'success');
+      // Trigger drawer refresh if available
+      if (window._notifDrawerUpdate) window._notifDrawerUpdate();
+    }).catch(function(err) {
+      notifLog('\u274c History error: ' + err.message);
     });
   }
 
