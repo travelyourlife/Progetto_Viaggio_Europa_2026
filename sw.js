@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-// Service Worker — Viaggio Europa 2026 V1.57
+// Service Worker — Viaggio Europa 2026 V1.58
 // Strategy: Stale-While-Revalidate for own assets (instant load + background update)
 //           Cache-First for CDN (stable, versioned)
 //           Network-Only for API calls
@@ -27,7 +27,7 @@ var messaging = firebase.messaging();
 // ─── CACHING CONFIG ───
 // ═══════════════════════════════════════════════════════════════
 
-const CACHE_NAME = 'quo-vadis-v1.57';
+const CACHE_NAME = 'quo-vadis-v1.58';
 const IMAGE_CACHE_NAME = 'quo-vadis-images-v1';
 const IMAGE_CACHE_LIMIT = 80;
 const STATIC_ASSETS = [

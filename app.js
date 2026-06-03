@@ -5852,7 +5852,7 @@ if ('serviceWorker' in navigator) {
 
   function getToken() {
     // VAPID key from Firebase Console > Project Settings > Cloud Messaging > Web Push certificates
-    var VAPID_KEY = 'BBW43ENkLgM_oXOaCCyo_m3voilbfw2fdlqjtopognVCmyiGXAibwedF94Og56uQdh61IvLqokMfIeROBYhYkis';
+    var VAPID_KEY = 'BBW43ENkLgM_oXOaCCyo_m3voilbfw2fdlqjtopognVCmyiGXAibwedF94Og56uQdh61IvLqokMfIeR0BYhYkis';
     // Must pass the SW registration so Firebase uses our sw.js (not default firebase-messaging-sw.js)
     navigator.serviceWorker.getRegistration().then(function(swReg) {
       if (!swReg) {
@@ -9688,7 +9688,7 @@ if ('serviceWorker' in navigator) {
         if (!swReg) return;
         // Step 5: Get FCM token
         adminLog('4️⃣ Calling messaging.getToken()...');
-        var VAPID_KEY = 'BBW43ENkLgM_oXOaCCyo_m3voilbfw2fdlqjtopognVCmyiGXAibwedF94Og56uQdh61IvLqokMfIeROBYhYkis';
+        var VAPID_KEY = 'BBW43ENkLgM_oXOaCCyo_m3voilbfw2fdlqjtopognVCmyiGXAibwedF94Og56uQdh61IvLqokMfIeR0BYhYkis';
         var messaging;
         try {
           messaging = firebase.messaging();
