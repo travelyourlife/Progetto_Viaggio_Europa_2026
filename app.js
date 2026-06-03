@@ -4392,8 +4392,8 @@ if ('serviceWorker' in navigator) {
             if (iconEl) iconEl.textContent = '\uD83D\uDDA5\uFE0F';
             if (installText) {
                 installText.innerHTML = isEN
-                    ? '<strong>Install Quo Vadis</strong><br>Click <strong>\u2B07\uFE0F</strong> in the address bar, or <strong>\u22ee</strong> \u2192 <strong>"Install Quo Vadis"</strong>'
-                    : '<strong>Installa Quo Vadis</strong><br>Clicca <strong>\u2B07\uFE0F</strong> nella barra indirizzi, oppure <strong>\u22ee</strong> \u2192 <strong>"Installa Quo Vadis"</strong>';
+                    ? '<strong>Install Quo Vadis</strong><br>Click <strong>\u2B07\uFE0F</strong> in the address bar or <strong>\u22ee \u2192 Install</strong>'
+                    : '<strong>Installa Quo Vadis</strong><br>Clicca <strong>\u2B07\uFE0F</strong> nella barra indirizzi o <strong>\u22ee \u2192 Installa</strong>';
             }
             btn.textContent = isEN ? 'Got it' : 'OK';
             btn.setAttribute('data-action', 'dismiss');
@@ -9611,35 +9611,34 @@ if ('serviceWorker' in navigator) {
     });
   }
 
-  // Admin Test Push with 5s delay (to allow closing the app)
+  // Admin Test Push (5s) — writes to DB immediately, then shows countdown
+  // User presses button, push is queued instantly, user has ~2-3s to close app before it arrives
   var adminTestPushDelay = document.getElementById('admin-test-push-delay');
   if (adminTestPushDelay) {
     adminTestPushDelay.addEventListener('click', function() {
       if (!db) { adminLog('ERROR: db is null'); return; }
       adminTestPushDelay.disabled = true;
-      var countdown = 5;
-      adminTestPushDelay.textContent = '⏱️ ' + countdown + 's...';
-      adminLog('⏱️ Push in 5 secondi — chiudi l\'app ora!');
-      var interval = setInterval(function() {
-        countdown--;
-        adminTestPushDelay.textContent = '⏱️ ' + countdown + 's...';
-        if (countdown <= 0) {
-          clearInterval(interval);
-          var ref = db.ref('trips/' + FAMILY_ID + '/notifications/queue');
-          ref.push({
-            type: 'test', title: '🧪 Admin Test (delayed)', body: 'Push dopo 5s — se vedi questo, le push in background funzionano!',
-            target: 'owner', url: './', tag: 'admin-test-delay-' + Date.now(), createdAt: Date.now(), sent: false, source: 'admin-panel'
-          }).then(function() {
-            adminLog('✅ Delayed push queued');
-            adminTestPushDelay.textContent = '✅ Inviata!';
-            setTimeout(function() { adminTestPushDelay.textContent = '⏱️ Test Push (5s)'; adminTestPushDelay.disabled = false; }, 3000);
-          }).catch(function(err) {
-            adminLog('❌ Error: ' + err.message);
-            adminTestPushDelay.textContent = '⏱️ Test Push (5s)';
-            adminTestPushDelay.disabled = false;
-          });
-        }
-      }, 1000);
+      adminTestPushDelay.textContent = '⏱️ Invio...';
+      adminLog('📤 Push inviata alla coda — chiudi l\'app ORA per riceverla come pop-up!');
+      var ref = db.ref('trips/' + FAMILY_ID + '/notifications/queue');
+      ref.push({
+        type: 'test', title: '🧪 Admin Test (background)', body: 'Se vedi questo pop-up, le push in background funzionano!',
+        target: 'owner', url: './', tag: 'admin-test-bg-' + Date.now(), createdAt: Date.now(), sent: false, source: 'admin-panel'
+      }).then(function() {
+        adminLog('✅ Push in coda — chiudi l\'app entro 3 secondi!');
+        adminTestPushDelay.textContent = '✅ Chiudi l\'app!';
+        adminTestPushDelay.style.background = '#27ae60';
+        setTimeout(function() {
+          adminTestPushDelay.textContent = '⏱️ Test Push (5s)';
+          adminTestPushDelay.style.background = '#e67e22';
+          adminTestPushDelay.disabled = false;
+        }, 5000);
+      }).catch(function(err) {
+        adminLog('❌ Error: ' + err.message);
+        adminTestPushDelay.textContent = '⏱️ Test Push (5s)';
+        adminTestPushDelay.style.background = '#e67e22';
+        adminTestPushDelay.disabled = false;
+      });
     });
   }
 

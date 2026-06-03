@@ -1,5 +1,5 @@
 /**
- * Quo Vadis v10.8 — Firebase Cloud Functions (v1.59)
+ * Quo Vadis v10.8 — Firebase Cloud Functions (v1.60)
  * 
  * 1. sendPushNotification: Listens to notifications/queue in Realtime Database.
  *    When a new notification is queued, sends FCM push to all registered tokens

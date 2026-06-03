@@ -294,6 +294,9 @@ var DAYS_DATA = [
       },
       {
         "text": "<strong>Olomouc</strong> al posto di Brno (meno turisti)"
+      },
+      {
+        "text": "➡️ Altre opzioni Europa Centrale → vedi <a href=\"#b1\">➕ Alternative</a>"
       }
     ],
     "kids": [
@@ -408,7 +411,11 @@ var DAYS_DATA = [
     "trekking": null,
     "fishing": null,
     "events": [],
-    "alternatives": [],
+    "alternatives": [
+      {
+        "text": "➡️ Deviazioni Paesi Baltici → vedi <a href=\"#b2\">➕ Alternative</a>"
+      }
+    ],
     "kids": [
       {
         "name": "Toys Museum (Žaislų muziejus)",
@@ -797,7 +804,11 @@ var DAYS_DATA = [
     },
     "fishing": null,
     "events": [],
-    "alternatives": [],
+    "alternatives": [
+      {
+        "text": "➡️ Deviazioni Finlandia → vedi <a href=\"#b3\">➕ Alternative</a>"
+      }
+    ],
     "kids": [
       {
         "name": "Lappeenranta Sandcastle (Hiekkalinna)",
@@ -1748,7 +1759,7 @@ var DAYS_DATA = [
     "region": "norvegia",
     "km": 160,
     "hours": "2h 30m",
-    "tolls": "AutoPASS (registrarsi su <a href=\"https://www.autopass.no\" target=\"_blank\" rel=\"noopener noreferrer\">autopass.no</a>)",
+    "tolls": "AutoPASS (registrarsi su <a href=\"https://www.autopass.no\" target=\"_blank\" rel=\"noopener noreferrer\">autopass.no</a>) — 💡 <strong>SkyttelPASS</strong>: sconto 20% pedaggi automatico (registrato su targa)",
     "tollLinks": [
       {
         "text": "autopass.no",
@@ -1820,6 +1831,9 @@ var DAYS_DATA = [
       },
       {
         "text": "<strong>Sommarøy</strong> (spiagge bianche, 1h)"
+      },
+      {
+        "text": "☔ Se piove → vedi <a href=\"#pioggia\" data-region=\"rain\">Piano Pioggia</a>"
       }
     ],
     "kids": [
@@ -1899,7 +1913,7 @@ var DAYS_DATA = [
     "region": "norvegia",
     "km": 170,
     "hours": "3h",
-    "tolls": "AutoPASS + traghetto breve",
+    "tolls": "AutoPASS + traghetto breve — 💡 con <strong>AutoPASS-Ferje</strong> prepagato: <strong>50% sconto</strong> traghetti",
     "tollLinks": [
       {
         "text": "AutoPASS",
@@ -2077,7 +2091,7 @@ var DAYS_DATA = [
     "region": "norvegia",
     "km": 200,
     "hours": "4h",
-    "tolls": "<a href=\"https://www.autopass.no\" target=\"_blank\" rel=\"noopener\">AutoPASS</a> + traghetto Gryllefjord–Andenes (~€180)",
+    "tolls": "<a href=\"https://www.autopass.no\" target=\"_blank\" rel=\"noopener\">AutoPASS</a> + traghetto Gryllefjord–Andenes (~€180) — 💡 con <strong>AutoPASS-Ferje</strong> prepagato: <strong>50% sconto</strong> traghetti",
     "tollLinks": [
       {
         "text": "AutoPASS",
@@ -2616,6 +2630,9 @@ var DAYS_DATA = [
     "alternatives": [
       {
         "text": "<strong>Lofotr Viking Museum</strong> (Borg, 30 min — ricostruzione casa vichinga, attività bambini) oppure <strong>Magic Ice</strong> (Svolvær, sculture di ghiaccio indoor)"
+      },
+      {
+        "text": "☔ Se piove → vedi <a href=\"#pioggia\" data-region=\"rain\">Piano Pioggia</a>"
       }
     ],
     "kids": [
@@ -2930,7 +2947,7 @@ var DAYS_DATA = [
     "region": "norvegia",
     "km": 400,
     "hours": "5h + traghetto",
-    "tolls": "Traghetto Moskenes–Bodø (~€112 furgone+4, NOK 1302)",
+    "tolls": "Traghetto Moskenes–Bodø (~€112 furgone+4, NOK 1302) — 💡 con <strong>AutoPASS-Ferje</strong> prepagato: <strong>50% sconto</strong> traghetti",
     "tollLinks": [
       {
         "text": "torghatten-nord.no",
@@ -3083,6 +3100,9 @@ var DAYS_DATA = [
     "alternatives": [
       {
         "text": "giornata di trasferimento — la pioggia non impatta. Sosta indoor: <strong>Vitensenter Trondheim</strong> (science center, arrivo sera)"
+      },
+      {
+        "text": "☔ Se piove → vedi <a href=\"#pioggia\" data-region=\"rain\">Piano Pioggia</a>"
       }
     ],
     "kids": [
@@ -3279,7 +3299,7 @@ var DAYS_DATA = [
     "region": "norvegia",
     "km": 320,
     "hours": "5h 30m",
-    "tolls": "<a href=\"https://www.autopass.no\" target=\"_blank\" rel=\"noopener\">AutoPASS</a> + traghetti interni",
+    "tolls": "<a href=\"https://www.autopass.no\" target=\"_blank\" rel=\"noopener\">AutoPASS</a> + traghetti interni — 💡 con <strong>AutoPASS-Ferje</strong> prepagato: <strong>50% sconto</strong> traghetti",
     "tollLinks": [
       {
         "text": "AutoPASS",
@@ -3319,6 +3339,9 @@ var DAYS_DATA = [
     "alternatives": [
       {
         "text": "<strong>Atlantic Road con pioggia è ancora più spettacolare</strong> — onde che scavalcano i ponti! Se tempesta forte, sosta al <strong>Kvernes Stavkirke</strong> (chiesa in legno 1300, indoor) o <strong>Molde Romsdalsmuseet</strong>"
+      },
+      {
+        "text": "☔ Se piove → vedi <a href=\"#pioggia\" data-region=\"rain\">Piano Pioggia</a>"
       }
     ],
     "kids": [
@@ -3557,7 +3580,7 @@ var DAYS_DATA = [
     "region": "norvegia",
     "km": 380,
     "hours": "7h",
-    "tolls": "<a href=\"https://www.autopass.no\" target=\"_blank\" rel=\"noopener\">AutoPASS</a> + traghetti interni",
+    "tolls": "<a href=\"https://www.autopass.no\" target=\"_blank\" rel=\"noopener\">AutoPASS</a> + traghetti interni — 💡 con <strong>AutoPASS-Ferje</strong> prepagato: <strong>50% sconto</strong> traghetti",
     "tollLinks": [
       {
         "text": "AutoPASS",
@@ -3607,6 +3630,9 @@ var DAYS_DATA = [
     "alternatives": [
       {
         "text": "giornata di trasferimento — la pioggia non impatta. Cascate di Hardanger ancora più imponenti con pioggia! Arrivo Bergen: <strong>Aquarium</strong> (Akvariet, aperto fino alle 18)"
+      },
+      {
+        "text": "☔ Se piove → vedi <a href=\"#pioggia\" data-region=\"rain\">Piano Pioggia</a>"
       }
     ],
     "kids": [
@@ -3720,6 +3746,9 @@ var DAYS_DATA = [
       },
       {
         "text": "Trek <strong>Mount Fløyen</strong>"
+      },
+      {
+        "text": "☔ Se piove → vedi <a href=\"#pioggia\" data-region=\"rain\">Piano Pioggia</a>"
       }
     ],
     "kids": [
@@ -3820,7 +3849,7 @@ var DAYS_DATA = [
     "region": "norvegia",
     "km": 210,
     "hours": "5h",
-    "tolls": "AutoPASS + traghetti",
+    "tolls": "AutoPASS + traghetti — 💡 con <strong>AutoPASS-Ferje</strong> prepagato: <strong>50% sconto</strong> traghetti",
     "tollLinks": [
       {
         "text": "AutoPASS",
@@ -4433,7 +4462,7 @@ var DAYS_DATA = [
     "region": "danimarca",
     "km": 260,
     "hours": "3h 30m",
-    "tolls": "Ponte Storebælt DKK 235 (~€32)",
+    "tolls": "Ponte Storebælt DKK 235 (~€32) — 💡 con accordo <strong>SkyttelPASS</strong>: sconto significativo",
     "tollLinks": [
       {
         "text": "Ponte Storebælt",
@@ -5134,6 +5163,9 @@ var DAYS_DATA = [
     "alternatives": [
       {
         "text": "<strong>Chambord</strong> (il più grande, ma meno adatto ai bambini)"
+      },
+      {
+        "text": "➡️ Altre opzioni Francia → vedi <a href=\"#b7\">➕ Alternative</a>"
       }
     ],
     "kids": [
@@ -5272,6 +5304,9 @@ var DAYS_DATA = [
     "alternatives": [
       {
         "text": "<strong>La Perla</strong> — talassoterapia sulla Concha → vedi <a href=\"#a5\">♨️ dettagli</a>"
+      },
+      {
+        "text": "☔ Se piove → vedi <a href=\"#pioggia\" data-region=\"rain\">Piano Pioggia</a>"
       }
     ],
     "kids": [
@@ -5427,6 +5462,9 @@ var DAYS_DATA = [
     "alternatives": [
       {
         "text": "<strong>Guggenheim</strong> è perfetto per la pioggia (indoor, 2-3h). Oppure <strong>Azkuna Zentroa</strong> (centro culturale con piscina panoramica) o <strong>Mercado de la Ribera</strong> (pintxos al coperto)"
+      },
+      {
+        "text": "☔ Se piove → vedi <a href=\"#pioggia\" data-region=\"rain\">Piano Pioggia</a>"
       }
     ],
     "kids": [
