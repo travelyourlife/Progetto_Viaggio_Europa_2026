@@ -555,6 +555,14 @@
         border: none !important;
     }
 
+    /* ─── v1.64: Diario action buttons more visible in dark ─── */
+    .diario-edit-btn, .diario-upload-btn, .diario-audio-btn, .diario-del-btn {
+        opacity: 0.85 !important;
+    }
+    .diario-edit-btn:hover, .diario-upload-btn:hover, .diario-audio-btn:hover, .diario-del-btn:hover {
+        opacity: 1 !important;
+    }
+
     /* ─── v1.64: Map fullscreen btn icon visibility ─── */
     .map-fullscreen-btn {
         color: #e2e8f0 !important;
@@ -1034,12 +1042,12 @@ mark.search-hl.current { background: #f97316; color: white; }
 .pos-info-icon-sm { font-size: 16px; margin-right: 4px; }
 
 /* Colored activity chips */
-.pos-chip-green { background: #e6f9ed !important; border-color: #38a169 !important; }
-.pos-chip-green strong { color: #22543d !important; }
-.pos-chip-blue { background: #e8f4fd !important; border-color: #3182ce !important; }
-.pos-chip-blue strong { color: #1a365d !important; }
-.pos-chip-orange { background: #fef3e2 !important; border-color: #dd6b20 !important; }
-.pos-chip-orange strong { color: #7b341e !important; }
+.pos-chip-green { background: #e6f9ed; border-color: #38a169; }
+.pos-chip-green strong { color: #22543d; }
+.pos-chip-blue { background: #e8f4fd; border-color: #3182ce; }
+.pos-chip-blue strong { color: #1a365d; }
+.pos-chip-orange { background: #fef3e2; border-color: #dd6b20; }
+.pos-chip-orange strong { color: #7b341e; }
 
 @media (max-width: 480px) {
     .pos-stats-grid-v2 { grid-template-columns: repeat(3, 1fr); gap: 8px; }
