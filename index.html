@@ -53,7 +53,7 @@
     <link rel="apple-touch-icon" sizes="152x152" href="./icon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="./icon.png">
     <link rel="apple-touch-icon" sizes="167x167" href="./icon.png">
-    <title>Viaggio Europa 2026 — V1.62</title>
+    <title>Viaggio Europa 2026 — V1.63</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <link rel="stylesheet" href="style.css">
 <!-- Firebase SDK (compat mode for single-file app) -->
@@ -69,7 +69,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = '1.62';
+  var EXPECTED_VERSION = '1.63';
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
   var r = false;
@@ -8934,20 +8934,6 @@
 <!-- Import Google Maps Timeline -->
 <div class="pos-admin-section">
     <h4 class="pos-admin-section-title">🗺️ Import Dati GPS</h4>
-
-    <!-- Google Drive Auto-Sync -->
-    <div style="padding:12px;background:var(--bg-alt);border-radius:var(--radius);border:1px solid var(--border);margin-bottom:10px;">
-        <p style="font-size:13px;margin:0 0 6px;"><strong>📡 Auto-Sync da Google Drive</strong></p>
-        <p style="font-size:12px;color:var(--text-muted);margin:0 0 8px;">I file GPX caricati dal GPS Logger su Drive vengono importati automaticamente all'apertura dell'app.</p>
-        <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;">
-            <input type="text" id="drive-folder-input" placeholder="Nome cartella Drive (es. GPSLogger)" style="flex:1;padding:6px 10px;border-radius:6px;border:1px solid var(--border);font-size:12px;background:var(--bg-main);color:var(--text-color);">
-            <button onclick="saveDriveFolderConfig()" class="pos-btn pos-btn-green" style="font-size:12px;padding:6px 12px;">💾</button>
-        </div>
-        <div style="display:flex;gap:8px;align-items:center;">
-            <button onclick="triggerDriveSync()" class="pos-btn pos-btn-blue" style="font-size:12px;padding:6px 12px;">🔄 Sync ora</button>
-            <span id="drive-sync-status" style="font-size:11px;color:var(--text-muted);">Non configurato</span>
-        </div>
-    </div>
 
     <!-- Manual import (JSON/GPX) -->
     <div style="padding:12px;background:var(--bg-alt);border-radius:var(--radius);border:1px solid var(--border);">
