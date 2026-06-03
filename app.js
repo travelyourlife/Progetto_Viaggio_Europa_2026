@@ -60,7 +60,7 @@ var KEYS = {
     '38':'piano-powerbank-20000','39':'piano-coperta-termica','40':'piano-fischietto-bambini',
     '41':'copia-chiavi','42':'cambio-bombola-gas','43':'adattatore-bombola-gas',
     '44':'controllo-pressione-gomme','45':'inversione-gomme','46':'catene-neve',
-    '47':'compressore-booster-avviamento','48':'aspirapolvere-caricab','49':'sacchetti-wc-umido',
+    '47':'compressore-booster-avviamento','48':'aspirapolvere-caricab',
     '50':'acido-citrico','51':'filtro-acqua','52':'termometri','53':'ascia','54':'sega',
     '55':'cuscini','56':'coperte','57':'lenzuola-x1','58':'federe-x4','59':'coprimaterassi',
     '60':'sacco-a-pelo-matrimoniale','61':'caffe-moka','62':'accendino','63':'borracce',
@@ -595,7 +595,14 @@ function openMapFullscreen(mapInstance, title) {
             var bounds = L.latLngBounds(routeCoords);
             setTimeout(function() { fsMap.invalidateSize(); fsMap.fitBounds(bounds, { padding: [30, 30], animate: false }); }, 50);
         }
-        function closeFs2() { fsMap.remove(); overlay.remove(); document.body.style.overflow = ''; }
+        function closeFs2() {
+            fsMap.remove(); overlay.remove(); document.body.style.overflow = '';
+            window._mapFsOpen = false;
+            if (history.state && history.state.mapFsOpen) history.back();
+        }
+        window._mapFsOpen = true;
+        window._closeMapFs = closeFs2;
+        history.pushState({ mapFsOpen: true }, '', '');
         overlay.querySelector('.map-fs-close').addEventListener('click', closeFs2);
         function onEsc2(e) { if (e.key === 'Escape') { closeFs2(); document.removeEventListener('keydown', onEsc2); } }
         document.addEventListener('keydown', onEsc2);
@@ -679,9 +686,14 @@ function openMapFullscreen(mapInstance, title) {
         fsMap.remove();
         overlay.remove();
         document.body.style.overflow = '';
+        window._mapFsOpen = false;
         // Refresh original map
         setTimeout(function() { mapInstance.invalidateSize(); }, 100);
+        if (history.state && history.state.mapFsOpen) history.back();
     }
+    window._mapFsOpen = true;
+    window._closeMapFs = closeFs;
+    history.pushState({ mapFsOpen: true }, '', '');
     overlay.querySelector('.map-fs-close').addEventListener('click', closeFs);
     // Escape key
     function onEsc(e) { if (e.key === 'Escape') { closeFs(); document.removeEventListener('keydown', onEsc); } }
@@ -1261,6 +1273,17 @@ document.addEventListener('DOMContentLoaded', function() {
         } catch(e) {}
     }
     window.addEventListener('popstate', function(e) {
+        // Priority 0: Close fullscreen map
+        if (window._mapFsOpen && window._closeMapFs) {
+            window._mapFsOpen = false;
+            var closeFn = window._closeMapFs;
+            window._closeMapFs = null;
+            // Remove the overlay directly without triggering another history.back()
+            var overlay = document.querySelector('.map-fs-overlay');
+            if (overlay) overlay.remove();
+            document.body.style.overflow = '';
+            return;
+        }
         // Priority 1: Close overlays
         if (sideMenu.classList.contains('open')) {
             closeMenu();
@@ -1279,6 +1302,7 @@ document.addEventListener('DOMContentLoaded', function() {
             altroSheetEl.classList.remove('open');
             var altroOv = document.getElementById('altroOverlay');
             if (altroOv) altroOv.classList.remove('open');
+            document.body.style.overflow = '';
             return;
         }
 
@@ -5629,6 +5653,15 @@ if ('serviceWorker' in navigator) {
         });
       }
 
+      // Tap on item marks it as read
+      item.addEventListener('click', function() {
+        if (!isRead(n.id)) {
+          markRead(n.id);
+          var dot = item.querySelector('.notif-unread-dot');
+          if (dot) dot.remove();
+        }
+      });
+
       // Bind dismiss
       item.querySelector('.notif-item-dismiss').addEventListener('click', function(e) {
         e.stopPropagation();
@@ -5679,18 +5712,15 @@ if ('serviceWorker' in navigator) {
 
   // --- Drawer open/close ---
   function openDrawer() {
-    // Mark all visible notifications as read (in Firebase)
-    notifications.forEach(function(n) {
-      if (n.ownerOnly && !isOwner) return;
-      if (n.target === 'owner' && !isOwner) return;
-      markRead(n.id);
-    });
     renderDrawer();
     drawer.classList.add('open');
     drawerOverlay.classList.add('open');
     document.body.style.overflow = 'hidden';
     history.pushState({ drawerOpen: true }, '', '');
-    updateBadge();
+    // Clear badge count on open (user has seen there are new notifs)
+    [badge, homeBadge].forEach(function(b) {
+      if (b) { b.textContent = ''; b.classList.remove('visible'); }
+    });
   }
 
   function closeDrawer() {
@@ -5832,6 +5862,39 @@ if ('serviceWorker' in navigator) {
     return;
   }
 
+  // Help tip when notifications are blocked
+  function showNotifBlockedTip() {
+    if (document.getElementById('notif-blocked-tip')) return;
+    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    var isMac = /Macintosh/.test(navigator.userAgent);
+    var isAndroid = /Android/.test(navigator.userAgent);
+    var helpText = '';
+    if (isIOS) {
+      helpText = isEN
+        ? '<b>Notifications are blocked.</b> To enable only for Quo Vadis:<br>Settings → Safari → Notifications → Allow, then revisit this site and allow.'
+        : '<b>Notifiche bloccate.</b> Per abilitarle solo per Quo Vadis:<br>Impostazioni → Safari → Notifiche → Consenti, poi riapri il sito e accetta.';
+    } else if (isMac) {
+      helpText = isEN
+        ? '<b>Notifications are blocked.</b> To enable only for Quo Vadis:<br>1. System Settings → Notifications → Google Chrome → ON<br>2. In Chrome: Settings → Privacy → Notifications → Block all by default<br>3. Add <code>travelyourlife.github.io</code> to "Allowed"'
+        : '<b>Notifiche bloccate.</b> Per abilitarle solo per Quo Vadis:<br>1. Impostazioni di Sistema → Notifiche → Google Chrome → ON<br>2. In Chrome: Impostazioni → Privacy → Notifiche → Blocca tutto di default<br>3. Aggiungi <code>travelyourlife.github.io</code> a "Consentiti"';
+    } else if (isAndroid) {
+      helpText = isEN
+        ? '<b>Notifications are blocked.</b> To enable only for Quo Vadis:<br>1. Phone Settings → Apps → Chrome → Notifications → ON<br>2. In Chrome: Settings → Notifications → Block all by default<br>3. Allow only <code>travelyourlife.github.io</code>'
+        : '<b>Notifiche bloccate.</b> Per abilitarle solo per Quo Vadis:<br>1. Impostazioni → App → Chrome → Notifiche → ON<br>2. In Chrome: Impostazioni → Notifiche → Blocca tutto di default<br>3. Consenti solo <code>travelyourlife.github.io</code>';
+    } else {
+      helpText = isEN
+        ? '<b>Notifications are blocked.</b> To enable only for Quo Vadis:<br>1. Allow Chrome notifications in your OS settings<br>2. In Chrome: Settings → Privacy → Notifications → Block all by default<br>3. Add <code>travelyourlife.github.io</code> to "Allowed"'
+        : '<b>Notifiche bloccate.</b> Per abilitarle solo per Quo Vadis:<br>1. Abilita le notifiche di Chrome nelle impostazioni del sistema<br>2. In Chrome: Impostazioni → Privacy → Notifiche → Blocca tutto di default<br>3. Aggiungi <code>travelyourlife.github.io</code> a "Consentiti"';
+    }
+    var tip = document.createElement('div');
+    tip.id = 'notif-blocked-tip';
+    tip.style.cssText = 'background:var(--bg-warning,#fff3cd);border:1px solid #ffc107;border-radius:10px;padding:12px 14px;margin:12px;font-size:12px;line-height:1.5;color:#664d03;';
+    tip.innerHTML = '<div style="margin-bottom:6px;">⚠️ ' + helpText + '</div>' +
+      '<div style="font-size:11px;opacity:0.8;">' + (isEN ? 'This way you\'ll only receive notifications from Quo Vadis, nothing else.' : 'Così riceverai notifiche solo da Quo Vadis, nient\'altro.') + '</div>';
+    var container = document.getElementById('notif-container');
+    if (container) container.prepend(tip);
+  }
+
   // Request permission and get token
   function requestPushPermission() {
     if (!('Notification' in window)) {
@@ -5840,6 +5903,8 @@ if ('serviceWorker' in navigator) {
     }
     if (Notification.permission === 'denied') {
       console.info('[FCM] Notifications denied by user');
+      // Show help tip in notification drawer
+      showNotifBlockedTip();
       return;
     }
 
@@ -7070,7 +7135,7 @@ if ('serviceWorker' in navigator) {
   // ═══════════════════════════════════════════════════════════════
   // ─── GOOGLE DRIVE AUTO-SYNC (GPX files) ───
   // ═══════════════════════════════════════════════════════════════
-  var DRIVE_SYNC_INTERVAL = 6 * 3600000; // 6 hours between syncs
+  var DRIVE_SYNC_INTERVAL = 1 * 3600000; // 1 hour between syncs
   var DRIVE_FOLDER_KEY = 'driveSyncFolder'; // localStorage key for folder name
   var DRIVE_LAST_SYNC_KEY = 'driveLastSync';
   var DRIVE_IMPORTED_KEY = 'driveImportedFiles';
@@ -7125,7 +7190,7 @@ if ('serviceWorker' in navigator) {
       return;
     }
 
-    var folderName = localStorage.getItem(DRIVE_FOLDER_KEY) || 'GPSLogger';
+    var folderName = localStorage.getItem(DRIVE_FOLDER_KEY) || 'GPSLogger for Android';
     var importedFiles = JSON.parse(localStorage.getItem(DRIVE_IMPORTED_KEY) || '[]');
 
     // Step 1: Find the folder
@@ -7257,8 +7322,7 @@ if ('serviceWorker' in navigator) {
     if (Date.now() - lastSync < DRIVE_SYNC_INTERVAL) return; // Too recent
 
     // Check if Drive sync is enabled
-    var folderName = localStorage.getItem(DRIVE_FOLDER_KEY);
-    if (!folderName) return; // Not configured — user must set folder name first
+    var folderName = localStorage.getItem(DRIVE_FOLDER_KEY) || 'GPSLogger for Android';
 
     // Delay sync by 5 seconds to let app load
     setTimeout(function() {
@@ -8302,6 +8366,7 @@ if ('serviceWorker' in navigator) {
   function openAltro() {
     altroOverlay.classList.add('open');
     altroSheet.classList.add('open');
+    document.body.style.overflow = 'hidden';
     history.pushState({ altroOpen: true }, '', '');
     if (window.haptic) window.haptic(10);
   }
@@ -8309,6 +8374,7 @@ if ('serviceWorker' in navigator) {
   function closeAltro() {
     altroOverlay.classList.remove('open');
     altroSheet.classList.remove('open');
+    document.body.style.overflow = '';
   }
 
   altroBtn.addEventListener('click', function(e) {
