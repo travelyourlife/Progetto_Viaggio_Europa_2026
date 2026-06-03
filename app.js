@@ -1108,6 +1108,32 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // ─── FIX v1.50: Firebase Listener Registry & Cleanup ───
+    // Prevents memory leaks by detaching .on() listeners when leaving a tab
+    var _fbListeners = {}; // { tabName: [{ ref, event, callback }] }
+    window._fbListeners = _fbListeners; // Expose for cross-scope re-attach checks
+    window.registerFirebaseListener = function(tab, ref, event, callback) {
+        if (!_fbListeners[tab]) _fbListeners[tab] = [];
+        _fbListeners[tab].push({ ref: ref, event: event, callback: callback });
+        ref.on(event, callback);
+    };
+    window.detachFirebaseListeners = function(tab) {
+        if (!_fbListeners[tab]) return;
+        _fbListeners[tab].forEach(function(entry) {
+            entry.ref.off(entry.event, entry.callback);
+        });
+        _fbListeners[tab] = [];
+    };
+    // Clean up tab-specific listeners on tab switch
+    var _previousTab = null;
+    window.addEventListener('tabSwitched', function(e) {
+        var newTab = e.detail;
+        if (_previousTab && _previousTab !== newTab) {
+            window.detachFirebaseListeners(_previousTab);
+        }
+        _previousTab = newTab;
+    });
+
     function switchTab(tabId, scrollToId) {
         sections.forEach(function(s) { s.classList.remove('active'); });
         var target = document.getElementById('tab-' + tabId);
@@ -4827,23 +4853,42 @@ if ('serviceWorker' in navigator) {
         });
 
         // Auto-close when a link inside is clicked + scroll with proper offset
+        // FIX v1.50: Close dropdown FIRST, wait for CSS transition to finish,
+        // THEN calculate scroll position (avoids layout-shift miscalculation)
         tabIndex.querySelectorAll('a').forEach(function(link) {
             link.addEventListener('click', function(e) {
                 e.preventDefault();
+                e.stopImmediatePropagation(); // Prevent general tab-index handler from conflicting
                 var targetId = this.getAttribute('href').replace('#', '');
                 var target = document.getElementById(targetId);
+
+                // Close the dropdown immediately
+                tabIndex.classList.remove('open');
+                toggle.classList.remove('open');
+
                 if (target) {
                     // Show header if hidden
                     document.body.classList.remove('header-hidden');
-                    // Calculate offset: top-bar (52px) + sticky tab-index (~50px) + padding
-                    var offset = 120;
-                    var targetPos = target.getBoundingClientRect().top + window.pageYOffset - offset;
-                    window.scrollTo({ top: targetPos, behavior: 'smooth' });
+                    // Wait for the CSS max-height transition to complete (350ms)
+                    // before calculating the scroll position
+                    setTimeout(function() {
+                        var topBarH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--top-bar-height')) || 52;
+                        var offset = topBarH + 16;
+                        var rect = target.getBoundingClientRect();
+                        var scrollY = window.pageYOffset + rect.top - offset;
+                        window.scrollTo({ top: scrollY, behavior: 'smooth' });
+                        // Second correction after any accordion reflow
+                        setTimeout(function() {
+                            var rect2 = target.getBoundingClientRect();
+                            var scrollY2 = window.pageYOffset + rect2.top - offset;
+                            if (Math.abs(rect2.top - offset) > 5) {
+                                window.scrollTo({ top: scrollY2, behavior: 'smooth' });
+                            }
+                        }, 300);
+                    }, 400);
                 }
-                setTimeout(function() {
-                    tabIndex.classList.remove('open');
-                    toggle.classList.remove('open');
-                }, 300);
+
+                history.pushState(null, '', '#' + targetId);
             });
         });
     });
@@ -7875,8 +7920,8 @@ if ('serviceWorker' in navigator) {
       typingTimeout = setTimeout(function() { TYPING_REF.child(chatUser.uid).remove(); }, 3000);
     });
   }
-  // Listen for others typing
-  TYPING_REF.on('value', function(snap) {
+  // Listen for others typing (registered for cleanup on tab switch)
+  var _chatTypingCb = function(snap) {
     if (!typingEl) return;
     var typers = [];
     snap.forEach(function(child) {
@@ -7890,7 +7935,12 @@ if ('serviceWorker' in navigator) {
     } else {
       typingEl.style.display = 'none';
     }
-  });
+  };
+  if (window.registerFirebaseListener) {
+    window.registerFirebaseListener('chat', TYPING_REF, 'value', _chatTypingCb);
+  } else {
+    TYPING_REF.on('value', _chatTypingCb);
+  }
 
   // ─── Send location ───
   var locationBtn = document.getElementById('chat-location-btn');
@@ -7934,7 +7984,7 @@ if ('serviceWorker' in navigator) {
     // Remove empty state
     if (chatEmpty) chatEmpty.style.display = 'none';
 
-    CHAT_REF.orderByChild('timestamp').limitToLast(MAX_MESSAGES).on('child_added', function(snap) {
+    var _chatAddedCb = function(snap) {
       var msg = snap.val();
       var key = snap.key;
       renderMessage(msg, key);
@@ -7945,14 +7995,25 @@ if ('serviceWorker' in navigator) {
         unreadCount++;
         updateUnreadBadge();
       }
-    });
+    };
+    var _chatQuery = CHAT_REF.orderByChild('timestamp').limitToLast(MAX_MESSAGES);
+    if (window.registerFirebaseListener) {
+      window.registerFirebaseListener('chat', _chatQuery, 'child_added', _chatAddedCb);
+    } else {
+      _chatQuery.on('child_added', _chatAddedCb);
+    }
 
     // Handle message deletion (by owner)
-    CHAT_REF.on('child_removed', function(snap) {
+    var _chatRemovedCb = function(snap) {
       var key = snap.key;
-      var el = chatMessages.querySelector('[data-key="' + key + '"]');
+      var el = chatMessages.querySelector('[data-key="' + key + '"');
       if (el) el.remove();
-    });
+    };
+    if (window.registerFirebaseListener) {
+      window.registerFirebaseListener('chat', CHAT_REF, 'child_removed', _chatRemovedCb);
+    } else {
+      CHAT_REF.on('child_removed', _chatRemovedCb);
+    }
   }
 
   // ─── Unread badge ───
@@ -7988,6 +8049,10 @@ if ('serviceWorker' in navigator) {
         db.ref('fcm_prefs/' + _chatUser.uid + '/chatLastRead').set(lastReadTimestamp).catch(function() {});
       }
       updateUnreadBadge();
+      // Re-attach listeners if they were detached
+      if (window._fbListeners && (!window._fbListeners['chat'] || window._fbListeners['chat'].length === 0)) {
+        startListening();
+      }
       scrollToBottom();
       // Don't auto-focus input to prevent keyboard from opening on mobile
     } else {
@@ -8019,10 +8084,15 @@ if ('serviceWorker' in navigator) {
   var DRIVER_UID_CHAT = (typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.length > 0) ? OWNER_UIDS[0] : null;
   var bannedUIDs = {};
 
-  // Load banned list
-  BANNED_REF.on('value', function(snap) {
+  // Load banned list (registered for cleanup on tab switch)
+  var _bannedCb = function(snap) {
     bannedUIDs = snap.val() || {};
-  });
+  };
+  if (window.registerFirebaseListener) {
+    window.registerFirebaseListener('chat', BANNED_REF, 'value', _bannedCb);
+  } else {
+    BANNED_REF.on('value', _bannedCb);
+  }
 
   // Track user profile on login — only if owner or approved (no ghost users)
   function trackUserProfile(user) {
@@ -8666,7 +8736,10 @@ if ('serviceWorker' in navigator) {
 
   // ─── Timeline Rendering ───
   function loadTimeline() {
-    diarioRef.orderByChild('dayNumber').on('value', function(snapshot) {
+    // Detach previous diary listener before re-attaching (prevents duplicates)
+    if (window.detachFirebaseListeners) window.detachFirebaseListeners('diario');
+    var _diarioQuery = diarioRef.orderByChild('dayNumber');
+    var _diarioCb = function(snapshot) {
       var entries = snapshot.val();
       if (!entries || Object.keys(entries).length === 0) {
         timelineEl.innerHTML = '<p class="diario-empty">' + (isEN ? 'The journal is empty. Entries will appear automatically during the trip.' : 'Il diario è vuoto. Le entry appariranno automaticamente durante il viaggio.') + '</p>';
@@ -8778,7 +8851,13 @@ if ('serviceWorker' in navigator) {
 
       timelineEl.innerHTML = html;
       bindEntryActions();
-    });
+    };
+    // Register for cleanup on tab switch
+    if (window.registerFirebaseListener) {
+      window.registerFirebaseListener('diario', _diarioQuery, 'value', _diarioCb);
+    } else {
+      _diarioQuery.on('value', _diarioCb);
+    }
   }
 
   // ─── Country code to flag emoji ───
@@ -9256,6 +9335,10 @@ if ('serviceWorker' in navigator) {
     if (e.detail === 'diario') {
       var altroBtn = document.getElementById('altroBtn');
       if (altroBtn) altroBtn.classList.add('active');
+      // Re-attach diary listener if it was detached
+      if (window._fbListeners && (!window._fbListeners['diario'] || window._fbListeners['diario'].length === 0)) {
+        loadTimeline();
+      }
     }
   });
 
@@ -9626,8 +9709,10 @@ if ('serviceWorker' in navigator) {
             // Banned: show Unban only
             actionBtn = uidShort + ' <button class="admin-global-unban pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--success,#38a169);color:#fff;border:none;border-radius:6px;cursor:pointer;">' + (isEN ? 'Unban' : 'Sblocca') + '</button>';
           } else if (isApproved) {
-            // Active/Approved: show Ban only (revoke access)
-            actionBtn = uidShort + ' <button class="admin-global-ban pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--danger,#e53e3e);color:#fff;border:none;border-radius:6px;cursor:pointer;">' + (isEN ? 'Ban' : 'Blocca') + '</button>';
+            // Active/Approved: show Remove (soft revoke) + Ban (hard block)
+            actionBtn = uidShort + ' ';
+            actionBtn += '<button class="admin-remove-user pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--warning,#d69e2e);color:#fff;border:none;border-radius:6px;cursor:pointer;margin-right:4px;">' + (isEN ? 'Remove' : 'Rimuovi') + '</button>';
+            actionBtn += '<button class="admin-global-ban pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--danger,#e53e3e);color:#fff;border:none;border-radius:6px;cursor:pointer;">' + (isEN ? 'Ban' : 'Blocca') + '</button>';
           } else {
             // Pending or Sconosciuto: show Approve + Reject + Ban
             actionBtn = uidShort + ' ';
@@ -9710,6 +9795,22 @@ if ('serviceWorker' in navigator) {
               if (window.showToast) showToast(isEN ? 'User approved!' : 'Utente approvato!', 'success');
               renderAdminUsers();
               renderAdminPending();
+            });
+          });
+        });
+      });
+
+      // Attach remove handlers (revoke access without banning)
+      adminUsersList.querySelectorAll('.admin-remove-user').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var uid = btn.dataset.uid;
+          var u = users[uid] || {};
+          var userName = u.name || u.email || uid;
+          showConfirm((isEN ? 'Remove access for ' : 'Rimuovere l\'accesso a ') + userName + (isEN ? '? They can request access again later.' : '? Potr\u00e0 richiedere l\'accesso di nuovo.'), function() {
+            // Remove from approvedUsers only — user is NOT banned, can re-request
+            approvedRef.child(uid).remove().then(function() {
+              if (window.showToast) showToast(isEN ? 'User removed (not banned)' : 'Utente rimosso (non bannato)', 'info');
+              renderAdminUsers();
             });
           });
         });
