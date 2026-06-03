@@ -1,18 +1,25 @@
 /**
- * Quo Vadis v10.8 — Firebase Cloud Functions
+ * Quo Vadis v10.8 — Firebase Cloud Functions (v1.52)
  * 
  * 1. sendPushNotification: Listens to notifications/queue in Realtime Database.
  *    When a new notification is queued, sends FCM push to all registered tokens
  *    filtered by role (family = owner+family, visitor = visitor, all = everyone).
+ *    NOW ALSO: respects per-user notifPrefs (push on/off per user).
  * 
  * 2. dailyCountdown: Cloud Scheduler — runs daily at 8:00 AM Europe/Rome.
  *    Sends countdown push notification to family members until trip starts.
+ *    NOW: checks notifSchedule.countdownEnabled before queuing.
  * 
  * 3. notifyNewPendingUser: Triggered when a new user is added to pendingUsers.
  *    Sends push notification to owner immediately (works even if app is closed).
  * 
  * 4. dailyReminders: Cloud Scheduler — runs daily at 8:00 AM Europe/Rome.
- *    Sends zaino/checklist reminders and next-stage evening reminder.
+ *    Sends zaino/checklist reminders.
+ *    NOW: checks notifSchedule.remindersEnabled before queuing.
+ * 
+ * 5. eveningNextStage: Cloud Scheduler — runs daily at 19:00 Europe/Rome.
+ *    During trip: reminds about tomorrow's route.
+ *    NOW: checks notifSchedule.eveningEnabled before queuing.
  * 
  * Deploy: firebase deploy --only functions
  * IMPORTANT: Answer N when asked about deleting Strava functions!
@@ -27,6 +34,31 @@ const { getMessaging } = require("firebase-admin/messaging");
 initializeApp();
 
 const FAMILY_ID = "viaggio-europa-2026";
+
+/**
+ * Read the admin notification schedule config from Firebase.
+ * Returns object with countdownEnabled, remindersEnabled, eveningEnabled (default all true).
+ */
+async function getNotifSchedule(db) {
+  const snap = await db.ref(`trips/${FAMILY_ID}/notifSchedule`).once("value");
+  const sched = snap.val();
+  if (!sched) return { countdownEnabled: true, remindersEnabled: true, eveningEnabled: true };
+  return {
+    countdownEnabled: sched.countdownEnabled !== false,
+    remindersEnabled: sched.remindersEnabled !== false,
+    eveningEnabled: sched.eveningEnabled !== false,
+  };
+}
+
+/**
+ * Read per-user notification preferences from Firebase.
+ * Returns object keyed by uid: { inApp: bool, push: bool }
+ * Defaults: both true if not set.
+ */
+async function getNotifPrefs(db) {
+  const snap = await db.ref(`trips/${FAMILY_ID}/notifPrefs`).once("value");
+  return snap.val() || {};
+}
 
 /**
  * Collect all FCM tokens from the database.
@@ -71,7 +103,6 @@ async function collectTokens(db) {
 
 /**
  * Filter tokens by target role.
- * For 'chat' target, requires async check of fcm_prefs.
  */
 function filterByTarget(tokens, target) {
   if (target === "all") return tokens;
@@ -81,6 +112,22 @@ function filterByTarget(tokens, target) {
     if (target === "owner") return t.role === "owner";
     if (target === "visitor") return t.role === "visitor";
     return false;
+  });
+}
+
+/**
+ * Filter tokens by per-user push preference (notifPrefs).
+ * Users with push === false are excluded from push notifications.
+ * Owner tokens are NEVER filtered out (admin always receives).
+ */
+function filterByNotifPrefs(tokens, notifPrefs) {
+  return tokens.filter((t) => {
+    // Owner always receives push
+    if (t.role === "owner") return true;
+    // Check per-user preference
+    const userPref = notifPrefs[t.uid];
+    if (userPref && userPref.push === false) return false;
+    return true; // default: enabled
   });
 }
 
@@ -224,6 +271,7 @@ async function markAsSent(db, pushId, successCount, error) {
 
 // ═══════════════════════════════════════════════════════════════
 // 1. SEND PUSH NOTIFICATION (triggered by database write)
+//    Now respects per-user notifPrefs (push on/off)
 // ═══════════════════════════════════════════════════════════════
 exports.sendPushNotification = onValueCreated(
   {
@@ -257,6 +305,16 @@ exports.sendPushNotification = onValueCreated(
     if (target === "chat") {
       const senderUid = notification.senderUid || null;
       targetTokens = await filterChatTokens(db, targetTokens, senderUid);
+    }
+
+    // Apply per-user notifPrefs (push on/off) — skip for admin test notifications
+    if (notification.source !== "admin-test-force") {
+      const notifPrefs = await getNotifPrefs(db);
+      const beforeCount = targetTokens.length;
+      targetTokens = filterByNotifPrefs(targetTokens, notifPrefs);
+      if (targetTokens.length < beforeCount) {
+        console.log(`[Push] Filtered by notifPrefs: ${beforeCount} → ${targetTokens.length} tokens`);
+      }
     }
 
     if (targetTokens.length === 0) {
@@ -330,6 +388,7 @@ exports.notifyNewPendingUser = onValueCreated(
 
 // ═══════════════════════════════════════════════════════════════
 // 3. DAILY COUNTDOWN PUSH (Cloud Scheduler — 8:00 AM Rome)
+//    Now checks notifSchedule.countdownEnabled before queuing.
 // ═══════════════════════════════════════════════════════════════
 exports.dailyCountdown = onSchedule(
   {
@@ -338,6 +397,15 @@ exports.dailyCountdown = onSchedule(
     region: "europe-west1",
   },
   async (event) => {
+    const db = getDatabase();
+
+    // Check if countdown is enabled in admin config
+    const schedule = await getNotifSchedule(db);
+    if (!schedule.countdownEnabled) {
+      console.log("[Countdown] Disabled by admin — skipping");
+      return null;
+    }
+
     const TRIP_START = new Date("2026-06-26T00:00:00+02:00");
     const now = new Date();
 
@@ -374,7 +442,6 @@ exports.dailyCountdown = onSchedule(
     }
 
     // Write to notifications queue — sendPushNotification will pick it up
-    const db = getDatabase();
     await db.ref(`trips/${FAMILY_ID}/notifications/queue`).push({
       type: "countdown",
       title: title,
@@ -394,7 +461,8 @@ exports.dailyCountdown = onSchedule(
 
 // ═══════════════════════════════════════════════════════════════
 // 4. DAILY REMINDERS (Cloud Scheduler — 8:00 AM Rome)
-//    Zaino + Checklist reminders (pre-trip) and next-stage (during trip)
+//    Zaino + Checklist reminders (pre-trip)
+//    Now checks notifSchedule.remindersEnabled before queuing.
 // ═══════════════════════════════════════════════════════════════
 exports.dailyReminders = onSchedule(
   {
@@ -403,6 +471,15 @@ exports.dailyReminders = onSchedule(
     region: "europe-west1",
   },
   async (event) => {
+    const db = getDatabase();
+
+    // Check if reminders are enabled in admin config
+    const schedule = await getNotifSchedule(db);
+    if (!schedule.remindersEnabled) {
+      console.log("[DailyReminders] Disabled by admin — skipping");
+      return null;
+    }
+
     const TRIP_START = new Date("2026-06-26T00:00:00+02:00");
     const TRIP_DAYS = 54;
     const now = new Date();
@@ -411,7 +488,6 @@ exports.dailyReminders = onSchedule(
     const diffMs = TRIP_START.getTime() - now.getTime();
     const daysUntilStart = Math.ceil(diffMs / 86400000);
 
-    const db = getDatabase();
     const notifications = [];
 
     // ─── PRE-TRIP: Zaino reminder ───
@@ -447,12 +523,6 @@ exports.dailyReminders = onSchedule(
       }
     }
 
-    // ─── DURING TRIP: Next stage evening reminder ───
-    // This runs at 8 AM but we also schedule an evening check
-    // Actually, for next-stage we need an evening scheduler
-    // For now, skip — the client-side handles this when app is open in the evening
-    // TODO: Add a separate 19:00 scheduler for next-stage if needed
-
     // ─── Queue all notifications ───
     for (const notif of notifications) {
       await db.ref(`trips/${FAMILY_ID}/notifications/queue`).push({
@@ -475,6 +545,7 @@ exports.dailyReminders = onSchedule(
 // ═══════════════════════════════════════════════════════════════
 // 5. EVENING NEXT-STAGE REMINDER (Cloud Scheduler — 19:00 Rome)
 //    During trip: reminds owner about tomorrow's route
+//    Now checks notifSchedule.eveningEnabled before queuing.
 // ═══════════════════════════════════════════════════════════════
 exports.eveningNextStage = onSchedule(
   {
@@ -483,6 +554,15 @@ exports.eveningNextStage = onSchedule(
     region: "europe-west1",
   },
   async (event) => {
+    const db = getDatabase();
+
+    // Check if evening notifications are enabled in admin config
+    const schedule = await getNotifSchedule(db);
+    if (!schedule.eveningEnabled) {
+      console.log("[EveningNextStage] Disabled by admin — skipping");
+      return null;
+    }
+
     const TRIP_START = new Date("2026-06-26T00:00:00+02:00");
     const TRIP_DAYS = 54;
     const now = new Date();
@@ -498,11 +578,6 @@ exports.eveningNextStage = onSchedule(
       return null;
     }
 
-    // Read itinerario from Firebase (stored as static data)
-    // Since itinerario is in data.js (client-side), we hardcode a minimal lookup
-    // or read from a Firebase path if available
-    const db = getDatabase();
-    
     // Check if itinerario is stored in Firebase
     const itinSnap = await db.ref(`trips/${FAMILY_ID}/itinerario/${tripDay + 1}`).once("value");
     let nextRoute = "";

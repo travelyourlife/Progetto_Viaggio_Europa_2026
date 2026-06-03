@@ -4310,7 +4310,7 @@ if ('serviceWorker' in navigator) {
 
 
 // ═══════════════════════════════════════════════════════════════
-// PWA Install Banner
+// PWA Install Banner — v1.52 (platform-optimized, minimal steps)
 // ═══════════════════════════════════════════════════════════════
 (function() {
     var banner = document.getElementById('installBanner');
@@ -4323,114 +4323,188 @@ if ('serviceWorker' in navigator) {
                        window.navigator.standalone === true;
     if (isStandalone) return;
 
-    // Don't show if dismissed within last 3 days
+    // Don't show if dismissed within last 12 hours
     var dismissedAt = localStorage.getItem('install-banner-dismissed');
-    if (dismissedAt && (Date.now() - parseInt(dismissedAt)) < 3 * 24 * 60 * 60 * 1000) return;
+    if (dismissedAt && (Date.now() - parseInt(dismissedAt)) < 12 * 60 * 60 * 1000) return;
 
-    // Detect iOS
-    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    // Detect platform
+    var ua = navigator.userAgent;
+    var isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+    var isMac = /Macintosh/.test(ua) && !isIOS;
+    var isSafari = /Safari/.test(ua) && !/Chrome|CriOS|FxiOS|EdgiOS/.test(ua);
+    var isChrome = /Chrome/.test(ua) && !/Edg|OPR|SamsungBrowser/.test(ua);
+    var isFirefox = /Firefox/i.test(ua) && !/Seamonkey/i.test(ua);
+    var isEdge = /Edg/i.test(ua);
+    var isSamsung = /SamsungBrowser/i.test(ua);
     var isEN = document.documentElement.lang === 'en' || location.pathname.indexOf('_en') !== -1;
 
-    // Capture beforeinstallprompt (Android/Chrome)
+    // ─── Capture beforeinstallprompt (Chrome, Edge, Samsung on Android/Desktop) ───
     var deferredPrompt = null;
     window.addEventListener('beforeinstallprompt', function(e) {
         e.preventDefault();
         deferredPrompt = e;
+        // Show banner with direct "Installa" button
+        var installText = banner.querySelector('.install-text');
+        if (installText) {
+            installText.innerHTML = isEN
+                ? '<strong>Install Quo Vadis</strong><br>Quick access, works offline'
+                : '<strong>Installa Quo Vadis</strong><br>Accesso rapido, funziona offline';
+        }
+        btn.textContent = isEN ? 'Install' : 'Installa';
         showBanner();
     });
 
-    // On iOS, show banner after 3 seconds
-    if (isIOS) {
-        setTimeout(showBanner, 3000);
-        btn.textContent = isEN ? 'How to' : 'Scopri come';
-    }
+    // ─── Platform-specific fallback (if beforeinstallprompt doesn't fire) ───
+    setTimeout(function() {
+        if (deferredPrompt || banner.style.display === 'flex') return; // Already handled
 
-    // Android/Desktop fallback: if beforeinstallprompt doesn't fire within 2s (first visit),
-    // show banner with browser-specific manual instructions
-    var fallbackMode = false;
-    if (!isIOS) {
-        setTimeout(function() {
-            if (!deferredPrompt && banner.style.display !== 'flex') {
-                fallbackMode = true;
-                var ua = navigator.userAgent;
-                var instruction = '';
-                if (/Firefox/i.test(ua) && !/Seamonkey/i.test(ua)) {
-                    instruction = isEN
-                        ? '<strong>Install Quo Vadis</strong><br>Tap \u22ee menu \u2192 "Install"'
-                        : '<strong>Installa Quo Vadis</strong><br>Tocca menu \u22ee \u2192 "Installa"';
-                } else if (/SamsungBrowser/i.test(ua)) {
-                    instruction = isEN
-                        ? '<strong>Install Quo Vadis</strong><br>Tap \u2261 menu \u2192 "Add page to" \u2192 Home Screen'
-                        : '<strong>Installa Quo Vadis</strong><br>Tocca menu \u2261 \u2192 "Aggiungi pagina a" \u2192 Home';
-                } else if (/OPR|Opera/i.test(ua)) {
-                    instruction = isEN
-                        ? '<strong>Install Quo Vadis</strong><br>Tap \u22ee menu \u2192 "Home screen"'
-                        : '<strong>Installa Quo Vadis</strong><br>Tocca menu \u22ee \u2192 "Schermata Home"';
-                } else if (/MiuiBrowser/i.test(ua)) {
-                    instruction = isEN
-                        ? '<strong>Install Quo Vadis</strong><br>Tap \u22ee menu \u2192 "Add to Home Screen"'
-                        : '<strong>Installa Quo Vadis</strong><br>Tocca menu \u22ee \u2192 "Aggiungi a Home"';
-                } else {
-                    // Chrome, Edge, Brave, Vivaldi, Android default browser, others
-                    instruction = isEN
-                        ? '<strong>Install Quo Vadis</strong><br>Tap \u22ee menu (top right) \u2192 "Add to Home Screen" or "Install App"'
-                        : '<strong>Installa Quo Vadis</strong><br>Tocca menu \u22ee (in alto a destra) \u2192 "Aggiungi a Home" o "Installa app"';
-                }
-                var installText = banner.querySelector('.install-text');
-                if (installText) installText.innerHTML = instruction;
-                btn.textContent = isEN ? 'Got it' : 'OK';
-                showBanner();
+        var installText = banner.querySelector('.install-text');
+        var iconEl = banner.querySelector('.install-icon');
+
+        if (isIOS) {
+            // iOS Safari — show visual step-by-step
+            if (iconEl) iconEl.textContent = '\uD83D\uDCF2';
+            if (installText) {
+                installText.innerHTML = isEN
+                    ? '<strong>Install Quo Vadis</strong><br>Tap <strong>Share</strong> \u2B06\uFE0F then <strong>"Add to Home Screen"</strong>'
+                    : '<strong>Installa Quo Vadis</strong><br>Tocca <strong>Condividi</strong> \u2B06\uFE0F poi <strong>"Aggiungi a Home"</strong>';
             }
-        }, 2000);
-    }
+            btn.textContent = isEN ? 'Show me' : 'Mostrami';
+            btn.setAttribute('data-action', 'ios-tip');
+            showBanner();
+
+        } else if (isMac && isSafari) {
+            // Safari Mac — File > Add to Dock (macOS Sonoma+)
+            if (iconEl) iconEl.textContent = '\uD83D\uDDA5\uFE0F';
+            if (installText) {
+                installText.innerHTML = isEN
+                    ? '<strong>Install Quo Vadis</strong><br>Menu <strong>File</strong> \u2192 <strong>"Add to Dock"</strong>'
+                    : '<strong>Installa Quo Vadis</strong><br>Menu <strong>File</strong> \u2192 <strong>"Aggiungi al Dock"</strong>';
+            }
+            btn.textContent = isEN ? 'Got it' : 'OK';
+            btn.setAttribute('data-action', 'dismiss');
+            showBanner();
+
+        } else if (isMac && isChrome) {
+            // Chrome Mac — install icon in address bar or ⋮ menu
+            if (iconEl) iconEl.textContent = '\uD83D\uDDA5\uFE0F';
+            if (installText) {
+                installText.innerHTML = isEN
+                    ? '<strong>Install Quo Vadis</strong><br>Click <strong>\u2B07\uFE0F</strong> in the address bar, or <strong>\u22ee</strong> \u2192 <strong>"Install Quo Vadis"</strong>'
+                    : '<strong>Installa Quo Vadis</strong><br>Clicca <strong>\u2B07\uFE0F</strong> nella barra indirizzi, oppure <strong>\u22ee</strong> \u2192 <strong>"Installa Quo Vadis"</strong>';
+            }
+            btn.textContent = isEN ? 'Got it' : 'OK';
+            btn.setAttribute('data-action', 'dismiss');
+            showBanner();
+
+        } else if (isMac && isEdge) {
+            // Edge Mac
+            if (iconEl) iconEl.textContent = '\uD83D\uDDA5\uFE0F';
+            if (installText) {
+                installText.innerHTML = isEN
+                    ? '<strong>Install Quo Vadis</strong><br>Click <strong>\u2026</strong> menu \u2192 <strong>Apps</strong> \u2192 <strong>"Install this site as an app"</strong>'
+                    : '<strong>Installa Quo Vadis</strong><br>Clicca <strong>\u2026</strong> \u2192 <strong>App</strong> \u2192 <strong>"Installa il sito come app"</strong>';
+            }
+            btn.textContent = isEN ? 'Got it' : 'OK';
+            btn.setAttribute('data-action', 'dismiss');
+            showBanner();
+
+        } else if (isFirefox) {
+            // Firefox doesn't support PWA install — just inform
+            if (iconEl) iconEl.textContent = '\uD83E\uDD8A';
+            if (installText) {
+                installText.innerHTML = isEN
+                    ? '<strong>Tip:</strong> Open in <strong>Chrome</strong> or <strong>Edge</strong> for one-tap install'
+                    : '<strong>Suggerimento:</strong> Apri in <strong>Chrome</strong> o <strong>Edge</strong> per installazione diretta';
+            }
+            btn.textContent = isEN ? 'Got it' : 'OK';
+            btn.setAttribute('data-action', 'dismiss');
+            showBanner();
+
+        } else {
+            // Generic Android/other — ⋮ menu instructions
+            if (installText) {
+                installText.innerHTML = isEN
+                    ? '<strong>Install Quo Vadis</strong><br>Tap <strong>\u22ee</strong> \u2192 <strong>"Add to Home Screen"</strong> or <strong>"Install App"</strong>'
+                    : '<strong>Installa Quo Vadis</strong><br>Tocca <strong>\u22ee</strong> \u2192 <strong>"Aggiungi a Home"</strong> o <strong>"Installa app"</strong>';
+            }
+            btn.textContent = isEN ? 'Got it' : 'OK';
+            btn.setAttribute('data-action', 'dismiss');
+            showBanner();
+        }
+    }, 2500);
 
     function showBanner() {
         banner.style.display = 'flex';
     }
 
-    // Install button click
+    // ─── Install button click ───
     btn.addEventListener('click', function() {
         if (deferredPrompt) {
-            // Android/Chrome native prompt
+            // Native install prompt (Chrome/Edge/Samsung Android + Chrome Desktop)
             deferredPrompt.prompt();
             deferredPrompt.userChoice.then(function(result) {
                 if (result.outcome === 'accepted') {
                     banner.style.display = 'none';
+                    localStorage.setItem('install-banner-dismissed', Date.now().toString());
                 }
                 deferredPrompt = null;
             });
-        } else if (isIOS) {
-            // Show iOS instructions tooltip
-            showIOSTip();
-        } else if (fallbackMode) {
-            // Fallback: just dismiss, user knows how to install manually
-            banner.style.display = 'none';
-            localStorage.setItem('install-banner-dismissed', Date.now().toString());
+        } else {
+            var action = btn.getAttribute('data-action');
+            if (action === 'ios-tip') {
+                showIOSTip();
+            } else {
+                // Dismiss
+                banner.style.display = 'none';
+                localStorage.setItem('install-banner-dismissed', Date.now().toString());
+            }
         }
     });
 
-    // Close button
+    // Close button (X)
     closeBtn.addEventListener('click', function() {
         banner.style.display = 'none';
         localStorage.setItem('install-banner-dismissed', Date.now().toString());
     });
 
-    // iOS instruction tooltip
+    // ─── iOS instruction overlay ───
     function showIOSTip() {
         var existing = document.querySelector('.install-ios-tip');
         if (existing) { existing.remove(); return; }
         var tip = document.createElement('div');
         tip.className = 'install-ios-tip';
         tip.innerHTML = isEN
-            ? '<button class="tip-close">\u2715</button><strong>Install on iPhone/iPad:</strong><br><br>1. Tap the <strong>Share</strong> button \u2B06\uFE0F at the bottom of Safari<br>2. Scroll down and tap <strong>"Add to Home Screen"</strong><br>3. Tap <strong>"Add"</strong> in the top right<br><br>Done! The app icon will appear on your home screen.'
-            : '<button class="tip-close">\u2715</button><strong>Installa su iPhone/iPad:</strong><br><br>1. Tocca il pulsante <strong>Condividi</strong> \u2B06\uFE0F in basso su Safari<br>2. Scorri e tocca <strong>"Aggiungi a Home"</strong><br>3. Tocca <strong>"Aggiungi"</strong> in alto a destra<br><br>Fatto! L\u2019icona apparir\u00e0 sulla tua home screen.';
+            ? '<button class="tip-close">\u2715</button>'
+              + '<strong>Install on iPhone/iPad:</strong><br><br>'
+              + '<div style="display:flex;align-items:center;gap:8px;margin:8px 0"><span style="font-size:28px">\u2B06\uFE0F</span><span>1. Tap the <strong>Share</strong> button at the bottom</span></div>'
+              + '<div style="display:flex;align-items:center;gap:8px;margin:8px 0"><span style="font-size:28px">\u2795</span><span>2. Tap <strong>"Add to Home Screen"</strong></span></div>'
+              + '<div style="display:flex;align-items:center;gap:8px;margin:8px 0"><span style="font-size:28px">\u2705</span><span>3. Tap <strong>"Add"</strong> — done!</span></div>'
+            : '<button class="tip-close">\u2715</button>'
+              + '<strong>Installa su iPhone/iPad:</strong><br><br>'
+              + '<div style="display:flex;align-items:center;gap:8px;margin:8px 0"><span style="font-size:28px">\u2B06\uFE0F</span><span>1. Tocca <strong>Condividi</strong> in basso</span></div>'
+              + '<div style="display:flex;align-items:center;gap:8px;margin:8px 0"><span style="font-size:28px">\u2795</span><span>2. Tocca <strong>"Aggiungi a Home"</strong></span></div>'
+              + '<div style="display:flex;align-items:center;gap:8px;margin:8px 0"><span style="font-size:28px">\u2705</span><span>3. Tocca <strong>"Aggiungi"</strong> — fatto!</span></div>';
         document.body.appendChild(tip);
         tip.querySelector('.tip-close').addEventListener('click', function() {
             tip.remove();
             banner.style.display = 'none';
             localStorage.setItem('install-banner-dismissed', Date.now().toString());
         });
+        // Also close on tap outside
+        tip.addEventListener('click', function(e) {
+            if (e.target === tip) {
+                tip.remove();
+            }
+        });
     }
+
+    // ─── Listen for successful install ───
+    window.addEventListener('appinstalled', function() {
+        banner.style.display = 'none';
+        deferredPrompt = null;
+        localStorage.setItem('install-banner-dismissed', Date.now().toString());
+    });
 })();
 
 
