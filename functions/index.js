@@ -1022,3 +1022,81 @@ exports.dailyCuriosity = onSchedule(
     return null;
   }
 );
+
+// ═══════════════════════════════════════════════════════════════
+// 9. TRANSLATE POST (HTTP callable — used by Admin post editor)
+//    Translates IT→EN or EN→IT using OpenAI API.
+//    Requires OPENAI_API_KEY set in Firebase Functions config:
+//    firebase functions:secrets:set OPENAI_API_KEY
+// ═══════════════════════════════════════════════════════════════
+const { onCall, HttpsError } = require("firebase-functions/v2/https");
+const { defineSecret } = require("firebase-functions/params");
+
+const openaiKey = defineSecret("OPENAI_API_KEY");
+
+exports.translatePost = onCall(
+  {
+    region: "europe-west1",
+    secrets: [openaiKey],
+  },
+  async (request) => {
+    // Only authenticated owners can translate
+    if (!request.auth) {
+      throw new HttpsError("unauthenticated", "Must be logged in");
+    }
+    const ownerUids = ["RxlVlsfeaEeSwFUVYbKQujEsbBo1", "Mh8BOeFPnFe7WObcsUoP6wyRgPw1"];
+    if (!ownerUids.includes(request.auth.uid)) {
+      throw new HttpsError("permission-denied", "Only owners can translate");
+    }
+
+    const { text, from, to } = request.data;
+    if (!text || !from || !to) {
+      throw new HttpsError("invalid-argument", "Missing text, from, or to");
+    }
+
+    const langNames = { it: "Italian", en: "English" };
+    const fromLang = langNames[from] || from;
+    const toLang = langNames[to] || to;
+
+    const apiKey = openaiKey.value();
+    if (!apiKey) {
+      throw new HttpsError("failed-precondition", "OPENAI_API_KEY not configured");
+    }
+
+    // Call OpenAI Chat Completions
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: "gpt-4o-mini",
+        messages: [
+          {
+            role: "system",
+            content: `You are a translator for a family travel blog about a van trip across Europe. Translate the following text from ${fromLang} to ${toLang}. Keep the same tone (informal, enthusiastic). Preserve all HTML tags, emoji, and formatting exactly as they are. Return ONLY the translated text, nothing else.`,
+          },
+          { role: "user", content: text },
+        ],
+        temperature: 0.3,
+        max_tokens: 1000,
+      }),
+    });
+
+    if (!response.ok) {
+      const err = await response.text();
+      console.error("[Translate] OpenAI error:", err);
+      throw new HttpsError("internal", "Translation API error");
+    }
+
+    const result = await response.json();
+    const translated = result.choices?.[0]?.message?.content?.trim();
+
+    if (!translated) {
+      throw new HttpsError("internal", "Empty translation response");
+    }
+
+    return { translated };
+  }
+);

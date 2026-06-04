@@ -551,8 +551,8 @@
     loadDiaryPhotos(data);
 
     // Mini map tile — generate OSM tile URL centered on current position
-    // Pre-trip: show home location (Leoben, AT); during trip: show current day
-    var homeLat = 47.37, homeLng = 15.09; // Leoben, Austria (home)
+    // Pre-trip: show home location (Selvazzano Dentro); during trip: show current day
+    var homeLat = 45.39, homeLng = 11.85; // Selvazzano Dentro (home)
     var mapLat = homeLat, mapLng = homeLng;
     if (tripActive && typeof TRIP_COORDS !== 'undefined' && TRIP_COORDS[currentDay]) {
       mapLat = TRIP_COORDS[currentDay].lat;
@@ -798,85 +798,100 @@
   }
 
   // ─── Build Feed HTML (Follower A) ───
+  // Pre-trip posts — loaded from Firebase via window._preTripPostsOverride (set by app.js)
+  // Fallback defaults if Firebase not yet loaded
+  var PRE_TRIP_POSTS_DEFAULT = [
+    {date:'2026-06-04', type:'countdown', typeLabel:{it:'\ud83d\ude80 Countdown',en:'\ud83d\ude80 Countdown'}, body:{it:'Mancano <strong>{{daysUntil}} giorni</strong> alla partenza! Il furgone \u00e8 quasi pronto, l\'avventura sta per iniziare. \ud83d\ude90\u2728',en:'<strong>{{daysUntil}} days</strong> until departure! The van is almost ready, the adventure is about to begin. \ud83d\ude90\u2728'}, image:null},
+    {date:'2026-06-01', type:'photo', typeLabel:{it:'\ud83d\udcf7 Foto',en:'\ud83d\udcf7 Photo'}, body:{it:'Preparativi in corso! Ecco cosa ci aspetta lungo la strada \u2014 fiordi, citt\u00e0 baltiche, e tanto altro.',en:'Preparations underway! Here\'s what awaits us along the road \u2014 fjords, Baltic cities, and much more.'}, image:'img/placeholder/van-view.jpg'},
+    {date:'2026-05-28', type:'plan', typeLabel:{it:'\ud83d\uddfa\ufe0f Piano',en:'\ud83d\uddfa\ufe0f Plan'}, body:{it:'<strong>Il percorso \u00e8 pronto!</strong><br>\ud83d\ude90 12.000 km &nbsp; \ud83c\uddf3\ud83c\uddf4\ud83c\uddf8\ud83c\uddea\ud83c\uddeb\ud83c\uddee\ud83c\uddea\ud83c\uddea\ud83c\uddf1\ud83c\uddfb\ud83c\uddf1\ud83c\uddf9\ud83c\uddf5\ud83c\uddf1\ud83c\udde8\ud83c\uddff 13 paesi &nbsp; \ud83d\udcc5 54 giorni',en:'<strong>The route is ready!</strong><br>\ud83d\ude90 12,000 km &nbsp; \ud83c\uddf3\ud83c\uddf4\ud83c\uddf8\ud83c\uddea\ud83c\uddeb\ud83c\uddee\ud83c\uddea\ud83c\uddea\ud83c\uddf1\ud83c\uddfb\ud83c\uddf1\ud83c\uddf9\ud83c\uddf5\ud83c\uddf1\ud83c\udde8\ud83c\uddff 13 countries &nbsp; \ud83d\udcc5 54 days'}, image:null}
+  ];
+
+  function getPreTripPosts() {
+    return (typeof window._preTripPostsOverride !== 'undefined' && window._preTripPostsOverride) ? window._preTripPostsOverride : PRE_TRIP_POSTS_DEFAULT;
+  }
+
+  // Hybrid date formatter: <7 days = relative, >=7 days = fixed ("4 giu 2026")
+  function formatHybridDate(dateStr, lang) {
+    if (!dateStr) return '';
+    // Parse date: support both "dd/mm/yyyy" and "yyyy-mm-dd"
+    var parts, d;
+    if (dateStr.indexOf('-') > -1) {
+      d = new Date(dateStr + 'T00:00:00');
+    } else {
+      parts = dateStr.split('/');
+      d = new Date(parts[2] + '-' + parts[1] + '-' + parts[0] + 'T00:00:00');
+    }
+    if (isNaN(d.getTime())) return dateStr;
+    var now = new Date();
+    var diffMs = now - d;
+    var diffDays = Math.floor(diffMs / 86400000);
+    if (diffDays === 0) return lang === 'en' ? 'Today' : 'Oggi';
+    if (diffDays === 1) return lang === 'en' ? 'Yesterday' : 'Ieri';
+    if (diffDays >= 2 && diffDays < 7) return lang === 'en' ? diffDays + ' days ago' : diffDays + ' giorni fa';
+    // >= 7 days: fixed format
+    var months_it = ['gen','feb','mar','apr','mag','giu','lug','ago','set','ott','nov','dic'];
+    var months_en = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var months = lang === 'en' ? months_en : months_it;
+    return d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+  }
+
   function buildFeed(dayData, tripData) {
     var html = '';
+    var lang = (typeof isEN !== 'undefined' && isEN) ? 'en' : 'it';
 
-    // Pre-trip mode: show countdown and preview feed
+    // Pre-trip mode: show standardized posts from Firebase
     if (tripData.tripPreMode) {
-      html += '<div class="hv-feed-item">';
-      html += '  <div class="hv-feed-header">';
-      html += '    <div class="hv-feed-avatar"></div>';
-      html += '    <div><div class="hv-feed-name">Equipaggio Quo Vadis</div><div class="hv-feed-time">Oggi</div></div>';
-      html += '    <span class="hv-feed-type hv-type-checkin">🚀 Countdown</span>';
-      html += '  </div>';
-      html += '  <div class="hv-feed-body">Mancano <strong>' + tripData.daysUntil + ' giorni</strong> alla partenza! Il furgone è quasi pronto, l\'avventura sta per iniziare. 🚐✨</div>';
-
-      html += '</div>';
-
-      html += '<div class="hv-feed-item">';
-      html += '  <div class="hv-feed-header">';
-      html += '    <div class="hv-feed-avatar"></div>';
-      html += '    <div><div class="hv-feed-name">Equipaggio Quo Vadis</div><div class="hv-feed-time">3 giorni fa</div></div>';
-      html += '    <span class="hv-feed-type hv-type-photo">📷 Foto</span>';
-      html += '  </div>';
-      html += '  <div class="hv-feed-photo" style="background-image:url(img/placeholder/van-view.jpg);background-size:cover;background-position:center;"></div>';
-      html += '  <div class="hv-feed-body">Preparativi in corso! Ecco cosa ci aspetta lungo la strada — fiordi, città baltiche, e tanto altro.</div>';
-
-      html += '</div>';
-
-      html += '<div class="hv-feed-item">';
-      html += '  <div class="hv-feed-header">';
-      html += '    <div class="hv-feed-avatar"></div>';
-      html += '    <div><div class="hv-feed-name">Equipaggio Quo Vadis</div><div class="hv-feed-time">1 settimana fa</div></div>';
-      html += '    <span class="hv-feed-type hv-type-recap">📝 Piano</span>';
-      html += '  </div>';
-      html += '  <div class="hv-feed-body">';
-      html += '    <strong>Il percorso è pronto!</strong><br>';
-      html += '    🚐 12.000 km &nbsp; 🇳🇴🇸🇪🇫🇮🇪🇪🇱🇻🇱🇹🇵🇱🇨🇿 13 paesi &nbsp; 📅 54 giorni';
-      html += '  </div>';
-
-      html += '</div>';
-
+      var prePosts = getPreTripPosts();
+      prePosts.forEach(function(post) {
+        html += '<div class="hv-feed-item">';
+        html += '  <div class="hv-feed-header">';
+        html += '    <div class="hv-feed-time">' + formatHybridDate(post.date, lang) + '</div>';
+        html += '    <span class="hv-feed-type hv-type-' + post.type + '">' + (post.typeLabel[lang] || post.typeLabel.it) + '</span>';
+        html += '  </div>';
+        if (post.image) {
+          html += '  <div class="hv-feed-photo" style="background-image:url(' + post.image + ');background-size:cover;background-position:center;"></div>';
+        }
+        var bodyText = (post.body[lang] || post.body.it || '');
+        var daysUntilStr = tripData.daysUntil === 1 ? (lang === 'en' ? '1 day' : '1 giorno') : (tripData.daysUntil + (lang === 'en' ? ' days' : ' giorni'));
+        bodyText = bodyText.replace('{{daysUntil}} giorni', daysUntilStr).replace('{{daysUntil}} days', daysUntilStr).replace('{{daysUntil}}', tripData.daysUntil);
+        html += '  <div class="hv-feed-body">' + bodyText + '</div>';
+        html += '</div>';
+      });
       return html;
     }
 
-    // Active trip: show real feed
+    // Active trip: show real feed (standardized: no author, date, tag)
+    var todayStr = new Date().toLocaleDateString('it-IT', {day:'2-digit', month:'2-digit', year:'numeric'}).replace(/\//g, '/');
     // Check-in item
     html += '<div class="hv-feed-item">';
     html += '  <div class="hv-feed-header">';
-    html += '    <div class="hv-feed-avatar"></div>';
-    html += '    <div><div class="hv-feed-name">Equipaggio Quo Vadis</div><div class="hv-feed-time">Oggi</div></div>';
-    html += '    <span class="hv-feed-type hv-type-checkin">📍 Check-in</span>';
+    html += '    <div class="hv-feed-time">' + todayStr + '</div>';
+    html += '    <span class="hv-feed-type hv-type-checkin">' + (lang === 'en' ? '📍 Check-in' : '📍 Check-in') + '</span>';
     html += '  </div>';
-    html += '  <div class="hv-feed-body">Arrivati a <strong>' + escHtml(tripData.city || '--') + '</strong>!</div>';
-
+    html += '  <div class="hv-feed-body">' + (lang === 'en' ? 'Arrived in <strong>' : 'Arrivati a <strong>') + escHtml(tripData.city || '--') + '</strong>!</div>';
     html += '</div>';
 
     // Photo item
     html += '<div class="hv-feed-item">';
     html += '  <div class="hv-feed-header">';
-    html += '    <div class="hv-feed-avatar"></div>';
-    html += '    <div><div class="hv-feed-name">Equipaggio Quo Vadis</div><div class="hv-feed-time">Oggi</div></div>';
-    html += '    <span class="hv-feed-type hv-type-photo">📷 Foto</span>';
+    html += '    <div class="hv-feed-time">' + todayStr + '</div>';
+    html += '    <span class="hv-feed-type hv-type-photo">' + (lang === 'en' ? '📷 Photo' : '📷 Foto') + '</span>';
     html += '  </div>';
     html += '  <div class="hv-feed-photo"></div>';
-    html += '  <div class="hv-feed-body">Vista incredibile!</div>';
-
+    html += '  <div class="hv-feed-body">' + (lang === 'en' ? 'Incredible view!' : 'Vista incredibile!') + '</div>';
     html += '</div>';
 
     // Recap item
     if (dayData) {
       html += '<div class="hv-feed-item">';
       html += '  <div class="hv-feed-header">';
-      html += '    <div class="hv-feed-avatar"></div>';
-      html += '    <div><div class="hv-feed-name">Equipaggio Quo Vadis</div><div class="hv-feed-time">Ieri sera</div></div>';
-      html += '    <span class="hv-feed-type hv-type-recap">📝 Riepilogo</span>';
+      html += '    <div class="hv-feed-time">' + todayStr + '</div>';
+      html += '    <span class="hv-feed-type hv-type-recap">' + (lang === 'en' ? '📝 Recap' : '📝 Riepilogo') + '</span>';
       html += '  </div>';
       html += '  <div class="hv-feed-body">';
-      html += '    <strong>Riepilogo G' + (tripData.dayNum > 1 ? tripData.dayNum - 1 : '--') + '</strong><br>';
-      html += '    🚐 ' + (dayData.km || '--') + ' km &nbsp; 📍 -- tappe &nbsp; 🦶 -- km a piedi';
+      html += '    <strong>' + (lang === 'en' ? 'Recap D' : 'Riepilogo G') + (tripData.dayNum > 1 ? tripData.dayNum - 1 : '--') + '</strong><br>';
+      html += '    \ud83d\ude90 ' + (dayData.km || '--') + ' km &nbsp; \ud83d\udccd -- ' + (lang === 'en' ? 'stops' : 'tappe') + ' &nbsp; \ud83e\uddb6 -- km ' + (lang === 'en' ? 'on foot' : 'a piedi');
       html += '  </div>';
-
       html += '</div>';
     }
 
@@ -886,46 +901,48 @@
   // ─── Build Diary Preview HTML (Follower B) ───
   function buildDiaryPreview(dayData, tripData) {
     var html = '';
+    var lang = (typeof isEN !== 'undefined' && isEN) ? 'en' : 'it';
 
-    // Pre-trip mode
+    // Pre-trip mode: show latest post from Firebase as diary preview
     if (tripData.tripPreMode) {
+      var prePosts = getPreTripPosts();
+      var latestPost = prePosts[0]; // Most recent
+      var daysUntilStr = tripData.daysUntil === 1 ? (lang === 'en' ? '1 day' : '1 giorno') : (tripData.daysUntil + (lang === 'en' ? ' days' : ' giorni'));
       html += '<div class="hv-diary-preview-header">';
-      html += '  <div class="hv-feed-avatar"></div>';
       html += '  <div>';
-      html += '    <div class="hv-diary-preview-title">🚐 L\'avventura sta per iniziare!</div>';
-      html += '    <div class="hv-diary-preview-time">Partenza tra ' + tripData.daysUntil + ' giorni</div>';
+      html += '    <div class="hv-diary-preview-title">' + (lang === 'en' ? '🚐 The adventure is about to begin!' : '🚐 L\'avventura sta per iniziare!') + '</div>';
+      html += '    <div class="hv-diary-preview-time">' + (lang === 'en' ? 'Departure in ' + daysUntilStr : 'Partenza tra ' + daysUntilStr) + '</div>';
       html += '  </div>';
       html += '</div>';
-      html += '<div class="hv-diary-preview-highlight">⭐ 54 giorni, 13 paesi, 12.000 km in furgone con tutta la famiglia!</div>';
-      html += '<div class="hv-diary-preview-text">';
-      html += '  Il percorso attraversa Austria, Germania, Danimarca, Norvegia, Svezia, Finlandia, Estonia, Lettonia, Lituania, Polonia e Cechia. Fiordi, città baltiche, natura artica e tanto altro.';
-      html += '</div>';
+      html += '<div class="hv-diary-preview-highlight">⭐ ' + (lang === 'en' ? '54 days, 13 countries, 12,000 km in a van with the whole family!' : '54 giorni, 13 paesi, 12.000 km in furgone con tutta la famiglia!') + '</div>';
+      if (latestPost) {
+        var bodyText = (latestPost.body[lang] || latestPost.body.it || '').replace(/<[^>]+>/g, '').substring(0, 120);
+        bodyText = bodyText.replace('{{daysUntil}} giorni', daysUntilStr).replace('{{daysUntil}} days', daysUntilStr).replace('{{daysUntil}}', tripData.daysUntil);
+        html += '<div class="hv-diary-preview-text">' + bodyText + '</div>';
+      }
       html += '<div class="hv-diary-preview-stats">';
-      html += '  🚐 12.000 km &nbsp; 🇳🇴🇸🇪🇫🇮 13 paesi &nbsp; 📅 54 giorni';
+      html += '  🚐 12.000 km &nbsp; 🇳🇴🇸🇪🇫🇮 13 ' + (lang === 'en' ? 'countries' : 'paesi') + ' &nbsp; 📅 54 ' + (lang === 'en' ? 'days' : 'giorni');
       html += '</div>';
-
       return html;
     }
 
     // Active trip mode
     html += '<div class="hv-diary-preview-header">';
-    html += '  <div class="hv-feed-avatar"></div>';
     html += '  <div>';
-    html += '    <div class="hv-diary-preview-title">Riepilogo G' + (tripData.dayNum > 1 ? tripData.dayNum - 1 : '--') + '</div>';
-    html += '    <div class="hv-diary-preview-time">Ieri sera, 21:30</div>';
+    html += '    <div class="hv-diary-preview-title">' + (lang === 'en' ? 'Recap D' : 'Riepilogo G') + (tripData.dayNum > 1 ? tripData.dayNum - 1 : '--') + '</div>';
+    html += '    <div class="hv-diary-preview-time">' + new Date().toLocaleDateString('it-IT', {day:'2-digit', month:'2-digit', year:'numeric'}) + '</div>';
     html += '  </div>';
     html += '</div>';
     if (dayData && dayData.narrative) {
       html += '<div class="hv-diary-preview-highlight">⭐ ' + escHtml(dayData.narrative.substring(0, 80)) + '...</div>';
     }
     html += '<div class="hv-diary-preview-text">';
-    html += '  Giornata incredibile! ';
+    html += lang === 'en' ? '  Incredible day! ' : '  Giornata incredibile! ';
     if (dayData) html += escHtml((dayData.narrative || '').replace(/[🚗🌒⛴️🚐]/g, '').substring(0, 120));
     html += '</div>';
     html += '<div class="hv-diary-preview-stats">';
-    html += '  🚐 ' + (dayData ? dayData.km || '--' : '--') + ' km &nbsp; 📍 -- tappe';
+    html += '  🚐 ' + (dayData ? dayData.km || '--' : '--') + ' km &nbsp; 📍 -- ' + (lang === 'en' ? 'stops' : 'tappe');
     html += '</div>';
-
     return html;
   }
 

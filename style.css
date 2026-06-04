@@ -817,6 +817,11 @@ mark.search-hl.current { background: #f97316; color: white; }
 .home-header {
     display: flex; align-items: center; justify-content: space-between;
     padding: 4px 0 clamp(6px, 1vh, 16px);
+    position: sticky; top: 0; z-index: 90;
+    background: var(--bg-main, #f7f8fc);
+    box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    margin: 0 -16px; padding-left: 16px; padding-right: 16px;
 }
 .home-brand {
     font-size: 28px; font-weight: 700; color: var(--primary);
@@ -3392,6 +3397,13 @@ html[lang="en"] .notif-drawer-list:empty::after {
 /* Separator between items */
 .altro-item + .altro-item { border-top: 1px solid var(--border); }
 
+/* Group labels in Altro sheet */
+.altro-group-label {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.5px; color: var(--text-muted, #64748b);
+    padding: 8px 16px 2px; margin-top: 4px;
+}
+
 
 
 /* ─── v8.2: Activity Stats Bar (Home) ─── */
@@ -4456,4 +4468,13 @@ html[lang="en"] .notif-drawer-list:empty::after {
         background: linear-gradient(90deg, #2d3748 25%, #4a5568 50%, #2d3748 75%);
         background-size: 200% 100%;
     }
+}
+
+
+/* ─── v1.82: Responsive top bar ─── */
+@media (max-width: 400px) {
+    .home-lang-switch { display: none; }
+}
+@media (max-width: 340px) {
+    #homeSearchOpen { display: none; }
 }

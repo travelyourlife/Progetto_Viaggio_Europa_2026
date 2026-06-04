@@ -1,1 +1,1 @@
-{"version":"1.81","date":"2026-06-04","notes":"UX: cross-link bars on all tabs, pre-trip map (no LIVE badge, van at home), pre-departure posts in Diario, removed fake reactions, dark mode expanded for home variants, Check-in button scrolls to Tappe."}
+{"version":"1.83","date":"2026-06-04","notes":"Unified post system: single Firebase source for home+diario, hybrid date format (relative <7d, fixed >=7d), auto-translate IT→EN via Cloud Function (OpenAI), grammar fix (1 giorno), departure location Selvazzano Dentro verified."}

@@ -1186,6 +1186,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         var parentHeader = parentBody.previousElementSibling;
                         if (parentHeader && parentHeader.classList.contains('accordion-header')) parentHeader.classList.add('open');
                     }
+                    // If element is a <details>, open it
+                    if (el.tagName === 'DETAILS' && !el.open) el.open = true;
+                    // If element is inside a closed <details>, open it
+                    var parentDetails = el.closest('details');
+                    if (parentDetails && !parentDetails.open) parentDetails.open = true;
                     el.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
             }, 50);
@@ -4436,7 +4441,7 @@ if ('serviceWorker' in navigator) {
 
 // ─── Day Override Controls ───
 (function() {
-  // Day override controls
+  // Day override controls with select picker
   // TRIP_START is defined in data.js
   var today = new Date(); today.setHours(0,0,0,0);
   var autoDay = Math.max(0, getCurrentTripDay());
@@ -4447,7 +4452,6 @@ if ('serviceWorker' in navigator) {
   if (overrideRaw !== null && overrideRaw !== '') {
     var plainParsed = parseInt(overrideRaw, 10);
     if (!isNaN(plainParsed) && overrideRaw === String(plainParsed)) {
-      // Legacy plain number format — migrate to JSON
       currentDay = plainParsed;
       localStorage.setItem(KEYS.DAY_OVERRIDE, JSON.stringify({day: plainParsed, ts: Date.now()}));
     } else {
@@ -4459,14 +4463,35 @@ if ('serviceWorker' in navigator) {
   }
   
   var dayLabel = document.getElementById('pos-day-current');
+  var daySelect = document.getElementById('pos-day-select');
   var prevBtn = document.getElementById('pos-day-prev');
   var nextBtn = document.getElementById('pos-day-next');
   var syncBtn = document.getElementById('pos-day-sync');
   var resetBtn = document.getElementById('pos-day-reset');
   
-  // Display uses 0-indexed: G0 = first day (matches itinerary)
+  // Populate the select dropdown with all days (-1 to TRIP_DAYS-1)
+  if (daySelect) {
+    var prefix = isEN ? 'D' : 'G';
+    for (var d = -1; d < TRIP_DAYS; d++) {
+      var opt = document.createElement('option');
+      opt.value = d;
+      var label = prefix + d;
+      // Add route/title hint from DAYS_DATA if available
+      if (typeof DAYS_DATA !== 'undefined' && DAYS_DATA[d] && DAYS_DATA[d].title) {
+        label += ' — ' + DAYS_DATA[d].title.substring(0, 25);
+      } else if (d === -1) {
+        label += ' — Pre-trip';
+      }
+      opt.textContent = label;
+      daySelect.appendChild(opt);
+    }
+    daySelect.value = currentDay;
+  }
+  
+  // Update both label (hidden) and select
   function updateLabel() {
     if (dayLabel) dayLabel.textContent = (isEN ? 'D' : 'G') + currentDay;
+    if (daySelect) daySelect.value = currentDay;
   }
   updateLabel();
   
@@ -4474,6 +4499,13 @@ if ('serviceWorker' in navigator) {
     localStorage.setItem(KEYS.DAY_OVERRIDE, JSON.stringify({day: currentDay, ts: Date.now()}));
     window.dispatchEvent(new CustomEvent('dayOverrideChanged', {detail: {day: currentDay}}));
   }
+  
+  // Select change handler — jump directly to any day
+  if (daySelect) daySelect.addEventListener('change', function() {
+    currentDay = parseInt(daySelect.value, 10);
+    updateLabel();
+    persistAndNotify();
+  });
   
   if (prevBtn) prevBtn.addEventListener('click', function() {
     currentDay = Math.max(-1, currentDay - 1);
@@ -4494,7 +4526,6 @@ if ('serviceWorker' in navigator) {
   });
   if (resetBtn) resetBtn.addEventListener('click', function() {
     localStorage.removeItem(KEYS.DAY_OVERRIDE);
-    // Also clear Firebase dayOverride + currentDay
     try {
       var ref = (typeof getFamilyRef === 'function') ? getFamilyRef('dayOverride') : null;
       if (ref) ref.set(null);
@@ -4524,14 +4555,25 @@ if ('serviceWorker' in navigator) {
         if (val !== null && typeof val === 'object' && typeof val.day === 'number') {
           if (val.day !== currentDay) {
             currentDay = val.day;
-            localStorage.setItem(KEYS.DAY_OVERRIDE, JSON.stringify({day: val.day, ts: val.ts || Date.now()}));
+            localStorage.setItem(KEYS.DAY_OVERRIDE, JSON.stringify({day: val.day, ts: val.ts || Date.now(), remote: true}));
             updateLabel();
           }
         } else if (val === null) {
-          // Override cleared remotely
-          localStorage.removeItem(KEYS.DAY_OVERRIDE);
-          currentDay = Math.floor((new Date() - TRIP_START) / 86400000);
-          updateLabel();
+          // Remote is null — only clear local override if it was set BY remote (not manually)
+          var localRaw = localStorage.getItem(KEYS.DAY_OVERRIDE);
+          if (localRaw) {
+            try {
+              var localObj = JSON.parse(localRaw);
+              // Only clear if the local override was set by remote sync (has .remote flag)
+              if (localObj && localObj.remote) {
+                localStorage.removeItem(KEYS.DAY_OVERRIDE);
+                currentDay = Math.floor((new Date() - TRIP_START) / 86400000);
+                updateLabel();
+              }
+            } catch(e) {
+              // Legacy format or corrupted — don't clear
+            }
+          }
         }
       });
     }
@@ -9007,52 +9049,61 @@ if ('serviceWorker' in navigator) {
   // Initial check (in case auth already resolved)
   if (firebaseUser) checkDiarioAccess(firebaseUser);
 
-  // ─── Pre-departure Diary Posts ───
-  function buildPreDepartureDiary() {
+  // ─── Pre-departure Diary Posts (unified: reads from Firebase via window._preTripPostsOverride) ───
+  function formatHybridDateDiary(dateStr, lang) {
+    if (!dateStr) return '';
+    var d;
+    if (dateStr.indexOf('-') > -1) {
+      d = new Date(dateStr + 'T00:00:00');
+    } else {
+      var parts = dateStr.split('/');
+      d = new Date(parts[2] + '-' + parts[1] + '-' + parts[0] + 'T00:00:00');
+    }
+    if (isNaN(d.getTime())) return dateStr;
     var now = new Date();
+    var diffDays = Math.floor((now - d) / 86400000);
+    if (diffDays === 0) return lang === 'en' ? 'Today' : 'Oggi';
+    if (diffDays === 1) return lang === 'en' ? 'Yesterday' : 'Ieri';
+    if (diffDays >= 2 && diffDays < 7) return lang === 'en' ? diffDays + ' days ago' : diffDays + ' giorni fa';
+    var months_it = ['gen','feb','mar','apr','mag','giu','lug','ago','set','ott','nov','dic'];
+    var months_en = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var months = lang === 'en' ? months_en : months_it;
+    return d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+  }
+
+  function buildPreDepartureDiary() {
+    var lang = (typeof isEN !== 'undefined' && isEN) ? 'en' : 'it';
     var tripStart = (typeof TRIP_START !== 'undefined') ? TRIP_START : new Date('2026-06-26T00:00:00');
-    var daysUntil = Math.max(0, Math.ceil((tripStart - now) / 86400000));
+    var daysUntil = Math.max(0, Math.ceil((tripStart - new Date()) / 86400000));
+    var daysUntilStr = daysUntil === 1 ? (lang === 'en' ? '1 day' : '1 giorno') : (daysUntil + (lang === 'en' ? ' days' : ' giorni'));
+
+    // Get posts from Firebase (unified source)
+    var posts = (typeof window._preTripPostsOverride !== 'undefined' && window._preTripPostsOverride) ? window._preTripPostsOverride : [
+      {date:'2026-06-04', type:'countdown', typeLabel:{it:'🚀 Countdown',en:'🚀 Countdown'}, body:{it:'Mancano <strong>{{daysUntil}} giorni</strong> alla partenza! Il furgone \u00e8 quasi pronto, l\'avventura sta per iniziare. 🚐✨',en:'<strong>{{daysUntil}} days</strong> until departure! The van is almost ready, the adventure is about to begin. 🚐✨'}, image:null},
+      {date:'2026-06-01', type:'photo', typeLabel:{it:'📷 Foto',en:'📷 Photo'}, body:{it:'Preparativi in corso! Ecco cosa ci aspetta lungo la strada \u2014 fiordi, citt\u00e0 baltiche, e tanto altro.',en:'Preparations underway!'}, image:'img/placeholder/van-view.jpg'},
+      {date:'2026-05-28', type:'plan', typeLabel:{it:'🗺️ Piano',en:'🗺️ Plan'}, body:{it:'<strong>Il percorso \u00e8 pronto!</strong><br>🚐 12.000 km \u00b7 13 paesi \u00b7 54 giorni',en:'<strong>The route is ready!</strong><br>🚐 12,000 km \u00b7 13 countries \u00b7 54 days'}, image:null}
+    ];
+
     var html = '';
+    posts.forEach(function(post) {
+      var typeLabel = (post.typeLabel && post.typeLabel[lang]) || (post.typeLabel && post.typeLabel.it) || post.type;
+      var bodyText = (post.body && (post.body[lang] || post.body.it)) || '';
+      bodyText = bodyText.replace('{{daysUntil}} giorni', daysUntilStr).replace('{{daysUntil}} days', daysUntilStr).replace('{{daysUntil}}', daysUntil);
 
-    // Post 1: Countdown
-    html += '<div class="diario-entry">';
-    html += '  <div class="diario-entry-marker"></div>';
-    html += '  <div class="diario-entry-card">';
-    html += '    <div class="diario-entry-header">';
-    html += '      <div><div class="diario-day">Pre-viaggio</div><div class="diario-date">' + now.toLocaleDateString('it-IT') + '</div></div>';
-    html += '      <span class="diario-entry-type diario-type-checkin">🚀 Countdown</span>';
-    html += '    </div>';
-    html += '    <p class="diario-text">Mancano <strong>' + daysUntil + ' giorni</strong> alla partenza! Il furgone è quasi pronto, l\'avventura sta per iniziare. 🚐✨</p>';
-    html += '    <div class="diario-stats"><span class="diario-stat">📅 Partenza: 26 giugno 2026</span></div>';
-    html += '  </div>';
-    html += '</div>';
-
-    // Post 2: Photo preview
-    html += '<div class="diario-entry">';
-    html += '  <div class="diario-entry-marker"></div>';
-    html += '  <div class="diario-entry-card">';
-    html += '    <div class="diario-entry-header">';
-    html += '      <div><div class="diario-day">Pre-viaggio</div><div class="diario-date">3 giorni fa</div></div>';
-    html += '      <span class="diario-entry-type diario-type-photo">📷 Foto</span>';
-    html += '    </div>';
-    html += '    <div class="diario-photos"><img src="img/placeholder/van-view.jpg" alt="Vista fiordi" class="diario-photo" loading="lazy"></div>';
-    html += '    <p class="diario-text">Preparativi in corso! Ecco cosa ci aspetta lungo la strada — fiordi, città baltiche, e tanto altro.</p>';
-    html += '  </div>';
-    html += '</div>';
-
-    // Post 3: Route plan
-    html += '<div class="diario-entry">';
-    html += '  <div class="diario-entry-marker"></div>';
-    html += '  <div class="diario-entry-card">';
-    html += '    <div class="diario-entry-header">';
-    html += '      <div><div class="diario-day">Pre-viaggio</div><div class="diario-date">1 settimana fa</div></div>';
-    html += '      <span class="diario-entry-type diario-type-recap">📝 Piano</span>';
-    html += '    </div>';
-    html += '    <div class="diario-highlight">⭐ Il percorso è pronto!</div>';
-    html += '    <p class="diario-text">🚐 12.000 km · 🇳🇴🇸🇪🇫🇮🇪🇪🇱🇻🇱🇹🇵🇱🇨🇿 13 paesi · 📅 54 giorni</p>';
-    html += '    <div class="diario-stats"><span class="diario-stat">🌍 Europa del Nord + Baltico + Spagna</span></div>';
-    html += '  </div>';
-    html += '</div>';
+      html += '<div class="diario-entry">';
+      html += '  <div class="diario-entry-marker"></div>';
+      html += '  <div class="diario-entry-card">';
+      html += '    <div class="diario-entry-header">';
+      html += '      <div><div class="diario-date">' + formatHybridDateDiary(post.date, lang) + '</div></div>';
+      html += '      <span class="diario-entry-type diario-type-' + post.type + '">' + typeLabel + '</span>';
+      html += '    </div>';
+      if (post.image) {
+        html += '    <div class="diario-photos"><img src="' + post.image + '" alt="" class="diario-photo" loading="lazy"></div>';
+      }
+      html += '    <p class="diario-text">' + bodyText + '</p>';
+      html += '  </div>';
+      html += '</div>';
+    });
 
     return html;
   }
@@ -10937,4 +10988,216 @@ if ('serviceWorker' in navigator) {
 
   // Expose for manual refresh
   window.refreshCuriositaArchive = loadCuriositaArchive;
+})();
+
+
+// ─── Admin: Pre-Trip Post Editor ───
+(function() {
+  var POST_TYPES = [
+    {value: 'countdown', label: '🚀 Countdown'},
+    {value: 'photo', label: '📷 Foto'},
+    {value: 'plan', label: '🗺️ Piano'},
+    {value: 'update', label: '📝 Aggiornamento'},
+    {value: 'checkin', label: '📍 Check-in'},
+    {value: 'day', label: '🌤️ Giornata'}
+  ];
+
+  var listEl = document.getElementById('admin-posts-list');
+  var addBtn = document.getElementById('admin-post-add');
+  var saveBtn = document.getElementById('admin-posts-save');
+  var statusEl = document.getElementById('admin-posts-status');
+  if (!listEl || !addBtn || !saveBtn) return;
+
+  var posts = [];
+
+  // Load posts from Firebase on admin tab open
+  function loadPosts() {
+    if (typeof getFamilyRef !== 'function' && typeof window.getFamilyRef !== 'function') {
+      // Fallback: use the global PRE_TRIP_POSTS from home-variants.js
+      if (typeof window._preTripPostsOverride !== 'undefined') {
+        posts = JSON.parse(JSON.stringify(window._preTripPostsOverride));
+      } else {
+        // Use defaults from home-variants
+        posts = [
+          {date:'04/06/2026', type:'countdown', typeLabel:{it:'🚀 Countdown',en:'🚀 Countdown'}, body:{it:'Mancano <strong>{{daysUntil}} giorni</strong> alla partenza!',en:'<strong>{{daysUntil}} days</strong> until departure!'}, image:null},
+          {date:'01/06/2026', type:'photo', typeLabel:{it:'📷 Foto',en:'📷 Photo'}, body:{it:'Preparativi in corso!',en:'Preparations underway!'}, image:'img/placeholder/van-view.jpg'},
+          {date:'28/05/2026', type:'plan', typeLabel:{it:'🗺️ Piano',en:'🗺️ Plan'}, body:{it:'<strong>Il percorso è pronto!</strong>',en:'<strong>The route is ready!</strong>'}, image:null}
+        ];
+      }
+      renderPosts();
+      return;
+    }
+    var ref = (typeof getFamilyRef === 'function') ? getFamilyRef('preTripPosts') : window.getFamilyRef('preTripPosts');
+    if (!ref) { renderPosts(); return; }
+    ref.once('value', function(snap) {
+      var val = snap.val();
+      if (val && Array.isArray(val)) {
+        posts = val;
+      } else if (!posts.length) {
+        posts = [
+          {date:'04/06/2026', type:'countdown', typeLabel:{it:'🚀 Countdown',en:'🚀 Countdown'}, body:{it:'Mancano <strong>{{daysUntil}} giorni</strong> alla partenza!',en:'<strong>{{daysUntil}} days</strong> until departure!'}, image:null},
+          {date:'01/06/2026', type:'photo', typeLabel:{it:'📷 Foto',en:'📷 Photo'}, body:{it:'Preparativi in corso!',en:'Preparations underway!'}, image:'img/placeholder/van-view.jpg'},
+          {date:'28/05/2026', type:'plan', typeLabel:{it:'🗺️ Piano',en:'🗺️ Plan'}, body:{it:'<strong>Il percorso è pronto!</strong>',en:'<strong>The route is ready!</strong>'}, image:null}
+        ];
+      }
+      renderPosts();
+    });
+  }
+
+  function renderPosts() {
+    var html = '';
+    posts.forEach(function(post, idx) {
+      html += '<div class="admin-post-item" style="border:1px solid var(--border);border-radius:8px;padding:10px;background:var(--bg-alt);">';
+      html += '  <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;">';
+      html += '    <input type="text" class="admin-post-date" data-idx="' + idx + '" value="' + (post.date || '') + '" placeholder="dd/mm/yyyy" style="width:100px;padding:4px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;">';
+      html += '    <select class="admin-post-type" data-idx="' + idx + '" style="padding:4px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;">';
+      POST_TYPES.forEach(function(t) {
+        html += '      <option value="' + t.value + '"' + (post.type === t.value ? ' selected' : '') + '>' + t.label + '</option>';
+      });
+      html += '    </select>';
+      html += '    <button class="admin-post-del pos-btn" data-idx="' + idx + '" style="font-size:11px;padding:4px 8px;background:#e53e3e;color:#fff;margin-left:auto;">🗑️</button>';
+      html += '  </div>';
+      html += '  <textarea class="admin-post-body-it" data-idx="' + idx + '" placeholder="Testo IT (HTML ok)" rows="2" style="width:100%;padding:6px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;resize:vertical;">' + (post.body && post.body.it ? post.body.it : '') + '</textarea>';
+      html += '  <textarea class="admin-post-body-en" data-idx="' + idx + '" placeholder="Testo EN (HTML ok)" rows="2" style="width:100%;padding:6px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;resize:vertical;margin-top:4px;">' + (post.body && post.body.en ? post.body.en : '') + '</textarea>';
+      html += '  <input type="text" class="admin-post-image" data-idx="' + idx + '" value="' + (post.image || '') + '" placeholder="URL immagine (opzionale)" style="width:100%;padding:4px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;margin-top:4px;">';
+      html += '</div>';
+    });
+    listEl.innerHTML = html;
+
+    // Attach delete handlers
+    listEl.querySelectorAll('.admin-post-del').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var idx = parseInt(this.getAttribute('data-idx'));
+        posts.splice(idx, 1);
+        renderPosts();
+      });
+    });
+  }
+
+  // Collect current form state into posts array
+  function collectPosts() {
+    listEl.querySelectorAll('.admin-post-date').forEach(function(el) {
+      var idx = parseInt(el.getAttribute('data-idx'));
+      posts[idx].date = el.value;
+    });
+    listEl.querySelectorAll('.admin-post-type').forEach(function(el) {
+      var idx = parseInt(el.getAttribute('data-idx'));
+      var val = el.value;
+      posts[idx].type = val;
+      var match = POST_TYPES.find(function(t) { return t.value === val; });
+      if (match) {
+        posts[idx].typeLabel = {it: match.label, en: match.label};
+      }
+    });
+    listEl.querySelectorAll('.admin-post-body-it').forEach(function(el) {
+      var idx = parseInt(el.getAttribute('data-idx'));
+      if (!posts[idx].body) posts[idx].body = {};
+      posts[idx].body.it = el.value;
+    });
+    listEl.querySelectorAll('.admin-post-body-en').forEach(function(el) {
+      var idx = parseInt(el.getAttribute('data-idx'));
+      if (!posts[idx].body) posts[idx].body = {};
+      posts[idx].body.en = el.value;
+    });
+    listEl.querySelectorAll('.admin-post-image').forEach(function(el) {
+      var idx = parseInt(el.getAttribute('data-idx'));
+      posts[idx].image = el.value || null;
+    });
+  }
+
+  addBtn.addEventListener('click', function() {
+    collectPosts();
+    posts.push({
+      date: new Date().toLocaleDateString('it-IT', {day:'2-digit', month:'2-digit', year:'numeric'}),
+      type: 'update',
+      typeLabel: {it: '📝 Aggiornamento', en: '📝 Update'},
+      body: {it: '', en: ''},
+      image: null
+    });
+    renderPosts();
+  });
+
+  saveBtn.addEventListener('click', function() {
+    collectPosts();
+    var ref = (typeof getFamilyRef === 'function') ? getFamilyRef('preTripPosts') : (window.getFamilyRef ? window.getFamilyRef('preTripPosts') : null);
+    if (!ref) {
+      statusEl.textContent = '❌ Firebase non connesso. Salvataggio locale.';
+      localStorage.setItem('preTripPosts_local', JSON.stringify(posts));
+      window._preTripPostsOverride = posts;
+      return;
+    }
+    ref.set(posts).then(function() {
+      statusEl.textContent = '✅ Salvato su Firebase!';
+      window._preTripPostsOverride = posts;
+    }).catch(function(err) {
+      statusEl.textContent = '❌ Errore: ' + err.message;
+    });
+  });
+
+  // ─── Translate Button Handler ───
+  var translateBtn = document.getElementById('admin-posts-translate');
+  if (translateBtn) {
+    translateBtn.addEventListener('click', async function() {
+      collectPosts();
+      var postsToTranslate = posts.filter(function(p) { return p.body && p.body.it && !p.body.en; });
+      if (postsToTranslate.length === 0) {
+        // Translate all that have IT text (overwrite EN)
+        postsToTranslate = posts.filter(function(p) { return p.body && p.body.it; });
+      }
+      if (postsToTranslate.length === 0) {
+        statusEl.textContent = '⚠️ Nessun testo IT da tradurre.';
+        return;
+      }
+      translateBtn.disabled = true;
+      translateBtn.textContent = '⏳ Traduzione in corso...';
+      statusEl.textContent = '';
+      try {
+        var functions = firebase.app().functions('europe-west1');
+        var translateFn = functions.httpsCallable('translatePost');
+        var count = 0;
+        for (var i = 0; i < posts.length; i++) {
+          if (posts[i].body && posts[i].body.it) {
+            var result = await translateFn({text: posts[i].body.it, from: 'it', to: 'en'});
+            if (result.data && result.data.translated) {
+              posts[i].body.en = result.data.translated;
+              count++;
+            }
+          }
+        }
+        renderPosts();
+        statusEl.textContent = '✅ Tradotti ' + count + ' post! Ricorda di salvare.';
+      } catch(err) {
+        statusEl.textContent = '❌ Errore traduzione: ' + (err.message || err);
+      } finally {
+        translateBtn.disabled = false;
+        translateBtn.textContent = '🌐 Traduci auto IT→EN';
+      }
+    });
+  }
+
+  // Load on admin tab switch
+  window.addEventListener('tabSwitched', function(e) {
+    if (e.detail === 'admin') {
+      setTimeout(loadPosts, 200);
+    }
+  });
+
+  // Also load posts from Firebase for the home feed (on app start)
+  setTimeout(function() {
+    var ref = (typeof getFamilyRef === 'function') ? getFamilyRef('preTripPosts') : (window.getFamilyRef ? window.getFamilyRef('preTripPosts') : null);
+    if (!ref) {
+      // Try localStorage fallback
+      var local = localStorage.getItem('preTripPosts_local');
+      if (local) {
+        try { window._preTripPostsOverride = JSON.parse(local); } catch(e) {}
+      }
+      return;
+    }
+    ref.on('value', function(snap) {
+      var val = snap.val();
+      if (val && Array.isArray(val)) {
+        window._preTripPostsOverride = val;
+      }
+    });
+  }, 3000);
 })();

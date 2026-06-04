@@ -320,18 +320,19 @@
     background: var(--card-bg, #fff); border: 1px solid var(--border-color, #e2e8f0);
 }
 .hv-feed-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-.hv-feed-avatar {
-    width: 36px; height: 36px; border-radius: 50%; object-fit: cover;
-    background: var(--border-color, #e2e8f0);
-}
-.hv-feed-name { font-size: 13px; font-weight: 700; color: var(--text-color, #1a1a2e); }
-.hv-feed-time { font-size: 11px; color: var(--text-muted, #64748b); }
+.hv-feed-avatar { display: none; }
+.hv-feed-name { display: none; }
+.hv-feed-time { font-size: 12px; color: var(--text-muted, #64748b); font-weight: 500; }
 .hv-feed-type {
     margin-left: auto; font-size: 11px; font-weight: 600; padding: 2px 8px;
     border-radius: 6px; background: #fef3c7; color: #d97706;
 }
-.hv-feed-type.hv-type-checkin { background: #dcfce7; color: #16a34a; }
-.hv-feed-type.hv-type-photo { background: #ede9fe; color: #7c3aed; }
+.hv-feed-type.hv-type-countdown { background: #dcfce7; color: #16a34a; }
+.hv-feed-type.hv-type-checkin { background: #ccfbf1; color: #0d9488; }
+.hv-feed-type.hv-type-photo { background: #dbeafe; color: #2563eb; }
+.hv-feed-type.hv-type-update { background: #f1f5f9; color: #475569; }
+.hv-feed-type.hv-type-plan { background: #ffedd5; color: #c2410c; }
+.hv-feed-type.hv-type-day { background: #fef9c3; color: #a16207; }
 .hv-feed-type.hv-type-recap { background: #eff6ff; color: #3b82f6; }
 .hv-feed-body { font-size: 14px; color: var(--text-color, #1a1a2e); line-height: 1.5; }
 .hv-feed-photo {
@@ -619,8 +620,12 @@
     /* Tags and badges */
     .hv-program-tag, .hv-tl-tag { background: #1e3a5f; color: #93c5fd; }
     .hv-feed-type { background: #422006; color: #fbbf24; }
-    .hv-feed-type.hv-type-checkin { background: #052e16; color: #4ade80; }
-    .hv-feed-type.hv-type-photo { background: #2e1065; color: #c4b5fd; }
+    .hv-feed-type.hv-type-countdown { background: #052e16; color: #4ade80; }
+    .hv-feed-type.hv-type-checkin { background: #042f2e; color: #5eead4; }
+    .hv-feed-type.hv-type-photo { background: #1e3a5f; color: #93c5fd; }
+    .hv-feed-type.hv-type-update { background: #1e293b; color: #94a3b8; }
+    .hv-feed-type.hv-type-plan { background: #431407; color: #fdba74; }
+    .hv-feed-type.hv-type-day { background: #422006; color: #fbbf24; }
     .hv-feed-type.hv-type-recap { background: #1e3a5f; color: #93c5fd; }
     .hv-diary-preview-highlight { background: #422006; color: #fbbf24; }
 
