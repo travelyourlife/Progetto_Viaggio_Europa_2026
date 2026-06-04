@@ -9105,23 +9105,32 @@ if ('serviceWorker' in navigator) {
 
     // Get posts from Firebase (unified source) — no hardcoded fallback
     var allPosts = (typeof window._preTripPostsOverride !== 'undefined' && window._preTripPostsOverride) ? window._preTripPostsOverride : [];
-    // Filter: only published (or legacy posts without status field)
-    var posts = allPosts.filter(function(p) { return !p.status || p.status === 'published'; });
+    // For owner: show all posts (including drafts). For others: only published.
+    var posts;
+    if (isOwner) {
+      posts = allPosts; // owner sees everything
+    } else {
+      posts = allPosts.filter(function(p) { return !p.status || p.status === 'published'; });
+    }
 
     if (posts.length === 0) {
       return '<div style="text-align:center;padding:40px 20px;color:var(--text-muted);">' + (lang === 'en' ? 'No journal entries yet. Stay tuned!' : 'Nessuna voce nel diario. Resta sintonizzato!') + '</div>';
     }
 
     var html = '';
-    posts.forEach(function(post) {
+    posts.forEach(function(post, postIdx) {
       var badge = post.badge || (post.typeLabel && (post.typeLabel[lang] || post.typeLabel.it)) || '';
       var bodyText = (post.body && (post.body[lang] || post.body.it)) || '';
       bodyText = bodyText.replace('{{daysUntil}} giorni', daysUntilStr).replace('{{daysUntil}} days', daysUntilStr).replace('{{daysUntil}}', daysUntil);
+      var isDraft = post.status === 'draft';
 
-      html += '<div class="diario-entry">';
-      html += '  <div class="diario-entry-card">';
+      html += '<div class="diario-entry' + (isDraft ? ' diario-entry-draft' : '') + '">';
+      html += '  <div class="diario-entry-card' + (isDraft ? ' diario-card-draft' : '') + '">';
       html += '    <div class="diario-entry-header">';
       html += '      <div><div class="diario-date">' + formatHybridDateDiary(post.date, lang) + '</div></div>';
+      if (isDraft && isOwner) {
+        html += '      <span class="diario-draft-badge">' + (lang === 'en' ? '\u270f\ufe0f Draft' : '\u270f\ufe0f Bozza') + '</span>';
+      }
       if (badge) html += '      <span class="diario-entry-type diario-type-' + (post.type || 'update') + '">' + badge + '</span>';
       html += '    </div>';
       if (post.title) {
@@ -9131,6 +9140,9 @@ if ('serviceWorker' in navigator) {
         html += '    <div class="diario-photos"><img src="' + post.image + '" alt="" class="diario-photo" loading="lazy"></div>';
       }
       html += '    <p class="diario-text">' + bodyText + '</p>';
+      if (isDraft && isOwner) {
+        html += '    <div style="text-align:right;margin-top:8px;"><button class="diario-publish-btn" data-post-idx="' + postIdx + '" style="background:var(--primary);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:14px;cursor:pointer;">\u2705 ' + (lang === 'en' ? 'Publish' : 'Pubblica') + '</button></div>';
+      }
       html += '  </div>';
       html += '</div>';
     });
@@ -9149,6 +9161,25 @@ if ('serviceWorker' in navigator) {
         // Show pre-departure posts instead of empty state
         var preHtml = buildPreDepartureDiary();
         timelineEl.innerHTML = preHtml;
+        // Attach publish button handlers for owner
+        if (isOwner) {
+          timelineEl.querySelectorAll('.diario-publish-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+              var idx = parseInt(btn.getAttribute('data-post-idx'));
+              if (isNaN(idx) || !window._preTripPostsOverride || !window._preTripPostsOverride[idx]) return;
+              window._preTripPostsOverride[idx].status = 'published';
+              // Save to Firebase
+              var ref = firebase.database().ref('trips/' + FAMILY_ID + '/preTripPosts');
+              ref.set(window._preTripPostsOverride).then(function() {
+                showToast(isEN ? '\u2705 Post published!' : '\u2705 Post pubblicato!', 'success');
+                // Re-render
+                timelineEl.innerHTML = buildPreDepartureDiary();
+              }).catch(function(err) {
+                showToast('\u274c ' + err.message, 'error');
+              });
+            });
+          });
+        }
         return;
       }
 

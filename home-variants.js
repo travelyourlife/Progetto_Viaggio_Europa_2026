@@ -1163,20 +1163,11 @@
         switchTabFromHome(tab);
       }
     } else if (action === 'openMap') {
-      // Try to open map fullscreen
-      try {
-        var rm = document.getElementById('routeMap');
-        var inst = null;
-        if (rm) {
-          for (var k in rm) {
-            if (k.indexOf('_leaflet_map') === 0) { inst = rm[k]; break; }
-          }
-        }
-        if (typeof window.openMapFullscreen === 'function') {
-          window.openMapFullscreen(inst, '🗺️ Il nostro percorso');
-        }
-      } catch (err) {
-        if (typeof switchTabFromHome === 'function') switchTabFromHome('posizione');
+      // Navigate to tab Posizione (unified map with POI, live marker, etc.)
+      if (typeof window.switchTab === 'function') {
+        window.switchTab('posizione');
+      } else if (typeof switchTabFromHome === 'function') {
+        switchTabFromHome('posizione');
       }
     } else if (action === 'openDay') {
       // Navigate to Giorni tab and scroll to current day's accordion

@@ -677,9 +677,8 @@ body.on-home .scroll-progress { display: none; }
 .auth-btn.logged-in::after { content: ''; position: absolute; bottom: 1px; right: 1px; width: 8px; height: 8px; background: var(--success); border-radius: 50%; border: 2px solid var(--primary); }
 .lang-btn { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 50%; text-decoration: none; font-size: 17px; background: rgba(255,255,255,0.1); transition: background 0.2s; }
 .lang-btn:hover { background: rgba(255,255,255,0.2); }
-.top-bar-title { font-weight: 700; font-size: 20px; display: flex; align-items: center; gap: 8px; cursor: pointer; flex: 1; min-width: 0; overflow: hidden; }
-.top-bar-title img { width: 32px; height: 32px; border-radius: 6px; }
-@media (max-width: 359px) { .top-bar-title { font-size: 16px; gap: 6px; } .top-bar-title img { width: 26px; height: 26px; } }
+.top-bar-title { font-weight: 700; font-size: 24px; display: flex; align-items: center; gap: 8px; cursor: pointer; flex: 1; min-width: 0; overflow: hidden; }
+@media (max-width: 359px) { .top-bar-title { font-size: 18px; } }
 
 /* ─── Search Overlay ─── */
 .search-overlay {
@@ -3691,6 +3690,20 @@ html[lang="en"] .notif-drawer-list:empty::after {
   box-shadow: 0 2px 12px rgba(0,0,0,.06);
   border: 1px solid var(--border);
   overflow: hidden;
+}
+.diario-card-draft {
+  border: 2px dashed var(--primary);
+  opacity: 0.85;
+  position: relative;
+}
+.diario-draft-badge {
+  background: #f59e0b;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
 }
 .diario-entry-header {
   display: flex;
