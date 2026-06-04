@@ -130,16 +130,8 @@ if (typeof firebaseConfig === 'undefined') { var firebaseConfig = {}; }
 if (typeof TRIP_END === 'undefined') { var TRIP_END = new Date(TRIP_START.getTime() + (TRIP_DAYS - 1) * 86400000); }
 
 function getCurrentTripDay() {
-  var override = localStorage.getItem(KEYS.DAY_OVERRIDE);
-  if (override !== null && override !== '') {
-    var parsed = parseInt(override, 10);
-    if (!isNaN(parsed)) return parsed;
-    // Handle JSON object format {day: N, ts: ...}
-    try {
-      var obj = JSON.parse(override);
-      if (obj && typeof obj.day === 'number') return obj.day;
-    } catch(e) {}
-  }
+  // v1.84: Session-only override (no localStorage persistence)
+  if (typeof window._dayOverride === 'number') return window._dayOverride;
   var now = new Date();
   var diff = Math.floor((now - TRIP_START) / 86400000);
   return Math.max(-1, Math.min(diff, TRIP_DAYS - 1));
@@ -3339,9 +3331,8 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!box || !btn) return;
         var isEN = document.documentElement.lang === 'en';
 
-        // Check if day override is active (testing mode)
-        var override = localStorage.getItem(KEYS.DAY_OVERRIDE);
-        var isOverride = override !== null && override !== '' && override !== '-1';
+        // Check if day override is active (testing mode) — v1.84: session-only
+        var isOverride = typeof window._dayOverride === 'number';
 
         if (tripDay >= 0 && tripDay <= TRIP_DAYS - 1) {
             // During trip: show "Vai a G[X] (oggi)"
@@ -4348,11 +4339,11 @@ if ('serviceWorker' in navigator) {
   // ─── 2. CURRENT DAY OVERRIDE ───
   // Remote listener handled by unified Day Override Controls block
   dbRef.child('currentDay').on('value', function(snapshot) {
-    const val = snapshot.val();
+    var val = snapshot.val();
     if (val !== null && val !== undefined) {
-      // Store as JSON {day, ts} format
+      // v1.84: Session-only override (no localStorage)
       var stored = (typeof val === 'object' && val.day !== undefined) ? val : {day: val, ts: Date.now()};
-      localStorage.setItem(KEYS.DAY_OVERRIDE, JSON.stringify(stored));
+      window._dayOverride = stored.day;
       window.dispatchEvent(new CustomEvent('dayOverrideChanged', { detail: stored }));
     }
   });
@@ -4441,26 +4432,9 @@ if ('serviceWorker' in navigator) {
 
 // ─── Day Override Controls ───
 (function() {
-  // Day override controls with select picker
-  // TRIP_START is defined in data.js
-  var today = new Date(); today.setHours(0,0,0,0);
-  var autoDay = Math.max(0, getCurrentTripDay());
-  
-  // Parse override — handle both JSON {day:N, ts:...} and legacy plain number
-  var overrideRaw = localStorage.getItem(KEYS.DAY_OVERRIDE);
-  var currentDay = autoDay;
-  if (overrideRaw !== null && overrideRaw !== '') {
-    var plainParsed = parseInt(overrideRaw, 10);
-    if (!isNaN(plainParsed) && overrideRaw === String(plainParsed)) {
-      currentDay = plainParsed;
-      localStorage.setItem(KEYS.DAY_OVERRIDE, JSON.stringify({day: plainParsed, ts: Date.now()}));
-    } else {
-      try {
-        var obj = JSON.parse(overrideRaw);
-        if (obj && typeof obj.day === 'number') currentDay = obj.day;
-      } catch(e) {}
-    }
-  }
+  // v1.84: Day override controls — SESSION-ONLY (no localStorage, no Firebase sync)
+  // Override resets on page refresh. Countdown always from TRIP_START.
+  var currentDay = getCurrentTripDay(); // real date (no override on fresh load)
   
   var dayLabel = document.getElementById('pos-day-current');
   var daySelect = document.getElementById('pos-day-select');
@@ -4476,11 +4450,10 @@ if ('serviceWorker' in navigator) {
       var opt = document.createElement('option');
       opt.value = d;
       var label = prefix + d;
-      // Add route/title hint from DAYS_DATA if available
       if (typeof DAYS_DATA !== 'undefined' && DAYS_DATA[d] && DAYS_DATA[d].title) {
-        label += ' — ' + DAYS_DATA[d].title.substring(0, 25);
+        label += ' \u2014 ' + DAYS_DATA[d].title.substring(0, 25);
       } else if (d === -1) {
-        label += ' — Pre-trip';
+        label += ' \u2014 Pre-trip';
       }
       opt.textContent = label;
       daySelect.appendChild(opt);
@@ -4488,57 +4461,50 @@ if ('serviceWorker' in navigator) {
     daySelect.value = currentDay;
   }
   
-  // Update both label (hidden) and select
   function updateLabel() {
     if (dayLabel) dayLabel.textContent = (isEN ? 'D' : 'G') + currentDay;
     if (daySelect) daySelect.value = currentDay;
   }
   updateLabel();
   
-  function persistAndNotify() {
-    localStorage.setItem(KEYS.DAY_OVERRIDE, JSON.stringify({day: currentDay, ts: Date.now()}));
+  function setOverrideAndNotify() {
+    window._dayOverride = currentDay;
     window.dispatchEvent(new CustomEvent('dayOverrideChanged', {detail: {day: currentDay}}));
   }
   
-  // Select change handler — jump directly to any day
   if (daySelect) daySelect.addEventListener('change', function() {
     currentDay = parseInt(daySelect.value, 10);
     updateLabel();
-    persistAndNotify();
+    setOverrideAndNotify();
   });
   
   if (prevBtn) prevBtn.addEventListener('click', function() {
     currentDay = Math.max(-1, currentDay - 1);
     updateLabel();
-    persistAndNotify();
+    setOverrideAndNotify();
   });
   if (nextBtn) nextBtn.addEventListener('click', function() {
     currentDay = Math.min(TRIP_DAYS - 1, currentDay + 1);
     updateLabel();
-    persistAndNotify();
+    setOverrideAndNotify();
   });
   if (syncBtn) syncBtn.addEventListener('click', function() {
+    // Sync to Firebase for other family devices
     if (window.firebaseSetCurrentDay) {
       window.firebaseSetCurrentDay(currentDay);
     }
-    persistAndNotify();
     showToast('\u2601\ufe0f ' + (isEN ? 'Day synced to G' : 'Giorno sincronizzato a G') + currentDay, 'success');
   });
   if (resetBtn) resetBtn.addEventListener('click', function() {
-    localStorage.removeItem(KEYS.DAY_OVERRIDE);
-    try {
-      var ref = (typeof getFamilyRef === 'function') ? getFamilyRef('dayOverride') : null;
-      if (ref) ref.set(null);
-      var ref2 = (typeof getFamilyRef === 'function') ? getFamilyRef('currentDay') : null;
-      if (ref2) ref2.set(null);
-    } catch(e) { console.warn('Reset Firebase error:', e); }
-    currentDay = Math.floor((Date.now() - TRIP_START.getTime()) / 86400000);
+    window._dayOverride = undefined;
+    // Calculate real day from TRIP_START
+    currentDay = Math.max(-1, Math.min(Math.floor((Date.now() - TRIP_START.getTime()) / 86400000), TRIP_DAYS - 1));
     updateLabel();
-    showToast('\u21ba ' + (isEN ? 'Override removed — real date' : 'Override rimosso — data reale'), 'success');
+    showToast('\u21ba ' + (isEN ? 'Override removed \u2014 real date' : 'Override rimosso \u2014 data reale'), 'success');
     window.dispatchEvent(new CustomEvent('dayOverrideChanged', {detail: null}));
   });
   
-  // Listen for remote override changes
+  // Listen for remote override changes (e.g. from Firebase listener if still active)
   window.addEventListener('dayOverrideChanged', function(e) {
     if (e.detail && e.detail.day !== undefined) {
       currentDay = e.detail.day;
@@ -4546,7 +4512,7 @@ if ('serviceWorker' in navigator) {
     }
   });
 
-  // Listen for remote Firebase currentDay changes
+  // Listen for remote Firebase currentDay changes (read-only, sets session override)
   if (typeof getFamilyRef === 'function') {
     var dayRef = getFamilyRef('currentDay');
     if (dayRef) {
@@ -4555,26 +4521,11 @@ if ('serviceWorker' in navigator) {
         if (val !== null && typeof val === 'object' && typeof val.day === 'number') {
           if (val.day !== currentDay) {
             currentDay = val.day;
-            localStorage.setItem(KEYS.DAY_OVERRIDE, JSON.stringify({day: val.day, ts: val.ts || Date.now(), remote: true}));
+            window._dayOverride = currentDay;
             updateLabel();
           }
-        } else if (val === null) {
-          // Remote is null — only clear local override if it was set BY remote (not manually)
-          var localRaw = localStorage.getItem(KEYS.DAY_OVERRIDE);
-          if (localRaw) {
-            try {
-              var localObj = JSON.parse(localRaw);
-              // Only clear if the local override was set by remote sync (has .remote flag)
-              if (localObj && localObj.remote) {
-                localStorage.removeItem(KEYS.DAY_OVERRIDE);
-                currentDay = Math.floor((new Date() - TRIP_START) / 86400000);
-                updateLabel();
-              }
-            } catch(e) {
-              // Legacy format or corrupted — don't clear
-            }
-          }
         }
+        // If remote is null, do nothing — session override stays as-is
       });
     }
   }
@@ -4951,13 +4902,8 @@ if ('serviceWorker' in navigator) {
     }
 
     function getDayIndex() {
-        // Respect Day Override from localStorage
-        var override = localStorage.getItem(KEYS.DAY_OVERRIDE);
-        if (override !== null && override !== '') {
-            var p = parseInt(override, 10);
-            if (!isNaN(p) && p >= 0 && override === String(p)) return p;
-            try { var obj = JSON.parse(override); if (obj && typeof obj.day === 'number' && obj.day >= 0) return obj.day; } catch(e) {}
-        }
+        // v1.84: Session-only override
+        if (typeof window._dayOverride === 'number' && window._dayOverride >= 0) return window._dayOverride;
         var now = new Date();
         if (now < TRIP_START) {
             return 0; // Show first destination before trip
@@ -5003,14 +4949,9 @@ if ('serviceWorker' in navigator) {
         var cityName = isEN ? coord.cityEn : coord.city;
 
         var now = new Date();
-        var overrideVal = localStorage.getItem(KEYS.DAY_OVERRIDE);
-        var overrideDay = -1;
-        var hasOverride = false;
-        if (overrideVal) {
-          var _p = parseInt(overrideVal, 10);
-          if (!isNaN(_p) && overrideVal === String(_p)) { overrideDay = _p; hasOverride = true; }
-          else { try { var _o = JSON.parse(overrideVal); if (_o && typeof _o.day === 'number') { overrideDay = _o.day; hasOverride = true; } } catch(e){} }
-        }
+        // v1.84: Session-only override
+        var hasOverride = typeof window._dayOverride === 'number';
+        var overrideDay = hasOverride ? window._dayOverride : -1;
         var isDuringTrip = (now >= TRIP_START && now <= TRIP_END) || (hasOverride && overrideDay >= 0);
 
         // Switch hero card layout

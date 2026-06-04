@@ -303,22 +303,11 @@
     var tripStart = (typeof TRIP_START !== 'undefined') ? TRIP_START : new Date('2026-06-26T00:00:00');
     var tripDays = (typeof TRIP_DAYS !== 'undefined') ? TRIP_DAYS : 54;
 
-    // Use the app's day override logic (for admin simulation)
+    // v1.84: Use session-only override (window._dayOverride) or real date
     var currentDay;
-    var overrideKey = 'viaggio2026_day_override';
-    var override = localStorage.getItem(overrideKey);
-    if (override !== null && override !== '') {
-      var parsed = parseInt(override, 10);
-      if (!isNaN(parsed) && override === String(parsed)) {
-        currentDay = parsed;
-      } else {
-        try {
-          var obj = JSON.parse(override);
-          if (obj && typeof obj.day === 'number') currentDay = obj.day;
-        } catch(e) {}
-      }
-    }
-    if (currentDay === undefined) {
+    if (typeof window._dayOverride === 'number') {
+      currentDay = window._dayOverride;
+    } else {
       currentDay = Math.floor((now - tripStart) / 86400000);
     }
     var tripActive = currentDay >= 0 && currentDay < tripDays;
@@ -580,22 +569,11 @@
 
     var now = new Date();
     var tripStart = (typeof TRIP_START !== 'undefined') ? TRIP_START : new Date('2026-06-26T00:00:00');
-    // Use day override for simulation
+    // v1.84: Use session-only override or real date
     var currentDay;
-    var overrideKey = 'viaggio2026_day_override';
-    var override = localStorage.getItem(overrideKey);
-    if (override !== null && override !== '') {
-      var parsed = parseInt(override, 10);
-      if (!isNaN(parsed) && override === String(parsed)) {
-        currentDay = parsed;
-      } else {
-        try {
-          var obj = JSON.parse(override);
-          if (obj && typeof obj.day === 'number') currentDay = obj.day;
-        } catch(e) {}
-      }
-    }
-    if (currentDay === undefined) {
+    if (typeof window._dayOverride === 'number') {
+      currentDay = window._dayOverride;
+    } else {
       currentDay = Math.floor((now - tripStart) / 86400000);
     }
     if (currentDay < 0) return;
@@ -1127,9 +1105,9 @@
       }
     } else if (action === 'openDay') {
       // Navigate to Giorni tab and scroll to current day's accordion
+      // v1.84: Use session-only override or real date
       var _dayIdx = 0;
-      var _ov = localStorage.getItem('viaggio2026_day_override');
-      if (_ov) { try { var _o = JSON.parse(_ov); if (_o && typeof _o.day === 'number') _dayIdx = _o.day; } catch(e) { var _p = parseInt(_ov, 10); if (!isNaN(_p) && _ov === String(_p)) _dayIdx = _p; } }
+      if (typeof window._dayOverride === 'number') { _dayIdx = window._dayOverride; }
       else { var _ts = (typeof TRIP_START !== 'undefined') ? TRIP_START : new Date('2026-06-26'); _dayIdx = Math.max(0, Math.floor((new Date() - _ts) / 86400000)); }
       var _scrollId = 'g' + _dayIdx;
       if (typeof window.switchTab === 'function') { window.switchTab('giorni', _scrollId); }
@@ -1220,14 +1198,13 @@
     var tripStart = (typeof TRIP_START !== 'undefined') ? TRIP_START : new Date('2026-06-26T00:00:00');
     var tripDays = (typeof TRIP_DAYS !== 'undefined') ? TRIP_DAYS : 54;
     var now = new Date();
+    // v1.84: Use session-only override or real date
     var currentDay;
-    var override = localStorage.getItem('viaggio2026_day_override');
-    if (override !== null && override !== '') {
-      var parsed = parseInt(override, 10);
-      if (!isNaN(parsed) && override === String(parsed)) currentDay = parsed;
-      else try { var obj = JSON.parse(override); if (obj && typeof obj.day === 'number') currentDay = obj.day; } catch(e) {}
+    if (typeof window._dayOverride === 'number') {
+      currentDay = window._dayOverride;
+    } else {
+      currentDay = Math.floor((now - tripStart) / 86400000);
     }
-    if (currentDay === undefined) currentDay = Math.floor((now - tripStart) / 86400000);
     var tripActive = currentDay >= 0 && currentDay < tripDays;
 
     // Need coordinates for current day

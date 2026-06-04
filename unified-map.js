@@ -106,14 +106,11 @@
 
     var now = new Date();
     var tripStart = typeof TRIP_START !== 'undefined' ? TRIP_START : new Date('2026-06-26');
-    var dayOverrideRaw = localStorage.getItem('viaggio2026_day_override');
+    // v1.84: Use session-only override or real date
     var currentDay;
-    if (dayOverrideRaw !== null && dayOverrideRaw !== '') {
-      var _p = parseInt(dayOverrideRaw, 10);
-      if (!isNaN(_p) && dayOverrideRaw === String(_p)) { currentDay = _p; }
-      else { try { var _o = JSON.parse(dayOverrideRaw); if (_o && typeof _o.day === 'number') currentDay = _o.day; } catch(e){} }
-    }
-    if (currentDay === undefined) {
+    if (typeof window._dayOverride === 'number') {
+      currentDay = window._dayOverride;
+    } else {
       currentDay = Math.floor((now - tripStart) / 86400000);
     }
     var totalDays = typeof TRIP_DAYS !== 'undefined' ? TRIP_DAYS : 54;

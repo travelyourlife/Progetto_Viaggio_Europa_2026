@@ -4474,6 +4474,7 @@ html[lang="en"] .notif-drawer-list:empty::after {
 /* ─── v1.82: Responsive top bar ─── */
 @media (max-width: 400px) {
     .home-lang-switch { display: none; }
+    .hero-card-avatar { display: none; }
 }
 @media (max-width: 340px) {
     #homeSearchOpen { display: none; }
