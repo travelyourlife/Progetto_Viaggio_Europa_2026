@@ -4347,7 +4347,13 @@ if ('serviceWorker' in navigator) {
       // v1.84: Session-only override (no localStorage)
       var stored = (typeof val === 'object' && val.day !== undefined) ? val : {day: val, ts: Date.now()};
       window._dayOverride = stored.day;
+      sessionStorage.setItem('qv_day_override', String(stored.day));
       window.dispatchEvent(new CustomEvent('dayOverrideChanged', { detail: stored }));
+    } else {
+      // Remote override removed (Auto pressed) — revert to real date
+      window._dayOverride = undefined;
+      sessionStorage.removeItem('qv_day_override');
+      window.dispatchEvent(new CustomEvent('dayOverrideChanged', { detail: null }));
     }
   });
 
@@ -4509,6 +4515,13 @@ if ('serviceWorker' in navigator) {
   if (resetBtn) resetBtn.addEventListener('click', function() {
     window._dayOverride = undefined;
     sessionStorage.removeItem('qv_day_override');
+    // Remove from Firebase so ALL devices revert to real date
+    if (typeof getFamilyRef === 'function') {
+      var ref = getFamilyRef('currentDay');
+      if (ref) ref.remove();
+    } else if (dbRef) {
+      dbRef.child('currentDay').remove();
+    }
     // Calculate real day from TRIP_START
     currentDay = Math.max(-1, Math.min(Math.floor((Date.now() - TRIP_START.getTime()) / 86400000), TRIP_DAYS - 1));
     updateLabel();
@@ -4534,10 +4547,17 @@ if ('serviceWorker' in navigator) {
           if (val.day !== currentDay) {
             currentDay = val.day;
             window._dayOverride = currentDay;
+            sessionStorage.setItem('qv_day_override', String(currentDay));
             updateLabel();
           }
+        } else if (val === null) {
+          // Remote override removed (Auto pressed) — revert to real date
+          window._dayOverride = undefined;
+          sessionStorage.removeItem('qv_day_override');
+          currentDay = Math.max(-1, Math.min(Math.floor((Date.now() - TRIP_START.getTime()) / 86400000), TRIP_DAYS - 1));
+          updateLabel();
+          window.dispatchEvent(new CustomEvent('dayOverrideChanged', {detail: null}));
         }
-        // If remote is null, do nothing — session override stays as-is
       });
     }
   }

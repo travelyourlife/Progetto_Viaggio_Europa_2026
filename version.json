@@ -1,1 +1,1 @@
-{"version":"1.85","date":"2026-06-04","notes":"Fix pre-trip stats (0/13 paesi instead of 13/13). Hero badge shows countdown instead of G1. Itinerario countdown respects day override. Day override persists across refresh via sessionStorage. Search button hidden on small screens (<400px)."}
+{"version":"1.86","date":"2026-06-04","notes":"Fix override persistence: Auto button now removes override from Firebase (all devices revert to real date). Firebase listeners handle null values correctly. Family avatar added to hero card."}

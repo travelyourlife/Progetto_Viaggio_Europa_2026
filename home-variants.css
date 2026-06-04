@@ -140,7 +140,7 @@
 }
 .hv-tl-day-num { font-size: 28px; font-weight: 900; display: block; }
 .hv-tl-day-date { font-size: 12px; opacity: 0.75; }
-.hv-tl-weather { font-size: 14px; }
+.hv-tl-weather { font-size: 14px; display: flex; align-items: center; gap: 8px; }
 
 .hv-tl-route {
     padding: 12px 16px; border-radius: 12px; margin-bottom: 16px;
@@ -542,6 +542,7 @@
 .hv-visitor-teaser-card strong { font-size: 14px; color: var(--text-color, #1a1a2e); }
 .hv-visitor-teaser-card p { font-size: 13px; color: var(--text-muted, #64748b); margin: 6px 0 8px; line-height: 1.4; }
 .hv-visitor-lock { font-size: 12px; color: #d97706; font-weight: 600; }
+a.hv-visitor-lock.hv-login-link { text-decoration: underline; cursor: pointer; display: inline-block; }
 
 /* ═══════════════════════════════════════════════════════════════════════
    ROLE SWITCH MODAL
@@ -800,3 +801,27 @@
 }
 .hv-notif-cta-btn:hover { background: #2563eb; transform: translateY(-1px); }
 .hv-notif-cta-btn:active { background: #1d4ed8; transform: scale(0.96); }
+
+/* ─── Hero Status Right (badge + avatar) ─── */
+.hv-hero-status-right {
+    display: flex; align-items: center; gap: 10px;
+}
+
+/* ─── Hero Avatar (family photo) ─── */
+.hv-hero-avatar {
+    width: 70px; height: 70px; border-radius: 50%;
+    object-fit: cover; flex-shrink: 0; margin-left: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    border: 2px solid rgba(255,255,255,0.3);
+}
+.hv-visitor-hero-avatar {
+    width: 90px; height: 90px; margin: 0 auto 12px;
+    display: block; border: 3px solid var(--primary);
+}
+.hv-bento-status { display: flex; align-items: center; justify-content: space-between; }
+.hv-story-top { display: flex; align-items: center; gap: 8px; }
+.hv-story-top .hv-hero-avatar { width: 40px; height: 40px; margin-left: auto; }
+@media (max-width: 360px) {
+    .hv-hero-avatar { display: none; }
+    .hv-visitor-hero-avatar { display: block; width: 70px; height: 70px; }
+}

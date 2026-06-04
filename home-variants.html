@@ -19,6 +19,7 @@
                 <span class="hv-day-num" data-hv="dayLabel">G--</span>
                 <span class="hv-day-date" data-hv="dayDate"></span>
             </div>
+            <img src="./icon.png" alt="" class="hv-hero-avatar">
         </div>
     </div>
     <!-- Weather row -->
@@ -138,6 +139,7 @@
         </div>
         <div class="hv-tl-weather">
             <span data-hv="weatherIcon">🌤</span> <span data-hv="temp">--°C</span>
+            <img src="./icon.png" alt="" class="hv-hero-avatar">
         </div>
     </div>
     <!-- Route summary -->
@@ -186,6 +188,7 @@
             <span class="hv-dash-day-num" data-hv="dayLabel">G--</span>
             <span class="hv-dash-day-date" data-hv="dayDate"></span>
         </div>
+        <img src="./icon.png" alt="" class="hv-hero-avatar">
     </div>
     <!-- Weather + route -->
     <div class="hv-dash-info-row">
@@ -283,6 +286,9 @@
         <div class="hv-hero-status-left">
             <span class="hv-status-badge hv-badge-green">● IN VIAGGIO</span>
         </div>
+        <div class="hv-hero-status-right">
+            <img src="./icon.png" alt="" class="hv-hero-avatar">
+        </div>
     </div>
     <div class="hv-follower-hero-content">
         <div class="hv-hero-city-big">📍 <span data-hv="city">--</span></div>
@@ -371,6 +377,7 @@
             <div class="hv-story-top">
                 <span class="hv-story-day" data-hv="dayLabel">G--</span>
                 <span class="hv-story-time" data-hv="lastUpdate">-- min fa</span>
+                <img src="./icon.png" alt="" class="hv-hero-avatar">
             </div>
             <div class="hv-story-bottom">
                 <span class="hv-status-badge hv-badge-green">● In Viaggio</span>
@@ -431,6 +438,7 @@
     <!-- Status bar -->
     <div class="hv-bento-status">
         <span class="hv-status-badge hv-badge-green">● IN VIAGGIO · AGGIORNATO <span data-hv="lastUpdate">--</span> MIN FA</span>
+        <img src="./icon.png" alt="" class="hv-hero-avatar">
     </div>
     <!-- Location widget (full width) -->
     <div class="hv-bento-location">
@@ -517,7 +525,7 @@
 <div class="hv-page hv-visitor">
     <!-- Hero -->
     <div class="hv-visitor-hero">
-        <div class="hv-visitor-hero-icon">🚐</div>
+        <img src="./icon.png" alt="" class="hv-hero-avatar hv-visitor-hero-avatar">
         <h2 class="hv-visitor-hero-title">Road Trip Europa 2026</h2>
         <div class="hv-visitor-hero-sub">12.000 km · 13 paesi · 54 giorni di avventura</div>
         <div class="hv-visitor-hero-tagline">Dai fiordi norvegesi al sole del Mediterraneo — seguici in diretta!</div>
@@ -550,12 +558,12 @@
         <div class="hv-visitor-teaser-card">
             <strong>📍 Posizione Live</strong>
             <p>Vedi dove si trova il furgone in tempo reale sulla mappa, con velocità e km percorsi.</p>
-            <span class="hv-visitor-lock">🔒 Accedi per sbloccare</span>
+            <a class="hv-visitor-lock hv-login-link" href="javascript:void(0)" onclick="if(typeof doGoogleSignIn==='function')doGoogleSignIn()">🔒 Accedi per sbloccare</a>
         </div>
         <div class="hv-visitor-teaser-card">
             <strong>📖 Diario del Viaggio</strong>
             <p>Foto, audio e racconti quotidiani dall'equipaggio. Ogni sera un nuovo riepilogo.</p>
-            <span class="hv-visitor-lock">🔒 Accedi per sbloccare</span>
+            <a class="hv-visitor-lock hv-login-link" href="javascript:void(0)" onclick="if(typeof doGoogleSignIn==='function')doGoogleSignIn()">🔒 Accedi per sbloccare</a>
         </div>
     </div>
     <!-- Public explore -->

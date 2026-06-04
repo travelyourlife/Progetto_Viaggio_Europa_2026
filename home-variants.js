@@ -972,13 +972,17 @@
     var startX, startY;
 
     brand.addEventListener('touchstart', function(e) {
+      e.preventDefault();
       startX = e.touches[0].clientX;
       startY = e.touches[0].clientY;
       longPressTimer = setTimeout(function() {
         isLongPress = true;
         openRoleModal();
       }, 800);
-    }, { passive: true });
+    }, { passive: false });
+
+    // Prevent native context menu on long-press
+    brand.addEventListener('contextmenu', function(e) { e.preventDefault(); });
 
     brand.addEventListener('touchmove', function(e) {
       if (!longPressTimer) return;
