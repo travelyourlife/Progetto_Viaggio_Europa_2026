@@ -53,7 +53,7 @@
     <link rel="apple-touch-icon" sizes="152x152" href="./icon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="./icon.png">
     <link rel="apple-touch-icon" sizes="167x167" href="./icon.png">
-    <title>Europe Trip 2026 — V1.84</title>
+    <title>Quo Vadis — V1.85</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="home-variants.css">
@@ -75,7 +75,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = '1.84';
+  var EXPECTED_VERSION = '1.85';
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
   var r = false;
@@ -181,7 +181,7 @@
 <!-- ─── Top Bar ─── -->
 <div class="top-bar" id="topBar">
     <button class="menu-btn" id="menuOpen" aria-label="Menu">☰</button>
-    <div class="top-bar-title" onclick="switchTabFromHome('home');history.pushState(null,'','#tab-home');" style="cursor:pointer;"><img src="./icon.png" alt="">Europe Trip 2026</div>
+    <div class="top-bar-title"><img src="./icon.png" alt="">Quo Vadis</div>
     <button class="search-btn" id="searchOpen" aria-label="Search">🔍</button>
     <button class="notif-bell-btn" id="notifBellBtn" aria-label="Notifications">🔔<span class="notif-badge" id="notifBadge"></span></button>
     <button class="auth-btn" id="authBtn" aria-label="Login" title="Sign in">👤</button>
@@ -206,7 +206,7 @@
 <div class="menu-overlay" id="menuOverlay"></div>
 <nav class="side-menu" id="sideMenu">
     <div class="side-menu-header">
-        <h3>Europe Trip 2026</h3>
+        <h3>Quo Vadis</h3>
         <p>54 days · 13 countries</p>
         <button class="menu-close" id="menuClose">✕</button>
     </div>
@@ -278,10 +278,7 @@
         <span class="altro-item-icon">🎒</span>
         <span class="altro-item-text"><span class="altro-item-label">Packing</span><span class="altro-item-sub">Luggage checklist</span></span>
     </button>
-    <button class="altro-item" id="altro-notif-toggle">
-        <span class="altro-item-icon">🔔</span>
-        <span class="altro-item-text"><span class="altro-item-label">Notifications</span><span class="altro-item-sub" id="altro-notif-status">Tap to enable/disable</span></span>
-    </button>
+
     <button class="altro-item" id="hardRefreshBtn" onclick="if(window.hardRefresh)window.hardRefresh();else window.location.reload(true);">
         <span class="altro-item-icon">🔄</span>
         <span class="altro-item-text"><span class="altro-item-label">Update App</span><span class="altro-item-sub">Force update and clear cache</span></span>
@@ -430,6 +427,7 @@
 <a href="#mappa">🗺️ Map</a>
 <a href="#itinerario-54-giorni">🌟 Itinerary</a>
 </div></div>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerary</a> · 📍 <a href="javascript:void(0)" onclick="switchTab('posizione')">Live Position</a> · 🍝 <a href="javascript:void(0)" onclick="switchTab('cibo')">Food</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura')">Culture</a> · 🗺️ <a href="javascript:void(0)" onclick="switchTab('piano')">Plan</a></div>
 <h2 id="sintesi">📋 Summary — Crew and Vehicle</h2>
 <p>👨‍👩‍👧‍👦 <strong>Crew:</strong> 2 adults + 2 children (8 and 6 years old)</p>
 <p>🚐 <strong>Vehicle:</strong> self-sufficient camper van (LiFePo4 + 5 kg gas cylinder)</p>
@@ -445,6 +443,16 @@
 <p>📍 <strong>Geographic extremes:</strong> North → <strong>Tromsø / Senja (🇳🇴)</strong> · South → <strong>Palencia (🇪🇸)</strong></p>
 <p>🌊 <strong>Seas touched:</strong> Baltic Sea · Arctic Ocean · Norwegian Sea · Atlantic · Mediterranean Sea</p>
 <p>🛣️ <strong>Iconic scenic roads (🛣️):</strong> Via Baltica · Punkaharju Ridge · Senja NTR · Andøya NTR · Lofoten (E10) NTR · Helgelandskysten · Atlantic Road · Geiranger–Trollstigen NTR · Hardanger NTR · Jæren NTR + Nordsjøvegen · Storebælt Bridge · Marguerite Route · Basque Corniche · Desfiladero de la Hermida</p>
+<hr>
+<h2 id="meteo-viaggio">🌤️ Trip Weather</h2>
+<div id="riepilogo-weather-stats">
+  <p class="weather-loading">Loading real weather data...</p>
+</div>
+<hr>
+<h2 id="curiosita-viaggio">💡 Trip Fun Facts</h2>
+<div id="riepilogo-curiosita">
+  <p class="weather-loading">Loading fun facts...</p>
+</div>
 <hr>
 <span id="tabella"></span><span id="tabA"></span>
 <h3 id="legenda">🏷️ Icon Legend — Itinerary</h3>
@@ -1580,6 +1588,7 @@
 <a href="#italia-g51-g53">🇮🇹 Italy</a>
 <a href="#libri-film">📚 Books and Films</a>
 </div></div>
+<div class="cross-link-bar">🍝 <a href="javascript:void(0)" onclick="switchTab('cibo')">Food</a> · 🦶 <a href="javascript:void(0)" onclick="switchTab('attivita')">Activities</a> · 🧭 <a href="javascript:void(0)" onclick="switchTab('luoghi')">Places</a> · 📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerary</a> · 🗺️ <a href="javascript:void(0)" onclick="switchTab('piano')">Plan</a></div>
 <h2 id="storia">🏛️ Culture — In-Depth Guide</h2>
 <blockquote>
 <p>A cultural guide to read the evening before or during transfers. For each country: historical timeline, key figures, what to observe in architecture, living summer traditions, useful words with pronunciation, and quizzes/games to engage children (6-8 years old).</p>
@@ -4605,6 +4614,7 @@
 <a href="#cucina-italiana-rientro-g50-g53">🇮🇹 Italy</a>
 <a href="#gastronomia-consigli-cucina-in-furgone">👨‍🍳 Van cooking tips</a>
 </div></div>
+<div class="cross-link-bar">🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura')">Culture</a> · 🦶 <a href="javascript:void(0)" onclick="switchTab('attivita')">Activities</a> · 🧭 <a href="javascript:void(0)" onclick="switchTab('luoghi')">Places</a> · 📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerary</a> · 🗺️ <a href="javascript:void(0)" onclick="switchTab('piano')">Plan</a></div>
 <h2 id="food">🍽️ Gastronomy — by Country and Area</h2>
 <blockquote>
 <p>Typical dishes, local products and practical tips for eating well while spending little in a van. Focus on foods suitable also for children and easy to find in supermarkets or local markets.</p>
@@ -5300,6 +5310,7 @@
 <a href="#drone">🛸 Drone</a>
 <a href="#inreach">📡 Garmin inReach</a>
 </div></div>
+<div class="cross-link-bar">📍 <a href="javascript:void(0)" onclick="switchTab('posizione')">Live Position</a> · 🍝 <a href="javascript:void(0)" onclick="switchTab('cibo')">Food</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura')">Culture</a> · 🧭 <a href="javascript:void(0)" onclick="switchTab('luoghi')">Places</a> · 🎯 <a href="javascript:void(0)" onclick="switchTab('zaino','z-trekking')">Trekking Gear</a></div>
 <h2 id="campeggio">🚐 Camping — Rules by Country</h2>
 <table class="no-responsive">
 <thead>
@@ -6831,6 +6842,7 @@
 <a href="#secA">♨️ Thermal Baths</a>
 <a href="#poi-parchi-divertimento">🎢 Theme Parks</a>
 </div></div>
+<div class="cross-link-bar">📍 <a href="javascript:void(0)" onclick="switchTab('posizione')">Live Position</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura')">Culture</a> · 🦶 <a href="javascript:void(0)" onclick="switchTab('attivita')">Activities</a> · 📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerary</a> · 🗺️ <a href="javascript:void(0)" onclick="switchTab('piano')">Plan</a></div>
 
 <h2 id="musei-attrazioni">🏛️ Museums and Attractions</h2>
 <p>Museums, monuments and must-see cultural attractions along the route. Many are already mentioned in the individual itinerary days.</p>
@@ -6906,6 +6918,7 @@
 <a href="#fonti">📚 Fonti</a>
 <a href="#analytics" id="analytics-tab-link" style="display:none;">📊 Analytics</a>
 </div></div>
+<div class="cross-link-bar">📍 <a href="javascript:void(0)" onclick="switchTab('posizione')">Live Position</a> · 🍝 <a href="javascript:void(0)" onclick="switchTab('cibo')">Food</a> · 🦶 <a href="javascript:void(0)" onclick="switchTab('attivita')">Activities</a> · 🎯 <a href="javascript:void(0)" onclick="switchTab('zaino')">Gear</a> · 📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerary</a></div>
 <h2 id="checklist-pre-partenza">✅ Checklist — Pre-departure</h2>
 <hr>
 <h3 id="prenotazioni-per-data">📅 Bookings by date</h3>
@@ -7506,6 +7519,80 @@
 <h1 style="text-align:center; margin-top:16px;">🛠️ Admin &amp; Test Panel</h1>
 <p style="text-align:center;color:var(--text-muted);font-size:0.85em;">🔒 Visible only to organizers</p>
 
+<!-- ═══ TRIP CONTROLS (moved from Posizione) ═══ -->
+<div id="pos-admin-panel" class="admin-card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:12px 0;">
+<h3 style="margin-bottom:12px;">🚐 Trip Controls</h3>
+
+<!-- Live Tracking -->
+<div class="pos-admin-section" style="margin-bottom:16px;">
+    <h4 style="font-size:14px;font-weight:600;margin-bottom:10px;">▶️ Live Tracking</h4>
+    <div class="pos-btn-row" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
+        <button id="pos-live-start" class="pos-btn pos-btn-green pos-btn-large">▶️ Start Trip</button>
+        <button id="pos-live-stop" class="pos-btn pos-btn-red pos-btn-large" style="display:none;">⏹️ End Day</button>
+    </div>
+    <div class="pos-options-row" id="pos-live-options" style="display:flex;flex-direction:column;gap:6px;font-size:13px;">
+        <label class="pos-toggle-label"><input type="checkbox" id="pos-opt-autostart"> Auto-start on movement</label>
+        <label class="pos-toggle-label"><input type="checkbox" id="pos-opt-autostop" checked> Auto-stop when idle (10 min)</label>
+        <label class="pos-toggle-label"><input type="checkbox" id="pos-opt-eco"> Eco mode (less battery)</label>
+        <label class="pos-toggle-label"><input type="checkbox" id="pos-opt-parking" checked> Ask for parking at end of day</label>
+    </div>
+    <div id="pos-live-stats" class="pos-live-stats" style="display:none;margin-top:12px;">
+        <div class="pos-live-stat"><span class="pos-live-stat-value" id="live-speed-now">0</span><span class="pos-live-stat-label">km/h current</span></div>
+        <div class="pos-live-stat"><span class="pos-live-stat-value" id="live-speed-avg">0</span><span class="pos-live-stat-label">km/h average</span></div>
+        <div class="pos-live-stat"><span class="pos-live-stat-value" id="live-km-today">0</span><span class="pos-live-stat-label">km today</span></div>
+        <div class="pos-live-stat"><span class="pos-live-stat-value" id="live-time-today">0:00</span><span class="pos-live-stat-label">drive time</span></div>
+    </div>
+    <div style="margin-top:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <select id="pos-edit-km-day-select" style="padding:6px 10px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:var(--bg-card);color:var(--text);"></select>
+        <button id="pos-edit-km-standalone" class="pos-btn pos-btn-gray" style="font-size:13px;padding:6px 12px;">✏️ Edit km</button>
+    </div>
+</div>
+
+<!-- Parking -->
+<div class="pos-admin-section" style="margin-bottom:16px;">
+    <h4 style="font-size:14px;font-weight:600;margin-bottom:10px;">🅿️ Save Parking</h4>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <div style="flex:1;min-width:200px;position:relative;">
+            <input type="text" id="pos-parking-name" placeholder="Spot name (e.g. Reine Parking)..." autocomplete="off" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;">
+            <div id="pos-parking-suggestions" style="display:none;position:absolute;top:100%;left:0;right:0;z-index:9999;background:var(--bg-card);border:1px solid var(--border);border-top:none;border-radius:0 0 8px 8px;max-height:200px;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,0.15);"></div>
+        </div>
+        <select id="pos-parking-rating" style="padding:8px;border:1px solid var(--border);border-radius:8px;">
+            <option value="5">⭐⭐⭐⭐⭐</option>
+            <option value="4">⭐⭐⭐⭐</option>
+            <option value="3" selected>⭐⭐⭐</option>
+            <option value="2">⭐⭐</option>
+            <option value="1">⭐</option>
+        </select>
+        <button id="pos-parking-btn" class="pos-btn pos-btn-purple">🅿️ Save</button>
+    </div>
+</div>
+
+<!-- GPS Import -->
+<div class="pos-admin-section" style="margin-bottom:16px;">
+    <h4 style="font-size:14px;font-weight:600;margin-bottom:10px;">🗺️ GPS Data Import</h4>
+    <div style="padding:12px;background:var(--bg-alt);border-radius:var(--radius);border:1px solid var(--border);">
+        <p style="font-size:13px;margin:0 0 6px;"><strong>📂 Manual Import</strong></p>
+        <p style="font-size:12px;color:var(--text-muted);margin:0 0 8px;">Import GPX or JSON (Google Takeout) files from your device</p>
+        <button id="pos-timeline-import" class="pos-btn pos-btn-blue" style="font-size:13px;padding:8px 16px;">📂 Import GPX / JSON</button>
+    </div>
+</div>
+
+<!-- Day Override -->
+<div class="pos-admin-section">
+    <h4 style="font-size:14px;font-weight:600;margin-bottom:10px;">📅 Override Current Day</h4>
+    <div style="padding:12px;background:var(--bg-alt);border-radius:var(--radius);border:1px solid var(--border);">
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+            <button class="pos-btn pos-btn-gray" id="pos-day-prev" style="padding:6px 12px;">◀</button>
+            <select id="pos-day-select" style="font-weight:700;font-size:15px;padding:4px 8px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);min-width:70px;text-align:center;cursor:pointer;"></select>
+            <span id="pos-day-current" style="display:none;">D0</span>
+            <button class="pos-btn pos-btn-gray" id="pos-day-next" style="padding:6px 12px;">▶</button>
+            <button class="pos-btn pos-btn-blue" id="pos-day-sync" style="padding:6px 12px;font-size:12px;">☁️ Sync</button>
+            <button class="pos-btn" id="pos-day-reset" style="padding:6px 12px;font-size:12px;background:#e53e3e;color:#fff;">↺ Auto</button>
+        </div>
+    </div>
+</div>
+</div>
+
 <!-- System Status -->
 <div class="admin-card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:12px 0;">
 <h3 style="margin-bottom:12px;">📊 System Status</h3>
@@ -7533,27 +7620,15 @@
 <pre id="admin-log" style="margin-top:12px;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px;font-size:0.78em;max-height:200px;overflow-y:auto;white-space:pre-wrap;display:none;"></pre>
 </div>
 
-<!-- Analytics Console -->
+<!-- Post Editor -->
 <div class="admin-card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:12px 0;">
-<h3 style="margin-bottom:12px;">📊 Analytics — Mini Console</h3>
-<div class="analytics-grid" id="analytics-grid">
-  <div class="analytics-card"><span class="analytics-value" id="an-sessions">--</span><span class="analytics-label">Sessions today</span></div>
-  <div class="analytics-card"><span class="analytics-value" id="an-pageviews">--</span><span class="analytics-label">Pageviews today</span></div>
-  <div class="analytics-card"><span class="analytics-value" id="an-unique-users">--</span><span class="analytics-label">Unique devices</span></div>
-  <div class="analytics-card"><span class="analytics-value" id="an-total-sessions">--</span><span class="analytics-label">Total sessions</span></div>
-  <div class="analytics-card"><span class="analytics-value" id="an-tabs">--</span><span class="analytics-label">Top tab</span></div>
-  <div class="analytics-card"><span class="analytics-value" id="an-avg-time">--</span><span class="analytics-label">Avg session time</span></div>
-</div>
-<details style="margin-top:12px;">
-<summary style="cursor:pointer;font-weight:600;">Tab visit details</summary>
-<table class="compact-table" id="an-tab-table">
-<thead><tr><th>Tab</th><th>Views</th><th>Time</th></tr></thead>
-<tbody id="an-tab-tbody"></tbody>
-</table>
-</details>
-<div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
-<button id="an-reset" class="pos-btn" style="font-size:13px;">Reset local counters</button>
-</div>
+<h3 style="margin-bottom:12px;">✏️ Pre-Departure Post Management</h3>
+<p style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">Edit posts visible on the follower home before departure. Changes are saved to Firebase.</p>
+<div id="admin-posts-list" style="display:flex;flex-direction:column;gap:10px;"></div>
+<button id="admin-post-add" class="pos-btn pos-btn-green" style="margin-top:10px;font-size:13px;">➕ Add post</button>
+<button id="admin-posts-save" class="pos-btn pos-btn-blue" style="margin-top:8px;font-size:13px;">💾 Save to Firebase</button>
+<button id="admin-posts-translate" class="pos-btn" style="margin-top:8px;font-size:13px;background:#805ad5;color:#fff;">🌐 Auto-translate IT→EN</button>
+<p id="admin-posts-status" style="font-size:11px;color:var(--text-muted);margin-top:6px;"></p>
 </div>
 
 <!-- Centralized User Management -->
@@ -7668,6 +7743,7 @@
     <div class="zp-sub" id="zp-percent">0% completed</div>
     <div class="zp-bar"><div class="zp-fill" id="zp-fill" style="width:0%"></div></div>
 </div>
+<div class="cross-link-bar">🗺️ <a href="javascript:void(0)" onclick="switchTab('piano')">Plan & Budget</a> · 🦶 <a href="javascript:void(0)" onclick="switchTab('attivita')">Activities</a> · 🍝 <a href="javascript:void(0)" onclick="switchTab('cibo')">Food</a> · 📍 <a href="javascript:void(0)" onclick="switchTab('posizione')">Live Position</a> · 📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerary</a></div>
 
 <h1 id="zaino" style="text-align:center;">🎒 What to Bring — Motorhome Equipment List</h1>
 <h3 id="z-camper">🚐 Motorhome &amp; Tools</h3>
@@ -7972,6 +8048,445 @@
     </div>
 </div>
 
+<!-- ─── HISTORICAL WEATHER (collapsible) ─── -->
+<details id="pos-meteo-storico" style="margin-top:16px;">
+<summary style="cursor:pointer;font-size:16px;font-weight:700;padding:12px 0;user-select:none;">📊 Historical Weather — by Area and Day <span style="font-size:13px;color:var(--text-muted);font-weight:400;">(climate averages)</span></summary>
+<div style="padding:8px 0;">
+<span id="meteo"></span>
+<blockquote>
+<p>Historical climate averages for the <strong>exact dates</strong> you will be in each area (26/06 → 18/08). Sources: WeatherSpark, Climate-Data.org, VisitNorway, VisitFinland, AccuWeather.</p>
+</blockquote>
+<h4 id="meteo-tabella-riassuntiva" style="font-size:1.2em;margin-top:1.5em;">📊 Weather — Summary Table</h4>
+<table>
+<thead>
+<tr>
+<th>Days</th>
+<th>Area</th>
+<th>T max</th>
+<th>T min</th>
+<th>Rain (mm/month)</th>
+<th>Rain days</th>
+<th>Daylight</th>
+<th>Weather risk</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Days"><a href="#g0">D0</a>-<a href="#g1">D1</a> (26-27/06)</td>
+<td data-label="Area">Austria 🇦🇹</td>
+<td data-label="T max">25°C</td>
+<td data-label="T min">15°C</td>
+<td data-label="Rain (mm/month)">~80</td>
+<td data-label="Rain days">10</td>
+<td data-label="Daylight">16h</td>
+<td data-label="Weather risk">Afternoon storms</td>
+</tr>
+<tr>
+<td data-label="Days"><a href="#g2">D2</a> (28/06)</td>
+<td data-label="Area">CZ → PL 🇨🇿🇵🇱</td>
+<td data-label="T max">23°C</td>
+<td data-label="T min">13°C</td>
+<td data-label="Rain (mm/month)">~70</td>
+<td data-label="Rain days">9</td>
+<td data-label="Daylight">17h</td>
+<td data-label="Weather risk">Afternoon storms</td>
+</tr>
+<tr>
+<td data-label="Days"><a href="#g3">D3</a>-<a href="#g5">D5</a> (29/06–01/07)</td>
+<td data-label="Area">Baltics 🇱🇹🇱🇻🇪🇪</td>
+<td data-label="T max">21-22°C</td>
+<td data-label="T min">12°C</td>
+<td data-label="Rain (mm/month)">~65</td>
+<td data-label="Rain days">9</td>
+<td data-label="Daylight">18h+</td>
+<td data-label="Weather risk">Brief showers</td>
+</tr>
+<tr>
+<td data-label="Days"><a href="#g6">D6</a> (02/07)</td>
+<td data-label="Area">Helsinki → Finland 🇫🇮</td>
+<td data-label="T max">20°C</td>
+<td data-label="T min">12°C</td>
+<td data-label="Rain (mm/month)">~60</td>
+<td data-label="Rain days">8</td>
+<td data-label="Daylight">19h</td>
+<td data-label="Weather risk">Variable</td>
+</tr>
+<tr>
+<td data-label="Days"><a href="#g7">D7</a>-<a href="#g9">D9</a> (03-05/07)</td>
+<td data-label="Area">Lakes / Oulu 🇫🇮</td>
+<td data-label="T max">20-22°C</td>
+<td data-label="T min">10-12°C</td>
+<td data-label="Rain (mm/month)">~65</td>
+<td data-label="Rain days">10</td>
+<td data-label="Daylight">20h+</td>
+<td data-label="Weather risk">⚠️ Mosquitoes! Brief showers</td>
+</tr>
+<tr>
+<td data-label="Days"><a href="#g10">D10</a>-<a href="#g14">D14</a> (06-10/07)</td>
+<td data-label="Area">Lapland 🇫🇮</td>
+<td data-label="T max">18-22°C</td>
+<td data-label="T min">8-12°C</td>
+<td data-label="Rain (mm/month)">~55</td>
+<td data-label="Rain days">9</td>
+<td data-label="Daylight">22-24h</td>
+<td data-label="Weather risk">⚠️ Mosquitoes at peak</td>
+</tr>
+<tr>
+<td data-label="Days"><a href="#g15">D15</a> (11/07)</td>
+<td data-label="Area">Tromsø 🇳🇴</td>
+<td data-label="T max">15°C</td>
+<td data-label="T min">9°C</td>
+<td data-label="Rain (mm/month)">~60</td>
+<td data-label="Rain days">10</td>
+<td data-label="Daylight">24h ☀️</td>
+<td data-label="Weather risk">Wind, rain possible</td>
+</tr>
+<tr>
+<td data-label="Days"><a href="#g16">D16</a>-<a href="#g23">D23</a> (12-19/07)</td>
+<td data-label="Area">Senja + Vesterålen + Lofoten 🇳🇴</td>
+<td data-label="T max">14-16°C</td>
+<td data-label="T min">10-12°C</td>
+<td data-label="Rain (mm/month)">~80</td>
+<td data-label="Rain days">12-14</td>
+<td data-label="Daylight">22-24h</td>
+<td data-label="Weather risk">⚠️ Frequent rain, wind</td>
+</tr>
+<tr>
+<td data-label="Days"><a href="#g24">D24</a>-<a href="#g25">D25</a> (20-21/07)</td>
+<td data-label="Area">Mo i Rana → Trondheim 🇳🇴</td>
+<td data-label="T max">17-19°C</td>
+<td data-label="T min">10-12°C</td>
+<td data-label="Rain (mm/month)">~70</td>
+<td data-label="Rain days">10</td>
+<td data-label="Daylight">20h</td>
+<td data-label="Weather risk">Rain possible</td>
+</tr>
+<tr>
+<td data-label="Days"><a href="#g26">D26</a> (22/07)</td>
+<td data-label="Area">Trondheim 🇳🇴</td>
+<td data-label="T max">19°C</td>
+<td data-label="T min">11°C</td>
+<td data-label="Rain (mm/month)">~70</td>
+<td data-label="Rain days">10</td>
+<td data-label="Daylight">20h</td>
+<td data-label="Weather risk">Variable</td>
+</tr>
+<tr>
+<td data-label="Days"><a href="#g27">D27</a>-<a href="#g29">D29</a> (23-25/07)</td>
+<td data-label="Area">Atlantic Rd → Bergen 🇳🇴</td>
+<td data-label="T max">16-17°C</td>
+<td data-label="T min">11°C</td>
+<td data-label="Rain (mm/month)">~150-170</td>
+<td data-label="Rain days">15-17</td>
+<td data-label="Daylight">19h</td>
+<td data-label="Weather risk">⚠️ Bergen: rain almost certain</td>
+</tr>
+<tr>
+<td data-label="Days"><a href="#g30">D30</a> (26/07)</td>
+<td data-label="Area">Bergen 🇳🇴</td>
+<td data-label="T max">17°C</td>
+<td data-label="T min">11°C</td>
+<td data-label="Rain (mm/month)">~170</td>
+<td data-label="Rain days">17</td>
+<td data-label="Daylight">19h</td>
+<td data-label="Weather risk">⚠️ Rain very likely</td>
+</tr>
+<tr>
+<td data-label="Days"><a href="#g31">D31</a>-<a href="#g32">D32</a> (27-28/07)</td>
+<td data-label="Area">Stavanger → K.sand 🇳🇴</td>
+<td data-label="T max">17-18°C</td>
+<td data-label="T min">11-12°C</td>
+<td data-label="Rain (mm/month)">~100</td>
+<td data-label="Rain days">12</td>
+<td data-label="Daylight">18h 30m</td>
+<td data-label="Weather risk">Cloudy 50%</td>
+</tr>
+<tr>
+<td data-label="Days"><a href="#g33">D33</a> (29/07)</td>
+<td data-label="Area">Ferry → Copenhagen 🇩🇰</td>
+<td data-label="T max">22°C</td>
+<td data-label="T min">14°C</td>
+<td data-label="Rain (mm/month)">~60</td>
+<td data-label="Rain days">9</td>
+<td data-label="Daylight">17h</td>
+<td data-label="Weather risk">Sporadic showers</td>
+</tr>
+<tr>
+<td data-label="Days"><a href="#g34">D34</a>-<a href="#g35">D35</a> (30-31/07)</td>
+<td data-label="Area">Copenhagen 🇩🇰</td>
+<td data-label="T max">22°C</td>
+<td data-label="T min">14°C</td>
+<td data-label="Rain (mm/month)">~60</td>
+<td data-label="Rain days">9</td>
+<td data-label="Daylight">17h</td>
+<td data-label="Weather risk">Sporadic showers</td>
+</tr>
+<tr>
+<td data-label="Days"><a href="#g36">D36</a>-<a href="#g38">D38</a> (01-03/08)</td>
+<td data-label="Area">Billund 🇩🇰</td>
+<td data-label="T max">21°C</td>
+<td data-label="T min">13°C</td>
+<td data-label="Rain (mm/month)">~65</td>
+<td data-label="Rain days">10</td>
+<td data-label="Daylight">16h 30m</td>
+<td data-label="Weather risk">Variable</td>
+</tr>
+<tr>
+<td data-label="Days"><a href="#g39">D39</a> (04/08)</td>
+<td data-label="Area">Bremen 🇩🇪</td>
+<td data-label="T max">22°C</td>
+<td data-label="T min">13°C</td>
+<td data-label="Rain (mm/month)">~65</td>
+<td data-label="Rain days">10</td>
+<td data-label="Daylight">16h</td>
+<td data-label="Weather risk">Variable</td>
+</tr>
+<tr>
+<td data-label="Days"><a href="#g40">D40</a> (05/08)</td>
+<td data-label="Area">Amiens 🇫🇷</td>
+<td data-label="T max">23°C</td>
+<td data-label="T min">13°C</td>
+<td data-label="Rain (mm/month)">~55</td>
+<td data-label="Rain days">8</td>
+<td data-label="Daylight">15h 30m</td>
+<td data-label="Weather risk">Brief showers</td>
+</tr>
+<tr>
+<td data-label="Days"><a href="#g41">D41</a>-<a href="#g42">D42</a> (06-07/08)</td>
+<td data-label="Area">Loire 🇫🇷</td>
+<td data-label="T max">25-26°C</td>
+<td data-label="T min">13-14°C</td>
+<td data-label="Rain (mm/month)">~52</td>
+<td data-label="Rain days">7</td>
+<td data-label="Daylight">15h</td>
+<td data-label="Weather risk">Fair</td>
+</tr>
+<tr>
+<td data-label="Days"><a href="#g43">D43</a> (08/08)</td>
+<td data-label="Area">San Sebastián 🇪🇸</td>
+<td data-label="T max">24-27°C</td>
+<td data-label="T min">16-18°C</td>
+<td data-label="Rain (mm/month)">~72</td>
+<td data-label="Rain days">9</td>
+<td data-label="Daylight">14h 30m</td>
+<td data-label="Weather risk">Humid, rain possible</td>
+</tr>
+<tr>
+<td data-label="Days"><a href="#g44">D44</a> (09/08)</td>
+<td data-label="Area">Bilbao 🇪🇸</td>
+<td data-label="T max">25-27°C</td>
+<td data-label="T min">17°C</td>
+<td data-label="Rain (mm/month)">~60</td>
+<td data-label="Rain days">7</td>
+<td data-label="Daylight">14h 30m</td>
+<td data-label="Weather risk">Less rain</td>
+</tr>
+<tr>
+<td data-label="Days"><a href="#g45">D45</a> (10/08)</td>
+<td data-label="Area">Picos de Europa 🇪🇸</td>
+<td data-label="T max">20-25°C / 10-15°C</td>
+<td data-label="T min">10-12°C</td>
+<td data-label="Rain (mm/month)">~50</td>
+<td data-label="Rain days">7</td>
+<td data-label="Daylight">14h</td>
+<td data-label="Weather risk">Mountain storms</td>
+</tr>
+<tr>
+<td data-label="Days"><a href="#g46">D46</a>-<a href="#g48">D48</a> (11-13/08)</td>
+<td data-label="Area">Palencia 🇪🇸</td>
+<td data-label="T max">29-31°C</td>
+<td data-label="T min">13-14°C</td>
+<td data-label="Rain (mm/month)">15</td>
+<td data-label="Rain days">2-3</td>
+<td data-label="Daylight">14h</td>
+<td data-label="Weather risk">☀️ Clear skies</td>
+</tr>
+<tr>
+<td data-label="Days"><a href="#g49">D49</a> (14/08)</td>
+<td data-label="Area">Costa Brava 🇪🇸</td>
+<td data-label="T max">28-30°C</td>
+<td data-label="T min">19-20°C</td>
+<td data-label="Rain (mm/month)">~40</td>
+<td data-label="Rain days">4</td>
+<td data-label="Daylight">14h</td>
+<td data-label="Weather risk">Fair and hot</td>
+</tr>
+<tr>
+<td data-label="Days"><a href="#g50">D50</a> (15/08)</td>
+<td data-label="Area">Côte d'Azur 🇫🇷</td>
+<td data-label="T max">28-31°C</td>
+<td data-label="T min">17-19°C</td>
+<td data-label="Rain (mm/month)">~25</td>
+<td data-label="Rain days">3</td>
+<td data-label="Daylight">14h</td>
+<td data-label="Weather risk">☀️ Very fair</td>
+</tr>
+<tr>
+<td data-label="Days"><a href="#g51">D51</a>-<a href="#g52">D52</a> (16-17/08)</td>
+<td data-label="Area">Genoa 🇮🇹</td>
+<td data-label="T max">28-30°C</td>
+<td data-label="T min">20-22°C</td>
+<td data-label="Rain (mm/month)">~40</td>
+<td data-label="Rain days">4</td>
+<td data-label="Daylight">14h</td>
+<td data-label="Weather risk">Hot and humid</td>
+</tr>
+<tr>
+<td data-label="Days"><a href="#g53">D53</a> (18/08)</td>
+<td data-label="Area">Genoa → Padova 🇮🇹</td>
+<td data-label="T max">30-32°C</td>
+<td data-label="T min">20°C</td>
+<td data-label="Rain (mm/month)">~45</td>
+<td data-label="Rain days">4</td>
+<td data-label="Daylight">14h</td>
+<td data-label="Weather risk">Afternoon Po Valley storms</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h4 id="meteo-profilo-termico" style="font-size:1.2em;margin-top:1.5em;">🌡️ Weather — Temperature Profile</h4>
+<p class="weather-reliability-note">🔵 Cool (≤17°C) · 🟢 Mild (18-23°C) · 🟡 Warm (24-27°C) · 🔴 Hot (≥28°C)</p>
+<div class="weather-chart" id="weatherChart">
+    <div class="wc-bars">
+        <div class="wc-bar-wrap" title="Austria 🇦🇹: 25°C max, 15°C min, 10 rain days">
+            <span class="wc-label">D0-D1</span>
+            <div class="wc-bar" style="width:70%;background:#d69e2e"></div>
+            <span class="wc-temp">25°</span>
+        </div>
+        <div class="wc-bar-wrap" title="CZ → PL 🇨🇿🇵🇱: 23°C max, 13°C min, 9 rain days">
+            <span class="wc-label">D2</span>
+            <div class="wc-bar" style="width:62%;background:#d69e2e"></div>
+            <span class="wc-temp">23°</span>
+        </div>
+        <div class="wc-bar-wrap" title="Baltics 🇱🇹🇱🇻🇪🇪: 22°C max, 12°C min, 9 rain days">
+            <span class="wc-label">D3-D5</span>
+            <div class="wc-bar" style="width:58%;background:#38a169"></div>
+            <span class="wc-temp">22°</span>
+        </div>
+        <div class="wc-bar-wrap" title="Helsinki 🇫🇮: 20°C max, 12°C min, 8 rain days">
+            <span class="wc-label">D6</span>
+            <div class="wc-bar" style="width:50%;background:#38a169"></div>
+            <span class="wc-temp">20°</span>
+        </div>
+        <div class="wc-bar-wrap" title="Lakes/Oulu 🇫🇮: 22°C max, 12°C min, 10 rain days">
+            <span class="wc-label">D7-D9</span>
+            <div class="wc-bar" style="width:58%;background:#38a169"></div>
+            <span class="wc-temp">22°</span>
+        </div>
+        <div class="wc-bar-wrap" title="Lapland 🇫🇮: 20°C max, 10°C min, 9 rain days">
+            <span class="wc-label">D10-D14</span>
+            <div class="wc-bar" style="width:50%;background:#38a169"></div>
+            <span class="wc-temp">20°</span>
+        </div>
+        <div class="wc-bar-wrap" title="Tromsø 🇳🇴: 15°C max, 9°C min, 10 rain days">
+            <span class="wc-label">D15</span>
+            <div class="wc-bar" style="width:29%;background:#3182ce"></div>
+            <span class="wc-temp">15°</span>
+        </div>
+        <div class="wc-bar-wrap" title="Lofoten 🇳🇴: 15°C max, 11°C min, 13 rain days">
+            <span class="wc-label">D16-D23</span>
+            <div class="wc-bar" style="width:29%;background:#3182ce"></div>
+            <span class="wc-temp">15°</span>
+        </div>
+        <div class="wc-bar-wrap" title="Mo→Trondheim 🇳🇴: 18°C max, 11°C min, 10 rain days">
+            <span class="wc-label">D24-D25</span>
+            <div class="wc-bar" style="width:41%;background:#38a169"></div>
+            <span class="wc-temp">18°</span>
+        </div>
+        <div class="wc-bar-wrap" title="Trondheim 🇳🇴: 19°C max, 11°C min, 10 rain days">
+            <span class="wc-label">D26</span>
+            <div class="wc-bar" style="width:45%;background:#38a169"></div>
+            <span class="wc-temp">19°</span>
+        </div>
+        <div class="wc-bar-wrap" title="Atlantic→Bergen 🇳🇴: 17°C max, 11°C min, 16 rain days">
+            <span class="wc-label">D27-D29</span>
+            <div class="wc-bar" style="width:37%;background:#3182ce"></div>
+            <span class="wc-temp">17°</span>
+        </div>
+        <div class="wc-bar-wrap" title="Bergen 🇳🇴: 17°C max, 11°C min, 17 rain days">
+            <span class="wc-label">D30</span>
+            <div class="wc-bar" style="width:37%;background:#3182ce"></div>
+            <span class="wc-temp">17°</span>
+        </div>
+        <div class="wc-bar-wrap" title="Stavanger 🇳🇴: 18°C max, 12°C min, 12 rain days">
+            <span class="wc-label">D31-D32</span>
+            <div class="wc-bar" style="width:41%;background:#38a169"></div>
+            <span class="wc-temp">18°</span>
+        </div>
+        <div class="wc-bar-wrap" title="→Copenhagen 🇩🇰: 22°C max, 14°C min, 9 rain days">
+            <span class="wc-label">D33</span>
+            <div class="wc-bar" style="width:58%;background:#38a169"></div>
+            <span class="wc-temp">22°</span>
+        </div>
+        <div class="wc-bar-wrap" title="Copenhagen 🇩🇰: 22°C max, 14°C min, 9 rain days">
+            <span class="wc-label">D34-D35</span>
+            <div class="wc-bar" style="width:58%;background:#38a169"></div>
+            <span class="wc-temp">22°</span>
+        </div>
+        <div class="wc-bar-wrap" title="Billund 🇩🇰: 20°C max, 12°C min, 10 rain days">
+            <span class="wc-label">D36-D37</span>
+            <div class="wc-bar" style="width:50%;background:#38a169"></div>
+            <span class="wc-temp">20°</span>
+        </div>
+        <div class="wc-bar-wrap" title="Hamburg→Amiens: 22°C max, 13°C min, 9 rain days">
+            <span class="wc-label">D38-D39</span>
+            <div class="wc-bar" style="width:58%;background:#38a169"></div>
+            <span class="wc-temp">22°</span>
+        </div>
+        <div class="wc-bar-wrap" title="Amiens 🇫🇷: 23°C max, 13°C min, 8 rain days">
+            <span class="wc-label">D40</span>
+            <div class="wc-bar" style="width:62%;background:#d69e2e"></div>
+            <span class="wc-temp">23°</span>
+        </div>
+        <div class="wc-bar-wrap" title="Loire 🇫🇷: 26°C max, 14°C min, 7 rain days">
+            <span class="wc-label">D41-D42</span>
+            <div class="wc-bar" style="width:75%;background:#d69e2e"></div>
+            <span class="wc-temp">26°</span>
+        </div>
+        <div class="wc-bar-wrap" title="San Sebastián 🇪🇸: 26°C max, 17°C min, 9 rain days">
+            <span class="wc-label">D43</span>
+            <div class="wc-bar" style="width:75%;background:#d69e2e"></div>
+            <span class="wc-temp">26°</span>
+        </div>
+        <div class="wc-bar-wrap" title="Bilbao 🇪🇸: 26°C max, 17°C min, 7 rain days">
+            <span class="wc-label">D44</span>
+            <div class="wc-bar" style="width:75%;background:#d69e2e"></div>
+            <span class="wc-temp">26°</span>
+        </div>
+        <div class="wc-bar-wrap" title="Picos 🇪🇸: 23°C max, 11°C min, 7 rain days">
+            <span class="wc-label">D45</span>
+            <div class="wc-bar" style="width:62%;background:#d69e2e"></div>
+            <span class="wc-temp">23°</span>
+        </div>
+        <div class="wc-bar-wrap" title="Palencia 🇪🇸: 30°C max, 14°C min, 3 rain days">
+            <span class="wc-label">D46-D48</span>
+            <div class="wc-bar" style="width:91%;background:#e53e3e"></div>
+            <span class="wc-temp">30°</span>
+        </div>
+        <div class="wc-bar-wrap" title="Costa Brava 🇪🇸: 29°C max, 20°C min, 4 rain days">
+            <span class="wc-label">D49-D50</span>
+            <div class="wc-bar" style="width:87%;background:#e53e3e"></div>
+            <span class="wc-temp">29°</span>
+        </div>
+        <div class="wc-bar-wrap" title="→Genoa→Home 🇫🇷🇮🇹: 30°C max, 20°C min, 4 rain days">
+            <span class="wc-label">D51-D53</span>
+            <div class="wc-bar" style="width:91%;background:#e53e3e"></div>
+            <span class="wc-temp">30°</span>
+        </div>
+    </div>
+</div>
+<div id="weatherRealtime" class="weather-realtime">
+    <div class="skeleton skeleton-line" style="width:80%;"></div>
+    <div class="skeleton skeleton-line" style="width:60%;"></div>
+    <div class="skeleton skeleton-block" style="height:60px;"></div>
+</div>
+<p class="weather-source"><em>Source: Open-Meteo API (real-time) + historical climate data</em></p>
+<blockquote>
+<p><strong>Recommended apps:</strong> <a href="https://www.yr.no" target="_blank" rel="noopener noreferrer">Yr.no</a> (Scandinavia) · <a href="https://www.aemet.es" target="_blank" rel="noopener noreferrer">AEMET</a> (Spain) · <a href="https://meteofrance.com" target="_blank" rel="noopener noreferrer">Météo-France</a> (France)</p>
+</blockquote>
+</div>
+</details>
+
 <hr>
 
 <!-- ─── STOPS (unified: itinerary + custom) ─── -->
@@ -8016,109 +8531,7 @@
 <div id="pos-daily-list"></div>
 </details>
 
-<hr>
-
-<!-- ═══ ADMIN PANEL (organizers only) ═══ -->
-<div id="pos-admin-panel" class="pos-admin-panel" style="display:none;">
-<details id="pos-admin-details">
-<summary class="pos-admin-summary">⚙️ Trip Controls <span class="owner-badge">🔒 Admin</span></summary>
-<!-- Live Tracking -->
-<div class="pos-admin-section">
-    <h4 class="pos-admin-section-title">▶️ Live Tracking</h4>
-    <div class="pos-btn-row">
-        <button id="pos-live-start" class="pos-btn pos-btn-green pos-btn-large">▶️ Start Trip</button>
-        <button id="pos-live-stop" class="pos-btn pos-btn-red pos-btn-large" style="display:none;">⏹️ End Day</button>
-    </div>
-    <div class="pos-options-row" id="pos-live-options">
-        <label class="pos-toggle-label">
-            <input type="checkbox" id="pos-opt-autostart"> Auto-start on movement
-        </label>
-        <label class="pos-toggle-label">
-            <input type="checkbox" id="pos-opt-autostop" checked> Auto-stop when idle (10 min)
-        </label>
-        <label class="pos-toggle-label">
-            <input type="checkbox" id="pos-opt-eco"> Eco mode (less battery)
-        </label>
-        <label class="pos-toggle-label">
-            <input type="checkbox" id="pos-opt-parking" checked> Ask for parking at end of day
-        </label>
-    </div>
-    <div id="pos-live-stats" class="pos-live-stats" style="display:none;margin-top:12px;">
-        <div class="pos-live-stat">
-            <span class="pos-live-stat-value" id="live-speed-now">0</span>
-            <span class="pos-live-stat-label">km/h current</span>
-        </div>
-        <div class="pos-live-stat">
-            <span class="pos-live-stat-value" id="live-speed-avg">0</span>
-            <span class="pos-live-stat-label">km/h average</span>
-        </div>
-        <div class="pos-live-stat">
-            <span class="pos-live-stat-value" id="live-km-today">0</span>
-            <span class="pos-live-stat-label">km today</span>
-        </div>
-        <div class="pos-live-stat">
-            <span class="pos-live-stat-value" id="live-time-today">0:00</span>
-            <span class="pos-live-stat-label">drive time</span>
-        </div>
-    </div>
-    <div style="margin-top:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-        <select id="pos-edit-km-day-select" style="padding:6px 10px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:var(--bg-card);color:var(--text);"></select>
-        <button id="pos-edit-km-standalone" class="pos-btn pos-btn-gray" style="font-size:13px;padding:6px 12px;">✏️ Edit km</button>
-    </div>
-</div>
-<!-- Custom Stops: now integrated in Stops section above -->
-<!-- Parking -->
-<div class="pos-admin-section">
-    <h4 class="pos-admin-section-title">🅿️ Save Parking</h4>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
-        <div style="flex:1;min-width:200px;position:relative;">
-            <input type="text" id="pos-parking-name" placeholder="Spot name (e.g. Reine Parking)..." autocomplete="off" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;">
-            <div id="pos-parking-suggestions" style="display:none;position:absolute;top:100%;left:0;right:0;z-index:9999;background:var(--bg-card);border:1px solid var(--border);border-top:none;border-radius:0 0 8px 8px;max-height:200px;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,0.15);"></div>
-        </div>
-        <select id="pos-parking-rating" style="padding:8px;border:1px solid var(--border);border-radius:8px;">
-            <option value="5">⭐⭐⭐⭐⭐</option>
-            <option value="4">⭐⭐⭐⭐</option>
-            <option value="3" selected>⭐⭐⭐</option>
-            <option value="2">⭐⭐</option>
-            <option value="1">⭐</option>
-        </select>
-        <button id="pos-parking-btn" class="pos-btn pos-btn-purple">🅿️ Save</button>
-    </div>
-</div>
-
-<!-- Import GPS Data -->
-<div class="pos-admin-section">
-    <h4 class="pos-admin-section-title">🗺️ GPS Data Import</h4>
-
-    <!-- Manual import (JSON/GPX) -->
-    <div style="padding:12px;background:var(--bg-alt);border-radius:var(--radius);border:1px solid var(--border);">
-        <p style="font-size:13px;margin:0 0 6px;"><strong>📂 Manual Import</strong></p>
-        <p style="font-size:12px;color:var(--text-muted);margin:0 0 8px;">Import GPX or JSON (Google Takeout) files from your device</p>
-        <button id="pos-timeline-import" class="pos-btn pos-btn-blue" style="font-size:13px;padding:8px 16px;">📂 Import GPX / JSON</button>
-    </div>
-</div>
-
-<!-- Settings -->
-<div class="pos-admin-section">
-    <h4 class="pos-admin-section-title">⚙️ Settings</h4>
-
-
-    <div style="padding:12px;background:var(--bg-alt);border-radius:var(--radius);border:1px solid var(--border);">
-        <p style="font-size:13px;margin:0 0 8px;"><strong>📅 Override current day</strong></p>
-        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-            <button class="pos-btn pos-btn-gray" id="pos-day-prev" style="padding:6px 12px;">◀</button>
-            <select id="pos-day-select" style="font-weight:700;font-size:15px;padding:4px 8px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);min-width:70px;text-align:center;cursor:pointer;"></select>
-            <span id="pos-day-current" style="display:none;">D0</span>
-            <button class="pos-btn pos-btn-gray" id="pos-day-next" style="padding:6px 12px;">▶</button>
-            <button class="pos-btn pos-btn-blue" id="pos-day-sync" style="padding:6px 12px;font-size:12px;">☁️ Sync</button>
-            <button class="pos-btn" id="pos-day-reset" style="padding:6px 12px;font-size:12px;background:#e53e3e;color:#fff;">↺ Auto</button>
-        </div>
-        <p style="font-size:11px;color:var(--text-muted);margin:6px 0 0;">Session-only override for testing (resets on refresh).</p>
-</div>
-
-</details>
-</div>
-</div>
+<!-- Admin panel removed from Posizione — now in Admin tab -->
 
 </div><!-- /posizione-content -->
 
@@ -8182,12 +8595,31 @@
 <div class="notif-drawer" id="notifDrawer">
     <div class="notif-drawer-header">
         <h3>🔔 Notifications</h3>
+        <button class="notif-settings-btn" id="notifSettingsBtn" title="Notification settings">⚙️</button>
         <button class="notif-drawer-close" id="notifDrawerClose">&times;</button>
     </div>
     <div class="notif-drawer-list" id="notifDrawerList"></div>
+    <div class="notif-settings-panel" id="notifSettingsPanel" style="display:none;">
+        <h4>⚙️ Notification Settings</h4>
+        <p class="notif-settings-desc">Enable push notifications to receive real-time trip updates.</p>
+        <button class="notif-settings-toggle" id="notifSettingsToggle">🔔 Enable notifications</button>
+        <p class="notif-settings-status" id="notifSettingsStatus"></p>
+    </div>
 </div>
 
-<!-- Scripts moved to <head> with defer for reliability -->
-
+<!-- ─── Home Variants Templates ─── -->
+<div id="hv-templates" style="display:none;"></div>
+<script>
+// Load home-variants.html templates into the page
+(function(){
+  fetch('./home-variants.html').then(function(r){return r.text();}).then(function(html){
+    var div = document.getElementById('hv-templates');
+    if(div) div.innerHTML = html;
+    // Move templates to document body for proper <template> access
+    var templates = div.querySelectorAll('template');
+    templates.forEach(function(t){ document.body.appendChild(t); });
+  }).catch(function(e){ console.warn('[HomeVariants] Could not load templates:', e); });
+})();
+</script>
 </body>
 </html>

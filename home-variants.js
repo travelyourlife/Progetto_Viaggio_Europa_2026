@@ -101,6 +101,18 @@
     // Initial render (delayed to let auth resolve)
     setTimeout(function() {
       renderCurrentVariant();
+      // Propagate saved role to entire app on load
+      if (currentRole === 'follower' || currentRole === 'visitor') {
+        window.isOwner = false;
+        var adminPanel = document.getElementById('tab-admin');
+        if (adminPanel) adminPanel.style.display = 'none';
+        var adminMenuLink = document.querySelector('[data-tab="admin"]');
+        if (adminMenuLink) adminMenuLink.style.display = 'none';
+        var addEntryBtn = document.getElementById('diario-add-entry');
+        if (addEntryBtn) addEntryBtn.style.display = 'none';
+        var bottomAdmin = document.querySelector('.bottom-bar [data-tab="admin"]');
+        if (bottomAdmin) bottomAdmin.style.display = 'none';
+      }
     }, 500);
   }
 
@@ -424,8 +436,8 @@
         data.routeHighlights = 'Prima tappa: dove tutto è iniziato!';
       }
 
-      data.dayNum = '1';
-      data.dayLabel = 'G1';
+      data.dayNum = data.daysUntil; // countdown number
+      data.dayLabel = 'T-' + data.daysUntil; // countdown label
 
       // Pre-trip program
       data.todayProgram = '<div class="hv-program-item"><span class="hv-program-icon">🚐</span><div class="hv-program-text"><div class="hv-program-title">Selvazzano → Leoben</div><div class="hv-program-sub">~350 km · 3h 30min stimati</div></div></div>';
@@ -459,12 +471,14 @@
     data.progressBar = progress;
 
     if (data.tripPreMode) {
-      // Pre-trip: show planned stats
-      data.totalDays = '54';
-      data.totalKm = '12.000';
-      data.totalCountries = '13';
+      // Pre-trip: show 0 stats (nothing visited yet)
+      data.totalDays = '0';
+      data.totalKm = '0';
+      data.totalCountries = '0';
       data.totalCheckins = '0';
-      data.progressText = 'Partenza tra ' + data.daysUntil + ' giorni · 54 giorni · 13 paesi';
+      var _en = (typeof isEN !== 'undefined' && isEN);
+      var countdownWord = data.daysUntil === 1 ? (_en ? 'day' : 'giorno') : (_en ? 'days' : 'giorni');
+      data.progressText = (_en ? 'Departure in ' : 'Partenza tra ') + data.daysUntil + ' ' + countdownWord + ' · 54 ' + (_en ? 'days' : 'giorni') + ' · 13 ' + (_en ? 'countries' : 'paesi');
       data.kmBar = 0;
       data.lastUpdate = '';
       data.distanceFromHome = '';
@@ -777,15 +791,9 @@
 
   // ─── Build Feed HTML (Follower A) ───
   // Pre-trip posts — loaded from Firebase via window._preTripPostsOverride (set by app.js)
-  // Fallback defaults if Firebase not yet loaded
-  var PRE_TRIP_POSTS_DEFAULT = [
-    {date:'2026-06-04', type:'countdown', typeLabel:{it:'\ud83d\ude80 Countdown',en:'\ud83d\ude80 Countdown'}, body:{it:'Mancano <strong>{{daysUntil}} giorni</strong> alla partenza! Il furgone \u00e8 quasi pronto, l\'avventura sta per iniziare. \ud83d\ude90\u2728',en:'<strong>{{daysUntil}} days</strong> until departure! The van is almost ready, the adventure is about to begin. \ud83d\ude90\u2728'}, image:null},
-    {date:'2026-06-01', type:'photo', typeLabel:{it:'\ud83d\udcf7 Foto',en:'\ud83d\udcf7 Photo'}, body:{it:'Preparativi in corso! Ecco cosa ci aspetta lungo la strada \u2014 fiordi, citt\u00e0 baltiche, e tanto altro.',en:'Preparations underway! Here\'s what awaits us along the road \u2014 fjords, Baltic cities, and much more.'}, image:'img/placeholder/van-view.jpg'},
-    {date:'2026-05-28', type:'plan', typeLabel:{it:'\ud83d\uddfa\ufe0f Piano',en:'\ud83d\uddfa\ufe0f Plan'}, body:{it:'<strong>Il percorso \u00e8 pronto!</strong><br>\ud83d\ude90 12.000 km &nbsp; \ud83c\uddf3\ud83c\uddf4\ud83c\uddf8\ud83c\uddea\ud83c\uddeb\ud83c\uddee\ud83c\uddea\ud83c\uddea\ud83c\uddf1\ud83c\uddfb\ud83c\uddf1\ud83c\uddf9\ud83c\uddf5\ud83c\uddf1\ud83c\udde8\ud83c\uddff 13 paesi &nbsp; \ud83d\udcc5 54 giorni',en:'<strong>The route is ready!</strong><br>\ud83d\ude90 12,000 km &nbsp; \ud83c\uddf3\ud83c\uddf4\ud83c\uddf8\ud83c\uddea\ud83c\uddeb\ud83c\uddee\ud83c\uddea\ud83c\uddea\ud83c\uddf1\ud83c\uddfb\ud83c\uddf1\ud83c\uddf9\ud83c\uddf5\ud83c\uddf1\ud83c\udde8\ud83c\uddff 13 countries &nbsp; \ud83d\udcc5 54 days'}, image:null}
-  ];
-
+  // No hardcoded fallback — all posts come from Firebase via window._preTripPostsOverride
   function getPreTripPosts() {
-    return (typeof window._preTripPostsOverride !== 'undefined' && window._preTripPostsOverride) ? window._preTripPostsOverride : PRE_TRIP_POSTS_DEFAULT;
+    return (typeof window._preTripPostsOverride !== 'undefined' && Array.isArray(window._preTripPostsOverride)) ? window._preTripPostsOverride : [];
   }
 
   // Hybrid date formatter: <7 days = relative, >=7 days = fixed ("4 giu 2026")
@@ -817,19 +825,27 @@
     var html = '';
     var lang = (typeof isEN !== 'undefined' && isEN) ? 'en' : 'it';
 
-    // Pre-trip mode: show standardized posts from Firebase
+    // Pre-trip mode: show published posts from Firebase (max 3)
     if (tripData.tripPreMode) {
       var prePosts = getPreTripPosts();
-      prePosts.forEach(function(post) {
+      // Filter: only published (or legacy posts without status field)
+      var publishedPosts = prePosts.filter(function(p) { return !p.status || p.status === 'published'; });
+      // Max 3 most recent
+      var feedPosts = publishedPosts.slice(0, 3);
+      feedPosts.forEach(function(post) {
+        var badge = post.badge || (post.typeLabel && (post.typeLabel[lang] || post.typeLabel.it)) || '';
         html += '<div class="hv-feed-item">';
         html += '  <div class="hv-feed-header">';
         html += '    <div class="hv-feed-time">' + formatHybridDate(post.date, lang) + '</div>';
-        html += '    <span class="hv-feed-type hv-type-' + post.type + '">' + (post.typeLabel[lang] || post.typeLabel.it) + '</span>';
+        if (badge) html += '    <span class="hv-feed-type hv-type-' + (post.type || 'update') + '">' + badge + '</span>';
         html += '  </div>';
+        if (post.title) {
+          html += '  <div class="hv-feed-title" style="font-weight:600;margin:4px 0;">' + post.title + '</div>';
+        }
         if (post.image) {
           html += '  <div class="hv-feed-photo" style="background-image:url(' + post.image + ');background-size:cover;background-position:center;"></div>';
         }
-        var bodyText = (post.body[lang] || post.body.it || '');
+        var bodyText = (post.body && (post.body[lang] || post.body.it)) || '';
         var daysUntilStr = tripData.daysUntil === 1 ? (lang === 'en' ? '1 day' : '1 giorno') : (tripData.daysUntil + (lang === 'en' ? ' days' : ' giorni'));
         bodyText = bodyText.replace('{{daysUntil}} giorni', daysUntilStr).replace('{{daysUntil}} days', daysUntilStr).replace('{{daysUntil}}', tripData.daysUntil);
         html += '  <div class="hv-feed-body">' + bodyText + '</div>';
@@ -1043,6 +1059,39 @@
           localStorage.setItem('hv-variant-idx', 0);
           closeRoleModal();
           renderCurrentVariant();
+
+          // ─── Propagate role to entire app ───
+          if (currentRole === 'follower' || currentRole === 'visitor') {
+            window.isOwner = false;
+            // Hide admin elements globally
+            var adminPanel = document.getElementById('tab-admin');
+            if (adminPanel) adminPanel.style.display = 'none';
+            var adminMenuLink = document.querySelector('[data-tab="admin"]');
+            if (adminMenuLink) adminMenuLink.style.display = 'none';
+            // Hide diary add button
+            var addEntryBtn = document.getElementById('diario-add-entry');
+            if (addEntryBtn) addEntryBtn.style.display = 'none';
+            // Hide all diary entry action buttons
+            var diaryActions = document.querySelectorAll('.diario-entry-actions');
+            diaryActions.forEach(function(el) { el.style.display = 'none'; });
+            // Hide bottom bar admin icon if present
+            var bottomAdmin = document.querySelector('.bottom-bar [data-tab="admin"]');
+            if (bottomAdmin) bottomAdmin.style.display = 'none';
+          } else {
+            // Restore owner view
+            window.isOwner = true;
+            var adminPanel = document.getElementById('tab-admin');
+            if (adminPanel) adminPanel.style.display = '';
+            var adminMenuLink = document.querySelector('[data-tab="admin"]');
+            if (adminMenuLink) adminMenuLink.style.display = '';
+            var addEntryBtn = document.getElementById('diario-add-entry');
+            if (addEntryBtn) addEntryBtn.style.display = '';
+            var diaryActions = document.querySelectorAll('.diario-entry-actions');
+            diaryActions.forEach(function(el) { el.style.display = ''; });
+            var bottomAdmin = document.querySelector('.bottom-bar [data-tab="admin"]');
+            if (bottomAdmin) bottomAdmin.style.display = '';
+          }
+
           showToastHV('🧪 Vista: ' + (currentRole === 'owner' ? 'Owner' : currentRole === 'follower' ? 'Follower' : 'Visitatore'));
         });
       });

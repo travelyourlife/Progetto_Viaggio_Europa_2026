@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════
-   Viaggio Europa 2026 — Design System V4.9
+   Quo Vadis — Design System V4.9
    Separato da index.html per manutenibilità
    ═══════════════════════════════════════════════════════════════ */
 
@@ -4475,7 +4475,5 @@ html[lang="en"] .notif-drawer-list:empty::after {
 @media (max-width: 400px) {
     .home-lang-switch { display: none; }
     .hero-card-avatar { display: none; }
-}
-@media (max-width: 340px) {
     #homeSearchOpen { display: none; }
 }

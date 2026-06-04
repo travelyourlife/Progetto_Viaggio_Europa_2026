@@ -1,6 +1,6 @@
 'use strict';
 // ═══════════════════════════════════════════════════════════════
-// app.js — Viaggio Europa 2026 V5.1
+// app.js — Quo Vadis V5.1
 // Logica applicativa unificata (IT + EN)
 // ═══════════════════════════════════════════════════════════════
 
@@ -3357,14 +3357,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 scrollToToday();
             });
-        } else if (!isOverride) {
-            // Pre-trip (no override): show countdown
+        } else {
+            // Pre-trip: show countdown (respects override if set to -1)
             var now = new Date(); now.setHours(0,0,0,0);
             var start = new Date(TRIP_START.getTime()); start.setHours(0,0,0,0);
             var daysLeft = Math.ceil((start - now) / 86400000);
             if (daysLeft > 0) {
                 box.style.display = 'block';
-                btn.textContent = '\u23F3 ' + (isEN ? daysLeft + ' days to departure' : 'Mancano ' + daysLeft + ' giorni alla partenza');
+                var countdownTxt = daysLeft === 1
+                    ? (isEN ? '1 day to departure' : 'Manca 1 giorno alla partenza')
+                    : (isEN ? daysLeft + ' days to departure' : 'Mancano ' + daysLeft + ' giorni alla partenza');
+                btn.textContent = '\u23F3 ' + countdownTxt;
                 btn.style.cursor = 'default';
                 btn.style.opacity = '0.85';
             }
@@ -4433,8 +4436,15 @@ if ('serviceWorker' in navigator) {
 // ─── Day Override Controls ───
 (function() {
   // v1.84: Day override controls — SESSION-ONLY (no localStorage, no Firebase sync)
-  // Override resets on page refresh. Countdown always from TRIP_START.
-  var currentDay = getCurrentTripDay(); // real date (no override on fresh load)
+  // v1.85: Override persists across refresh via sessionStorage (not tab close)
+  var savedOverride = sessionStorage.getItem('qv_day_override');
+  if (savedOverride !== null) {
+    var parsed = parseInt(savedOverride, 10);
+    if (!isNaN(parsed) && parsed >= -1 && parsed < TRIP_DAYS) {
+      window._dayOverride = parsed;
+    }
+  }
+  var currentDay = getCurrentTripDay(); // uses override if restored from sessionStorage
   
   var dayLabel = document.getElementById('pos-day-current');
   var daySelect = document.getElementById('pos-day-select');
@@ -4469,6 +4479,7 @@ if ('serviceWorker' in navigator) {
   
   function setOverrideAndNotify() {
     window._dayOverride = currentDay;
+    sessionStorage.setItem('qv_day_override', currentDay);
     window.dispatchEvent(new CustomEvent('dayOverrideChanged', {detail: {day: currentDay}}));
   }
   
@@ -4497,6 +4508,7 @@ if ('serviceWorker' in navigator) {
   });
   if (resetBtn) resetBtn.addEventListener('click', function() {
     window._dayOverride = undefined;
+    sessionStorage.removeItem('qv_day_override');
     // Calculate real day from TRIP_START
     currentDay = Math.max(-1, Math.min(Math.floor((Date.now() - TRIP_START.getTime()) / 86400000), TRIP_DAYS - 1));
     updateLabel();
@@ -4751,8 +4763,22 @@ if ('serviceWorker' in navigator) {
 
     function updateStats() {
         var now = new Date();
-        // Day counter (now inline in banner: "G 0/54")
-        if (now < TRIP_START) {
+        // v1.85: Respect day override for countdown and stats
+        var hasOverride = typeof window._dayOverride === 'number';
+        var overrideDay = hasOverride ? window._dayOverride : null;
+
+        if (hasOverride && overrideDay < 0) {
+            // Override set to pre-trip
+            var daysUntil = Math.ceil((TRIP_START - now) / 86400000);
+            if (daysUntil < 1) daysUntil = Math.abs(overrideDay); // fallback
+            hsDay.textContent = '0';
+            if (countdownEl) countdownEl.textContent = daysUntil;
+        } else if (hasOverride && overrideDay >= 0) {
+            // Override set to a trip day
+            hsDay.textContent = overrideDay + 1;
+            var daysLeft = TRIP_DAYS - (overrideDay + 1);
+            if (countdownEl) countdownEl.textContent = Math.max(0, daysLeft);
+        } else if (now < TRIP_START) {
             var daysUntil = Math.ceil((TRIP_START - now) / 86400000);
             hsDay.textContent = '0';
             if (countdownEl) countdownEl.textContent = daysUntil;
@@ -8968,7 +8994,7 @@ if ('serviceWorker' in navigator) {
     gate.style.display = 'none';
     pendingEl.style.display = 'none';
     contentEl.style.display = '';
-    if (asOwner && addEntryBtn) addEntryBtn.style.display = '';
+    if (addEntryBtn) addEntryBtn.style.display = asOwner ? '' : 'none';
     loadTimeline();
   }
 
@@ -9018,26 +9044,30 @@ if ('serviceWorker' in navigator) {
     var daysUntil = Math.max(0, Math.ceil((tripStart - new Date()) / 86400000));
     var daysUntilStr = daysUntil === 1 ? (lang === 'en' ? '1 day' : '1 giorno') : (daysUntil + (lang === 'en' ? ' days' : ' giorni'));
 
-    // Get posts from Firebase (unified source)
-    var posts = (typeof window._preTripPostsOverride !== 'undefined' && window._preTripPostsOverride) ? window._preTripPostsOverride : [
-      {date:'2026-06-04', type:'countdown', typeLabel:{it:'🚀 Countdown',en:'🚀 Countdown'}, body:{it:'Mancano <strong>{{daysUntil}} giorni</strong> alla partenza! Il furgone \u00e8 quasi pronto, l\'avventura sta per iniziare. 🚐✨',en:'<strong>{{daysUntil}} days</strong> until departure! The van is almost ready, the adventure is about to begin. 🚐✨'}, image:null},
-      {date:'2026-06-01', type:'photo', typeLabel:{it:'📷 Foto',en:'📷 Photo'}, body:{it:'Preparativi in corso! Ecco cosa ci aspetta lungo la strada \u2014 fiordi, citt\u00e0 baltiche, e tanto altro.',en:'Preparations underway!'}, image:'img/placeholder/van-view.jpg'},
-      {date:'2026-05-28', type:'plan', typeLabel:{it:'🗺️ Piano',en:'🗺️ Plan'}, body:{it:'<strong>Il percorso \u00e8 pronto!</strong><br>🚐 12.000 km \u00b7 13 paesi \u00b7 54 giorni',en:'<strong>The route is ready!</strong><br>🚐 12,000 km \u00b7 13 countries \u00b7 54 days'}, image:null}
-    ];
+    // Get posts from Firebase (unified source) — no hardcoded fallback
+    var allPosts = (typeof window._preTripPostsOverride !== 'undefined' && window._preTripPostsOverride) ? window._preTripPostsOverride : [];
+    // Filter: only published (or legacy posts without status field)
+    var posts = allPosts.filter(function(p) { return !p.status || p.status === 'published'; });
+
+    if (posts.length === 0) {
+      return '<div style="text-align:center;padding:40px 20px;color:var(--text-muted);">' + (lang === 'en' ? 'No journal entries yet. Stay tuned!' : 'Nessuna voce nel diario. Resta sintonizzato!') + '</div>';
+    }
 
     var html = '';
     posts.forEach(function(post) {
-      var typeLabel = (post.typeLabel && post.typeLabel[lang]) || (post.typeLabel && post.typeLabel.it) || post.type;
+      var badge = post.badge || (post.typeLabel && (post.typeLabel[lang] || post.typeLabel.it)) || '';
       var bodyText = (post.body && (post.body[lang] || post.body.it)) || '';
       bodyText = bodyText.replace('{{daysUntil}} giorni', daysUntilStr).replace('{{daysUntil}} days', daysUntilStr).replace('{{daysUntil}}', daysUntil);
 
       html += '<div class="diario-entry">';
-      html += '  <div class="diario-entry-marker"></div>';
       html += '  <div class="diario-entry-card">';
       html += '    <div class="diario-entry-header">';
       html += '      <div><div class="diario-date">' + formatHybridDateDiary(post.date, lang) + '</div></div>';
-      html += '      <span class="diario-entry-type diario-type-' + post.type + '">' + typeLabel + '</span>';
+      if (badge) html += '      <span class="diario-entry-type diario-type-' + (post.type || 'update') + '">' + badge + '</span>';
       html += '    </div>';
+      if (post.title) {
+        html += '    <div class="diario-entry-title" style="font-weight:600;font-size:15px;margin:4px 0;">' + post.title + '</div>';
+      }
       if (post.image) {
         html += '    <div class="diario-photos"><img src="' + post.image + '" alt="" class="diario-photo" loading="lazy"></div>';
       }
@@ -9263,6 +9293,7 @@ if ('serviceWorker' in navigator) {
     // Delete
     timelineEl.querySelectorAll('.diario-del-btn').forEach(function(btn) {
       btn.addEventListener('click', function() {
+        if (!isOwner) return;
         var key = btn.getAttribute('data-key');
         showConfirm(isEN ? 'Delete this journal entry?' : 'Eliminare questa voce del diario?', function() {
           diarioRef.child(key).remove();
@@ -9273,6 +9304,7 @@ if ('serviceWorker' in navigator) {
     // Upload photo
     timelineEl.querySelectorAll('.diario-upload-btn').forEach(function(btn) {
       btn.addEventListener('click', function() {
+        if (!isOwner) return;
         var key = btn.getAttribute('data-key');
         showPhotoUpload(key);
       });
@@ -9281,6 +9313,7 @@ if ('serviceWorker' in navigator) {
     // Record audio
     timelineEl.querySelectorAll('.diario-audio-btn').forEach(function(btn) {
       btn.addEventListener('click', function() {
+        if (!isOwner) return;
         var key = btn.getAttribute('data-key');
         showAudioRecorder(key);
       });
@@ -9289,6 +9322,7 @@ if ('serviceWorker' in navigator) {
     // Edit text
     timelineEl.querySelectorAll('.diario-edit-btn').forEach(function(btn) {
       btn.addEventListener('click', function() {
+        if (!isOwner) return;
         var key = btn.getAttribute('data-key');
         showEditModal(key);
       });
@@ -9619,6 +9653,7 @@ if ('serviceWorker' in navigator) {
   // ─── Add Entry (auto-populate from today's data) ───
   if (addEntryBtn) {
     addEntryBtn.addEventListener('click', function() {
+      if (!isOwner) { if (window.showToast) showToast(isEN ? '\ud83d\udd12 Only organizers can add entries.' : '\ud83d\udd12 Solo gli organizzatori possono aggiungere entry.', 'info'); return; }
       var tripDay = getCurrentTripDay();
       var dayKey, dayLabel;
       var now = new Date();
@@ -10932,15 +10967,11 @@ if ('serviceWorker' in navigator) {
 })();
 
 
-// ─── Admin: Pre-Trip Post Editor ───
+// ─── Admin: Post Editor (Firebase-backed, draft/published) ───
 (function() {
-  var POST_TYPES = [
-    {value: 'countdown', label: '🚀 Countdown'},
-    {value: 'photo', label: '📷 Foto'},
-    {value: 'plan', label: '🗺️ Piano'},
-    {value: 'update', label: '📝 Aggiornamento'},
-    {value: 'checkin', label: '📍 Check-in'},
-    {value: 'day', label: '🌤️ Giornata'}
+  var BADGE_PRESETS = [
+    '🚀 Countdown', '📷 Foto', '🗺️ Piano', '📝 Aggiornamento',
+    '📍 Check-in', '🌤️ Giornata', '⭐ Highlight', '🎬 Video'
   ];
 
   var listEl = document.getElementById('admin-posts-list');
@@ -10951,35 +10982,29 @@ if ('serviceWorker' in navigator) {
 
   var posts = [];
 
+  function getPostsRef() {
+    var ref = (typeof getFamilyRef === 'function') ? getFamilyRef('preTripPosts') : (window.getFamilyRef ? window.getFamilyRef('preTripPosts') : null);
+    return ref;
+  }
+
   // Load posts from Firebase on admin tab open
   function loadPosts() {
-    if (typeof getFamilyRef !== 'function' && typeof window.getFamilyRef !== 'function') {
-      // Fallback: use the global PRE_TRIP_POSTS from home-variants.js
-      if (typeof window._preTripPostsOverride !== 'undefined') {
+    var ref = getPostsRef();
+    if (!ref) {
+      if (typeof window._preTripPostsOverride !== 'undefined' && window._preTripPostsOverride) {
         posts = JSON.parse(JSON.stringify(window._preTripPostsOverride));
       } else {
-        // Use defaults from home-variants
-        posts = [
-          {date:'04/06/2026', type:'countdown', typeLabel:{it:'🚀 Countdown',en:'🚀 Countdown'}, body:{it:'Mancano <strong>{{daysUntil}} giorni</strong> alla partenza!',en:'<strong>{{daysUntil}} days</strong> until departure!'}, image:null},
-          {date:'01/06/2026', type:'photo', typeLabel:{it:'📷 Foto',en:'📷 Photo'}, body:{it:'Preparativi in corso!',en:'Preparations underway!'}, image:'img/placeholder/van-view.jpg'},
-          {date:'28/05/2026', type:'plan', typeLabel:{it:'🗺️ Piano',en:'🗺️ Plan'}, body:{it:'<strong>Il percorso è pronto!</strong>',en:'<strong>The route is ready!</strong>'}, image:null}
-        ];
+        posts = [];
       }
       renderPosts();
       return;
     }
-    var ref = (typeof getFamilyRef === 'function') ? getFamilyRef('preTripPosts') : window.getFamilyRef('preTripPosts');
-    if (!ref) { renderPosts(); return; }
     ref.once('value', function(snap) {
       var val = snap.val();
       if (val && Array.isArray(val)) {
         posts = val;
-      } else if (!posts.length) {
-        posts = [
-          {date:'04/06/2026', type:'countdown', typeLabel:{it:'🚀 Countdown',en:'🚀 Countdown'}, body:{it:'Mancano <strong>{{daysUntil}} giorni</strong> alla partenza!',en:'<strong>{{daysUntil}} days</strong> until departure!'}, image:null},
-          {date:'01/06/2026', type:'photo', typeLabel:{it:'📷 Foto',en:'📷 Photo'}, body:{it:'Preparativi in corso!',en:'Preparations underway!'}, image:'img/placeholder/van-view.jpg'},
-          {date:'28/05/2026', type:'plan', typeLabel:{it:'🗺️ Piano',en:'🗺️ Plan'}, body:{it:'<strong>Il percorso è pronto!</strong>',en:'<strong>The route is ready!</strong>'}, image:null}
-        ];
+      } else {
+        posts = [];
       }
       renderPosts();
     });
@@ -10988,21 +11013,33 @@ if ('serviceWorker' in navigator) {
   function renderPosts() {
     var html = '';
     posts.forEach(function(post, idx) {
-      html += '<div class="admin-post-item" style="border:1px solid var(--border);border-radius:8px;padding:10px;background:var(--bg-alt);">';
-      html += '  <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;">';
-      html += '    <input type="text" class="admin-post-date" data-idx="' + idx + '" value="' + (post.date || '') + '" placeholder="dd/mm/yyyy" style="width:100px;padding:4px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;">';
-      html += '    <select class="admin-post-type" data-idx="' + idx + '" style="padding:4px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;">';
-      POST_TYPES.forEach(function(t) {
-        html += '      <option value="' + t.value + '"' + (post.type === t.value ? ' selected' : '') + '>' + t.label + '</option>';
-      });
-      html += '    </select>';
+      var isDraft = (post.status === 'draft');
+      var statusColor = isDraft ? '#e53e3e' : '#38a169';
+      var statusLabel = isDraft ? '📝 Bozza' : '✅ Pubblicato';
+      html += '<div class="admin-post-item" style="border:1px solid ' + (isDraft ? '#e53e3e55' : 'var(--border)') + ';border-radius:8px;padding:10px;background:var(--bg-alt);' + (isDraft ? 'opacity:0.85;' : '') + '">';
+      // Row 1: date + status toggle + delete
+      html += '  <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;flex-wrap:wrap;">';
+      html += '    <input type="date" class="admin-post-date" data-idx="' + idx + '" value="' + (post.date || '') + '" style="padding:4px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;">';
+      html += '    <button class="admin-post-status pos-btn" data-idx="' + idx + '" style="font-size:11px;padding:4px 8px;background:' + statusColor + ';color:#fff;">' + statusLabel + '</button>';
       html += '    <button class="admin-post-del pos-btn" data-idx="' + idx + '" style="font-size:11px;padding:4px 8px;background:#e53e3e;color:#fff;margin-left:auto;">🗑️</button>';
       html += '  </div>';
+      // Row 2: title (optional) + badge
+      html += '  <div style="display:flex;gap:8px;margin-bottom:4px;">';
+      html += '    <input type="text" class="admin-post-title" data-idx="' + idx + '" value="' + escapeHtml(post.title || '') + '" placeholder="Titolo (opzionale)" style="flex:1;padding:4px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;">';
+      html += '    <input type="text" class="admin-post-badge" data-idx="' + idx + '" value="' + escapeHtml(post.badge || (post.typeLabel && post.typeLabel.it) || '') + '" placeholder="Badge es: \ud83d\ude80 Countdown" list="badge-presets" style="width:150px;padding:4px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;">';
+      html += '  </div>';
+      // Row 3: body IT
       html += '  <textarea class="admin-post-body-it" data-idx="' + idx + '" placeholder="Testo IT (HTML ok)" rows="2" style="width:100%;padding:6px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;resize:vertical;">' + (post.body && post.body.it ? post.body.it : '') + '</textarea>';
+      // Row 4: body EN
       html += '  <textarea class="admin-post-body-en" data-idx="' + idx + '" placeholder="Testo EN (HTML ok)" rows="2" style="width:100%;padding:6px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;resize:vertical;margin-top:4px;">' + (post.body && post.body.en ? post.body.en : '') + '</textarea>';
+      // Row 5: image URL
       html += '  <input type="text" class="admin-post-image" data-idx="' + idx + '" value="' + (post.image || '') + '" placeholder="URL immagine (opzionale)" style="width:100%;padding:4px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;margin-top:4px;">';
       html += '</div>';
     });
+    // Badge presets datalist
+    html += '<datalist id="badge-presets">';
+    BADGE_PRESETS.forEach(function(b) { html += '<option value="' + b + '">'; });
+    html += '</datalist>';
     listEl.innerHTML = html;
 
     // Attach delete handlers
@@ -11010,6 +11047,14 @@ if ('serviceWorker' in navigator) {
       btn.addEventListener('click', function() {
         var idx = parseInt(this.getAttribute('data-idx'));
         posts.splice(idx, 1);
+        renderPosts();
+      });
+    });
+    // Attach status toggle handlers
+    listEl.querySelectorAll('.admin-post-status').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var idx = parseInt(this.getAttribute('data-idx'));
+        posts[idx].status = (posts[idx].status === 'draft') ? 'published' : 'draft';
         renderPosts();
       });
     });
@@ -11021,14 +11066,16 @@ if ('serviceWorker' in navigator) {
       var idx = parseInt(el.getAttribute('data-idx'));
       posts[idx].date = el.value;
     });
-    listEl.querySelectorAll('.admin-post-type').forEach(function(el) {
+    listEl.querySelectorAll('.admin-post-title').forEach(function(el) {
       var idx = parseInt(el.getAttribute('data-idx'));
-      var val = el.value;
-      posts[idx].type = val;
-      var match = POST_TYPES.find(function(t) { return t.value === val; });
-      if (match) {
-        posts[idx].typeLabel = {it: match.label, en: match.label};
-      }
+      posts[idx].title = el.value || '';
+    });
+    listEl.querySelectorAll('.admin-post-badge').forEach(function(el) {
+      var idx = parseInt(el.getAttribute('data-idx'));
+      var badge = el.value || '';
+      posts[idx].badge = badge;
+      // Keep typeLabel for backward compat
+      posts[idx].typeLabel = {it: badge, en: badge};
     });
     listEl.querySelectorAll('.admin-post-body-it').forEach(function(el) {
       var idx = parseInt(el.getAttribute('data-idx'));
@@ -11048,9 +11095,11 @@ if ('serviceWorker' in navigator) {
 
   addBtn.addEventListener('click', function() {
     collectPosts();
-    posts.push({
-      date: new Date().toLocaleDateString('it-IT', {day:'2-digit', month:'2-digit', year:'numeric'}),
-      type: 'update',
+    posts.unshift({
+      date: new Date().toISOString().split('T')[0],
+      status: 'draft',
+      title: '',
+      badge: '📝 Aggiornamento',
       typeLabel: {it: '📝 Aggiornamento', en: '📝 Update'},
       body: {it: '', en: ''},
       image: null
@@ -11060,11 +11109,9 @@ if ('serviceWorker' in navigator) {
 
   saveBtn.addEventListener('click', function() {
     collectPosts();
-    var ref = (typeof getFamilyRef === 'function') ? getFamilyRef('preTripPosts') : (window.getFamilyRef ? window.getFamilyRef('preTripPosts') : null);
+    var ref = getPostsRef();
     if (!ref) {
-      statusEl.textContent = '❌ Firebase non connesso. Salvataggio locale.';
-      localStorage.setItem('preTripPosts_local', JSON.stringify(posts));
-      window._preTripPostsOverride = posts;
+      statusEl.textContent = '❌ Firebase non connesso.';
       return;
     }
     ref.set(posts).then(function() {
@@ -11082,7 +11129,6 @@ if ('serviceWorker' in navigator) {
       collectPosts();
       var postsToTranslate = posts.filter(function(p) { return p.body && p.body.it && !p.body.en; });
       if (postsToTranslate.length === 0) {
-        // Translate all that have IT text (overwrite EN)
         postsToTranslate = posts.filter(function(p) { return p.body && p.body.it; });
       }
       if (postsToTranslate.length === 0) {
@@ -11123,22 +11169,17 @@ if ('serviceWorker' in navigator) {
     }
   });
 
-  // Also load posts from Firebase for the home feed (on app start)
+  // Also load posts from Firebase for the home/diario feed (on app start)
   setTimeout(function() {
-    var ref = (typeof getFamilyRef === 'function') ? getFamilyRef('preTripPosts') : (window.getFamilyRef ? window.getFamilyRef('preTripPosts') : null);
-    if (!ref) {
-      // Try localStorage fallback
-      var local = localStorage.getItem('preTripPosts_local');
-      if (local) {
-        try { window._preTripPostsOverride = JSON.parse(local); } catch(e) {}
-      }
-      return;
-    }
+    var ref = getPostsRef();
+    if (!ref) return;
     ref.on('value', function(snap) {
       var val = snap.val();
       if (val && Array.isArray(val)) {
         window._preTripPostsOverride = val;
+      } else {
+        window._preTripPostsOverride = [];
       }
     });
-  }, 3000);
+  }, 2000);
 })();

@@ -1,6 +1,6 @@
 'use strict';
 // ═══════════════════════════════════════════════════════════════
-// data.js — Unica fonte di verità per Viaggio Europa 2026 V4.8
+// data.js — Unica fonte di verità per Quo Vadis V4.8
 // ═══════════════════════════════════════════════════════════════
 
 var TRIP_START = new Date('2026-06-26T00:00:00');
