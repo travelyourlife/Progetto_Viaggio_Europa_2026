@@ -302,9 +302,28 @@ exports.sendPushNotification = onValueCreated(
     let targetTokens = filterByTarget(allTokens, target || "all");
 
     // For chat notifications, further filter by user preference and exclude sender
+    // Also aggregate: count recent unread messages and use fixed tag for replacement
     if (target === "chat") {
       const senderUid = notification.senderUid || null;
       targetTokens = await filterChatTokens(db, targetTokens, senderUid);
+
+      // Count recent chat messages in last 5 minutes for aggregation
+      const fiveMinAgo = Date.now() - 5 * 60 * 1000;
+      const recentSnap = await db.ref(`chat/${FAMILY_ID}`)
+        .orderByChild("timestamp")
+        .startAt(fiveMinAgo)
+        .once("value");
+      const recentCount = recentSnap.numChildren();
+
+      // Override notification body and tag for aggregation
+      if (recentCount > 1) {
+        notification.title = "💬 Chat Quo Vadis";
+        notification.body = `${recentCount} nuovi messaggi`;
+      } else {
+        notification.title = "💬 " + (notification.title || "Messaggio");
+      }
+      // Fixed tag so the OS replaces the previous chat notification
+      notification.tag = "chat";
     }
 
     // Apply per-user notifPrefs (push on/off) — skip for admin test notifications

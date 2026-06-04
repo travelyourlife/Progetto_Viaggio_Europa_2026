@@ -3974,6 +3974,10 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // ─── Service Worker Registration ───
+function handleSwUpdate(sw) {
+    // Tell the new SW to skip waiting and activate immediately
+    sw.postMessage('skipWaiting');
+}
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
         navigator.serviceWorker.register('./sw.js').then(function(reg) {
@@ -6305,6 +6309,48 @@ if ('serviceWorker' in navigator) {
     });
   }
 
+  // ─── v1.72: Notification settings in drawer ───
+  var notifSettingsBtn = document.getElementById('notifSettingsBtn');
+  var notifSettingsPanel = document.getElementById('notifSettingsPanel');
+  var notifSettingsToggle = document.getElementById('notifSettingsToggle');
+  var notifSettingsStatusEl = document.getElementById('notifSettingsStatus');
+  function updateNotifSettingsPanel() {
+    if (!notifSettingsPanel) return;
+    var perm = typeof Notification !== 'undefined' ? Notification.permission : 'unsupported';
+    if (perm === 'granted') {
+      notifSettingsToggle.textContent = isEN ? '\ud83d\udd15 Disable notifications' : '\ud83d\udd15 Disattiva notifiche';
+      notifSettingsToggle.classList.add('active');
+      notifSettingsStatusEl.textContent = isEN ? '\u2705 Notifications active' : '\u2705 Notifiche attive';
+      notifSettingsStatusEl.style.color = '#4caf50';
+    } else if (perm === 'denied') {
+      notifSettingsToggle.textContent = isEN ? '\ud83d\udd14 Enable notifications' : '\ud83d\udd14 Attiva notifiche';
+      notifSettingsToggle.classList.remove('active');
+      notifSettingsStatusEl.textContent = isEN ? '\ud83d\udeab Blocked by browser' : '\ud83d\udeab Bloccate dal browser';
+      notifSettingsStatusEl.style.color = '#e53935';
+    } else {
+      notifSettingsToggle.textContent = isEN ? '\ud83d\udd14 Enable notifications' : '\ud83d\udd14 Attiva notifiche';
+      notifSettingsToggle.classList.remove('active');
+      notifSettingsStatusEl.textContent = isEN ? 'Tap to enable push notifications' : 'Tocca per attivare le notifiche push';
+      notifSettingsStatusEl.style.color = '';
+    }
+  }
+  if (notifSettingsBtn) {
+    notifSettingsBtn.addEventListener('click', function() {
+      if (notifSettingsPanel.style.display === 'none') {
+        notifSettingsPanel.style.display = 'block';
+        updateNotifSettingsPanel();
+      } else {
+        notifSettingsPanel.style.display = 'none';
+      }
+    });
+  }
+  if (notifSettingsToggle) {
+    notifSettingsToggle.addEventListener('click', function() {
+      if (notifToggle) { notifToggle.click(); }
+      setTimeout(function() { updateNotifSettingsPanel(); updateNotifStatus(); }, 1200);
+    });
+  }
+
   // ─── v1.11: Version tag in side menu ───
   var versionTag = document.getElementById('app-version-tag');
   if (versionTag) {
@@ -7788,7 +7834,7 @@ if ('serviceWorker' in navigator) {
           body: text.length > 100 ? text.substring(0, 100) + '...' : text,
           target: 'chat',  // special target: only users who opted in to chat notifications
           url: './#tab-chat',
-          tag: 'chat-' + Date.now(),
+          tag: 'chat',  // fixed tag: OS replaces previous chat notification (aggregation)
           senderUid: chatUser.uid  // exclude sender from receiving
         });
       }
@@ -8939,13 +8985,36 @@ if ('serviceWorker' in navigator) {
         var countryCode = entry.countryCode || '';
         var flag = countryCode ? countryCodeToFlag(countryCode) : '';
 
+        // Determine entry type for badge
+        var entryType = '';
+        var entryTypeLabel = '';
+        if (entry.video && entry.video.url) {
+          entryType = 'video'; entryTypeLabel = '\ud83c\udfac ' + 'Video';
+        } else if (entry.photos && Object.keys(entry.photos).length > 0) {
+          if (entry.highlight) {
+            entryType = 'highlight'; entryTypeLabel = '\u2b50 Highlight';
+          } else {
+            entryType = 'photo'; entryTypeLabel = '\ud83d\udcf7 ' + (isEN ? 'Photo' : 'Foto');
+          }
+        } else if (entry.audio && entry.audio.url) {
+          entryType = 'audio'; entryTypeLabel = '\ud83c\udfa4 Audio';
+        } else if (entry.activities && (entry.activities.km || entry.activities.walk_km || entry.activities.bike_km)) {
+          entryType = 'tappa'; entryTypeLabel = '\ud83d\udea9 ' + (isEN ? 'Stage' : 'Tappa');
+        } else if (entry.text && entry.text.length > 100) {
+          entryType = 'recap'; entryTypeLabel = '\ud83d\udcdd ' + (isEN ? 'Recap' : 'Riepilogo');
+        } else if (entry.text && entry.text.length > 0 && entry.text.length <= 100) {
+          entryType = 'message'; entryTypeLabel = '\ud83d\udcac ' + (isEN ? 'Message' : 'Messaggio');
+        } else {
+          entryType = 'checkin'; entryTypeLabel = '\ud83d\udccd Check-in';
+        }
+
         html += '<div class="diario-entry" data-key="' + key + '">';
         html += '  <div class="diario-entry-marker"></div>';
         html += '  <div class="diario-entry-card">';
         html += '    <div class="diario-entry-header">';
-        html += '      <span class="diario-day">' + dayLabel + '</span>';
-        html += '      <span class="diario-date">' + dateStr + '</span>';
+        html += '      <div><div class="diario-day">' + dayLabel + '</div><div class="diario-date">' + dateStr + '</div></div>';
         if (flag) html += '      <span class="diario-flag">' + flag + ' ' + country + '</span>';
+        html += '      <span class="diario-entry-type diario-type-' + entryType + '">' + entryTypeLabel + '</span>';
         html += '    </div>';
 
         // Photos
@@ -9000,6 +9069,12 @@ if ('serviceWorker' in navigator) {
           if (entry.activities.elevation) html += '<span class="diario-stat">\u26f0\ufe0f ' + entry.activities.elevation + 'm</span>';
         }
         if (entry.weather) html += '<span class="diario-stat">' + entry.weather + '</span>';
+        html += '    </div>';
+
+        // Reactions row (social style)
+        html += '    <div class="diario-reactions">';
+        html += '      <span>\u2764\ufe0f ' + (entry.likes || 0) + '</span>';
+        html += '      <span>\ud83d\udcac ' + (entry.comments || 0) + '</span>';
         html += '    </div>';
 
         // Owner actions

@@ -53,9 +53,13 @@
     <link rel="apple-touch-icon" sizes="152x152" href="./icon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="./icon.png">
     <link rel="apple-touch-icon" sizes="167x167" href="./icon.png">
-    <title>Viaggio Europa 2026 — V1.66</title>
+    <title>Viaggio Europa 2026 — V1.75</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="home-variants.css">
+    <link rel="stylesheet" href="unified-map.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" crossorigin="">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" crossorigin="">
 <!-- Firebase SDK (compat mode for single-file app) -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
@@ -69,7 +73,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = '1.66';
+  var EXPECTED_VERSION = '1.75';
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
   var r = false;
@@ -132,7 +136,11 @@
 <script src="wiki-links.js" defer></script>
 <script src="weather-coords.js" defer></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js" crossorigin="" defer></script>
+<script src="poi-data.js" defer></script>
 <script src="app.js" defer></script>
+<script src="unified-map.js" defer></script>
+<script src="home-variants.js" defer></script>
 </head>
 <body class="on-home">
 
@@ -215,7 +223,7 @@
     <a class="menu-item" data-tab="zaino"><span class="menu-icon">🎒</span><span class="menu-text">Zaino</span></a>
     <a class="menu-item" data-tab="chat"><span class="menu-icon">💬</span><span class="menu-text">Chat</span></a>
     <div class="menu-divider"></div>
-    <a class="menu-item" id="notif-toggle" style="cursor:pointer;"><span class="menu-icon">🔔</span><span class="menu-text">Notifiche</span><span class="menu-badge" id="notif-status" style="margin-left:auto;font-size:11px;opacity:0.7;"></span></a>
+    <a class="menu-item" id="notif-toggle" style="display:none;"><span class="menu-icon">🔔</span><span class="menu-text">Notifiche</span><span class="menu-badge" id="notif-status" style="margin-left:auto;font-size:11px;opacity:0.7;"></span></a>
     <a class="menu-item" id="sidebar-refresh-btn" style="cursor:pointer;" onclick="if(window.hardRefresh)window.hardRefresh();else window.location.reload(true);"><span class="menu-icon">🔄</span><span class="menu-text">Aggiorna App</span></a>
     <a class="menu-item" data-tab="admin" id="admin-menu-link" style="display:none;"><span class="menu-icon">🛠️</span><span class="menu-text">Admin</span></a>
     <div class="menu-version" id="app-version-tag"></div>
@@ -9034,12 +9042,35 @@
 <div class="notif-drawer" id="notifDrawer">
     <div class="notif-drawer-header">
         <h3>🔔 Notifiche</h3>
+        <button class="notif-settings-btn" id="notifSettingsBtn" title="Impostazioni notifiche">⚙️</button>
         <button class="notif-drawer-close" id="notifDrawerClose">&times;</button>
     </div>
     <div class="notif-drawer-list" id="notifDrawerList"></div>
+    <div class="notif-settings-panel" id="notifSettingsPanel" style="display:none;">
+        <h4>⚙️ Impostazioni notifiche</h4>
+        <p class="notif-settings-desc">Attiva le notifiche push per ricevere aggiornamenti in tempo reale sul viaggio.</p>
+        <button class="notif-settings-toggle" id="notifSettingsToggle">🔔 Attiva notifiche</button>
+        <p class="notif-settings-status" id="notifSettingsStatus"></p>
+    </div>
 </div>
 
 <!-- Scripts moved to <head> with defer for reliability -->
+
+<!-- ─── Home Variants Templates ─── -->
+<!-- Loaded inline for single-file PWA compatibility -->
+<div id="hv-templates" style="display:none;"></div>
+<script>
+// Load home-variants.html templates into the page
+(function(){
+  fetch('./home-variants.html').then(function(r){return r.text();}).then(function(html){
+    var div = document.getElementById('hv-templates');
+    if(div) div.innerHTML = html;
+    // Move templates to document body for proper <template> access
+    var templates = div.querySelectorAll('template');
+    templates.forEach(function(t){ document.body.appendChild(t); });
+  }).catch(function(e){ console.warn('[HomeVariants] Could not load templates:', e); });
+})();
+</script>
 
 </body>
 </html>
