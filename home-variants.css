@@ -579,29 +579,89 @@
    ═══════════════════════════════════════════════════════════════════════ */
 
 @media (prefers-color-scheme: dark) {
+    /* Card backgrounds */
     .hv-action-card, .hv-dash-card, .hv-follower-action, .hv-bento-widget,
     .hv-feed-item, .hv-diary-preview, .hv-visitor-cta, .hv-visitor-teaser-card,
     .hv-visitor-stats, .hv-dash-stats, .hv-tl-item, .hv-today-program,
     .hv-dash-location, .hv-dash-route, .hv-progress-compact, .hv-bento-progress,
-    .hv-map-preview, .hv-bento-map, .hv-weather-row, .hv-tl-route {
-        background: var(--card-bg, #1e293b);
-        border-color: var(--border-color, #334155);
+    .hv-map-preview, .hv-bento-map, .hv-weather-row, .hv-tl-route,
+    .hv-checklist-links, .hv-checklist-link {
+        background: var(--card-bg, #2d3748);
+        border-color: var(--border-color, #4a5568);
     }
     .hv-chip, .hv-tool, .hv-tl-btn {
-        background: var(--card-bg, #1e293b);
-        border-color: var(--border-color, #334155);
+        background: var(--card-bg, #2d3748);
+        border-color: var(--border-color, #4a5568);
         color: var(--text-color, #e2e8f0);
     }
+
+    /* Text colors */
+    .hv-section-header span, .hv-tl-title, .hv-program-title,
+    .hv-dash-loc-left, .hv-dash-route-title, .hv-action-label,
+    .hv-bento-widget-value, .hv-feed-body, .hv-diary-preview-text,
+    .hv-feed-name, .hv-role-modal-title, .hv-role-option,
+    .hv-checklist-text, .hv-visitor-cta h3, .hv-visitor-teaser-card strong {
+        color: var(--text-color, #e2e8f0);
+    }
+    .hv-tl-time, .hv-tl-desc, .hv-program-sub, .hv-feed-time,
+    .hv-dash-route-sub, .hv-bento-widget-label, .hv-action-count,
+    .hv-diary-preview-time, .hv-diary-preview-stats, .hv-feed-reactions,
+    .hv-visitor-cta p, .hv-visitor-features, .hv-visitor-lock,
+    .hv-checklist-link .hv-chevron {
+        color: var(--text-muted, #a0aec0);
+    }
+
+    /* Accent links */
+    .hv-link, .hv-action-sub, .hv-see-all-link {
+        color: #90cdf4;
+    }
+
+    /* Tags and badges */
     .hv-program-tag, .hv-tl-tag { background: #1e3a5f; color: #93c5fd; }
     .hv-feed-type { background: #422006; color: #fbbf24; }
     .hv-feed-type.hv-type-checkin { background: #052e16; color: #4ade80; }
     .hv-feed-type.hv-type-photo { background: #2e1065; color: #c4b5fd; }
     .hv-feed-type.hv-type-recap { background: #1e3a5f; color: #93c5fd; }
     .hv-diary-preview-highlight { background: #422006; color: #fbbf24; }
-    .hv-visitor-login-btn { background: #1e293b; border-color: #475569; color: #e2e8f0; }
-    .hv-role-modal { background: #1e293b; }
-    .hv-role-close { background: #334155; color: #e2e8f0; }
+
+    /* Active timeline item */
+    .hv-tl-item.hv-tl-active { border-color: #63b3ed; box-shadow: 0 0 0 3px rgba(99,179,237,0.15); }
+    .hv-tl-item.hv-tl-active::before { background: #63b3ed; }
+    .hv-tl-item.hv-tl-done::before { background: #68d391; }
+    .hv-tl-item::before { border-color: var(--card-bg, #2d3748); }
+
+    /* Progress bars */
+    .hv-dash-progress-pct, .hv-progress-pct { color: #90cdf4; }
+    .hv-dash-progress-bar, .hv-bento-widget-bar { background: var(--border-color, #4a5568); }
+
+    /* Day badges */
+    .hv-dash-day-badge, .hv-bento-day-badge { background: #2b6cb0; }
+    .hv-day-badge { background: rgba(255,255,255,0.1); }
+
+    /* Notification CTA */
+    .hv-notif-cta { background: linear-gradient(135deg, #1e3a5f 0%, #1a365d 100%); border-color: #2b6cb0; }
+    .hv-notif-cta-text strong { color: #90cdf4; }
+    .hv-notif-cta-text span { color: #63b3ed; }
+    .hv-notif-cta-btn { background: #2b6cb0; }
+    .hv-notif-cta-btn:hover { background: #2c5282; }
+
+    /* Visitor hero already has dark gradient, just fix login btn */
+    .hv-visitor-login-btn { background: #2d3748; border-color: #4a5568; color: #e2e8f0; }
+    .hv-role-modal { background: #2d3748; }
+    .hv-role-close { background: #4a5568; color: #e2e8f0; }
+
+    /* Map previews */
     .hv-map-preview, .hv-bento-map { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); }
+
+    /* Checklist hover */
+    .hv-checklist-link:hover { background: var(--bg-main, #1a202c); }
+    .hv-checklist-link:active { background: var(--border-color, #4a5568); }
+
+    /* Photo placeholder gradient */
+    .hv-feed-photo, .hv-bento-photo { background-image: linear-gradient(135deg, #4a5568 0%, #2d3748 100%); }
+
+    /* Stat numbers */
+    .hv-stat-num { color: var(--text-color, #e2e8f0); }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════

@@ -9007,6 +9007,56 @@ if ('serviceWorker' in navigator) {
   // Initial check (in case auth already resolved)
   if (firebaseUser) checkDiarioAccess(firebaseUser);
 
+  // ─── Pre-departure Diary Posts ───
+  function buildPreDepartureDiary() {
+    var now = new Date();
+    var tripStart = (typeof TRIP_START !== 'undefined') ? TRIP_START : new Date('2026-06-26T00:00:00');
+    var daysUntil = Math.max(0, Math.ceil((tripStart - now) / 86400000));
+    var html = '';
+
+    // Post 1: Countdown
+    html += '<div class="diario-entry">';
+    html += '  <div class="diario-entry-marker"></div>';
+    html += '  <div class="diario-entry-card">';
+    html += '    <div class="diario-entry-header">';
+    html += '      <div><div class="diario-day">Pre-viaggio</div><div class="diario-date">' + now.toLocaleDateString('it-IT') + '</div></div>';
+    html += '      <span class="diario-entry-type diario-type-checkin">🚀 Countdown</span>';
+    html += '    </div>';
+    html += '    <p class="diario-text">Mancano <strong>' + daysUntil + ' giorni</strong> alla partenza! Il furgone è quasi pronto, l\'avventura sta per iniziare. 🚐✨</p>';
+    html += '    <div class="diario-stats"><span class="diario-stat">📅 Partenza: 26 giugno 2026</span></div>';
+    html += '  </div>';
+    html += '</div>';
+
+    // Post 2: Photo preview
+    html += '<div class="diario-entry">';
+    html += '  <div class="diario-entry-marker"></div>';
+    html += '  <div class="diario-entry-card">';
+    html += '    <div class="diario-entry-header">';
+    html += '      <div><div class="diario-day">Pre-viaggio</div><div class="diario-date">3 giorni fa</div></div>';
+    html += '      <span class="diario-entry-type diario-type-photo">📷 Foto</span>';
+    html += '    </div>';
+    html += '    <div class="diario-photos"><img src="img/placeholder/van-view.jpg" alt="Vista fiordi" class="diario-photo" loading="lazy"></div>';
+    html += '    <p class="diario-text">Preparativi in corso! Ecco cosa ci aspetta lungo la strada — fiordi, città baltiche, e tanto altro.</p>';
+    html += '  </div>';
+    html += '</div>';
+
+    // Post 3: Route plan
+    html += '<div class="diario-entry">';
+    html += '  <div class="diario-entry-marker"></div>';
+    html += '  <div class="diario-entry-card">';
+    html += '    <div class="diario-entry-header">';
+    html += '      <div><div class="diario-day">Pre-viaggio</div><div class="diario-date">1 settimana fa</div></div>';
+    html += '      <span class="diario-entry-type diario-type-recap">📝 Piano</span>';
+    html += '    </div>';
+    html += '    <div class="diario-highlight">⭐ Il percorso è pronto!</div>';
+    html += '    <p class="diario-text">🚐 12.000 km · 🇳🇴🇸🇪🇫🇮🇪🇪🇱🇻🇱🇹🇵🇱🇨🇿 13 paesi · 📅 54 giorni</p>';
+    html += '    <div class="diario-stats"><span class="diario-stat">🌍 Europa del Nord + Baltico + Spagna</span></div>';
+    html += '  </div>';
+    html += '</div>';
+
+    return html;
+  }
+
   // ─── Timeline Rendering ───
   function loadTimeline() {
     // Detach previous diary listener before re-attaching (prevents duplicates)
@@ -9015,7 +9065,9 @@ if ('serviceWorker' in navigator) {
     var _diarioCb = function(snapshot) {
       var entries = snapshot.val();
       if (!entries || Object.keys(entries).length === 0) {
-        timelineEl.innerHTML = '<p class="diario-empty">' + (isEN ? 'The journal is empty. Entries will appear automatically during the trip.' : 'Il diario è vuoto. Le entry appariranno automaticamente durante il viaggio.') + '</p>';
+        // Show pre-departure posts instead of empty state
+        var preHtml = buildPreDepartureDiary();
+        timelineEl.innerHTML = preHtml;
         return;
       }
 
@@ -9153,11 +9205,13 @@ if ('serviceWorker' in navigator) {
           html += '    <div class="diario-weather-row" data-weather-day="' + weatherDayIdx + '" style="display:none;"></div>';
         }
 
-        // Reactions row (social style)
-        html += '    <div class="diario-reactions">';
-        html += '      <span>\u2764\ufe0f ' + (entry.likes || 0) + '</span>';
-        html += '      <span>\ud83d\udcac ' + (entry.comments || 0) + '</span>';
-        html += '    </div>';
+        // Reactions row (only show if real data exists)
+        if (entry.likes > 0 || entry.comments > 0) {
+          html += '    <div class="diario-reactions">';
+          if (entry.likes > 0) html += '      <span>\u2764\ufe0f ' + entry.likes + '</span>';
+          if (entry.comments > 0) html += '      <span>\ud83d\udcac ' + entry.comments + '</span>';
+          html += '    </div>';
+        }
 
         // Owner actions
         if (isOwner) {

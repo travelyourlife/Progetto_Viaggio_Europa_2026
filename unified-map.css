@@ -397,6 +397,16 @@
   backdrop-filter: blur(4px);
 }
 
+/* ═══ Pre-trip Map Badge ═══ */
+.umap-mini-badge-pretrip {
+  background: #2563eb;
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.4);
+}
+.umap-mini-badge-pretrip::before {
+  animation: none;
+  background: #93c5fd;
+}
+
 /* ═══ Dark Mode Support ═══ */
 @media (prefers-color-scheme: dark) {
   .umap-filter-panel {

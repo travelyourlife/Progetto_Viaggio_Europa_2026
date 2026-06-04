@@ -1,1 +1,1 @@
-{"version":"1.80","date":"2026-06-04","notes":"Fix: Auto button crash (try/catch), prev allows -1 pre-trip, [object Object] trekking fix, 0-indexed day alignment everywhere."}
+{"version":"1.81","date":"2026-06-04","notes":"UX: cross-link bars on all tabs, pre-trip map (no LIVE badge, van at home), pre-departure posts in Diario, removed fake reactions, dark mode expanded for home variants, Check-in button scrolls to Tappe."}

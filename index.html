@@ -53,7 +53,7 @@
     <link rel="apple-touch-icon" sizes="152x152" href="./icon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="./icon.png">
     <link rel="apple-touch-icon" sizes="167x167" href="./icon.png">
-    <title>Viaggio Europa 2026 — V1.76</title>
+    <title>Viaggio Europa 2026 — V1.81</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="home-variants.css">
@@ -74,7 +74,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = '1.80';
+  var EXPECTED_VERSION = '1.81';
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
   var r = false;
@@ -423,6 +423,7 @@
 <a href="#mappa">🗺️ Mappa</a>
 <a href="#itinerario-54-giorni">🌟 Itinerario</a>
 </div></div>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerario</a> · 📍 <a href="javascript:void(0)" onclick="switchTab('posizione')">Posizione Live</a> · 🍝 <a href="javascript:void(0)" onclick="switchTab('cibo')">Cibo</a> · 🏙️ <a href="javascript:void(0)" onclick="switchTab('cultura')">Cultura</a> · 🗺️ <a href="javascript:void(0)" onclick="switchTab('piano')">Piano</a></div>
 <h2 id="sintesi">📋 Sintesi — Equipaggio e Mezzo</h2>
 <p>👨‍👩‍👧‍👦 <strong>Equipaggio:</strong> 2 adulti + 2 bambini (8 e 6 anni)</p>
 <p>🚐 <strong>Mezzo:</strong> furgone camperizzato autonomo (LiFePo4 + bombola gas 5 kg)</p>
@@ -1146,6 +1147,7 @@
 <a href="#italia-g51-g53">🇮🇹 Italia</a>
 <a href="#libri-film">📚 Libri e Film</a>
 </div></div>
+<div class="cross-link-bar">🍝 <a href="javascript:void(0)" onclick="switchTab('cibo')">Cibo</a> · 🥾 <a href="javascript:void(0)" onclick="switchTab('attivita')">Attività</a> · 🧭 <a href="javascript:void(0)" onclick="switchTab('luoghi')">Luoghi</a> · 📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerario</a> · 🗺️ <a href="javascript:void(0)" onclick="switchTab('piano')">Piano</a></div>
 <h2 id="storia">🏛️ Cultura — Guida Approfondita</h2>
 <blockquote>
 <p>Una guida culturale da leggere la sera prima o durante i trasferimenti. Per ogni Paese: timeline storica, personaggi chiave, cosa osservare nell'architettura, tradizioni vive in estate, parole utili con pronuncia, e quiz/giochi per coinvolgere i bambini (6-8 anni).</p>
@@ -5070,6 +5072,7 @@
 <a href="#cucina-italiana-rientro-g50-g53">🇮🇹 Italia</a>
 <a href="#gastronomia-consigli-cucina-in-furgone">👨‍🍳 Consigli cucina in furgone</a>
 </div></div>
+<div class="cross-link-bar">🏙️ <a href="javascript:void(0)" onclick="switchTab('cultura')">Cultura</a> · 🥾 <a href="javascript:void(0)" onclick="switchTab('attivita')">Attività</a> · 🧭 <a href="javascript:void(0)" onclick="switchTab('luoghi')">Luoghi</a> · 📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerario</a> · 🗺️ <a href="javascript:void(0)" onclick="switchTab('piano')">Piano</a></div>
 <h2 id="food">🍽️ Gastronomia — per Paese e Zona</h2>
 <blockquote>
 <p>Piatti tipici, prodotti locali e consigli pratici per mangiare bene spendendo poco in furgone. Focus su cibi adatti anche ai bambini e facili da trovare nei supermercati o mercati locali.</p>
@@ -5751,6 +5754,7 @@
 <a href="#drone">🛸 Drone</a>
 <a href="#inreach">📡 Garmin inReach</a>
 </div></div>
+<div class="cross-link-bar">📍 <a href="javascript:void(0)" onclick="switchTab('posizione')">Posizione Live</a> · 🍝 <a href="javascript:void(0)" onclick="switchTab('cibo')">Cibo</a> · 🏙️ <a href="javascript:void(0)" onclick="switchTab('cultura')">Cultura</a> · 🧭 <a href="javascript:void(0)" onclick="switchTab('luoghi')">Luoghi</a> · 🎯 <a href="javascript:void(0)" onclick="switchTab('zaino','z-trekking')">Zaino Trekking</a></div>
 <h2 id="campeggio">🚐 Campeggio — Regole per Paese</h2>
 <table>
 <thead>
@@ -7281,7 +7285,7 @@
 <a href="#secA">♨️ Terme</a>
 <a href="#poi-parchi-divertimento">🎢 Parchi</a>
 </div></div>
-
+<div class="cross-link-bar">📍 <a href="javascript:void(0)" onclick="switchTab('posizione')">Posizione Live</a> · 🏙️ <a href="javascript:void(0)" onclick="switchTab('cultura')">Cultura</a> · 🥾 <a href="javascript:void(0)" onclick="switchTab('attivita')">Attività</a> · 📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerario</a> · 🗺️ <a href="javascript:void(0)" onclick="switchTab('piano')">Piano</a></div>
 <h2 id="musei-attrazioni">🏛️ Musei e Attrazioni</h2>
 <p>Musei, monumenti e attrazioni culturali imperdibili lungo il percorso. Molti sono già citati nei singoli giorni dell'itinerario.</p>
 <div id="poi-list-museum"></div>
@@ -7356,6 +7360,7 @@
 <a href="#fonti">📚 Fonti</a>
 <a href="#analytics" id="analytics-tab-link" style="display:none;">📊 Analytics</a>
 </div></div>
+<div class="cross-link-bar">📍 <a href="javascript:void(0)" onclick="switchTab('posizione')">Posizione Live</a> · 🍝 <a href="javascript:void(0)" onclick="switchTab('cibo')">Cibo</a> · 🥾 <a href="javascript:void(0)" onclick="switchTab('attivita')">Attività</a> · 🎯 <a href="javascript:void(0)" onclick="switchTab('zaino')">Zaino</a> · 📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerario</a></div>
 <h2 id="checklist-pre-partenza">✅ Checklist — Pre-partenza</h2>
 <hr>
 <h3 id="prenotazioni-per-data">📅 Prenotazioni per data</h3>
@@ -8170,7 +8175,7 @@
     <div class="zp-bar"><div class="zp-fill" id="zp-fill" style="width:0%"></div></div>
 </div>
 
-<h1 id="zaino" style="text-align:center;">🎒 Cosa Portare — Lista Equipaggiamento Camper</h1>
+<div class="cross-link-bar">🗺️ <a href="javascript:void(0)" onclick="switchTab('piano')">Piano & Budget</a> · 🥾 <a href="javascript:void(0)" onclick="switchTab('attivita')">Attività</a> · 🍝 <a href="javascript:void(0)" onclick="switchTab('cibo')">Cibo</a> · 📍 <a href="javascript:void(0)" onclick="switchTab('posizione')">Posizione Live</a> · 📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerario</a></div>
 <h3 id="z-camper">🚐 Camper &amp; Attrezzi</h3>
 <ul>
 <li class="task-item"><input type="checkbox" data-idx="copia-chiavi"> Copia chiavi</li>

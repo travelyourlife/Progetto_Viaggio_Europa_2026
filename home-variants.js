@@ -268,6 +268,19 @@
       }
     }
 
+    // Update mini-map for pre-trip: show van at home, no LIVE badge
+    if (tripData.tripPreMode) {
+      var mapBadges = container.querySelectorAll('.umap-mini-badge');
+      mapBadges.forEach(function(badge) {
+        badge.textContent = '🏠 Partenza tra ' + tripData.daysUntil + 'g';
+        badge.classList.add('umap-mini-badge-pretrip');
+      });
+      var mapMarkers = container.querySelectorAll('.umap-mini-marker');
+      mapMarkers.forEach(function(marker) {
+        marker.style.animation = 'none';
+      });
+    }
+
     // Show/hide pre-trip sections
     var preSections = container.querySelectorAll('.hv-pre-section');
     preSections.forEach(function(sec) {
@@ -538,15 +551,14 @@
     loadDiaryPhotos(data);
 
     // Mini map tile — generate OSM tile URL centered on current position
-    var mapLat = 47.37, mapLng = 15.09; // default: Leoben
-    if (typeof TRIP_COORDS !== 'undefined' && tripActive && TRIP_COORDS[currentDay]) {
+    // Pre-trip: show home location (Leoben, AT); during trip: show current day
+    var homeLat = 47.37, homeLng = 15.09; // Leoben, Austria (home)
+    var mapLat = homeLat, mapLng = homeLng;
+    if (tripActive && typeof TRIP_COORDS !== 'undefined' && TRIP_COORDS[currentDay]) {
       mapLat = TRIP_COORDS[currentDay].lat;
       mapLng = TRIP_COORDS[currentDay].lng;
-    } else if (typeof TRIP_COORDS !== 'undefined' && TRIP_COORDS[0]) {
-      mapLat = TRIP_COORDS[0].lat;
-      mapLng = TRIP_COORDS[0].lng;
     }
-    var tileZ = 6;
+    var tileZ = data.tripPreMode ? 7 : 6; // higher zoom for home in pre-trip
     var tileX = Math.floor((mapLng + 180) / 360 * Math.pow(2, tileZ));
     var tileY = Math.floor((1 - Math.log(Math.tan(mapLat * Math.PI / 180) + 1 / Math.cos(mapLat * Math.PI / 180)) / Math.PI) / 2 * Math.pow(2, tileZ));
     data.miniMapTile = 'https://tile.openstreetmap.org/' + tileZ + '/' + tileX + '/' + tileY + '.png';
@@ -798,7 +810,7 @@
       html += '    <span class="hv-feed-type hv-type-checkin">🚀 Countdown</span>';
       html += '  </div>';
       html += '  <div class="hv-feed-body">Mancano <strong>' + tripData.daysUntil + ' giorni</strong> alla partenza! Il furgone è quasi pronto, l\'avventura sta per iniziare. 🚐✨</div>';
-      html += '  <div class="hv-feed-reactions">❤️ 15 &nbsp; 💬 4</div>';
+
       html += '</div>';
 
       html += '<div class="hv-feed-item">';
@@ -809,7 +821,7 @@
       html += '  </div>';
       html += '  <div class="hv-feed-photo" style="background-image:url(img/placeholder/van-view.jpg);background-size:cover;background-position:center;"></div>';
       html += '  <div class="hv-feed-body">Preparativi in corso! Ecco cosa ci aspetta lungo la strada — fiordi, città baltiche, e tanto altro.</div>';
-      html += '  <div class="hv-feed-reactions">❤️ 22 &nbsp; 💬 6</div>';
+
       html += '</div>';
 
       html += '<div class="hv-feed-item">';
@@ -822,7 +834,7 @@
       html += '    <strong>Il percorso è pronto!</strong><br>';
       html += '    🚐 12.000 km &nbsp; 🇳🇴🇸🇪🇫🇮🇪🇪🇱🇻🇱🇹🇵🇱🇨🇿 13 paesi &nbsp; 📅 54 giorni';
       html += '  </div>';
-      html += '  <div class="hv-feed-reactions">❤️ 31 &nbsp; 🤩 8</div>';
+
       html += '</div>';
 
       return html;
@@ -837,7 +849,7 @@
     html += '    <span class="hv-feed-type hv-type-checkin">📍 Check-in</span>';
     html += '  </div>';
     html += '  <div class="hv-feed-body">Arrivati a <strong>' + escHtml(tripData.city || '--') + '</strong>!</div>';
-    html += '  <div class="hv-feed-reactions">❤️ 4 &nbsp; 💬 1</div>';
+
     html += '</div>';
 
     // Photo item
@@ -849,7 +861,7 @@
     html += '  </div>';
     html += '  <div class="hv-feed-photo"></div>';
     html += '  <div class="hv-feed-body">Vista incredibile!</div>';
-    html += '  <div class="hv-feed-reactions">❤️ 12 &nbsp; 💬 3</div>';
+
     html += '</div>';
 
     // Recap item
@@ -864,7 +876,7 @@
       html += '    <strong>Riepilogo G' + (tripData.dayNum > 1 ? tripData.dayNum - 1 : '--') + '</strong><br>';
       html += '    🚐 ' + (dayData.km || '--') + ' km &nbsp; 📍 -- tappe &nbsp; 🦶 -- km a piedi';
       html += '  </div>';
-      html += '  <div class="hv-feed-reactions">❤️ 8</div>';
+
       html += '</div>';
     }
 
@@ -891,7 +903,7 @@
       html += '<div class="hv-diary-preview-stats">';
       html += '  🚐 12.000 km &nbsp; 🇳🇴🇸🇪🇫🇮 13 paesi &nbsp; 📅 54 giorni';
       html += '</div>';
-      html += '<div class="hv-diary-preview-reactions">❤️ 31 &nbsp; 👏 12 &nbsp; 🤩 8 &nbsp; +</div>';
+
       return html;
     }
 
@@ -913,7 +925,7 @@
     html += '<div class="hv-diary-preview-stats">';
     html += '  🚐 ' + (dayData ? dayData.km || '--' : '--') + ' km &nbsp; 📍 -- tappe';
     html += '</div>';
-    html += '<div class="hv-diary-preview-reactions">❤️ 8 &nbsp; 👏 3 &nbsp; 🤩 2 &nbsp; +</div>';
+
     return html;
   }
 
@@ -1132,6 +1144,18 @@
       } else if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
         var cta = document.getElementById('hv-follower-notif-cta');
         if (cta) cta.style.display = 'none';
+      }
+    } else if (action === 'checkin') {
+      // Navigate to Posizione tab and scroll to check-in section
+      if (typeof window.switchTab === 'function') {
+        window.switchTab('posizione', 'pos-checkin-details');
+        // Also open the details element
+        setTimeout(function() {
+          var det = document.getElementById('pos-checkin-details');
+          if (det && !det.open) det.open = true;
+        }, 100);
+      } else if (typeof switchTabFromHome === 'function') {
+        switchTabFromHome('posizione');
       }
     } else if (action === 'openGpsGuide') {
       window.open('https://github.com/niccolorossi/gps-logger-guide', '_blank');
