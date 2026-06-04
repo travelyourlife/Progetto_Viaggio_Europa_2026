@@ -58,6 +58,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="home-variants.css">
     <link rel="stylesheet" href="unified-map.css">
+    <link rel="stylesheet" href="modern-pages.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" crossorigin="">
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" crossorigin="">
 <!-- Firebase SDK (compat mode for single-file app) -->
@@ -73,7 +74,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = '1.77';
+  var EXPECTED_VERSION = '1.80';
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
   var r = false;
@@ -7955,6 +7956,79 @@
 <h1 style="text-align:center; margin-top:16px;">🛠️ Admin &amp; Test Panel</h1>
 <p style="text-align:center;color:var(--text-muted);font-size:0.85em;">🔒 Visibile solo agli organizzatori</p>
 
+<!-- ═══ CONTROLLI VIAGGIO (spostati da Posizione) ═══ -->
+<div id="pos-admin-panel" class="admin-card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:12px 0;">
+<h3 style="margin-bottom:12px;">🚐 Controlli Viaggio</h3>
+
+<!-- Tracking Live -->
+<div class="pos-admin-section" style="margin-bottom:16px;">
+    <h4 style="font-size:14px;font-weight:600;margin-bottom:10px;">▶️ Tracking Live</h4>
+    <div class="pos-btn-row" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
+        <button id="pos-live-start" class="pos-btn pos-btn-green pos-btn-large">▶️ Avvia Viaggio</button>
+        <button id="pos-live-stop" class="pos-btn pos-btn-red pos-btn-large" style="display:none;">⏹️ Fine Giornata</button>
+    </div>
+    <div class="pos-options-row" id="pos-live-options" style="display:flex;flex-direction:column;gap:6px;font-size:13px;">
+        <label class="pos-toggle-label"><input type="checkbox" id="pos-opt-autostart"> Auto-start al movimento</label>
+        <label class="pos-toggle-label"><input type="checkbox" id="pos-opt-autostop" checked> Auto-stop da fermo (10 min)</label>
+        <label class="pos-toggle-label"><input type="checkbox" id="pos-opt-eco"> Modalità eco (meno batteria)</label>
+        <label class="pos-toggle-label"><input type="checkbox" id="pos-opt-parking" checked> Chiedi parcheggio a fine giornata</label>
+    </div>
+    <div id="pos-live-stats" class="pos-live-stats" style="display:none;margin-top:12px;">
+        <div class="pos-live-stat"><span class="pos-live-stat-value" id="live-speed-now">0</span><span class="pos-live-stat-label">km/h attuale</span></div>
+        <div class="pos-live-stat"><span class="pos-live-stat-value" id="live-speed-avg">0</span><span class="pos-live-stat-label">km/h media</span></div>
+        <div class="pos-live-stat"><span class="pos-live-stat-value" id="live-km-today">0</span><span class="pos-live-stat-label">km oggi</span></div>
+        <div class="pos-live-stat"><span class="pos-live-stat-value" id="live-time-today">0:00</span><span class="pos-live-stat-label">tempo guida</span></div>
+    </div>
+    <div style="margin-top:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <select id="pos-edit-km-day-select" style="padding:6px 10px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:var(--bg-card);color:var(--text);"></select>
+        <button id="pos-edit-km-standalone" class="pos-btn pos-btn-gray" style="font-size:13px;padding:6px 12px;">✏️ Correggi km</button>
+    </div>
+</div>
+
+<!-- Parcheggi -->
+<div class="pos-admin-section" style="margin-bottom:16px;">
+    <h4 style="font-size:14px;font-weight:600;margin-bottom:10px;">🅿️ Segna Parcheggio</h4>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <div style="flex:1;min-width:200px;position:relative;">
+            <input type="text" id="pos-parking-name" placeholder="Nome spot (es. Parcheggio Reine)..." autocomplete="off" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;">
+            <div id="pos-parking-suggestions" style="display:none;position:absolute;top:100%;left:0;right:0;z-index:9999;background:var(--bg-card);border:1px solid var(--border);border-top:none;border-radius:0 0 8px 8px;max-height:200px;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,0.15);"></div>
+        </div>
+        <select id="pos-parking-rating" style="padding:8px;border:1px solid var(--border);border-radius:8px;">
+            <option value="5">⭐⭐⭐⭐⭐</option>
+            <option value="4">⭐⭐⭐⭐</option>
+            <option value="3" selected>⭐⭐⭐</option>
+            <option value="2">⭐⭐</option>
+            <option value="1">⭐</option>
+        </select>
+        <button id="pos-parking-btn" class="pos-btn pos-btn-purple">🅿️ Salva</button>
+    </div>
+</div>
+
+<!-- Import GPS -->
+<div class="pos-admin-section" style="margin-bottom:16px;">
+    <h4 style="font-size:14px;font-weight:600;margin-bottom:10px;">🗺️ Import Dati GPS</h4>
+    <div style="padding:12px;background:var(--bg-alt);border-radius:var(--radius);border:1px solid var(--border);">
+        <p style="font-size:13px;margin:0 0 6px;"><strong>📂 Import manuale</strong></p>
+        <p style="font-size:12px;color:var(--text-muted);margin:0 0 8px;">Importa file GPX o JSON (Google Takeout) dal dispositivo</p>
+        <button id="pos-timeline-import" class="pos-btn pos-btn-blue" style="font-size:13px;padding:8px 16px;">📂 Importa GPX / JSON</button>
+    </div>
+</div>
+
+<!-- Override Giorno -->
+<div class="pos-admin-section">
+    <h4 style="font-size:14px;font-weight:600;margin-bottom:10px;">📅 Override Giorno Corrente</h4>
+    <div style="padding:12px;background:var(--bg-alt);border-radius:var(--radius);border:1px solid var(--border);">
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+            <button class="pos-btn pos-btn-gray" id="pos-day-prev" style="padding:6px 12px;">◀</button>
+            <span id="pos-day-current" style="font-weight:700;font-size:15px;">G0</span>
+            <button class="pos-btn pos-btn-gray" id="pos-day-next" style="padding:6px 12px;">▶</button>
+            <button class="pos-btn pos-btn-blue" id="pos-day-sync" style="padding:6px 12px;font-size:12px;">☁️ Sincronizza</button>
+            <button class="pos-btn" id="pos-day-reset" style="padding:6px 12px;font-size:12px;background:#e53e3e;color:#fff;">↺ Auto</button>
+        </div>
+    </div>
+</div>
+</div>
+
 <!-- System Status -->
 <div class="admin-card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:12px 0;">
 <h3 style="margin-bottom:12px;">📊 System Status</h3>
@@ -8883,112 +8957,7 @@
 <div id="pos-daily-list"></div>
 </details>
 
-<hr>
-
-<!-- ═══ PANNELLO ADMIN (solo organizzatori) ═══ -->
-<div id="pos-admin-panel" class="pos-admin-panel" style="display:none;">
-<details id="pos-admin-details">
-<summary class="pos-admin-summary">⚙️ Controlli Viaggio <span class="owner-badge">🔒 Admin</span></summary>
-
-<!-- Controlli Live -->
-<div class="pos-admin-section">
-    <h4 class="pos-admin-section-title">▶️ Tracking Live</h4>
-    <div class="pos-btn-row">
-        <button id="pos-live-start" class="pos-btn pos-btn-green pos-btn-large">▶️ Avvia Viaggio</button>
-        <button id="pos-live-stop" class="pos-btn pos-btn-red pos-btn-large" style="display:none;">⏹️ Fine Giornata</button>
-    </div>
-    <div class="pos-options-row" id="pos-live-options">
-        <label class="pos-toggle-label">
-            <input type="checkbox" id="pos-opt-autostart"> Auto-start al movimento
-        </label>
-        <label class="pos-toggle-label">
-            <input type="checkbox" id="pos-opt-autostop" checked> Auto-stop da fermo (10 min)
-        </label>
-        <label class="pos-toggle-label">
-            <input type="checkbox" id="pos-opt-eco"> Modalità eco (meno batteria)
-        </label>
-        <label class="pos-toggle-label">
-            <input type="checkbox" id="pos-opt-parking" checked> Chiedi parcheggio a fine giornata
-        </label>
-    </div>
-    <div id="pos-live-stats" class="pos-live-stats" style="display:none;margin-top:12px;">
-        <div class="pos-live-stat">
-            <span class="pos-live-stat-value" id="live-speed-now">0</span>
-            <span class="pos-live-stat-label">km/h attuale</span>
-        </div>
-        <div class="pos-live-stat">
-            <span class="pos-live-stat-value" id="live-speed-avg">0</span>
-            <span class="pos-live-stat-label">km/h media</span>
-        </div>
-        <div class="pos-live-stat">
-            <span class="pos-live-stat-value" id="live-km-today">0</span>
-            <span class="pos-live-stat-label">km oggi</span>
-        </div>
-        <div class="pos-live-stat">
-            <span class="pos-live-stat-value" id="live-time-today">0:00</span>
-            <span class="pos-live-stat-label">tempo guida</span>
-        </div>
-    </div>
-    <div style="margin-top:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-        <select id="pos-edit-km-day-select" style="padding:6px 10px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:var(--bg-card);color:var(--text);"></select>
-        <button id="pos-edit-km-standalone" class="pos-btn pos-btn-gray" style="font-size:13px;padding:6px 12px;">✏️ Correggi km</button>
-    </div>
-</div>
-
-<!-- Tappe Libere: ora integrate nella sezione Tappe sopra -->
-
-<!-- Parcheggi (form admin) -->
-<div class="pos-admin-section">
-    <h4 class="pos-admin-section-title">🅿️ Segna Parcheggio</h4>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
-        <div style="flex:1;min-width:200px;position:relative;">
-            <input type="text" id="pos-parking-name" placeholder="Nome spot (es. Parcheggio Reine)..." autocomplete="off" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;">
-            <div id="pos-parking-suggestions" style="display:none;position:absolute;top:100%;left:0;right:0;z-index:9999;background:var(--bg-card);border:1px solid var(--border);border-top:none;border-radius:0 0 8px 8px;max-height:200px;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,0.15);"></div>
-        </div>
-        <select id="pos-parking-rating" style="padding:8px;border:1px solid var(--border);border-radius:8px;">
-            <option value="5">⭐⭐⭐⭐⭐</option>
-            <option value="4">⭐⭐⭐⭐</option>
-            <option value="3" selected>⭐⭐⭐</option>
-            <option value="2">⭐⭐</option>
-            <option value="1">⭐</option>
-        </select>
-        <button id="pos-parking-btn" class="pos-btn pos-btn-purple">🅿️ Salva</button>
-    </div>
-</div>
-
-
-
-<!-- Import Google Maps Timeline -->
-<div class="pos-admin-section">
-    <h4 class="pos-admin-section-title">🗺️ Import Dati GPS</h4>
-
-    <!-- Manual import (JSON/GPX) -->
-    <div style="padding:12px;background:var(--bg-alt);border-radius:var(--radius);border:1px solid var(--border);">
-        <p style="font-size:13px;margin:0 0 6px;"><strong>📂 Import manuale</strong></p>
-        <p style="font-size:12px;color:var(--text-muted);margin:0 0 8px;">Importa file GPX o JSON (Google Takeout) dal dispositivo</p>
-        <button id="pos-timeline-import" class="pos-btn pos-btn-blue" style="font-size:13px;padding:8px 16px;">📂 Importa GPX / JSON</button>
-    </div>
-</div>
-
-<!-- Impostazioni -->
-<div class="pos-admin-section">
-    <h4 class="pos-admin-section-title">⚙️ Impostazioni</h4>
-
-
-    <div style="padding:12px;background:var(--bg-alt);border-radius:var(--radius);border:1px solid var(--border);">
-        <p style="font-size:13px;margin:0 0 8px;"><strong>📅 Override giorno corrente</strong></p>
-        <div style="display:flex;gap:8px;align-items:center;">
-            <button class="pos-btn pos-btn-gray" id="pos-day-prev" style="padding:6px 12px;">◀</button>
-            <span id="pos-day-current" style="font-weight:700;font-size:15px;">G0</span>
-            <button class="pos-btn pos-btn-gray" id="pos-day-next" style="padding:6px 12px;">▶</button>
-            <button class="pos-btn pos-btn-blue" id="pos-day-sync" style="padding:6px 12px;font-size:12px;">☁️ Sincronizza</button>
-            <button class="pos-btn" id="pos-day-reset" style="padding:6px 12px;font-size:12px;background:#e53e3e;color:#fff;">↺ Auto</button>
-        </div>
-    </div>
-</div>
-
-</details>
-</div>
+<!-- Pannello Admin rimosso da Posizione — ora nel tab Admin -->
 
 </div><!-- /posizione-content -->
 

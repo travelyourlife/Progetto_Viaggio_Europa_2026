@@ -93,6 +93,11 @@
       renderCurrentVariant();
     });
 
+    // Listen for day override changes (admin reset/sync)
+    window.addEventListener('dayOverrideChanged', function() {
+      setTimeout(function() { renderCurrentVariant(); }, 100);
+    });
+
     // Initial render (delayed to let auth resolve)
     setTimeout(function() {
       renderCurrentVariant();
@@ -291,7 +296,7 @@
     var override = localStorage.getItem(overrideKey);
     if (override !== null && override !== '') {
       var parsed = parseInt(override, 10);
-      if (!isNaN(parsed)) {
+      if (!isNaN(parsed) && override === String(parsed)) {
         currentDay = parsed;
       } else {
         try {
@@ -305,9 +310,9 @@
     }
     var tripActive = currentDay >= 0 && currentDay < tripDays;
 
-    // Day info
-    data.dayNum = tripActive ? (currentDay + 1) : '--';
-    data.dayLabel = tripActive ? ('G' + (currentDay + 1)) : 'G--';
+    // Day info — 0-indexed to match itinerary (G0 = first day)
+    data.dayNum = tripActive ? currentDay : '--';
+    data.dayLabel = tripActive ? ('G' + currentDay) : 'G--';
 
     // Get day data from DAYS_DATA
     var dayData = null;
@@ -441,7 +446,7 @@
     }
 
     // Stats (from DOM if available)
-    data.totalDays = getStatFromDOM('hs-day') || (tripActive ? (currentDay + 1) : '0');
+    data.totalDays = getStatFromDOM('hs-day') || (tripActive ? currentDay : '0');
     data.totalKm = getStatFromDOM('hs-km') || '0';
     data.totalCountries = getStatFromDOM('hs-countries') || '0';
     data.totalCheckins = getStatFromDOM('hs-checkins') || '0';
@@ -462,7 +467,7 @@
       data.lastUpdate = '';
       data.distanceFromHome = '';
     } else {
-      data.progressText = 'G' + (data.totalDays) + '/54 · ' + data.totalKm + ' km · ' + data.totalCountries + '/13 paesi';
+      data.progressText = 'G' + currentDay + '/54 · ' + data.totalKm + ' km · ' + data.totalCountries + '/13 paesi';
       data.kmBar = Math.min(100, Math.round((parseInt(data.totalKm.replace(/\./g, '')) || 0) / 12000 * 100));
       data.lastUpdate = '';
 
@@ -569,7 +574,7 @@
     var override = localStorage.getItem(overrideKey);
     if (override !== null && override !== '') {
       var parsed = parseInt(override, 10);
-      if (!isNaN(parsed)) {
+      if (!isNaN(parsed) && override === String(parsed)) {
         currentDay = parsed;
       } else {
         try {
@@ -685,7 +690,7 @@
       html += '<div class="hv-program-item">';
       html += '  <span class="hv-program-icon">🥾</span>';
       html += '  <div class="hv-program-text">';
-      html += '    <div class="hv-program-title">' + escHtml((dayData.trekking.name || dayData.trekking || '').toString().substring(0, 50)) + '</div>';
+      html += '    <div class="hv-program-title">' + escHtml((dayData.trekking.name || dayData.trekking.title || (typeof dayData.trekking === 'string' ? dayData.trekking : 'Trekking')).toString().substring(0, 50)) + '</div>';
       html += '  </div>';
       html += '  <span class="hv-program-tag">Attività</span>';
       html += '</div>';
@@ -1092,7 +1097,14 @@
         if (typeof switchTabFromHome === 'function') switchTabFromHome('posizione');
       }
     } else if (action === 'openDay') {
-      if (typeof switchTabFromHome === 'function') switchTabFromHome('giorni');
+      // Navigate to Giorni tab and scroll to current day's accordion
+      var _dayIdx = 0;
+      var _ov = localStorage.getItem('viaggio2026_day_override');
+      if (_ov) { try { var _o = JSON.parse(_ov); if (_o && typeof _o.day === 'number') _dayIdx = _o.day; } catch(e) { var _p = parseInt(_ov, 10); if (!isNaN(_p) && _ov === String(_p)) _dayIdx = _p; } }
+      else { var _ts = (typeof TRIP_START !== 'undefined') ? TRIP_START : new Date('2026-06-26'); _dayIdx = Math.max(0, Math.floor((new Date() - _ts) / 86400000)); }
+      var _scrollId = 'g' + _dayIdx;
+      if (typeof window.switchTab === 'function') { window.switchTab('giorni', _scrollId); }
+      else if (typeof switchTabFromHome === 'function') { switchTabFromHome('giorni'); }
     } else if (action === 'admin') {
       // Open admin tab directly
       if (typeof switchTabFromHome === 'function') {
@@ -1171,7 +1183,7 @@
     var override = localStorage.getItem('viaggio2026_day_override');
     if (override !== null && override !== '') {
       var parsed = parseInt(override, 10);
-      if (!isNaN(parsed)) currentDay = parsed;
+      if (!isNaN(parsed) && override === String(parsed)) currentDay = parsed;
       else try { var obj = JSON.parse(override); if (obj && typeof obj.day === 'number') currentDay = obj.day; } catch(e) {}
     }
     if (currentDay === undefined) currentDay = Math.floor((now - tripStart) / 86400000);

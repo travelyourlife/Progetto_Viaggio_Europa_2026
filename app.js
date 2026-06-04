@@ -4464,36 +4464,44 @@ if ('serviceWorker' in navigator) {
   var syncBtn = document.getElementById('pos-day-sync');
   var resetBtn = document.getElementById('pos-day-reset');
   
+  // Display uses 0-indexed: G0 = first day (matches itinerary)
   function updateLabel() {
     if (dayLabel) dayLabel.textContent = (isEN ? 'D' : 'G') + currentDay;
   }
   updateLabel();
   
+  function persistAndNotify() {
+    localStorage.setItem(KEYS.DAY_OVERRIDE, JSON.stringify({day: currentDay, ts: Date.now()}));
+    window.dispatchEvent(new CustomEvent('dayOverrideChanged', {detail: {day: currentDay}}));
+  }
+  
   if (prevBtn) prevBtn.addEventListener('click', function() {
-    currentDay = Math.max(0, currentDay - 1);
+    currentDay = Math.max(-1, currentDay - 1);
     updateLabel();
+    persistAndNotify();
   });
   if (nextBtn) nextBtn.addEventListener('click', function() {
     currentDay = Math.min(TRIP_DAYS - 1, currentDay + 1);
     updateLabel();
+    persistAndNotify();
   });
   if (syncBtn) syncBtn.addEventListener('click', function() {
     if (window.firebaseSetCurrentDay) {
       window.firebaseSetCurrentDay(currentDay);
     }
-    localStorage.setItem(KEYS.DAY_OVERRIDE, JSON.stringify({day: currentDay, ts: Date.now()}));
+    persistAndNotify();
     showToast('\u2601\ufe0f ' + (isEN ? 'Day synced to G' : 'Giorno sincronizzato a G') + currentDay, 'success');
-    // Update "oggi sei qui" indicators
-    window.dispatchEvent(new CustomEvent('dayOverrideChanged', {detail: {day: currentDay}}));
   });
   if (resetBtn) resetBtn.addEventListener('click', function() {
     localStorage.removeItem(KEYS.DAY_OVERRIDE);
     // Also clear Firebase dayOverride + currentDay
-    var ref = getFamilyRef ? getFamilyRef('dayOverride') : null;
-    if (ref) ref.set(null);
-    var ref2 = getFamilyRef ? getFamilyRef('currentDay') : null;
-    if (ref2) ref2.set(null);
-    currentDay = Math.max(0, Math.floor((new Date() - TRIP_START) / 86400000));
+    try {
+      var ref = (typeof getFamilyRef === 'function') ? getFamilyRef('dayOverride') : null;
+      if (ref) ref.set(null);
+      var ref2 = (typeof getFamilyRef === 'function') ? getFamilyRef('currentDay') : null;
+      if (ref2) ref2.set(null);
+    } catch(e) { console.warn('Reset Firebase error:', e); }
+    currentDay = Math.floor((Date.now() - TRIP_START.getTime()) / 86400000);
     updateLabel();
     showToast('\u21ba ' + (isEN ? 'Override removed — real date' : 'Override rimosso — data reale'), 'success');
     window.dispatchEvent(new CustomEvent('dayOverrideChanged', {detail: null}));
@@ -4522,7 +4530,7 @@ if ('serviceWorker' in navigator) {
         } else if (val === null) {
           // Override cleared remotely
           localStorage.removeItem(KEYS.DAY_OVERRIDE);
-          currentDay = Math.max(0, Math.floor((new Date() - TRIP_START) / 86400000));
+          currentDay = Math.floor((new Date() - TRIP_START) / 86400000);
           updateLabel();
         }
       });
