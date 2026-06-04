@@ -108,6 +108,7 @@
             <a class="hv-chip" data-hv-action="tab:attivita">🥾 Attività</a>
             <a class="hv-chip" data-hv-action="tab:luoghi">📍 Luoghi</a>
             <a class="hv-chip" data-hv-action="tab:riepilogo">📌 Riepilogo</a>
+            <a class="hv-chip" data-hv-action="openCuriosity">💡 Curiosità</a>
         </div>
     </div>
     <!-- Strumenti -->
@@ -117,10 +118,11 @@
             <a class="hv-tool" data-hv-action="tab:piano">📋 Piano</a>
             <a class="hv-tool" data-hv-action="tab:zaino">🎒 Zaino</a>
             <a class="hv-tool" data-hv-action="admin">⚙️ Admin</a>
+            <a class="hv-tool" data-hv-action="updateApp">🔄 Aggiorna</a>
         </div>
     </div>
     <div class="hv-app-footer">
-        <span class="hv-version" data-hv="version"></span> · <a class="hv-refresh-link" onclick="if(window.hardRefresh)window.hardRefresh();else window.location.reload(true);">🔄 Aggiorna app</a>
+        <span class="hv-version" data-hv="version"></span>
     </div>
 </div>
 </template>
@@ -266,8 +268,9 @@
     <!-- Bottom tools -->
     <div class="hv-tools-row">
         <a class="hv-tool" data-hv-action="tab:zaino">🎒 Zaino</a>
+        <a class="hv-tool" data-hv-action="openCuriosity">💡 Curiosità</a>
         <a class="hv-tool" data-hv-action="admin">⚙️ Admin</a>
-        <a class="hv-tool" data-hv-action="refresh">🔄 Aggiorna</a>
+        <a class="hv-tool" data-hv-action="updateApp">🔄 Aggiorna</a>
     </div>
 </div>
 </template>
@@ -349,10 +352,12 @@
             <a class="hv-chip" data-hv-action="tab:riepilogo">📌 Riepilogo</a>
             <a class="hv-chip" data-hv-action="tab:piano">🗺️ Piano</a>
             <a class="hv-chip" data-hv-action="tab:zaino">🎒 Zaino</a>
+            <a class="hv-chip" data-hv-action="openCuriosity">💡 Curiosità</a>
+            <a class="hv-chip" data-hv-action="updateApp">🔄 Aggiorna</a>
         </div>
     </div>
     <div class="hv-app-footer">
-        <span class="hv-version" data-hv="version"></span> · <a class="hv-refresh-link" onclick="if(window.hardRefresh)window.hardRefresh();else window.location.reload(true);">🔄 Aggiorna app</a>
+        <span class="hv-version" data-hv="version"></span>
     </div>
 </div>
 </template>

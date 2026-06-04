@@ -4175,11 +4175,47 @@ if ('serviceWorker' in navigator) {
           el.innerHTML = `${wInfo.icon} ${forecast.high}°C / ${forecast.low}°C · ${label} · ${daylightStr}${extra} <span class="meteo-badge meteo-live">${badge}</span>`;
         }
       } else if (daysUntil < 0) {
-        const badge = el.querySelector('.meteo-badge');
-        if (badge) badge.textContent = isEN ? '(historical)' : '(storico)';
+        // Try to load real weather from Firebase archive
+        await loadArchivedWeather(el, dayIdx);
       }
     }
   }
+
+  // Load archived real weather from Firebase for past days
+  async function loadArchivedWeather(el, dayIdx) {
+    if (typeof firebase === 'undefined' || !firebase.database) {
+      // No Firebase — just mark as historical
+      const badge = el.querySelector('.meteo-badge');
+      if (badge) badge.textContent = isEN ? '(historical)' : '(storico)';
+      return;
+    }
+    var familyId = (typeof FAMILY_ID !== 'undefined') ? FAMILY_ID : 'viaggio-europa-2026';
+    try {
+      var snap = await firebase.database().ref('trips/' + familyId + '/weatherArchive/' + dayIdx).once('value');
+      if (snap.exists()) {
+        var w = snap.val();
+        var wInfo = weatherCodes[w.code] || {it: 'Variabile', en: 'Variable', icon: w.icon || '\u{1F324}\uFE0F'};
+        var label = isEN ? wInfo.en : wInfo.it;
+        var daylightStr = '';
+        if (w.sunrise && w.sunset) {
+          daylightStr = '\u{1F305} ' + w.sunrise + '\u2013' + w.sunset + ' (' + w.daylight + ')';
+        }
+        var extra = '';
+        if (w.wind && w.wind > 0) extra += ' \u00b7 ' + (isEN ? 'Wind ' : 'Vento ') + w.wind + ' km/h';
+        if (w.precipProb && w.precipProb > 0) extra += ' \u00b7 ' + (isEN ? 'Rain ' : 'Pioggia ') + w.precipProb + '%';
+        var badge = isEN ? '(real weather)' : '(meteo reale)';
+        el.innerHTML = (w.icon || wInfo.icon) + ' ' + w.high + '\u00b0C / ' + w.low + '\u00b0C \u00b7 ' + label + ' \u00b7 ' + daylightStr + extra + ' <span class="meteo-badge meteo-real">' + badge + '</span>';
+      } else {
+        // No archive data — mark as historical static
+        var badge2 = el.querySelector('.meteo-badge');
+        if (badge2) badge2.textContent = isEN ? '(historical)' : '(storico)';
+      }
+    } catch(e) {
+      var badge3 = el.querySelector('.meteo-badge');
+      if (badge3) badge3.textContent = isEN ? '(historical)' : '(storico)';
+    }
+  }
+
   // Expose for pull-to-refresh
   window.fetchLiveWeather = function() { return updateMeteo(); };
 
@@ -5348,6 +5384,13 @@ if ('serviceWorker' in navigator) {
 
 // ─── HOME SEARCH & AUTH BUTTONS ───
 (function() {
+  // Tap logo "Quo Vadis" → scroll to top
+  var homeBrand = document.querySelector('.home-brand');
+  if (homeBrand) {
+    homeBrand.addEventListener('click', function() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
   var homeSearch = document.getElementById('homeSearchOpen');
   var homeAuth = document.getElementById('homeAuthBtn');
   if (homeSearch) {
@@ -8988,7 +9031,23 @@ if ('serviceWorker' in navigator) {
         // Determine entry type for badge
         var entryType = '';
         var entryTypeLabel = '';
-        if (entry.video && entry.video.url) {
+        var CUSTOM_TYPE_MAP = {
+          'checkin':   '\ud83d\udccd Check-in',
+          'tappa':     '\ud83d\udea9 ' + (isEN ? 'Stage' : 'Tappa'),
+          'highlight': '\u2b50 Highlight',
+          'photo':     '\ud83d\udcf7 ' + (isEN ? 'Photo' : 'Foto'),
+          'video':     '\ud83c\udfac Video',
+          'audio':     '\ud83c\udfa4 Audio',
+          'recap':     '\ud83d\udcdd ' + (isEN ? 'Recap' : 'Riepilogo'),
+          'message':   '\ud83d\udcac ' + (isEN ? 'Message' : 'Messaggio'),
+          'cibo':      '\ud83c\udf5d ' + (isEN ? 'Food' : 'Cibo'),
+          'cultura':   '\ud83c\udfdb\ufe0f ' + (isEN ? 'Culture' : 'Cultura'),
+          'attivita':  '\ud83e\udd7e ' + (isEN ? 'Activity' : 'Attivit\u00e0'),
+        };
+        if (entry.customType && CUSTOM_TYPE_MAP[entry.customType]) {
+          entryType = entry.customType;
+          entryTypeLabel = CUSTOM_TYPE_MAP[entry.customType];
+        } else if (entry.video && entry.video.url) {
           entryType = 'video'; entryTypeLabel = '\ud83c\udfac ' + 'Video';
         } else if (entry.photos && Object.keys(entry.photos).length > 0) {
           if (entry.highlight) {
@@ -9071,6 +9130,12 @@ if ('serviceWorker' in navigator) {
         if (entry.weather) html += '<span class="diario-stat">' + entry.weather + '</span>';
         html += '    </div>';
 
+        // Weather archive row (loaded async after render)
+        var weatherDayIdx = (typeof dn === 'number' && dn >= 0) ? dn : -1;
+        if (weatherDayIdx >= 0) {
+          html += '    <div class="diario-weather-row" data-weather-day="' + weatherDayIdx + '" style="display:none;"></div>';
+        }
+
         // Reactions row (social style)
         html += '    <div class="diario-reactions">';
         html += '      <span>\u2764\ufe0f ' + (entry.likes || 0) + '</span>';
@@ -9093,6 +9158,7 @@ if ('serviceWorker' in navigator) {
 
       timelineEl.innerHTML = html;
       bindEntryActions();
+      loadDiaryWeather();
     };
     // Register for cleanup on tab switch
     if (window.registerFirebaseListener) {
@@ -9100,6 +9166,26 @@ if ('serviceWorker' in navigator) {
     } else {
       _diarioQuery.on('value', _diarioCb);
     }
+  }
+
+  // ─── Load weather archive for diary entries ───
+  function loadDiaryWeather() {
+    if (!firebase.database) return;
+    var familyId = (typeof FAMILY_ID !== 'undefined') ? FAMILY_ID : 'viaggio-europa-2026';
+    var rows = timelineEl.querySelectorAll('.diario-weather-row');
+    rows.forEach(function(row) {
+      var dayIdx = parseInt(row.getAttribute('data-weather-day'));
+      if (isNaN(dayIdx) || dayIdx < 0) return;
+      firebase.database().ref('trips/' + familyId + '/weatherArchive/' + dayIdx).once('value', function(snap) {
+        if (!snap.exists()) return;
+        var w = snap.val();
+        row.innerHTML = '<span class="diario-weather-icon">' + (w.icon || '\u{1F324}\uFE0F') + '</span> ' +
+          w.high + '\u00b0/' + w.low + '\u00b0C \u00b7 ' + (w.condition || '') +
+          (w.sunrise ? ' \u00b7 \u{1F305} ' + w.sunrise + '\u2013' + w.sunset : '') +
+          (w.wind && w.wind > 15 ? ' \u00b7 \u{1F4A8} ' + w.wind + ' km/h' : '');
+        row.style.display = '';
+      });
+    });
   }
 
   // ─── Country code to flag emoji ───
@@ -9408,8 +9494,31 @@ if ('serviceWorker' in navigator) {
       var entry = snap.val() || {};
       var overlay = document.createElement('div');
       overlay.className = 'diario-edit-overlay';
+      var typeOptions = [
+        { value: '', label: isEN ? '(Auto-detect)' : '(Automatico)' },
+        { value: 'checkin', label: '📍 Check-in' },
+        { value: 'tappa', label: '🚩 ' + (isEN ? 'Stage' : 'Tappa') },
+        { value: 'highlight', label: '⭐ Highlight' },
+        { value: 'photo', label: '📷 ' + (isEN ? 'Photo' : 'Foto') },
+        { value: 'video', label: '🎬 Video' },
+        { value: 'audio', label: '🎤 Audio' },
+        { value: 'recap', label: '📝 ' + (isEN ? 'Recap' : 'Riepilogo') },
+        { value: 'message', label: '💬 ' + (isEN ? 'Message' : 'Messaggio') },
+        { value: 'cibo', label: '🍝 ' + (isEN ? 'Food' : 'Cibo') },
+        { value: 'cultura', label: '🏛️ ' + (isEN ? 'Culture' : 'Cultura') },
+        { value: 'attivita', label: '🥾 ' + (isEN ? 'Activity' : 'Attività') },
+      ];
+      var typeSelectHtml = '<select id="diario-edit-type">';
+      typeOptions.forEach(function(opt) {
+        var sel = (entry.customType === opt.value || (!entry.customType && opt.value === '')) ? ' selected' : '';
+        typeSelectHtml += '<option value="' + opt.value + '"' + sel + '>' + opt.label + '</option>';
+      });
+      typeSelectHtml += '</select>';
+
       overlay.innerHTML = '<div class="diario-edit-modal">' +
         '<h3>' + (isEN ? 'Edit entry' : 'Modifica voce') + '</h3>' +
+        '<label>' + (isEN ? 'Entry type' : 'Tipo voce') + '</label>' +
+        typeSelectHtml +
         '<label>' + (isEN ? 'Day name (optional)' : 'Nome giorno (opzionale)') + '</label>' +
         '<input type="text" id="diario-edit-label" value="' + escapeHtml(entry.customLabel || '') + '" maxlength="40" placeholder="' + (isEN ? 'e.g. Departure, Rest day...' : 'es. Partenza, Giorno di riposo...') + '">' +
         '<label>' + (isEN ? 'Text / Story' : 'Testo / Racconto') + '</label>' +
@@ -9427,10 +9536,12 @@ if ('serviceWorker' in navigator) {
       overlay.addEventListener('click', function(e) { if (e.target === overlay) overlay.remove(); });
 
       overlay.querySelector('.diario-edit-save').addEventListener('click', function() {
+        var customType = document.getElementById('diario-edit-type').value;
         var customLabel = document.getElementById('diario-edit-label').value.trim();
         var text = document.getElementById('diario-edit-text').value.trim();
         var highlight = document.getElementById('diario-edit-highlight').value.trim();
         var updates = {};
+        updates['customType'] = customType || null;
         updates['customLabel'] = customLabel || null;
         updates['text'] = text || null;
         updates['highlight'] = highlight || null;
@@ -10563,4 +10674,196 @@ if ('serviceWorker' in navigator) {
       loadSchedule();
     }, 3000);
   }
+})();
+
+
+// ═══════════════════════════════════════════════════════════════
+// RIEPILOGO — Weather Aggregate Stats
+// Reads from trips/{familyId}/weatherArchive and renders summary
+// ═══════════════════════════════════════════════════════════════
+(function() {
+  'use strict';
+  var container = document.getElementById('riepilogo-weather-stats');
+  if (!container) return;
+
+  function loadWeatherStats() {
+    if (typeof firebase === 'undefined' || !firebase.database) {
+      container.innerHTML = '<p>Dati meteo non disponibili (Firebase non connesso)</p>';
+      return;
+    }
+    var familyId = (typeof FAMILY_ID !== 'undefined') ? FAMILY_ID : 'viaggio-europa-2026';
+    var isEN = (typeof window.isEN !== 'undefined') ? window.isEN : false;
+
+    firebase.database().ref('trips/' + familyId + '/weatherArchive').once('value', function(snap) {
+      if (!snap.exists()) {
+        container.innerHTML = '<p>' + (isEN ? 'Weather data will appear here during the trip.' : 'I dati meteo reali appariranno qui durante il viaggio.') + '</p>';
+        return;
+      }
+
+      var data = snap.val();
+      var days = Object.values(data);
+      if (days.length === 0) {
+        container.innerHTML = '<p>' + (isEN ? 'No weather data yet.' : 'Nessun dato meteo ancora.') + '</p>';
+        return;
+      }
+
+      // Aggregate stats
+      var totalDays = days.length;
+      var temps = days.map(function(d) { return d.high; });
+      var tempsLow = days.map(function(d) { return d.low; });
+      var maxTemp = Math.max.apply(null, temps);
+      var minTemp = Math.min.apply(null, tempsLow);
+      var avgHigh = Math.round(temps.reduce(function(a, b) { return a + b; }, 0) / totalDays);
+      var avgLow = Math.round(tempsLow.reduce(function(a, b) { return a + b; }, 0) / totalDays);
+
+      // Find hottest and coldest days
+      var hottestDay = days.find(function(d) { return d.high === maxTemp; });
+      var coldestDay = days.find(function(d) { return d.low === minTemp; });
+
+      // Weather condition counts
+      var sunnyDays = 0, cloudyDays = 0, rainyDays = 0, stormDays = 0;
+      days.forEach(function(d) {
+        var c = d.code;
+        if (c <= 1) sunnyDays++;
+        else if (c <= 3) cloudyDays++;
+        else if ((c >= 51 && c <= 65) || (c >= 80 && c <= 82)) rainyDays++;
+        else if (c >= 95) stormDays++;
+        else cloudyDays++;
+      });
+
+      // Wind stats
+      var winds = days.filter(function(d) { return d.wind; }).map(function(d) { return d.wind; });
+      var maxWind = winds.length > 0 ? Math.max.apply(null, winds) : 0;
+      var windyDays = winds.filter(function(w) { return w > 25; }).length;
+      var windyDay = days.find(function(d) { return d.wind === maxWind; });
+
+      // Daylight extremes
+      var daylights = days.filter(function(d) { return d.daylight; }).map(function(d) {
+        var parts = d.daylight.match(/(\d+)h/);
+        return parts ? parseInt(parts[1]) : 0;
+      });
+      var maxDaylight = daylights.length > 0 ? Math.max.apply(null, daylights) : 0;
+      var minDaylight = daylights.length > 0 ? Math.min.apply(null, daylights) : 0;
+
+      // Rain probability
+      var rainyProb = days.filter(function(d) { return d.precipProb && d.precipProb > 50; }).length;
+
+      // Build HTML
+      var html = '';
+      html += '<div class="weather-stats-grid">';
+
+      // Temperature card
+      html += '<div class="weather-stat-card">';
+      html += '<h3>🌡️ ' + (isEN ? 'Temperature' : 'Temperature') + '</h3>';
+      html += '<p><strong>' + (isEN ? 'Hottest' : 'Più caldo') + ':</strong> ' + maxTemp + '°C — G' + hottestDay.day + ' ' + hottestDay.city + '</p>';
+      html += '<p><strong>' + (isEN ? 'Coldest' : 'Più freddo') + ':</strong> ' + minTemp + '°C — G' + coldestDay.day + ' ' + coldestDay.city + '</p>';
+      html += '<p><strong>' + (isEN ? 'Average' : 'Media') + ':</strong> ' + avgHigh + '°/' + avgLow + '°C</p>';
+      html += '</div>';
+
+      // Conditions card
+      html += '<div class="weather-stat-card">';
+      html += '<h3>☀️ ' + (isEN ? 'Conditions' : 'Condizioni') + '</h3>';
+      html += '<p>☀️ ' + (isEN ? 'Sunny' : 'Sole') + ': <strong>' + sunnyDays + '</strong> ' + (isEN ? 'days' : 'giorni') + '</p>';
+      html += '<p>⛅ ' + (isEN ? 'Cloudy' : 'Nuvoloso') + ': <strong>' + cloudyDays + '</strong> ' + (isEN ? 'days' : 'giorni') + '</p>';
+      html += '<p>🌧️ ' + (isEN ? 'Rain' : 'Pioggia') + ': <strong>' + rainyDays + '</strong> ' + (isEN ? 'days' : 'giorni') + '</p>';
+      if (stormDays > 0) html += '<p>⛈️ ' + (isEN ? 'Storms' : 'Temporali') + ': <strong>' + stormDays + '</strong> ' + (isEN ? 'days' : 'giorni') + '</p>';
+      html += '</div>';
+
+      // Wind card
+      html += '<div class="weather-stat-card">';
+      html += '<h3>💨 ' + (isEN ? 'Wind' : 'Vento') + '</h3>';
+      html += '<p><strong>' + (isEN ? 'Max' : 'Max') + ':</strong> ' + maxWind + ' km/h' + (windyDay ? ' — G' + windyDay.day + ' ' + windyDay.city : '') + '</p>';
+      html += '<p><strong>' + (isEN ? 'Windy days' : 'Giorni ventosi') + ' (>25 km/h):</strong> ' + windyDays + '</p>';
+      html += '</div>';
+
+      // Daylight card
+      html += '<div class="weather-stat-card">';
+      html += '<h3>🌅 ' + (isEN ? 'Daylight' : 'Ore di luce') + '</h3>';
+      html += '<p><strong>' + (isEN ? 'Most' : 'Massimo') + ':</strong> ~' + maxDaylight + 'h</p>';
+      html += '<p><strong>' + (isEN ? 'Least' : 'Minimo') + ':</strong> ~' + minDaylight + 'h</p>';
+      html += '</div>';
+
+      html += '</div>';
+
+      // Summary line
+      html += '<p class="weather-summary"><strong>' + totalDays + '/' + 54 + '</strong> ' + (isEN ? 'days recorded' : 'giorni registrati') + '</p>';
+
+      container.innerHTML = html;
+    });
+  }
+
+  // Load when tab becomes visible or on DOMContentLoaded
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() { setTimeout(loadWeatherStats, 2000); });
+  } else {
+    setTimeout(loadWeatherStats, 2000);
+  }
+
+  // Expose for manual refresh
+  window.refreshWeatherStats = loadWeatherStats;
+})();
+
+
+// ═══════════════════════════════════════════════════════════════
+// RIEPILOGO: Curiosità del Viaggio (archive from Firebase)
+// ═══════════════════════════════════════════════════════════════
+(function() {
+  'use strict';
+  var container = document.getElementById('riepilogo-curiosita');
+  if (!container) return;
+
+  function loadCuriositaArchive() {
+    if (typeof firebase === 'undefined' || !firebase.database) {
+      container.innerHTML = '<p>Curiosità non disponibili (Firebase non connesso)</p>';
+      return;
+    }
+    var familyId = (typeof FAMILY_ID !== 'undefined') ? FAMILY_ID : 'viaggio-europa-2026';
+
+    firebase.database().ref('trips/' + familyId + '/notifications/queue')
+      .orderByChild('type').equalTo('curiosity')
+      .once('value', function(snap) {
+        if (!snap.exists()) {
+          container.innerHTML = '<p style="text-align:center;color:#888;">Le curiosità appariranno qui man mano che vengono inviate (ogni giorno alle 9:00).</p>';
+          return;
+        }
+
+        var items = [];
+        snap.forEach(function(child) {
+          var v = child.val();
+          items.push({ title: v.title || '', body: v.body || '', ts: v.createdAt || 0, tag: v.tag || '' });
+        });
+
+        // Sort by timestamp ascending (oldest first = chronological)
+        items.sort(function(a, b) { return a.ts - b.ts; });
+
+        if (items.length === 0) {
+          container.innerHTML = '<p style="text-align:center;color:#888;">Nessuna curiosità ancora ricevuta.</p>';
+          return;
+        }
+
+        var html = '<div class="curiosita-archive">';
+        html += '<p style="margin-bottom:12px;color:#555;">📚 <strong>' + items.length + '</strong> curiosità ricevute finora</p>';
+        items.forEach(function(item, idx) {
+          var dateStr = item.ts ? new Date(item.ts).toLocaleDateString('it-IT', { weekday:'short', day:'numeric', month:'short' }) : '';
+          html += '<div class="curiosita-item" style="background:#f8f9fa;border-radius:10px;padding:12px 14px;margin-bottom:8px;">';
+          html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">';
+          html += '<span style="font-size:0.72rem;color:#888;font-weight:500;">#' + (idx + 1) + ' · ' + dateStr + '</span>';
+          html += '</div>';
+          html += '<div style="font-size:0.92rem;line-height:1.4;">' + (item.body || item.title) + '</div>';
+          html += '</div>';
+        });
+        html += '</div>';
+        container.innerHTML = html;
+      });
+  }
+
+  // Load when tab becomes visible or on DOMContentLoaded
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() { setTimeout(loadCuriositaArchive, 2500); });
+  } else {
+    setTimeout(loadCuriositaArchive, 2500);
+  }
+
+  // Expose for manual refresh
+  window.refreshCuriositaArchive = loadCuriositaArchive;
 })();

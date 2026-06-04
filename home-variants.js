@@ -113,11 +113,17 @@
 
   // ─── Determine effective role ───
   function getEffectiveRole() {
+    // Security: if user is not authenticated, always return visitor
+    // regardless of localStorage (prevents spoofing via DevTools)
+    var isAuthenticated = (typeof firebaseUser !== 'undefined' && firebaseUser);
+    if (!isAuthenticated) return 'visitor';
+
+    // If role is manually set (from role modal), use it — but only if authenticated
     if (currentRole !== 'auto') return currentRole;
+
     // Auto-detect based on auth state
     if (typeof isOwner !== 'undefined' && isOwner) return 'owner';
-    if (typeof firebaseUser !== 'undefined' && firebaseUser) return 'follower';
-    return 'visitor';
+    return 'follower';
   }
 
   // ─── Get current variant list based on role ───
@@ -173,6 +179,9 @@
 
     // Setup mini-map hint
     setupMiniMapHint();
+
+    // Fetch live weather for hero
+    fetchHeroLiveWeather();
   }
 
   // ─── Populate variant with real data ───
@@ -451,10 +460,30 @@
       data.progressText = 'Partenza tra ' + data.daysUntil + ' giorni · 54 giorni · 13 paesi';
       data.kmBar = 0;
       data.lastUpdate = '';
+      data.distanceFromHome = '';
     } else {
       data.progressText = 'G' + (data.totalDays) + '/54 · ' + data.totalKm + ' km · ' + data.totalCountries + '/13 paesi';
       data.kmBar = Math.min(100, Math.round((parseInt(data.totalKm.replace(/\./g, '')) || 0) / 12000 * 100));
-      data.lastUpdate = '12';
+      data.lastUpdate = '';
+
+      // Distance from home (Selvazzano: 45.3833, 11.9833)
+      var HOME_LAT = 45.3833, HOME_LNG = 11.9833;
+      var posLat = null, posLng = null;
+      // Use TRIP_COORDS for current day as fallback
+      if (typeof TRIP_COORDS !== 'undefined' && tripActive && TRIP_COORDS[currentDay]) {
+        posLat = TRIP_COORDS[currentDay].lat;
+        posLng = TRIP_COORDS[currentDay].lng;
+      }
+      if (posLat !== null && posLng !== null) {
+        var distKm = haversineKm(HOME_LAT, HOME_LNG, posLat, posLng);
+        data.distanceFromHome = '\ud83d\udccd ' + formatKmDistance(distKm) + ' da \ud83c\udfe0';
+        data.progressText += ' · ' + data.distanceFromHome;
+      } else {
+        data.distanceFromHome = '';
+      }
+
+      // Also try live position from Firebase (async update)
+      fetchLiveDistanceFromHome(HOME_LAT, HOME_LNG);
     }
 
     // Diary/chat status
@@ -1066,10 +1095,11 @@
       if (typeof switchTabFromHome === 'function') switchTabFromHome('giorni');
     } else if (action === 'admin') {
       // Open admin/altro panel
-      var altroBtn = document.getElementById('altroSheetToggle') || document.querySelector('[data-action="altro"]');
+      var altroBtn = document.getElementById('altroBtn');
       if (altroBtn) altroBtn.click();
-    } else if (action === 'refresh') {
-      location.reload();
+    } else if (action === 'refresh' || action === 'updateApp') {
+      if (window.hardRefresh) window.hardRefresh();
+      else location.reload(true);
     } else if (action === 'login') {
       // Trigger Google login
       var authBtn = document.getElementById('homeAuthBtn');
@@ -1092,6 +1122,8 @@
       }
     } else if (action === 'openGpsGuide') {
       window.open('https://github.com/niccolorossi/gps-logger-guide', '_blank');
+    } else if (action === 'openCuriosity') {
+      openCuriosityPanel();
     }
   }
 
@@ -1126,6 +1158,197 @@
     toast.textContent = msg;
     document.body.appendChild(toast);
     setTimeout(function() { toast.remove(); }, 2500);
+  }
+
+  // ─── Live Weather for Hero ───
+  function fetchHeroLiveWeather() {
+    // Only fetch if trip is active or within 16 days
+    var tripStart = (typeof TRIP_START !== 'undefined') ? TRIP_START : new Date('2026-06-26T00:00:00');
+    var tripDays = (typeof TRIP_DAYS !== 'undefined') ? TRIP_DAYS : 54;
+    var now = new Date();
+    var currentDay;
+    var override = localStorage.getItem('viaggio2026_day_override');
+    if (override !== null && override !== '') {
+      var parsed = parseInt(override, 10);
+      if (!isNaN(parsed)) currentDay = parsed;
+      else try { var obj = JSON.parse(override); if (obj && typeof obj.day === 'number') currentDay = obj.day; } catch(e) {}
+    }
+    if (currentDay === undefined) currentDay = Math.floor((now - tripStart) / 86400000);
+    var tripActive = currentDay >= 0 && currentDay < tripDays;
+
+    // Need coordinates for current day
+    var lat, lon;
+    if (typeof TRIP_COORDS !== 'undefined' && tripActive && TRIP_COORDS[currentDay]) {
+      lat = TRIP_COORDS[currentDay].lat;
+      lon = TRIP_COORDS[currentDay].lng;
+    } else if (typeof TRIP_COORDS !== 'undefined' && TRIP_COORDS[0]) {
+      lat = TRIP_COORDS[0].lat;
+      lon = TRIP_COORDS[0].lng;
+    } else {
+      return; // No coords available
+    }
+
+    // Calculate date for the current day
+    var dayDate = new Date(tripStart.getTime() + currentDay * 86400000);
+    var dateStr = dayDate.toISOString().split('T')[0];
+
+    // Check if within forecast range (16 days from today)
+    var daysUntil = Math.ceil((dayDate - now) / 86400000);
+    if (daysUntil > 16 || daysUntil < -1) return; // Out of forecast range
+
+    var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + lat + '&longitude=' + lon +
+      '&daily=temperature_2m_max,temperature_2m_min,weathercode,sunrise,sunset,precipitation_probability_max,windspeed_10m_max' +
+      '&start_date=' + dateStr + '&end_date=' + dateStr + '&timezone=auto';
+
+    fetch(url).then(function(r) { return r.json(); }).then(function(data) {
+      if (!data.daily || !data.daily.temperature_2m_max) return;
+
+      var high = Math.round(data.daily.temperature_2m_max[0]);
+      var low = Math.round(data.daily.temperature_2m_min[0]);
+      var code = data.daily.weathercode[0];
+      var wIcon = weatherCodeToIcon(code);
+
+      // Sunrise/sunset
+      var daylightStr = '';
+      if (data.daily.sunrise && data.daily.sunset) {
+        var rise = new Date(data.daily.sunrise[0]);
+        var set = new Date(data.daily.sunset[0]);
+        var diffMs = set - rise;
+        var hours = Math.floor(diffMs / 3600000);
+        var mins = Math.round((diffMs % 3600000) / 60000);
+        var riseFmt = rise.getHours().toString().padStart(2,'0') + ':' + rise.getMinutes().toString().padStart(2,'0');
+        var setFmt = set.getHours().toString().padStart(2,'0') + ':' + set.getMinutes().toString().padStart(2,'0');
+        daylightStr = riseFmt + '–' + setFmt + ' (' + hours + 'h' + (mins > 0 ? ' ' + mins + 'm' : '') + ')';
+      }
+
+      // Update hero elements
+      var container = document.getElementById('hv-container');
+      if (!container) return;
+
+      // Update temp with green dot
+      var tempEls = container.querySelectorAll('[data-hv="temp"]');
+      tempEls.forEach(function(el) {
+        el.innerHTML = high + '°C <span class="hv-live-dot"></span>';
+      });
+
+      // Update weather icon
+      var iconEls = container.querySelectorAll('[data-hv="weatherIcon"]');
+      iconEls.forEach(function(el) { el.textContent = wIcon; });
+
+      // Update daylight
+      var dlEls = container.querySelectorAll('[data-hv="daylight"]');
+      dlEls.forEach(function(el) { el.textContent = daylightStr; });
+
+    }).catch(function() { /* Fail silently, keep static data */ });
+  }
+
+  // Weather code to emoji (WMO codes)
+  function weatherCodeToIcon(code) {
+    if (code === 0) return '☀️';
+    if (code === 1 || code === 2) return '⛅';
+    if (code === 3) return '☁️';
+    if (code >= 51 && code <= 55) return '🌦️';
+    if (code >= 61 && code <= 65) return '🌧️';
+    if (code >= 71 && code <= 77) return '🌨️';
+    if (code >= 80 && code <= 82) return '🌧️';
+    if (code >= 95 && code <= 99) return '⛈️';
+    if (code >= 45 && code <= 48) return '🌫️';
+    return '🌤️';
+  }
+
+  // ─── Haversine distance calculation ───
+  function haversineKm(lat1, lng1, lat2, lng2) {
+    var R = 6371; // Earth radius in km
+    var dLat = (lat2 - lat1) * Math.PI / 180;
+    var dLng = (lng2 - lng1) * Math.PI / 180;
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+      Math.sin(dLng / 2) * Math.sin(dLng / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return Math.round(R * c);
+  }
+
+  function formatKmDistance(km) {
+    if (km >= 1000) {
+      return km.toLocaleString('it-IT') + ' km';
+    }
+    return km + ' km';
+  }
+
+  // ─── Fetch live position from Firebase and update distance ───
+  function fetchLiveDistanceFromHome(homeLat, homeLng) {
+    if (typeof firebase === 'undefined' || !firebase.database) return;
+    var familyId = (typeof FAMILY_ID !== 'undefined') ? FAMILY_ID : 'main';
+    firebase.database().ref('trips/' + familyId + '/position').once('value').then(function(snap) {
+      var pos = snap.val();
+      if (!pos || !pos.lat || !pos.lng) return;
+      var distKm = haversineKm(homeLat, homeLng, pos.lat, pos.lng);
+      var distText = '\ud83d\udccd ' + formatKmDistance(distKm) + ' da \ud83c\udfe0';
+
+      // Update the progress text elements in the DOM
+      var container = document.getElementById('hv-container');
+      if (!container) return;
+      var progressEls = container.querySelectorAll('[data-hv="progressText"]');
+      progressEls.forEach(function(el) {
+        var current = el.textContent || '';
+        // Replace existing distance or append
+        if (current.indexOf('\ud83d\udccd') >= 0) {
+          el.textContent = current.replace(/\ud83d\udccd[^·]+da \ud83c\udfe0/, distText);
+        } else if (current.indexOf('paesi') >= 0) {
+          el.textContent = current + ' \u00b7 ' + distText;
+        }
+      });
+    }).catch(function() { /* silent */ });
+  }
+
+  // ─── Curiosity Panel ───
+  function openCuriosityPanel() {
+    // Read curiosities from Firebase notifications queue (type=curiosity)
+    if (typeof firebase === 'undefined' || !firebase.database) {
+      showCuriosityModal([]);
+      return;
+    }
+    var familyId = (typeof FAMILY_ID !== 'undefined') ? FAMILY_ID : 'main';
+    firebase.database().ref('trips/' + familyId + '/notifications/queue')
+      .orderByChild('type').equalTo('curiosity')
+      .once('value').then(function(snap) {
+        var items = [];
+        snap.forEach(function(child) {
+          var v = child.val();
+          items.push({ title: v.title || '', body: v.body || '', ts: v.createdAt || 0, tag: v.tag || '' });
+        });
+        // Sort by timestamp descending (newest first)
+        items.sort(function(a, b) { return b.ts - a.ts; });
+        showCuriosityModal(items);
+      }).catch(function() {
+        showCuriosityModal([]);
+      });
+  }
+
+  function showCuriosityModal(items) {
+    var overlay = document.createElement('div');
+    overlay.className = 'diario-edit-overlay';
+    var html = '<div class="diario-edit-modal" style="max-height:80vh;overflow-y:auto;max-width:420px;">';
+    html += '<h3>\ud83d\udca1 Curiosit\u00e0 del Viaggio</h3>';
+    if (items.length === 0) {
+      html += '<p style="color:#888;text-align:center;">Nessuna curiosit\u00e0 ancora ricevuta.<br>Arriveranno ogni giorno alle 9:00!</p>';
+    } else {
+      html += '<div style="display:flex;flex-direction:column;gap:12px;">';
+      items.forEach(function(item) {
+        var dateStr = item.ts ? new Date(item.ts).toLocaleDateString('it-IT', { day:'numeric', month:'short' }) : '';
+        html += '<div style="background:#f8f9fa;border-radius:10px;padding:12px;">';
+        html += '<div style="font-size:0.75rem;color:#888;margin-bottom:4px;">' + dateStr + '</div>';
+        html += '<div style="font-size:0.95rem;">' + (item.body || item.title) + '</div>';
+        html += '</div>';
+      });
+      html += '</div>';
+    }
+    html += '<div class="diario-edit-actions" style="margin-top:16px;"><button class="diario-edit-cancel">Chiudi</button></div>';
+    html += '</div>';
+    overlay.innerHTML = html;
+    document.body.appendChild(overlay);
+    overlay.querySelector('.diario-edit-cancel').addEventListener('click', function() { overlay.remove(); });
+    overlay.addEventListener('click', function(e) { if (e.target === overlay) overlay.remove(); });
   }
 
   // ─── Mini-map hint auto-hide ───

@@ -21,6 +21,12 @@
  *    During trip: reminds about tomorrow's route.
  *    NOW: checks notifSchedule.eveningEnabled before queuing.
  * 
+ * 6. morningWeatherPush: Cloud Scheduler — runs daily at 7:30 AM Europe/Rome.
+ *    During trip: sends weather forecast push to all users.
+ * 
+ * 7. dailyWeatherArchiver: Cloud Scheduler — runs daily at 20:00 Europe/Rome.
+ *    During trip: saves real weather data to Firebase for post-trip historical view.
+ * 
  * Deploy: firebase deploy --only functions
  * IMPORTANT: Answer N when asked about deleting Strava functions!
  */
@@ -631,6 +637,388 @@ exports.eveningNextStage = onSchedule(
     });
 
     console.log(`[EveningNextStage] Queued: ${title}`);
+    return null;
+  }
+);
+
+
+// ═══════════════════════════════════════════════════════════════
+// 6. MORNING WEATHER PUSH (Cloud Scheduler — 7:30 AM Rome)
+//    During trip: sends weather for today's location to owner + followers
+// ═══════════════════════════════════════════════════════════════
+
+// Trip coordinates for each day (index 0 = G0)
+const TRIP_COORDS = [
+  { lat: 47.3765, lng: 15.0914, city: "Leoben" },
+  { lat: 48.2082, lng: 16.3738, city: "Vienna" },
+  { lat: 52.2297, lng: 21.0122, city: "Varsavia" },
+  { lat: 54.6872, lng: 25.2797, city: "Vilnius" },
+  { lat: 56.0153, lng: 23.4161, city: "Šiauliai" },
+  { lat: 59.4370, lng: 24.7536, city: "Tallinn" },
+  { lat: 60.1699, lng: 24.9384, city: "Helsinki" },
+  { lat: 61.7667, lng: 29.3833, city: "Punkaharju" },
+  { lat: 61.5000, lng: 28.5000, city: "Lago Saimaa" },
+  { lat: 65.0121, lng: 25.4651, city: "Oulu" },
+  { lat: 65.9300, lng: 26.5100, city: "Ranua" },
+  { lat: 66.5436, lng: 25.8473, city: "Rovaniemi" },
+  { lat: 66.5000, lng: 25.7500, city: "Rovaniemi" },
+  { lat: 69.0714, lng: 27.0142, city: "Utsjoki" },
+  { lat: 69.0485, lng: 20.7890, city: "Kilpisjärvi" },
+  { lat: 69.6496, lng: 18.9560, city: "Tromsø" },
+  { lat: 69.2950, lng: 17.0500, city: "Senja" },
+  { lat: 69.3267, lng: 16.1317, city: "Andøya" },
+  { lat: 69.3250, lng: 16.1300, city: "Andøya" },
+  { lat: 68.2344, lng: 14.5686, city: "Svolvær" },
+  { lat: 68.1483, lng: 14.2017, city: "Henningsvær" },
+  { lat: 68.2500, lng: 13.5833, city: "Lofoten" },
+  { lat: 67.9333, lng: 13.0833, city: "Reine" },
+  { lat: 68.0333, lng: 13.3500, city: "Lofoten Sud" },
+  { lat: 66.5633, lng: 15.3117, city: "Saltstraumen" },
+  { lat: 63.4305, lng: 10.3951, city: "Trondheim" },
+  { lat: 63.4305, lng: 10.3951, city: "Trondheim" },
+  { lat: 63.0167, lng: 7.3500, city: "Atlanterhavsveien" },
+  { lat: 62.4567, lng: 7.6700, city: "Trollstigen" },
+  { lat: 60.3913, lng: 5.3221, city: "Bergen" },
+  { lat: 60.3913, lng: 5.3221, city: "Bergen" },
+  { lat: 58.9700, lng: 5.7331, city: "Stavanger" },
+  { lat: 58.9863, lng: 6.1885, city: "Preikestolen" },
+  { lat: 55.6761, lng: 12.5683, city: "Copenhagen" },
+  { lat: 55.6761, lng: 12.5683, city: "Copenhagen" },
+  { lat: 55.6761, lng: 12.5683, city: "Copenhagen" },
+  { lat: 55.7308, lng: 9.1153, city: "Billund" },
+  { lat: 55.7308, lng: 9.1153, city: "Legoland" },
+  { lat: 55.7308, lng: 9.1153, city: "LEGO House" },
+  { lat: 53.0793, lng: 8.8017, city: "Brema" },
+  { lat: 49.8942, lng: 2.3022, city: "Amiens" },
+  { lat: 47.4133, lng: 0.9900, city: "Loira" },
+  { lat: 47.4133, lng: 0.9900, city: "Loira" },
+  { lat: 43.3183, lng: -1.9812, city: "San Sebastián" },
+  { lat: 43.2630, lng: -2.9350, city: "Bilbao" },
+  { lat: 43.1500, lng: -4.8000, city: "Picos de Europa" },
+  { lat: 42.0096, lng: -4.5288, city: "Palencia" },
+  { lat: 42.0096, lng: -4.5288, city: "Palencia" },
+  { lat: 41.8800, lng: 3.1200, city: "Costa Brava" },
+  { lat: 42.2886, lng: 3.2743, city: "Cadaqués" },
+  { lat: 43.5528, lng: 7.0174, city: "Costa Azzurra" },
+  { lat: 44.4056, lng: 8.9463, city: "Genova" },
+  { lat: 44.4056, lng: 8.9463, city: "Genova" },
+  { lat: 45.3900, lng: 11.8500, city: "Casa" },
+];
+
+// WMO weather code to emoji + Italian label
+function weatherCodeToLabel(code) {
+  if (code === 0) return { icon: "☀️", label: "Sereno" };
+  if (code === 1) return { icon: "🌤️", label: "Prevalentemente sereno" };
+  if (code === 2) return { icon: "⛅", label: "Parzialmente nuvoloso" };
+  if (code === 3) return { icon: "☁️", label: "Coperto" };
+  if (code >= 45 && code <= 48) return { icon: "🌫️", label: "Nebbia" };
+  if (code >= 51 && code <= 55) return { icon: "🌦️", label: "Pioggerella" };
+  if (code >= 61 && code <= 65) return { icon: "🌧️", label: "Pioggia" };
+  if (code >= 71 && code <= 77) return { icon: "🌨️", label: "Neve" };
+  if (code >= 80 && code <= 82) return { icon: "🌧️", label: "Rovesci" };
+  if (code >= 95 && code <= 99) return { icon: "⛈️", label: "Temporale" };
+  return { icon: "🌤️", label: "Variabile" };
+}
+
+// Fetch weather from Open-Meteo
+async function fetchWeatherForDay(lat, lng, dateStr) {
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&daily=temperature_2m_max,temperature_2m_min,weathercode,sunrise,sunset,precipitation_probability_max,windspeed_10m_max&start_date=${dateStr}&end_date=${dateStr}&timezone=auto`;
+  try {
+    const resp = await fetch(url);
+    if (!resp.ok) return null;
+    const data = await resp.json();
+    if (!data.daily || !data.daily.temperature_2m_max) return null;
+    
+    const rise = new Date(data.daily.sunrise[0]);
+    const set = new Date(data.daily.sunset[0]);
+    const diffMs = set - rise;
+    const hours = Math.floor(diffMs / 3600000);
+    const mins = Math.round((diffMs % 3600000) / 60000);
+    
+    return {
+      high: Math.round(data.daily.temperature_2m_max[0]),
+      low: Math.round(data.daily.temperature_2m_min[0]),
+      code: data.daily.weathercode[0],
+      sunrise: rise.getHours().toString().padStart(2, "0") + ":" + rise.getMinutes().toString().padStart(2, "0"),
+      sunset: set.getHours().toString().padStart(2, "0") + ":" + set.getMinutes().toString().padStart(2, "0"),
+      daylight: hours + "h" + (mins > 0 ? " " + mins + "m" : ""),
+      wind: data.daily.windspeed_10m_max ? Math.round(data.daily.windspeed_10m_max[0]) : 0,
+      precipProb: data.daily.precipitation_probability_max ? data.daily.precipitation_probability_max[0] : 0,
+    };
+  } catch (e) {
+    console.error("[Weather] Fetch error:", e.message);
+    return null;
+  }
+}
+
+exports.morningWeatherPush = onSchedule(
+  {
+    schedule: "30 7 * * *", // Every day at 7:30 AM
+    timeZone: "Europe/Rome",
+    region: "europe-west1",
+  },
+  async (event) => {
+    const db = getDatabase();
+    const TRIP_START = new Date("2026-06-26T00:00:00+02:00");
+    const TRIP_DAYS = 54;
+    const now = new Date();
+    const todayStr = now.toISOString().slice(0, 10);
+
+    // Calculate trip day
+    const diffMs = now.getTime() - TRIP_START.getTime();
+    const tripDay = Math.floor(diffMs / 86400000);
+
+    // Only during trip
+    if (tripDay < 0 || tripDay >= TRIP_DAYS) {
+      console.log("[MorningWeather] Not during trip — skipping");
+      return null;
+    }
+
+    const coords = TRIP_COORDS[tripDay];
+    if (!coords) {
+      console.log("[MorningWeather] No coords for day " + tripDay);
+      return null;
+    }
+
+    const weather = await fetchWeatherForDay(coords.lat, coords.lng, todayStr);
+    if (!weather) {
+      console.log("[MorningWeather] Could not fetch weather");
+      return null;
+    }
+
+    const wLabel = weatherCodeToLabel(weather.code);
+    const title = `${wLabel.icon} Buongiorno da ${coords.city}!`;
+    let body = `${weather.high}°/${weather.low}°C · ${wLabel.label}`;
+    body += ` · 🌅 ${weather.sunrise}–${weather.sunset}`;
+    if (weather.precipProb > 20) {
+      body += ` · 🌧️ ${weather.precipProb}%`;
+    }
+    if (weather.wind > 25) {
+      body += ` · 💨 ${weather.wind} km/h`;
+    }
+
+    // Send to all (owner + followers)
+    await db.ref(`trips/${FAMILY_ID}/notifications/queue`).push({
+      type: "morning_weather",
+      title: title,
+      body: body,
+      target: "all",
+      url: "./",
+      tag: `weather-${todayStr}`,
+      createdAt: Date.now(),
+      sent: false,
+      source: "scheduler",
+    });
+
+    console.log(`[MorningWeather] Queued: ${title} — ${body}`);
+    return null;
+  }
+);
+
+// ═══════════════════════════════════════════════════════════════
+// 7. DAILY WEATHER ARCHIVER (Cloud Scheduler — 20:00 Rome)
+//    Saves real weather data to Firebase for post-trip historical view
+// ═══════════════════════════════════════════════════════════════
+exports.dailyWeatherArchiver = onSchedule(
+  {
+    schedule: "0 20 * * *", // Every day at 8:00 PM
+    timeZone: "Europe/Rome",
+    region: "europe-west1",
+  },
+  async (event) => {
+    const db = getDatabase();
+    const TRIP_START = new Date("2026-06-26T00:00:00+02:00");
+    const TRIP_DAYS = 54;
+    const now = new Date();
+    const todayStr = now.toISOString().slice(0, 10);
+
+    // Calculate trip day
+    const diffMs = now.getTime() - TRIP_START.getTime();
+    const tripDay = Math.floor(diffMs / 86400000);
+
+    // Only during trip
+    if (tripDay < 0 || tripDay >= TRIP_DAYS) {
+      console.log("[WeatherArchiver] Not during trip — skipping");
+      return null;
+    }
+
+    const coords = TRIP_COORDS[tripDay];
+    if (!coords) {
+      console.log("[WeatherArchiver] No coords for day " + tripDay);
+      return null;
+    }
+
+    const weather = await fetchWeatherForDay(coords.lat, coords.lng, todayStr);
+    if (!weather) {
+      console.log("[WeatherArchiver] Could not fetch weather for archiving");
+      return null;
+    }
+
+    const wLabel = weatherCodeToLabel(weather.code);
+
+    // Save to Firebase: trips/{familyId}/weatherArchive/{dayIndex}
+    await db.ref(`trips/${FAMILY_ID}/weatherArchive/${tripDay}`).set({
+      day: tripDay,
+      date: todayStr,
+      city: coords.city,
+      lat: coords.lat,
+      lng: coords.lng,
+      high: weather.high,
+      low: weather.low,
+      code: weather.code,
+      condition: wLabel.label,
+      icon: wLabel.icon,
+      sunrise: weather.sunrise,
+      sunset: weather.sunset,
+      daylight: weather.daylight,
+      wind: weather.wind,
+      precipProb: weather.precipProb,
+      archivedAt: Date.now(),
+    });
+
+    console.log(`[WeatherArchiver] Saved G${tripDay} ${coords.city}: ${weather.high}°/${weather.low}°C ${wLabel.label}`);
+    return null;
+  }
+);
+
+
+// ═══════════════════════════════════════════════════════════════
+// 8. DAILY CURIOSITY PUSH (Cloud Scheduler — 9:00 AM Rome)
+//    Pre-trip: sends curiosity every 2 days (day -22, -20, -18...)
+//    During trip: sends 1 curiosity per day tied to current stage
+//    Reads from curiosita-data embedded below.
+// ═══════════════════════════════════════════════════════════════
+
+const CURIOSITA = [
+  // PRE-PARTENZA (11)
+  { day: -22, emoji: "🗺️", text: "Il vostro viaggio coprirà circa 12.000 km — la stessa distanza che separa Roma da Tokyo in linea d'aria!" },
+  { day: -20, emoji: "☀️", text: "A Tromsø, in Norvegia, il sole non tramonta dal 20 maggio al 22 luglio: 69 giorni consecutivi di luce!" },
+  { day: -18, emoji: "🧱", text: "LEGOLAND Billund ha usato oltre 65 milioni di mattoncini LEGO solo per il Miniland." },
+  { day: -16, emoji: "🌊", text: "I fiordi norvegesi possono raggiungere i 1.308 metri di profondità — più profondi del Grand Canyon!" },
+  { day: -14, emoji: "🦌", text: "In Lapponia finlandese ci sono più renne che abitanti: 200.000 renne per 180.000 persone." },
+  { day: -12, emoji: "🌒", text: "Il 12 agosto 2026 ci sarà un'eclissi totale di sole visibile dalla Spagna — e voi sarete lì!" },
+  { day: -10, emoji: "🐋", text: "Nelle acque di Andenes vivono capodogli tutto l'anno — uno dei pochi posti al mondo dove si avvistano con certezza." },
+  { day: -8, emoji: "🏛️", text: "Il Clos Lucé ad Amboise fu l'ultima dimora di Leonardo da Vinci. Nel parco ci sono 40 macchine costruite dai suoi disegni!" },
+  { day: -6, emoji: "🎨", text: "Il Guggenheim di Bilbao è ricoperto da 33.000 lastre di titanio — ognuna spessa solo mezzo millimetro." },
+  { day: -4, emoji: "🇪🇪", text: "Tallinn ha il centro storico medievale meglio conservato del Nord Europa — Patrimonio UNESCO dal 1997." },
+  { day: -2, emoji: "🚐", text: "Attraverserete 13 paesi in 54 giorni — una media di un paese nuovo ogni 4 giorni!" },
+  // DURANTE IL VIAGGIO (54)
+  { day: 0, emoji: "🍺", text: "Leoben ospita il birrificio Gösser, fondato nel 1860 — la birra più bevuta d'Austria." },
+  { day: 1, emoji: "🎡", text: "La Riesenrad del Prater di Vienna gira dal 1897 — ha 127 anni ed è una delle ruote panoramiche più antiche del mondo." },
+  { day: 2, emoji: "🧜‍♀️", text: "Lo stemma di Varsavia è una sirena con spada e scudo — la leggenda dice che protegge la città dai nemici." },
+  { day: 3, emoji: "🎈", text: "Vilnius ha una \"Repubblica di Užupis\" — un quartiere bohémien autoproclamato stato indipendente nel 1997." },
+  { day: 4, emoji: "🏛️", text: "Riga ha la più grande collezione di edifici Art Nouveau al mondo: oltre 800 palazzi decorati." },
+  { day: 5, emoji: "💻", text: "L'Estonia è il paese più digitale del mondo: il 99% dei servizi pubblici è online. Puoi votare dal telefono!" },
+  { day: 6, emoji: "🧖", text: "In Finlandia ci sono 3,3 milioni di saune per 5,5 milioni di abitanti — più saune che automobili!" },
+  { day: 7, emoji: "🌲", text: "La cresta di Punkaharju è una formazione glaciale lunga 7 km — lo Zar Alessandro I la dichiarò paesaggio protetto nel 1803." },
+  { day: 8, emoji: "🦭", text: "Nel lago Saimaa vive la foca degli anelli più rara del mondo: ne restano solo ~430 esemplari." },
+  { day: 9, emoji: "🎸", text: "Oulu ospita ogni anno i Campionati Mondiali di Air Guitar — sì, è una competizione seria dal 1996!" },
+  { day: 10, emoji: "🐻‍❄️", text: "Lo zoo artico di Ranua è l'unico zoo dove si vedono orsi polari a queste latitudini in habitat quasi naturale." },
+  { day: 11, emoji: "🎅", text: "Rovaniemi riceve ogni anno oltre 500.000 lettere indirizzate a Babbo Natale da 198 paesi diversi." },
+  { day: 12, emoji: "📐", text: "Il Circolo Polare Artico passa esattamente attraverso il Santa Claus Village — c'è una linea sul pavimento!" },
+  { day: 13, emoji: "🦌", text: "Il popolo Sami ha oltre 300 parole diverse per descrivere la neve e il ghiaccio." },
+  { day: 14, emoji: "🪨", text: "A Kilpisjärvi c'è il Treriksröset: il punto dove si incontrano Finlandia, Svezia e Norvegia. 3 paesi contemporaneamente!" },
+  { day: 15, emoji: "⛪", text: "La Cattedrale Artica di Tromsø ha una vetrata di 140 m² — visibile anche di notte col sole di mezzanotte." },
+  { day: 16, emoji: "👹", text: "Senja ospita il Troll più grande del mondo: Senjatrollet, alto 18 metri, con una grotta-museo nella pancia!" },
+  { day: 17, emoji: "🚀", text: "Ad Andøya c'è una base spaziale attiva — vengono lanciati razzi di ricerca scientifica dal 1962." },
+  { day: 18, emoji: "🐋", text: "I capodogli di Andenes si immergono fino a 2.000 m per cacciare calamari giganti — trattengono il respiro 90 minuti!" },
+  { day: 19, emoji: "🐟", text: "Le Lofoten producono il 70% dello stoccafisso norvegese — essiccato all'aria sui caratteristici hjell da 1.000 anni." },
+  { day: 20, emoji: "⚽", text: "Henningsvær ha il campo da calcio più scenografico del mondo: su un isolotto tra le montagne, circondato dal mare." },
+  { day: 21, emoji: "🏖️", text: "Haukland Beach alle Lofoten: sabbia bianca e acqua turchese... a 68° Nord!" },
+  { day: 22, emoji: "📸", text: "Reine è stata eletta \"villaggio più bello della Norvegia\" nel 1970 — da allora è l'immagine iconica delle Lofoten." },
+  { day: 23, emoji: "🏚️", text: "Nusfjord: le sue rorbu (capanne rosse) risalgono al 1800 e sono Patrimonio UNESCO." },
+  { day: 24, emoji: "🌀", text: "Il Saltstraumen è la corrente di marea più forte del mondo: 400 milioni di m³ d'acqua a 37 km/h!" },
+  { day: 25, emoji: "🌐", text: "Oggi attraverserete il Circolo Polare Artico verso sud — il monumento Polarsirkelen segna il punto esatto." },
+  { day: 26, emoji: "👑", text: "La cattedrale di Nidaros a Trondheim è il luogo di incoronazione dei re norvegesi dal Medioevo." },
+  { day: 27, emoji: "🌊", text: "L'Atlanterhavsveien è lunga solo 8,3 km ma ha 8 ponti che saltano da un isolotto all'altro — \"strada del secolo\"." },
+  { day: 28, emoji: "🐉", text: "La Trollstigen ha 11 tornanti con pendenza del 10% e una cascata che attraversa la strada." },
+  { day: 29, emoji: "💎", text: "Il Geirangerfjord: le cascate \"Sette Sorelle\" cadono per 250 metri direttamente nel fiordo." },
+  { day: 30, emoji: "🌧️", text: "Bergen piove 231 giorni all'anno. I locali dicono: \"Non esiste cattivo tempo, solo cattivo abbigliamento\"." },
+  { day: 31, emoji: "🧗", text: "Il Preikestolen: piattaforma di 25×25 m sospesa a 604 metri sopra il Lysefjord — senza ringhiere!" },
+  { day: 32, emoji: "⛰️", text: "Il Kjeragbolten è un masso incastrato tra due pareti a 984 m d'altezza — la foto in piedi sopra è un classico!" },
+  { day: 33, emoji: "🚢", text: "Il traghetto Kristiansand-Hirtshals attraversa lo Skagerrak in ~2h30." },
+  { day: 34, emoji: "🎢", text: "I Giardini di Tivoli (1843) sono il secondo parco più antico del mondo — ispirarono Walt Disney per Disneyland!" },
+  { day: 35, emoji: "🚲", text: "A Copenhagen ci sono più biciclette che abitanti: 675.000 bici per 630.000 persone." },
+  { day: 36, emoji: "🧱", text: "LEGO viene dal danese \"leg godt\" = \"gioca bene\". Fondata nel 1932 a Billund da un falegname." },
+  { day: 37, emoji: "🏗️", text: "LEGOLAND Billund: il Monte Rushmore in LEGO ha 1,5 milioni di mattoncini — 3 anni per costruirlo!" },
+  { day: 38, emoji: "🏠", text: "La LEGO House contiene 25 milioni di mattoncini e un albero della creatività alto 15 metri." },
+  { day: 39, emoji: "🐴", text: "I Musicanti di Brema non arrivarono mai a Brema nella fiaba dei Grimm — si fermarono prima!" },
+  { day: 40, emoji: "⛪", text: "La cattedrale di Amiens è la più grande gotica di Francia — ci entrerebbero 2 Notre-Dame di Parigi!" },
+  { day: 41, emoji: "🏰", text: "La Valle della Loira ha oltre 300 castelli in 280 km — più castelli per km² di qualsiasi altra regione." },
+  { day: 42, emoji: "🎨", text: "Leonardo da Vinci portò la Gioconda dall'Italia al Clos Lucé — morì qui nel 1519." },
+  { day: 43, emoji: "🍽️", text: "San Sebastián ha la più alta concentrazione di stelle Michelin per m² al mondo." },
+  { day: 44, emoji: "🐕", text: "\"Puppy\" al Guggenheim di Bilbao: un cane di 12 m ricoperto da 37.000 piante fiorite!" },
+  { day: 45, emoji: "🚡", text: "La funivia di Fuente Dé sale 753 m in 4 minuti — una delle più ripide d'Europa." },
+  { day: 46, emoji: "✝️", text: "Il Cristo del Otero a Palencia (20 m) fu la seconda statua di Cristo più alta del mondo nel 1931." },
+  { day: 47, emoji: "🌑", text: "L'eclissi del 12 agosto 2026 sarà totale per ~1 min 50 sec a Palencia. La prossima in Spagna? Nel 2090!" },
+  { day: 48, emoji: "🗿", text: "Cap de Creus: le rocce erose dal vento ispirarono i paesaggi surreali di Salvador Dalí." },
+  { day: 49, emoji: "🎨", text: "La casa-museo di Dalí a Portlligat ha uova giganti sul tetto e un labirinto di stanze collegate." },
+  { day: 50, emoji: "🏎️", text: "\"Costa Azzurra\" prende il nome da un libro del 1887 — prima si chiamava semplicemente \"Riviera\"." },
+  { day: 51, emoji: "🐬", text: "L'Acquario di Genova: 70 vasche, 12.000 animali, e una vasca tattile dove toccare le razze!" },
+  { day: 52, emoji: "⛵", text: "Genova fu la \"Superba\" — Cristoforo Colombo nacque qui nel 1451, e la sua casa è ancora visitabile." },
+  { day: 53, emoji: "🏠", text: "\"Nostos\" (ritorno) + \"algos\" (dolore) = nostalgia. Ma voi tornate con 54 giorni di ricordi!" },
+];
+
+exports.dailyCuriosity = onSchedule(
+  {
+    schedule: "0 9 * * *", // Every day at 9:00 AM
+    timeZone: "Europe/Rome",
+    region: "europe-west1",
+  },
+  async (event) => {
+    const db = getDatabase();
+    const FAMILY_ID = "main";
+
+    // Check if curiosity notifications are enabled
+    const schedSnap = await db.ref(`trips/${FAMILY_ID}/notifSchedule/curiosityEnabled`).once("value");
+    if (schedSnap.val() === false) {
+      console.log("[Curiosity] Disabled via notifSchedule — skipping");
+      return null;
+    }
+
+    const TRIP_START = new Date("2026-06-26T00:00:00+02:00");
+    const now = new Date();
+    const diffMs = now.getTime() - TRIP_START.getTime();
+    const tripDay = Math.floor(diffMs / 86400000);
+
+    // Find matching curiosity
+    let curiosity = null;
+
+    if (tripDay < 0) {
+      // Pre-trip: find curiosity matching this day offset (every 2 days)
+      curiosity = CURIOSITA.find(c => c.day === tripDay);
+      // If no exact match, try closest even day
+      if (!curiosity) {
+        const evenDay = tripDay % 2 === 0 ? tripDay : tripDay + 1;
+        curiosity = CURIOSITA.find(c => c.day === evenDay);
+      }
+    } else if (tripDay >= 0 && tripDay <= 53) {
+      // During trip: exact day match
+      curiosity = CURIOSITA.find(c => c.day === tripDay);
+    }
+
+    if (!curiosity) {
+      console.log(`[Curiosity] No curiosity for tripDay ${tripDay} — skipping`);
+      return null;
+    }
+
+    const title = `${curiosity.emoji} Sapevi che...`;
+    const body = curiosity.text;
+
+    // Write to notifications queue
+    await db.ref(`trips/${FAMILY_ID}/notifications/queue`).push({
+      type: "curiosity",
+      title: title,
+      body: body,
+      target: "all", // Send to everyone (owner + followers)
+      url: "./",
+      tag: `curiosity-${now.toISOString().slice(0, 10)}`,
+      createdAt: Date.now(),
+      sent: false,
+      source: "scheduler",
+    });
+
+    console.log(`[Curiosity] Queued: ${title} — ${body.substring(0, 50)}...`);
     return null;
   }
 );

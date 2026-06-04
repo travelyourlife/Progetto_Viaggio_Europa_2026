@@ -53,7 +53,7 @@
     <link rel="apple-touch-icon" sizes="152x152" href="./icon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="./icon.png">
     <link rel="apple-touch-icon" sizes="167x167" href="./icon.png">
-    <title>Viaggio Europa 2026 — V1.75</title>
+    <title>Viaggio Europa 2026 — V1.76</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="home-variants.css">
@@ -73,7 +73,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = '1.75';
+  var EXPECTED_VERSION = '1.76';
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
   var r = false;
@@ -417,6 +417,7 @@
 <div class="tab-index-wrapper"><div class="tab-index">
 <a href="#sintesi">📋 Sintesi</a>
 <a href="#curiosita-dati-geografici">🌍 Curiosità</a>
+<a href="#meteo-viaggio">🌤️ Meteo</a>
 <a href="#legenda">🏷️ Legenda</a>
 <a href="#mappa">🗺️ Mappa</a>
 <a href="#itinerario-54-giorni">🌟 Itinerario</a>
@@ -436,6 +437,16 @@
 <p>📍 <strong>Estremi geografici:</strong> Nord → <strong>Tromsø / Senja (🇳🇴)</strong> · Sud → <strong>Palencia (🇪🇸)</strong></p>
 <p>🌊 <strong>Mari toccati:</strong> Mar Baltico · Oceano Artico · Mare di Norvegia · Atlantico · Mar Mediterraneo</p>
 <p>🛣️ <strong>Strade panoramiche iconiche (🛣️):</strong> Via Baltica · Punkaharju Ridge · Senja NTR · Andøya NTR · Lofoten (E10) NTR · Helgelandskysten · Atlantic Road · Geiranger–Trollstigen NTR · Hardanger NTR · Jæren NTR + Nordsjøvegen · Ponte Storebælt · Margueritruten · Corniche Basque · Desfiladero de la Hermida</p>
+<hr>
+<h2 id="meteo-viaggio">🌤️ Meteo del Viaggio</h2>
+<div id="riepilogo-weather-stats">
+  <p class="weather-loading">Caricamento dati meteo reali...</p>
+</div>
+<hr>
+<h2 id="curiosita-viaggio">💡 Curiosità del Viaggio</h2>
+<div id="riepilogo-curiosita">
+  <p class="weather-loading">Caricamento curiosità...</p>
+</div>
 <hr>
 <span id="tabella"></span><span id="tabA"></span>
 <h3 id="legenda">🏷️ Legenda icone — Itinerario</h3>

@@ -178,3 +178,192 @@ Quo Vadis è una **PWA client-heavy** con backend Firebase serverless. L'archite
 ## Conclusione
 
 L'architettura attuale è **corretta per il caso d'uso** (PWA offline-first per famiglia in viaggio). Il server fa il minimo indispensabile (push dispatch + scheduling). Le ottimizzazioni principali sono sul **peso del client** (code splitting + lazy loading), non sullo spostamento di logica server-side. L'unica eccezione significativa è il **meteo aggregato** che eviterebbe chiamate duplicate da tutti i client.
+
+
+---
+
+## Quo Vadis → SaaS: Analisi e Roadmap
+
+### Visione
+
+Trasformare Quo Vadis da app single-tenant per una famiglia a **piattaforma SaaS multi-tenant** per viaggiatori in camper/van/auto che vogliono condividere il viaggio con amici e familiari.
+
+---
+
+### Decisioni Architetturali Chiave
+
+#### 1. Multi-Tenancy
+
+**Stato attuale:** Tutto è hardcoded per UN viaggio (`FAMILY_ID = "viaggio-europa-2026"`, `OWNER_UIDS` fissi, `days-data.js` statico).
+
+**Target SaaS:**
+- Ogni "viaggio" è un tenant isolato con proprio ID
+- Un utente può creare più viaggi (passati e futuri)
+- Un utente può essere owner di un viaggio e follower di un altro
+- Struttura dati: `trips/{tripId}/...` (già parzialmente in uso)
+
+**Modello dati proposto:**
+
+```
+users/{uid}/
+  profile: { name, email, photo, plan }
+  trips: { tripId1: "owner", tripId2: "follower" }
+
+trips/{tripId}/
+  meta: { title, startDate, endDate, totalDays, owner, status }
+  itinerary: { day0: {...}, day1: {...}, ... }
+  members: { uid1: "owner", uid2: "follower", uid3: "viewer" }
+  live: { position, lastUpdate, speed, heading }
+  diary: { ... }
+  chat: { ... }
+  weatherArchive: { ... }
+  settings: { privacy, notifications, theme }
+```
+
+#### 2. Stack Tecnologico Proposto
+
+| Layer | Attuale | SaaS |
+|-------|---------|------|
+| Frontend | Vanilla JS monolite | React/Next.js + TypeScript |
+| Backend | Firebase Cloud Functions (5) | Node.js API (Express/Fastify) o Next.js API routes |
+| Database | Firebase RTDB | **Firestore** (multi-tenant queries) + Redis (cache) |
+| Auth | Firebase Auth (Google only) | Firebase Auth (Google + Apple + Email) |
+| Storage | Firebase Storage | Firebase Storage o S3 |
+| Hosting | Firebase Hosting | Vercel o Firebase Hosting |
+| Real-time | Firebase RTDB listeners | Firestore listeners o WebSocket |
+| Push | FCM | FCM + Web Push API |
+| Maps | Leaflet + OSM | Leaflet + OSM (invariato) |
+| Meteo | Open-Meteo (client) | Open-Meteo (server-side, cached) |
+
+#### 3. Perché Firestore invece di RTDB
+
+| Criterio | RTDB | Firestore |
+|----------|------|-----------|
+| Query multi-tenant | ❌ Flat structure, no index | ✅ Collection groups, compound queries |
+| Pricing | Per GB stored + bandwidth | Per reads/writes (più prevedibile) |
+| Offline | ✅ | ✅ |
+| Security Rules | Semplici ma limitate | Più espressive (field-level) |
+| Scalabilità | Regionale, 200k connessioni | Multi-region, auto-scale |
+
+#### 4. Modello di Business
+
+**Opzione A — Freemium:**
+- **Free:** 1 viaggio attivo, 3 follower, 7 giorni max, no GPS live
+- **Pro (€4.99/mese o €29.99/anno):** Viaggi illimitati, follower illimitati, GPS live, meteo, notifiche, export PDF
+- **Family (€7.99/mese):** Come Pro + 3 account owner (coppia + nonni)
+
+**Opzione B — Pay-per-trip:**
+- **Free:** Pianificazione illimitata, 1 follower
+- **Trip Pass (€9.99 una tantum):** Attiva tutte le feature per 1 viaggio (durata illimitata)
+- **Annual (€24.99/anno):** Viaggi illimitati
+
+**Raccomandazione:** Opzione B (pay-per-trip) — più adatto a viaggiatori occasionali. Bassa friction, alto valore percepito.
+
+---
+
+### Funzionalità SaaS Aggiuntive
+
+| Feature | Descrizione | Effort |
+|---------|-------------|--------|
+| **Trip Builder** | UI drag-and-drop per creare itinerario (oggi è manuale in days-data.js) | 3-4 settimane |
+| **Invite System** | Link/QR code per invitare follower (oggi: approvazione manuale) | 1 settimana |
+| **Trip Templates** | Itinerari pre-fatti (Scandinavia, Balcani, ecc.) da personalizzare | 2 settimane |
+| **Social Feed** | Feed pubblico con highlight dei viaggi (opt-in) | 2-3 settimane |
+| **Export/Ricordo** | PDF/libro fotografico del viaggio completo | 2 settimane |
+| **Integrazione Strava** | Import automatico km/attività (già parzialmente implementato) | 1 settimana |
+| **Multi-lingua** | i18n completo (IT/EN/DE/FR/ES) | 2 settimane |
+| **Dashboard Analytics** | Per owner: chi ha visto cosa, engagement follower | 1 settimana |
+| **Offline-first PWA** | Mantieni l'esperienza offline attuale | Già fatto |
+| **Notifiche smart** | ML-based: notifica solo quando succede qualcosa di interessante | 3-4 settimane |
+
+---
+
+### Roadmap di Sviluppo
+
+#### Fase 0 — Validazione (Giugno-Agosto 2026)
+- Usa il viaggio attuale come MVP/demo
+- Raccogli feedback reale da 20+ follower
+- Documenta cosa funziona e cosa no
+- Identifica le feature più richieste
+
+#### Fase 1 — Fondamenta (Settembre-Ottobre 2026)
+- Setup progetto Next.js + TypeScript + Tailwind
+- Migrazione auth a multi-provider (Google + Apple + Email)
+- Migrazione dati a Firestore (multi-tenant)
+- API layer per CRUD viaggi
+- Trip Builder base (form, non drag-and-drop)
+- Invite system con link
+
+#### Fase 2 — Core Features (Novembre-Dicembre 2026)
+- GPS live tracking (porta il codice attuale)
+- Chat real-time
+- Diario con foto
+- Notifiche push
+- Meteo server-side (porta le Cloud Functions attuali)
+- Homepage per ruolo (porta home-variants)
+
+#### Fase 3 — Monetizzazione (Gennaio 2027)
+- Stripe integration (billing)
+- Piano Free vs Pro
+- Landing page marketing
+- Onboarding flow
+- Trip templates (3-5 itinerari pre-fatti)
+
+#### Fase 4 — Growth (Febbraio-Marzo 2027)
+- Social feed pubblico
+- Export PDF/libro
+- Dashboard analytics
+- Multi-lingua (IT + EN)
+- SEO + content marketing
+- App Store (PWA wrapper con Capacitor)
+
+---
+
+### Rischi e Mitigazioni
+
+| Rischio | Probabilità | Mitigazione |
+|---------|-------------|-------------|
+| Mercato saturo (Polarsteps, FindMyFriends) | Media | Differenziarsi su: famiglia con bambini, offline-first, privacy |
+| Costi Firebase troppo alti | Bassa | Firestore pricing prevedibile, cache aggressiva |
+| Complessità multi-tenant | Alta | Iniziare con architettura semplice, scalare dopo |
+| Mancanza di traction | Media | Validare con viaggio reale, community van/camper |
+| Tempo di sviluppo solo | Alta | MVP minimo, no feature creep, usa il codice esistente come reference |
+
+---
+
+### Competitor Analysis
+
+| App | Punti di forza | Punti deboli | Differenziazione QV |
+|-----|---------------|--------------|---------------------|
+| **Polarsteps** | Tracking automatico, bel design | No offline, no family focus, no pianificazione | Offline-first, family-oriented, pianificazione integrata |
+| **FindMyFriends** | Semplice, integrato iOS | Solo posizione, no contenuto | Contenuto ricco (diario, foto, meteo, itinerario) |
+| **TripIt** | Pianificazione business | No live tracking, no social | Live tracking + social per famiglia |
+| **Roadtrippers** | Route planning USA | No tracking, no condivisione live | EU-focused, live sharing, community |
+
+---
+
+### Proposta per Utenti Non Loggati
+
+Per il SaaS, gli utenti non loggati (visitor) dovrebbero vedere:
+
+1. **Landing page del viaggio** — titolo, mappa statica del percorso, durata, paesi
+2. **Teaser content** — ultimi 2-3 check-in pubblici (se il trip è pubblico)
+3. **CTA chiara** — "Accedi per seguire il viaggio" / "Crea il tuo viaggio"
+4. **Privacy rispettata** — nessuna posizione live, nessun dettaglio personale
+
+**Per l'app attuale (pre-SaaS):**
+- Visitor vede: hero con countdown/stato, mappa statica, CTA login
+- Dopo login: diventa "pending" → owner approva → diventa follower
+- Questo flow è già implementato e funziona bene
+
+---
+
+### Conclusione
+
+Il viaggio di giugno-agosto 2026 è la **validazione perfetta**. Dopo 54 giorni con utenti reali, avrai:
+- Feedback su UX e feature
+- Dati reali per il marketing ("Testato su un viaggio di 12.000 km")
+- Codebase di riferimento per il rewrite
+- Contenuti per la landing page (foto, statistiche, testimonial dai follower)
+
+**Non riscrivere prima del viaggio.** Usa l'app attuale, raccogli dati, poi riscrivi con le idee chiare a settembre.

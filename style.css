@@ -821,6 +821,8 @@ mark.search-hl.current { background: #f97316; color: white; }
 .home-brand {
     font-size: 28px; font-weight: 700; color: var(--primary);
     margin: 0; font-family: 'Georgia', serif;
+    user-select: none; -webkit-user-select: none;
+    cursor: pointer; -webkit-tap-highlight-color: transparent;
 }
 .home-compass { font-size: 22px; }
 .home-lang-switch {
