@@ -1094,9 +1094,10 @@
     } else if (action === 'openDay') {
       if (typeof switchTabFromHome === 'function') switchTabFromHome('giorni');
     } else if (action === 'admin') {
-      // Open admin/altro panel
-      var altroBtn = document.getElementById('altroBtn');
-      if (altroBtn) altroBtn.click();
+      // Open admin tab directly
+      if (typeof switchTabFromHome === 'function') {
+        switchTabFromHome('admin');
+      }
     } else if (action === 'refresh' || action === 'updateApp') {
       if (window.hardRefresh) window.hardRefresh();
       else location.reload(true);

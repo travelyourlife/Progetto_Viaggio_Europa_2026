@@ -1,1 +1,1 @@
-{"version":"1.76","date":"2026-06-04","notes":"Live weather hero, meteo push, daily archiver, diary weather, riepilogo stats, auth fix, curiosity push, diary labels, distance from home, curiosità archive, admin fix"}
+{"version":"1.77","date":"2026-06-04","notes":"Fix day override bug (G0 reset), unify override format to JSON {day,ts}, fix getDayIndex/hero for day 0, fix unified-map key, visitor hero update"}
