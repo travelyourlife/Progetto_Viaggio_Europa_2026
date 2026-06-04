@@ -230,6 +230,33 @@ function showGlobalBanScreen() {
   if (bottomNav) bottomNav.style.display = 'none';
 }
 
+// ─── Protected Tabs UI (v1.86 Security) ───
+// Hide/show protected tabs (chat, diario, posizione) based on auth state
+var _PROTECTED_TAB_IDS = ['chat', 'diario', 'posizione'];
+function updateProtectedTabsUI(user) {
+  var show = !!user;
+  // Bottom bar tabs
+  _PROTECTED_TAB_IDS.forEach(function(tabId) {
+    var btns = document.querySelectorAll('.bottom-tab[data-tab="' + tabId + '"]');
+    btns.forEach(function(btn) { btn.style.display = show ? '' : 'none'; });
+    // Side menu items
+    var menuLinks = document.querySelectorAll('.side-menu .menu-item[data-tab="' + tabId + '"]');
+    menuLinks.forEach(function(link) { link.style.display = show ? '' : 'none'; });
+  });
+  // If user is on a protected tab and logs out, redirect to home
+  if (!show) {
+    var activeSection = document.querySelector('.tab-content.active');
+    if (activeSection) {
+      var activeId = activeSection.id.replace('tab-', '');
+      if (_PROTECTED_TAB_IDS.indexOf(activeId) !== -1) {
+        if (typeof window.switchTab === 'function') window.switchTab('home');
+      }
+    }
+  }
+}
+// Run on page load (before auth resolves, hide protected tabs)
+document.addEventListener('DOMContentLoaded', function() { updateProtectedTabsUI(null); });
+
 // ─── Owner/Viewer Auth State (V4.8) ───
 // Viewers see everything read-only without login. Owners (Google Auth) can write.
 var isOwner = false;
@@ -255,6 +282,8 @@ function checkOwnerStatus() {
       }
 
       window.dispatchEvent(new CustomEvent('authStateChanged', { detail: { user: user, isOwner: isOwner } }));
+      // Update protected tab visibility
+      updateProtectedTabsUI(user);
 
       // ─── Owner: save profile to approvedUsers (so Gestisci shows name, not UID) ───
       if (isOwner && user && typeof firebase !== 'undefined' && firebase.database) {
@@ -1142,7 +1171,17 @@ document.addEventListener('DOMContentLoaded', function() {
         _previousTab = newTab;
     });
 
+    // Protected tabs: require authentication
+    var PROTECTED_TABS = ['chat', 'diario', 'posizione'];
+
     function switchTab(tabId, scrollToId) {
+        // Block access to protected tabs for non-authenticated users
+        if (PROTECTED_TABS.indexOf(tabId) !== -1 && !firebaseUser) {
+            showToast(isEN ? '🔒 Sign in to access this section' : '🔒 Accedi per visualizzare questa sezione', 'info');
+            // Trigger login
+            if (typeof doGoogleSignIn === 'function') doGoogleSignIn();
+            return;
+        }
         sections.forEach(function(s) { s.classList.remove('active'); });
         var target = document.getElementById('tab-' + tabId);
         if (target) target.classList.add('active');
@@ -11189,6 +11228,51 @@ if ('serviceWorker' in navigator) {
     }
   });
 
+  // ─── Default draft posts (v1.86) — shown in admin editor until published ───
+  var DEFAULT_DRAFT_POSTS = [
+    {
+      date: '2026-06-04',
+      status: 'draft',
+      title: '',
+      badge: '\ud83d\ude80 Countdown',
+      typeLabel: {it: '\ud83d\ude80 Countdown', en: '\ud83d\ude80 Countdown'},
+      body: {
+        it: 'Mancano <strong>{{daysUntil}} giorni</strong> alla partenza! Il furgone \u00e8 quasi pronto, l\u2019avventura sta per iniziare. \ud83d\ude90\u2728',
+        en: '<strong>{{daysUntil}} days</strong> until departure! The van is almost ready, the adventure is about to begin. \ud83d\ude90\u2728'
+      },
+      image: null
+    },
+    {
+      date: '2026-06-02',
+      status: 'draft',
+      title: '',
+      badge: '\ud83d\udcf7 Foto',
+      typeLabel: {it: '\ud83d\udcf7 Foto', en: '\ud83d\udcf7 Photo'},
+      body: {
+        it: 'Preparativi in corso! Ecco cosa ci aspetta lungo la strada \u2014 fiordi, citt\u00e0 baltiche, e tanto altro.',
+        en: 'Preparations underway! Here\u2019s what awaits us on the road \u2014 fjords, Baltic cities, and so much more.'
+      },
+      image: './img/placeholder/van-view.jpg'
+    },
+    {
+      date: '2026-05-29',
+      status: 'draft',
+      title: 'Il percorso \u00e8 pronto!',
+      badge: '\ud83d\uddfa\ufe0f Piano',
+      typeLabel: {it: '\ud83d\uddfa\ufe0f Piano', en: '\ud83d\uddfa\ufe0f Route'},
+      body: {
+        it: '\ud83d\ude90 12.000 km &nbsp; \ud83c\uddf3\ud83c\uddf4\ud83c\uddec\ud83c\udde7\ud83c\uddf8\ud83c\uddea\ud83c\uddeb\ud83c\uddee\ud83c\uddea\ud83c\uddea\ud83c\uddf1\ud83c\uddfb\ud83c\uddf1\ud83c\uddf9\ud83c\uddf5\ud83c\uddf1\ud83c\udde6\ud83c\uddf9 13 paesi &nbsp; \ud83d\udcc5 54 giorni',
+        en: '\ud83d\ude90 12,000 km &nbsp; \ud83c\uddf3\ud83c\uddf4\ud83c\uddec\ud83c\udde7\ud83c\uddf8\ud83c\uddea\ud83c\uddeb\ud83c\uddee\ud83c\uddea\ud83c\uddea\ud83c\uddf1\ud83c\uddfb\ud83c\uddf1\ud83c\uddf9\ud83c\uddf5\ud83c\uddf1\ud83c\udde6\ud83c\uddf9 13 countries &nbsp; \ud83d\udcc5 54 days'
+      },
+      image: null
+    }
+  ];
+
+  // Seed default drafts as initial value (Firebase will override when loaded)
+  if (!window._preTripPostsOverride || window._preTripPostsOverride.length === 0) {
+    window._preTripPostsOverride = DEFAULT_DRAFT_POSTS;
+  }
+
   // Also load posts from Firebase for the home/diario feed (on app start)
   setTimeout(function() {
     var ref = getPostsRef();
@@ -11198,7 +11282,13 @@ if ('serviceWorker' in navigator) {
       if (val && Array.isArray(val)) {
         window._preTripPostsOverride = val;
       } else {
-        window._preTripPostsOverride = [];
+        // Firebase empty: seed with defaults and save them
+        window._preTripPostsOverride = DEFAULT_DRAFT_POSTS;
+        if (isOwner) {
+          ref.set(DEFAULT_DRAFT_POSTS).then(function() {
+            console.info('[Posts] Default draft posts seeded to Firebase');
+          }).catch(function() {});
+        }
       }
     });
   }, 2000);

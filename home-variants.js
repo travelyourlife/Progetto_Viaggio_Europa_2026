@@ -1065,7 +1065,7 @@
           renderCurrentVariant();
 
           // ─── Propagate role to entire app ───
-          if (currentRole === 'follower' || currentRole === 'visitor') {
+          if (currentRole === 'visitor') {
             window.isOwner = false;
             // Hide admin elements globally
             var adminPanel = document.getElementById('tab-admin');
@@ -1081,6 +1081,26 @@
             // Hide bottom bar admin icon if present
             var bottomAdmin = document.querySelector('.bottom-bar [data-tab="admin"]');
             if (bottomAdmin) bottomAdmin.style.display = 'none';
+            // Hide protected tabs (chat, diario, posizione) for visitor
+            if (typeof updateProtectedTabsUI === 'function') updateProtectedTabsUI(null);
+          } else if (currentRole === 'follower') {
+            window.isOwner = false;
+            // Hide admin elements globally
+            var adminPanel = document.getElementById('tab-admin');
+            if (adminPanel) adminPanel.style.display = 'none';
+            var adminMenuLink = document.querySelector('[data-tab="admin"]');
+            if (adminMenuLink) adminMenuLink.style.display = 'none';
+            // Hide diary add button
+            var addEntryBtn = document.getElementById('diario-add-entry');
+            if (addEntryBtn) addEntryBtn.style.display = 'none';
+            // Hide all diary entry action buttons
+            var diaryActions = document.querySelectorAll('.diario-entry-actions');
+            diaryActions.forEach(function(el) { el.style.display = 'none'; });
+            // Hide bottom bar admin icon if present
+            var bottomAdmin = document.querySelector('.bottom-bar [data-tab="admin"]');
+            if (bottomAdmin) bottomAdmin.style.display = 'none';
+            // Follower CAN see chat/diario/posizione (they are logged in)
+            if (typeof updateProtectedTabsUI === 'function') updateProtectedTabsUI(window.firebaseUser || true);
           } else {
             // Restore owner view
             window.isOwner = true;
@@ -1094,6 +1114,8 @@
             diaryActions.forEach(function(el) { el.style.display = ''; });
             var bottomAdmin = document.querySelector('.bottom-bar [data-tab="admin"]');
             if (bottomAdmin) bottomAdmin.style.display = '';
+            // Owner can see everything
+            if (typeof updateProtectedTabsUI === 'function') updateProtectedTabsUI(window.firebaseUser || true);
           }
 
           showToastHV('🧪 Vista: ' + (currentRole === 'owner' ? 'Owner' : currentRole === 'follower' ? 'Follower' : 'Visitatore'));
@@ -1162,7 +1184,7 @@
       var _dayIdx = 0;
       if (typeof window._dayOverride === 'number') { _dayIdx = window._dayOverride; }
       else { var _ts = (typeof TRIP_START !== 'undefined') ? TRIP_START : new Date('2026-06-26'); _dayIdx = Math.max(0, Math.floor((new Date() - _ts) / 86400000)); }
-      var _scrollId = 'g' + _dayIdx;
+      var _scrollId = 'g' + _dayIdx + '-header';
       if (typeof window.switchTab === 'function') { window.switchTab('giorni', _scrollId); }
       else if (typeof switchTabFromHome === 'function') { switchTabFromHome('giorni'); }
     } else if (action === 'admin') {
@@ -1209,6 +1231,21 @@
       window.open('https://github.com/niccolorossi/gps-logger-guide', '_blank');
     } else if (action === 'openCuriosity') {
       openCuriosityPanel();
+    } else if (action === 'goToDay') {
+      // Navigate to Giorni tab and scroll to current day's accordion header
+      var _dayIdx2 = 0;
+      if (typeof window._dayOverride === 'number') { _dayIdx2 = window._dayOverride; }
+      else { var _ts2 = (typeof TRIP_START !== 'undefined') ? TRIP_START : new Date('2026-06-26'); _dayIdx2 = Math.max(0, Math.floor((new Date() - _ts2) / 86400000)); }
+      var _scrollId2 = 'g' + _dayIdx2 + '-header';
+      if (typeof window.switchTab === 'function') { window.switchTab('giorni', _scrollId2); }
+      else if (typeof switchTabFromHome === 'function') { switchTabFromHome('giorni'); }
+    } else if (action === 'expandAvatar') {
+      // Show avatar in fullscreen lightbox
+      var lb = document.createElement('div');
+      lb.className = 'hv-avatar-lightbox';
+      lb.innerHTML = '<img src="./icon.png" alt="Famiglia">';
+      lb.addEventListener('click', function() { lb.remove(); });
+      document.body.appendChild(lb);
     }
   }
 

@@ -1,1 +1,1 @@
-{"version":"1.86","date":"2026-06-04","notes":"Fix override persistence: Auto button now removes override from Firebase (all devices revert to real date). Firebase listeners handle null values correctly. Family avatar added to hero card."}
+{"version":"1.87","date":"2026-06-05","notes":"Day badge clickable (navigates to Itinerario and opens the day). Security: Chat/Diario/Live hidden for non-authenticated users. Draft diary posts system. Larger top bar title."}
