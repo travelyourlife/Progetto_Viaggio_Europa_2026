@@ -466,15 +466,43 @@
     hookLiveUpdates();
   }
 
+  // ─── Direct init with a known map instance (called from app.js after map is ready) ───
+  function initWithMap(map) {
+    if (unifiedMapReady) return; // already initialized
+    mapInstance = map;
+    unifiedMapReady = true;
+    console.info('[UnifiedMap] Direct init with map instance...');
+    // 1. Add planned route overlay (future route as dashed blue)
+    addPlannedRouteOverlay(map);
+    // 2. Initialize POI layers with clustering
+    initPoiLayers(map);
+    // 3. Create filter panel
+    createFilterPanel(map);
+    console.info('[UnifiedMap] Initialization complete. POI categories:', Object.keys(poiLayerGroups).length);
+  }
+
   // ─── Start when DOM is ready ───
+  // Only auto-init the route map features (live marker + go-to-live button)
+  // The pos-map features (POI, route overlay, filter panel) are initialized
+  // via initWithMap() called from showPosizioneContent() in app.js
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function() { setTimeout(init, 1500); });
+    document.addEventListener('DOMContentLoaded', function() {
+      setTimeout(function() {
+        addLiveMarkerToRouteMap();
+        addGoToLiveButton();
+      }, 2000);
+    });
   } else {
-    setTimeout(init, 1500);
+    setTimeout(function() {
+      addLiveMarkerToRouteMap();
+      addGoToLiveButton();
+    }, 2000);
   }
 
   // Expose for external use
   window.UnifiedMap = {
+    init: init,
+    initWithMap: initWithMap,
     toggleCategory: function(cat) { if (mapInstance) toggleCategory(cat, mapInstance); },
     getState: function() { return toggleState; },
     refresh: function() { if (mapInstance) { addPlannedRouteOverlay(mapInstance); } }

@@ -790,10 +790,11 @@
   }
 
   // ─── Build Feed HTML (Follower A) ───
-  // Pre-trip posts — loaded from Firebase via window._preTripPostsOverride (set by app.js)
-  // No hardcoded fallback — all posts come from Firebase via window._preTripPostsOverride
+  // Pre-trip posts — now reads from /diary/ entries cached in window._diaryEntries
+  // Returns published (non-draft) entries formatted for the home feed
   function getPreTripPosts() {
-    return (typeof window._preTripPostsOverride !== 'undefined' && Array.isArray(window._preTripPostsOverride)) ? window._preTripPostsOverride : [];
+    var entries = window._diaryEntriesForHome || [];
+    return entries;
   }
 
   // Hybrid date formatter: <7 days = relative, >=7 days = fixed ("4 giu 2026")
@@ -825,30 +826,33 @@
     var html = '';
     var lang = (typeof isEN !== 'undefined' && isEN) ? 'en' : 'it';
 
-    // Pre-trip mode: show published posts from Firebase (max 3)
+    // Pre-trip mode: show published diary entries (max 3)
     if (tripData.tripPreMode) {
       var prePosts = getPreTripPosts();
-      // Filter: only published (or legacy posts without status field)
-      var publishedPosts = prePosts.filter(function(p) { return !p.status || p.status === 'published'; });
-      // Max 3 most recent
-      var feedPosts = publishedPosts.slice(0, 3);
+      // Max 3 most recent published entries
+      var feedPosts = prePosts.slice(0, 3);
       feedPosts.forEach(function(post) {
-        var badge = post.badge || (post.typeLabel && (post.typeLabel[lang] || post.typeLabel.it)) || '';
+        var CUSTOM_TYPE_MAP_HOME = {
+          'checkin': '\ud83d\udccd Check-in', 'tappa': '\ud83d\udea9 Tappa', 'highlight': '\u2b50 Highlight',
+          'photo': '\ud83d\udcf7 Foto', 'video': '\ud83c\udfac Video', 'audio': '\ud83c\udfa4 Audio',
+          'recap': '\ud83d\udcdd Riepilogo', 'message': '\ud83d\udcac Messaggio',
+          'cibo': '\ud83c\udf5d Cibo', 'cultura': '\ud83c\udfdb\ufe0f Cultura', 'attivita': '\ud83e\udd7e Attivit\u00e0'
+        };
+        var badge = post.customType ? (CUSTOM_TYPE_MAP_HOME[post.customType] || '') : '';
         html += '<div class="hv-feed-item">';
         html += '  <div class="hv-feed-header">';
         html += '    <div class="hv-feed-time">' + formatHybridDate(post.date, lang) + '</div>';
-        if (badge) html += '    <span class="hv-feed-type hv-type-' + (post.type || 'update') + '">' + badge + '</span>';
+        if (badge) html += '    <span class="hv-feed-type hv-type-' + (post.customType || 'update') + '">' + badge + '</span>';
         html += '  </div>';
-        if (post.title) {
-          html += '  <div class="hv-feed-title" style="font-weight:600;margin:4px 0;">' + post.title + '</div>';
+        if (post.customLabel) {
+          html += '  <div class="hv-feed-title" style="font-weight:600;margin:4px 0;">' + escHtml(post.customLabel) + '</div>';
         }
-        if (post.image) {
-          html += '  <div class="hv-feed-photo" style="background-image:url(' + post.image + ');background-size:cover;background-position:center;"></div>';
+        if (post.photos && Object.keys(post.photos).length > 0) {
+          var firstPhoto = post.photos[Object.keys(post.photos)[0]];
+          html += '  <div class="hv-feed-photo" style="background-image:url(' + firstPhoto.url + ');background-size:cover;background-position:center;"></div>';
         }
-        var bodyText = (post.body && (post.body[lang] || post.body.it)) || '';
-        var daysUntilStr = tripData.daysUntil === 1 ? (lang === 'en' ? '1 day' : '1 giorno') : (tripData.daysUntil + (lang === 'en' ? ' days' : ' giorni'));
-        bodyText = bodyText.replace('{{daysUntil}} giorni', daysUntilStr).replace('{{daysUntil}} days', daysUntilStr).replace('{{daysUntil}}', tripData.daysUntil);
-        html += '  <div class="hv-feed-body">' + bodyText + '</div>';
+        var bodyText = post.text || '';
+        html += '  <div class="hv-feed-body">' + escHtml(bodyText) + '</div>';
         html += '</div>';
       });
       return html;
@@ -897,25 +901,24 @@
     var html = '';
     var lang = (typeof isEN !== 'undefined' && isEN) ? 'en' : 'it';
 
-    // Pre-trip mode: show latest post from Firebase as diary preview
+    // Pre-trip mode: show latest published diary entry as diary preview
     if (tripData.tripPreMode) {
       var prePosts = getPreTripPosts();
       var latestPost = prePosts[0]; // Most recent
       var daysUntilStr = tripData.daysUntil === 1 ? (lang === 'en' ? '1 day' : '1 giorno') : (tripData.daysUntil + (lang === 'en' ? ' days' : ' giorni'));
       html += '<div class="hv-diary-preview-header">';
       html += '  <div>';
-      html += '    <div class="hv-diary-preview-title">' + (lang === 'en' ? '🚐 The adventure is about to begin!' : '🚐 L\'avventura sta per iniziare!') + '</div>';
+      html += '    <div class="hv-diary-preview-title">' + (lang === 'en' ? '\ud83d\ude90 The adventure is about to begin!' : '\ud83d\ude90 L\'avventura sta per iniziare!') + '</div>';
       html += '    <div class="hv-diary-preview-time">' + (lang === 'en' ? 'Departure in ' + daysUntilStr : 'Partenza tra ' + daysUntilStr) + '</div>';
       html += '  </div>';
       html += '</div>';
-      html += '<div class="hv-diary-preview-highlight">⭐ ' + (lang === 'en' ? '54 days, 13 countries, 12,000 km in a van with the whole family!' : '54 giorni, 13 paesi, 12.000 km in furgone con tutta la famiglia!') + '</div>';
-      if (latestPost) {
-        var bodyText = (latestPost.body[lang] || latestPost.body.it || '').replace(/<[^>]+>/g, '').substring(0, 120);
-        bodyText = bodyText.replace('{{daysUntil}} giorni', daysUntilStr).replace('{{daysUntil}} days', daysUntilStr).replace('{{daysUntil}}', tripData.daysUntil);
-        html += '<div class="hv-diary-preview-text">' + bodyText + '</div>';
+      html += '<div class="hv-diary-preview-highlight">\u2b50 ' + (lang === 'en' ? '54 days, 13 countries, 12,000 km in a van with the whole family!' : '54 giorni, 13 paesi, 12.000 km in furgone con tutta la famiglia!') + '</div>';
+      if (latestPost && latestPost.text) {
+        var bodyText = (latestPost.text || '').substring(0, 120);
+        html += '<div class="hv-diary-preview-text">' + escHtml(bodyText) + '</div>';
       }
       html += '<div class="hv-diary-preview-stats">';
-      html += '  🚐 12.000 km &nbsp; 🇳🇴🇸🇪🇫🇮 13 ' + (lang === 'en' ? 'countries' : 'paesi') + ' &nbsp; 📅 54 ' + (lang === 'en' ? 'days' : 'giorni');
+      html += '  \ud83d\ude90 12.000 km &nbsp; \ud83c\uddf3\ud83c\uddf4\ud83c\uddf8\ud83c\uddea\ud83c\uddeb\ud83c\uddee 13 ' + (lang === 'en' ? 'countries' : 'paesi') + ' &nbsp; \ud83d\udcc5 54 ' + (lang === 'en' ? 'days' : 'giorni');
       html += '</div>';
       return html;
     }

@@ -8950,15 +8950,24 @@ if ('serviceWorker' in navigator) {
       // invalidateSize after a bit more delay for rendering
       setTimeout(function() {
         var posMapEl = document.getElementById('pos-map');
+        var posMapInstance = null;
         if (posMapEl) {
           for (var key in posMapEl) {
             if (key.indexOf('_leaflet') === 0 && posMapEl[key] && posMapEl[key].invalidateSize) {
               posMapEl[key].invalidateSize();
+              posMapInstance = posMapEl[key];
               break;
             }
           }
         }
-        if (typeof map !== 'undefined' && map && map.invalidateSize) map.invalidateSize();
+        if (typeof map !== 'undefined' && map && map.invalidateSize) {
+          map.invalidateSize();
+          posMapInstance = posMapInstance || map;
+        }
+        // Initialize UnifiedMap (POI, route overlay, filter panel) on the pos-map
+        if (posMapInstance && window.UnifiedMap && window.UnifiedMap.initWithMap) {
+          setTimeout(function() { window.UnifiedMap.initWithMap(posMapInstance); }, 200);
+        }
       }, 300);
     }, 100);
   }
@@ -8994,6 +9003,20 @@ if ('serviceWorker' in navigator) {
   var dailySummRef = firebase.database().ref('trips/' + FAMILY_ID + '/dailySummaries');
   var activitiesRef = firebase.database().ref('trips/' + FAMILY_ID + '/activities');
   var storageRef = (firebase.storage) ? firebase.storage().ref('diary/' + FAMILY_ID) : null;
+
+  // Bridge: expose published diary entries for home feed (replaces old _preTripPostsOverride)
+  diarioRef.orderByChild('dayNumber').on('value', function(snap) {
+    var entries = snap.val();
+    if (!entries) { window._diaryEntriesForHome = []; return; }
+    var published = [];
+    Object.keys(entries).forEach(function(key) {
+      var e = entries[key];
+      if (!e.draft) published.push(e);
+    });
+    // Sort by date descending
+    published.sort(function(a, b) { return (b.date || '').localeCompare(a.date || ''); });
+    window._diaryEntriesForHome = published;
+  });
 
   // DOM elements
   var gate = document.getElementById('diario-gate');
@@ -9075,7 +9098,7 @@ if ('serviceWorker' in navigator) {
   // Initial check (in case auth already resolved)
   if (firebaseUser) checkDiarioAccess(firebaseUser);
 
-  // ─── Pre-departure Diary Posts (unified: reads from Firebase via window._preTripPostsOverride) ───
+  // ─── Diary Date Formatter ───
   function formatHybridDateDiary(dateStr, lang) {
     if (!dateStr) return '';
     var d;
@@ -9097,57 +9120,41 @@ if ('serviceWorker' in navigator) {
     return d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
   }
 
-  function buildPreDepartureDiary() {
-    var lang = (typeof isEN !== 'undefined' && isEN) ? 'en' : 'it';
-    var tripStart = (typeof TRIP_START !== 'undefined') ? TRIP_START : new Date('2026-06-26T00:00:00');
-    var daysUntil = Math.max(0, Math.ceil((tripStart - new Date()) / 86400000));
-    var daysUntilStr = daysUntil === 1 ? (lang === 'en' ? '1 day' : '1 giorno') : (daysUntil + (lang === 'en' ? ' days' : ' giorni'));
-
-    // Get posts from Firebase (unified source) — no hardcoded fallback
-    var allPosts = (typeof window._preTripPostsOverride !== 'undefined' && window._preTripPostsOverride) ? window._preTripPostsOverride : [];
-    // For owner: show all posts (including drafts). For others: only published.
-    var posts;
-    if (isOwner) {
-      posts = allPosts; // owner sees everything
-    } else {
-      posts = allPosts.filter(function(p) { return !p.status || p.status === 'published'; });
-    }
-
-    if (posts.length === 0) {
-      return '<div style="text-align:center;padding:40px 20px;color:var(--text-muted);">' + (lang === 'en' ? 'No journal entries yet. Stay tuned!' : 'Nessuna voce nel diario. Resta sintonizzato!') + '</div>';
-    }
-
-    var html = '';
-    posts.forEach(function(post, postIdx) {
-      var badge = post.badge || (post.typeLabel && (post.typeLabel[lang] || post.typeLabel.it)) || '';
-      var bodyText = (post.body && (post.body[lang] || post.body.it)) || '';
-      bodyText = bodyText.replace('{{daysUntil}} giorni', daysUntilStr).replace('{{daysUntil}} days', daysUntilStr).replace('{{daysUntil}}', daysUntil);
-      var isDraft = post.status === 'draft';
-
-      html += '<div class="diario-entry' + (isDraft ? ' diario-entry-draft' : '') + '">';
-      html += '  <div class="diario-entry-card' + (isDraft ? ' diario-card-draft' : '') + '">';
-      html += '    <div class="diario-entry-header">';
-      html += '      <div><div class="diario-date">' + formatHybridDateDiary(post.date, lang) + '</div></div>';
-      if (isDraft && isOwner) {
-        html += '      <span class="diario-draft-badge">' + (lang === 'en' ? '\u270f\ufe0f Draft' : '\u270f\ufe0f Bozza') + '</span>';
+  // Seed 3 default draft posts into /diary/ when empty (one-time)
+  function seedDefaultDrafts() {
+    var today = new Date().toISOString().split('T')[0];
+    var seeds = {
+      'seed-countdown': {
+        dayNumber: -1,
+        date: today,
+        customLabel: 'Pre-viaggio',
+        customType: 'message',
+        text: isEN ? 'The countdown has begun! The van is almost ready, the adventure is about to start.' : 'Il conto alla rovescia \u00e8 iniziato! Il furgone \u00e8 quasi pronto, l\'avventura sta per iniziare.',
+        draft: true,
+        createdAt: firebase.database.ServerValue.TIMESTAMP
+      },
+      'seed-photo': {
+        dayNumber: -1,
+        date: today,
+        customLabel: 'Pre-viaggio',
+        customType: 'photo',
+        text: isEN ? 'Preparations underway! Here\'s what awaits us along the road \u2014 fjords, Baltic cities, and much more.' : 'Preparativi in corso! Ecco cosa ci aspetta lungo la strada \u2014 fiordi, citt\u00e0 baltiche, e tanto altro.',
+        draft: true,
+        createdAt: firebase.database.ServerValue.TIMESTAMP
+      },
+      'seed-plan': {
+        dayNumber: -1,
+        date: today,
+        customLabel: 'Pre-viaggio',
+        customType: 'recap',
+        text: isEN ? 'The route is ready! 54 days, 13 countries, 12,000 km in a van with the whole family.' : 'Il percorso \u00e8 pronto! 54 giorni, 13 paesi, 12.000 km in furgone con tutta la famiglia.',
+        draft: true,
+        createdAt: firebase.database.ServerValue.TIMESTAMP
       }
-      if (badge) html += '      <span class="diario-entry-type diario-type-' + (post.type || 'update') + '">' + badge + '</span>';
-      html += '    </div>';
-      if (post.title) {
-        html += '    <div class="diario-entry-title" style="font-weight:600;font-size:15px;margin:4px 0;">' + post.title + '</div>';
-      }
-      if (post.image) {
-        html += '    <div class="diario-photos"><img src="' + post.image + '" alt="" class="diario-photo" loading="lazy"></div>';
-      }
-      html += '    <p class="diario-text">' + bodyText + '</p>';
-      if (isDraft && isOwner) {
-        html += '    <div style="text-align:right;margin-top:8px;"><button class="diario-publish-btn" data-post-idx="' + postIdx + '" style="background:var(--primary);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:14px;cursor:pointer;">\u2705 ' + (lang === 'en' ? 'Publish' : 'Pubblica') + '</button></div>';
-      }
-      html += '  </div>';
-      html += '</div>';
+    };
+    diarioRef.update(seeds).then(function() {
+      showToast(isEN ? '\ud83d\udcdd 3 draft posts created!' : '\ud83d\udcdd 3 bozze create!', 'info');
     });
-
-    return html;
   }
 
   // ─── Timeline Rendering ───
@@ -9158,27 +9165,12 @@ if ('serviceWorker' in navigator) {
     var _diarioCb = function(snapshot) {
       var entries = snapshot.val();
       if (!entries || Object.keys(entries).length === 0) {
-        // Show pre-departure posts instead of empty state
-        var preHtml = buildPreDepartureDiary();
-        timelineEl.innerHTML = preHtml;
-        // Attach publish button handlers for owner
-        if (isOwner) {
-          timelineEl.querySelectorAll('.diario-publish-btn').forEach(function(btn) {
-            btn.addEventListener('click', function() {
-              var idx = parseInt(btn.getAttribute('data-post-idx'));
-              if (isNaN(idx) || !window._preTripPostsOverride || !window._preTripPostsOverride[idx]) return;
-              window._preTripPostsOverride[idx].status = 'published';
-              // Save to Firebase
-              var ref = firebase.database().ref('trips/' + FAMILY_ID + '/preTripPosts');
-              ref.set(window._preTripPostsOverride).then(function() {
-                showToast(isEN ? '\u2705 Post published!' : '\u2705 Post pubblicato!', 'success');
-                // Re-render
-                timelineEl.innerHTML = buildPreDepartureDiary();
-              }).catch(function(err) {
-                showToast('\u274c ' + err.message, 'error');
-              });
-            });
-          });
+        // Seed default draft posts for owner if diary is empty
+        if (isOwner && !window._diarySeedDone) {
+          window._diarySeedDone = true;
+          seedDefaultDrafts();
+        } else {
+          timelineEl.innerHTML = '<div style="text-align:center;padding:40px 20px;color:var(--text-muted);">' + (isEN ? 'No journal entries yet. Stay tuned!' : 'Nessuna voce nel diario. Resta sintonizzato!') + '</div>';
         }
         return;
       }
@@ -9195,6 +9187,8 @@ if ('serviceWorker' in navigator) {
 
       sortedKeys.forEach(function(key) {
         var entry = entries[key];
+        // Draft filtering: non-owners don't see drafts
+        if (entry.draft && !isOwner) return;
         var dn = entry.dayNumber;
         var dayLabel;
         if (entry.customLabel) {
@@ -9248,11 +9242,13 @@ if ('serviceWorker' in navigator) {
           entryType = 'checkin'; entryTypeLabel = '\ud83d\udccd Check-in';
         }
 
-        html += '<div class="diario-entry" data-key="' + key + '">';
+        var isDraft = !!entry.draft;
+        html += '<div class="diario-entry' + (isDraft ? ' diario-entry-draft' : '') + '" data-key="' + key + '">';
         html += '  <div class="diario-entry-marker"></div>';
-        html += '  <div class="diario-entry-card">';
+        html += '  <div class="diario-entry-card' + (isDraft ? ' diario-card-draft' : '') + '">';
         html += '    <div class="diario-entry-header">';
         html += '      <div><div class="diario-day">' + dayLabel + '</div><div class="diario-date">' + dateStr + '</div></div>';
+        if (isDraft && isOwner) html += '      <span class="diario-draft-badge">' + (isEN ? '\u270f\ufe0f Draft' : '\u270f\ufe0f Bozza') + '</span>';
         if (flag) html += '      <span class="diario-flag">' + flag + ' ' + country + '</span>';
         html += '      <span class="diario-entry-type diario-type-' + entryType + '">' + entryTypeLabel + '</span>';
         html += '    </div>';
@@ -9328,6 +9324,9 @@ if ('serviceWorker' in navigator) {
         // Owner actions
         if (isOwner) {
           html += '    <div class="diario-entry-actions">';
+          if (isDraft) {
+            html += '      <button class="diario-publish-btn" data-key="' + key + '" style="background:var(--success);color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;cursor:pointer;">\u2705 ' + (isEN ? 'Publish' : 'Pubblica') + '</button>';
+          }
           html += '      <button class="diario-edit-btn" data-key="' + key + '">\u270f\ufe0f</button>';
           html += '      <button class="diario-upload-btn" data-key="' + key + '">\ud83d\udcf7</button>';
           html += '      <button class="diario-audio-btn" data-key="' + key + '">🎤</button>';
@@ -9380,6 +9379,17 @@ if ('serviceWorker' in navigator) {
 
   // ─── Entry Actions (owner only) ───
   function bindEntryActions() {
+    // Publish (remove draft flag)
+    timelineEl.querySelectorAll('.diario-publish-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        if (!isOwner) return;
+        var key = btn.getAttribute('data-key');
+        diarioRef.child(key).update({ draft: null, date: new Date().toISOString().split('T')[0] }).then(function() {
+          showToast(isEN ? '\u2705 Post published!' : '\u2705 Post pubblicato!', 'success');
+        });
+      });
+    });
+
     // Delete
     timelineEl.querySelectorAll('.diario-del-btn').forEach(function(btn) {
       btn.addEventListener('click', function() {
@@ -9704,6 +9714,8 @@ if ('serviceWorker' in navigator) {
 
       overlay.innerHTML = '<div class="diario-edit-modal">' +
         '<h3>' + (isEN ? 'Edit entry' : 'Modifica voce') + '</h3>' +
+        '<label>' + (isEN ? 'Date' : 'Data') + '</label>' +
+        '<input type="date" id="diario-edit-date" value="' + (entry.date || '') + '">' +
         '<label>' + (isEN ? 'Entry type' : 'Tipo voce') + '</label>' +
         typeSelectHtml +
         '<label>' + (isEN ? 'Day name (optional)' : 'Nome giorno (opzionale)') + '</label>' +
@@ -9723,11 +9735,13 @@ if ('serviceWorker' in navigator) {
       overlay.addEventListener('click', function(e) { if (e.target === overlay) overlay.remove(); });
 
       overlay.querySelector('.diario-edit-save').addEventListener('click', function() {
+        var dateVal = document.getElementById('diario-edit-date').value;
         var customType = document.getElementById('diario-edit-type').value;
         var customLabel = document.getElementById('diario-edit-label').value.trim();
         var text = document.getElementById('diario-edit-text').value.trim();
         var highlight = document.getElementById('diario-edit-highlight').value.trim();
         var updates = {};
+        if (dateVal) updates['date'] = dateVal;
         updates['customType'] = customType || null;
         updates['customLabel'] = customLabel || null;
         updates['text'] = text || null;
@@ -9777,6 +9791,7 @@ if ('serviceWorker' in navigator) {
           activities: { walk_km: 0, bike_km: 0, elevation: 0 },
           text: '',
           highlight: '',
+          draft: true,
           autoGenerated: true,
           createdAt: firebase.database.ServerValue.TIMESTAMP
         };
@@ -11057,18 +11072,11 @@ if ('serviceWorker' in navigator) {
 })();
 
 
-// ─── Admin: Post Editor (Firebase-backed, draft/published) ───
+// ─── Admin: Post Editor (REMOVED — diary drafts now managed via /diary/ entries) ───
 (function() {
-  var BADGE_PRESETS = [
-    '🚀 Countdown', '📷 Foto', '🗺️ Piano', '📝 Aggiornamento',
-    '📍 Check-in', '🌤️ Giornata', '⭐ Highlight', '🎬 Video'
-  ];
-
-  var listEl = document.getElementById('admin-posts-list');
-  var addBtn = document.getElementById('admin-post-add');
-  var saveBtn = document.getElementById('admin-posts-save');
-  var statusEl = document.getElementById('admin-posts-status');
-  if (!listEl || !addBtn || !saveBtn) return;
+  // Legacy admin post editor removed in v1.89.
+  // All diary posts (including pre-trip) are now normal /diary/ entries with draft:true.
+  return;
 
   var posts = [];
 

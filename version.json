@@ -1,1 +1,1 @@
-{"version":"1.88","date":"2026-06-05","notes":"Day badge clickable (navigates to Itinerario and opens the day). Security: Chat/Diario/Live hidden for non-authenticated users. Draft diary posts system. Larger top bar title."}
+{"version": "1.89", "date": "2026-06-05", "notes": "Diary refactor: drafts as normal entries, editable with publish flow. Top bar serif font consistent. Home brand 32px no compass."}
