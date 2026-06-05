@@ -1900,6 +1900,7 @@ document.addEventListener('DOMContentLoaded', function() {
             L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
                 attribution: '© OpenStreetMap © CARTO', maxZoom: 19
             }).addTo(map);
+            window._posMapInstance = map; // expose for UnifiedMap integration
             var spinner = document.getElementById('mapSpinner');
             if (spinner) spinner.remove();
 
@@ -8951,8 +8952,16 @@ if ('serviceWorker' in navigator) {
       setTimeout(function() {
         var posMapEl = document.getElementById('pos-map');
         var posMapInstance = null;
-        if (posMapEl) {
-          for (var key in posMapEl) {
+        // Method 1: get from window._posMapInstance (exposed by Posizione IIFE)
+        if (window._posMapInstance) {
+          posMapInstance = window._posMapInstance;
+          posMapInstance.invalidateSize();
+        }
+        // Method 2: DOM property lookup
+        if (!posMapInstance && posMapEl) {
+          var keys = Object.keys(posMapEl);
+          for (var i = 0; i < keys.length; i++) {
+            var key = keys[i];
             if (key.indexOf('_leaflet') === 0 && posMapEl[key] && posMapEl[key].invalidateSize) {
               posMapEl[key].invalidateSize();
               posMapInstance = posMapEl[key];
@@ -8960,16 +8969,19 @@ if ('serviceWorker' in navigator) {
             }
           }
         }
-        if (typeof map !== 'undefined' && map && map.invalidateSize) {
-          map.invalidateSize();
-          posMapInstance = posMapInstance || map;
-        }
         // Initialize UnifiedMap (POI, route overlay, filter panel) on the pos-map
-        if (posMapInstance && window.UnifiedMap && window.UnifiedMap.initWithMap) {
-          setTimeout(function() { window.UnifiedMap.initWithMap(posMapInstance); }, 200);
+        // Use retry to handle timing issues
+        function tryInitUnifiedMap(attempt) {
+          var inst = posMapInstance || window._posMapInstance;
+          if (inst && window.UnifiedMap && window.UnifiedMap.initWithMap) {
+            window.UnifiedMap.initWithMap(inst);
+          } else if (attempt < 10) {
+            setTimeout(function() { tryInitUnifiedMap(attempt + 1); }, 500);
+          }
         }
-      }, 300);
-    }, 100);
+        setTimeout(function() { tryInitUnifiedMap(0); }, 300);
+      }, 400);
+    }, 200);
   }
 
   // ─── Login Button ───

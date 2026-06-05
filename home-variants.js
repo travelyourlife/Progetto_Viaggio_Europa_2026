@@ -7,7 +7,7 @@
   'use strict';
 
   // ─── Configuration ───
-  var OWNER_VARIANTS = ['owner-a', 'owner-d', 'owner-b', 'classic'];
+  var OWNER_VARIANTS = ['owner-a', 'classic'];
   var FOLLOWER_VARIANTS = ['follower-a', 'follower-b', 'follower-e'];
   var VISITOR_VARIANT = 'visitor';
 
@@ -274,10 +274,7 @@
       if (programHeader && programHeader.textContent.indexOf('oggi') > -1) {
         programHeader.textContent = '📅 Anteprima Giorno 1';
       }
-      var feedLabel = container.querySelector('.hv-section-label');
-      if (feedLabel && feedLabel.textContent.indexOf('AGGIORNAMENTI') > -1) {
-        feedLabel.textContent = '📣 IN ARRIVO';
-      }
+      // Feed section label is already set in HTML as 'Diario di bordo'
     }
 
     // Update mini-map for pre-trip: show van at home, no LIVE badge
@@ -1166,8 +1163,11 @@
         switchTabFromHome(tab);
       }
     } else if (action === 'openMap') {
-      // Navigate to tab Posizione (unified map with POI, live marker, etc.)
-      if (typeof window.switchTab === 'function') {
+      // Open fullscreen map directly
+      if (typeof window.openMapFullscreen === 'function') {
+        var _mapInst = window._posMapInstance || null;
+        window.openMapFullscreen(_mapInst, (typeof isEN !== 'undefined' && isEN) ? 'Live Map' : 'Mappa Live');
+      } else if (typeof window.switchTab === 'function') {
         window.switchTab('posizione');
       } else if (typeof switchTabFromHome === 'function') {
         switchTabFromHome('posizione');
