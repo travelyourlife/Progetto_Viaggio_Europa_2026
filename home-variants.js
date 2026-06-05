@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════════════════════════
    HOME VARIANTS JS — Quo Vadis v1.69
-   Sistema di homepage multiple con switch (triplo-tap) e ruolo (long-press)
+   Sistema di homepage multiple — triplo-tap cambia utente
    ═══════════════════════════════════════════════════════════════════════ */
 
 (function() {
@@ -79,11 +79,11 @@
     // Load templates from the HTML file
     loadTemplates();
 
-    // Setup triple-tap on logo
+    // Setup triple-tap on logo (switches user/role)
     setupTripleTap();
 
-    // Setup long-press on logo
-    setupLongPress();
+    // Long-press disabled (unreliable on mobile)
+    // setupLongPress();
 
     // Setup role modal
     setupRoleModal();
@@ -971,9 +971,9 @@
     if (!brand) return;
 
     brand.addEventListener('click', function(e) {
-      // Allow triple-tap for owner and authenticated followers (not anonymous visitors)
-      var effectiveRole = getEffectiveRole();
-      if (effectiveRole === 'visitor') return;
+      // Allow triple-tap for any authenticated user (even when simulating visitor role)
+      var isAuthenticated = (typeof firebaseUser !== 'undefined' && firebaseUser);
+      if (!isAuthenticated) return;
 
       if (isLongPress) { isLongPress = false; return; }
 
@@ -984,7 +984,7 @@
       if (tapCount === 3) {
         clearTimeout(tapTimer);
         tapCount = 0;
-        cycleVariant();
+        openRoleModal();
       }
     });
   }
@@ -1143,15 +1143,18 @@
             if (typeof updateProtectedTabsUI === 'function') updateProtectedTabsUI(window.firebaseUser || true);
           }
 
-          showToastHV('🧪 Vista: ' + (currentRole === 'owner' ? 'Owner' : currentRole === 'follower' ? 'Follower' : 'Visitatore'));
+          var roleLabel = currentRole === 'owner' ? 'Owner' : currentRole === 'follower' ? 'Follower' : (typeof isEN !== 'undefined' && isEN ? 'Visitor' : 'Visitatore');
+          showToastHV('🧪 ' + (typeof isEN !== 'undefined' && isEN ? 'View: ' : 'Vista: ') + roleLabel);
         });
       });
     }
   }
 
   function openRoleModal() {
-    // Only owner can switch roles
-    if (typeof isOwner === 'undefined' || !isOwner) return;
+    // Only real owner (by Firebase UID) can switch roles — not affected by simulated role
+    var realUser = (typeof firebaseUser !== 'undefined') ? firebaseUser : null;
+    var realOwner = realUser && (typeof OWNER_UIDS !== 'undefined') && OWNER_UIDS.indexOf(realUser.uid) !== -1;
+    if (!realOwner) return;
     var modal = document.getElementById('hvRoleModal');
     if (modal) {
       // Set current selection
@@ -1238,11 +1241,16 @@
       // Navigate to Posizione tab and scroll to check-in section
       if (typeof window.switchTab === 'function') {
         window.switchTab('posizione', 'pos-checkin-details');
-        // Also open the details element
+        // Also open the details element and ensure places are rendered
         setTimeout(function() {
           var det = document.getElementById('pos-checkin-details');
           if (det && !det.open) det.open = true;
-        }, 100);
+          // Force re-render if list is empty
+          var list = document.getElementById('pos-places-list');
+          if (list && list.children.length === 0 && typeof window._renderPosPlaces === 'function') {
+            window._renderPosPlaces('');
+          }
+        }, 150);
       } else if (typeof switchTabFromHome === 'function') {
         switchTabFromHome('posizione');
       }

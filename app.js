@@ -1730,9 +1730,21 @@ document.addEventListener('DOMContentLoaded', function() {
             if (countEl) countEl.textContent = count + (typeof customCheckins !== 'undefined' && customCheckins ? Object.keys(customCheckins).length : 0);
         }
         renderPlaces('');
+        // Expose for re-render on tab switch
+        window._renderPosPlaces = renderPlaces;
 
         var posSearch = document.getElementById('pos-search');
         if (posSearch) posSearch.addEventListener('input', function() { renderPlaces(this.value); });
+
+        // Defensive: re-render when posizione tab becomes active (fixes empty list on first navigation)
+        window.addEventListener('tabSwitched', function(e) {
+            if (e.detail === 'posizione') {
+                var list = document.getElementById('pos-places-list');
+                if (list && list.children.length === 0) {
+                    renderPlaces(posSearch ? posSearch.value : '');
+                }
+            }
+        });
 
         // Check-in handlers (manual)
         listContainer.addEventListener('change', function(e) {

@@ -53,7 +53,7 @@
     <link rel="apple-touch-icon" sizes="152x152" href="./icon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="./icon.png">
     <link rel="apple-touch-icon" sizes="167x167" href="./icon.png">
-    <title>Quo Vadis — V1.97</title>
+    <title>Quo Vadis — V1.98</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="home-variants.css">
@@ -75,7 +75,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = '1.97';
+  var EXPECTED_VERSION = '1.98';
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
   var r = false;
@@ -832,6 +832,7 @@
 <p>➕ Plage de Beauduc o Plage de Piémanson — spiagge selvagge (verificare accesso furgoni 2026)</p>
 <p>➕ Pesca: canali della Camargue — anguilla, muggine, orata. GRATIS da riva (Francia)</p>
 <p><strong>🚐 Parcheggio furgone:</strong> Chemin Bas des Launes (Saintes-Maries) — area tollerata per camper, ~€8-12/notte in agosto. Arrivare prima delle 16:00! Alternativa: Camping de la Brise (€25-35/notte, con servizi).</p>
+<p><strong>Maps:</strong> <a href="https://maps.google.com/?q=43.4500,4.4283" target="_blank" rel="noopener noreferrer">📍 Saintes-Maries-de-la-Mer</a>, <a href="https://maps.google.com/?q=43.4917,4.4150" target="_blank" rel="noopener noreferrer">📍 Parc Ornithologique Pont de Gau</a></p>
 <hr>
 <h4 id="decisione-quando-scegliere">📝 Decisione: quando scegliere?</h4>
 <p>Controlla le previsioni traffico su <a href="https://www.bfrm.gouv.fr" target="_blank" rel="noopener noreferrer">Bison Futé</a> 1 settimana prima:</p>
@@ -1391,6 +1392,7 @@
 <p><strong>Marmotta alpina</strong> (<a href="https://it.wikipedia.org/wiki/Marmota_marmota" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — Vive sopra i 1.500m nelle Alpi. Si vede facilmente d'estate nei prati alpini. Emette un fischio acuto quando avvista un predatore.</p>
 <p><strong>Stambecco delle Alpi</strong> (<a href="https://it.wikipedia.org/wiki/Capra_ibex" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — Corna ricurve fino a 1 metro. Quasi estinto nel 1800, oggi recuperato grazie a programmi di reintroduzione.</p>
 <p><strong>Aquila reale</strong> (<a href="https://it.wikipedia.org/wiki/Aquila_chrysaetos" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — Apertura alare fino a 2,3 metri. Simbolo delle Alpi austriache.</p>
+<p><strong>Parco Nazionale Alti Tauri (Hohe Tauern)</strong> (<a href="https://it.wikipedia.org/wiki/Parco_nazionale_degli_Alti_Tauri" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — Il più grande parco dell'Austria con ghiacciai, cascate, stambecchi e camosci. <a href="https://maps.google.com/?q=47.0833,12.7500(Hohe+Tauern+National+Park)" target="_blank" rel="noopener noreferrer">📍 Maps</a></p>
 <p><strong>Bosco Viennese (Wienerwald)</strong> (<a href="https://it.wikipedia.org/wiki/Wienerwald" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — Riserva della Biosfera UNESCO alle porte di Vienna. 1.350 km² di foresta.</p>
 <h3 id="musica-arte-austria">🎵 Musica e arte</h3>
 <p><strong>Valzer viennese</strong> (<a href="https://it.wikipedia.org/wiki/Valzer_viennese" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — Johann Strauss II lo rese famoso in tutto il mondo. "Sul bel Danubio blu" (1867) è il valzer più celebre. Ogni Capodanno il concerto dalla Musikverein viene trasmesso in 90 paesi.</p>
@@ -1454,6 +1456,12 @@
 </li>
 </li>
 </ol>
+<p>Che animale puoi vedere allo zoo di Schönbrunn? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Il panda gigante! 🐼 Schönbrunn è lo zoo più antico del mondo (1752).</span></p>
+<p>Di che colore è il famoso Palazzo di Schönbrunn? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Giallo! 🟡 Si chiama "giallo Schönbrunn" ed è stato scelto dall'imperatrice Maria Teresa.</span></p>
+<p>Cosa è un "Kaiserschmarrn"? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Una frittata dolce fatta a pezzetti! 🥞 Il nome significa "pasticcio dell'imperatore" perché era il preferito di Francesco Giuseppe.</span></p>
+<p>Quanti Paesi confinano con l'Austria? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Otto! 🇺🇳 Confina con Germania, Repubblica Ceca, Slovacchia, Ungheria, Slovenia, Italia, Svizzera e Liechtenstein.</span></p>
+<p>Quale famoso compositore è nato a Salisburgo? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Wolfgang Amadeus Mozart! 🎵 È nato nel 1756 e ha iniziato a comporre a 5 anni.</span></p>
+<p>Come si dice "buongiorno" in austriaco? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Grüß Gott! 🙏 Significa letteralmente "Dio ti saluti" — lo dicono tutti, anche i bambini!</span></p>
 <h3 id="cosa-comprare-souvenir-autentici">🛍 Cosa comprare (souvenir autentici)</h3>
 <p>🏛️ <strong>Mozartkugeln</strong> (palline di cioccolato/marzapane) — quelle originali sono della Konditorei Fürst (Salisburgo), ma a Vienna trovate le Mirabell</p>
 <p>🏛️ <strong>Manner Schnitten</strong> — i wafer rosa iconici (dal 1898), li trovate ovunque</p>
@@ -1630,6 +1638,7 @@
 
 <h3 id="natura-fauna-ceca">🌿 Natura e fauna</h3>
 <p><strong>Moravia Carsica</strong> (<a href="https://it.wikipedia.org/wiki/Carso_moravo" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — Sistema di grotte con stalattiti e il fiume sotterraneo Punkva. Si naviga in barca sottoterra! <a href="https://maps.google.com/?q=49.3653,16.7622(Punkevni+jeskyne)" target="_blank" rel="noopener noreferrer">📍 Maps</a></p>
+<p><strong>Svizzera Boema (Bohemian Switzerland)</strong> (<a href="https://it.wikipedia.org/wiki/Svizzera_Boema" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — Archi e gole di arenaria. La Pravčická brána è il più grande arco naturale d'Europa. <a href="https://maps.google.com/?q=50.8833,14.2833(Bohemian+Switzerland+NP)" target="_blank" rel="noopener noreferrer">📍 Maps</a></p>
 <p><strong>Cervo europeo</strong> (<a href="https://it.wikipedia.org/wiki/Cervus_elaphus" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — Presente nei boschi boemi. In autunno si sente il bramito dei maschi.</p>
 <p><strong>Boemia</strong> (<a href="https://it.wikipedia.org/wiki/Boemia" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — Regione storica con colline boscose, fiumi e castelli. Il nome viene dalla tribù celtica dei Boi.</p>
 <h3 id="musica-arte-ceca">🎵 Musica e arte</h3>
@@ -1687,6 +1696,13 @@
 </li>
 </li>
 </ol>
+<p>Come si chiama il famoso orologio nella piazza di Praga? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> L'Orologio Astronomico (Orloj)! ⌚ Funziona dal 1410 — più di 600 anni!</span></p>
+<p>Per cosa è famosa la Repubblica Ceca? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Il cristallo! 💎 Il cristallo ceco è famoso in tutto il mondo per la sua purezza e bellezza.</span></p>
+<p>Cosa è un "trdelník"? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Un dolce a spirale cotto sul fuoco! 🥐 Viene avvolto attorno a un bastoncino e coperto di zucchero e cannella.</span></p>
+<p>Quanti castelli ha la Repubblica Ceca? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Circa 2.000! 🏰 Più di qualsiasi altro Paese al mondo.</span></p>
+<p>Cosa mangiano i cechi a Natale? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> La carpa! 🐟 La comprano viva e la tengono nella vasca da bagno prima di cucinarla!</span></p>
+<p>Quale creatura protegge Praga secondo la leggenda? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Il Golem! Un gigante di argilla creato da un rabbino per proteggere la città.</span></p>
+<p>Quanti ponti attraversano il fiume a Praga? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Più di 17! Il più famoso è il Ponte Carlo con 30 statue.</span></p>
 <h3 id="cosa-comprare">🛍 Cosa comprare</h3>
 <p>🏛️ <strong>Trdelník</strong> — il dolce a spirale (mangiarlo caldo!)</p>
 <p>🏛️ <strong>Cristallo di Boemia</strong> — tradizione dal 1300, ma fragile in furgone!</p>
@@ -1953,6 +1969,13 @@
 </li>
 </li>
 </ol>
+<p>Che animale vive nella Foresta di Białowieża? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Il bisonte europeo! 🦬 È il più grande mammifero terrestre d'Europa.</span></p>
+<p>Quanti pierogi può mangiare un polacco a pranzo? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Anche 20! 🥟 I pierogi sono ravioli ripieni — il piatto nazionale polacco.</span></p>
+<p>Perché Varsavia si chiama così? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Da una leggenda! 🧜‍♀️ Wars e Sawa erano due innamorati — una sirena li protegge.</span></p>
+<p>Cosa ha scoperto Copernico? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Che la Terra gira intorno al Sole! ☀️ Prima tutti pensavano il contrario.</span></p>
+<p>Quanto costa un obwarzanek dal carretto? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Solo 2-3 złoty! 🥯 È una ciambella di pane intrecciata tipica di Cracovia.</span></p>
+<p>Quale elemento ha scoperto Marie Curie? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Il polonio! ☢️ L'ha chiamato così in onore della sua patria, la Polonia.</span></p>
+<p>Cosa è successo a Varsavia durante la guerra? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> È stata distrutta all'85%! 💔 Ma i polacchi l'hanno ricostruita identica — ora è Patrimonio UNESCO.</span></p>
 <h3 id="cosa-comprare_1">🛍 Cosa comprare</h3>
 <p>🏛️ <strong>Obwarzanki</strong> dal carretto (da mangiare subito!)</p>
 <p>🏛️ <strong>Ambra del Baltico</strong> — la trovate anche qui, più economica che in Scandinavia</p>
@@ -2212,6 +2235,13 @@
 </li>
 </li>
 </ol>
+<p>Che sport è il più popolare in Lituania? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Il basket! 🏀 I lituani lo adorano — è quasi una religione!</span></p>
+<p>Cosa si trova sulla collina delle streghe a Juodkrantė? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Sculture in legno di streghe e demoni! 🧙‍♀️ Un sentiero magico nel bosco.</span></p>
+<p>Quante lingue parlano i lituani? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Molti parlano 3-4 lingue! 🗣️ Lituano, russo, inglese e spesso polacco.</span></p>
+<p>Che forma ha il Paese visto dall'alto? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Sembra un cuore! ❤️ I lituani ne sono molto orgogliosi.</span></p>
+<p>Cosa mangiano i lituani a Natale? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> 12 piatti diversi! 🍽️ Uno per ogni apostolo — tutti senza carne.</span></p>
+<p>Perché Vilnius ha un quartiere chiamato Užupis? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> È una "repubblica" di artisti! 🎨 Ha la sua costituzione che dice che i gatti hanno diritto di essere pigri.</span></p>
+<p>Cosa è il Čepkeliai? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> La più grande palude della Lituania! 🌿 Un ecosistema unico con piante carnivore.</span></p>
 <h3 id="cosa-comprare_2">🛍 Cosa comprare</h3>
 <p>🏛️ <strong>Ambra</strong> — più economica che altrove (siamo sulla costa del Baltico)</p>
 <p>🏛️ <strong>Lino</strong> — la Lituania produce lino di altissima qualità (tovaglioli, borse)</p>
@@ -2472,6 +2502,13 @@
 </li>
 </li>
 </ol>
+<p>Quanto è alta la torre della chiesa di San Pietro a Riga? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> 123 metri! ⛪ Si può salire in ascensore per una vista incredibile.</span></p>
+<p>Che fiore è il simbolo della Lettonia? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> La margherita! 🌼 I lettoni la indossano durante le feste.</span></p>
+<p>Perché i lettoni cantano così tanto? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Hanno ottenuto l'indipendenza cantando! 🎵 La "Rivoluzione Cantata" del 1991.</span></p>
+<p>Quante spiagge ha la Lettonia? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> 500 km di costa! 🏖️ Sabbia bianca sul Mar Baltico.</span></p>
+<p>Dove è stato il primo albero di Natale del mondo? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> A Riga! 🎄 Nel 1510 nella piazza del municipio.</span></p>
+<p>Di che colore è la bandiera lettone? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Rosso scuro e bianco! 🇱🇻 Il rosso rappresenta il sangue versato per la libertà.</span></p>
+<p>Cosa fanno i lettoni a San Giovanni (Jāņi)? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Accendono falò e cantano tutta la notte! 🔥 È la festa più importante dell'anno.</span></p>
 <h3 id="cosa-comprare_3">🛍 Cosa comprare</h3>
 <p>🏛️ <strong>Balsamo Nero di Riga</strong> (Rīgas Melnais Balzams) — liquore alle erbe dal 1752, bottiglia nera inconfondibile (per i genitori!)</p>
 <p>🏛️ <strong>Miele e prodotti dell'alveare</strong> — la Lettonia è famosa per l'apicoltura</p>
@@ -2688,6 +2725,7 @@
 <h3 id="musica-arte-estonia">🎵 Musica e arte</h3>
 <p><strong>Arvo Pärt</strong> (<a href="https://it.wikipedia.org/wiki/Arvo_P%C3%A4rt" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — Il compositore vivente più eseguito al mondo! Estone, inventò lo stile "tintinnabuli" — musica minimalista e spirituale che sembra il suono di campane lontane. "Spiegel im Spiegel" è usato in decine di film.</p>
 <p><strong>Festival della Canzone estone</strong> (<a href="https://it.wikipedia.org/wiki/Festival_della_canzone_estone" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — Ogni 5 anni, 30.000 cantori + 100.000 spettatori. Il palco è una conchiglia gigante. <a href="https://maps.google.com/?q=59.4500,24.7950(Song+Festival+Grounds+Tallinn)" target="_blank" rel="noopener noreferrer">📍 Maps</a></p>
+<p><strong>Parco Nazionale di Lahemaa</strong> (<a href="https://it.wikipedia.org/wiki/Parco_nazionale_di_Lahemaa" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — Torbiere, scogliere costiere e dimore nobiliari. Il più grande parco dell'Estonia. <a href="https://maps.google.com/?q=59.5000,25.8000(Lahemaa+National+Park)" target="_blank" rel="noopener noreferrer">📍 Maps</a></p>
 <p><strong>E-Estonia</strong> (<a href="https://it.wikipedia.org/wiki/E-Estonia" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — Il paese più digitale del mondo: voto online, residenza digitale, Skype nato qui. L'arte digitale e le startup sono la nuova cultura estone.</p>
 <h3 id="quiz-per-i-bambini_5">🎯 Quiz per i bambini</h3>
 <ol>
@@ -2740,6 +2778,13 @@
 </li>
 </li>
 </ol>
+<p>Quante isole ha l'Estonia? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Oltre 2.200! 🏝️ Ma solo circa 20 sono abitate.</span></p>
+<p>Perché l'Estonia è il Paese più digitale del mondo? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Si può fare tutto online! 💻 Votare, fondare un'azienda, andare dal dottore — tutto digitale.</span></p>
+<p>Che animale è sullo stemma di Tallinn? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Tre leoni! 🦁 Come la Danimarca, perché i danesi fondarono la città.</span></p>
+<p>Cosa significa Tallinn? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> "Città dei danesi"! 🇩🇰 Taani-linn in estone.</span></p>
+<p>Quante saune ci sono in Estonia? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Circa 1 ogni 4 persone! 🧖 La tradizione della sauna è patrimonio UNESCO.</span></p>
+<p>Perché in estate in Estonia non diventa mai buio? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Perché è così a nord che il sole tramonta solo per poche ore! ☀️ Le "notti bianche".</span></p>
+<p>Cosa hanno inventato gli estoni? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Skype! 📱 Il programma per videochiamate è stato creato da programmatori estoni nel 2003.</span></p>
 <h3 id="cosa-comprare_4">🛍 Cosa comprare</h3>
 <p>🏛️ <strong>Marzapane di Tallinn</strong> — tradizione dal 1400! La farmacia Raeapteek (la più antica d'Europa, dal 1422) vendeva marzapane come "medicina"</p>
 <p>📍 <a href="https://maps.google.com/?q=59.4370,24.7450(Raeapteek+Tallinn)" target="_blank" rel="noopener noreferrer">Raeapteek (Town Hall Pharmacy)</a></p>
@@ -3037,6 +3082,14 @@
 </li>
 </li>
 </ol>
+<p>Quante saune ci sono in Finlandia? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Circa 3 milioni! 🧖 Più saune che automobili!</span></p>
+<p>Cosa fanno i finlandesi dopo la sauna? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Si tuffano nel lago ghiacciato! 🥶 Anche in inverno a -20°C!</span></p>
+<p>Quanti laghi ha la Finlandia? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> 188.000! 💧 Per questo la chiamano "il Paese dei mille laghi" (ma sono molti di più!).</span></p>
+<p>Che animale è il più pericoloso in Finlandia? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> L'alce! 🫎 Causa più incidenti stradali di qualsiasi altro animale.</span></p>
+<p>Perché i finlandesi amano il silenzio? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> È parte della loro cultura! 🤫 "Il silenzio è oro" è il loro motto non ufficiale.</span></p>
+<p>Cosa è l'aurora boreale? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Luci colorate nel cielo! 🌌 Particelle solari che danzano nell'atmosfera — verdi, viola, rosa.</span></p>
+<p>Dove abita Babbo Natale? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> A Rovaniemi, in Lapponia! 🎅 Si può visitare il suo villaggio tutto l'anno.</span></p>
+<p>Cosa sono i Moomins? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Personaggi di una storia finlandese! 🦛 Sembrano ippopotami bianchi e vivono avventure nella valle dei Mumin.</span></p>
 <h3 id="cosa-comprare_5">🛍 Cosa comprare</h3>
 <p>🏛️ <strong>Moomin</strong> — tazze, peluche, libri (il negozio ufficiale è a Helsinki e Rovaniemi)</p>
 <p>🏛️ <strong>Fazer chocolate</strong> — il cioccolato finlandese (la barretta blu "Fazer Blue" è iconica)</p>
@@ -3281,6 +3334,7 @@
 <p><strong>Fiordi norvegesi</strong> (<a href="https://it.wikipedia.org/wiki/Fiordo" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — Valli glaciali inondate dal mare. Il Sognefjord è il più lungo (204 km) e profondo (1.308m). Il Geirangerfjord è Patrimonio UNESCO. <a href="https://maps.google.com/?q=62.1050,7.0940(Geirangerfjord)" target="_blank" rel="noopener noreferrer">📍 Maps</a></p>
 <p><strong>Aquila di mare</strong> (<a href="https://it.wikipedia.org/wiki/Haliaeetus_albicilla" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — Apertura alare fino a 2,5m! La Norvegia ha la più grande popolazione europea. Si vedono spesso alle Lofoten.</p>
 <p><strong>Balene (Orca e Capodoglio)</strong> (<a href="https://it.wikipedia.org/wiki/Orca" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — Safari balene da Andenes e Tromsø. Orche in inverno, capodogli tutto l'anno. <a href="https://maps.google.com/?q=69.3260,16.1200(Andenes+Whale+Safari)" target="_blank" rel="noopener noreferrer">📍 Maps</a></p>
+<p><strong>Bue muschiato</strong> (<a href="https://it.wikipedia.org/wiki/Ovibos_moschatus" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — Animale preistorico sopravvissuto nel Dovrefjell. Safari guidati disponibili. <a href="https://maps.google.com/?q=62.2000,9.6000(Dovrefjell+Musk+Ox)" target="_blank" rel="noopener noreferrer">📍 Maps</a></p>
 <p><strong>Renna</strong> (<a href="https://it.wikipedia.org/wiki/Rangifer_tarandus" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — Semi-domestiche, gestite dal popolo Sami. Si incontrano spesso sulle strade del nord! Attenzione alla guida.</p>
 <p><strong>Isole Lofoten</strong> (<a href="https://it.wikipedia.org/wiki/Lofoten" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — Montagne che escono dal mare, villaggi di pescatori rossi (rorbuer), spiagge bianche con acqua turchese. <a href="https://maps.google.com/?q=68.2000,14.5000(Lofoten+Islands)" target="_blank" rel="noopener noreferrer">📍 Maps</a></p>
 <h3 id="musica-arte-norvegia">🎵 Musica e arte</h3>
@@ -3345,6 +3399,14 @@
 </li>
 </li>
 </ol>
+<p>Cosa è un troll? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Una creatura della mitologia nordica! 🧌 Vivono nelle montagne e odiano la luce del sole.</span></p>
+<p>Perché le case norvegesi hanno il tetto d'erba? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Per l'isolamento! 🌿 L'erba tiene caldo in inverno e fresco in estate.</span></p>
+<p>Quanti tunnel ci sono in Norvegia? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Oltre 1.100! 🚇 Il più lungo è il Lærdal (24,5 km) con luci colorate dentro.</span></p>
+<p>Che animale puoi vedere alle Isole Lofoten? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Le aquile di mare! 🦅 Hanno un'apertura alare di 2,5 metri.</span></p>
+<p>Quanto è lungo il fiordo più lungo della Norvegia? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> 204 km! 🌊 Il Sognefjord è anche profondo 1.308 metri.</span></p>
+<p>Si può piantare una tenda ovunque in Norvegia? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Sì! ⛺ Il "diritto di accesso" (allemannsretten) permette di campeggiare ovunque nella natura.</span></p>
+<p>Quante chiese di legno vichinghe restano in Norvegia? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Solo 28! ⛪ Sono chiamate "stavkirke" e hanno fino a 900 anni.</span></p>
+<p>Il fondo sovrano norvegese vale più di...? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> 1.500 miliardi di dollari! 💰 Ogni norvegese è "milionario" sulla carta.</span></p>
 <h3 id="cosa-comprare_6">🛍 Cosa comprare</h3>
 <p>🏛️ <strong>Troll di legno</strong> — artigianali, non quelli di plastica cinese!</p>
 <p>🏛️ <strong>Brunost</strong> (formaggio marrone) — dolce, caramellato. Gusto unico. Si affetta con lo scoiattolo (ostehøvel).</p>
@@ -3627,6 +3689,16 @@
 </li>
 </li>
 </ol>
+<p>Quante isole ha la Danimarca? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Oltre 400! 🏝️ Ma solo circa 70 sono abitate.</span></p>
+<p>Che giocattolo è stato inventato in Danimarca? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> I LEGO! 🧱 Il nome viene da "leg godt" che significa "gioca bene" in danese.</span></p>
+<p>Cosa è "hygge"? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Una parola danese per l'accoglienza! 🕯️ Significa godersi i piaceri semplici con le persone care.</span></p>
+<p>Cosa è la statua della Sirenetta? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Una statua di bronzo nel porto di Copenaghen! 🧜‍♀️ È ispirata alla fiaba di Hans Christian Andersen.</span></p>
+<p>Cosa è uno "smørrebrød"? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Un panino aperto! 🥪 I danesi mettono ogni tipo di condimento sul pane di segale scuro.</span></p>
+<p>Cosa è il ponte Storebælt? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Uno dei ponti più lunghi del mondo! 🌉 Collega due isole danesi ed è lungo 18 km.</span></p>
+<p>Chi ha scritto "Il brutto anatroccolo"? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Hans Christian Andersen! 🪶 Era danese e ha scritto molte fiabe famose.</span></p>
+<p>Come si chiamano i dolci danesi in Danimarca? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Wienerbrød (pane di Vienna)! 🥐 I danesi pensano che vengano dall'Austria!</span></p>
+<p>Cosa è il Tivoli? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Uno dei parchi divertimenti più antichi del mondo! 🎢 Ha aperto a Copenaghen nel 1843.</span></p>
+<p>Di che colore è la bandiera danese? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Rossa con una croce bianca! 🇩🇰 Si chiama Dannebrog ed è la bandiera nazionale più antica ancora in uso.</span></p>
 <h3 id="cosa-comprare_7">🛍 Cosa comprare</h3>
 <p>🏛️ <strong>LEGO</strong> — a Billund costano meno e ci sono set esclusivi non venduti altrove</p>
 <p>🏛️ <strong>Design danese</strong> — una lampada, una tazza, un poster (Flying Tiger, HAY, Søstrene Grene)</p>
@@ -3866,6 +3938,16 @@
 </li>
 </li>
 </ol>
+<p>Quanti tipi di pane esistono in Germania? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Oltre 3.000! 🍞 Il pane tedesco è Patrimonio UNESCO.</span></p>
+<p>Cosa ha inventato Gutenberg? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> La stampa a caratteri mobili! 📖 Nel 1440, rivoluzionando la diffusione della conoscenza.</span></p>
+<p>Quanto è lunga l'autostrada tedesca? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Circa 13.000 km! 🛣️ Ed è famosa perché in molti tratti non c'è limite di velocità.</span></p>
+<p>Perché Brema è famosa? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Per i Musicanti di Brema! 🎵 Un asino, un cane, un gatto e un gallo della fiaba dei fratelli Grimm.</span></p>
+<p>Cosa succede se tocchi le zampe dell'asino? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Porta fortuna! 🍀 La statua dei Musicanti di Brema è lucida dove tutti la toccano.</span></p>
+<p>Da quanti anni la cantina di Brema serve vino? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Oltre 600 anni! 🍷 Il Ratskeller è una delle cantine più antiche della Germania.</span></p>
+<p>I Musicanti di Brema sono 4 animali. Quali? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Asino, cane, gatto e gallo! 🐴🐕🐈🐓 Uno sopra l'altro per spaventare i ladri.</span></p>
+<p>Di cosa è fatta la Torre Eiffel? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Ferro! 🛠️ Ha 18.038 pezzi di ferro e 2,5 milioni di rivetti.</span></p>
+<p>Cosa è un "Bretzel"? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Un pane a forma di nodo! 🥨 È il simbolo dei panettieri tedeschi dal Medioevo.</span></p>
+<p>Cosa sono gli orsetti gommosi Haribo? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Caramelle inventate in Germania nel 1922! 🐻 Il nome viene da HAns RIegel BOnn (il fondatore).</span></p>
 <h3 id="cosa-comprare_8">🛍 Cosa comprare</h3>
 <p>🏛️ <strong>Haribo Goldbären</strong> — gli orsetti gommosi originali (inventati in Germania nel 1922)</p>
 <p>🏛️ <strong>Bremer Klaben</strong> — dolce tradizionale di Brema (tipo panettone con frutta secca)</p>
@@ -4095,6 +4177,8 @@
 <p><strong>Camargue</strong> (<a href="https://it.wikipedia.org/wiki/Camargue" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — Delta del Rodano: cavalli bianchi selvaggi, tori neri, fenicotteri rosa! Paesaggio unico di paludi e saline. <a href="https://maps.google.com/?q=43.5000,4.5000(Camargue)" target="_blank" rel="noopener noreferrer">📍 Maps</a></p>
 <p><strong>Fenicottero rosa</strong> (<a href="https://it.wikipedia.org/wiki/Phoenicopterus_roseus" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — Colonie enormi in Camargue. Il colore rosa viene dai gamberetti che mangiano!</p>
 <p><strong>Gole del Verdon</strong> (<a href="https://it.wikipedia.org/wiki/Gole_del_Verdon" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — Il "Grand Canyon d'Europa": 700m di profondità, acqua turchese. <a href="https://maps.google.com/?q=43.7500,6.3200(Gorges+du+Verdon)" target="_blank" rel="noopener noreferrer">📍 Maps</a></p>
+<p><strong>Megaliti di Carnac</strong> (<a href="https://it.wikipedia.org/wiki/Allineamenti_di_Carnac" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — 3.000+ menhir del 4500 a.C. Più antichi di Stonehenge! <a href="https://maps.google.com/?q=47.5922,-3.0778(Carnac+megaliths)" target="_blank" rel="noopener noreferrer">📍 Maps</a></p>
+<p><strong>Baia di Mont Saint-Michel</strong> (<a href="https://it.wikipedia.org/wiki/Mont_Saint-Michel" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — Maree fino a 14m! Le maree più veloci d'Europa. Foche e delfini. <a href="https://maps.google.com/?q=48.6360,-1.5110(Mont+Saint-Michel+bay)" target="_blank" rel="noopener noreferrer">📍 Maps</a></p>
 <h3 id="musica-arte-francia">🎵 Musica e arte</h3>
 <p><strong>Impressionismo</strong> (<a href="https://it.wikipedia.org/wiki/Impressionismo" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — Monet, Renoir, Degas rivoluzionarono la pittura dipingendo "impressioni" di luce. Monet dipinse le ninfee nel suo giardino a Giverny. <a href="https://maps.google.com/?q=49.0750,1.5330(Giverny+Monet)" target="_blank" rel="noopener noreferrer">📍 Maps</a></p>
 <p><strong>Claude Debussy</strong> (<a href="https://it.wikipedia.org/wiki/Claude_Debussy" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — "Clair de Lune" è uno dei brani più belli mai scritti. Musica che evoca colori e atmosfere, come un quadro impressionista sonoro.</p>
@@ -4151,6 +4235,16 @@
 </li>
 </li>
 </ol>
+<p>Cosa è una "crêpe"? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Una frittella sottilissima! 🥞 Le crêpes francesi possono essere dolci o salate.</span></p>
+<p>Quanti tipi di formaggio produce la Francia? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Oltre 1.200! 🧀 De Gaulle disse: "Come si può governare un Paese con 246 formaggi?".</span></p>
+<p>Cosa è il Tour de France? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> La corsa ciclistica più famosa del mondo! 🚴 Dura 3 settimane e percorre circa 3.500 km.</span></p>
+<p>Cosa è il Louvre? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Il museo d'arte più grande del mondo! 🎨 Ospita la Gioconda e ha 380.000 opere.</span></p>
+<p>Cosa è la "bouillabaisse"? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Una zuppa di pesce di Marsiglia! 🥘 Ha almeno 4 tipi di pesce diversi.</span></p>
+<p>Cosa è il Monte Bianco? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> La montagna più alta dell'Europa occidentale! 🏔️ 4.808 metri, al confine tra Francia e Italia.</span></p>
+<p>Qual è il motto nazionale francese? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Liberté, Égalité, Fraternité! 🇫🇷 Libertà, Uguaglianza, Fratellanza — dal 1789.</span></p>
+<p>Cosa è una baguette? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Un pane lungo e sottile francese! 🥖 I francesi ne mangiano 10 miliardi all'anno!</span></p>
+<p>Cosa ha di speciale il Paese Basco? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Parlano basco (euskara)! 🗣️ Una lingua misteriosa non imparentata con nessun'altra al mondo.</span></p>
+<p>Di cosa è fatta la Torre Eiffel? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Ferro! 🛠️ Ha 18.038 pezzi di ferro e 2,5 milioni di rivetti.</span></p>
 <h3 id="cosa-comprare_9">🛍 Cosa comprare</h3>
 <p>🏛️ <strong>Fromage</strong> — formaggio locale (ogni regione ha il suo!)</p>
 <p>🏛️ <strong>Baguette tradition</strong> — da mangiare subito, non dura più di 6 ore</p>
@@ -4387,6 +4481,7 @@
 <p><strong>Orso bruno cantabrico</strong> (<a href="https://it.wikipedia.org/wiki/Orso_bruno_cantabrico" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — Circa 350 orsi nelle montagne cantabriche. Popolazione in recupero dopo essere stata quasi estinta.</p>
 <p><strong>Avvoltoio grifone</strong> (<a href="https://it.wikipedia.org/wiki/Gyps_fulvus" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — Apertura alare fino a 2,8m! La Spagna ha la più grande popolazione europea. Si vedono nei Picos e nei Pirenei.</p>
 <p><strong>Costa Verde (Asturie/Cantabria)</strong> (<a href="https://it.wikipedia.org/wiki/Asturie" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — La "Spagna verde": scogliere, prati, foreste. Clima atlantico, molto diverso dalla Spagna mediterranea. <a href="https://maps.google.com/?q=43.3600,-5.8500(Costa+Verde+Asturias)" target="_blank" rel="noopener noreferrer">📍 Maps</a></p>
+<p><strong>Picos de Europa</strong> (<a href="https://it.wikipedia.org/wiki/Picos_de_Europa" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — Il primo parco nazionale della Spagna (1918). Vette calcaree drammatiche, camosci, avvoltoi. <a href="https://maps.google.com/?q=43.2000,-4.8500(Picos+de+Europa)" target="_blank" rel="noopener noreferrer">📍 Maps</a></p>
 <p><strong>Flysch di Zumaia</strong> (<a href="https://it.wikipedia.org/wiki/Flysch" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — Strati di roccia di 60 milioni di anni esposti sulla costa basca. Si vede il confine K-T (estinzione dei dinosauri)! <a href="https://maps.google.com/?q=43.2950,-2.2580(Flysch+Zumaia)" target="_blank" rel="noopener noreferrer">📍 Maps</a></p>
 <h3 id="musica-arte-spagna">🎵 Musica e arte</h3>
 <p><strong>Flamenco</strong> (<a href="https://it.wikipedia.org/wiki/Flamenco" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — Patrimonio UNESCO. Danza, canto e chitarra di origine gitana andalusa. Il "duende" è l'emozione profonda che trasmette.</p>
@@ -4445,6 +4540,16 @@
 </li>
 </li>
 </ol>
+<p>Cosa è un'eclissi solare? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Quando la Luna passa tra la Terra e il Sole! 🌑 Il 12 agosto 2026 ce ne sarà una visibile dalla Spagna.</span></p>
+<p>Cosa è la "paella"? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Un piatto di riso cotto in una grande padella piatta! 🥘 Viene da Valencia ed è il piatto più famoso di Spagna.</span></p>
+<p>Cosa è il flamenco? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Una danza spagnola appassionata con chitarra, canto e battito di mani! 💃 Patrimonio UNESCO.</span></p>
+<p>Cosa è la Sagrada Familia? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Una chiesa gigante a Barcellona! ⛪ Gaudí l'ha iniziata nel 1882 e non è ancora finita!</span></p>
+<p>Quante lingue ufficiali ha la Spagna? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> 5! 🗣️ Spagnolo, catalano, basco, galiziano e aranese.</span></p>
+<p>Cosa sono le "tapas"? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Piccoli piatti di cibo da condividere tra amici! 🍽️ Il nome viene da "tapa" (coperchio).</span></p>
+<p>Cosa è il Cammino di Santiago? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Un famoso pellegrinaggio a piedi! 🚶 Si cammina fino a Santiago de Compostela — anche 800 km!</span></p>
+<p>Cosa è il "gazpacho"? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Una zuppa fredda di pomodoro! 🍅 Perfetta per le giornate calde dell'estate spagnola.</span></p>
+<p>Cosa è la Corsa dei Tori? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Una festa a Pamplona dove la gente corre davanti ai tori! 🐂 Si tiene ogni luglio durante San Fermín.</span></p>
+<p>Cosa sono i Picos de Europa? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Una catena montuosa nel nord della Spagna! 🏔️ Il primo parco nazionale spagnolo (1918).</span></p>
 <h3 id="cosa-comprare_10">🛍 Cosa comprare</h3>
 <p>🏛️ <strong>Txakoli</strong> — vino bianco frizzante basco (per i genitori)</p>
 <p>🏛️ <strong>Formaggio Idiazábal</strong> — affumicato, di pecora. Delizioso.</p>
@@ -4673,6 +4778,17 @@
 </li>
 </li>
 </ol>
+<p>Quante regioni ha l'Italia? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> 20! 🇮🇹 Ognuna ha la sua cucina, il suo dialetto e le sue tradizioni.</span></p>
+<p>Cosa è il Colosseo? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Un'antica arena romana! 🏟️ Poteva contenere 50.000 spettatori per i giochi dei gladiatori.</span></p>
+<p>Quante forme di pasta esistono in Italia? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Oltre 350! 🍝 Ogni forma ha un nome e una salsa perfetta.</span></p>
+<p>Cosa è il gelato? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Il gelato italiano! 🍨 Ha meno aria e più sapore del gelato industriale.</span></p>
+<p>Cosa è la Torre di Pisa? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Un campanile che ha iniziato a inclinarsi durante la costruzione! 🗼 Ci vollero 200 anni per finirla.</span></p>
+<p>Cosa hanno inventato i Romani? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Strade, acquedotti, cemento, e il calendario! 🏛️ Molte delle loro invenzioni le usiamo ancora oggi.</span></p>
+<p>Cosa è "la passeggiata"? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> La camminata serale italiana! 🚶 Le famiglie escono a passeggiare, prendere un gelato e chiacchierare.</span></p>
+<p>Quale vulcano ha distrutto Pompei? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Il Vesuvio! 🌋 È eruttato nel 79 d.C. e ha sepolto l'intera città sotto la cenere.</span></p>
+<p>Qual è il Paese più piccolo del mondo? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> La Città del Vaticano! 🇻🇦 È dentro Roma ed è grande come un campo da golf.</span></p>
+<p>Cosa è il "carnevale"? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Una festa con maschere e costumi prima della Quaresima! 🎭 Il più famoso è a Venezia.</span></p>
+<p>Cosa sono le Dolomiti? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Montagne rosa nel nord Italia! 🏔️ Diventano rosa al tramonto — si chiama "enrosadira".</span></p>
 <h3 id="cosa-comprare_11">🛍 Cosa comprare</h3>
 <p>🏛️ <strong>Pesto fresco</strong> — nei barattoli sottovuoto dura qualche giorno (o comprate il basilico di Prà!)</p>
 <p>🏛️ <strong>Focaccia di Recco</strong> — da mangiare subito!</p>
@@ -7950,7 +8066,6 @@
 <p><a href="https://en.wikipedia.org/wiki/Saimaa_ringed_seal" target="_blank" rel="noopener noreferrer">Foca del Saimaa</a> — Finlandia, solo 400 esemplari</p>
 <p><a href="https://en.wikipedia.org/wiki/Fjord" target="_blank" rel="noopener noreferrer">Fiordi</a> — Norvegia, geologia glaciale</p>
 <p><a href="https://en.wikipedia.org/wiki/Wadden_Sea" target="_blank" rel="noopener noreferrer">Wadden Sea</a> — Danimarca/Germania, patrimonio UNESCO</p>
-<p><a href="https://en.wikipedia.org/wiki/Mont-Saint-Michel" target="_blank" rel="noopener noreferrer">Mont Saint-Michel</a> — Francia, maree da 14m</p>
 <p><a href="https://en.wikipedia.org/wiki/Picos_de_Europa" target="_blank" rel="noopener noreferrer">Picos de Europa</a> — Spagna, primo parco nazionale</p>
 <p><a href="https://en.wikipedia.org/wiki/Cinque_Terre" target="_blank" rel="noopener noreferrer">Cinque Terre</a> — Italia, villaggi UNESCO</p>
 <p><a href="https://en.wikipedia.org/wiki/Singing_Revolution" target="_blank" rel="noopener noreferrer">Singing Revolution</a> — Estonia, indipendenza cantata</p>
@@ -8187,7 +8302,7 @@
 
 <h1 style="text-align:center; margin-top:16px;">🎒 Zaino — Cosa Portare</h1>
 <div class="zaino-progress-bar" id="zaino-progress">
-    <div class="zp-text">🎒 Preparazione: <strong id="zp-count">0</strong> / <strong id="zp-total">190</strong> oggetti pronti</div>
+    <div class="zp-text">🎒 Preparazione: <strong id="zp-count">0</strong> / <strong id="zp-total">191</strong> oggetti pronti</div>
     <div class="zp-sub" id="zp-percent">0% completato</div>
     <div class="zp-bar"><div class="zp-fill" id="zp-fill" style="width:0%"></div></div>
 </div>
@@ -8362,6 +8477,7 @@
 <li class="task-item"><input type="checkbox" data-idx="tracolla"> Tracolla</li>
 <li class="task-item"><input type="checkbox" data-idx="landing-pad"> Landing pad</li>
 <li class="task-item"><input type="checkbox" data-idx="soffietto"> Soffietto</li>
+<li class="task-item"><input type="checkbox" data-idx="adattatore-micro-sd"> Adattatore Micro SD</li>
 
 </ul>
 <h3 id="z-trekking">🥾 Trekking</h3>

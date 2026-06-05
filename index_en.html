@@ -53,7 +53,7 @@
     <link rel="apple-touch-icon" sizes="152x152" href="./icon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="./icon.png">
     <link rel="apple-touch-icon" sizes="167x167" href="./icon.png">
-    <title>Quo Vadis — V1.97</title>
+    <title>Quo Vadis — V1.98</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="home-variants.css">
@@ -75,7 +75,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = '1.97';
+  var EXPECTED_VERSION = '1.98';
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
   var r = false;
@@ -1809,6 +1809,12 @@
 </li>
 <li>
 <p>"Why do Austrian cows wear bells?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>To find them in the mountain fog! And they have a festival when the cows come back to the valley in autumn.</strong></span></p>
+<p>"How do you say 'good morning' in Austrian?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>Grüß Gott! 🙏 It literally means "God greet you" — everyone says it, even children!</strong></span></p>
+<p>"How many children did Empress Sissi have?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>Four! But she was so sad that she traveled constantly and hardly ever stayed at the palace.</strong></span></p>
+<p>"What shape is the Kaiserschmarrn dessert?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>It's a sweet torn pancake! 🥞 The name means "Emperor's mess" because it was his favorite.</strong></span></p>
+<p>"Why is Vienna called Wien in German?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>From the Wien river that flows through the city! The Romans called it Vindobona.</strong></span></p>
+<p>"How many violinists play in the Vienna New Year's Concert?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>About 100! 🎻 And the whole world watches it on TV on January 1st.</strong></span></p>
+<p>"What animal can you see at Schönbrunn Zoo?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>Giant pandas! 🐼 It's the oldest zoo in the world (1752) and has two pandas from China.</strong></span></p>
 <p>What is the name of the famous Viennese cake with apricot jam? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Sachertorte! 🎂 It was invented in 1832 by Franz Sacher when he was only 16 years old.</span></p>
 <p>Which animal is the symbol of the Vienna Zoo (Schönbrunn)? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> The giant panda! 🐼 Schönbrunn is the oldest zoo in the world (1752).</span></p>
 <p>What color is the famous Schönbrunn Palace? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Yellow! 🟡 It's called 'Schönbrunn yellow' and was chosen by Empress Maria Theresa.</span></p>
@@ -1943,7 +1949,7 @@
 <h3 id="musica-arte-ceca">🎵 Music & Art</h3>
 <ul>
 <li><strong>Dvořák</strong> — His "New World Symphony" is one of the most performed in the world. <a href="https://en.wikipedia.org/wiki/Anton%C3%ADn_Dvo%C5%99%C3%A1k" target="_blank" rel="noopener noreferrer">📚</a></li>
-<li><strong>Alfons Mucha</strong> — Father of Art Nouveau. His posters of Sarah Bernhardt made him famous overnight. <a href="https://en.wikipedia.org/wiki/Alphonse_Mucha" target="_blank" rel="noopener noreferrer">📚</a></li>
+<li><strong>Alfons Mucha</strong> — Father of Art Nouveau. His posters of Sarah Bernhardt made him famous overnight. <a href="https://en.wikipedia.org/wiki/Alphonse_Mucha" target="_blank" rel="noopener noreferrer">📚</a> <a href="https://maps.google.com/?q=50.0838,14.4254(Mucha+Museum+Praha)" target="_blank" rel="noopener noreferrer">📍 Maps</a></li>
 <li><strong>Czech glass</strong> — Bohemian crystal tradition since the 13th century. World-famous for quality and beauty. <a href="https://en.wikipedia.org/wiki/Bohemian_glass" target="_blank" rel="noopener noreferrer">📚</a></li>
 </ul>
 <h3 id="quiz-per-i-bambini_1">🎯 Quiz for kids</h3>
@@ -1971,6 +1977,14 @@
 </li>
 <li>
 <p>"What do Czechs eat at Christmas?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>Carp! They buy it alive and keep it in the bathtub before cooking it!</strong></span></p>
+<p>"What is the Sedlec Ossuary?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>A chapel decorated with 40,000 human bones! 💀 They made chandeliers and coat of arms from them.</strong></span></p>
+<p>"What do Czechs drink the most?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>Beer! 🍺 Czechs drink more beer than anyone else in the world — about 140 liters per person per year!</strong></span></p>
+<p>"How many towers does Charles Bridge have?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>Three! Two on one side and one on the other. And the bridge has 30 statues on it.</strong></span></p>
+<p>"What sport do Czechs love?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>Ice hockey! 🏒 They're world champions and all kids play it.</strong></span></p>
+<p>"Why is Prague Castle in the Guinness Book of Records?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>It's the largest ancient castle in the world! 🏰 It's almost 600 meters long.</strong></span></p>
+<p>"What are koláče?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>Round pastries with jam or cottage cheese in the center! Every Czech grandma makes them.</strong></span></p>
+<p>"What animal is the symbol of Prague?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>The two-tailed lion! 🦁 It's been on the city's coat of arms for 800 years.</strong></span></p>
+<p>"Why is Prague called the Golden City?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>Because King Charles IV had the towers covered in gold! ✨ And at sunset everything glows golden.</strong></span></p>
 <p>What is the name of the famous clock in Prague's Old Town Square? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> The Astronomical Clock (Orloj)! ⌚ It's been working since 1410 — over 600 years!</span></p>
 <p>What is the Czech Republic famous for producing? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Crystal glass! 💎 Czech crystal is known worldwide for its clarity and beauty.</span></p>
 <p>What animal can you find on the Czech coat of arms? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> A two-tailed lion! 🦁 It's been the symbol of Czech lands since the 13th century.</span></p>
@@ -1983,6 +1997,7 @@
 <h3 id="cosa-comprare">🛍 What to buy</h3>
 <p>🏛️ <strong>Trdelník</strong> — the spiral sweet (eat it hot!)</p>
 <p>🏛️ <strong>Bohemian crystal</strong> — tradition since 1300, but fragile in a van!</p>
+<p><strong>Moravian Karst</strong> (<a href="https://en.wikipedia.org/wiki/Moravian_Karst" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — Cave system with stalactites and the underground Punkva river. You can ride a boat underground! <a href="https://maps.google.com/?q=49.3653,16.7622(Punkevni+jeskyne)" target="_blank" rel="noopener noreferrer">📍 Maps</a></p>
 <hr>
 <h2 id="polonia-g2-g3">🇵🇱 Poland (G2-G3)</h2>
 <div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g2')">Itinerary G2-G3</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-polacca-g2-g3')">Food</a></div>
@@ -2166,6 +2181,14 @@
 </li>
 <li>
 <p>"What did Copernicus discover?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>That the Earth goes around the Sun! Before him, everyone thought it was the other way around!</strong></span></p>
+<p>"What is the Wieliczka Salt Mine?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>An underground cathedral made entirely of salt! 🧂 Even the chandeliers are salt crystals. It's 700 years old!</strong></span></p>
+<p>"What animal is the symbol of Warsaw?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>The mermaid! 🧜‍♀️ But she's not a gentle mermaid — she has a sword and shield!</strong></span></p>
+<p>"How big is the Białowieża Forest?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>As big as 20,000 football pitches! 🌲 It's the last virgin forest in Europe.</strong></span></p>
+<p>"What are pączki?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>Fried doughnuts filled with rose jam! 🍩 On Fat Thursday, Poles eat millions of them.</strong></span></p>
+<p>"Why does a trumpet play every hour in Kraków?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>A trumpeter plays from the tower every hour — and stops mid-note! 🎺 Legend says a Mongol arrow hit the original trumpeter.</strong></span></p>
+<p>"How many lakes does Poland have?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>More than 9,000! 🏊 In summer everyone goes to the lake instead of the sea.</strong></span></p>
+<p>"Who invented the Esperanto language?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>A Pole! His name was Zamenhof and he dreamed that everyone would speak the same language.</strong></span></p>
+<p>"What do Poles put on pizza?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>Ketchup! 🍕 Poles put ketchup on pizza — Italians are horrified!</strong></span></p>
 <p>What is the name of the famous Polish dish made of stuffed dumplings? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Pierogi! 🥟 They can be filled with potatoes, cheese, meat, or even strawberries.</span></p>
 <p>What animal is the symbol of Warsaw? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> A mermaid (Syrenka)! 🧜‍♀️ She holds a sword and shield to protect the city.</span></p>
 <p>How many UNESCO World Heritage Sites does Poland have? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> 17! 🏰 Including the historic centers of Krakow and Warsaw.</span></p>
@@ -2179,6 +2202,7 @@
 <p>🏛️ <strong>Obwarzanki</strong> from the cart (to eat immediately!)</p>
 <p>🏛️ <strong>Baltic amber</strong> — you can find it here too, cheaper than in Scandinavia</p>
 <p>🏛️ <strong>Oscypek</strong> — smoked cheese from the Tatra mountains (spindle-shaped, decorated)</p>
+<p><strong>Tatra Mountains</strong> (<a href="https://en.wikipedia.org/wiki/Tatra_Mountains" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — The "miniature Alps" of Poland. Peaks up to 2,499m, glacial lakes, chamois. <a href="https://maps.google.com/?q=49.2500,19.9500(Tatra+Mountains)" target="_blank" rel="noopener noreferrer">📍 Maps</a></p>
 <hr>
 <h2 id="lituania-g3-g4">🇱🇹 Lithuania (G3-G4)</h2>
 <div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g3')">Itinerary G3-G4</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-baltica-g3-g6')">Food</a></div>
@@ -2327,7 +2351,7 @@
 <ul>
 <li><strong>Sutartinės</strong> — Ancient Lithuanian polyphonic songs. UNESCO Intangible Heritage. Unique in Europe. <a href="https://en.wikipedia.org/wiki/Sutartin%C4%97" target="_blank" rel="noopener noreferrer">📚</a></li>
 <li><strong>Hill of Crosses</strong> — Over 100,000 crosses placed by pilgrims. Powerful folk art. <a href="https://en.wikipedia.org/wiki/Hill_of_Crosses" target="_blank" rel="noopener noreferrer">📚</a> <a href="https://maps.google.com/?q=56.0153,23.4167(Hill+of+Crosses)" target="_blank" rel="noopener noreferrer">📍 Maps</a></li>
-<li><strong>M.K. Čiurlionis</strong> — Painter and composer who created "musical paintings". Lithuania's greatest artist. <a href="https://en.wikipedia.org/wiki/Mikalojus_Konstantinas_%C4%8Ciurlionis" target="_blank" rel="noopener noreferrer">📚</a></li>
+<li><strong>M.K. Čiurlionis</strong> — Painter and composer who created "musical paintings". Lithuania's greatest artist. <a href="https://en.wikipedia.org/wiki/Mikalojus_Konstantinas_%C4%8Ciurlionis" target="_blank" rel="noopener noreferrer">📚</a> <a href="https://maps.google.com/?q=54.8960,23.9140(Ciurlionis+Museum+Kaunas)" target="_blank" rel="noopener noreferrer">📍 Maps</a></li>
 </ul>
 <h3 id="quiz-per-i-bambini_3">🎯 Quiz for kids</h3>
 <ol>
@@ -2354,6 +2378,14 @@
 </li>
 <li>
 <p>"What animal is Lithuania's symbol?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>The stork! There are so many \u2014 almost one per family!</strong></span></p>
+<p>"What is the Hill of Crosses?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>A hill with over 200,000 crosses! ✝️ The Soviets destroyed it 3 times but people kept rebuilding it.</strong></span></p>
+<p>"What is on the Hill of Witches in Juodkrantė?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>Giant wooden sculptures of witches, devils and dragons! 🧙‍♀️ A magical path through the forest.</strong></span></p>
+<p>"Why is amber called 'gold of the Baltic'?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>Because it's fossil resin from 40 million years ago! 🟡 Sometimes you can find insects trapped inside.</strong></span></p>
+<p>"How many languages do Lithuanians speak?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>At least 2-3! Lithuanian, Russian and English. Lithuanian is one of the oldest languages in Europe.</strong></span></p>
+<p>"What is Čepkeliai?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>Lithuania's largest bog! 🐸 Wolves, lynxes and carnivorous plants live there.</strong></span></p>
+<p>"What shape is the country seen from above?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>It looks like a hand! ✋ With fingers touching the Baltic Sea.</strong></span></p>
+<p>"What do Lithuanians eat at Christmas?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>12 different dishes! 🎄 One for each apostle. But no meat — all fish and vegetables.</strong></span></p>
+<p>"Why does Vilnius have a neighborhood called Užupis?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>It's an independent "republic" invented by artists! 🎨 Its constitution says cats have the right to be lazy.</strong></span></p>
 <p>What is the Hill of Crosses in Lithuania? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> A hill covered with over 200,000 crosses! ✝️ Pilgrims have been placing crosses there for centuries.</span></p>
 <p>What is Lithuania's national sport? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Basketball! 🏀 Lithuania has won Olympic medals and is crazy about the sport.</span></p>
 <p>What is 'cepelinai'? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Giant potato dumplings shaped like zeppelins! 🥟 They're stuffed with meat and served with sour cream.</span></p>
@@ -2443,6 +2475,7 @@
 <h3 id="tradizioni-vive-in-estate_3">🎉 Living traditions in summer</h3>
 <p>🏛️ <strong>Jāņi</strong> (St. John's Day, June 23-24) — THE Latvian national festival. Huge bonfires, oak wreaths, Jāņi cheese with caraway, beer. If you pass by on 06/23 you might see traces of it!</p>
 <p>🏛️ <strong>Choral singing</strong> — Latvians sing EVERYWHERE. The Song Festival (every 5 years) gathers 30,000 choristers. The "Singing Revolution" (1988) freed them from the USSR by singing.</p>
+<p><strong>Mark Rothko</strong> (<a href="https://en.wikipedia.org/wiki/Mark_Rothko" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — The famous abstract expressionist painter was born in Daugavpils, Latvia. Rothko Centre open to visitors. <a href="https://maps.google.com/?q=55.8750,26.5350(Rothko+Centre+Daugavpils)" target="_blank" rel="noopener noreferrer">📍 Maps</a></p>
 <p>🏛️ <strong>Riga Central Market</strong> — in 5 pavilions of former Zeppelin hangars (yes, airships!). The largest covered market in Europe.</p>
 <p>📍 <a href="https://maps.google.com/?q=56.9440,24.1130(Riga+Central+Market)" target="_blank" rel="noopener noreferrer">Riga Central Market</a></p>
 <h3 id="parole-utili_4">💬 Useful words</h3>
@@ -2509,6 +2542,7 @@
 <h3 id="natura-fauna-lettonia">🌿 Nature & Wildlife</h3>
 <ul>
 <li><strong>Gauja National Park</strong> — Latvia's largest park. Sandstone cliffs, caves, medieval castles. <a href="https://en.wikipedia.org/wiki/Gauja_National_Park" target="_blank" rel="noopener noreferrer">📚</a> <a href="https://maps.google.com/?q=57.25,25.08(Gauja+NP)" target="_blank" rel="noopener noreferrer">📍 Maps</a></li>
+<p><strong>Gauja National Park</strong> (<a href="https://en.wikipedia.org/wiki/Gauja_National_Park" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — Latvia's largest national park. Red sandstone cliffs 90m high, caves, medieval castles. <a href="https://maps.google.com/?q=57.2500,25.1000(Gauja+National+Park)" target="_blank" rel="noopener noreferrer">📍 Maps</a></p>
 <li><strong>Black stork</strong> — Rare and shy. Latvia is one of Europe's best places to spot them. <a href="https://en.wikipedia.org/wiki/Black_stork" target="_blank" rel="noopener noreferrer">📚</a></li>
 <li><strong>Latvian forests</strong> — Cover 52% of the country. Wolves, lynx, and bears live here. <a href="https://en.wikipedia.org/wiki/Forests_of_Latvia" target="_blank" rel="noopener noreferrer">📚</a></li>
 </ul>
@@ -2543,6 +2577,14 @@
 </li>
 <li>
 <p>"How many beaches does Latvia have?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>More than 500 km of coastline! J\u016brmala beach is 33 km long \u2014 it would take hours to walk it all!</strong></span></p>
+<p>"How many Art Nouveau buildings does Riga have?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>Over 800! 🏛️ More than any other city in Europe. Look up at the facades on Alberta iela!</strong></span></p>
+<p>"What are pīrādziņi?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>Buns stuffed with bacon and onion! Every Latvian family has their own recipe.</strong></span></p>
+<p>"What flower is Latvia's symbol?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>The daisy! 🌼 In June, girls make flower crowns for the Midsummer festival.</strong></span></p>
+<p>"Why do Latvians sing so much?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>Every 5 years they hold a Song Festival with 30,000 singers! 🎵 They won independence by singing.</strong></span></p>
+<p>"How many beaches does Latvia have?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>Over 500 km of coastline! 🏖️ White sand but the water is quite cold.</strong></span></p>
+<p>"What is Riga Black Balsam?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>A mysterious black drink made from 24 herbs! 🧪 It's 300 years old and very strong.</strong></span></p>
+<p>"What animal lives in Latvian forests?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>The lynx! 🐱 It's the largest wild cat in Northern Europe with tufted ears.</strong></span></p>
+<p>"Why does Riga have Art Nouveau buildings?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>Because it was very rich in the early 1900s! 🏛️ It has over 800 Art Nouveau buildings — more than any other city.</strong></span></p>
 <p>What is Riga famous for in architecture? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Art Nouveau buildings! 🏠 Riga has over 800 Art Nouveau buildings — the most in Europe.</span></p>
 <p>What is 'Jani' in Latvia? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Midsummer festival! ☀️ Latvians celebrate with bonfires, flower crowns, and cheese.</span></p>
 <p>What is the national bird of Latvia? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> The white wagtail! 🐦 It's a small bird that wags its tail up and down.</span></p>
@@ -2556,6 +2598,7 @@
 <p>🏛️ <strong>Riga Black Balsam</strong> (Rīgas Melnais Balzams) — herbal liqueur since 1752, unmistakable black bottle (for parents!)</p>
 <p>🏛️ <strong>Honey and hive products</strong> — Latvia is famous for beekeeping</p>
 <p>🏛️ <strong>Wool gloves and socks</strong> — with traditional Baltic patterns</p>
+<p><strong>Jūrmala Beaches</strong> (<a href="https://en.wikipedia.org/wiki/J%C5%ABrmala" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — 33 km of white sand beach on the Baltic. Art Nouveau wooden architecture. <a href="https://maps.google.com/?q=56.9680,23.7700(Jurmala+Beach)" target="_blank" rel="noopener noreferrer">📍 Maps</a></p>
 <hr>
 <h2 id="estonia-g5-g6">🇪🇪 Estonia (G5-G6)</h2>
 <div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g5')">Itinerary G5-G6</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-baltica-g3-g6')">Food</a></div>
@@ -2706,8 +2749,10 @@
 <h3 id="natura-fauna-estonia">🌿 Nature & Wildlife</h3>
 <ul>
 <li><strong>Lahemaa National Park</strong> — Bogs, coastal cliffs, and manor houses. Estonia's largest park. <a href="https://en.wikipedia.org/wiki/Lahemaa_National_Park" target="_blank" rel="noopener noreferrer">📚</a> <a href="https://maps.google.com/?q=59.5,25.8(Lahemaa)" target="_blank" rel="noopener noreferrer">📍 Maps</a></li>
+<p><strong>Estonian Song Festival</strong> (<a href="https://en.wikipedia.org/wiki/Estonian_Song_Festival" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — Every 5 years, 30,000 singers + 100,000 spectators. The stage is a giant shell. <a href="https://maps.google.com/?q=59.4500,24.7950(Song+Festival+Grounds+Tallinn)" target="_blank" rel="noopener noreferrer">📍 Maps</a></p>
+<p><strong>Saaremaa Island</strong> (<a href="https://en.wikipedia.org/wiki/Saaremaa" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — Estonia's largest island. Windmills, Kaali meteorite crater (3,500 years old!), grey seals. <a href="https://maps.google.com/?q=58.4200,22.5300(Saaremaa)" target="_blank" rel="noopener noreferrer">📍 Maps</a></p>
 <li><strong>Flying squirrel</strong> — Extremely rare in Europe. Estonia is one of the few EU countries where it lives. <a href="https://en.wikipedia.org/wiki/Siberian_flying_squirrel" target="_blank" rel="noopener noreferrer">📚</a></li>
-<li><strong>Bogs</strong> — Estonia has 10,000+ bogs. Boardwalk trails let you walk over them. Unique landscapes. <a href="https://en.wikipedia.org/wiki/Bog" target="_blank" rel="noopener noreferrer">📚</a></li>
+<li><strong>Bogs</strong> — Estonia has 10,000+ bogs. Boardwalk trails let you walk over them. Unique landscapes. <a href="https://en.wikipedia.org/wiki/Bog" target="_blank" rel="noopener noreferrer">📚</a> <a href="https://maps.google.com/?q=58.4400,25.0500(Soomaa+National+Park)" target="_blank" rel="noopener noreferrer">📍 Maps</a></li>
 </ul>
 <h3 id="musica-arte-estonia">🎵 Music & Art</h3>
 <ul>
@@ -2740,6 +2785,14 @@
 </li>
 <li>
 <p>"How old is the pharmacy in Tallinn?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>More than 600 years! It's one of Europe's oldest pharmacies still open. They used to sell unicorn powder!</strong></span></p>
+<p>"How many islands does Estonia have?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>Over 2,200! 🏝️ But only about 20 are inhabited. Saaremaa is the biggest.</strong></span></p>
+<p>"Why is Estonia the most digital country in the world?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>You can do everything online! 💻 Vote, start a company, see a doctor — all digital.</strong></span></p>
+<p>"What animal is on Tallinn's coat of arms?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>Three lions! 🦁 Like Denmark, because the Danes founded the city.</strong></span></p>
+<p>"What does Tallinn mean?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>"Danish town"! 🇩🇰 Taani-linn in Estonian.</strong></span></p>
+<p>"How many saunas are there in Estonia?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>About 1 for every 4 people! 🧖 The sauna tradition is UNESCO heritage.</strong></span></p>
+<p>"Why doesn't it get dark in Estonia in summer?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>Because it's so far north that the sun only sets for a few hours! ☀️ The "white nights".</strong></span></p>
+<p>"What did Estonians invent?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>Skype! 📱 The video calling program was created by Estonian programmers in 2003.</strong></span></p>
+<p>"How many islands does Estonia have?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>Over 2,200! 🏝️ But only about 20 are inhabited. Saaremaa is the biggest.</strong></span></p>
 <p>How many islands does Estonia have? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Over 2,200! 🏝️ But most are tiny and uninhabited.</span></p>
 <p>What is Estonia famous for in technology? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Skype was invented there! 💻 Estonia is one of the most digital countries in the world.</span></p>
 <p>What is 'kama'? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> A traditional flour mix of roasted grains! 🌾 Estonians mix it with yogurt or milk as a snack.</span></p>
@@ -2821,9 +2874,10 @@
 </table>
 <h3 id="personaggi-da-conoscere_6">🧑‍🎨 People to know</h3>
 <p><strong>Tove Jansson (1914-2001)</strong> — The creator of the <strong>Moomin</strong>! Finnish-Swedish writer and illustrator. The Moomins are white hippos living in Moomin Valley with their friends. There are museums, theme parks and kids love them.</p>
+<p><strong>Nuuksio National Park</strong> (<a href="https://en.wikipedia.org/wiki/Nuuksio_National_Park" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — 30 min from Helsinki. Lakes, forests, flying squirrels! <a href="https://maps.google.com/?q=60.3100,24.5100(Nuuksio+National+Park)" target="_blank" rel="noopener noreferrer">📍 Maps</a></p>
 <p>📍 <a href="https://maps.google.com/?q=61.4978,23.7610(Moomin+Museum+Tampere)" target="_blank" rel="noopener noreferrer">Moomin Museum, Tampere</a></p>
 <p>📍 <a href="https://www.moomin.com/" target="_blank" rel="noopener noreferrer">moomin.com</a></p>
-<p><strong>Jean Sibelius (1865-1957)</strong> — The national composer. <em>Finlandia</em> (1899) is practically the unofficial anthem — it was written as a protest against Russification. When it was played, the Russians banned it!</p>
+<p><strong>Jean Sibelius (1865-1957)</strong> — The national composer. <em>Finlandia</em> (1899) is practically the unofficial anthem — it was written as a protest against Russification. When it was played, the Russians banned it! <a href="https://maps.google.com/?q=60.1820,24.9140(Sibelius+Monument+Helsinki)" target="_blank" rel="noopener noreferrer">📍 Maps</a></p>
 <p><strong>Alvar Aalto (1898-1976)</strong> — The most famous Finnish architect and designer. The Aalto vase (the wavy one from Iittala) is in every Finnish home. He also designed Finlandia Hall in Helsinki.</p>
 <p>📍 <a href="https://maps.google.com/?q=60.1740,24.9320(Finlandia+Hall+Helsinki)" target="_blank" rel="noopener noreferrer">Finlandia Hall</a></p>
 <p><strong>Santa Claus</strong> — Officially lives in Rovaniemi, Lapland! The Santa Claus Village is open all year. In summer it is less crowded and you can still meet Santa Claus.</p>
@@ -2915,7 +2969,7 @@
 </table>
 <h3 id="natura-fauna-finlandia">🌿 Nature & Wildlife</h3>
 <ul>
-<li><strong>Saimaa ringed seal</strong> — Only 400 left! Lives only in Lake Saimaa. One of the rarest seals. <a href="https://en.wikipedia.org/wiki/Saimaa_ringed_seal" target="_blank" rel="noopener noreferrer">📚</a></li>
+<li><strong>Saimaa ringed seal</strong> — Only 400 left! Lives only in Lake Saimaa. One of the rarest seals. <a href="https://en.wikipedia.org/wiki/Saimaa_ringed_seal" target="_blank" rel="noopener noreferrer">📚</a> <a href="https://maps.google.com/?q=61.5000,28.5000(Lake+Saimaa)" target="_blank" rel="noopener noreferrer">📍 Maps</a></li>
 <li><strong>Reindeer</strong> — 200,000 semi-wild reindeer in Lapland. Herded by Sámi people. <a href="https://en.wikipedia.org/wiki/Reindeer" target="_blank" rel="noopener noreferrer">📚</a></li>
 <li><strong>Finnish forests</strong> — Cover 73% of the country (most in Europe!). 188,000 lakes. <a href="https://en.wikipedia.org/wiki/Geography_of_Finland" target="_blank" rel="noopener noreferrer">📚</a></li>
 <li><strong>Arctic cloudberry</strong> — Golden berry growing in bogs. Rare and precious. Called "lakka" in Finnish. <a href="https://en.wikipedia.org/wiki/Rubus_chamaemorus" target="_blank" rel="noopener noreferrer">📚</a></li>
@@ -2961,6 +3015,13 @@
 </li>
 <li>
 <p>"Why doesn't the sun set in summer?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>Because we're so far north that the Earth is tilted toward the sun! It's called the "midnight sun".</strong></span></p>
+<p>"How many saunas are there in Finland?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>About 3 million! 🧖 More saunas than cars!</strong></span></p>
+<p>"What do Finns do after the sauna?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>They jump in the frozen lake! 🥶 Even in winter at -20°C!</strong></span></p>
+<p>"How many lakes does Finland have?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>188,000! 💧 That's why it's called "the Land of a Thousand Lakes" (but there are many more!).</strong></span></p>
+<p>"What is the most dangerous animal in Finland?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>The moose! 🫎 It causes more road accidents than any other animal.</strong></span></p>
+<p>"Why do Finns love silence?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>It's part of their culture! 🤫 "Silence is golden" is their unofficial motto.</strong></span></p>
+<p>"What is the Northern Lights?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>Colored lights in the sky! 🌌 Solar particles dancing in the atmosphere — green, purple, pink.</strong></span></p>
+<p>"Where does Santa Claus live?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>In Rovaniemi, Lapland! 🎅 You can visit his village all year round.</strong></span></p>
 <p>How many lakes does Finland have? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> About 188,000! 🌊 That's why it's called the 'Land of a Thousand Lakes' (but it has way more!).</span></p>
 <p>What is a Finnish sauna tradition? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> You hit yourself with birch branches (vihta)! 🌿 It improves circulation and smells great.</span></p>
 <p>What is the Midnight Sun? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> In summer, the sun doesn't set for weeks in northern Finland! ☀️ You can read a book outside at midnight.</span></p>
@@ -3052,14 +3113,14 @@
 <p>Fun fact: the word "bluetooth" comes from the Viking king Harald Blåtand (Bluetooth)!</p>
 <p><strong>Roald Amundsen (1872-1928)</strong> — The first man to reach the South Pole (1911), beating the Englishman Scott by 34 days. He left from Tromsø for his last expedition (1928) and never returned. Tromsø was the "Gateway to the Arctic" for all explorers.</p>
 <p>📍 <a href="https://maps.google.com/?q=69.6500,18.9580(Polar+Museum+Tromsø)" target="_blank" rel="noopener noreferrer">Polar Museum, Tromsø</a></p>
-<p><strong>Edvard Munch (1863-1944)</strong> — The painter of <em>The Scream</em> (1893). That painting is worth ~$120 million. Munch was Norwegian, depressed, and brilliant. The landscape behind The Scream is the Oslo fjord seen from Ekeberg.</p>
-<p><strong>Edvard Grieg (1843-1907)</strong> — The composer of <em>Peer Gynt</em> (everyone recognizes the music "In the Hall of the Mountain King"!). He lived in Bergen.</p>
+<p><strong>Edvard Munch (1863-1944)</strong> — The painter of <em>The Scream</em> (1893). That painting is worth ~$120 million. Munch was Norwegian, depressed, and brilliant. The landscape behind The Scream is the Oslo fjord seen from Ekeberg. <a href="https://maps.google.com/?q=59.9060,10.7540(MUNCH+Museum+Oslo)" target="_blank" rel="noopener noreferrer">📍 Maps</a></p>
+<p><strong>Edvard Grieg (1843-1907)</strong> — The composer of <em>Peer Gynt</em> (everyone recognizes the music "In the Hall of the Mountain King"!). He lived in Bergen. <a href="https://maps.google.com/?q=60.3130,5.2900(Troldhaugen+Bergen)" target="_blank" rel="noopener noreferrer">📍 Maps</a></p>
 <p>📍 <a href="https://maps.google.com/?q=60.3460,5.3100(Troldhaugen+Bergen)" target="_blank" rel="noopener noreferrer">Troldhaugen (Grieg's house), Bergen</a></p>
 <h3 id="cosa-osservare-nellarchitettura_7">🏛 What to observe in architecture</h3>
 <p>🏛️ <strong>Stavkirke</strong> (wooden stave churches) — unique in the world! Only 28 remain (out of 1000+ originals). Built without a single nail, with dragons carved on the roofs (a pagan-Christian mix). The most famous is <a href="https://maps.google.com/?q=61.0480,7.8130(Borgund+Stave+Church)" target="_blank" rel="noopener noreferrer">Borgund</a> (near route G28-G29).</p>
 <p>🏛️ <strong>Bryggen (Bergen)</strong> — the colorful wooden houses of the Hanseatic port (UNESCO). 62 medieval wooden buildings, all crooked because the ground moves. Behind the facades: very narrow corridors where German merchants lived and traded.</p>
 <p>📍 <a href="https://maps.google.com/?q=60.3975,5.3240(Bryggen+Bergen)" target="_blank" rel="noopener noreferrer">Bryggen, Bergen</a></p>
-<p>🏛️ <strong>Rorbuer (Lofoten)</strong> — the red fishermen's cabins on stilts. Today many are rented to tourists. The red color comes from cod liver oil mixed with ochre!</p>
+<p>🏛️ <strong>Rorbuer (Lofoten)</strong> — the red fishermen's cabins on stilts. Today many are rented to tourists. The red color comes from cod liver oil mixed with ochre! <a href="https://maps.google.com/?q=68.2000,14.5000(Lofoten+Islands)" target="_blank" rel="noopener noreferrer">📍 Maps</a></p>
 <p>🏛️ <strong>Norwegian modern architecture:</strong> Norway invests billions in public architecture. The National Tourist Routes have designer panoramic platforms (Trollstigen, Stegastein, Tungeneset) — art in the landscape.</p>
 <p>📍 <a href="https://maps.google.com/?q=60.9080,7.1150(Stegastein+Viewpoint)" target="_blank" rel="noopener noreferrer">Stegastein Viewpoint</a></p>
 <h3 id="tradizioni-vive-in-estate_6">🎉 Living traditions in summer</h3>
@@ -3148,8 +3209,9 @@
 </table>
 <h3 id="natura-fauna-norvegia">🌿 Nature & Wildlife</h3>
 <ul>
-<li><strong>Fjords</strong> — Carved by glaciers over millions of years. Geirangerfjord and Nærøyfjord are UNESCO heritage. <a href="https://en.wikipedia.org/wiki/Fjord" target="_blank" rel="noopener noreferrer">📚</a></li>
+<li><strong>Fjords</strong> — Carved by glaciers over millions of years. Geirangerfjord and Nærøyfjord are UNESCO heritage. <a href="https://en.wikipedia.org/wiki/Fjord" target="_blank" rel="noopener noreferrer">📚</a> <a href="https://maps.google.com/?q=62.1050,7.0940(Geirangerfjord)" target="_blank" rel="noopener noreferrer">📍 Maps</a></li>
 <li><strong>Musk ox</strong> — Prehistoric animal surviving in Dovrefjell. Guided safaris available. <a href="https://en.wikipedia.org/wiki/Muskox" target="_blank" rel="noopener noreferrer">📚</a> <a href="https://maps.google.com/?q=62.2,9.6(Dovrefjell)" target="_blank" rel="noopener noreferrer">📍 Maps</a></li>
+<p><strong>Whales (Orca and Sperm Whale)</strong> (<a href="https://en.wikipedia.org/wiki/Orca" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — Whale safari from Andenes and Tromsø. Orcas in winter, sperm whales year-round. <a href="https://maps.google.com/?q=69.3260,16.1200(Andenes+Whale+Safari)" target="_blank" rel="noopener noreferrer">📍 Maps</a></p>
 <li><strong>White-tailed eagle</strong> — Wingspan up to 2.5m! Common along the coast. "Flying doors" the locals call them. <a href="https://en.wikipedia.org/wiki/White-tailed_eagle" target="_blank" rel="noopener noreferrer">📚</a></li>
 <li><strong>Atlantic puffin</strong> — Colourful "clown of the sea". Nests on cliffs from May to August. <a href="https://en.wikipedia.org/wiki/Atlantic_puffin" target="_blank" rel="noopener noreferrer">📚</a></li>
 <li><strong>Northern lights</strong> — Visible from September to March above the Arctic Circle. <a href="https://en.wikipedia.org/wiki/Aurora" target="_blank" rel="noopener noreferrer">📚</a></li>
@@ -3198,6 +3260,12 @@
 </li>
 <li>
 <p>"What animal can you see in the Lofoten Islands?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>White-tailed eagles! Their wingspan is 2.5 meters \u2014 as wide as dad with arms stretched out!</strong></span></p>
+<p>"What is a troll?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>A creature from Norse mythology! 🧌 They live in mountains and hate sunlight.</strong></span></p>
+<p>"Why do Norwegian houses have grass roofs?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>For insulation! 🌿 The grass keeps warm in winter and cool in summer.</strong></span></p>
+<p>"How many tunnels are there in Norway?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>Over 1,100! 🚇 The longest is Lærdal (24.5 km) with colored lights inside.</strong></span></p>
+<p>"What animal can you see in the Lofoten Islands?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>Sea eagles! 🦅 They have a wingspan of 2.5 meters.</strong></span></p>
+<p>"How long is Norway's longest fjord?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>204 km! 🌊 The Sognefjord is also 1,308 meters deep.</strong></span></p>
+<p>"Can you pitch a tent anywhere in Norway?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>Yes! ⛺ The "right of access" (allemannsretten) allows camping anywhere in nature.</strong></span></p>
 <p>What are the Northern Lights? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Dancing colored lights in the sky! 🌌 They're caused by particles from the Sun hitting Earth's atmosphere.</span></p>
 <p>What is a fjord? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> A long, narrow inlet of sea between tall cliffs! 🏔️ Norway has over 1,000 fjords.</span></p>
 <p>What is 'brunost'? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Brown cheese! 🧀 It's sweet and caramel-flavored, made from whey.</span></p>
@@ -3413,6 +3481,12 @@
 </li>
 <li>
 <p>"What did Hans Christian Andersen write?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>The Little Mermaid, The Ugly Duckling, The Snow Queen! All the fairy tales you know!</strong></span></p>
+<p>"How many LEGO bricks exist in the world?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>About 400 billion! 🧱 That's 62 bricks for every person on Earth.</strong></span></p>
+<p>"Why are Danes the happiest people in the world?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>Because of hygge! 🕯️ Free healthcare, short work hours, and lots of candles and coziness.</strong></span></p>
+<p>"What is Tivoli?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>One of the world's oldest amusement parks! 🎢 It opened in Copenhagen in 1843 and inspired Walt Disney.</strong></span></p>
+<p>"How many islands does Denmark have?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>Over 400! 🏝️ But only about 70 are inhabited.</strong></span></p>
+<p>"What is a smørrebrød?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>An open-faced sandwich! 🥪 Danes put all sorts of toppings on dark rye bread.</strong></span></p>
+<p>"Why is the Danish flag the oldest in the world?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>It dates back to 1219! 🇩🇰 Legend says it fell from the sky during a battle.</strong></span></p>
 <p>How many islands does Denmark have? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Over 400! 🏝️ But only about 70 are inhabited.</span></p>
 <p>What toy was invented in Denmark? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> LEGO! 🧱 The name comes from 'leg godt' meaning 'play well' in Danish.</span></p>
 <p>What is 'hygge'? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> A Danish word for cozy togetherness! 🕯️ It means enjoying simple pleasures with loved ones.</span></p>
@@ -3481,7 +3555,7 @@
 </tbody>
 </table>
 <h3 id="personaggi-da-conoscere_9">🧑‍🎨 People to know</h3>
-<p><strong>The Brothers Grimm (Jacob 1785-1863, Wilhelm 1786-1859)</strong> — They collected German fairy tales: Cinderella, Snow White, Hansel and Gretel, Little Red Riding Hood, Rapunzel. In Bremen there is the famous statue of the <strong>Bremen Town Musicians</strong> (donkey, dog, cat, and rooster) — touch the donkey’s paws for good luck!</p>
+<p><strong>The Brothers Grimm (Jacob 1785-1863, Wilhelm 1786-1859)</strong> — They collected German fairy tales: Cinderella, Snow White, Hansel and Gretel, Little Red Riding Hood, Rapunzel. In Bremen there is the famous statue of the <strong>Bremen Town Musicians</strong> (donkey, dog, cat, and rooster) — touch the donkey’s paws for good luck! <a href="https://maps.google.com/?q=51.2200,9.4900(German+Fairy+Tale+Route)" target="_blank" rel="noopener noreferrer">📍 Maps</a></p>
 <p>📍 <a href="https://maps.google.com/?q=53.0760,8.8075(Town+Musicians+Bremen)" target="_blank" rel="noopener noreferrer">Bremen Town Musicians statue</a></p>
 <h3 id="cosa-osservare-nellarchitettura_9">🏛 What to observe in architecture</h3>
 <p>🏛️ <strong>Marktplatz of Bremen</strong> — the square with the Gothic town hall (UNESCO) and the Roland statue (1404). The town hall has a wine cellar that has served wine continuously for 600 years!</p>
@@ -3541,6 +3615,7 @@
 </table>
 <h3 id="tradizioni-vive-in-estate_8">🎉 Living traditions in summer</h3>
 <p>🏛️ <strong>Bremer Freimarkt</strong> is not in summer, but in summer Bremen has the <strong>Breminale</strong> — a free festival along the Weser river with music, theater, and stalls (in July!)</p>
+<p><strong>Black Forest (Schwarzwald)</strong> (<a href="https://en.wikipedia.org/wiki/Black_Forest" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — Fir trees so dense that sunlight can't penetrate (hence the name "black"). Cuckoo clocks, trails, waterfalls. <a href="https://maps.google.com/?q=48.0000,8.2000(Black+Forest)" target="_blank" rel="noopener noreferrer">📍 Maps</a></p>
 <p>💡 Germans in summer live in <strong>Biergarten</strong> (beer gardens) — you can bring your own food and buy only beer!</p>
 <p>🏛️ <strong>Currywurst</strong> at kiosks — the German national fast food (sausage with curry ketchup)</p>
 <p>In Bremen: the <strong>Ratskeller</strong> under the town hall has been serving wine continuously for 600 years (world record!)</p>
@@ -3581,6 +3656,15 @@
 </li>
 <li>
 <p>"Why is Bremen famous?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>For the Town Musicians of Bremen! A donkey, a dog, a cat and a rooster who escape together. But they never actually reached Bremen!</strong></span></p>
+<p>"How many types of bread exist in Germany?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>Over 3,000! 🍞 German bread is UNESCO heritage.</strong></span></p>
+<p>"What did Gutenberg invent?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>The printing press! 📖 In 1440, revolutionizing the spread of knowledge.</strong></span></p>
+<p>"How long is the German motorway?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>About 13,000 km! 🛣️ And it's famous because many sections have no speed limit.</strong></span></p>
+<p>"Why is Bremen famous?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>For the Bremen Town Musicians! 🎵 A donkey, dog, cat and rooster from the Brothers Grimm fairy tale.</strong></span></p>
+<p>"What happens if you touch the donkey's paws?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>It brings good luck! 🍀 The statue is shiny where everyone touches it.</strong></span></p>
+<p>"For how many years has the Bremen cellar been serving wine?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>Over 600 years! 🍷 The Ratskeller is one of the oldest wine cellars in Germany.</strong></span></p>
+<p>"The Bremen Town Musicians are 4 animals. Which ones?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>Donkey, dog, cat and rooster! 🐴🐕🐈🐓 One on top of the other to scare the robbers.</strong></span></p>
+<p>"What is a Bretzel?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>A knot-shaped bread! 🥨 It's been the symbol of German bakers since the Middle Ages.</strong></span></p>
+<p>"What are Haribo gummy bears?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>Candies invented in Germany in 1922! 🐻 The name comes from HAns RIegel BOnn (the founder).</strong></span></p>
 <p>What is the Autobahn? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> German highways with (some) sections without speed limits! 🏁 But most sections do have limits now.</span></p>
 <p>What is a 'Brezel' (pretzel)? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> A twisted bread snack! 🥨 Its shape is said to represent arms crossed in prayer.</span></p>
 <p>What is the Black Forest famous for? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Cuckoo clocks and Black Forest cake! 🎂 The cake has chocolate, cherries, and whipped cream.</span></p>
@@ -3675,7 +3759,7 @@
 <h3 id="cosa-osservare-nellarchitettura_10">🏛 What to observe in architecture</h3>
 <p>🏛️ <strong>Amiens Cathedral</strong> — the largest Gothic cathedral in France (200,000 m³!). The facade has 3,000 statues. In summer, a colored light show on the facade (Chroma) displays the original medieval colors.</p>
 <p>📍 <a href="https://maps.google.com/?q=49.8950,2.3020" target="_blank" rel="noopener noreferrer">Cathédrale Notre-Dame d'Amiens</a></p>
-<p>🏛️ <strong>Loire Castles</strong> — Chenonceau ("castle of the women") is built ON A BRIDGE over the Cher river. 5 arches, 60 meters of gallery over the water. Kids love it because it looks like a fairy tale castle.</p>
+<p>🏛️ <strong>Loire Castles</strong> — Chenonceau ("castle of the women") is built ON A BRIDGE over the Cher river. 5 arches, 60 meters of gallery over the water. Kids love it because it looks like a fairy tale castle. <a href="https://maps.google.com/?q=47.6160,1.5170(Chateau+de+Chambord)" target="_blank" rel="noopener noreferrer">📍 Maps</a></p>
 <p>🏛️ <strong>Hortillonnages d'Amiens</strong> — 300 hectares of floating gardens in the city center, cultivated since the Middle Ages. Visited by boat.</p>
 <p>📍 <a href="https://maps.google.com/?q=49.9000,2.3150(Hortillonnages+Amiens)" target="_blank" rel="noopener noreferrer">Hortillonnages d'Amiens</a></p>
 <p>🏛️ <strong>Camargue</strong> (Plan B, see <a href="#b9">Return</a>) — unique landscape: pink salt flats, white horses, black bulls, flamingos. Architecture: the "cabanes de gardians" (white huts with straw roofs shaped like apses).</p>
@@ -3761,7 +3845,7 @@
 </ul>
 <h3 id="musica-arte-francia">🎵 Music & Art</h3>
 <ul>
-<li><strong>Claude Monet</strong> — Father of Impressionism. His water lilies in Giverny are world-famous. <a href="https://en.wikipedia.org/wiki/Claude_Monet" target="_blank" rel="noopener noreferrer">📚</a></li>
+<li><strong>Claude Monet</strong> — Father of Impressionism. His water lilies in Giverny are world-famous. <a href="https://en.wikipedia.org/wiki/Claude_Monet" target="_blank" rel="noopener noreferrer">📚</a> <a href="https://maps.google.com/?q=49.0750,1.5330(Giverny+Monet)" target="_blank" rel="noopener noreferrer">📍 Maps</a></li>
 <li><strong>Breton music</strong> — Celtic roots! Bagpipes (biniou), bombarde, fest-noz dances. Unique in France. <a href="https://en.wikipedia.org/wiki/Music_of_Brittany" target="_blank" rel="noopener noreferrer">📚</a></li>
 <li><strong>Asterix</strong> — Comic born in 1959. The indomitable Gauls! Set in Brittany. <a href="https://en.wikipedia.org/wiki/Asterix" target="_blank" rel="noopener noreferrer">📚</a></li>
 <li><strong>Jules Verne</strong> — Born in Nantes. Father of science fiction. 20,000 Leagues, Around the World in 80 Days. <a href="https://en.wikipedia.org/wiki/Jules_Verne" target="_blank" rel="noopener noreferrer">📚</a></li>
@@ -3797,6 +3881,12 @@
 </li>
 <li>
 <p>"What is a croissant?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>A crescent-shaped pastry! Actually the Austrians invented it, but the French made it perfect.</strong></span></p>
+<p>"How many cheeses does France have?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>Over 1,200! 🧀 De Gaulle said: "How can you govern a country with 246 cheeses?"</strong></span></p>
+<p>"How much does the Eiffel Tower weigh?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>10,100 tons! 🗼 But the air inside it weighs more than the iron structure.</strong></span></p>
+<p>"Why do the French eat snails?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>They've been eating them since the Romans! 🐌 With garlic butter they're delicious (apparently).</strong></span></p>
+<p>"How many baguettes do the French eat per day?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>30 million! 🥖 That's about 10 billion per year.</strong></span></p>
+<p>"What is the Tour de France?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>The most famous cycling race in the world! 🚴 It lasts 3 weeks and covers about 3,500 km.</strong></span></p>
+<p>"Why is the rooster the symbol of France?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>Because in Latin "gallus" means both "rooster" and "Gaul" (ancient France)! 🐓</strong></span></p>
 <p>What is the Eiffel Tower made of? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Iron! 🛠️ It has 18,038 iron pieces and 2.5 million rivets.</span></p>
 <p>What is a 'crêpe'? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> A very thin pancake! 🥞 French crêpes can be sweet (Nutella, sugar) or savory (ham, cheese).</span></p>
 <p>How many types of cheese does France produce? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Over 1,200! 🧀 There's a different cheese for every day of the year (and then some).</span></p>
@@ -3814,6 +3904,9 @@
 <p>🏛️ <strong>Baguette tradition</strong> — eat immediately, doesn’t last more than 6 hours</p>
 <p>🏛️ <strong>Confiture</strong> (artisan jam) — at markets</p>
 <p>🏛️ <strong>Savon de Marseille</strong> — traditional soap (in Camargue/Provence)</p>
+<p><strong>French Gothic</strong> (<a href="https://en.wikipedia.org/wiki/Gothic_architecture" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — Notre-Dame, Chartres, Reims: enormous stained-glass windows, pointed arches, rose windows. Chartres Cathedral has stained glass from 1200 still intact! <a href="https://maps.google.com/?q=48.4478,1.4877(Cathedrale+Chartres)" target="_blank" rel="noopener noreferrer">📍 Maps</a></p>
+<p><strong>Gorges du Verdon</strong> (<a href="https://en.wikipedia.org/wiki/Verdon_Gorge" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — Europe's "Grand Canyon": 700m deep, turquoise water. <a href="https://maps.google.com/?q=43.7500,6.3200(Gorges+du+Verdon)" target="_blank" rel="noopener noreferrer">📍 Maps</a></p>
+<p><strong>Camargue</strong> (<a href="https://en.wikipedia.org/wiki/Camargue" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — Rhône delta: wild white horses, black bulls, pink flamingos! Unique landscape of marshes and salt flats. <a href="https://maps.google.com/?q=43.5000,4.5000(Camargue)" target="_blank" rel="noopener noreferrer">📍 Maps</a></p>
 <hr>
 <h2 id="spagna-g43-g49">🇪🇸 Spain (G43-G49)</h2>
 <div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g43')">Itinerary G43-G49</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-spagnola-g43-g49')">Food</a></div>
@@ -3831,6 +3924,7 @@
 <td data-label="Period">15000 BC</td>
 <td data-label="Event">Altamira cave paintings (Cantabria!)</td>
 <td data-label="Where to see it">Near the Picos de Europa</td>
+<p><strong>Costa Verde (Asturias/Cantabria)</strong> (<a href="https://en.wikipedia.org/wiki/Asturias" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — The "Green Spain": cliffs, meadows, forests. Atlantic climate, very different from Mediterranean Spain. <a href="https://maps.google.com/?q=43.3600,-5.8500(Costa+Verde+Asturias)" target="_blank" rel="noopener noreferrer">📍 Maps</a></p>
 </tr>
 <tr>
 <td data-label="Period">711-1492</td>
@@ -3892,7 +3986,7 @@
 <p>🏛️ <strong>Basque Caseríos</strong> — traditional farms: large stone houses with gabled roofs, wooden beams. Each family had their caserío for generations.</p>
 <p>🏛️ <strong>San Juan de Gaztelugatxe</strong> — the islet connected to the mainland by a stone bridge with 241 steps. Location of "Dragonstone" in Game of Thrones!</p>
 <p>📍 <a href="https://maps.google.com/?q=43.4450,-2.7810(San+Juan+de+Gaztelugatxe)" target="_blank" rel="noopener noreferrer">San Juan de Gaztelugatxe</a></p>
-<p>🏛️ <strong>Picos de Europa</strong> — the most spectacular limestone mountains in Spain. Fuente Dé: cable car that climbs 753 meters in 4 minutes!</p>
+<p>🏛️ <strong>Picos de Europa</strong> — the most spectacular limestone mountains in Spain. Fuente Dé: cable car that climbs 753 meters in 4 minutes! <a href="https://maps.google.com/?q=43.1700,-4.8500(Picos+de+Europa)" target="_blank" rel="noopener noreferrer">📍 Maps</a></p>
 <h3 id="tradizioni-vive-in-estate_10">🎉 Living traditions in summer</h3>
 <p>🏛️ <strong>Pintxos</strong> — the "Basque tapas". Every bar has a counter full of snacks on a skewer. You go from one bar to another (txikiteo), having a pintxo + a glass of txakoli (sparkling white wine). San Sebastián has the highest concentration of Michelin stars per square meter in the world!</p>
 <p>🏛️ <strong>Fiestas</strong> — in summer every pueblo has its patron saint festival with bulls, music, fireworks. In July-August there is almost one every day!</p>
@@ -4020,6 +4114,12 @@
 </li>
 <li>
 <p>"What animal is the symbol of Bilbao?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>A giant dog made of flowers! It's called Puppy and is 12 meters tall, in front of the Guggenheim museum.</strong></span></p>
+<p>"Why do Spaniards eat dinner at 10 PM?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>Because Franco changed the time zone! ⏰ Spain should be on UK time but uses Central European time, so sunset is very late.</strong></span></p>
+<p>"What is La Tomatina?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>A tomato fight festival! 🍅 Every August in Buñol, 20,000 people throw 150 tons of tomatoes at each other.</strong></span></p>
+<p>"How many bars are there in Spain?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>Over 300,000! 🍻 That's 1 bar for every 132 people — more than any other country in Europe.</strong></span></p>
+<p>"Why is the Sagrada Familia still not finished?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>Because Gaudí designed it to take 150 years! ⛪ It started in 1882 and should be done by 2026.</strong></span></p>
+<p>"What is the siesta?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>The afternoon nap! 😴 Shops close from 2 to 5 PM and everyone rests.</strong></span></p>
+<p>"What is paella?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>A rice dish cooked in a big flat pan! 🥘 It comes from Valencia and is Spain's most famous dish.</strong></span></p>
 <p>What is a solar eclipse? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> When the Moon passes between Earth and the Sun! 🌑 For a few minutes, day becomes night.</span></p>
 <p>What is 'paella'? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> A rice dish cooked in a big flat pan! 🥘 The original from Valencia has rabbit, chicken, and beans.</span></p>
 <p>What is flamenco? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> A passionate Spanish dance with guitar and clapping! 💃 It comes from Andalusia in southern Spain.</span></p>
@@ -4162,6 +4262,7 @@
 <ul>
 <li><strong>Cinque Terre NP</strong> — Five colourful villages on terraced cliffs. UNESCO heritage. <a href="https://en.wikipedia.org/wiki/Cinque_Terre" target="_blank" rel="noopener noreferrer">📚</a> <a href="https://maps.google.com/?q=44.1,9.7(Cinque+Terre)" target="_blank" rel="noopener noreferrer">📍 Maps</a></li>
 <li><strong>Dolphins</strong> — Bottlenose dolphins common in the Ligurian Sea. Whale watching from Genoa. <a href="https://en.wikipedia.org/wiki/Pelagos_sanctuary" target="_blank" rel="noopener noreferrer">📚</a></li>
+<p><strong>Portofino</strong> (<a href="https://en.wikipedia.org/wiki/Portofino" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — Fishing village turned jet-set destination. Marine Protected Area with posidonia meadows. <a href="https://maps.google.com/?q=44.3030,9.2100(Portofino)" target="_blank" rel="noopener noreferrer">📍 Maps</a></p>
 <li><strong>Mediterranean maquis</strong> — Aromatic scrubland: rosemary, lavender, myrtle. Smells incredible! <a href="https://en.wikipedia.org/wiki/Maquis_shrubland" target="_blank" rel="noopener noreferrer">📚</a></li>
 </ul>
 <h3 id="musica-arte-italia">🎵 Music & Art</h3>
@@ -4198,6 +4299,13 @@
 </li>
 <li>
 <p>"Who invented pizza?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>A pizza maker in Naples in 1889! He made it with tomato, mozzarella and basil for Queen Margherita \u2014 the colors of the Italian flag!</strong></span></p>
+<p>"How many types of pasta exist in Italy?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>More than 600! 🍝 Every region has its own special shape. And woe to those who break spaghetti!</strong></span></p>
+<p>"Why is the Tower of Pisa leaning?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>Because the ground is too soft! 🏗️ It started leaning during construction and took 200 years to finish.</strong></span></p>
+<p>"How much gelato do Italians eat per year?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>About 8 kg per person! 🍦 Italy has more than 39,000 gelaterias.</strong></span></p>
+<p>"What is the Palio di Siena?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>A crazy horse race in the city square! 🐎 It lasts only 90 seconds but they prepare for months.</strong></span></p>
+<p>"Why is Venice sinking?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>Because it's built on 118 islands on wooden poles! 🏘️ And the sea level is rising.</strong></span></p>
+<p>"How many active volcanoes are there in Italy?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>Three main ones: Etna, Stromboli and Vesuvius! 🌋 Etna erupts almost every year.</strong></span></p>
+<p>"What is the Venice Carnival?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';">👀</button><span class="quiz-answer" style="display:none;"> → <strong>A festival where everyone wears elaborate masks! 🎭 It lasts 2 weeks and started in the year 1162.</strong></span></p>
 <p>How many regions does Italy have? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> 20! 🇮🇹 Each has its own cuisine, dialect, and traditions.</span></p>
 <p>What is the Colosseum? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> An ancient Roman arena! 🏟️ It could hold 50,000 spectators watching gladiator fights.</span></p>
 <p>How many shapes of pasta exist in Italy? <button class="quiz-reveal-btn">?</button><span class="quiz-answer" style="display:none;"> Over 350! 🍝 Each region has its own special shapes and sauces.</span></p>
@@ -4216,6 +4324,7 @@
 <p>🏛️ <strong>Focaccia di Recco</strong> — eat it immediately!</p>
 <p>🏛️ <strong>Dried trofie</strong> — to make trofie with pesto at home</p>
 <p>🏛️ <strong>Ligurian EVO oil</strong> — delicate, perfect for pesto</p>
+<p><strong>Cinque Terre</strong> (<a href="https://en.wikipedia.org/wiki/Cinque_Terre" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — Five colourful villages clinging to the Ligurian cliff. UNESCO heritage. Trails through vineyards overlooking the sea. <a href="https://maps.google.com/?q=44.1280,9.7100(Cinque+Terre)" target="_blank" rel="noopener noreferrer">📍 Maps</a></p>
 <hr>
 <h2 id="libri-film">📚 Culture — Books, Films and Podcasts</h2>
 <h3 id="prima-della-partenza-da-leggerevedere-a-casa">📚 Before departure (to read/watch at home)</h3>
@@ -7739,13 +7848,12 @@
 <h1 style="text-align:center; margin-top:16px;">🎒 Backpack — What to Bring</h1>
 
 <div class="zaino-progress-bar" id="zaino-progress">
-    <div class="zp-text">🎒 Preparation: <strong id="zp-count">0</strong> / <strong id="zp-total">190</strong> items packed</div>
+    <div class="zp-text">🎒 Preparation: <strong id="zp-count">0</strong> / <strong id="zp-total">191</strong> items packed</div>
     <div class="zp-sub" id="zp-percent">0% completed</div>
     <div class="zp-bar"><div class="zp-fill" id="zp-fill" style="width:0%"></div></div>
 </div>
 <div class="cross-link-bar">📋 <a href="javascript:void(0)" onclick="switchTab('piano')">Plan & Budget</a> · 🥾 <a href="javascript:void(0)" onclick="switchTab('attivita')">Activities</a> · 🍝 <a href="javascript:void(0)" onclick="switchTab('cibo')">Food</a> · 📍 <a href="javascript:void(0)" onclick="switchTab('posizione')">Live Position</a> · 📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerary</a></div>
 
-<h1 id="zaino" style="text-align:center;">🎒 What to Bring — Motorhome Equipment List</h1>
 <h3 id="z-camper">🚐 Motorhome &amp; Tools</h3>
 <ul>
 <li class="task-item"><input type="checkbox" data-idx="copia-chiavi"> Spare keys</li>
@@ -7801,6 +7909,8 @@
 <li class="task-item"><input type="checkbox" data-idx="legumi-in-scatola"> Canned legumes</li>
 <li class="task-item"><input type="checkbox" data-idx="vino"> Wine</li>
 <li class="task-item"><input type="checkbox" data-idx="birra"> Beer</li>
+<li class="task-item"><input type="checkbox" data-idx="borsa-termica"> Cooler bag</li>
+<li class="task-item"><input type="checkbox" data-idx="ghiaccioli-freezer"> Freezer popsicles</li>
 </ul>
 <h3 id="z-vestiario">👕 Clothing</h3>
 <ul>
@@ -8610,9 +8720,9 @@
 <!-- ─── Home Variants Templates ─── -->
 <div id="hv-templates" style="display:none;"></div>
 <script>
-// Load home-variants.html templates into the page
+// Load home-variants_en.html templates into the page
 (function(){
-  fetch('./home-variants.html').then(function(r){return r.text();}).then(function(html){
+  fetch('./home-variants_en.html').then(function(r){return r.text();}).then(function(html){
     var div = document.getElementById('hv-templates');
     if(div) div.innerHTML = html;
     // Move templates to document body for proper <template> access
