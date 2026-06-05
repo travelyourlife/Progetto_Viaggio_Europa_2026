@@ -299,6 +299,37 @@ function checkOwnerStatus() {
         });
       }
 
+      // ─── Non-owner: auto-submit pending request on login (v1.93 fix) ───
+      if (user && !isOwner && typeof firebase !== 'undefined' && firebase.database) {
+        (function() {
+          var _uid = user.uid;
+          var _approvedRef = firebase.database().ref('trips/' + FAMILY_ID + '/approvedUsers/' + _uid);
+          var _pendingRef = firebase.database().ref('trips/' + FAMILY_ID + '/pendingUsers/' + _uid);
+          var _bannedRef = firebase.database().ref('trips/' + FAMILY_ID + '/bannedUsers/' + _uid);
+          // Only submit if not banned, not approved, and not already pending
+          _bannedRef.once('value', function(banSnap) {
+            if (banSnap.exists()) return; // banned — do nothing
+            _approvedRef.once('value', function(appSnap) {
+              if (appSnap.exists()) return; // already approved
+              _pendingRef.once('value', function(pendSnap) {
+                if (pendSnap.exists()) return; // already pending
+                // Auto-submit pending request
+                _pendingRef.set({
+                  email: user.email || '',
+                  displayName: user.displayName || 'Utente',
+                  photoURL: user.photoURL || '',
+                  requestedAt: firebase.database.ServerValue.TIMESTAMP
+                }).then(function() {
+                  console.info('[Auth] Auto-submitted pending access request for ' + user.email);
+                }).catch(function(e) {
+                  console.warn('[Auth] Could not submit pending request:', e.message);
+                });
+              });
+            });
+          });
+        })();
+      }
+
       // ─── Owner: check for pending user requests (badge + toast + push) ───
       if (isOwner && typeof firebase !== 'undefined' && firebase.database) {
         // Realtime listener: notify owner whenever a new pending request arrives
@@ -644,6 +675,9 @@ window.openMapFullscreen = function openMapFullscreen(mapInstance, title) {
     mapInstance.eachLayer(function(layer) {
         if (layer instanceof L.TileLayer) return; // skip tile layer (already added)
         try {
+            // Skip UnifiedMap POI markers — they will be re-created by initForFullscreen with proper filter controls
+            if (layer instanceof L.Marker && layer.options && layer.options.icon && layer.options.icon.options && 
+                (layer.options.icon.options.className === 'umap-poi-icon' || layer.options.icon.options.className === 'umap-cluster-icon' || layer.options.icon.options.className === 'umap-live-route-marker')) return;
             var cloned = null;
             if (layer instanceof L.CircleMarker && !(layer instanceof L.Circle)) {
                 cloned = L.circleMarker(layer.getLatLng(), layer.options);
@@ -8420,21 +8454,10 @@ if ('serviceWorker' in navigator) {
     BANNED_REF.on('value', _bannedCb);
   }
 
-  // Track user profile on login — only if owner or approved (no ghost users)
+  // Track user profile on login — ALL authenticated users (v1.93: removed gate so admin panel sees everyone)
   function trackUserProfile(user) {
     if (!user) return;
-    // Gate: only write to chat/users if owner or approved
-    var isOwnerUser = (typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.indexOf(user.uid) !== -1);
-    if (isOwnerUser) {
-      doTrackProfile(user);
-    } else {
-      firebase.database().ref('trips/' + FAMILY_ID + '/approvedUsers/' + user.uid).once('value').then(function(snap) {
-        if (snap.exists()) {
-          doTrackProfile(user);
-        }
-        // If not approved, do NOT write to chat/users — user stays invisible until approved
-      });
-    }
+    doTrackProfile(user);
   }
 
   function doTrackProfile(user) {
