@@ -505,7 +505,7 @@ const places = itinerario.map(function(t) {
 // ═══════════════════════════════════════════════════════════════
 
 // ─── Global fullscreen map helper ───
-function openMapFullscreen(mapInstance, title) {
+window.openMapFullscreen = function openMapFullscreen(mapInstance, title) {
     console.info('[Map] openMapFullscreen called, mapInstance:', !!mapInstance, 'Leaflet:', typeof L);
     // If no map instance provided, create a standalone route map fullscreen
     if (!mapInstance) {
@@ -709,7 +709,7 @@ function openMapFullscreen(mapInstance, title) {
         document.body.style.overflow = '';
         window._mapFsOpen = false;
         // Refresh original map
-        setTimeout(function() { mapInstance.invalidateSize(); }, 100);
+        if (mapInstance) setTimeout(function() { mapInstance.invalidateSize(); }, 100);
         if (history.state && history.state.mapFsOpen) history.back();
     }
     window._mapFsOpen = true;
@@ -719,9 +719,7 @@ function openMapFullscreen(mapInstance, title) {
     // Escape key
     function onEsc(e) { if (e.key === 'Escape') { closeFs(); document.removeEventListener('keydown', onEsc); } }
     document.addEventListener('keydown', onEsc);
-}
-window.openMapFullscreen = openMapFullscreen;
-
+};
 function initRouteMap() {
     var toggle = document.getElementById('routeMapToggle');
     var container = document.getElementById('routeMapContainer');
@@ -919,7 +917,7 @@ function initRouteMap() {
         mapDiv.appendChild(fsBtn);
         fsBtn.addEventListener('click', function(e) {
             e.stopPropagation();
-            openMapFullscreen(routeMapInstance, isEN ? 'Route Map' : 'Mappa Percorso');
+            window.openMapFullscreen(routeMapInstance, isEN ? 'Route Map' : 'Mappa Percorso');
         });
 
         // ─── POI Layer on Route Map ───
@@ -3021,7 +3019,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (posFullscreenBtn) {
             posFullscreenBtn.addEventListener('click', function() {
                 initMap();
-                openMapFullscreen(map, isEN ? 'Live Map' : 'Mappa Live');
+                window.openMapFullscreen(map, isEN ? 'Live Map' : 'Mappa Live');
             });
         }
 

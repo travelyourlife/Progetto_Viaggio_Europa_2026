@@ -396,27 +396,7 @@
     window._umapUpdateRouteLive = updateRouteLiveMarker;
   }
 
-  // ─── Add "go to live map" button on route map ───
-  function addGoToLiveButton() {
-    var routeMapContainer = document.getElementById('routeMapContainer');
-    if (!routeMapContainer) return;
-
-    var btn = document.createElement('button');
-    btn.className = 'umap-goto-live-btn';
-    btn.innerHTML = '🚐 Vedi mappa live →';
-    btn.addEventListener('click', function(e) {
-      e.stopPropagation();
-      // Switch to tab-posizione
-      if (typeof switchTab === 'function') {
-        switchTab('posizione');
-      } else {
-        // Fallback: click the tab button
-        var tabBtn = document.querySelector('[data-tab="posizione"]');
-        if (tabBtn) tabBtn.click();
-      }
-    });
-    routeMapContainer.appendChild(btn);
-  }
+  // (Removed: addGoToLiveButton — no longer needed)
 
   // ─── Main initialization ───
   function init() {
@@ -436,8 +416,6 @@
       // 4. Add live marker to route map
       setTimeout(addLiveMarkerToRouteMap, 2000);
 
-      // 5. Add "go to live map" button
-      setTimeout(addGoToLiveButton, 1000);
 
       console.info('[UnifiedMap] Initialization complete. POI categories:', Object.keys(poiLayerGroups).length);
     });
@@ -482,20 +460,18 @@
   }
 
   // ─── Start when DOM is ready ───
-  // Only auto-init the route map features (live marker + go-to-live button)
+  // Only auto-init the route map features (live marker on route map)
   // The pos-map features (POI, route overlay, filter panel) are initialized
   // via initWithMap() called from showPosizioneContent() in app.js
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function() {
       setTimeout(function() {
         addLiveMarkerToRouteMap();
-        addGoToLiveButton();
       }, 2000);
     });
   } else {
     setTimeout(function() {
       addLiveMarkerToRouteMap();
-      addGoToLiveButton();
     }, 2000);
   }
 

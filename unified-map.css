@@ -243,32 +243,6 @@
   100% { transform: scale(2); opacity: 0; }
 }
 
-/* ═══ "Go to Live Map" button on Route Map ═══ */
-.umap-goto-live-btn {
-  display: block;
-  width: calc(100% - 16px);
-  margin: 8px auto;
-  padding: 10px 16px;
-  background: linear-gradient(135deg, #3182ce, #2c5282);
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  text-align: center;
-  box-shadow: 0 2px 8px rgba(49, 130, 206, 0.3);
-  transition: all 0.2s ease;
-}
-
-.umap-goto-live-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(49, 130, 206, 0.4);
-}
-
-.umap-goto-live-btn:active {
-  transform: translateY(0);
-}
 
 /* ═══ Mini Map Preview (Homepage) ═══ */
 .umap-mini-preview {
@@ -451,9 +425,6 @@
     border-color: var(--border, #4a5568);
   }
 
-  .umap-goto-live-btn {
-    background: linear-gradient(135deg, #4299e1, #3182ce);
-  }
 }
 
 [data-theme="dark"] .umap-filter-panel {
