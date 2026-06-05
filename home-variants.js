@@ -246,6 +246,21 @@
       }
     });
 
+    // ─── Toggle pre-trip hero vs during-trip hero ───
+    var hvPage = container.querySelector('.hv-page');
+    if (hvPage) {
+      if (tripData.tripPreMode) {
+        hvPage.classList.add('hv-pretrip-visible');
+      } else {
+        hvPage.classList.remove('hv-pretrip-visible');
+      }
+    }
+    // Belt-and-suspenders: also set inline display to guarantee visibility toggle
+    var preTripHero = container.querySelector('.hv-pretrip-hero');
+    var duringHero = container.querySelector('.hv-during-hero');
+    if (preTripHero) preTripHero.style.display = tripData.tripPreMode ? 'block' : 'none';
+    if (duringHero) duringHero.style.display = tripData.tripPreMode ? 'none' : 'block';
+
     // Update status badges dynamically based on trip state
     var badges = container.querySelectorAll('.hv-status-badge');
     badges.forEach(function(badge) {
@@ -275,6 +290,12 @@
         programHeader.textContent = '📅 Anteprima Giorno 1';
       }
       // Feed section label is already set in HTML as 'Diario di bordo'
+
+      // Safety: override 'Giorno X/54' in during-trip hero (in case CSS hide fails)
+      var countryLines = container.querySelectorAll('.hv-hero-country, .hv-bento-country');
+      countryLines.forEach(function(el) {
+        el.innerHTML = '<span data-hv="country">' + (tripData.country || '--') + '</span> <span data-hv="flag">' + (tripData.flag || '') + '</span> · Prima tappa';
+      });
     }
 
     // Update mini-map for pre-trip: show van at home, no LIVE badge
@@ -433,8 +454,12 @@
         data.routeHighlights = 'Prima tappa: dove tutto è iniziato!';
       }
 
-      data.dayNum = data.daysUntil; // countdown number
-      data.dayLabel = 'T-' + data.daysUntil; // countdown label
+      data.dayNum = '0'; // pre-trip: no trip day yet
+      data.dayLabel = 'T-' + data.daysUntil; // countdown label for day badge
+
+      // Pre-trip hero countdown text
+      var _en2 = (typeof isEN !== 'undefined' && isEN);
+      data.countdownText = data.daysUntil === 1 ? (_en2 ? 'day to go' : 'giorno alla partenza') : (_en2 ? 'days to go' : 'giorni alla partenza');
 
       // Pre-trip program
       data.todayProgram = '<div class="hv-program-item"><span class="hv-program-icon">🚐</span><div class="hv-program-text"><div class="hv-program-title">Selvazzano → Leoben</div><div class="hv-program-sub">~350 km · 3h 30min stimati</div></div></div>';

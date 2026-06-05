@@ -9291,7 +9291,11 @@ if ('serviceWorker' in navigator) {
 
         // Text
         if (entry.text) {
-          html += '    <p class="diario-text">' + escapeHtml(entry.text) + '</p>';
+          html += '    <p class="diario-text" data-entry-key="' + key + '">' + escapeHtml(entry.text) + '</p>';
+          // Translate button for non-owner users on EN version
+          if (!isOwner && isEN) {
+            html += '    <button class="diario-translate-btn" data-key="' + key + '" data-text="' + escapeHtml(entry.text).replace(/"/g, '&quot;') + '" title="Translate to English">\uD83C\uDF10</button>';
+          }
         }
 
         // Highlight
@@ -9446,6 +9450,43 @@ if ('serviceWorker' in navigator) {
         if (!isOwner) return;
         var key = btn.getAttribute('data-key');
         showEditModal(key);
+      });
+    });
+
+    // Translate button (non-owner EN users)
+    timelineEl.querySelectorAll('.diario-translate-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var key = btn.getAttribute('data-key');
+        var textEl = timelineEl.querySelector('.diario-text[data-entry-key="' + key + '"]');
+        if (!textEl) return;
+        // If already translated, toggle back
+        if (btn.dataset.translated === '1') {
+          textEl.textContent = btn.dataset.original;
+          btn.dataset.translated = '0';
+          btn.textContent = '\uD83C\uDF10';
+          return;
+        }
+        var originalText = textEl.textContent;
+        btn.dataset.original = originalText;
+        btn.disabled = true;
+        btn.textContent = '\u23F3';
+        // Call translatePost Cloud Function
+        var functions = firebase.app().functions('europe-west1');
+        var translateFn = functions.httpsCallable('translatePost');
+        translateFn({ text: originalText, from: 'it', to: 'en' }).then(function(result) {
+          if (result.data && result.data.translated) {
+            textEl.textContent = result.data.translated;
+            btn.dataset.translated = '1';
+            btn.textContent = '\uD83C\uDDEE\uD83C\uDDF9';
+            btn.title = 'Show original';
+          }
+        }).catch(function(err) {
+          console.warn('[Translate]', err);
+          btn.textContent = '\uD83C\uDF10';
+          if (window.showToast) showToast('Translation unavailable', 'error');
+        }).finally(function() {
+          btn.disabled = false;
+        });
       });
     });
 

@@ -967,8 +967,7 @@ exports.dailyCuriosity = onSchedule(
   },
   async (event) => {
     const db = getDatabase();
-    const FAMILY_ID = "main";
-
+    // Uses global FAMILY_ID = "viaggio-europa-2026" (line 42)
     // Check if curiosity notifications are enabled
     const schedSnap = await db.ref(`trips/${FAMILY_ID}/notifSchedule/curiosityEnabled`).once("value");
     if (schedSnap.val() === false) {
@@ -1040,13 +1039,9 @@ exports.translatePost = onCall(
     secrets: [openaiKey],
   },
   async (request) => {
-    // Only authenticated owners can translate
+    // Any authenticated user can translate (owners + approved followers)
     if (!request.auth) {
       throw new HttpsError("unauthenticated", "Must be logged in");
-    }
-    const ownerUids = ["RxlVlsfeaEeSwFUVYbKQujEsbBo1", "Mh8BOeFPnFe7WObcsUoP6wyRgPw1"];
-    if (!ownerUids.includes(request.auth.uid)) {
-      throw new HttpsError("permission-denied", "Only owners can translate");
     }
 
     const { text, from, to } = request.data;
