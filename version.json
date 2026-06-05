@@ -1,1 +1,1 @@
-{"version": "1.91", "date": "2026-06-05", "notes": "Fix openMapFullscreen global scope. Remove go-to-live button. Fix all map click handlers."}
+{"version": "1.92", "date": "2026-06-05", "notes": "Fullscreen map now shows UnifiedMap POI layers, filter panel, clustering, and Google Maps links."}

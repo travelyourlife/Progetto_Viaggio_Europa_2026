@@ -587,34 +587,15 @@ window.openMapFullscreen = function openMapFullscreen(mapInstance, title) {
                     marker.bindPopup('<strong>' + city + '</strong>');
                 }
             });
-            // Add POI markers (same as Itinerario)
-            if (typeof POI_ATTIVITA !== 'undefined' && POI_ATTIVITA.length) {
-                var catColors = { park: '#e53e3e', market: '#dd6b20', nature: '#38a169', museum: '#6b46c1', viewpoint: '#3182ce', festival: '#d53f8c', spa: '#e53e3e' };
-                var catIcons = { park: '\uD83C\uDFA2', market: '\uD83D\uDED2', nature: '\uD83C\uDF32', museum: '\uD83C\uDFDB\uFE0F', viewpoint: '\uD83C\uDF05', festival: '\uD83C\uDF89', spa: '\u2668\uFE0F' };
-                POI_ATTIVITA.forEach(function(poi) {
-                    var name = typeof isEN !== 'undefined' && isEN ? poi.nameEn : poi.name;
-                    var desc = typeof isEN !== 'undefined' && isEN ? poi.descEn : poi.desc;
-                    var price = typeof isEN !== 'undefined' && isEN ? poi.priceEn : poi.price;
-                    var color = catColors[poi.cat];
-                    var poiMarker = L.circleMarker([poi.lat, poi.lng], {
-                        radius: 8,
-                        fillColor: color,
-                        color: '#fff',
-                        weight: 1.5,
-                        fillOpacity: 0.85
-                    }).addTo(fsMap);
-                    var poiPopup = '<div style="max-width:220px">' +
-                        '<strong>' + (catIcons[poi.cat] || '') + ' ' + name + '</strong> ' + poi.country + '<br>' +
-                        '<small>' + desc.substring(0, 120) + (desc.length > 120 ? '...' : '') + '</small><br>' +
-                        '<small>\uD83D\uDCB0 ' + price + '</small><br>' +
-                        '<a href="' + poi.mapsUrl + '" target="_blank" rel="noopener">\uD83D\uDCCD Maps</a>' +
-                        (poi.url ? ' \u00B7 <a href="' + poi.url + '" target="_blank" rel="noopener">\uD83C\uDF10</a>' : '') +
-                    '</div>';
-                    poiMarker.bindPopup(poiPopup);
-                });
-            }
             var bounds = L.latLngBounds(routeCoords);
             setTimeout(function() { fsMap.invalidateSize(); fsMap.fitBounds(bounds, { padding: [30, 30], animate: false }); }, 50);
+            // v1.92: Initialize UnifiedMap POI/filters/clustering on fullscreen map
+            setTimeout(function() {
+                if (window.UnifiedMap && typeof window.UnifiedMap.initForFullscreen === 'function') {
+                    var fsBody = overlay.querySelector('.map-fs-body');
+                    window.UnifiedMap.initForFullscreen(fsMap, fsBody);
+                }
+            }, 200);
         }
         function closeFs2() {
             fsMap.remove(); overlay.remove(); document.body.style.overflow = '';
@@ -702,6 +683,13 @@ window.openMapFullscreen = function openMapFullscreen(mapInstance, title) {
             fsMap.setView(allLatLngs[0], 10, { animate: false });
         }
     }, 50);
+    // v1.92: Initialize UnifiedMap POI/filters/clustering on cloned fullscreen map
+    setTimeout(function() {
+        if (window.UnifiedMap && typeof window.UnifiedMap.initForFullscreen === 'function') {
+            var fsBody = overlay.querySelector('.map-fs-body');
+            window.UnifiedMap.initForFullscreen(fsMap, fsBody);
+        }
+    }, 200);
 
     function closeFs() {
         fsMap.remove();
@@ -4817,7 +4805,7 @@ if ('serviceWorker' in navigator) {
 
     // Uses global TRIP_START, TRIP_END, TRIP_DAYS from data.js
     var TOTAL_KM = 12000;
-    var COUNTRIES = ['Italia','Germania','Danimarca','Svezia','Finlandia','Norvegia','Francia','Spagna','Andorra','Svizzera','Austria','Liechtenstein','Lussemburgo'];
+    var COUNTRIES = ['Italia','Austria','Cechia','Polonia','Lituania','Lettonia','Estonia','Finlandia','Norvegia','Danimarca','Germania','Francia','Spagna'];
 
     function updateStats() {
         var now = new Date();

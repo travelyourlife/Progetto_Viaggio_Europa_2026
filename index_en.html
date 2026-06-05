@@ -53,7 +53,7 @@
     <link rel="apple-touch-icon" sizes="152x152" href="./icon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="./icon.png">
     <link rel="apple-touch-icon" sizes="167x167" href="./icon.png">
-    <title>Quo Vadis — V1.91</title>
+    <title>Quo Vadis — V1.92</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="home-variants.css">
@@ -75,7 +75,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = '1.91';
+  var EXPECTED_VERSION = '1.92';
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
   var r = false;
@@ -221,7 +221,7 @@
     <a class="menu-item" data-tab="luoghi"><span class="menu-icon">🧭</span><span class="menu-text">Places</span></a>
     <div class="menu-divider"></div>
     <a class="menu-item" data-tab="riepilogo"><span class="menu-icon">📌</span><span class="menu-text">Summary</span></a>
-    <a class="menu-item" data-tab="piano"><span class="menu-icon">🗺️</span><span class="menu-text">Plan</span></a>
+    <a class="menu-item" data-tab="piano"><span class="menu-icon">📋</span><span class="menu-text">Plan</span></a>
     <a class="menu-item" data-tab="zaino"><span class="menu-icon">🎒</span><span class="menu-text">Packing</span></a>
     <a class="menu-item" data-tab="chat"><span class="menu-icon">💬</span><span class="menu-text">Chat</span></a>
     <div class="menu-divider"></div>
@@ -256,7 +256,7 @@
         <span class="altro-item-text"><span class="altro-item-label">Culture</span><span class="altro-item-sub">History &amp; traditions</span></span>
     </button>
     <button class="altro-item" data-tab="attivita">
-        <span class="altro-item-icon">🦶</span>
+        <span class="altro-item-icon">🥾</span>
         <span class="altro-item-text"><span class="altro-item-label">Activities</span><span class="altro-item-sub">Trekking &amp; sports</span></span>
     </button>
     <button class="altro-item" data-tab="luoghi">
@@ -271,7 +271,7 @@
     <hr style="border:none;border-top:1px solid var(--border-color,#e2e8f0);margin:4px 16px;">
     <div class="altro-group-label">🧰 Tools</div>
     <button class="altro-item" data-tab="piano">
-        <span class="altro-item-icon">🗺️</span>
+        <span class="altro-item-icon">📋</span>
         <span class="altro-item-text"><span class="altro-item-label">Plan</span><span class="altro-item-sub">Budget &amp; checklist</span></span>
     </button>
     <button class="altro-item" data-tab="zaino">
@@ -427,7 +427,7 @@
 <a href="#mappa">🗺️ Map</a>
 <a href="#itinerario-54-giorni">🌟 Itinerary</a>
 </div></div>
-<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerary</a> · 📍 <a href="javascript:void(0)" onclick="switchTab('posizione')">Live Position</a> · 🍝 <a href="javascript:void(0)" onclick="switchTab('cibo')">Food</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura')">Culture</a> · 🗺️ <a href="javascript:void(0)" onclick="switchTab('piano')">Plan</a></div>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerary</a> · 📍 <a href="javascript:void(0)" onclick="switchTab('posizione')">Live Position</a> · 🍝 <a href="javascript:void(0)" onclick="switchTab('cibo')">Food</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura')">Culture</a> · 📋 <a href="javascript:void(0)" onclick="switchTab('piano')">Plan</a></div>
 <h2 id="sintesi">📋 Summary — Crew and Vehicle</h2>
 <p>👨‍👩‍👧‍👦 <strong>Crew:</strong> 2 adults + 2 children (8 and 6 years old)</p>
 <p>🚐 <strong>Vehicle:</strong> self-sufficient camper van (LiFePo4 + 5 kg gas cylinder)</p>
@@ -1588,7 +1588,7 @@
 <a href="#italia-g51-g53">🇮🇹 Italy</a>
 <a href="#libri-film">📚 Books and Films</a>
 </div></div>
-<div class="cross-link-bar">🍝 <a href="javascript:void(0)" onclick="switchTab('cibo')">Food</a> · 🦶 <a href="javascript:void(0)" onclick="switchTab('attivita')">Activities</a> · 🧭 <a href="javascript:void(0)" onclick="switchTab('luoghi')">Places</a> · 📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerary</a> · 🗺️ <a href="javascript:void(0)" onclick="switchTab('piano')">Plan</a></div>
+<div class="cross-link-bar">🍝 <a href="javascript:void(0)" onclick="switchTab('cibo')">Food</a> · 🥾 <a href="javascript:void(0)" onclick="switchTab('attivita')">Activities</a> · 🧭 <a href="javascript:void(0)" onclick="switchTab('luoghi')">Places</a> · 📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerary</a> · 📋 <a href="javascript:void(0)" onclick="switchTab('piano')">Plan</a></div>
 <h2 id="storia">🏛️ Culture — In-Depth Guide</h2>
 <blockquote>
 <p>A cultural guide to read the evening before or during transfers. For each country: historical timeline, key figures, what to observe in architecture, living summer traditions, useful words with pronunciation, and quizzes/games to engage children (6-8 years old).</p>
@@ -4614,7 +4614,7 @@
 <a href="#cucina-italiana-rientro-g50-g53">🇮🇹 Italy</a>
 <a href="#gastronomia-consigli-cucina-in-furgone">👨‍🍳 Van cooking tips</a>
 </div></div>
-<div class="cross-link-bar">🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura')">Culture</a> · 🦶 <a href="javascript:void(0)" onclick="switchTab('attivita')">Activities</a> · 🧭 <a href="javascript:void(0)" onclick="switchTab('luoghi')">Places</a> · 📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerary</a> · 🗺️ <a href="javascript:void(0)" onclick="switchTab('piano')">Plan</a></div>
+<div class="cross-link-bar">🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura')">Culture</a> · 🥾 <a href="javascript:void(0)" onclick="switchTab('attivita')">Activities</a> · 🧭 <a href="javascript:void(0)" onclick="switchTab('luoghi')">Places</a> · 📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerary</a> · 📋 <a href="javascript:void(0)" onclick="switchTab('piano')">Plan</a></div>
 <h2 id="food">🍽️ Gastronomy — by Country and Area</h2>
 <blockquote>
 <p>Typical dishes, local products and practical tips for eating well while spending little in a van. Focus on foods suitable also for children and easy to find in supermarkets or local markets.</p>
@@ -5310,7 +5310,7 @@
 <a href="#drone">🛸 Drone</a>
 <a href="#inreach">📡 Garmin inReach</a>
 </div></div>
-<div class="cross-link-bar">📍 <a href="javascript:void(0)" onclick="switchTab('posizione')">Live Position</a> · 🍝 <a href="javascript:void(0)" onclick="switchTab('cibo')">Food</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura')">Culture</a> · 🧭 <a href="javascript:void(0)" onclick="switchTab('luoghi')">Places</a> · 🎯 <a href="javascript:void(0)" onclick="switchTab('zaino','z-trekking')">Trekking Gear</a></div>
+<div class="cross-link-bar">📍 <a href="javascript:void(0)" onclick="switchTab('posizione')">Live Position</a> · 🍝 <a href="javascript:void(0)" onclick="switchTab('cibo')">Food</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura')">Culture</a> · 🧭 <a href="javascript:void(0)" onclick="switchTab('luoghi')">Places</a> · 🎒 <a href="javascript:void(0)" onclick="switchTab('zaino','z-trekking')">Trekking Gear</a></div>
 <h2 id="campeggio">🚐 Camping — Rules by Country</h2>
 <table class="no-responsive">
 <thead>
@@ -6842,7 +6842,7 @@
 <a href="#secA">♨️ Thermal Baths</a>
 <a href="#poi-parchi-divertimento">🎢 Theme Parks</a>
 </div></div>
-<div class="cross-link-bar">📍 <a href="javascript:void(0)" onclick="switchTab('posizione')">Live Position</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura')">Culture</a> · 🦶 <a href="javascript:void(0)" onclick="switchTab('attivita')">Activities</a> · 📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerary</a> · 🗺️ <a href="javascript:void(0)" onclick="switchTab('piano')">Plan</a></div>
+<div class="cross-link-bar">📍 <a href="javascript:void(0)" onclick="switchTab('posizione')">Live Position</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura')">Culture</a> · 🥾 <a href="javascript:void(0)" onclick="switchTab('attivita')">Activities</a> · 📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerary</a> · 📋 <a href="javascript:void(0)" onclick="switchTab('piano')">Plan</a></div>
 
 <h2 id="musei-attrazioni">🏛️ Museums and Attractions</h2>
 <p>Museums, monuments and must-see cultural attractions along the route. Many are already mentioned in the individual itinerary days.</p>
@@ -6907,7 +6907,7 @@
 </section>
 <section id="tab-piano" class="tab-content">
 
-<h1 style="text-align:center; margin-top:16px;">🗺️ Plan — Budget, Checklist and Sources</h1>
+<h1 style="text-align:center; margin-top:16px;">📋 Plan — Budget, Checklist and Sources</h1>
 <div class="tab-index-wrapper"><div class="tab-index">
 <a href="#checklist-pre-partenza">✅ Checklist</a>
 <a href="#app">📱 App</a>
@@ -6918,7 +6918,7 @@
 <a href="#fonti">📚 Fonti</a>
 <a href="#analytics" id="analytics-tab-link" style="display:none;">📊 Analytics</a>
 </div></div>
-<div class="cross-link-bar">📍 <a href="javascript:void(0)" onclick="switchTab('posizione')">Live Position</a> · 🍝 <a href="javascript:void(0)" onclick="switchTab('cibo')">Food</a> · 🦶 <a href="javascript:void(0)" onclick="switchTab('attivita')">Activities</a> · 🎯 <a href="javascript:void(0)" onclick="switchTab('zaino')">Gear</a> · 📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerary</a></div>
+<div class="cross-link-bar">📍 <a href="javascript:void(0)" onclick="switchTab('posizione')">Live Position</a> · 🍝 <a href="javascript:void(0)" onclick="switchTab('cibo')">Food</a> · 🥾 <a href="javascript:void(0)" onclick="switchTab('attivita')">Activities</a> · 🎒 <a href="javascript:void(0)" onclick="switchTab('zaino')">Gear</a> · 📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerary</a></div>
 <h2 id="checklist-pre-partenza">✅ Checklist — Pre-departure</h2>
 <hr>
 <h3 id="prenotazioni-per-data">📅 Bookings by date</h3>
@@ -7743,7 +7743,7 @@
     <div class="zp-sub" id="zp-percent">0% completed</div>
     <div class="zp-bar"><div class="zp-fill" id="zp-fill" style="width:0%"></div></div>
 </div>
-<div class="cross-link-bar">🗺️ <a href="javascript:void(0)" onclick="switchTab('piano')">Plan & Budget</a> · 🦶 <a href="javascript:void(0)" onclick="switchTab('attivita')">Activities</a> · 🍝 <a href="javascript:void(0)" onclick="switchTab('cibo')">Food</a> · 📍 <a href="javascript:void(0)" onclick="switchTab('posizione')">Live Position</a> · 📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerary</a></div>
+<div class="cross-link-bar">📋 <a href="javascript:void(0)" onclick="switchTab('piano')">Plan & Budget</a> · 🥾 <a href="javascript:void(0)" onclick="switchTab('attivita')">Activities</a> · 🍝 <a href="javascript:void(0)" onclick="switchTab('cibo')">Food</a> · 📍 <a href="javascript:void(0)" onclick="switchTab('posizione')">Live Position</a> · 📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerary</a></div>
 
 <h1 id="zaino" style="text-align:center;">🎒 What to Bring — Motorhome Equipment List</h1>
 <h3 id="z-camper">🚐 Motorhome &amp; Tools</h3>
@@ -7915,7 +7915,7 @@
 <li class="task-item"><input type="checkbox" data-idx="soffietto"> Blower</li>
 <li class="task-item"><input type="checkbox" data-idx="adattatore-micro-sd"> Micro SD adapter</li>
 </ul>
-<h3 id="z-trekking">🦶 Trekking</h3>
+<h3 id="z-trekking">🥾 Trekking</h3>
 <ul>
 <li class="task-item"><input type="checkbox" data-idx="zaino-10l"> 10l Backpack</li>
 <li class="task-item"><input type="checkbox" data-idx="zaino-30l"> 30l Backpack</li>

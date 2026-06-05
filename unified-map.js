@@ -1,4 +1,4 @@
-/* Quo Vadis — Unified Map v1.70 */
+/* Quo Vadis — Unified Map v1.92 */
 /* Enhances the existing pos-map with route overlay, POI layers, toggle panel, and clustering */
 
 (function() {
@@ -16,7 +16,7 @@
     kids:        { label: '👶 Kids',              color: '#d53f8c', size: 22, defaultOn: false }
   };
 
-  // ─── State ───
+  // ─── State (for pos-map) ───
   var unifiedMapReady = false;
   var poiLayerGroups = {};  // cat -> L.markerClusterGroup or L.layerGroup
   var routePlanLayer = null;
@@ -31,7 +31,6 @@
       attempts++;
       var mapEl = document.getElementById('pos-map');
       if (mapEl) {
-        // Find Leaflet map instance on the element
         for (var key in mapEl) {
           if (key.indexOf('_leaflet_map') === 0 && mapEl[key]) {
             mapInstance = mapEl[key];
@@ -41,7 +40,7 @@
           }
         }
       }
-      if (attempts > 100) clearInterval(check); // give up after 10s
+      if (attempts > 100) clearInterval(check);
     }, 100);
   }
 
@@ -106,7 +105,6 @@
 
     var now = new Date();
     var tripStart = typeof TRIP_START !== 'undefined' ? TRIP_START : new Date('2026-06-26');
-    // v1.84: Use session-only override or real date
     var currentDay;
     if (typeof window._dayOverride === 'number') {
       currentDay = window._dayOverride;
@@ -115,7 +113,6 @@
     }
     var totalDays = typeof TRIP_DAYS !== 'undefined' ? TRIP_DAYS : 54;
 
-    // Remove existing route plan layer if any
     if (routePlanLayer) {
       map.removeLayer(routePlanLayer);
     }
@@ -123,43 +120,26 @@
     routePlanLayer = L.layerGroup();
 
     if (currentDay >= totalDays) {
-      // Trip completed: all solid green (already shown by existing code)
-      // We just add the future route as nothing (all done)
+      // Trip completed
     } else if (currentDay >= 0) {
-      // During trip: add future route as dashed blue
       var splitIdx = Math.min(currentDay + 2, routeCoords.length);
       var futureCoords = routeCoords.slice(splitIdx - 1);
       if (futureCoords.length > 1) {
         L.polyline(futureCoords, {
-          color: '#2c5282',
-          weight: 2.5,
-          opacity: 0.5,
-          dashArray: '8,6',
-          lineJoin: 'round'
+          color: '#2c5282', weight: 2.5, opacity: 0.5, dashArray: '8,6', lineJoin: 'round'
         }).addTo(routePlanLayer);
       }
     } else {
-      // Before trip: show entire planned route as dashed blue
       L.polyline(routeCoords, {
-        color: '#2c5282',
-        weight: 2.5,
-        opacity: 0.5,
-        dashArray: '8,6',
-        lineJoin: 'round'
+        color: '#2c5282', weight: 2.5, opacity: 0.5, dashArray: '8,6', lineJoin: 'round'
       }).addTo(routePlanLayer);
     }
 
-    // Add day markers (small dots for planned stops)
     TRIP_COORDS.forEach(function(c, i) {
       var visited = currentDay >= 0 && i <= currentDay;
       if (!visited && currentDay >= 0) {
-        // Only show future stops as small blue dots
         L.circleMarker([c.lat, c.lng], {
-          radius: 4,
-          fillColor: '#2c5282',
-          color: '#fff',
-          weight: 1,
-          fillOpacity: 0.6
+          radius: 4, fillColor: '#2c5282', color: '#fff', weight: 1, fillOpacity: 0.6
         }).bindTooltip(c.city || c.cityEn, { direction: 'top', offset: [0, -6] })
          .addTo(routePlanLayer);
       }
@@ -168,8 +148,8 @@
     routePlanLayer.addTo(map);
   }
 
-  // ─── Initialize POI layers ───
-  function initPoiLayers(map) {
+  // ─── Initialize POI layers (generic — works for any map) ───
+  function initPoiLayers(map, layerGroups, tState) {
     if (typeof MAP_POIS === 'undefined' || !MAP_POIS.length) {
       console.warn('[UnifiedMap] MAP_POIS not loaded');
       return;
@@ -179,20 +159,20 @@
     Object.keys(POI_CATEGORIES).forEach(function(cat) {
       var saved = localStorage.getItem('umap_poi_' + cat);
       if (saved !== null) {
-        toggleState[cat] = saved === '1';
+        tState[cat] = saved === '1';
       } else {
-        toggleState[cat] = POI_CATEGORIES[cat].defaultOn;
+        tState[cat] = POI_CATEGORIES[cat].defaultOn;
       }
     });
 
     // Create layer groups (with clustering for dense categories)
-    var denseCats = ['kids', 'parking', 'cibo']; // categories that need clustering
+    var denseCats = ['kids', 'parking', 'cibo'];
 
     Object.keys(POI_CATEGORIES).forEach(function(cat) {
-      if (cat === 'star') return; // star is handled specially
+      if (cat === 'star') return;
 
       if (denseCats.indexOf(cat) >= 0 && typeof L.markerClusterGroup === 'function') {
-        poiLayerGroups[cat] = L.markerClusterGroup({
+        layerGroups[cat] = L.markerClusterGroup({
           maxClusterRadius: 50,
           spiderfyOnMaxZoom: true,
           showCoverageOnHover: false,
@@ -207,12 +187,12 @@
           }
         });
       } else {
-        poiLayerGroups[cat] = L.layerGroup();
+        layerGroups[cat] = L.layerGroup();
       }
     });
 
-    // Star layer (always uses regular layerGroup - only 32 markers)
-    poiLayerGroups['star'] = L.layerGroup();
+    // Star layer
+    layerGroups['star'] = L.layerGroup();
 
     // Populate layers with markers
     MAP_POIS.forEach(function(poi) {
@@ -220,31 +200,29 @@
       var catConfig = POI_CATEGORIES[cat];
       if (!catConfig) return;
 
-      // Add to star layer if it's a star POI
       if (poi.star) {
         var starMarker = L.marker([poi.lat, poi.lng], {
           icon: createPoiIcon(poi, POI_CATEGORIES.star),
           title: poi.name
         }).bindPopup(createPopupContent(poi), { maxWidth: 250, closeButton: true });
-        poiLayerGroups['star'].addLayer(starMarker);
+        layerGroups['star'].addLayer(starMarker);
       }
 
-      // Also add to its category layer (non-star version)
       if (!poi.star) {
         var marker = L.marker([poi.lat, poi.lng], {
           icon: createPoiIcon(poi, catConfig),
           title: poi.name
         }).bindPopup(createPopupContent(poi), { maxWidth: 250, closeButton: true });
-        if (poiLayerGroups[cat]) {
-          poiLayerGroups[cat].addLayer(marker);
+        if (layerGroups[cat]) {
+          layerGroups[cat].addLayer(marker);
         }
       }
     });
 
     // Add active layers to map
-    Object.keys(toggleState).forEach(function(cat) {
-      if (toggleState[cat] && poiLayerGroups[cat]) {
-        poiLayerGroups[cat].addTo(map);
+    Object.keys(tState).forEach(function(cat) {
+      if (tState[cat] && layerGroups[cat]) {
+        layerGroups[cat].addTo(map);
       }
     });
   }
@@ -263,10 +241,9 @@
     updateFilterPanelUI();
   }
 
-  // ─── Create filter panel ───
-  function createFilterPanel(map) {
-    var mapEl = document.getElementById('pos-map');
-    if (!mapEl) return;
+  // ─── Create filter panel (generic — appends to containerEl) ───
+  function createFilterPanel(map, containerEl, layerGroups, tState) {
+    if (!containerEl) return;
 
     // Filter toggle button
     var btn = document.createElement('button');
@@ -274,17 +251,17 @@
     btn.innerHTML = '📍';
     btn.title = 'Filtri POI';
     btn.setAttribute('aria-label', 'Filtri POI');
-    mapEl.appendChild(btn);
+    containerEl.appendChild(btn);
 
     // Filter panel
-    filterPanel = document.createElement('div');
-    filterPanel.className = 'umap-filter-panel';
-    filterPanel.style.display = 'none';
+    var panel = document.createElement('div');
+    panel.className = 'umap-filter-panel';
+    panel.style.display = 'none';
 
     var panelTitle = document.createElement('div');
     panelTitle.className = 'umap-filter-title';
     panelTitle.textContent = '📍 Mostra sulla mappa';
-    filterPanel.appendChild(panelTitle);
+    panel.appendChild(panelTitle);
 
     // Count POIs per category
     var counts = { star: 0 };
@@ -304,11 +281,21 @@
 
       var checkbox = document.createElement('input');
       checkbox.type = 'checkbox';
-      checkbox.checked = toggleState[cat];
+      checkbox.checked = tState[cat];
       checkbox.className = 'umap-filter-checkbox';
       checkbox.dataset.cat = cat;
       checkbox.addEventListener('change', function() {
-        toggleCategory(cat, map);
+        tState[cat] = !tState[cat];
+        localStorage.setItem('umap_poi_' + cat, tState[cat] ? '1' : '0');
+        if (tState[cat]) {
+          if (layerGroups[cat]) layerGroups[cat].addTo(map);
+        } else {
+          if (layerGroups[cat]) map.removeLayer(layerGroups[cat]);
+        }
+        // Update all checkboxes in this panel
+        panel.querySelectorAll('.umap-filter-checkbox').forEach(function(cb) {
+          cb.checked = tState[cb.dataset.cat];
+        });
       });
 
       var colorDot = document.createElement('span');
@@ -327,29 +314,31 @@
       row.appendChild(colorDot);
       row.appendChild(label);
       row.appendChild(count);
-      filterPanel.appendChild(row);
+      panel.appendChild(row);
     });
 
-    mapEl.appendChild(filterPanel);
+    containerEl.appendChild(panel);
 
     // Toggle panel visibility
     btn.addEventListener('click', function(e) {
       e.stopPropagation();
-      var isVisible = filterPanel.style.display !== 'none';
-      filterPanel.style.display = isVisible ? 'none' : 'block';
+      var isVisible = panel.style.display !== 'none';
+      panel.style.display = isVisible ? 'none' : 'block';
       btn.classList.toggle('umap-filter-btn-active', !isVisible);
     });
 
-    // Close panel when clicking elsewhere on map
-    mapEl.addEventListener('click', function(e) {
-      if (!filterPanel.contains(e.target) && e.target !== btn) {
-        filterPanel.style.display = 'none';
+    // Close panel when clicking elsewhere on container
+    containerEl.addEventListener('click', function(e) {
+      if (!panel.contains(e.target) && e.target !== btn) {
+        panel.style.display = 'none';
         btn.classList.remove('umap-filter-btn-active');
       }
     });
+
+    return panel;
   }
 
-  // ─── Update filter panel checkboxes ───
+  // ─── Update filter panel checkboxes (for pos-map panel) ───
   function updateFilterPanelUI() {
     if (!filterPanel) return;
     var checkboxes = filterPanel.querySelectorAll('.umap-filter-checkbox');
@@ -360,7 +349,6 @@
 
   // ─── Add "show live on route map" marker ───
   function addLiveMarkerToRouteMap() {
-    // Wait for route map to exist
     var routeMapEl = document.getElementById('routeMap');
     if (!routeMapEl) return;
 
@@ -373,7 +361,6 @@
     }
     if (!routeMapInstance) return;
 
-    // Listen for live position updates
     var liveMarkerOnRoute = null;
     function updateRouteLiveMarker(lat, lng) {
       if (!lat || !lng) return;
@@ -392,7 +379,6 @@
       }
     }
 
-    // Observe Firebase live data (hook into existing system)
     window._umapUpdateRouteLive = updateRouteLiveMarker;
   }
 
@@ -404,32 +390,21 @@
       console.info('[UnifiedMap] Map found, initializing unified layers...');
       unifiedMapReady = true;
 
-      // 1. Add planned route overlay (future route as dashed blue)
       addPlannedRouteOverlay(map);
-
-      // 2. Initialize POI layers with clustering
-      initPoiLayers(map);
-
-      // 3. Create filter panel
-      createFilterPanel(map);
-
-      // 4. Add live marker to route map
+      initPoiLayers(map, poiLayerGroups, toggleState);
+      var mapEl = document.getElementById('pos-map');
+      filterPanel = createFilterPanel(map, mapEl, poiLayerGroups, toggleState);
       setTimeout(addLiveMarkerToRouteMap, 2000);
-
 
       console.info('[UnifiedMap] Initialization complete. POI categories:', Object.keys(poiLayerGroups).length);
     });
 
-    // Hook into Firebase live position updates via MutationObserver on info card
-    // This avoids modifying app.js - we observe when the city name updates
     function hookLiveUpdates() {
       var cityEl = document.getElementById('pos-city-name');
       if (!cityEl) return;
       
-      // Poll the van marker position from the existing map
       setInterval(function() {
         if (!mapInstance) return;
-        // Find the van marker (highest zIndexOffset)
         var vanLatLng = null;
         mapInstance.eachLayer(function(layer) {
           if (layer.options && layer.options.zIndexOffset === 2000 && layer.getLatLng) {
@@ -439,30 +414,41 @@
         if (vanLatLng && window._umapUpdateRouteLive) {
           window._umapUpdateRouteLive(vanLatLng.lat, vanLatLng.lng);
         }
-      }, 5000); // check every 5 seconds
+      }, 5000);
     }
     hookLiveUpdates();
   }
 
-  // ─── Direct init with a known map instance (called from app.js after map is ready) ───
+  // ─── Direct init with a known map instance (called from app.js for pos-map) ───
   function initWithMap(map) {
     if (unifiedMapReady) return; // already initialized
     mapInstance = map;
     unifiedMapReady = true;
     console.info('[UnifiedMap] Direct init with map instance...');
-    // 1. Add planned route overlay (future route as dashed blue)
     addPlannedRouteOverlay(map);
-    // 2. Initialize POI layers with clustering
-    initPoiLayers(map);
-    // 3. Create filter panel
-    createFilterPanel(map);
+    initPoiLayers(map, poiLayerGroups, toggleState);
+    var mapEl = document.getElementById('pos-map');
+    filterPanel = createFilterPanel(map, mapEl, poiLayerGroups, toggleState);
     console.info('[UnifiedMap] Initialization complete. POI categories:', Object.keys(poiLayerGroups).length);
   }
 
+  // ─── Fullscreen init (independent of pos-map, can be called multiple times) ───
+  function initForFullscreen(map, containerEl) {
+    console.info('[UnifiedMap] initForFullscreen called');
+    // Create fresh state for this fullscreen instance
+    var fsLayerGroups = {};
+    var fsTState = {};
+
+    // Add POI layers with clustering
+    initPoiLayers(map, fsLayerGroups, fsTState);
+
+    // Create filter panel inside the fullscreen container
+    createFilterPanel(map, containerEl, fsLayerGroups, fsTState);
+
+    console.info('[UnifiedMap] Fullscreen init complete. POI categories:', Object.keys(fsLayerGroups).length);
+  }
+
   // ─── Start when DOM is ready ───
-  // Only auto-init the route map features (live marker on route map)
-  // The pos-map features (POI, route overlay, filter panel) are initialized
-  // via initWithMap() called from showPosizioneContent() in app.js
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function() {
       setTimeout(function() {
@@ -479,6 +465,7 @@
   window.UnifiedMap = {
     init: init,
     initWithMap: initWithMap,
+    initForFullscreen: initForFullscreen,
     toggleCategory: function(cat) { if (mapInstance) toggleCategory(cat, mapInstance); },
     getState: function() { return toggleState; },
     refresh: function() { if (mapInstance) { addPlannedRouteOverlay(mapInstance); } }
