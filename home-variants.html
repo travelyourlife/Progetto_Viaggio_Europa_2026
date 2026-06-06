@@ -45,8 +45,6 @@
             <img src="./icon.png" alt="Famiglia" class="hv-hero-avatar hv-avatar-clickable" data-hv-action="expandAvatar">
         </div>
         <div class="hv-hero-trip-distance-badge" data-hv="distanceFromHome"></div>
-        <!-- Separatore solido -->
-        <hr class="hv-hero-separator">
         <!-- Weather + light sub-row -->
         <div class="hv-hero-weather-row">
             <span class="hero-info-block"><span data-hv="weatherIcon">🌤</span> <span class="hero-weather-bold" data-hv="temp">--°C</span></span>
@@ -97,6 +95,11 @@
                 <span class="hv-action-icon">🗺️</span>
                 <span class="hv-action-label">Mappa</span>
                 <span class="hv-action-sub" data-hv="kmTotal"></span>
+            </a>
+            <a class="hv-action-card hv-tracking-card" data-hv-action="toggleTracking" id="hv-tracking-card" style="display:none;">
+                <span class="hv-action-icon" id="hv-tracking-icon">🛰️</span>
+                <span class="hv-action-label" id="hv-tracking-label">Tracking</span>
+                <span class="hv-action-sub" id="hv-tracking-sub">▶ Avvia</span>
             </a>
         </div>
     </div>
@@ -349,8 +352,6 @@
             <img src="./icon.png" alt="Famiglia" class="hv-hero-avatar hv-avatar-clickable" data-hv-action="expandAvatar">
         </div>
         <div class="hv-hero-trip-distance-badge" data-hv="distanceFromHome"></div>
-        <!-- Separatore solido -->
-        <hr class="hv-hero-separator">
         <!-- Weather + light sub-row -->
         <div class="hv-hero-weather-row">
             <span class="hero-info-block"><span data-hv="weatherIcon">🌤</span> <span class="hero-weather-bold" data-hv="temp">--°C</span></span>

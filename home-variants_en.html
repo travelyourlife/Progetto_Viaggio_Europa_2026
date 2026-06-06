@@ -45,8 +45,6 @@
             <img src="./icon.png" alt="Family" class="hv-hero-avatar hv-avatar-clickable" data-hv-action="expandAvatar">
         </div>
         <div class="hv-hero-trip-distance-badge" data-hv="distanceFromHome"></div>
-        <!-- Solid separator -->
-        <hr class="hv-hero-separator">
         <!-- Weather + light sub-row -->
         <div class="hv-hero-weather-row">
             <span class="hero-info-block"><span data-hv="weatherIcon">🌤</span> <span class="hero-weather-bold" data-hv="temp">--°C</span></span>
@@ -98,6 +96,11 @@
                 <span class="hv-action-label">Map</span>
                 <span class="hv-action-sub" data-hv="kmTotal"></span>
             </a>
+            <a class="hv-action-card hv-tracking-card" data-hv-action="toggleTracking" id="hv-tracking-card" style="display:none;">
+                <span class="hv-action-icon" id="hv-tracking-icon">🛰️</span>
+                <span class="hv-action-label" id="hv-tracking-label">Tracking</span>
+                <span class="hv-action-sub" id="hv-tracking-sub">▶ Start</span>
+            </a>
         </div>
     </div>
     <!-- Progress bar -->
@@ -127,11 +130,7 @@
                 <span class="hv-checklist-text">Study the itinerary</span>
                 <span class="hv-chevron">›</span>
             </a>
-            <a class="hv-checklist-link" data-hv-action="openGpsGuide">
-                <span class="hv-checklist-icon">📍</span>
-                <span class="hv-checklist-text">Configure GPS Logger</span>
-                <span class="hv-chevron">›</span>
-            </a>
+
         </div>
     </div>
     <!-- Esplora -->
@@ -353,8 +352,6 @@
             <img src="./icon.png" alt="Family" class="hv-hero-avatar hv-avatar-clickable" data-hv-action="expandAvatar">
         </div>
         <div class="hv-hero-trip-distance-badge" data-hv="distanceFromHome"></div>
-        <!-- Solid separator -->
-        <hr class="hv-hero-separator">
         <!-- Weather + light sub-row -->
         <div class="hv-hero-weather-row">
             <span class="hero-info-block"><span data-hv="weatherIcon">🌤</span> <span class="hero-weather-bold" data-hv="temp">--°C</span></span>

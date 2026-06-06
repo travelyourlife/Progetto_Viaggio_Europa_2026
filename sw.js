@@ -27,7 +27,7 @@ var messaging = firebase.messaging();
 // ─── CACHING CONFIG ───
 // ═══════════════════════════════════════════════════════════════
 
-const CACHE_NAME = 'quo-vadis-v2.10';
+const CACHE_NAME = 'quo-vadis-v2.15';
 const IMAGE_CACHE_NAME = 'quo-vadis-images-v1';
 const IMAGE_CACHE_LIMIT = 80;
 const STATIC_ASSETS = [
@@ -72,18 +72,16 @@ const CDN_ASSETS = [
   'https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js'
 ];
 
-// ─── Install: pre-cache both CDN and STATIC assets, skip waiting immediately ───
+// ─── Install: pre-cache both CDN and STATIC assets ───
+// v2.11 FIX: Removed automatic skipWaiting() to prevent mid-navigation breakage.
+// The new SW waits until the user accepts the update via the client-side banner.
 self.addEventListener('install', function(event) {
   event.waitUntil(
     caches.open(CACHE_NAME).then(function(cache) {
       console.log('[SW] Installing — caching all assets (CDN + Static)');
       return cache.addAll(CDN_ASSETS.concat(STATIC_ASSETS));
-    }).then(function() {
-      // Force immediate activation — don't wait for old SW to release
-      // NOTE (v2.00): Aggressive but acceptable for travel PWA where updates are critical.
-      // The client-side handles SW_UPDATED message to prompt user before reload.
-      return self.skipWaiting();
     })
+    // v2.11: Do NOT call skipWaiting() here. Wait for explicit message from client.
   );
 });
 
@@ -172,10 +170,14 @@ function staleWhileRevalidate(request) {
       return networkResponse;
     }).catch(function() {
       console.log('[SW] Network error (offline mode)');
-      // Serve branded offline page for navigation requests
+      // v2.11 FIX: For navigation requests, serve the cached app shell (index.html)
+      // instead of a generic offline page. This allows full itinerary browsing offline
+      // since data.js and days-data.js are pre-cached.
       if (request.mode === 'navigate') {
-        return caches.match('./offline.html').then(function(offlinePage) {
-          return offlinePage || cachedResponse || new Response('Offline', { status: 503 });
+        return cachedResponse || caches.match('./index.html').then(function(shellPage) {
+          return shellPage || caches.match('./offline.html').then(function(offlinePage) {
+            return offlinePage || new Response('Offline', { status: 503 });
+          });
         });
       }
       return cachedResponse || new Response('Offline', { status: 503 });

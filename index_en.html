@@ -69,7 +69,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = '2.10';
+  var EXPECTED_VERSION = '2.15';
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
   var r = false;
@@ -175,7 +175,7 @@
 <!-- ─── Top Bar ─── -->
 <div class="top-bar" id="topBar">
     <button class="menu-btn" id="menuOpen" aria-label="Menu">☰</button>
-    <div class="top-bar-title">Quo Vadis</div>
+    <div class="top-bar-title" id="topBarTitle" style="cursor:pointer;">Quo Vadis</div>
     <button class="search-btn" id="searchOpen" aria-label="Search">🔍</button>
     <button class="notif-bell-btn" id="notifBellBtn" aria-label="Notifications">🔔<span class="notif-badge" id="notifBadge"></span></button>
     <button class="auth-btn" id="authBtn" aria-label="Login" title="Sign in">👤</button>

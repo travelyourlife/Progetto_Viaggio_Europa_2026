@@ -399,7 +399,7 @@ exports.notifyNewPendingUser = onValueCreated(
       title: `\ud83d\udc64 Nuova richiesta: ${displayName}`,
       body: email ? `${email} vuole accedere all'app` : "Un nuovo utente vuole accedere all'app",
       target: "owner",
-      url: "./#tab-diario",
+      url: "./#tab-admin",
       tag: `access-request-${uid.slice(0, 8)}`,
       createdAt: Date.now(),
       sent: false,

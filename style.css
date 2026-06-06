@@ -586,6 +586,10 @@ html {
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
     overflow-x: hidden;
+    /* v2.11 FIX: Prevent blue lateral lines on wide screens / PWA standalone mode.
+       Ensures the area outside the max-width:900px body is always neutral,
+       not colored by theme-color or safe-area rendering artifacts. */
+    background: var(--bg);
 }
 
 body {
@@ -2063,6 +2067,12 @@ table { max-width: 100%; }
     }
     .hero-card {
         max-width: 900px;
+    }
+    /* v2.11 FIX: Ensure no lateral artifacts on wide desktop screens */
+    body {
+        border-left: none;
+        border-right: none;
+        box-shadow: none;
     }
 }
 

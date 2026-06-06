@@ -180,35 +180,82 @@ function doGoogleSignIn(successCb) {
     if (window.showToast) showToast('Firebase non disponibile', 'error');
     return;
   }
+
+  // v2.11 FIX: Explicit persistence before any sign-in attempt
+  firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(function(e) {
+    console.warn('[Auth] setPersistence error:', e.message);
+  });
+
   if (typeof google === 'undefined' || !google.accounts) {
-    // GIS library not loaded yet — fallback to signInWithRedirect
-    console.warn('[Auth] GIS not loaded, falling back to signInWithRedirect');
+    // v2.11 FIX: GIS not loaded — show feedback + wait briefly before fallback
+    console.warn('[Auth] GIS not loaded, attempting delayed retry...');
+    if (window.showToast) showToast(isEN ? '⏳ Loading login...' : '⏳ Caricamento login...', 'info');
+
+    // Wait up to 3 seconds for GIS to load before falling back
+    var _gisRetries = 0;
+    var _gisWait = setInterval(function() {
+      _gisRetries++;
+      if (typeof google !== 'undefined' && google.accounts) {
+        clearInterval(_gisWait);
+        doGoogleSignIn(successCb); // Retry now that GIS is loaded
+      } else if (_gisRetries >= 15) {
+        clearInterval(_gisWait);
+        // v2.11: Show explicit feedback that we're using redirect fallback
+        if (window.showToast) showToast(isEN ? '🔄 Redirecting to Google...' : '🔄 Reindirizzamento a Google...', 'info');
+        var provider = new firebase.auth.GoogleAuthProvider();
+        try { localStorage.setItem('firebase_redirect_pending', '1'); } catch(e) {}
+        firebase.auth().signInWithRedirect(provider);
+      }
+    }, 200);
+    return;
+  }
+
+  _gisSuccessCb = successCb || null;
+
+  try {
+    google.accounts.id.initialize({
+      client_id: GIS_CLIENT_ID,
+      callback: function(response) {
+        var credential = firebase.auth.GoogleAuthProvider.credential(response.credential);
+        firebase.auth().signInWithCredential(credential).then(function(result) {
+          console.info('[Auth] GIS login success:', result.user.email);
+          if (_gisSuccessCb) {
+            _gisSuccessCb(result.user);
+          } else {
+            if (window.showToast) showToast((isEN ? 'Welcome, ' : 'Benvenuto, ') + (result.user.displayName || result.user.email), 'success');
+          }
+        }).catch(function(err) {
+          console.error('[Auth] signInWithCredential error:', err);
+          if (window.showToast) showToast((isEN ? 'Login error: ' : 'Errore login: ') + err.message, 'error');
+        });
+      },
+      auto_select: false,
+      cancel_on_tap_outside: false // v2.11: prevent accidental dismissal
+    });
+    google.accounts.id.prompt(function(notification) {
+      // v2.11 FIX: Handle GIS prompt blocked/dismissed (Safari, adblockers)
+      if (notification.isNotDisplayed()) {
+        console.warn('[Auth] GIS prompt blocked:', notification.getNotDisplayedReason());
+        if (window.showToast) showToast(isEN ? '⚠️ Popup blocked. Redirecting...' : '⚠️ Popup bloccato. Reindirizzamento...', 'warning');
+        // Fallback to redirect
+        var provider = new firebase.auth.GoogleAuthProvider();
+        try { localStorage.setItem('firebase_redirect_pending', '1'); } catch(e) {}
+        setTimeout(function() {
+          firebase.auth().signInWithRedirect(provider);
+        }, 1000);
+      } else if (notification.isSkippedMoment()) {
+        console.info('[Auth] GIS prompt skipped:', notification.getSkippedReason());
+        // User dismissed — no action needed, they can retry
+      }
+    });
+  } catch(gisErr) {
+    // v2.11: Catch any GIS initialization errors (3rd party cookie blocks, etc.)
+    console.error('[Auth] GIS initialization error:', gisErr);
+    if (window.showToast) showToast(isEN ? '⚠️ Login service error. Redirecting...' : '⚠️ Errore servizio login. Reindirizzamento...', 'warning');
     var provider = new firebase.auth.GoogleAuthProvider();
     try { localStorage.setItem('firebase_redirect_pending', '1'); } catch(e) {}
     firebase.auth().signInWithRedirect(provider);
-    return;
   }
-  _gisSuccessCb = successCb || null;
-  google.accounts.id.initialize({
-    client_id: GIS_CLIENT_ID,
-    callback: function(response) {
-      var credential = firebase.auth.GoogleAuthProvider.credential(response.credential);
-      firebase.auth().signInWithCredential(credential).then(function(result) {
-        console.info('[Auth] GIS login success:', result.user.email);
-        if (_gisSuccessCb) {
-          _gisSuccessCb(result.user);
-        } else {
-          if (window.showToast) showToast((isEN ? 'Welcome, ' : 'Benvenuto, ') + (result.user.displayName || result.user.email), 'success');
-        }
-      }).catch(function(err) {
-        console.error('[Auth] signInWithCredential error:', err);
-        if (window.showToast) showToast((isEN ? 'Login error: ' : 'Errore login: ') + err.message, 'error');
-      });
-    },
-    auto_select: false,
-    cancel_on_tap_outside: true
-  });
-  google.accounts.id.prompt(); // Show One Tap / account chooser
 }
 
 
@@ -263,16 +310,47 @@ document.addEventListener('DOMContentLoaded', function() { updateProtectedTabsUI
 // ─── Owner/Viewer Auth State (V4.8) ───
 // Viewers see everything read-only without login. Owners (Google Auth) can write.
 var isOwner = false;
+// v2.13: Track whether user is a hardcoded (super) owner vs dynamic owner
+var isHardcodedOwner = false;
+var _dynamicOwners = {}; // cache of ownerUsers from database
 function checkOwnerStatus() {
   if (typeof firebase !== 'undefined' && firebase.auth) {
     firebase.auth().onAuthStateChanged(function(user) {
       firebaseUser = user;
-      if (user && typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.indexOf(user.uid) !== -1) {
+      isHardcodedOwner = !!(user && typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.indexOf(user.uid) !== -1);
+      if (isHardcodedOwner) {
         isOwner = true;
-        console.info('[Auth] Owner mode: ' + user.displayName);
+        console.info('[Auth] Owner mode (hardcoded): ' + user.displayName);
+        // v2.11 FIX: Auto-reset simulated role on Owner login
+        try {
+          var savedRole = localStorage.getItem('hv-role');
+          if (savedRole && savedRole !== 'auto' && savedRole !== 'owner') {
+            console.info('[Auth] Resetting simulated role "' + savedRole + '" back to owner');
+            localStorage.setItem('hv-role', 'owner');
+          }
+        } catch(e) {}
+      } else if (user) {
+        // v2.13: Check dynamic ownerUsers in database
+        firebase.database().ref('trips/' + FAMILY_ID + '/ownerUsers/' + user.uid).once('value', function(ownerSnap) {
+          if (ownerSnap.exists() && ownerSnap.val() === true) {
+            isOwner = true;
+            console.info('[Auth] Owner mode (dynamic): ' + user.displayName);
+            try {
+              var savedRole2 = localStorage.getItem('hv-role');
+              if (savedRole2 && savedRole2 !== 'auto' && savedRole2 !== 'owner') {
+                localStorage.setItem('hv-role', 'owner');
+              }
+            } catch(e) {}
+            // Re-dispatch auth event with updated isOwner
+            window.dispatchEvent(new CustomEvent('authStateChanged', { detail: { user: user, isOwner: true } }));
+            updateProtectedTabsUI(user);
+          } else {
+            isOwner = false;
+            console.info('[Auth] Authenticated but not owner: ' + user.email);
+          }
+        });
       } else {
         isOwner = false;
-        if (user) console.info('[Auth] Authenticated but not owner: ' + user.email);
       }
       // ─── Global Ban Check ───
       if (user && !isOwner && typeof firebase !== 'undefined' && firebase.database) {
@@ -305,6 +383,9 @@ function checkOwnerStatus() {
       // ─── Non-owner: check approval status + auto-submit pending request (v1.93 fix) ───
       // Track approval status (used by home-variants for UI hints)
       window._userApproved = isOwner; // owners are always approved
+      // v2.13 FIX: Global flag to prevent multiple auto-submits from different code paths
+      // (onAuthStateChanged, updateChatAuth, checkDiarioAccess, checkPosizioneAccess)
+      window._pendingSubmitDone = false;
       if (user && !isOwner && typeof firebase !== 'undefined' && firebase.database) {
         (function() {
           var _uid = user.uid;
@@ -320,7 +401,9 @@ function checkOwnerStatus() {
                 return; // already approved
               }
               _pendingRef.once('value', function(pendSnap) {
-                if (pendSnap.exists()) return; // already pending
+                if (pendSnap.exists()) { window._pendingSubmitDone = true; return; } // already pending
+                if (window._pendingSubmitDone) return; // another code path already submitted
+                window._pendingSubmitDone = true;
                 // Auto-submit pending request
                 _pendingRef.set({
                   email: user.email || '',
@@ -341,7 +424,11 @@ function checkOwnerStatus() {
       // ─── Owner: check for pending user requests (badge + toast + push) ───
       if (isOwner && typeof firebase !== 'undefined' && firebase.database) {
         // Realtime listener: notify owner whenever a new pending request arrives
+        // v2.13 FIX: Removed client-side queuePushNotification — the Cloud Function
+        // notifyNewPendingUser already sends a push with unique tag per UID.
+        // Client only shows in-app toast + badge (debounced 2s to avoid duplicates).
         var _lastPendingCount = 0;
+        var _pendingToastTimer = null;
         var _pendingUsersRef = firebase.database().ref('trips/' + FAMILY_ID + '/pendingUsers');
         var _pendingUsersCb = function(snap) {
           var pending = snap.val();
@@ -352,26 +439,18 @@ function checkOwnerStatus() {
             badge.textContent = count;
             badge.style.display = count > 0 ? 'inline-flex' : 'none';
           }
-          // Toast only if count increased (new request)
+          // Toast only if count increased (new request) — debounced 2s
           if (count > _lastPendingCount) {
-            setTimeout(function() {
+            if (_pendingToastTimer) clearTimeout(_pendingToastTimer);
+            _pendingToastTimer = setTimeout(function() {
+              _pendingToastTimer = null;
               if (window.showToast) {
                 var msg = isEN
-                  ? '👥 ' + count + ' pending access request' + (count > 1 ? 's' : '') + ' — open Diario → Manage'
-                  : '👥 ' + count + ' richiesta' + (count > 1 ? 'e' : '') + ' di accesso — apri Diario → Gestisci';
+                  ? '👥 ' + count + ' pending access request' + (count > 1 ? 's' : '') + ' — open Admin to approve'
+                  : '👥 ' + count + ' richiesta' + (count > 1 ? 'e' : '') + ' di accesso — apri Admin per approvare';
                 showToast(msg, 'info', 6000);
               }
-            }, 1000);
-            // Push notification to owner (even if app is closed)
-            if (window.queuePushNotification) {
-              queuePushNotification('access_request', {
-                title: isEN ? '👥 New access request' : '👥 Nuova richiesta di accesso',
-                body: isEN ? count + ' user(s) waiting for approval' : count + ' utente/i in attesa di approvazione',
-                target: 'owner',
-                url: './#tab-diario',
-                tag: 'access-request'
-              });
-            }
+            }, 2000);
           }
           _lastPendingCount = count;
         };
@@ -1163,6 +1242,15 @@ document.addEventListener('DOMContentLoaded', function() {
         if (history.state && history.state.menuOpen) history.back();
     });
 
+    // v2.14: Click on "Quo Vadis" title → go Home
+    var topBarTitle = document.getElementById('topBarTitle');
+    if (topBarTitle) {
+        topBarTitle.addEventListener('click', function() {
+            if (typeof switchTab === 'function') switchTab('home');
+            history.pushState(null, '', '#tab-home');
+        });
+    }
+
     // ─── Nav visibility ───
     function updateNavVisibility(tabId) {
         if (tabId === 'home') {
@@ -1218,7 +1306,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Protected tabs: require authentication AND approval
-    var PROTECTED_TABS = ['chat', 'diario', 'posizione'];
+    var PROTECTED_TABS = ['chat', 'diario', 'posizione', 'admin'];
 
     function switchTab(tabId, scrollToId) {
         // Block access to protected tabs for non-authenticated users
@@ -1226,6 +1314,11 @@ document.addEventListener('DOMContentLoaded', function() {
             showToast(isEN ? '🔒 Sign in to access this section' : '🔒 Accedi per visualizzare questa sezione', 'info');
             // Trigger login
             if (typeof doGoogleSignIn === 'function') doGoogleSignIn();
+            return;
+        }
+        // v2.11 FIX: Admin tab requires Owner status, not just authentication
+        if (tabId === 'admin' && !isOwner) {
+            showToast(isEN ? '🔒 Admin area — owners only' : '🔒 Area Admin — solo organizzatori', 'error');
             return;
         }
         // NOTE: Each protected tab (diario, chat, posizione) has its own internal
@@ -1278,27 +1371,39 @@ document.addEventListener('DOMContentLoaded', function() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
         window.dispatchEvent(new CustomEvent('tabSwitched', { detail: tabId }));
-        // Invalidate Leaflet maps when switching to tabs that contain them
+        // v2.11 FIX: Use IntersectionObserver for reliable map invalidation
+        // instead of arbitrary setTimeout which may not be enough on slow devices
         if (tabId === 'giorni' || tabId === 'posizione') {
-            setTimeout(function() {
-                document.querySelectorAll('.leaflet-container').forEach(function(el) {
-                    var mapObj = el._leaflet_map || el._leaflet;
-                    if (!mapObj) {
-                        // Try to find via Leaflet internal reference
-                        for (var key in el) {
-                            if (key.indexOf('_leaflet') === 0 && el[key] && el[key].invalidateSize) {
-                                el[key].invalidateSize(); break;
+            var _mapContainers = document.querySelectorAll('.leaflet-container');
+            _mapContainers.forEach(function(el) {
+                if (el._hvMapObserver) return; // Already observing
+                var observer = new IntersectionObserver(function(entries) {
+                    entries.forEach(function(entry) {
+                        if (entry.isIntersecting) {
+                            var mapObj = el._leaflet_map || el._leaflet;
+                            if (!mapObj) {
+                                for (var key in el) {
+                                    if (key.indexOf('_leaflet') === 0 && el[key] && el[key].invalidateSize) {
+                                        el[key].invalidateSize(); break;
+                                    }
+                                }
                             }
+                            if (mapObj && mapObj.invalidateSize) mapObj.invalidateSize();
                         }
-                    }
-                    if (mapObj && mapObj.invalidateSize) mapObj.invalidateSize();
-                });
-                // Also try the global routeMapInstance
+                    });
+                }, { threshold: 0.1 });
+                observer.observe(el);
+                el._hvMapObserver = observer;
+            });
+            // Fallback: also try after a short delay for maps created after tab switch
+            setTimeout(function() {
                 if (typeof routeMapInstance !== 'undefined' && routeMapInstance) routeMapInstance.invalidateSize();
-            }, 200);
+            }, 300);
         }
-        // Tab memory: save last visited tab
-        try { localStorage.setItem('qv_lastTab', tabId); } catch(e) {}
+        // Tab memory: save last visited tab (never save admin — requires Owner auth)
+        if (tabId !== 'admin') {
+            try { localStorage.setItem('qv_lastTab', tabId); } catch(e) {}
+        }
     }
 
     window.switchTab = switchTab;
@@ -2384,8 +2489,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 idleCheckTimer = setInterval(function() {
                     if (!liveActive) return;
                     if (Date.now() - lastMovementTime > IDLE_TIMEOUT) {
-                        showToast(isEN ? '⏹️ Auto-stopped (idle 10 min)' : '⏹️ Auto-stop (fermo da 10 min)', 'info');
-                        stopLive();
+                        // v2.15: Show confirmation before auto-stop
+                        showAutoStopConfirm();
                     }
                 }, 30000);
             }
@@ -2415,6 +2520,62 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         window.addEventListener('beforeunload', _emergencySave);
         window.addEventListener('pagehide', _emergencySave);
+
+        // v2.15: Auto-stop confirmation dialog
+        var _autoStopConfirmShown = false;
+        var _autoStopForceTimer = null;
+        function showAutoStopConfirm() {
+            if (_autoStopConfirmShown) return; // avoid duplicates
+            _autoStopConfirmShown = true;
+            // Clear idle check to avoid re-triggering
+            if (idleCheckTimer) { clearInterval(idleCheckTimer); idleCheckTimer = null; }
+            // Create confirmation overlay
+            var overlay = document.createElement('div');
+            overlay.id = 'autostop-confirm-overlay';
+            overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:99999;display:flex;align-items:center;justify-content:center;';
+            var box = document.createElement('div');
+            box.style.cssText = 'background:#fff;border-radius:16px;padding:24px;max-width:320px;width:90%;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,0.3);';
+            box.innerHTML = '<div style="font-size:32px;margin-bottom:12px;">⏹️</div>' +
+                '<h3 style="margin:0 0 8px;font-size:18px;">' + (isEN ? 'Idle for 10 minutes' : 'Fermo da 10 minuti') + '</h3>' +
+                '<p style="margin:0 0 20px;color:#666;font-size:14px;">' + (isEN ? 'Stop tracking? (auto-stop in 2 min)' : 'Fermare il tracking? (auto-stop tra 2 min)') + '</p>' +
+                '<div style="display:flex;gap:12px;justify-content:center;">' +
+                    '<button id="autostop-continue" style="flex:1;padding:12px;border:2px solid #2196F3;background:#fff;color:#2196F3;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;">' + (isEN ? 'Continue' : 'Continua') + '</button>' +
+                    '<button id="autostop-stop" style="flex:1;padding:12px;border:none;background:#f44336;color:#fff;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;">' + (isEN ? 'Stop' : 'Ferma') + '</button>' +
+                '</div>';
+            overlay.appendChild(box);
+            document.body.appendChild(overlay);
+            if (window.haptic) window.haptic(30);
+            // Force stop after 2 minutes if no response
+            _autoStopForceTimer = setTimeout(function() {
+                _autoStopConfirmShown = false;
+                if (overlay.parentNode) overlay.remove();
+                showToast(isEN ? '⏹️ Auto-stopped (no response)' : '⏹️ Auto-stop (nessuna risposta)', 'info');
+                stopLive();
+            }, 2 * 60 * 1000);
+            // Continue button
+            overlay.querySelector('#autostop-continue').addEventListener('click', function() {
+                _autoStopConfirmShown = false;
+                if (_autoStopForceTimer) { clearTimeout(_autoStopForceTimer); _autoStopForceTimer = null; }
+                overlay.remove();
+                lastMovementTime = Date.now(); // reset idle timer
+                // Restart idle check
+                idleCheckTimer = setInterval(function() {
+                    if (!liveActive) return;
+                    if (Date.now() - lastMovementTime > IDLE_TIMEOUT) {
+                        showAutoStopConfirm();
+                    }
+                }, 30000);
+                showToast(isEN ? '▶️ Tracking continues' : '▶️ Tracking continua', 'success');
+            });
+            // Stop button
+            overlay.querySelector('#autostop-stop').addEventListener('click', function() {
+                _autoStopConfirmShown = false;
+                if (_autoStopForceTimer) { clearTimeout(_autoStopForceTimer); _autoStopForceTimer = null; }
+                overlay.remove();
+                showToast(isEN ? '⏹️ Tracking stopped' : '⏹️ Tracking fermato', 'info');
+                stopLive();
+            });
+        }
 
         function stopLive() {
             liveActive = false;
@@ -3119,20 +3280,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // ─── Auth-based UI visibility ───
         function updatePosAuthUI() {
+            // v2.13: Respect role simulation for realistic preview
+            var effectiveOwner = isOwner && !window._simRole;
             var adminPanel = document.getElementById('pos-admin-panel');
-            if (adminPanel) adminPanel.style.display = isOwner ? '' : 'none';
+            if (adminPanel) adminPanel.style.display = effectiveOwner ? '' : 'none';
             // Show custom stop add row for owners
             var customAddRow = document.getElementById('pos-custom-add-row');
-            if (customAddRow) customAddRow.style.display = isOwner ? '' : 'none';
+            if (customAddRow) customAddRow.style.display = effectiveOwner ? '' : 'none';
             // Hide start/stop for non-driver owner (can still see live data)
             var DRIVER_UID = (typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.length > 0) ? OWNER_UIDS[0] : null;
             var isDriver = firebaseUser && DRIVER_UID && firebaseUser.uid === DRIVER_UID;
-            if (startBtn) startBtn.style.display = (isOwner && isDriver) ? '' : 'none';
+            if (startBtn) startBtn.style.display = (effectiveOwner && isDriver) ? '' : 'none';
             if (stopBtn && !liveActive) stopBtn.style.display = 'none';
             // Quick-start button (inline, admin only) — toggles between ▶ and ⏹
             var quickStartBtn = document.getElementById('pos-quick-start');
             if (quickStartBtn) {
-                quickStartBtn.style.display = (isOwner && isDriver) ? 'inline-flex' : 'none';
+                quickStartBtn.style.display = (effectiveOwner && isDriver) ? 'inline-flex' : 'none';
                 if (liveActive) {
                     quickStartBtn.textContent = '\u23F9';
                     quickStartBtn.classList.add('stop-mode');
@@ -3147,6 +3310,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         window.addEventListener('authStateChanged', function() { updatePosAuthUI(); });
+        window.addEventListener('simRoleChanged', function() { updatePosAuthUI(); });
         updatePosAuthUI();
 
         // ─── Init ───
@@ -3297,8 +3461,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 idleCheckTimer = setInterval(function() {
                     if (!liveActive) return;
                     if (Date.now() - lastMovementTime > IDLE_TIMEOUT) {
-                        showToast(isEN ? '⏹️ Auto-stopped (idle 10 min)' : '⏹️ Auto-stop (fermo da 10 min)', 'info');
-                        stopLive();
+                        // v2.15: Show confirmation before auto-stop
+                        showAutoStopConfirm();
                     }
                 }, 30000);
             }
@@ -3311,6 +3475,11 @@ document.addEventListener('DOMContentLoaded', function() {
         window.addEventListener('authStateChanged', function(e) {
             if (e.detail.isOwner) { setTimeout(resumeTracking, 1500); }
         });
+
+        // v2.13: Expose tracking controls globally for Home quick-action card
+        window._startLiveTracking = startLive;
+        window._stopLiveTracking = function() { stopLive(); };
+        window._isLiveTrackingActive = function() { return liveActive; };
 
     })();
 
@@ -4031,9 +4200,30 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // ─── Service Worker Registration ───
+// v2.11 FIX: Show update banner instead of forcing immediate skipWaiting
+// This prevents mid-navigation breakage when assets change between versions
 function handleSwUpdate(sw) {
-    // Tell the new SW to skip waiting and activate immediately
-    sw.postMessage('skipWaiting');
+    // Create update banner if not already present
+    if (document.getElementById('sw-update-banner')) return;
+    var banner = document.createElement('div');
+    banner.id = 'sw-update-banner';
+    banner.style.cssText = 'position:fixed;bottom:70px;left:12px;right:12px;z-index:99998;background:linear-gradient(135deg,var(--primary,#2c5282),var(--accent,#6366f1));color:#fff;padding:14px 18px;border-radius:14px;box-shadow:0 4px 20px rgba(0,0,0,0.3);display:flex;align-items:center;gap:12px;font-size:14px;font-weight:600;animation:slideUp 0.3s ease;';
+    banner.innerHTML = '<span style="flex:1;">' + (typeof isEN !== 'undefined' && isEN ? '\u2728 New version available!' : '\u2728 Nuova versione disponibile!') + '</span>' +
+      '<button id="sw-update-btn" style="background:#fff;color:var(--primary,#2c5282);border:none;border-radius:8px;padding:8px 16px;font-weight:700;font-size:13px;cursor:pointer;white-space:nowrap;">' + (typeof isEN !== 'undefined' && isEN ? 'Update' : 'Aggiorna') + '</button>' +
+      '<button id="sw-update-dismiss" style="background:transparent;border:none;color:rgba(255,255,255,0.7);font-size:18px;cursor:pointer;padding:4px 8px;">\u2715</button>';
+    document.body.appendChild(banner);
+
+    document.getElementById('sw-update-btn').addEventListener('click', function() {
+        sw.postMessage('skipWaiting');
+        banner.remove();
+        // Reload after SW takes control
+        navigator.serviceWorker.addEventListener('controllerchange', function() {
+            window.location.reload();
+        });
+    });
+    document.getElementById('sw-update-dismiss').addEventListener('click', function() {
+        banner.remove();
+    });
 }
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
@@ -6469,6 +6659,7 @@ if ('serviceWorker' in navigator) {
       localStorage.setItem(KEYS.DEVICE_ID, deviceId);
     }
     // Determine role: owner > family > visitor
+    // v2.13: isOwner now includes dynamic owners from database
     var role = 'visitor';
     if (typeof isOwner !== 'undefined' && isOwner) {
       role = 'owner';
@@ -7836,7 +8027,9 @@ if ('serviceWorker' in navigator) {
           } else {
             // Check if already pending
             firebase.database().ref('trips/' + FAMILY_ID + '/pendingUsers/' + user.uid).once('value').then(function(pSnap) {
-              if (!pSnap.exists()) {
+              if (!pSnap.exists() && !window._pendingSubmitDone) {
+                // v2.13 FIX: Use global flag to prevent duplicate auto-submits
+                window._pendingSubmitDone = true;
                 // Auto-submit pending request
                 firebase.database().ref('trips/' + FAMILY_ID + '/pendingUsers/' + user.uid).set({
                   displayName: user.displayName || 'Utente',
@@ -7894,6 +8087,22 @@ if ('serviceWorker' in navigator) {
           updateUnreadBadge();
         }
       }).catch(function() {});
+    }
+  });
+  // v2.14: Re-check chat when simulation role changes
+  window.addEventListener('simRoleChanged', function() {
+    if (window._simRole === 'visitor') {
+      chatInputBar.style.display = 'none';
+      chatMessages.style.display = 'none';
+      chatLoginPrompt.style.display = 'block';
+      if (chatPendingPrompt) chatPendingPrompt.style.display = 'none';
+    } else if (window._simRole === 'follower') {
+      chatInputBar.style.display = 'flex';
+      chatLoginPrompt.style.display = 'none';
+      if (chatPendingPrompt) chatPendingPrompt.style.display = 'none';
+      chatMessages.style.display = '';
+    } else {
+      if (firebaseUser) updateChatAuth(firebaseUser);
     }
   });
 
@@ -8505,10 +8714,14 @@ if ('serviceWorker' in navigator) {
       typingEl.style.display = 'none';
     }
   };
+  // v2.11 FIX: Always use registerFirebaseListener to prevent memory leaks
+  // The registry MUST be available at this point (initialized in DOMContentLoaded)
   if (window.registerFirebaseListener) {
     window.registerFirebaseListener('chat', TYPING_REF, 'value', _chatTypingCb);
   } else {
-    TYPING_REF.on('value', _chatTypingCb);
+    console.warn('[Chat] registerFirebaseListener not available — creating fallback registry');
+    window.registerFirebaseListener = window.registerFirebaseListener || function(tab, ref, event, cb) { ref.on(event, cb); };
+    window.registerFirebaseListener('chat', TYPING_REF, 'value', _chatTypingCb);
   }
 
   // ─── Send location ───
@@ -8569,10 +8782,12 @@ if ('serviceWorker' in navigator) {
       }
     };
     var _chatQuery = CHAT_REF.orderByChild('timestamp').limitToLast(MAX_MESSAGES);
+    // v2.11 FIX: Always register for proper cleanup on tab switch
     if (window.registerFirebaseListener) {
       window.registerFirebaseListener('chat', _chatQuery, 'child_added', _chatAddedCb);
     } else {
-      _chatQuery.on('child_added', _chatAddedCb);
+      window.registerFirebaseListener = window.registerFirebaseListener || function(tab, ref, event, cb) { ref.on(event, cb); };
+      window.registerFirebaseListener('chat', _chatQuery, 'child_added', _chatAddedCb);
     }
 
     // Handle message deletion (by owner)
@@ -8581,10 +8796,12 @@ if ('serviceWorker' in navigator) {
       var el = chatMessages.querySelector('[data-key="' + key + '"');
       if (el) el.remove();
     };
+    // v2.11 FIX: Always register for proper cleanup on tab switch
     if (window.registerFirebaseListener) {
       window.registerFirebaseListener('chat', CHAT_REF, 'child_removed', _chatRemovedCb);
     } else {
-      CHAT_REF.on('child_removed', _chatRemovedCb);
+      window.registerFirebaseListener = window.registerFirebaseListener || function(tab, ref, event, cb) { ref.on(event, cb); };
+      window.registerFirebaseListener('chat', CHAT_REF, 'child_removed', _chatRemovedCb);
     }
   }
 
@@ -8660,10 +8877,12 @@ if ('serviceWorker' in navigator) {
   var _bannedCb = function(snap) {
     bannedUIDs = snap.val() || {};
   };
+  // v2.11 FIX: Always register for proper cleanup on tab switch
   if (window.registerFirebaseListener) {
     window.registerFirebaseListener('chat', BANNED_REF, 'value', _bannedCb);
   } else {
-    BANNED_REF.on('value', _bannedCb);
+    window.registerFirebaseListener = window.registerFirebaseListener || function(tab, ref, event, cb) { ref.on(event, cb); };
+    window.registerFirebaseListener('chat', BANNED_REF, 'value', _bannedCb);
   }
 
   // Track user profile on login — ALL authenticated users (v1.93: removed gate so admin panel sees everyone)
@@ -9134,10 +9353,13 @@ if ('serviceWorker' in navigator) {
         // Check if pending
         pendingRef.child(user.uid).once('value', function(pSnap) {
           if (pSnap.exists()) {
+            window._pendingSubmitDone = true;
             gate.style.display = 'none';
             pendingEl.style.display = '';
             contentEl.style.display = 'none';
-          } else {
+          } else if (!window._pendingSubmitDone) {
+            // v2.13 FIX: Use global flag to prevent duplicate auto-submits
+            window._pendingSubmitDone = true;
             // Auto-submit request
             pendingRef.child(user.uid).set({
               email: user.email || '',
@@ -9149,6 +9371,11 @@ if ('serviceWorker' in navigator) {
               pendingEl.style.display = '';
               contentEl.style.display = 'none';
             });
+          } else {
+            // Already submitted by another code path
+            gate.style.display = 'none';
+            pendingEl.style.display = '';
+            contentEl.style.display = 'none';
           }
         });
       }
@@ -9222,6 +9449,10 @@ if ('serviceWorker' in navigator) {
   window.addEventListener('authStateChanged', function(e) {
     var user = e.detail.user;
     checkPosizioneAccess(user);
+  });
+  // v2.14: Re-check posizione when simulation role changes
+  window.addEventListener('simRoleChanged', function() {
+    if (firebaseUser) checkPosizioneAccess(firebaseUser);
   });
 
   // Initial check (in case auth already resolved) + fallback listener
@@ -9299,10 +9530,13 @@ if ('serviceWorker' in navigator) {
         // Check if pending
         pendingRef.child(user.uid).once('value', function(pSnap) {
           if (pSnap.exists()) {
+            window._pendingSubmitDone = true;
             gate.style.display = 'none';
             pendingEl.style.display = '';
             contentEl.style.display = 'none';
-          } else {
+          } else if (!window._pendingSubmitDone) {
+            // v2.13 FIX: Use global flag to prevent duplicate auto-submits
+            window._pendingSubmitDone = true;
             // Auto-submit request
             pendingRef.child(user.uid).set({
               email: user.email || '',
@@ -9314,6 +9548,11 @@ if ('serviceWorker' in navigator) {
               pendingEl.style.display = '';
               contentEl.style.display = 'none';
             });
+          } else {
+            // Already submitted by another code path
+            gate.style.display = 'none';
+            pendingEl.style.display = '';
+            contentEl.style.display = 'none';
           }
         });
       }
@@ -9324,7 +9563,9 @@ if ('serviceWorker' in navigator) {
     gate.style.display = 'none';
     pendingEl.style.display = 'none';
     contentEl.style.display = '';
-    if (addEntryBtn) addEntryBtn.style.display = asOwner ? '' : 'none';
+    // v2.14: Respect role simulation for realistic preview
+    var effectiveOwner = asOwner && !window._simRole;
+    if (addEntryBtn) addEntryBtn.style.display = effectiveOwner ? '' : 'none';
     loadTimeline();
   }
 
@@ -9347,6 +9588,10 @@ if ('serviceWorker' in navigator) {
   window.addEventListener('authStateChanged', function(e) {
     var user = e.detail.user;
     checkDiarioAccess(user);
+  });
+  // v2.14: Re-render diario when simulation role changes
+  window.addEventListener('simRoleChanged', function() {
+    if (firebaseUser) checkDiarioAccess(firebaseUser);
   });
 
   // Initial check (in case auth already resolved) + fallback listener
@@ -9451,7 +9696,9 @@ if ('serviceWorker' in navigator) {
       sortedKeys.forEach(function(key) {
         var entry = entries[key];
         // Draft filtering: non-owners don't see drafts
-        if (entry.draft && !isOwner) return;
+        // v2.14: Also hide drafts during role simulation
+        var _effectiveOwnerDiario = isOwner && !window._simRole;
+        if (entry.draft && !_effectiveOwnerDiario) return;
         var dn = entry.dayNumber;
         var dayLabel;
         if (entry.customLabel) {
@@ -9594,7 +9841,8 @@ if ('serviceWorker' in navigator) {
         }
 
         // Owner actions
-        if (isOwner) {
+        // v2.14: Respect role simulation
+        if (isOwner && !window._simRole) {
           html += '    <div class="diario-entry-actions">';
           if (isDraft) {
             html += '      <button class="diario-publish-btn" data-key="' + key + '" style="background:var(--success);color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;cursor:pointer;">\u2705 ' + (isEN ? 'Publish' : 'Pubblica') + '</button>';
@@ -10274,15 +10522,21 @@ if ('serviceWorker' in navigator) {
 
   // Show admin sidebar + bottom sheet link only for owners
   function showAdminForOwner() {
-    if (typeof isOwner !== 'undefined' && isOwner) {
+    // v2.14: Respect role simulation
+    var effectiveOwner = (typeof isOwner !== 'undefined' && isOwner) && !window._simRole;
+    if (effectiveOwner) {
       if (adminMenuLink) adminMenuLink.style.display = '';
       if (altroAdminLink) altroAdminLink.style.display = '';
       updateAdminStatus();
+    } else {
+      if (adminMenuLink) adminMenuLink.style.display = 'none';
+      if (altroAdminLink) altroAdminLink.style.display = 'none';
     }
   }
   window.addEventListener('authStateChanged', function(e) {
     if (e.detail && e.detail.user) showAdminForOwner();
   });
+  window.addEventListener('simRoleChanged', function() { showAdminForOwner(); });
   showAdminForOwner();
 
   function adminLog(msg) {
@@ -10586,6 +10840,7 @@ if ('serviceWorker' in navigator) {
   var bannedRef = db.ref('trips/' + FAMILY_ID + '/bannedUsers');
   var pendingRef = db.ref('trips/' + FAMILY_ID + '/pendingUsers');
   var approvedRef = db.ref('trips/' + FAMILY_ID + '/approvedUsers');
+  var ownerUsersRef = db.ref('trips/' + FAMILY_ID + '/ownerUsers'); // v2.13: dynamic owners
 
   var adminUsersList = document.getElementById('admin-users-list');
   var adminPendingList = document.getElementById('admin-pending-list');
@@ -10594,10 +10849,16 @@ if ('serviceWorker' in navigator) {
   if (!adminUsersList) return; // Not on admin tab
 
   var globalBanned = {};
+  var dynamicOwnerMap = {}; // v2.13: cache of dynamic owners
 
   // Listen for banned list changes
   bannedRef.on('value', function(snap) {
     globalBanned = snap.val() || {};
+  });
+
+  // v2.13: Listen for dynamic owner changes
+  ownerUsersRef.on('value', function(snap) {
+    dynamicOwnerMap = snap.val() || {};
   });
 
   function renderAdminUsers() {
@@ -10668,7 +10929,9 @@ if ('serviceWorker' in navigator) {
       deduped.forEach(function(entry) {
         var uid = entry.uid;
         var u = entry.user;
-        var isOwnerUser = (typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.indexOf(uid) !== -1);
+        var isHardcodedOwnerUser = (typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.indexOf(uid) !== -1);
+        var isDynamicOwnerUser = !!dynamicOwnerMap[uid];
+        var isOwnerUser = isHardcodedOwnerUser || isDynamicOwnerUser;
         var isBanned = !!globalBanned[uid];
         var lastSeen = u.lastSeen ? new Date(u.lastSeen).toLocaleString(isEN ? 'en-GB' : 'it-IT', {day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : '\u2014';
         var safePhoto = (u.photo && /^https:\/\//.test(u.photo)) ? escapeHtml(u.photo) : '';
@@ -10679,7 +10942,9 @@ if ('serviceWorker' in navigator) {
         var isGhost = !isOwnerUser && u.lastSeen && (Date.now() - u.lastSeen > 30 * 86400000);
         var ghostBadge = isGhost ? ' <span title="' + (isEN ? 'Inactive > 30 days (possible ghost account)' : 'Inattivo > 30 giorni (possibile account fantasma)') + '" style="font-size:11px;cursor:help;">\ud83d\udc7b</span>' : '';
         var statusBadge;
-        if (isOwnerUser) {
+        if (isHardcodedOwnerUser) {
+          statusBadge = '<span style="background:var(--accent,#6366f1);color:#fff;padding:2px 8px;border-radius:8px;font-size:11px;">Owner ★</span>';
+        } else if (isDynamicOwnerUser) {
           statusBadge = '<span style="background:var(--accent,#6366f1);color:#fff;padding:2px 8px;border-radius:8px;font-size:11px;">Owner</span>';
         } else if (isBanned) {
           statusBadge = '<span style="background:var(--danger,#e53e3e);color:#fff;padding:2px 8px;border-radius:8px;font-size:11px;">' + (isEN ? 'Banned' : 'Bannato') + '</span>';
@@ -10692,6 +10957,16 @@ if ('serviceWorker' in navigator) {
         }
         var uidShort = '<span style="font-size:10px;color:var(--text-muted);font-family:monospace;">' + uid.substring(0, 8) + '...</span>';
         var actionBtn = '';
+        // v2.13: Promote/Demote buttons (only hardcoded owners can do this)
+        if (isOwnerUser && !isHardcodedOwnerUser && isHardcodedOwner) {
+          // Dynamic owner: show Demote button (only hardcoded super-admins can demote)
+          actionBtn = uidShort + ' ';
+          actionBtn += '<button class="admin-demote-owner pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--warning,#d69e2e);color:#fff;border:none;border-radius:6px;cursor:pointer;margin-right:4px;">' + (isEN ? '⬇️ Demote' : '⬇️ Rimuovi Owner') + '</button>';
+        } else if (!isOwnerUser && isApproved && isHardcodedOwner) {
+          // Approved non-owner: show Promote button (only hardcoded super-admins can promote)
+          actionBtn = uidShort + ' ';
+          actionBtn += '<button class="admin-promote-owner pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--accent,#6366f1);color:#fff;border:none;border-radius:6px;cursor:pointer;margin-right:4px;">' + (isEN ? '⬆️ Promote' : '⬆️ Promuovi Owner') + '</button>';
+        }
         if (!isOwnerUser) {
           if (isBanned) {
             // Banned: show Unban + Delete
@@ -10746,6 +11021,70 @@ if ('serviceWorker' in navigator) {
           });
         });
       }
+
+      // v2.13: Attach Promote to Owner handlers
+      adminUsersList.querySelectorAll('.admin-promote-owner').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var uid = btn.dataset.uid;
+          var u = users[uid] || {};
+          var userName = u.name || u.email || uid;
+          showConfirm((isEN ? 'Promote ' + userName + ' to Owner? They will have full admin access.' : 'Promuovere ' + userName + ' a Owner? Avr\u00e0 accesso completo da admin.'), function() {
+            ownerUsersRef.child(uid).set(true).then(function() {
+              if (window.showToast) showToast(isEN ? userName + ' promoted to Owner!' : userName + ' promosso a Owner!', 'success');
+              // Update FCM token role to 'owner' for push targeting
+              db.ref('fcm_tokens/' + uid).once('value', function(tokSnap) {
+                var tokData = tokSnap.val();
+                if (tokData) {
+                  var updates = {};
+                  Object.keys(tokData).forEach(function(devId) {
+                    if (tokData[devId] && tokData[devId].token) {
+                      updates[devId + '/role'] = 'owner';
+                    }
+                  });
+                  if (Object.keys(updates).length > 0) {
+                    db.ref('fcm_tokens/' + uid).update(updates);
+                  }
+                }
+              });
+              renderAdminUsers();
+            }).catch(function(err) {
+              if (window.showToast) showToast(isEN ? 'Error: ' + err.message : 'Errore: ' + err.message, 'error');
+            });
+          });
+        });
+      });
+
+      // v2.13: Attach Demote from Owner handlers
+      adminUsersList.querySelectorAll('.admin-demote-owner').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var uid = btn.dataset.uid;
+          var u = users[uid] || {};
+          var userName = u.name || u.email || uid;
+          showConfirm((isEN ? 'Remove Owner role from ' + userName + '? They will keep regular access.' : 'Rimuovere il ruolo Owner da ' + userName + '? Manterr\u00e0 l\'accesso normale.'), function() {
+            ownerUsersRef.child(uid).remove().then(function() {
+              if (window.showToast) showToast(isEN ? userName + ' demoted to regular user' : userName + ' rimosso da Owner', 'info');
+              // Update FCM token role back to 'family'
+              db.ref('fcm_tokens/' + uid).once('value', function(tokSnap) {
+                var tokData = tokSnap.val();
+                if (tokData) {
+                  var updates = {};
+                  Object.keys(tokData).forEach(function(devId) {
+                    if (tokData[devId] && tokData[devId].token) {
+                      updates[devId + '/role'] = 'family';
+                    }
+                  });
+                  if (Object.keys(updates).length > 0) {
+                    db.ref('fcm_tokens/' + uid).update(updates);
+                  }
+                }
+              });
+              renderAdminUsers();
+            }).catch(function(err) {
+              if (window.showToast) showToast(isEN ? 'Error: ' + err.message : 'Errore: ' + err.message, 'error');
+            });
+          });
+        });
+      });
 
       // Attach ban handlers
       adminUsersList.querySelectorAll('.admin-global-ban').forEach(function(btn) {
@@ -10857,6 +11196,25 @@ if ('serviceWorker' in navigator) {
             deleteOps.push(db.ref('fcm_prefs/' + uid).remove());
             deleteOps.push(db.ref('chat/typing/' + uid).remove());
             deleteOps.push(db.ref('chat/presence/' + uid).remove());
+            // v2.11 FIX: Clean up orphaned chat messages from deleted user
+            // Non-blocking: if chat cleanup fails (e.g. missing index), deletion still succeeds
+            var chatMsgRef = db.ref('chat/' + FAMILY_ID);
+            deleteOps.push(
+              chatMsgRef.orderByChild('uid').equalTo(uid).once('value').then(function(msgSnap) {
+                if (!msgSnap.exists()) return;
+                var msgUpdates = {};
+                msgSnap.forEach(function(child) {
+                  // Mark messages as from deleted user (soft delete preserves conversation context)
+                  msgUpdates[child.key + '/deletedUser'] = true;
+                  msgUpdates[child.key + '/name'] = isEN ? '[Deleted User]' : '[Utente Eliminato]';
+                  msgUpdates[child.key + '/photo'] = '';
+                });
+                return chatMsgRef.update(msgUpdates);
+              }).catch(function(chatErr) {
+                console.warn('[Admin] Chat cleanup failed (non-blocking):', chatErr.message);
+                // Don't throw — user deletion should still succeed
+              })
+            );
             Promise.all(deleteOps).then(function() {
               if (window.showToast) showToast(isEN ? 'User permanently deleted' : 'Utente eliminato definitivamente', 'success');
               renderAdminUsers();

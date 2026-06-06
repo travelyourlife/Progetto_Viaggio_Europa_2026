@@ -17,7 +17,11 @@ var DaysRenderer = (function() {
   };
 
   // ─── HELPERS ───────────────────────────────────────────────────────
-  function esc(s) { return s || ''; }
+  // v2.11 FIX: Proper HTML escaping to prevent XSS if data ever comes from user input
+  function esc(s) {
+    if (!s) return '';
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
 
   function mapsLink(url, label) {
     if (!url) return '';

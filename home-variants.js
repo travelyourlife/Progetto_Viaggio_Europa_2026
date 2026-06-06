@@ -38,6 +38,13 @@
     if (savedRole) currentRole = savedRole;
     if (savedVariant !== null) currentVariantIdx = parseInt(savedVariant, 10) || 0;
 
+    // v2.13: Initialize _simRole on page load for persistent simulation
+    if (savedRole && savedRole !== 'auto' && savedRole !== 'owner') {
+      window._simRole = savedRole;
+    } else {
+      window._simRole = null;
+    }
+
     // Wait for DOM and templates to be ready
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', waitForTemplates);
@@ -101,18 +108,11 @@
     // Initial render (delayed to let auth resolve)
     setTimeout(function() {
       renderCurrentVariant();
-      // Propagate saved role to entire app on load
-      if (currentRole === 'follower' || currentRole === 'visitor') {
-        window.isOwner = false;
-        var adminPanel = document.getElementById('tab-admin');
-        if (adminPanel) adminPanel.style.display = 'none';
-        var adminMenuLink = document.querySelector('[data-tab="admin"]');
-        if (adminMenuLink) adminMenuLink.style.display = 'none';
-        var addEntryBtn = document.getElementById('diario-add-entry');
-        if (addEntryBtn) addEntryBtn.style.display = 'none';
-        var bottomAdmin = document.querySelector('.bottom-bar [data-tab="admin"]');
-        if (bottomAdmin) bottomAdmin.style.display = 'none';
-      }
+      // v2.11 FIX: Do NOT propagate simulated role to global app state.
+      // Admin visibility is now controlled EXCLUSIVELY by Firebase Auth UID
+      // (via checkOwnerStatus in app.js). home-variants only changes the
+      // homepage appearance, never hides admin panel or diary buttons globally.
+      // If the Owner is simulating follower/visitor, only the homepage changes.
     }, 500);
   }
 
@@ -229,8 +229,12 @@
           el.innerHTML = tripData[key];
         } else if (key === 'feed') {
           el.innerHTML = tripData[key];
+          // Re-bind action handlers for dynamically inserted feed items
+          setupActions(el);
         } else if (key === 'diaryPreview') {
           el.innerHTML = tripData[key];
+          // Re-bind action handlers for dynamically inserted diary preview
+          setupActions(el);
         } else if (key === 'photoCounter') {
           if (tripData.photoCount > 0) {
             el.style.display = 'block';
@@ -899,7 +903,7 @@
           'cibo': '\ud83c\udf5d Cibo', 'cultura': '\ud83c\udfdb\ufe0f Cultura', 'attivita': '\ud83e\udd7e Attivit\u00e0'
         };
         var badge = post.customType ? (CUSTOM_TYPE_MAP_HOME[post.customType] || '') : '';
-        html += '<div class="hv-feed-item">';
+        html += '<div class="hv-feed-item" data-hv-action="tab:diario" style="cursor:pointer;">';
         html += '  <div class="hv-feed-header">';
         html += '    <div class="hv-feed-time">' + formatHybridDate(post.date, lang) + '</div>';
         if (badge) html += '    <span class="hv-feed-type hv-type-' + (post.customType || 'update') + '">' + badge + '</span>';
@@ -929,7 +933,7 @@
     // Active trip: show real feed (standardized: no author, date, tag)
     var todayStr = new Date().toLocaleDateString('it-IT', {day:'2-digit', month:'2-digit', year:'numeric'}).replace(/\//g, '/');
     // Check-in item
-    html += '<div class="hv-feed-item">';
+    html += '<div class="hv-feed-item" data-hv-action="tab:diario" style="cursor:pointer;">';
     html += '  <div class="hv-feed-header">';
     html += '    <div class="hv-feed-time">' + todayStr + '</div>';
     html += '    <span class="hv-feed-type hv-type-checkin">' + (lang === 'en' ? '📍 Check-in' : '📍 Check-in') + '</span>';
@@ -938,7 +942,7 @@
     html += '</div>';
 
     // Photo item
-    html += '<div class="hv-feed-item">';
+    html += '<div class="hv-feed-item" data-hv-action="tab:diario" style="cursor:pointer;">';
     html += '  <div class="hv-feed-header">';
     html += '    <div class="hv-feed-time">' + todayStr + '</div>';
     html += '    <span class="hv-feed-type hv-type-photo">' + (lang === 'en' ? '📷 Photo' : '📷 Foto') + '</span>';
@@ -949,7 +953,7 @@
 
     // Recap item
     if (dayData) {
-      html += '<div class="hv-feed-item">';
+      html += '<div class="hv-feed-item" data-hv-action="tab:diario" style="cursor:pointer;">';
       html += '  <div class="hv-feed-header">';
       html += '    <div class="hv-feed-time">' + todayStr + '</div>';
       html += '    <span class="hv-feed-type hv-type-recap">' + (lang === 'en' ? '📝 Recap' : '📝 Riepilogo') + '</span>';
@@ -1135,58 +1139,37 @@
           closeRoleModal();
           renderCurrentVariant();
 
-          // ─── Propagate role to entire app ───
-          if (currentRole === 'visitor') {
-            window.isOwner = false;
-            // Hide admin elements globally
-            var adminPanel = document.getElementById('tab-admin');
-            if (adminPanel) adminPanel.style.display = 'none';
-            var adminMenuLink = document.querySelector('[data-tab="admin"]');
-            if (adminMenuLink) adminMenuLink.style.display = 'none';
-            // Hide diary add button
-            var addEntryBtn = document.getElementById('diario-add-entry');
-            if (addEntryBtn) addEntryBtn.style.display = 'none';
-            // Hide all diary entry action buttons
-            var diaryActions = document.querySelectorAll('.diario-entry-actions');
-            diaryActions.forEach(function(el) { el.style.display = 'none'; });
-            // Hide bottom bar admin icon if present
-            var bottomAdmin = document.querySelector('.bottom-bar [data-tab="admin"]');
-            if (bottomAdmin) bottomAdmin.style.display = 'none';
-            // Hide protected tabs (chat, diario, posizione) for visitor
-            if (typeof updateProtectedTabsUI === 'function') updateProtectedTabsUI(null);
-          } else if (currentRole === 'follower') {
-            window.isOwner = false;
-            // Hide admin elements globally
-            var adminPanel = document.getElementById('tab-admin');
-            if (adminPanel) adminPanel.style.display = 'none';
-            var adminMenuLink = document.querySelector('[data-tab="admin"]');
-            if (adminMenuLink) adminMenuLink.style.display = 'none';
-            // Hide diary add button
-            var addEntryBtn = document.getElementById('diario-add-entry');
-            if (addEntryBtn) addEntryBtn.style.display = 'none';
-            // Hide all diary entry action buttons
-            var diaryActions = document.querySelectorAll('.diario-entry-actions');
-            diaryActions.forEach(function(el) { el.style.display = 'none'; });
-            // Hide bottom bar admin icon if present
-            var bottomAdmin = document.querySelector('.bottom-bar [data-tab="admin"]');
-            if (bottomAdmin) bottomAdmin.style.display = 'none';
-            // Follower CAN see chat/diario/posizione (they are logged in)
-            if (typeof updateProtectedTabsUI === 'function') updateProtectedTabsUI(window.firebaseUser || true);
+          // ─── v2.13: Role simulation now affects ALL sections for realistic preview ───
+          // We expose window._simRole so other sections can hide Owner-only controls.
+          // The real isOwner stays true (Firebase permissions unchanged), but UI hides controls.
+          if (currentRole !== 'auto' && currentRole !== 'owner') {
+            window._simRole = currentRole; // 'follower' or 'visitor'
           } else {
-            // Restore owner view
-            window.isOwner = true;
-            var adminPanel = document.getElementById('tab-admin');
-            if (adminPanel) adminPanel.style.display = '';
-            var adminMenuLink = document.querySelector('[data-tab="admin"]');
-            if (adminMenuLink) adminMenuLink.style.display = '';
-            var addEntryBtn = document.getElementById('diario-add-entry');
-            if (addEntryBtn) addEntryBtn.style.display = '';
-            var diaryActions = document.querySelectorAll('.diario-entry-actions');
-            diaryActions.forEach(function(el) { el.style.display = ''; });
-            var bottomAdmin = document.querySelector('.bottom-bar [data-tab="admin"]');
-            if (bottomAdmin) bottomAdmin.style.display = '';
-            // Owner can see everything
-            if (typeof updateProtectedTabsUI === 'function') updateProtectedTabsUI(window.firebaseUser || true);
+            window._simRole = null;
+          }
+          // Dispatch event so all sections can react
+          window.dispatchEvent(new CustomEvent('simRoleChanged', { detail: { simRole: window._simRole } }));
+          //
+          // Show a visual reminder that simulation is active:
+          var simBanner = document.getElementById('hv-sim-banner');
+          if (currentRole !== 'auto' && currentRole !== 'owner') {
+            if (!simBanner) {
+              simBanner = document.createElement('div');
+              simBanner.id = 'hv-sim-banner';
+              simBanner.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:linear-gradient(90deg,#d69e2e,#ed8936);color:#fff;text-align:center;padding:4px 12px;font-size:12px;font-weight:700;cursor:pointer;';
+              simBanner.title = 'Click to reset to Owner view';
+              simBanner.addEventListener('click', function() {
+                localStorage.setItem('hv-role', 'owner');
+                window._simRole = null;
+                window.dispatchEvent(new CustomEvent('simRoleChanged', { detail: { simRole: null } }));
+                location.reload();
+              });
+              document.body.appendChild(simBanner);
+            }
+            simBanner.textContent = '\u26a0\ufe0f ' + (typeof isEN !== 'undefined' && isEN ? 'Simulating: ' : 'Simulazione: ') + (currentRole === 'visitor' ? 'Visitor' : 'Follower') + ' — ' + (typeof isEN !== 'undefined' && isEN ? 'tap to reset' : 'tocca per resettare');
+            simBanner.style.display = 'block';
+          } else {
+            if (simBanner) simBanner.style.display = 'none';
           }
 
           var roleLabel = currentRole === 'owner' ? 'Owner' : currentRole === 'follower' ? 'Follower' : (typeof isEN !== 'undefined' && isEN ? 'Visitor' : 'Visitatore');
@@ -1300,8 +1283,6 @@
       } else if (typeof switchTabFromHome === 'function') {
         switchTabFromHome('posizione');
       }
-    } else if (action === 'openGpsGuide') {
-      window.open('https://github.com/niccolorossi/gps-logger-guide', '_blank');
     } else if (action === 'openCuriosity') {
       openCuriosityPanel();
     } else if (action === 'goToDay') {
@@ -1312,6 +1293,45 @@
       var _scrollId2 = 'g' + _dayIdx2 + '-header';
       if (typeof window.switchTab === 'function') { window.switchTab('giorni', _scrollId2); }
       else if (typeof switchTabFromHome === 'function') { switchTabFromHome('giorni'); }
+    } else if (action === 'toggleTracking') {
+      // v2.13: Toggle GPS tracking from Home quick-action card
+      var isActive = window._isLiveTrackingActive && window._isLiveTrackingActive();
+      if (isActive) {
+        // Stop tracking
+        if (typeof window.showConfirm === 'function') {
+          window.showConfirm((typeof isEN !== 'undefined' && isEN) ? 'End today\'s trip?' : 'Terminare il viaggio di oggi?', function() {
+            if (window._stopLiveTracking) window._stopLiveTracking();
+            updateTrackingCard();
+            // Reminder to stop GPSLogger
+            setTimeout(function() {
+              if (typeof window.showToast === 'function') {
+                window.showToast((typeof isEN !== 'undefined' && isEN) ? '\u23f9 Tracking stopped. Remember to stop GPSLogger too!' : '\u23f9 Tracking fermato. Ricordati di fermare anche GPSLogger!', 'info', 5000);
+              }
+            }, 500);
+          });
+        }
+      } else {
+        // Start tracking
+        if (window._startLiveTracking) {
+          window._startLiveTracking();
+          updateTrackingCard();
+          // Reminder to start GPSLogger
+          setTimeout(function() {
+            if (typeof window.showToast === 'function') {
+              window.showToast((typeof isEN !== 'undefined' && isEN) ? '\ud83d\udef0\ufe0f Tracking started! Remember to also start GPSLogger.' : '\ud83d\udef0\ufe0f Tracking avviato! Ricordati di avviare anche GPSLogger.', 'info', 5000);
+            }
+            // Try to open GPSLogger via intent (Android)
+            try {
+              var gpsLink = document.createElement('a');
+              gpsLink.href = 'intent://#Intent;package=com.mendhak.gpslogger;end';
+              gpsLink.style.display = 'none';
+              document.body.appendChild(gpsLink);
+              gpsLink.click();
+              setTimeout(function() { gpsLink.remove(); }, 1000);
+            } catch(e) { /* ignore if not Android */ }
+          }, 800);
+        }
+      }
     } else if (action === 'expandAvatar') {
       // Show avatar in fullscreen lightbox
       var lb = document.createElement('div');
@@ -1321,6 +1341,51 @@
       document.body.appendChild(lb);
     }
   }
+
+  // ─── v2.13: Tracking card state management ───
+  function updateTrackingCard() {
+    var card = document.getElementById('hv-tracking-card');
+    var icon = document.getElementById('hv-tracking-icon');
+    var label = document.getElementById('hv-tracking-label');
+    var sub = document.getElementById('hv-tracking-sub');
+    if (!card) return;
+    var isActive = window._isLiveTrackingActive && window._isLiveTrackingActive();
+    if (isActive) {
+      card.style.borderColor = 'var(--danger, #e53e3e)';
+      card.style.background = 'rgba(229,62,62,0.05)';
+      if (icon) icon.textContent = '\u23f9';
+      if (label) label.textContent = 'Tracking';
+      if (sub) { sub.textContent = (typeof isEN !== 'undefined' && isEN) ? '\u23f9 Stop' : '\u23f9 Ferma'; sub.style.color = 'var(--danger, #e53e3e)'; }
+    } else {
+      card.style.borderColor = '';
+      card.style.background = '';
+      if (icon) icon.textContent = '\ud83d\udef0\ufe0f';
+      if (label) label.textContent = 'Tracking';
+      if (sub) { sub.textContent = (typeof isEN !== 'undefined' && isEN) ? '\u25b6 Start' : '\u25b6 Avvia'; sub.style.color = ''; }
+    }
+  }
+
+  // Show tracking card only for Owner (driver)
+  function showTrackingCardIfOwner() {
+    var card = document.getElementById('hv-tracking-card');
+    if (!card) return;
+    if (typeof isOwner !== 'undefined' && isOwner) {
+      card.style.display = '';
+      updateTrackingCard();
+    } else {
+      card.style.display = 'none';
+    }
+  }
+  window.addEventListener('authStateChanged', function(e) {
+    if (e.detail && e.detail.isOwner) { showTrackingCardIfOwner(); }
+  });
+  // Also check on initial load (delayed to let auth resolve)
+  setTimeout(showTrackingCardIfOwner, 2000);
+  // Update card state periodically (in case tracking started/stopped from Posizione tab)
+  setInterval(function() {
+    var card = document.getElementById('hv-tracking-card');
+    if (card && card.style.display !== 'none') updateTrackingCard();
+  }, 3000);
 
   // ─── Utilities ───
   function getStatFromDOM(id) {
@@ -1388,7 +1453,14 @@
 
     // Check if within forecast range (16 days from today)
     var daysUntil = Math.ceil((dayDate - now) / 86400000);
-    if (daysUntil > 16 || daysUntil < -1) return; // Out of forecast range
+    if (daysUntil > 16 || daysUntil < -1) {
+      // If day override is active, use today's date as fallback to show format
+      if (typeof window._dayOverride === 'number') {
+        dateStr = now.toISOString().split('T')[0];
+      } else {
+        return; // Out of forecast range
+      }
+    }
 
     var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + lat + '&longitude=' + lon +
       '&daily=temperature_2m_max,temperature_2m_min,weathercode,sunrise,sunset,precipitation_probability_max,windspeed_10m_max' +
