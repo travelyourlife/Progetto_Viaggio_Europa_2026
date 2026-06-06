@@ -1323,7 +1323,7 @@
             // Try to open GPSLogger via intent (Android)
             try {
               var gpsLink = document.createElement('a');
-              gpsLink.href = 'intent://#Intent;package=com.mendhak.gpslogger;end';
+              gpsLink.href = 'intent://#Intent;package=com.mendhak.gpslogger;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;end';
               gpsLink.style.display = 'none';
               document.body.appendChild(gpsLink);
               gpsLink.click();
@@ -1341,6 +1341,26 @@
       document.body.appendChild(lb);
     }
   }
+
+  // ─── v2.15: Admin card visibility (Owner only, respects simRole) ───
+  function showAdminCardIfOwner() {
+    var card = document.getElementById('hv-admin-card');
+    if (!card) return;
+    var effectiveOwner = (typeof isOwner !== 'undefined' && isOwner) && !window._simRole;
+    if (effectiveOwner) {
+      card.style.display = '';
+    } else {
+      card.style.display = 'none';
+    }
+  }
+  window.addEventListener('authStateChanged', function(e) {
+    showAdminCardIfOwner();
+  });
+  window.addEventListener('simRoleChanged', function(e) {
+    showAdminCardIfOwner();
+    showTrackingCardIfOwner();
+  });
+  setTimeout(showAdminCardIfOwner, 2000);
 
   // ─── v2.13: Tracking card state management ───
   function updateTrackingCard() {
@@ -1365,11 +1385,12 @@
     }
   }
 
-  // Show tracking card only for Owner (driver)
+  // Show tracking card only for Owner (driver) - respects simRole
   function showTrackingCardIfOwner() {
     var card = document.getElementById('hv-tracking-card');
     if (!card) return;
-    if (typeof isOwner !== 'undefined' && isOwner) {
+    var effectiveOwner = (typeof isOwner !== 'undefined' && isOwner) && !window._simRole;
+    if (effectiveOwner) {
       card.style.display = '';
       updateTrackingCard();
     } else {
