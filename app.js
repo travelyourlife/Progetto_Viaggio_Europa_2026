@@ -2306,13 +2306,33 @@ document.addEventListener('DOMContentLoaded', function() {
         function startLive() {
             if (!navigator.geolocation) { showToast(isEN ? 'GPS not supported.' : 'GPS non supportato.', 'error'); return; }
             if (!isOwner) { showToast(isEN ? '🔒 Only organizers.' : '🔒 Solo organizzatori.', 'info'); return; }
-            // Only the driver (first OWNER_UID) can start tracking
-            var DRIVER_UID = (typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.length > 0) ? OWNER_UIDS[0] : null;
-            if (firebaseUser && DRIVER_UID && firebaseUser.uid !== DRIVER_UID) {
-                showToast(isEN ? '🚐 Tracking reserved for the driver.' : '🚐 Tracking riservato al conducente.', 'info');
-                return;
+
+            // v2.16: Check if another Owner already has tracking active
+            var liveSessionRef = getFamilyRef('liveSession');
+            if (liveSessionRef) {
+                liveSessionRef.once('value', function(snap) {
+                    var sessions = snap.val() || {};
+                    var otherActive = null;
+                    Object.keys(sessions).forEach(function(uid) {
+                        if (uid !== firebaseUser.uid && sessions[uid] && sessions[uid].active === true) {
+                            otherActive = sessions[uid];
+                            otherActive.uid = uid;
+                        }
+                    });
+                    if (otherActive) {
+                        // Another owner has tracking active — block with info
+                        var otherName = otherActive.name || otherActive.uid.substring(0, 8);
+                        showToast(isEN ? '🚐 Tracking already active by ' + otherName + '. Stop theirs first.' : '🚐 Tracking già attivo da ' + otherName + '. Fermalo prima di avviare il tuo.', 'info', 5000);
+                        return;
+                    }
+                    // No conflict — proceed with start
+                    _doStartLiveLoad();
+                });
+            } else {
+                _doStartLiveLoad();
             }
 
+            function _doStartLiveLoad() {
             // Load existing today's data from Firebase to accumulate across sessions
             var sumRef = getFamilyRef('dailySummaries/' + todayStr());
             var trackRef = getFamilyRef('tracks/' + todayStr() + '/points');
@@ -2328,7 +2348,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 // Persist tracking state to Firebase for resume after refresh
                 var sessionRef = getFamilyRef('liveSession/' + (firebaseUser ? firebaseUser.uid : 'driver'));
-                if (sessionRef) sessionRef.set({ active: true, startTime: liveStartTime, todayKm: todayKm });
+                if (sessionRef) sessionRef.set({ active: true, startTime: liveStartTime, todayKm: todayKm, name: firebaseUser.displayName || 'Owner' });
                 lastMovementTime = Date.now();
                 _startLiveGPS();
             }
@@ -2360,6 +2380,7 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 doStart();
             }
+            } // end _doStartLiveLoad
         }
 
         // Previous elapsed time from earlier sessions today
@@ -2681,9 +2702,7 @@ document.addEventListener('DOMContentLoaded', function() {
             var now = new Date();
             if (now < TRIP_START) return;
             if (now > TRIP_END) return;
-            // Only the driver (first OWNER_UID) can auto-start
-            var DRIVER_UID = (typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.length > 0) ? OWNER_UIDS[0] : null;
-            if (firebaseUser && DRIVER_UID && firebaseUser.uid !== DRIVER_UID) return;
+            // v2.16: Any owner can auto-start (conflict check is in startLive)
 
             var autoStartCount = 0;
             var AUTO_START_THRESHOLD = 15; // km/h — must be driving, not GPS drift
@@ -3287,15 +3306,13 @@ document.addEventListener('DOMContentLoaded', function() {
             // Show custom stop add row for owners
             var customAddRow = document.getElementById('pos-custom-add-row');
             if (customAddRow) customAddRow.style.display = effectiveOwner ? '' : 'none';
-            // Hide start/stop for non-driver owner (can still see live data)
-            var DRIVER_UID = (typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.length > 0) ? OWNER_UIDS[0] : null;
-            var isDriver = firebaseUser && DRIVER_UID && firebaseUser.uid === DRIVER_UID;
-            if (startBtn) startBtn.style.display = (effectiveOwner && isDriver) ? '' : 'none';
+            // v2.16: All owners can start/stop tracking (conflict check in startLive)
+            if (startBtn) startBtn.style.display = effectiveOwner ? '' : 'none';
             if (stopBtn && !liveActive) stopBtn.style.display = 'none';
-            // Quick-start button (inline, admin only) — toggles between ▶ and ⏹
+            // Quick-start button (inline, owner only) — toggles between ▶ and ⏹
             var quickStartBtn = document.getElementById('pos-quick-start');
             if (quickStartBtn) {
-                quickStartBtn.style.display = (effectiveOwner && isDriver) ? 'inline-flex' : 'none';
+                quickStartBtn.style.display = effectiveOwner ? 'inline-flex' : 'none';
                 if (liveActive) {
                     quickStartBtn.textContent = '\u23F9';
                     quickStartBtn.classList.add('stop-mode');
@@ -3321,8 +3338,6 @@ document.addEventListener('DOMContentLoaded', function() {
         function resumeTracking() {
             if (liveActive) return;
             if (!firebaseUser || !isOwner) return;
-            var DRIVER_UID = (typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.length > 0) ? OWNER_UIDS[0] : null;
-            if (DRIVER_UID && firebaseUser.uid !== DRIVER_UID) return;
             var sessionRef = getFamilyRef('liveSession/' + firebaseUser.uid);
             if (!sessionRef) return;
             sessionRef.once('value', function(snap) {

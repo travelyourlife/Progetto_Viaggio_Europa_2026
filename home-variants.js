@@ -580,9 +580,9 @@
       data.chatBadge = '';
       data.diarySnippet = '';
     } else {
-      data.diarioStatus = 'Da compilare';
+      data.diarioStatus = '';
       data.chatStatus = '';
-      data.diarioCount = '-- entry';
+      data.diarioCount = '';
       data.chatPreview = '';
       data.chatBadge = '';
       data.diarySnippet = '';
