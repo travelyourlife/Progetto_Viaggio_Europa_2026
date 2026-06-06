@@ -48,8 +48,8 @@
       "users": {
         ".read": "auth != null && (auth.uid === 'RxlVlsfeaEeSwFUVYbKQujEsbBo1' || auth.uid === 'Mh8BOeFPnFe7WObcsUoP6wyRgPw1')",
         "$uid": {
-          ".write": "auth != null && auth.uid === $uid",
-          ".validate": "newData.hasChildren(['name', 'email'])"
+          ".write": "auth != null && (auth.uid === $uid || auth.uid === 'RxlVlsfeaEeSwFUVYbKQujEsbBo1' || auth.uid === 'Mh8BOeFPnFe7WObcsUoP6wyRgPw1')",
+          ".validate": "newData.hasChildren(['name', 'email']) || newData.val() === null"
         }
       },
       "banned": {

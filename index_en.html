@@ -2,12 +2,6 @@
 <html lang="en">
 <head>
     <!-- Google tag (gtag.js) — deferred config to exclude owner sessions -->
-    <!-- TODO SECURITY (v1.28+):
-         - [ ] Apply updated database.rules.json (live read + chat write → approved only)
-         - [ ] Verify XSS in chat (does renderMessage use textContent?)
-         - [ ] Rate limiting on pendingUsers (Cloud Functions)
-         - [ ] Session expiry after X days
-    -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-YSGVVPN5ZR"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -53,7 +47,7 @@
     <link rel="apple-touch-icon" sizes="152x152" href="./icon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="./icon.png">
     <link rel="apple-touch-icon" sizes="167x167" href="./icon.png">
-    <title>Quo Vadis — V1.98</title>
+    <title>Quo Vadis — V2.00</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="home-variants.css">
@@ -75,7 +69,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = '1.98';
+  var EXPECTED_VERSION = '2.10';
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
   var r = false;
@@ -325,24 +319,32 @@
                 <div class="hero-trip-city" id="hero-trip-city">📍 --</div>
                 <div class="hero-trip-country" id="hero-trip-country"></div>
             </div>
-            <div class="hero-trip-date" id="hero-trip-date" style="cursor:pointer;" title="Go to day in Itinerary">
-                <div class="hero-trip-date-day" id="hero-trip-date-day">--</div>
-                <div class="hero-trip-date-month" id="hero-trip-date-month"></div>
+            <div class="hero-trip-day-badge" id="hero-trip-date" style="cursor:pointer;" title="Go to day in Itinerary">
+                <span class="hero-trip-day-label" id="hero-trip-date-day">D--</span>
             </div>
             <img src="./icon.png" alt="" class="hero-card-avatar">
+        </div>
+        <div class="hero-trip-distance" id="hero-trip-distance" style="display:none;">
+            <span id="hero-trip-distance-text"></span>
         </div>
     </div>
     <!-- Avatar for pre-trip (shown by default) -->
     <img src="./icon.png" alt="" class="hero-card-avatar" id="hero-pre-avatar">
     <!-- Weather row (integrated, shown in both states) -->
     <div class="hero-weather-row" id="hero-weather-row" style="display:none;">
-        <span id="hero-weather-loc"></span>
+        <span class="hero-info-block" id="hero-weather-loc-block"><span id="hero-weather-loc"></span></span>
         <span class="hero-weather-sep">·</span>
-        <span id="hero-weather-icon"></span>
-        <span id="hero-weather-temp" class="hero-weather-bold"></span>
+        <span class="hero-info-block" id="hero-weather-temp-block"><span id="hero-weather-icon"></span> <span id="hero-weather-temp" class="hero-weather-bold"></span></span>
         <span class="hero-weather-sep">·</span>
-        <span>🌅</span>
-        <span id="hero-weather-light"></span>
+        <span class="hero-info-block" id="hero-weather-light-block">🌅 <span id="hero-weather-light"></span></span>
+    </div>
+    <!-- Next stop row (during trip) -->
+    <div class="hero-next-stop" id="hero-next-stop" style="display:none;">
+        <span class="hero-info-block" id="hero-next-loc-block"></span>
+        <span class="hero-weather-sep">·</span>
+        <span class="hero-info-block" id="hero-next-weather-block"></span>
+        <span class="hero-weather-sep">·</span>
+        <span class="hero-info-block" id="hero-next-when-block"></span>
     </div>
 </div>
 
@@ -427,7 +429,7 @@
 <a href="#mappa">🗺️ Map</a>
 <a href="#itinerario-54-giorni">🌟 Itinerary</a>
 </div></div>
-<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerary</a> · 📍 <a href="javascript:void(0)" onclick="switchTab('posizione')">Live Position</a> · 🍝 <a href="javascript:void(0)" onclick="switchTab('cibo')">Food</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura')">Culture</a> · 📋 <a href="javascript:void(0)" onclick="switchTab('piano')">Plan</a></div>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerary</a> · 📍 <a href="javascript:void(0)" class="protected-link" onclick="switchTab('posizione')">Live Position</a> · 🍝 <a href="javascript:void(0)" onclick="switchTab('cibo')">Food</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura')">Culture</a> · 📋 <a href="javascript:void(0)" onclick="switchTab('piano')">Plan</a></div>
 <h2 id="sintesi">📋 Summary — Crew and Vehicle</h2>
 <p>👨‍👩‍👧‍👦 <strong>Crew:</strong> 2 adults + 2 children (8 and 6 years old)</p>
 <p>🚐 <strong>Vehicle:</strong> self-sufficient camper van (LiFePo4 + 5 kg gas cylinder)</p>
@@ -646,7 +648,7 @@
 <div id="days-dynamic-content"></div>
 <!-- END DAYS CONTENT -->
 <span id="meteo"></span>
-<h3 id="pos-meteo-storico">☀️🌧️ Weather — by Zone and Day</h3>
+<h3 id="giorni-meteo-storico">☀️🌧️ Weather — by Zone and Day</h3>
 <blockquote>
 <p>Historical climate averages for the <strong>exact dates</strong> you will be in each zone (26/06 → 18/08). Sources: WeatherSpark, Climate-Data.org, VisitNorway, VisitFinland, AccuWeather.</p>
 </blockquote>
@@ -5419,7 +5421,7 @@
 <a href="#drone">🛸 Drone</a>
 <a href="#inreach">📡 Garmin inReach</a>
 </div></div>
-<div class="cross-link-bar">📍 <a href="javascript:void(0)" onclick="switchTab('posizione')">Live Position</a> · 🍝 <a href="javascript:void(0)" onclick="switchTab('cibo')">Food</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura')">Culture</a> · 🧭 <a href="javascript:void(0)" onclick="switchTab('luoghi')">Places</a> · 🎒 <a href="javascript:void(0)" onclick="switchTab('zaino','z-trekking')">Trekking Gear</a></div>
+<div class="cross-link-bar">📍 <a href="javascript:void(0)" class="protected-link" onclick="switchTab('posizione')">Live Position</a> · 🍝 <a href="javascript:void(0)" onclick="switchTab('cibo')">Food</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura')">Culture</a> · 🧭 <a href="javascript:void(0)" onclick="switchTab('luoghi')">Places</a> · 🎒 <a href="javascript:void(0)" onclick="switchTab('zaino','z-trekking')">Trekking Gear</a></div>
 <h2 id="campeggio">🚐 Camping — Rules by Country</h2>
 <table class="no-responsive">
 <thead>
@@ -6951,7 +6953,7 @@
 <a href="#secA">♨️ Thermal Baths</a>
 <a href="#poi-parchi-divertimento">🎢 Theme Parks</a>
 </div></div>
-<div class="cross-link-bar">📍 <a href="javascript:void(0)" onclick="switchTab('posizione')">Live Position</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura')">Culture</a> · 🥾 <a href="javascript:void(0)" onclick="switchTab('attivita')">Activities</a> · 📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerary</a> · 📋 <a href="javascript:void(0)" onclick="switchTab('piano')">Plan</a></div>
+<div class="cross-link-bar">📍 <a href="javascript:void(0)" class="protected-link" onclick="switchTab('posizione')">Live Position</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura')">Culture</a> · 🥾 <a href="javascript:void(0)" onclick="switchTab('attivita')">Activities</a> · 📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerary</a> · 📋 <a href="javascript:void(0)" onclick="switchTab('piano')">Plan</a></div>
 
 <h2 id="musei-attrazioni">🏛️ Museums and Attractions</h2>
 <p>Museums, monuments and must-see cultural attractions along the route. Many are already mentioned in the individual itinerary days.</p>
@@ -7027,7 +7029,7 @@
 <a href="#fonti">📚 Fonti</a>
 <a href="#analytics" id="analytics-tab-link" style="display:none;">📊 Analytics</a>
 </div></div>
-<div class="cross-link-bar">📍 <a href="javascript:void(0)" onclick="switchTab('posizione')">Live Position</a> · 🍝 <a href="javascript:void(0)" onclick="switchTab('cibo')">Food</a> · 🥾 <a href="javascript:void(0)" onclick="switchTab('attivita')">Activities</a> · 🎒 <a href="javascript:void(0)" onclick="switchTab('zaino')">Gear</a> · 📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerary</a></div>
+<div class="cross-link-bar">📍 <a href="javascript:void(0)" class="protected-link" onclick="switchTab('posizione')">Live Position</a> · 🍝 <a href="javascript:void(0)" onclick="switchTab('cibo')">Food</a> · 🥾 <a href="javascript:void(0)" onclick="switchTab('attivita')">Activities</a> · 🎒 <a href="javascript:void(0)" onclick="switchTab('zaino')">Gear</a> · 📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerary</a></div>
 <h2 id="checklist-pre-partenza">✅ Checklist — Pre-departure</h2>
 <hr>
 <h3 id="prenotazioni-per-data">📅 Bookings by date</h3>
@@ -7852,7 +7854,7 @@
     <div class="zp-sub" id="zp-percent">0% completed</div>
     <div class="zp-bar"><div class="zp-fill" id="zp-fill" style="width:0%"></div></div>
 </div>
-<div class="cross-link-bar">📋 <a href="javascript:void(0)" onclick="switchTab('piano')">Plan & Budget</a> · 🥾 <a href="javascript:void(0)" onclick="switchTab('attivita')">Activities</a> · 🍝 <a href="javascript:void(0)" onclick="switchTab('cibo')">Food</a> · 📍 <a href="javascript:void(0)" onclick="switchTab('posizione')">Live Position</a> · 📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerary</a></div>
+<div class="cross-link-bar">📋 <a href="javascript:void(0)" onclick="switchTab('piano')">Plan & Budget</a> · 🥾 <a href="javascript:void(0)" onclick="switchTab('attivita')">Activities</a> · 🍝 <a href="javascript:void(0)" onclick="switchTab('cibo')">Food</a> · 📍 <a href="javascript:void(0)" class="protected-link" onclick="switchTab('posizione')">Live Position</a> · 📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerary</a></div>
 
 <h3 id="z-camper">🚐 Motorhome &amp; Tools</h3>
 <ul>
@@ -8162,11 +8164,11 @@
 <details id="pos-meteo-storico" style="margin-top:16px;">
 <summary style="cursor:pointer;font-size:16px;font-weight:700;padding:12px 0;user-select:none;">📊 Historical Weather — by Area and Day <span style="font-size:13px;color:var(--text-muted);font-weight:400;">(climate averages)</span></summary>
 <div style="padding:8px 0;">
-<span id="meteo"></span>
+<span id="pos-meteo-anchor"></span>
 <blockquote>
 <p>Historical climate averages for the <strong>exact dates</strong> you will be in each area (26/06 → 18/08). Sources: WeatherSpark, Climate-Data.org, VisitNorway, VisitFinland, AccuWeather.</p>
 </blockquote>
-<h4 id="meteo-tabella-riassuntiva" style="font-size:1.2em;margin-top:1.5em;">📊 Weather — Summary Table</h4>
+<h4 id="pos-meteo-tabella" style="font-size:1.2em;margin-top:1.5em;">📊 Weather — Summary Table</h4>
 <table>
 <thead>
 <tr>
@@ -8454,9 +8456,9 @@
 </tbody>
 </table>
 <hr>
-<h4 id="meteo-profilo-termico" style="font-size:1.2em;margin-top:1.5em;">🌡️ Weather — Temperature Profile</h4>
+<h4 id="pos-meteo-profilo" style="font-size:1.2em;margin-top:1.5em;">🌡️ Weather — Temperature Profile</h4>
 <p class="weather-reliability-note">🔵 Cool (≤17°C) · 🟢 Mild (18-23°C) · 🟡 Warm (24-27°C) · 🔴 Hot (≥28°C)</p>
-<div class="weather-chart" id="weatherChart">
+<div class="weather-chart" id="pos-weatherChart">
     <div class="wc-bars">
         <div class="wc-bar-wrap" title="Austria 🇦🇹: 25°C max, 15°C min, 10 rain days">
             <span class="wc-label">D0-D1</span>
@@ -8585,7 +8587,7 @@
         </div>
     </div>
 </div>
-<div id="weatherRealtime" class="weather-realtime">
+<div id="pos-weatherRealtime" class="weather-realtime">
     <div class="skeleton skeleton-line" style="width:80%;"></div>
     <div class="skeleton skeleton-line" style="width:60%;"></div>
     <div class="skeleton skeleton-block" style="height:60px;"></div>

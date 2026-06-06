@@ -196,7 +196,7 @@
 }
 
 .umap-popup-link:hover {
-  text-decoration: underline;
+  text-decoration: none; color: var(--primary, #2b6cb0);
 }
 
 /* ═══ Live marker on Route Map ═══ */

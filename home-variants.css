@@ -30,22 +30,25 @@
 
 .hv-hero-status {
     display: flex; justify-content: space-between; align-items: flex-start;
-    padding: 16px 18px; border-radius: 16px; margin-bottom: 12px;
-    background: linear-gradient(135deg, #1a2a4a 0%, #2d3a5c 100%);
-    color: #fff;
+    padding: 16px 18px; border-radius: 20px; margin-bottom: 12px;
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    color: var(--text-primary, #1a202c);
+    border: 1px solid rgba(255,255,255,0.6);
+    border-left: none;
+    box-shadow: 6px 6px 12px rgba(0,0,0,0.06), -4px -4px 10px rgba(255,255,255,0.8);
 }
-.hv-hero-status.hv-hero-dark { border-radius: 16px; }
+.hv-hero-status.hv-hero-dark { border-radius: 20px; }
 .hv-status-badge { font-size: 15px; font-weight: 700; letter-spacing: 0.3px; }
-.hv-badge-green { color: #4ade80; }
-.hv-badge-blue { color: #60a5fa; }
-.hv-hero-city { font-size: 22px; font-weight: 800; margin-top: 6px; }
-.hv-hero-country { font-size: 13px; opacity: 0.85; margin-top: 2px; }
+.hv-badge-green { color: #16a34a; }
+.hv-badge-blue { color: #2563eb; }
+.hv-hero-city { font-size: 22px; font-weight: 800; margin-top: 6px; color: var(--text-primary, #1a202c); }
+.hv-hero-country { font-size: 13px; opacity: 0.7; margin-top: 2px; color: var(--text-secondary, #4a5568); }
 .hv-day-badge {
-    background: rgba(255,255,255,0.15); border-radius: 10px; padding: 8px 12px;
+    background: #f0f9ff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 8px 12px;
     text-align: center;
 }
-.hv-day-num { font-size: 20px; font-weight: 800; display: block; }
-.hv-day-date { font-size: 11px; opacity: 0.7; }
+.hv-day-num { font-size: 20px; font-weight: 800; display: block; color: #2563eb; }
+.hv-day-date { font-size: 11px; opacity: 0.7; color: var(--text-muted, #64748b); }
 
 .hv-weather-row {
     display: flex; align-items: center; gap: 6px; padding: 10px 16px;
@@ -350,6 +353,13 @@
     background: linear-gradient(135deg, #fde68a 0%, #fdba74 100%);
 }
 .hv-feed-reactions { display: flex; gap: 12px; margin-top: 8px; font-size: 13px; color: var(--text-muted, #64748b); }
+.hv-feed-translate-btn {
+    display: inline-block; margin-top: 6px; padding: 4px 10px;
+    font-size: 16px; background: #f0f9ff; border: 1px solid #bfdbfe;
+    border-radius: 8px; cursor: pointer; transition: background 0.2s;
+}
+.hv-feed-translate-btn:hover { background: #dbeafe; }
+.hv-feed-translate-btn:disabled { opacity: 0.5; cursor: wait; }
 
 /* ═══════════════════════════════════════════════════════════════════════
    FOLLOWER VARIANTE B: Story Card
@@ -652,7 +662,9 @@ a.hv-visitor-lock.hv-login-link { text-decoration: underline; cursor: pointer; d
 
     /* Day badges */
     .hv-dash-day-badge, .hv-bento-day-badge { background: #2b6cb0; }
-    .hv-day-badge { background: rgba(255,255,255,0.1); }
+    .hv-day-badge { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); }
+    .hv-day-num { color: #60a5fa; }
+    .hv-day-date { color: #a0aec0; }
 
     /* Notification CTA */
     .hv-notif-cta { background: linear-gradient(135deg, #1e3a5f 0%, #1a365d 100%); border-color: #2b6cb0; }
@@ -660,6 +672,37 @@ a.hv-visitor-lock.hv-login-link { text-decoration: underline; cursor: pointer; d
     .hv-notif-cta-text span { color: #63b3ed; }
     .hv-notif-cta-btn { background: #2b6cb0; }
     .hv-notif-cta-btn:hover { background: #2c5282; }
+
+    /* Hero status (during-trip) dark mode */
+    .hv-hero-status {
+        background: linear-gradient(135deg, #2d3748 0%, #323d50 100%);
+        color: #e2e8f0;
+        border-color: rgba(255,255,255,0.08);
+        box-shadow: 6px 6px 12px rgba(0,0,0,0.3), -4px -4px 10px rgba(255,255,255,0.03);
+    }
+    .hv-badge-green { color: #4ade80; }
+    .hv-badge-blue { color: #60a5fa; }
+    .hv-hero-city { color: #e2e8f0; }
+    .hv-hero-country { color: #a0aec0; }
+
+    /* Pre-trip hero dark mode */
+    .hv-pretrip-hero {
+        background: linear-gradient(135deg, #2d3748 0%, #323d50 100%);
+        color: #e2e8f0;
+        border-color: rgba(255,255,255,0.08);
+        box-shadow: 6px 6px 12px rgba(0,0,0,0.3), -4px -4px 10px rgba(255,255,255,0.03);
+    }
+    .hv-pretrip-label { color: #fbbf24; }
+    .hv-pretrip-number { color: #60a5fa; }
+    .hv-pretrip-text { color: #e2e8f0; }
+    .hv-pretrip-date { color: #a0aec0; }
+    .hv-pretrip-weather { color: #a0aec0; border-top-color: rgba(255,255,255,0.1); }
+
+    /* During-trip hero v199 dark mode */
+    .hv-hero-v199 .hv-hero-trip-day-badge .hv-day-num {
+        color: #e2e8f0; background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2);
+    }
+    .hv-hero-trip-distance span { color: #a0aec0; }
 
     /* Visitor hero already has dark gradient, just fix login btn */
     .hv-visitor-login-btn { background: #2d3748; border-color: #4a5568; color: #e2e8f0; }
@@ -822,7 +865,7 @@ a.hv-visitor-lock.hv-login-link { text-decoration: underline; cursor: pointer; d
     width: 70px; height: 70px; border-radius: 50%;
     object-fit: cover; flex-shrink: 0; margin-left: 10px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-    border: 2px solid rgba(255,255,255,0.3);
+    border: 2px solid rgba(0,0,0,0.08);
 }
 .hv-avatar-clickable { cursor: pointer; transition: transform 0.2s; }
 .hv-avatar-clickable:active { transform: scale(0.92); }
@@ -858,9 +901,11 @@ a.hv-visitor-lock.hv-login-link { text-decoration: underline; cursor: pointer; d
    ═══════════════════════════════════════════════════════════════════════ */
 
 .hv-pretrip-hero {
-    border-radius: 16px; margin-bottom: 12px; overflow: hidden;
-    background: linear-gradient(135deg, #1a2a4a 0%, #2d3a5c 100%);
-    color: #fff;
+    border-radius: 20px; margin-bottom: 12px; overflow: hidden;
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    color: var(--text-primary, #1a202c);
+    border: 1px solid rgba(0,0,0,0.06);
+    box-shadow: 6px 6px 12px rgba(0,0,0,0.06), -4px -4px 10px rgba(255,255,255,0.8);
 }
 .hv-pretrip-hero-main {
     display: flex; align-items: center; justify-content: space-between;
@@ -869,24 +914,24 @@ a.hv-visitor-lock.hv-login-link { text-decoration: underline; cursor: pointer; d
 .hv-pretrip-hero-left { flex: 1; min-width: 0; }
 .hv-pretrip-label {
     display: block; font-size: 11px; font-weight: 700; letter-spacing: 1.2px;
-    color: #fbbf24; margin-bottom: 6px; text-transform: uppercase;
+    color: #d97706; margin-bottom: 6px; text-transform: uppercase;
 }
 .hv-pretrip-countdown {
     display: flex; align-items: baseline; gap: 8px; margin-bottom: 6px;
 }
 .hv-pretrip-number {
-    font-size: 52px; font-weight: 800; color: #60a5fa; line-height: 1;
+    font-size: 52px; font-weight: 800; color: #2563eb; line-height: 1;
 }
 .hv-pretrip-text {
-    font-size: 16px; font-weight: 500; color: rgba(255,255,255,0.9); line-height: 1.3;
+    font-size: 16px; font-weight: 500; color: var(--text-primary, #1a202c); line-height: 1.3;
 }
 .hv-pretrip-date {
-    font-size: 13px; color: rgba(255,255,255,0.7); margin-top: 2px;
+    font-size: 13px; color: var(--text-muted, #64748b); margin-top: 2px;
 }
 .hv-pretrip-weather {
     display: flex; align-items: center; gap: 6px; padding: 10px 18px 14px;
-    font-size: 13px; color: rgba(255,255,255,0.85);
-    border-top: 1px solid rgba(255,255,255,0.12);
+    font-size: 13px; color: var(--text-secondary, #4a5568);
+    border-top: 1px solid rgba(0,0,0,0.06);
 }
 .hv-pretrip-weather .hv-sep { opacity: 0.4; }
 
@@ -901,4 +946,154 @@ a.hv-visitor-lock.hv-login-link { text-decoration: underline; cursor: pointer; d
 @media (max-width: 360px) {
     .hv-pretrip-hero-main .hv-hero-avatar { display: none; }
     .hv-pretrip-number { font-size: 42px; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   V1.99 HERO REDESIGN — Two-level layout with centered day badge
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.hv-hero-v199 {
+    display: flex; flex-direction: column; gap: 8px;
+}
+.hv-hero-trip-top {
+    margin-bottom: 4px;
+}
+.hv-hero-trip-main {
+    display: flex; align-items: center; gap: 12px;
+}
+.hv-hero-trip-city-block {
+    flex-shrink: 0;
+}
+.hv-hero-trip-day-badge {
+    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+}
+.hv-hero-trip-day-badge .hv-day-num {
+    display: inline-block;
+    font-size: 18px; font-weight: 700; color: #2563eb;
+    background: #f0f9ff; border: 1.5px solid #bfdbfe;
+    border-radius: 8px; padding: 4px 12px;
+    letter-spacing: 0.5px;
+}
+.hv-hero-trip-day-badge .hv-day-date {
+    font-size: 11px; font-weight: 500; color: var(--text-secondary, #4a5568);
+    opacity: 0.8;
+}
+.hv-hero-trip-day-badge .hv-day-date:empty { display: none; }
+
+/* Distance badge — yellow/amber background */
+.hv-hero-trip-distance-badge {
+    display: inline-block; margin-top: 6px;
+    font-size: 12px; font-weight: 600; color: #92400e;
+    background: #fef3c7; border: 1px solid #fde68a;
+    border-radius: 12px; padding: 3px 10px;
+}
+.hv-hero-trip-distance-badge:empty { display: none; }
+
+/* Next stop row */
+.hv-next-stop-row {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 13px; color: var(--text-muted, #64748b);
+    margin-top: 4px; padding-top: 8px;
+    border-top: 1px dashed var(--border, #e2e8f0);
+    flex-wrap: wrap; row-gap: 4px;
+}
+.hv-next-stop-row .hero-info-block {
+    display: inline-flex; align-items: center; gap: 3px;
+    white-space: nowrap;
+}
+.hv-next-stop-row .hero-weather-bold {
+    font-weight: 600;
+}
+
+/* Weather v199 sub-row — uses hero-info-block from style.css */
+.hv-weather-v199 {
+    flex-wrap: wrap; row-gap: 4px;
+}
+.hv-weather-v199 .hero-info-block {
+    display: inline-flex; align-items: center; gap: 3px;
+    white-space: nowrap;
+}
+.hv-weather-v199 .hero-weather-bold {
+    font-weight: 600;
+}
+
+/* Also style hero-info-block inside pretrip-weather */
+.hv-pretrip-weather .hero-info-block {
+    display: inline-flex; align-items: center; gap: 3px;
+    white-space: nowrap;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   V2.10 HERO — Unified card with border-left accent
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.hv-during-hero-v210 {
+    display: flex; flex-direction: column; gap: 8px;
+    padding: 18px 20px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    border: 1px solid rgba(255,255,255,0.6);
+    border-left: none;
+    box-shadow: 6px 6px 12px rgba(0,0,0,0.06), -4px -4px 10px rgba(255,255,255,0.8);
+    margin-bottom: 12px;
+    color: var(--text-primary, #1a202c);
+}
+
+/* Separatore solido */
+.hv-hero-separator {
+    width: 100%; border: none;
+    border-top: 1px solid rgba(0,0,0,0.08);
+    margin: 8px 0;
+}
+
+/* Separatore tratteggiato */
+.hv-hero-separator-dashed {
+    width: 100%; border: none;
+    border-top: 1px dashed var(--border, #e2e8f0);
+    margin: 6px 0;
+}
+
+/* Weather row inside unified card */
+.hv-hero-weather-row {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 13px; color: var(--text-muted, #64748b);
+    flex-wrap: wrap; row-gap: 4px;
+    padding: 2px 0;
+}
+.hv-hero-weather-row .hero-info-block {
+    display: inline-flex; align-items: center; gap: 3px;
+    white-space: nowrap;
+}
+.hv-hero-weather-row .hero-weather-bold {
+    font-weight: 600;
+}
+
+/* Next stop row inside unified card */
+.hv-hero-next-stop-row {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 13px; color: var(--text-muted, #64748b);
+    flex-wrap: wrap; row-gap: 4px;
+    padding: 2px 0;
+}
+.hv-hero-next-stop-row .hero-info-block {
+    display: inline-flex; align-items: center; gap: 3px;
+    white-space: nowrap;
+}
+.hv-hero-next-stop-row .hero-weather-bold {
+    font-weight: 600;
+}
+
+/* ─── Dark mode for v2.10 hero ─── */
+@media (prefers-color-scheme: dark) {
+    .hv-during-hero-v210 {
+        background: linear-gradient(135deg, #2d3748 0%, #323d50 100%);
+        color: #e2e8f0;
+        border-color: rgba(255,255,255,0.08);
+        border-left: none;
+        box-shadow: 6px 6px 12px rgba(0,0,0,0.3), -4px -4px 10px rgba(255,255,255,0.03);
+    }
+    .hv-hero-separator { border-top-color: rgba(255,255,255,0.1); }
+    .hv-hero-separator-dashed { border-top-color: rgba(255,255,255,0.15); }
+    .hv-hero-weather-row { color: #a0aec0; }
+    .hv-hero-next-stop-row { color: #a0aec0; }
 }

@@ -324,13 +324,47 @@
         notifCta.style.display = 'none';
       }
     }
+
+    // ─── Translate buttons in home feed (EN followers) ───
+    var translateBtns = container.querySelectorAll('.hv-feed-translate-btn');
+    translateBtns.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var textToTranslate = btn.getAttribute('data-text');
+        if (!textToTranslate) return;
+        var bodyEl = btn.previousElementSibling; // .hv-feed-body
+        if (btn.dataset.translated === '1') {
+          // Restore original
+          bodyEl.textContent = textToTranslate;
+          btn.dataset.translated = '0';
+          return;
+        }
+        btn.textContent = '\u23f3';
+        btn.disabled = true;
+        // Call translatePost Cloud Function
+        if (typeof firebase !== 'undefined' && firebase.functions) {
+          var translateFn = firebase.functions().httpsCallable('translatePost');
+          translateFn({ text: textToTranslate, from: 'it', to: 'en' }).then(function(result) {
+            if (result.data && result.data.translated) {
+              bodyEl.textContent = result.data.translated;
+              btn.dataset.translated = '1';
+            }
+            btn.textContent = '\uD83C\uDF10';
+            btn.disabled = false;
+          }).catch(function() {
+            btn.textContent = '\uD83C\uDF10';
+            btn.disabled = false;
+          });
+        }
+      });
+    });
   }
 
   // ─── Get trip data from existing app state ───
   function getTripData() {
     var data = {};
     var now = new Date();
-    var tripStart = (typeof TRIP_START !== 'undefined') ? TRIP_START : new Date('2026-06-26T00:00:00');
+    var _en = (typeof isEN !== 'undefined' && isEN);
+    var tripStart = (typeof TRIP_START !== 'undefined') ? TRIP_START : new Date(2026, 5, 26);
     var tripDays = (typeof TRIP_DAYS !== 'undefined') ? TRIP_DAYS : 54;
 
     // v1.84: Use session-only override (window._dayOverride) or real date
@@ -375,7 +409,7 @@
 
       // Weather
       if (dayData.meteo) {
-        data.temp = dayData.meteo.high + '°C';
+        data.temp = dayData.meteo.low ? (dayData.meteo.high + '°/' + dayData.meteo.low + '°') : (dayData.meteo.high + '°C');
         data.weatherIcon = getWeatherIcon(dayData.meteo.cond);
         data.weatherDesc = dayData.meteo.cond || '--';
         data.daylight = dayData.meteo.daylight || '--';
@@ -387,6 +421,10 @@
       var weekdays = ['Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato'];
       var months = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
       data.dayFullDate = weekdays[dayDateObj.getDay()] + ' ' + dayDateObj.getDate() + ' ' + months[dayDateObj.getMonth()] + ' ' + dayDateObj.getFullYear();
+      // Short date for hero badge (e.g. "8 Luglio" / "8 July")
+      var monthsShort_it = ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
+      var monthsShort_en = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+      data.dayDateShort = dayDateObj.getDate() + ' ' + (_en ? monthsShort_en[dayDateObj.getMonth()] : monthsShort_it[dayDateObj.getMonth()]);
 
       // Km today
       data.kmToday = dayData.km || '--';
@@ -408,7 +446,8 @@
       data.checklist = buildChecklist(dayData);
     } else {
       // Pre-trip: show countdown and Day 1 preview
-      var daysUntil = Math.abs(currentDay);
+      // Guard: if post-trip (currentDay >= tripDays), show 0 instead of wrong countdown
+      var daysUntil = currentDay < 0 ? Math.abs(currentDay) : 0;
       data.tripPreMode = true;
       data.daysUntil = daysUntil;
 
@@ -498,7 +537,6 @@
       data.totalKm = '0';
       data.totalCountries = '0';
       data.totalCheckins = '0';
-      var _en = (typeof isEN !== 'undefined' && isEN);
       var countdownWord = data.daysUntil === 1 ? (_en ? 'day' : 'giorno') : (_en ? 'days' : 'giorni');
       data.progressText = (_en ? 'Departure in ' : 'Partenza tra ') + data.daysUntil + ' ' + countdownWord + ' · 54 ' + (_en ? 'days' : 'giorni') + ' · 13 ' + (_en ? 'countries' : 'paesi');
       data.kmBar = 0;
@@ -519,7 +557,7 @@
       }
       if (posLat !== null && posLng !== null) {
         var distKm = haversineKm(HOME_LAT, HOME_LNG, posLat, posLng);
-        data.distanceFromHome = '\ud83d\udccd ' + formatKmDistance(distKm) + ' da \ud83c\udfe0';
+        data.distanceFromHome = formatKmDistance(distKm) + (_en ? ' from home \ud83c\udfe0' : ' da casa \ud83c\udfe0');
         data.progressText += ' · ' + data.distanceFromHome;
       } else {
         data.distanceFromHome = '';
@@ -604,7 +642,7 @@
     if (!familyId) return;
 
     var now = new Date();
-    var tripStart = (typeof TRIP_START !== 'undefined') ? TRIP_START : new Date('2026-06-26T00:00:00');
+    var tripStart = (typeof TRIP_START !== 'undefined') ? TRIP_START : new Date(2026, 5, 26);
     // v1.84: Use session-only override or real date
     var currentDay;
     if (typeof window._dayOverride === 'number') {
@@ -871,10 +909,18 @@
         }
         if (post.photos && Object.keys(post.photos).length > 0) {
           var firstPhoto = post.photos[Object.keys(post.photos)[0]];
-          html += '  <div class="hv-feed-photo" style="background-image:url(' + firstPhoto.url + ');background-size:cover;background-position:center;"></div>';
+          // SECURITY: only allow https:// photo URLs
+          var safeFeedPhotoUrl = (firstPhoto.url && /^https:\/\//.test(firstPhoto.url)) ? escHtml(firstPhoto.url) : '';
+          if (safeFeedPhotoUrl) {
+            html += '  <div class="hv-feed-photo" style="background-image:url(' + safeFeedPhotoUrl + ');background-size:cover;background-position:center;"></div>';
+          }
         }
         var bodyText = post.text || '';
         html += '  <div class="hv-feed-body">' + escHtml(bodyText) + '</div>';
+        // Translate button for EN followers (non-owner)
+        if (lang === 'en' && bodyText && !(typeof isOwner !== 'undefined' && isOwner)) {
+          html += '  <button class="hv-feed-translate-btn" data-text="' + escHtml(bodyText).replace(/"/g, '&quot;') + '" title="Translate to English">\uD83C\uDF10</button>';
+        }
         html += '</div>';
       });
       return html;
@@ -1205,7 +1251,7 @@
       // v1.84: Use session-only override or real date
       var _dayIdx = 0;
       if (typeof window._dayOverride === 'number') { _dayIdx = window._dayOverride; }
-      else { var _ts = (typeof TRIP_START !== 'undefined') ? TRIP_START : new Date('2026-06-26'); _dayIdx = Math.max(0, Math.floor((new Date() - _ts) / 86400000)); }
+      else { var _ts = (typeof TRIP_START !== 'undefined') ? TRIP_START : new Date(2026, 5, 26); _dayIdx = Math.max(0, Math.floor((new Date() - _ts) / 86400000)); }
       var _scrollId = 'g' + _dayIdx + '-header';
       if (typeof window.switchTab === 'function') { window.switchTab('giorni', _scrollId); }
       else if (typeof switchTabFromHome === 'function') { switchTabFromHome('giorni'); }
@@ -1262,7 +1308,7 @@
       // Navigate to Giorni tab and scroll to current day's accordion header
       var _dayIdx2 = 0;
       if (typeof window._dayOverride === 'number') { _dayIdx2 = window._dayOverride; }
-      else { var _ts2 = (typeof TRIP_START !== 'undefined') ? TRIP_START : new Date('2026-06-26'); _dayIdx2 = Math.max(0, Math.floor((new Date() - _ts2) / 86400000)); }
+      else { var _ts2 = (typeof TRIP_START !== 'undefined') ? TRIP_START : new Date(2026, 5, 26); _dayIdx2 = Math.max(0, Math.floor((new Date() - _ts2) / 86400000)); }
       var _scrollId2 = 'g' + _dayIdx2 + '-header';
       if (typeof window.switchTab === 'function') { window.switchTab('giorni', _scrollId2); }
       else if (typeof switchTabFromHome === 'function') { switchTabFromHome('giorni'); }
@@ -1312,7 +1358,7 @@
   // ─── Live Weather for Hero ───
   function fetchHeroLiveWeather() {
     // Only fetch if trip is active or within 16 days
-    var tripStart = (typeof TRIP_START !== 'undefined') ? TRIP_START : new Date('2026-06-26T00:00:00');
+    var tripStart = (typeof TRIP_START !== 'undefined') ? TRIP_START : new Date(2026, 5, 26);
     var tripDays = (typeof TRIP_DAYS !== 'undefined') ? TRIP_DAYS : 54;
     var now = new Date();
     // v1.84: Use session-only override or real date
@@ -1373,21 +1419,69 @@
       var container = document.getElementById('hv-container');
       if (!container) return;
 
-      // Update temp with green dot
+      // Update temp: show high°/low° with green live dot
       var tempEls = container.querySelectorAll('[data-hv="temp"]');
       tempEls.forEach(function(el) {
-        el.innerHTML = high + '°C <span class="hv-live-dot"></span>';
+        el.innerHTML = high + '°/' + low + '° <span class="hv-live-dot"></span>';
       });
 
       // Update weather icon
       var iconEls = container.querySelectorAll('[data-hv="weatherIcon"]');
       iconEls.forEach(function(el) { el.textContent = wIcon; });
 
-      // Update daylight
+      // Update daylight: show sunrise-sunset (duration)
       var dlEls = container.querySelectorAll('[data-hv="daylight"]');
       dlEls.forEach(function(el) { el.textContent = daylightStr; });
 
+      // Fetch next stop weather
+      fetchNextStopWeather(container, currentDay, tripActive);
+
     }).catch(function() { /* Fail silently, keep static data */ });
+  }
+
+  // ─── Next stop weather fetch ───
+  function fetchNextStopWeather(container, currentDay, tripActive) {
+    if (typeof TRIP_COORDS === 'undefined' || !tripActive) return;
+    var nextIdx = currentDay + 1;
+    if (nextIdx >= TRIP_COORDS.length) return;
+    var nextCoord = TRIP_COORDS[nextIdx];
+    if (!nextCoord) return;
+
+    var _en = (typeof isEN !== 'undefined' && isEN);
+    var nextCity = _en ? (nextCoord.cityEn || nextCoord.city) : nextCoord.city;
+
+    // Show next stop row and its dashed separator
+    var nextStopRows = container.querySelectorAll('[data-hv="nextStopRow"]');
+    nextStopRows.forEach(function(el) { el.style.display = ''; });
+    var nextStopSeps = container.querySelectorAll('[data-hv="nextStopSep"]');
+    nextStopSeps.forEach(function(el) { el.style.display = ''; });
+
+    // Set city name
+    var nextCityEls = container.querySelectorAll('[data-hv="nextStopCity"]');
+    nextCityEls.forEach(function(el) { el.textContent = nextCity; });
+
+    // Set "Tomorrow" / "Domani"
+    var nextWhenEls = container.querySelectorAll('[data-hv="nextStopWhen"]');
+    nextWhenEls.forEach(function(el) { el.textContent = _en ? 'Tomorrow' : 'Domani'; });
+
+    // Fetch weather for next stop
+    var tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    var tomorrowStr = tomorrow.toISOString().split('T')[0];
+    var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + nextCoord.lat +
+      '&longitude=' + nextCoord.lng +
+      '&daily=temperature_2m_max,weathercode' +
+      '&timezone=auto&start_date=' + tomorrowStr + '&end_date=' + tomorrowStr;
+
+    fetch(url).then(function(r) { return r.json(); }).then(function(data) {
+      if (data.daily && data.daily.temperature_2m_max) {
+        var tMax = Math.round(data.daily.temperature_2m_max[0]);
+        var wCode = data.daily.weathercode[0];
+        var wIcon = weatherCodeToIcon(wCode);
+        var nextWeatherEls = container.querySelectorAll('[data-hv="nextStopWeather"]');
+        nextWeatherEls.forEach(function(el) { el.textContent = wIcon + ' ' + tMax + '°C'; });
+      }
+    }).catch(function() { /* Fail silently */ });
   }
 
   // Weather code to emoji (WMO codes)
@@ -1486,7 +1580,7 @@
         var dateStr = item.ts ? new Date(item.ts).toLocaleDateString('it-IT', { day:'numeric', month:'short' }) : '';
         html += '<div style="background:#f8f9fa;border-radius:10px;padding:12px;">';
         html += '<div style="font-size:0.75rem;color:#888;margin-bottom:4px;">' + dateStr + '</div>';
-        html += '<div style="font-size:0.95rem;">' + (item.body || item.title) + '</div>';
+        html += '<div style="font-size:0.95rem;">' + escHtml(item.body || item.title) + '</div>';
         html += '</div>';
       });
       html += '</div>';

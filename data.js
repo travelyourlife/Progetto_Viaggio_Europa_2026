@@ -3,8 +3,8 @@
 // data.js — Unica fonte di verità per Quo Vadis V4.8
 // ═══════════════════════════════════════════════════════════════
 
-var TRIP_START = new Date('2026-06-26T00:00:00');
-var TRIP_END = new Date('2026-08-18T23:59:59');
+var TRIP_START = new Date(2026, 5, 26, 0, 0, 0); // Month is 0-indexed: 5 = June
+var TRIP_END = new Date(2026, 7, 18, 23, 59, 59);   // Month is 0-indexed: 7 = August
 var TRIP_DAYS = 54;
 
 // Tab order for swipe navigation (shared between app.js sections)
@@ -126,6 +126,9 @@ var weatherCodes = {
 };
 
 // ─── Firebase Configuration ───
+// NOTE (v1.99): Firebase API keys are safe to expose client-side (they only identify the project).
+// Security is enforced by Firebase Security Rules + Auth. However, restrict this key in
+// Google Cloud Console → API Restrictions → HTTP referrers: viaggio-europa-2026.web.app/*
 var firebaseConfig = {
   apiKey: "AIzaSyCuUYGu_5PlIlDbxwYsFYL5y4OmoGehzzg",
   authDomain: "viaggio-europa-2026.firebaseapp.com",

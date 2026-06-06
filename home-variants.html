@@ -7,7 +7,7 @@
 <!-- ─── OWNER VARIANTE A: Daily Briefing ─── -->
 <template id="hv-owner-a">
 <div class="hv-page hv-owner-a">
-    <!-- ═══ PRE-TRIP HERO (shared, hidden during trip) ═══ -->
+    <!-- ═══ PRE-TRIP HERO (v1.99 redesign) ═══ -->
     <div class="hv-pretrip-hero">
         <div class="hv-pretrip-hero-main">
             <div class="hv-pretrip-hero-left">
@@ -21,36 +21,47 @@
             <img src="./icon.png" alt="Famiglia" class="hv-hero-avatar hv-avatar-clickable" data-hv-action="expandAvatar">
         </div>
         <div class="hv-pretrip-weather">
-            <span>🎯 <span data-hv="city">--</span></span>
+            <span class="hero-info-block">🎯 <span data-hv="city">--</span></span>
             <span class="hv-sep">·</span>
-            <span data-hv="weatherIcon">🌤</span> <span data-hv="temp">--°C</span>
+            <span class="hero-info-block"><span data-hv="weatherIcon">🌤</span> <span data-hv="temp">--°C</span></span>
             <span class="hv-sep">·</span>
-            <span>🌅</span> <span data-hv="daylight">--</span>
+            <span class="hero-info-block">🌅 <span data-hv="daylight">--</span></span>
         </div>
     </div>
-    <!-- ═══ DURING-TRIP HERO (hidden pre-trip) ═══ -->
-    <div class="hv-during-hero">
-        <div class="hv-hero-status">
-            <div class="hv-hero-status-left">
-                <span class="hv-status-badge hv-badge-green">● IN VIAGGIO</span>
+    <!-- ═══ DURING-TRIP HERO (v2.10: unified card with border-left) ═══ -->
+    <div class="hv-during-hero hv-during-hero-v210">
+        <div class="hv-hero-trip-top">
+            <span class="hv-status-badge hv-badge-green">🟢 IN VIAGGIO</span>
+        </div>
+        <div class="hv-hero-trip-main">
+            <div class="hv-hero-trip-city-block" data-hv-action="tab:posizione" style="cursor:pointer;" title="Apri In Viaggio">
                 <div class="hv-hero-city">📍 <span data-hv="city">--</span></div>
                 <div class="hv-hero-country"><span data-hv="country">--</span> <span data-hv="flag"></span></div>
             </div>
-            <div class="hv-hero-status-right">
-                <div class="hv-day-badge" data-hv-action="goToDay" style="cursor:pointer;">
-                    <span class="hv-day-num" data-hv="dayLabel">G--</span>
-                    <span class="hv-day-date" data-hv="dayDate"></span>
-                </div>
-                <img src="./icon.png" alt="Famiglia" class="hv-hero-avatar hv-avatar-clickable" data-hv-action="expandAvatar">
+            <div class="hv-hero-trip-day-badge" data-hv-action="goToDay" style="cursor:pointer;" title="Vai al giorno">
+                <span class="hv-day-num" data-hv="dayLabel">G--</span>
+                <span class="hv-day-date" data-hv="dayDateShort"></span>
             </div>
+            <img src="./icon.png" alt="Famiglia" class="hv-hero-avatar hv-avatar-clickable" data-hv-action="expandAvatar">
         </div>
-        <!-- Weather row -->
-        <div class="hv-weather-row">
-            <span data-hv="weatherIcon">🌤</span> <span data-hv="temp">--°C</span>
+        <div class="hv-hero-trip-distance-badge" data-hv="distanceFromHome"></div>
+        <!-- Separatore solido -->
+        <hr class="hv-hero-separator">
+        <!-- Weather + light sub-row -->
+        <div class="hv-hero-weather-row">
+            <span class="hero-info-block"><span data-hv="weatherIcon">🌤</span> <span class="hero-weather-bold" data-hv="temp">--°C</span></span>
             <span class="hv-sep">·</span>
-            <span>🌅</span> <span data-hv="daylight">--</span>
+            <span class="hero-info-block">🌅 <span data-hv="daylight">--</span></span>
+        </div>
+        <!-- Separatore tratteggiato -->
+        <hr class="hv-hero-separator-dashed" data-hv="nextStopSep" style="display:none;">
+        <!-- Next stop sub-row -->
+        <div class="hv-hero-next-stop-row" data-hv="nextStopRow" style="display:none;">
+            <span class="hero-info-block">🎯 <span class="hero-weather-bold" data-hv="nextStopCity">--</span></span>
             <span class="hv-sep">·</span>
-            <span>🚐</span> <span data-hv="kmToday">-- km oggi</span>
+            <span class="hero-info-block"><span data-hv="nextStopWeather">🌤 --°C</span></span>
+            <span class="hv-sep">·</span>
+            <span class="hero-info-block" data-hv="nextStopWhen">Domani</span>
         </div>
     </div>
     <!-- Programma di oggi -->
@@ -116,11 +127,7 @@
                 <span class="hv-checklist-text">Studia l'itinerario</span>
                 <span class="hv-chevron">›</span>
             </a>
-            <a class="hv-checklist-link" data-hv-action="openGpsGuide">
-                <span class="hv-checklist-icon">📍</span>
-                <span class="hv-checklist-text">Configura GPS Logger</span>
-                <span class="hv-chevron">›</span>
-            </a>
+
         </div>
     </div>
     <!-- Esplora -->
@@ -304,7 +311,7 @@
 <!-- ─── FOLLOWER VARIANTE A: Live Feed ─── -->
 <template id="hv-follower-a">
 <div class="hv-page hv-follower-a">
-    <!-- ═══ PRE-TRIP HERO (shared, hidden during trip) ═══ -->
+    <!-- ═══ PRE-TRIP HERO (v1.99 redesign) ═══ -->
     <div class="hv-pretrip-hero">
         <div class="hv-pretrip-hero-main">
             <div class="hv-pretrip-hero-left">
@@ -318,27 +325,47 @@
             <img src="./icon.png" alt="Famiglia" class="hv-hero-avatar hv-avatar-clickable" data-hv-action="expandAvatar">
         </div>
         <div class="hv-pretrip-weather">
-            <span>🎯 <span data-hv="city">--</span></span>
+            <span class="hero-info-block">🎯 <span data-hv="city">--</span></span>
             <span class="hv-sep">·</span>
-            <span data-hv="weatherIcon">🌤</span> <span data-hv="temp">--°C</span>
+            <span class="hero-info-block"><span data-hv="weatherIcon">🌤</span> <span data-hv="temp">--°C</span></span>
             <span class="hv-sep">·</span>
-            <span>🌅</span> <span data-hv="daylight">--</span>
+            <span class="hero-info-block">🌅 <span data-hv="daylight">--</span></span>
         </div>
     </div>
-    <!-- ═══ DURING-TRIP HERO (hidden pre-trip) ═══ -->
-    <div class="hv-during-hero">
-        <div class="hv-follower-hero-block">
-            <div class="hv-follower-hero-text">
-                <span class="hv-status-badge hv-badge-green">● IN VIAGGIO</span>
-                <div class="hv-hero-city-big">📍 <span data-hv="city">--</span></div>
-                <div class="hv-hero-country"><span data-hv="country">--</span> <span data-hv="flag"></span> · Giorno <span data-hv="dayNum">--</span>/54</div>
-                <div class="hv-hero-stats-row">
-                    <span>🌤 <span data-hv="temp">--°C</span></span>
-                    <span>🚐 <span data-hv="totalKm">--</span> km totali</span>
-                    <span>🌍 <span data-hv="totalCountries">--</span>/13 paesi</span>
-                </div>
+    <!-- ═══ DURING-TRIP HERO (v2.10: unified card with border-left) ═══ -->
+    <div class="hv-during-hero hv-during-hero-v210">
+        <div class="hv-hero-trip-top">
+            <span class="hv-status-badge hv-badge-green">🟢 IN VIAGGIO</span>
+        </div>
+        <div class="hv-hero-trip-main">
+            <div class="hv-hero-trip-city-block" data-hv-action="tab:posizione" style="cursor:pointer;" title="Apri In Viaggio">
+                <div class="hv-hero-city">📍 <span data-hv="city">--</span></div>
+                <div class="hv-hero-country"><span data-hv="country">--</span> <span data-hv="flag"></span></div>
+            </div>
+            <div class="hv-hero-trip-day-badge" data-hv-action="goToDay" style="cursor:pointer;" title="Vai al giorno">
+                <span class="hv-day-num" data-hv="dayLabel">G--</span>
+                <span class="hv-day-date" data-hv="dayDateShort"></span>
             </div>
             <img src="./icon.png" alt="Famiglia" class="hv-hero-avatar hv-avatar-clickable" data-hv-action="expandAvatar">
+        </div>
+        <div class="hv-hero-trip-distance-badge" data-hv="distanceFromHome"></div>
+        <!-- Separatore solido -->
+        <hr class="hv-hero-separator">
+        <!-- Weather + light sub-row -->
+        <div class="hv-hero-weather-row">
+            <span class="hero-info-block"><span data-hv="weatherIcon">🌤</span> <span class="hero-weather-bold" data-hv="temp">--°C</span></span>
+            <span class="hv-sep">·</span>
+            <span class="hero-info-block">🌅 <span data-hv="daylight">--</span></span>
+        </div>
+        <!-- Separatore tratteggiato -->
+        <hr class="hv-hero-separator-dashed" data-hv="nextStopSep" style="display:none;">
+        <!-- Next stop sub-row -->
+        <div class="hv-hero-next-stop-row" data-hv="nextStopRow" style="display:none;">
+            <span class="hero-info-block">🎯 <span class="hero-weather-bold" data-hv="nextStopCity">--</span></span>
+            <span class="hv-sep">·</span>
+            <span class="hero-info-block"><span data-hv="nextStopWeather">🌤 --°C</span></span>
+            <span class="hv-sep">·</span>
+            <span class="hero-info-block" data-hv="nextStopWhen">Domani</span>
         </div>
     </div>
     <!-- Map preview (real tile + live marker) -->

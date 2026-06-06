@@ -1049,9 +1049,18 @@ exports.translatePost = onCall(
       throw new HttpsError("invalid-argument", "Missing text, from, or to");
     }
 
+    // SECURITY: Limit text length to prevent API abuse (max 5000 chars)
+    if (typeof text !== "string" || text.length > 5000) {
+      throw new HttpsError("invalid-argument", "Text too long (max 5000 characters)");
+    }
+
+    // SECURITY: Validate 'from' and 'to' are known language codes
     const langNames = { it: "Italian", en: "English" };
-    const fromLang = langNames[from] || from;
-    const toLang = langNames[to] || to;
+    if (!langNames[from] || !langNames[to]) {
+      throw new HttpsError("invalid-argument", "Invalid language code. Allowed: it, en");
+    }
+    const fromLang = langNames[from];
+    const toLang = langNames[to];
 
     const apiKey = openaiKey.value();
     if (!apiKey) {

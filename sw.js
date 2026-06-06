@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-// Service Worker — Quo Vadis V1.98
+// Service Worker — Quo Vadis V2.00
 // Strategy: Stale-While-Revalidate for own assets (instant load + background update)
 //           Cache-First for CDN (stable, versioned)
 //           Network-Only for API calls
@@ -27,7 +27,7 @@ var messaging = firebase.messaging();
 // ─── CACHING CONFIG ───
 // ═══════════════════════════════════════════════════════════════
 
-const CACHE_NAME = 'quo-vadis-v1.98';
+const CACHE_NAME = 'quo-vadis-v2.10';
 const IMAGE_CACHE_NAME = 'quo-vadis-images-v1';
 const IMAGE_CACHE_LIMIT = 80;
 const STATIC_ASSETS = [
@@ -51,6 +51,7 @@ const STATIC_ASSETS = [
   './firebase-messaging-sw.js',
   './offline.html',
   './home-variants.html',
+  './home-variants_en.html',
   './home-variants.css',
   './home-variants.js',
   './unified-map.js',
@@ -79,6 +80,8 @@ self.addEventListener('install', function(event) {
       return cache.addAll(CDN_ASSETS.concat(STATIC_ASSETS));
     }).then(function() {
       // Force immediate activation — don't wait for old SW to release
+      // NOTE (v2.00): Aggressive but acceptable for travel PWA where updates are critical.
+      // The client-side handles SW_UPDATED message to prompt user before reload.
       return self.skipWaiting();
     })
   );

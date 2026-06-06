@@ -120,7 +120,7 @@ var KEYS = {
 })();
 
 // Safety guard: if data.js failed to load, provide minimal fallbacks
-if (typeof TRIP_START === 'undefined') { var TRIP_START = new Date('2026-06-26T00:00:00'); }
+if (typeof TRIP_START === 'undefined') { var TRIP_START = new Date(2026, 5, 26, 0, 0, 0); }
 if (typeof TRIP_DAYS === 'undefined') { var TRIP_DAYS = 54; }
 if (typeof itinerario === 'undefined') { var itinerario = []; }
 if (typeof regioni === 'undefined') { var regioni = []; }
@@ -243,6 +243,9 @@ function updateProtectedTabsUI(user) {
     var menuLinks = document.querySelectorAll('.side-menu .menu-item[data-tab="' + tabId + '"]');
     menuLinks.forEach(function(link) { link.style.display = show ? '' : 'none'; });
   });
+  // Hide/show cross-link bar links to protected tabs
+  var protectedLinks = document.querySelectorAll('.protected-link');
+  protectedLinks.forEach(function(link) { link.style.display = show ? '' : 'none'; });
   // If user is on a protected tab and logs out, redirect to home
   if (!show) {
     var activeSection = document.querySelector('.tab-content.active');
@@ -299,7 +302,9 @@ function checkOwnerStatus() {
         });
       }
 
-      // ─── Non-owner: auto-submit pending request on login (v1.93 fix) ───
+      // ─── Non-owner: check approval status + auto-submit pending request (v1.93 fix) ───
+      // Track approval status (used by home-variants for UI hints)
+      window._userApproved = isOwner; // owners are always approved
       if (user && !isOwner && typeof firebase !== 'undefined' && firebase.database) {
         (function() {
           var _uid = user.uid;
@@ -310,7 +315,10 @@ function checkOwnerStatus() {
           _bannedRef.once('value', function(banSnap) {
             if (banSnap.exists()) return; // banned — do nothing
             _approvedRef.once('value', function(appSnap) {
-              if (appSnap.exists()) return; // already approved
+              if (appSnap.exists()) {
+                window._userApproved = true; // Mark user as approved for tab access
+                return; // already approved
+              }
               _pendingRef.once('value', function(pendSnap) {
                 if (pendSnap.exists()) return; // already pending
                 // Auto-submit pending request
@@ -334,7 +342,8 @@ function checkOwnerStatus() {
       if (isOwner && typeof firebase !== 'undefined' && firebase.database) {
         // Realtime listener: notify owner whenever a new pending request arrives
         var _lastPendingCount = 0;
-        firebase.database().ref('trips/' + FAMILY_ID + '/pendingUsers').on('value', function(snap) {
+        var _pendingUsersRef = firebase.database().ref('trips/' + FAMILY_ID + '/pendingUsers');
+        var _pendingUsersCb = function(snap) {
           var pending = snap.val();
           var count = pending ? Object.keys(pending).length : 0;
           // Update badge
@@ -365,7 +374,13 @@ function checkOwnerStatus() {
             }
           }
           _lastPendingCount = count;
-        });
+        };
+        // Fix #3: Register via managed listener system for proper cleanup on tab switch/logout
+        if (window.registerFirebaseListener) {
+          window.registerFirebaseListener('home', _pendingUsersRef, 'value', _pendingUsersCb);
+        } else {
+          _pendingUsersRef.on('value', _pendingUsersCb);
+        }
       }
     });
   }
@@ -538,6 +553,17 @@ const places = itinerario.map(function(t) {
 // ─── Global fullscreen map helper ───
 window.openMapFullscreen = function openMapFullscreen(mapInstance, title) {
     console.info('[Map] openMapFullscreen called, mapInstance:', !!mapInstance, 'Leaflet:', typeof L);
+    // v2.02: Auth gate — block unapproved users from fullscreen map
+    if (!window.firebaseUser) {
+      console.warn('[Map] openMapFullscreen blocked: user not authenticated');
+      if (typeof window.switchTab === 'function') window.switchTab('posizione');
+      return;
+    }
+    if (!window.isOwner && !window._userApproved) {
+      console.warn('[Map] openMapFullscreen blocked: user not approved');
+      if (typeof window.switchTab === 'function') window.switchTab('posizione');
+      return;
+    }
     // If no map instance provided, create a standalone route map fullscreen
     if (!mapInstance) {
         var overlay = document.createElement('div');
@@ -558,7 +584,7 @@ window.openMapFullscreen = function openMapFullscreen(mapInstance, title) {
             var HOME_COORDS = [45.39, 11.85];
             var routeCoords = [HOME_COORDS].concat(TRIP_COORDS.map(function(c) { return [c.lat, c.lng]; }));
             var now = new Date();
-            var tripStart = typeof TRIP_START !== 'undefined' ? TRIP_START : new Date('2026-06-26');
+            var tripStart = typeof TRIP_START !== 'undefined' ? TRIP_START : new Date(2026, 5, 26);
             var currentDay = Math.floor((now - tripStart) / 86400000);
             var totalDays = typeof TRIP_DAYS !== 'undefined' ? TRIP_DAYS : 54;
             if (currentDay >= totalDays) {
@@ -822,7 +848,7 @@ function initRouteMap() {
 
         // Determine current trip day for coloring
         var now = new Date();
-        var tripStart = typeof TRIP_START !== 'undefined' ? TRIP_START : new Date('2026-06-26');
+        var tripStart = typeof TRIP_START !== 'undefined' ? TRIP_START : new Date(2026, 5, 26);
         var currentDay = Math.floor((now - tripStart) / 86400000);
         var tripDays = typeof TRIP_DAYS !== 'undefined' ? TRIP_DAYS : 54;
         var tripActive = currentDay >= 0 && currentDay < tripDays;
@@ -1191,7 +1217,7 @@ document.addEventListener('DOMContentLoaded', function() {
         _previousTab = newTab;
     });
 
-    // Protected tabs: require authentication
+    // Protected tabs: require authentication AND approval
     var PROTECTED_TABS = ['chat', 'diario', 'posizione'];
 
     function switchTab(tabId, scrollToId) {
@@ -1202,6 +1228,9 @@ document.addEventListener('DOMContentLoaded', function() {
             if (typeof doGoogleSignIn === 'function') doGoogleSignIn();
             return;
         }
+        // NOTE: Each protected tab (diario, chat, posizione) has its own internal
+        // approval check with proper async handling. No additional blocking here
+        // to avoid race conditions with the async _userApproved flag.
         sections.forEach(function(s) { s.classList.remove('active'); });
         var target = document.getElementById('tab-' + tabId);
         if (target) target.classList.add('active');
@@ -1924,6 +1953,8 @@ document.addEventListener('DOMContentLoaded', function() {
         // ─── Map ───
         function initMap() {
             if (map) return;
+            // Security: don't load map data if user is not authenticated
+            if (!firebaseUser) return;
             map = L.map('pos-map', {
                 dragging: !L.Browser.mobile,
                 tap: !L.Browser.mobile,
@@ -1959,7 +1990,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 TRIP_COORDS.forEach(function(c) { routeCoords.push([c.lat, c.lng]); });
 
                 var now = new Date();
-                var tripStart = typeof TRIP_START !== 'undefined' ? TRIP_START : new Date('2026-06-26');
+                var tripStart = typeof TRIP_START !== 'undefined' ? TRIP_START : new Date(2026, 5, 26);
                 var currentDay = Math.floor((now - tripStart) / 86400000);
                 var totalDays = typeof TRIP_DAYS !== 'undefined' ? TRIP_DAYS : 54;
 
@@ -2018,6 +2049,8 @@ document.addEventListener('DOMContentLoaded', function() {
         // ─── Track Line (from Firebase) ───
         function loadTrackLine() {
             if (!map) return;
+            // Security: don't load track data if user is not authenticated
+            if (!firebaseUser) return;
             var ref = getFamilyRef('tracks/' + todayStr());
             if (ref) {
                 ref.child('points').on('value', function(snap) {
@@ -2040,6 +2073,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // ─── Listen to live positions of family members ───
         function listenLivePositions() {
+            // Security: don't load live position data if user is not authenticated
+            if (!firebaseUser) return;
             var ref = getFamilyRef('live');
             if (!ref) return;
             ref.on('value', function(snap) {
@@ -2445,7 +2480,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 setTimeout(function() {
                     if (liveActive) return;
                     // Check if recap was already confirmed today
-                    var recapDone = sessionStorage.getItem('recap_done_' + todayStr());
+                    var recapDone = localStorage.getItem('recap_done_' + todayStr());
                     if (!recapDone) {
                         showToast(isEN ? '📋 Don\'t forget to close today\'s diary!' : '📋 Non dimenticare di chiudere il diario di oggi!', 'info', 8000);
                         queuePushNotification('recap_reminder', {
@@ -4450,29 +4485,66 @@ if ('serviceWorker' in navigator) {
   // ─── 4. ZAINO/PACKING SYNC (with DEBOUNCE) ───
   const ZAINO_KEY = KEYS.ZAINO;
 
+  var _zainoFirstSync = true; // First sync does merge; subsequent syncs accept remote
   dbRef.child('zaino').on('value', function(snapshot) {
-    const remoteZaino = snapshot.val();
+    var remoteZaino = snapshot.val();
     if (!remoteZaino) return;
-    const localZaino = JSON.parse(localStorage.getItem(ZAINO_KEY) || '{}');
-    if (remoteZaino.ts > (localZaino.ts || 0)) {
-      localStorage.setItem(ZAINO_KEY, JSON.stringify(remoteZaino));
-      // Also update PROGRESS key so loadProgress() picks it up
-      localStorage.setItem(KEYS.PROGRESS, JSON.stringify(remoteZaino));
-      // Update DOM checkboxes in real-time
+    var localZaino = JSON.parse(localStorage.getItem(ZAINO_KEY) || '{}');
+    var finalState;
+
+    if (_zainoFirstSync) {
+      // FIRST SYNC: merge local + remote (union) to recover offline checks
+      _zainoFirstSync = false;
+      finalState = { checks: {}, ts: Date.now() };
       if (remoteZaino.checks) {
-        document.querySelectorAll('input[type="checkbox"][data-idx]').forEach(function(cb) {
-          var idx = cb.getAttribute('data-idx');
-          var shouldBeChecked = !!remoteZaino.checks[idx];
-          if (cb.checked !== shouldBeChecked) {
-            cb.checked = shouldBeChecked;
-            var item = cb.closest('.task-item');
-            if (item) { if (shouldBeChecked) item.classList.add('checked'); else item.classList.remove('checked'); }
-          }
-        });
+        Object.keys(remoteZaino.checks).forEach(function(k) { if (remoteZaino.checks[k]) finalState.checks[k] = true; });
       }
-      window.dispatchEvent(new CustomEvent('zainoSynced', { detail: remoteZaino }));
-      showSyncStatus(isEN ? '☁️ Synced' : '☁️ Sincronizzato', 'ok');
+      if (localZaino.checks) {
+        Object.keys(localZaino.checks).forEach(function(k) { if (localZaino.checks[k]) finalState.checks[k] = true; });
+      }
+      // Push merged state back if local had extras
+      var localHasExtra = localZaino.checks && Object.keys(localZaino.checks).some(function(k) {
+        return localZaino.checks[k] && !(remoteZaino.checks && remoteZaino.checks[k]);
+      });
+      if (localHasExtra && isOwner) {
+        dbRef.child('zaino').set(finalState).catch(function() {});
+      }
+    } else {
+      // SUBSEQUENT SYNCS: accept remote as truth (deliberate action from another device)
+      finalState = remoteZaino;
     }
+
+    // Save to localStorage
+    localStorage.setItem(ZAINO_KEY, JSON.stringify(finalState));
+    localStorage.setItem(KEYS.PROGRESS, JSON.stringify(finalState));
+    // Update DOM checkboxes in real-time
+    var changed = false;
+    document.querySelectorAll('input[type="checkbox"][data-idx]').forEach(function(cb) {
+      var idx = cb.getAttribute('data-idx');
+      var shouldBeChecked = !!(finalState.checks && finalState.checks[idx]);
+      if (cb.checked !== shouldBeChecked) {
+        cb.checked = shouldBeChecked;
+        changed = true;
+        var item = cb.closest('.task-item');
+        if (item) { if (shouldBeChecked) item.classList.add('checked'); else item.classList.remove('checked'); }
+      }
+    });
+    // Update progress counter after sync
+    if (changed) {
+      var countEl = document.getElementById('zp-count');
+      var percentEl = document.getElementById('zp-percent');
+      var fillEl = document.getElementById('zp-fill');
+      if (countEl) {
+        var done = document.querySelectorAll('input[type="checkbox"][data-idx]:checked').length;
+        var total = document.querySelectorAll('input[type="checkbox"][data-idx]').length;
+        countEl.textContent = done;
+        var pct = total > 0 ? Math.round(done / total * 100) : 0;
+        if (percentEl) percentEl.textContent = pct + '% completato';
+        if (fillEl) fillEl.style.width = pct + '%';
+      }
+    }
+    window.dispatchEvent(new CustomEvent('zainoSynced', { detail: finalState }));
+    showSyncStatus(isEN ? '☁️ Synced' : '☁️ Sincronizzato', 'ok');
   });
 
   // Debounced zaino push — waits 1.5s of inactivity before writing
@@ -4962,8 +5034,16 @@ if ('serviceWorker' in navigator) {
     }
 
     updateStats();
-    // Refresh every 60 seconds
-    setInterval(updateStats, 60000);
+    // Refresh every 60 seconds — pause when tab is hidden (v1.99)
+    var statsInterval = setInterval(updateStats, 60000);
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            clearInterval(statsInterval);
+        } else {
+            updateStats();
+            statsInterval = setInterval(updateStats, 60000);
+        }
+    });
 })();
 
 // ═══════════════════════════════════════════════════════════════
@@ -4985,8 +5065,17 @@ if ('serviceWorker' in navigator) {
     var heroTripCity = document.getElementById('hero-trip-city');
     var heroTripCountry = document.getElementById('hero-trip-country');
     var heroTripDateDay = document.getElementById('hero-trip-date-day');
-    var heroTripDateMonth = document.getElementById('hero-trip-date-month');
+    // New v1.99 elements
+    var heroTripDistance = document.getElementById('hero-trip-distance');
+    var heroTripDistanceText = document.getElementById('hero-trip-distance-text');
+    var heroNextStop = document.getElementById('hero-next-stop');
+    var heroNextLocBlock = document.getElementById('hero-next-loc-block');
+    var heroNextWeatherBlock = document.getElementById('hero-next-weather-block');
+    var heroNextWhenBlock = document.getElementById('hero-next-when-block');
     if (!heroWeatherRow) return;
+
+    // Home coordinates for distance calculation
+    var HOME_LAT = 45.3833, HOME_LNG = 11.9833;
 
     // WMO weather code to emoji
     function wmoToEmoji(code) {
@@ -5077,14 +5166,12 @@ if ('serviceWorker' in navigator) {
             heroPreTrip.style.display = 'none';
             if (heroPreAvatar) heroPreAvatar.style.display = 'none';
             heroDuringTrip.style.display = '';
-            // Set date (use simulated date if Day Override active)
-            var displayDate = hasOverride
-                ? new Date(TRIP_START.getTime() + dayIdx * 86400000)
-                : now;
-            if (heroTripDateDay) heroTripDateDay.textContent = displayDate.getDate();
-            if (heroTripDateMonth) {
-                heroTripDateMonth.textContent = displayDate.toLocaleDateString(isEN ? 'en-GB' : 'it-IT', { month: 'long' });
-            }
+            // v1.99: Badge shows G/D + dayIdx (0-based, consistent with itinerary)
+            var dayPrefix = isEN ? 'D' : 'G';
+            if (heroTripDateDay) heroTripDateDay.textContent = dayPrefix + dayIdx;
+
+            // v1.99: Distance from home badge
+            _updateDistanceFromHome(coord.lat, coord.lng);
 
             // --- Live van position (hero big) from Firebase ---
             // Try to read last known position from Firebase 'live' node
@@ -5120,6 +5207,10 @@ if ('serviceWorker' in navigator) {
                 if (heroTripCity) heroTripCity.textContent = '📍 ' + cityName;
                 if (heroTripCountry) heroTripCountry.textContent = (coord.country || '') + ' ' + (coord.flag || '');
             }
+        } else {
+            // Pre-trip: hide distance and next-stop
+            if (heroTripDistance) heroTripDistance.style.display = 'none';
+            if (heroNextStop) heroNextStop.style.display = 'none';
         }
 
         // Determine which date to fetch (today for during-trip, trip start for pre-trip)
@@ -5174,11 +5265,93 @@ if ('serviceWorker' in navigator) {
                 if (heroWeatherLight) heroWeatherLight.textContent = sunTimes + ' (' + formatHoursMinutes(daylightMin) + ')';
 
                 heroWeatherRow.style.display = '';
+
+                // v1.99: Update next-stop row (only during trip)
+                var now2 = new Date();
+                var isDuring2 = (now2 >= TRIP_START && now2 <= TRIP_END) || (typeof window._dayOverride === 'number' && window._dayOverride >= 0);
+                if (isDuring2) {
+                    _updateNextStop(dayIdx);
+                }
             })
             .catch(function(err) {
                 console.warn('[Weather]', err);
                 heroWeatherRow.style.display = 'none';
             });
+    }
+
+    // ─── v1.99: Distance from home (haversine) ───
+    // NOTE: Cannot consolidate with haversineGlobal (different IIFE scope)
+    function _haversineKm(lat1, lng1, lat2, lng2) {
+        var R = 6371;
+        var dLat = (lat2 - lat1) * Math.PI / 180;
+        var dLng = (lng2 - lng1) * Math.PI / 180;
+        var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+            Math.sin(dLng / 2) * Math.sin(dLng / 2);
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return Math.round(R * c);
+    }
+
+    function _updateDistanceFromHome(fallbackLat, fallbackLng) {
+        if (!heroTripDistance || !heroTripDistanceText) return;
+        // Try live position from Firebase first
+        if (typeof firebase !== 'undefined' && firebase.database && typeof FAMILY_ID !== 'undefined') {
+            firebase.database().ref('trips/' + FAMILY_ID + '/position').once('value').then(function(snap) {
+                var pos = snap.val();
+                var lat = (pos && pos.lat) ? pos.lat : fallbackLat;
+                var lng = (pos && pos.lng) ? pos.lng : fallbackLng;
+                var km = _haversineKm(HOME_LAT, HOME_LNG, lat, lng);
+                heroTripDistanceText.textContent = km.toLocaleString('it-IT') + ' km ' + (isEN ? 'from home' : 'da casa') + ' \uD83C\uDFE0';
+                heroTripDistance.style.display = '';
+            }).catch(function() {
+                // Fallback to planned coordinates
+                var km = _haversineKm(HOME_LAT, HOME_LNG, fallbackLat, fallbackLng);
+                heroTripDistanceText.textContent = km.toLocaleString('it-IT') + ' km ' + (isEN ? 'from home' : 'da casa') + ' \uD83C\uDFE0';
+                heroTripDistance.style.display = '';
+            });
+        } else {
+            var km = _haversineKm(HOME_LAT, HOME_LNG, fallbackLat, fallbackLng);
+            heroTripDistanceText.textContent = km.toLocaleString('it-IT') + ' km ' + (isEN ? 'from home' : 'da casa') + ' \uD83C\uDFE0';
+            heroTripDistance.style.display = '';
+        }
+    }
+
+    // ─── v1.99: Next stop row ───
+    function _updateNextStop(currentDayIdx) {
+        if (!heroNextStop || !heroNextLocBlock) return;
+        var nextIdx = currentDayIdx + 1;
+        if (nextIdx >= TRIP_COORDS.length) {
+            heroNextStop.style.display = 'none';
+            return;
+        }
+        var nextCoord = TRIP_COORDS[nextIdx];
+        var nextCity = isEN ? nextCoord.cityEn : nextCoord.city;
+        heroNextLocBlock.textContent = '\uD83C\uDFAF ' + nextCity;
+
+        // Fetch next-stop weather
+        var tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        var tomorrowStr = tomorrow.toISOString().split('T')[0];
+        var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + nextCoord.lat +
+            '&longitude=' + nextCoord.lng +
+            '&daily=temperature_2m_max,weathercode' +
+            '&timezone=auto&start_date=' + tomorrowStr + '&end_date=' + tomorrowStr;
+
+        fetch(url)
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                if (data.daily && data.daily.temperature_2m_max) {
+                    var tMax = Math.round(data.daily.temperature_2m_max[0]);
+                    var wCode = data.daily.weathercode[0];
+                    if (heroNextWeatherBlock) heroNextWeatherBlock.textContent = wmoToEmoji(wCode) + ' ' + tMax + '\u00B0C';
+                }
+            })
+            .catch(function() {
+                if (heroNextWeatherBlock) heroNextWeatherBlock.textContent = '';
+            });
+
+        if (heroNextWhenBlock) heroNextWhenBlock.textContent = isEN ? 'Tomorrow' : 'Domani';
+        heroNextStop.style.display = '';
     }
 
     // Fetch on load and refresh every 30 minutes
@@ -5483,7 +5656,16 @@ if ('serviceWorker' in navigator) {
       // Show logout option via custom modal
       showConfirm((isEN ? 'Logged in as: ' : 'Connesso come: ') + (user.displayName || user.email) + '\n\n' + (isEN ? 'Sign out?' : 'Disconnettersi?'), function() {
         firebase.auth().signOut().then(function() {
+          // Fix #2: Clean up all Firebase listeners on logout to prevent memory leaks & data exposure
+          if (typeof window.detachFirebaseListeners === 'function') {
+            window.detachFirebaseListeners('chat');
+            window.detachFirebaseListeners('diario');
+            window.detachFirebaseListeners('posizione');
+            window.detachFirebaseListeners('admin');
+            window.detachFirebaseListeners('home');
+          }
           showToast(isEN ? 'Signed out' : 'Disconnesso', 'info');
+          setTimeout(function() { window.location.reload(); }, 500);
         });
       });
     } else {
@@ -5925,7 +6107,8 @@ if ('serviceWorker' in navigator) {
       html += '<span class="notif-item-icon">' + (n.icon || '\ud83d\udd14') + '</span>';
       html += '<div class="notif-item-body">';
       // Use text for local notifs, title+body for Firebase notifs
-      var displayText = n.text || ('<strong>' + (n.title || '') + '</strong>' + (n.body ? '<br>' + n.body : ''));
+      // SECURITY: escape title/body from Firebase to prevent stored XSS
+      var displayText = n.text || ('<strong>' + escapeHtml(n.title || '') + '</strong>' + (n.body ? '<br>' + escapeHtml(n.body) : ''));
       html += '<span class="notif-item-text">' + displayText + '</span>';
       // Time display
       var timeStr = '';
@@ -5943,7 +6126,9 @@ if ('serviceWorker' in navigator) {
         html += '<a class="notif-item-link" data-action="go">' + n.actionLabel + ' \u2192</a>';
       } else if (n.url && n.url !== './') {
         var linkLabel = isEN ? 'Open' : 'Apri';
-        html += '<a class="notif-item-link" data-action="url" data-url="' + n.url + '">' + linkLabel + ' \u2192</a>';
+        // SECURITY: sanitize URL — only allow relative paths or same-origin URLs
+        var safeNotifUrl = (n.url && (/^\.?\//.test(n.url) || /^\.\.?\//.test(n.url) || /^#/.test(n.url) || n.url.indexOf(location.origin) === 0)) ? escapeHtml(n.url) : './';
+        html += '<a class="notif-item-link" data-action="url" data-url="' + safeNotifUrl + '">' + linkLabel + ' \u2192</a>';
       }
       html += '</div>';
       html += '<button class="notif-item-dismiss" aria-label="' + (isEN ? 'Dismiss' : 'Chiudi') + '">&times;</button>';
@@ -6563,7 +6748,7 @@ if ('serviceWorker' in navigator) {
   window.showDailyRecapWidget = function() {
     // Prevent showing twice
     if (document.getElementById('recap-widget-overlay')) return;
-    if (sessionStorage.getItem('recap_done_' + todayStr())) return;
+    if (localStorage.getItem('recap_done_' + todayStr())) return;
 
     var tripDay = getCurrentTripDay();
     var today = todayStr();
@@ -6783,7 +6968,7 @@ if ('serviceWorker' in navigator) {
         return Promise.all(photoPromises.concat([audioPromise]));
       }).then(function() {
         // Mark recap as done
-        sessionStorage.setItem('recap_done_' + today, '1');
+        localStorage.setItem('recap_done_' + today, '1');
         overlay.remove();
         if (!navigator.onLine) {
           showToast(isEN ? '\ud83d\udce1 Saved locally — will sync when online' : '\ud83d\udce1 Salvato localmente — sincronizzer\u00e0 online', 'success', 4000);
@@ -7423,14 +7608,8 @@ if ('serviceWorker' in navigator) {
     showToast((isEN ? '\u2705 GPS track imported for ' : '\u2705 Tracciato GPS importato per ') + imported + (isEN ? ' days' : ' giorni'), 'success');
   }
 
-  // Local haversine (km) — same formula as position module
-  function _haversine(lat1, lon1, lat2, lon2) {
-    var R = 6371;
-    var dLat = (lat2 - lat1) * Math.PI / 180;
-    var dLon = (lon2 - lon1) * Math.PI / 180;
-    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1*Math.PI/180) * Math.cos(lat2*Math.PI/180) * Math.sin(dLon/2) * Math.sin(dLon/2);
-    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-  }
+  // Local haversine (km) — alias to shared haversineGlobal (consolidated v1.99)
+  var _haversine = haversineGlobal;
 
   // ═══════════════════════════════════════════════════════════════
   // ─── GPX PARSER ───
@@ -7718,17 +7897,35 @@ if ('serviceWorker' in navigator) {
     }
   });
 
-  // Initial check
+  // Initial check + secondary auth listener to avoid race condition
   if (typeof firebase !== 'undefined' && firebase.auth) {
     var currentUser = firebase.auth().currentUser;
-    updateChatAuth(currentUser);
+    if (currentUser) {
+      updateChatAuth(currentUser);
+    } else {
+      // Auth might not have resolved yet — register a direct listener as fallback
+      var _chatAuthUnsub = firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+          updateChatAuth(user);
+          // Unsubscribe after first resolution to avoid double-firing
+          if (_chatAuthUnsub) _chatAuthUnsub();
+        }
+      });
+    }
   }
 
   // Login link in chat
   if (chatLoginLink) {
     chatLoginLink.addEventListener('click', function(e) {
       e.preventDefault();
-      doGoogleSignIn();
+      // v2.02: If user is already authenticated, re-trigger chat auth check
+      // instead of showing Google popup (fixes re-access after removal)
+      var existingUser = firebase.auth && firebase.auth().currentUser;
+      if (existingUser) {
+        updateChatAuth(existingUser);
+      } else {
+        doGoogleSignIn();
+      }
     });
   }
 
@@ -8345,9 +8542,12 @@ if ('serviceWorker' in navigator) {
   function linkify(text) {
     var urlRegex = /(https?:\/\/[^\s<"']+)/g;
     return text.replace(urlRegex, function(url) {
+      // v1.99: Strip trailing punctuation that's likely not part of the URL
+      var cleaned = url.replace(/[.,;:!?)\]]+$/, '');
+      var trailing = url.slice(cleaned.length);
       // Extra sanitization: ensure no unescaped quotes in URL that could break href attribute
-      var safeUrl = url.replace(/"/g, '%22').replace(/'/g, '%27');
-      return '<a href="' + safeUrl + '" target="_blank" rel="noopener noreferrer">' + url + '</a>';
+      var safeUrl = cleaned.replace(/"/g, '%22').replace(/'/g, '%27');
+      return '<a href="' + safeUrl + '" target="_blank" rel="noopener noreferrer">' + cleaned + '</a>' + escapeHtml(trailing);
     });
   }
 
@@ -9008,7 +9208,13 @@ if ('serviceWorker' in navigator) {
   // ─── Login Button ───
   if (loginBtn) {
     loginBtn.addEventListener('click', function() {
-      doGoogleSignIn();
+      // v2.02: If already authenticated, re-check access instead of showing popup
+      var existingUser = firebase.auth && firebase.auth().currentUser;
+      if (existingUser) {
+        checkPosizioneAccess(existingUser);
+      } else {
+        doGoogleSignIn();
+      }
     });
   }
 
@@ -9018,8 +9224,17 @@ if ('serviceWorker' in navigator) {
     checkPosizioneAccess(user);
   });
 
-  // Initial check (in case auth already resolved)
-  if (firebaseUser) checkPosizioneAccess(firebaseUser);
+  // Initial check (in case auth already resolved) + fallback listener
+  if (firebaseUser) {
+    checkPosizioneAccess(firebaseUser);
+  } else if (typeof firebase !== 'undefined' && firebase.auth) {
+    var _posAuthUnsub = firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        checkPosizioneAccess(user);
+        if (_posAuthUnsub) _posAuthUnsub();
+      }
+    });
+  }
 })();
 
 
@@ -9116,7 +9331,13 @@ if ('serviceWorker' in navigator) {
   // ─── Login Button ───
   if (loginBtn) {
     loginBtn.addEventListener('click', function() {
-      doGoogleSignIn();
+      // v2.02: If already authenticated, re-check access instead of showing popup
+      var existingUser = firebase.auth && firebase.auth().currentUser;
+      if (existingUser) {
+        checkDiarioAccess(existingUser);
+      } else {
+        doGoogleSignIn();
+      }
     });
   }
 
@@ -9128,8 +9349,17 @@ if ('serviceWorker' in navigator) {
     checkDiarioAccess(user);
   });
 
-  // Initial check (in case auth already resolved)
-  if (firebaseUser) checkDiarioAccess(firebaseUser);
+  // Initial check (in case auth already resolved) + fallback listener
+  if (firebaseUser) {
+    checkDiarioAccess(firebaseUser);
+  } else if (firebase.auth) {
+    var _diarioAuthUnsub = firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        checkDiarioAccess(user);
+        if (_diarioAuthUnsub) _diarioAuthUnsub();
+      }
+    });
+  }
 
   // ─── Diary Date Formatter ───
   function formatHybridDateDiary(dateStr, lang) {
@@ -9291,14 +9521,19 @@ if ('serviceWorker' in navigator) {
           html += '    <div class="diario-photos">';
           Object.keys(entry.photos).forEach(function(photoKey) {
             var photo = entry.photos[photoKey];
-            html += '      <img src="' + photo.url + '" alt="' + escapeHtml(photo.caption || '') + '" class="diario-photo" loading="lazy" data-entry-key="' + key + '" data-photo-key="' + photoKey + '">';
+            var safeUrl = (photo.url && /^https:\/\//.test(photo.url)) ? escapeHtml(photo.url) : '';
+            html += '      <img src="' + safeUrl + '" alt="' + escapeHtml(photo.caption || '') + '" class="diario-photo" loading="lazy" data-entry-key="' + key + '" data-photo-key="' + photoKey + '">';
           });
           html += '    </div>';
         }
 
         // Audio note
         if (entry.audio && entry.audio.url) {
-          html += '    <div class="diario-audio" style="margin:8px 0;"><audio controls src="' + entry.audio.url + '" style="width:100%;height:36px;border-radius:8px;"></audio></div>';
+          // SECURITY: sanitize audio URL — only allow https:// sources
+          var safeAudioUrl = (entry.audio.url && /^https:\/\//.test(entry.audio.url)) ? escapeHtml(entry.audio.url) : '';
+          if (safeAudioUrl) {
+            html += '    <div class="diario-audio" style="margin:8px 0;"><audio controls src="' + safeAudioUrl + '" style="width:100%;height:36px;border-radius:8px;"></audio></div>';
+          }
         }
 
         // Text
@@ -9423,6 +9658,9 @@ if ('serviceWorker' in navigator) {
         var key = btn.getAttribute('data-key');
         diarioRef.child(key).update({ draft: null, date: new Date().toISOString().split('T')[0] }).then(function() {
           showToast(isEN ? '\u2705 Post published!' : '\u2705 Post pubblicato!', 'success');
+        }).catch(function(err) {
+          console.error('[Diario] Publish failed:', err);
+          showToast(isEN ? 'Failed to publish post' : 'Impossibile pubblicare il post', 'danger');
         });
       });
     });
@@ -9433,7 +9671,12 @@ if ('serviceWorker' in navigator) {
         if (!isOwner) return;
         var key = btn.getAttribute('data-key');
         showConfirm(isEN ? 'Delete this journal entry?' : 'Eliminare questa voce del diario?', function() {
-          diarioRef.child(key).remove();
+          diarioRef.child(key).remove().then(function() {
+            showToast(isEN ? 'Entry deleted' : 'Voce eliminata', 'info');
+          }).catch(function(err) {
+            console.error('[Diario] Delete failed:', err);
+            showToast(isEN ? 'Failed to delete entry' : 'Impossibile eliminare la voce', 'danger');
+          });
         });
       });
     });
@@ -10428,9 +10671,13 @@ if ('serviceWorker' in navigator) {
         var isOwnerUser = (typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.indexOf(uid) !== -1);
         var isBanned = !!globalBanned[uid];
         var lastSeen = u.lastSeen ? new Date(u.lastSeen).toLocaleString(isEN ? 'en-GB' : 'it-IT', {day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : '\u2014';
-        var photo = u.photo ? '<img src="' + u.photo + '" style="width:28px;height:28px;border-radius:50%;vertical-align:middle;" loading="lazy">' : '<span style="font-size:20px;">\ud83d\udc64</span>';
+        var safePhoto = (u.photo && /^https:\/\//.test(u.photo)) ? escapeHtml(u.photo) : '';
+        var photo = safePhoto ? '<img src="' + safePhoto + '" style="width:28px;height:28px;border-radius:50%;vertical-align:middle;" loading="lazy">' : '<span style="font-size:20px;">\ud83d\udc64</span>';
         var isApproved = !!approvedMap[uid];
         var isPending = !!pendingMap[uid];
+        // v1.99: Ghost indicator — user in DB but inactive > 30 days (may be deleted from Auth)
+        var isGhost = !isOwnerUser && u.lastSeen && (Date.now() - u.lastSeen > 30 * 86400000);
+        var ghostBadge = isGhost ? ' <span title="' + (isEN ? 'Inactive > 30 days (possible ghost account)' : 'Inattivo > 30 giorni (possibile account fantasma)') + '" style="font-size:11px;cursor:help;">\ud83d\udc7b</span>' : '';
         var statusBadge;
         if (isOwnerUser) {
           statusBadge = '<span style="background:var(--accent,#6366f1);color:#fff;padding:2px 8px;border-radius:8px;font-size:11px;">Owner</span>';
@@ -10447,28 +10694,31 @@ if ('serviceWorker' in navigator) {
         var actionBtn = '';
         if (!isOwnerUser) {
           if (isBanned) {
-            // Banned: show Unban only
-            actionBtn = uidShort + ' <button class="admin-global-unban pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--success,#38a169);color:#fff;border:none;border-radius:6px;cursor:pointer;">' + (isEN ? 'Unban' : 'Sblocca') + '</button>';
+            // Banned: show Unban + Delete
+            actionBtn = uidShort + ' <button class="admin-global-unban pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--success,#38a169);color:#fff;border:none;border-radius:6px;cursor:pointer;margin-right:4px;">' + (isEN ? 'Unban' : 'Sblocca') + '</button>';
+            actionBtn += '<button class="admin-delete-user pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:#718096;color:#fff;border:none;border-radius:6px;cursor:pointer;">' + (isEN ? '🗑️ Delete' : '🗑️ Elimina') + '</button>';
           } else if (isApproved) {
             // Active/Approved: show Remove (soft revoke) + Ban (hard block)
             actionBtn = uidShort + ' ';
             actionBtn += '<button class="admin-remove-user pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--warning,#d69e2e);color:#fff;border:none;border-radius:6px;cursor:pointer;margin-right:4px;">' + (isEN ? 'Remove' : 'Rimuovi') + '</button>';
-            actionBtn += '<button class="admin-global-ban pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--danger,#e53e3e);color:#fff;border:none;border-radius:6px;cursor:pointer;">' + (isEN ? 'Ban' : 'Blocca') + '</button>';
+            actionBtn += '<button class="admin-global-ban pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--danger,#e53e3e);color:#fff;border:none;border-radius:6px;cursor:pointer;margin-right:4px;">' + (isEN ? 'Ban' : 'Blocca') + '</button>';
+            actionBtn += '<button class="admin-delete-user pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:#718096;color:#fff;border:none;border-radius:6px;cursor:pointer;">' + (isEN ? '🗑️ Delete' : '🗑️ Elimina') + '</button>';
           } else {
             // Pending or Sconosciuto: show Approve + Reject + Ban
             actionBtn = uidShort + ' ';
             actionBtn += '<button class="admin-inline-approve pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--success,#38a169);color:#fff;border:none;border-radius:6px;cursor:pointer;margin-right:4px;">\u2705 ' + (isEN ? 'Approve' : 'Approva') + '</button>';
             actionBtn += '<button class="admin-inline-reject pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--warning,#d69e2e);color:#fff;border:none;border-radius:6px;cursor:pointer;margin-right:4px;">\u274c ' + (isEN ? 'Reject' : 'Rifiuta') + '</button>';
-            actionBtn += '<button class="admin-global-ban pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--danger,#e53e3e);color:#fff;border:none;border-radius:6px;cursor:pointer;">' + (isEN ? 'Ban' : 'Blocca') + '</button>';
+            actionBtn += '<button class="admin-global-ban pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--danger,#e53e3e);color:#fff;border:none;border-radius:6px;cursor:pointer;margin-right:4px;">' + (isEN ? 'Ban' : 'Blocca') + '</button>';
+            actionBtn += '<button class="admin-delete-user pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:#718096;color:#fff;border:none;border-radius:6px;cursor:pointer;">' + (isEN ? '🗑️ Delete' : '🗑️ Elimina') + '</button>';
           }
         }
 
         html += '<tr style="border-bottom:1px solid var(--border-color,#e2e8f0);' + (isBanned ? 'opacity:0.6;' : '') + '">';
         html += '<td style="padding:6px 4px;">' + photo + '</td>';
-        html += '<td style="padding:6px 4px;">' + (u.name || 'Anonimo') + '</td>';
-        html += '<td style="padding:6px 4px;font-size:0.85em;color:var(--text-muted);">' + (u.email || '\u2014') + '</td>';
+        html += '<td style="padding:6px 4px;">' + escapeHtml(u.name || 'Anonimo') + '</td>';
+        html += '<td style="padding:6px 4px;font-size:0.85em;color:var(--text-muted);">' + escapeHtml(u.email || '\u2014') + '</td>';
         html += '<td style="padding:6px 4px;">' + lastSeen + '</td>';
-        html += '<td style="padding:6px 4px;">' + statusBadge + '</td>';
+        html += '<td style="padding:6px 4px;">' + statusBadge + ghostBadge + '</td>';
         html += '<td style="padding:6px 4px;text-align:center;">' + actionBtn + '</td>';
         html += '</tr>';
       });
@@ -10483,11 +10733,15 @@ if ('serviceWorker' in navigator) {
           showConfirm((isEN ? 'Remove ' + duplicateUIDs.length + ' duplicate UID(s)? Only the most recent per email will be kept.' : 'Rimuovere ' + duplicateUIDs.length + ' UID duplicati? Verr\u00e0 mantenuto solo il pi\u00f9 recente per email.'), function() {
             var updates = {};
             duplicateUIDs.forEach(function(duid) { updates[duid] = null; });
+            console.log('[Admin] Removing duplicate UIDs:', duplicateUIDs);
             usersRef.update(updates).then(function() {
               localStorage.setItem('admin-dupes-dismissed', '1');
               sessionStorage.setItem('admin-dupes-cleaned', '1');
               if (window.showToast) showToast(isEN ? 'Duplicates removed!' : 'Duplicati rimossi!', 'success');
               renderAdminUsers();
+            }).catch(function(err) {
+              console.error('[Admin] Failed to remove duplicates:', err);
+              if (window.showToast) showToast(isEN ? 'Error: ' + err.message : 'Errore: ' + err.message, 'error');
             });
           });
         });
@@ -10549,10 +10803,18 @@ if ('serviceWorker' in navigator) {
           var u = users[uid] || {};
           var userName = u.name || u.email || uid;
           showConfirm((isEN ? 'Remove access for ' : 'Rimuovere l\'accesso a ') + userName + (isEN ? '? They can request access again later.' : '? Potr\u00e0 richiedere l\'accesso di nuovo.'), function() {
-            // Remove from approvedUsers only — user is NOT banned, can re-request
-            approvedRef.child(uid).remove().then(function() {
-              if (window.showToast) showToast(isEN ? 'User removed (not banned)' : 'Utente rimosso (non bannato)', 'info');
+            // v1.99: Complete cleanup — remove from ALL nodes to prevent ghost entries
+            var removeOps = [];
+            removeOps.push(approvedRef.child(uid).remove());
+            removeOps.push(usersRef.child(uid).remove());
+            removeOps.push(pendingRef.child(uid).remove());
+            removeOps.push(db.ref('fcm_tokens/' + uid).remove());
+            Promise.all(removeOps).then(function() {
+              if (window.showToast) showToast(isEN ? 'User fully removed (not banned, can re-request)' : 'Utente rimosso completamente (non bannato, pu\u00f2 richiedere di nuovo)', 'info');
               renderAdminUsers();
+            }).catch(function(err) {
+              console.error('[Admin] Remove user error:', err);
+              if (window.showToast) showToast(isEN ? 'Error removing user' : 'Errore nella rimozione', 'error');
             });
           });
         });
@@ -10569,11 +10831,39 @@ if ('serviceWorker' in navigator) {
             var removeOps = [];
             removeOps.push(usersRef.child(uid).remove());
             removeOps.push(pendingRef.child(uid).remove());
-            removeOps.push(db.ref('trips/' + FAMILY_ID + '/fcm_tokens/' + uid).remove());
+            removeOps.push(db.ref('fcm_tokens/' + uid).remove());
             Promise.all(removeOps).then(function() {
               if (window.showToast) showToast(isEN ? 'User rejected (can retry)' : 'Utente rifiutato (pu\u00f2 riprovare)', 'info');
               renderAdminUsers();
               renderAdminPending();
+            });
+          });
+        });
+      });
+
+      // v2.02: Attach delete handlers (complete removal from ALL Firebase nodes)
+      adminUsersList.querySelectorAll('.admin-delete-user').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var uid = btn.dataset.uid;
+          var u = users[uid] || {};
+          var userName = u.name || u.email || uid;
+          showConfirm((isEN ? 'Permanently delete ' : 'Eliminare definitivamente ') + userName + (isEN ? '? This removes all traces from the system.' : '? Verr\u00e0 rimosso completamente dal sistema.'), function() {
+            var deleteOps = [];
+            deleteOps.push(approvedRef.child(uid).remove());
+            deleteOps.push(pendingRef.child(uid).remove());
+            deleteOps.push(usersRef.child(uid).remove());
+            deleteOps.push(db.ref('trips/' + FAMILY_ID + '/bannedUsers/' + uid).remove());
+            deleteOps.push(db.ref('fcm_tokens/' + uid).remove());
+            deleteOps.push(db.ref('fcm_prefs/' + uid).remove());
+            deleteOps.push(db.ref('chat/typing/' + uid).remove());
+            deleteOps.push(db.ref('chat/presence/' + uid).remove());
+            Promise.all(deleteOps).then(function() {
+              if (window.showToast) showToast(isEN ? 'User permanently deleted' : 'Utente eliminato definitivamente', 'success');
+              renderAdminUsers();
+              renderAdminPending();
+            }).catch(function(err) {
+              console.error('[Admin] Delete user error:', err);
+              if (window.showToast) showToast(isEN ? 'Error deleting user' : 'Errore nell\'eliminazione', 'error');
             });
           });
         });
@@ -10595,10 +10885,11 @@ if ('serviceWorker' in navigator) {
       var html = '';
       Object.keys(users).forEach(function(uid) {
         var u = users[uid];
-        var photo = u.photoURL ? '<img src="' + u.photoURL + '" style="width:28px;height:28px;border-radius:50%;vertical-align:middle;" loading="lazy">' : '<span style="font-size:20px;">👤</span>';
+        var safePendingPhoto = (u.photoURL && /^https:\/\//.test(u.photoURL)) ? escapeHtml(u.photoURL) : '';
+        var photo = safePendingPhoto ? '<img src="' + safePendingPhoto + '" style="width:28px;height:28px;border-radius:50%;vertical-align:middle;" loading="lazy">' : '<span style="font-size:20px;">👤</span>';
         html += '<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-color,#e2e8f0);">';
         html += photo;
-        html += '<span style="flex:1;font-size:14px;">' + (u.displayName || u.email || uid) + '</span>';
+        html += '<span style="flex:1;font-size:14px;">' + escapeHtml(u.displayName || u.email || uid) + '</span>';
         html += '<button class="admin-approve-btn pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--success,#38a169);color:#fff;border:none;border-radius:6px;cursor:pointer;">\u2705 ' + (isEN ? 'Approve' : 'Approva') + '</button>';
         html += '<button class="admin-reject-btn pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--danger,#e53e3e);color:#fff;border:none;border-radius:6px;cursor:pointer;">\u274c ' + (isEN ? 'Reject' : 'Rifiuta') + '</button>';
         html += '</div>';
@@ -10899,7 +11190,7 @@ if ('serviceWorker' in navigator) {
 
   if (testCountdownBtn) {
     testCountdownBtn.addEventListener('click', function() {
-      var daysUntil = Math.ceil((new Date('2026-06-26T00:00:00+02:00').getTime() - Date.now()) / 86400000);
+      var daysUntil = Math.ceil((TRIP_START.getTime() - Date.now()) / 86400000);
       queueTestNotification('countdown',
         '📅 ' + daysUntil + (isEN ? ' days to departure' : ' giorni alla partenza'),
         isEN ? 'Countdown test from admin panel' : 'Test countdown dal pannello admin',
