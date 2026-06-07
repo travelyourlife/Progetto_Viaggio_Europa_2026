@@ -10499,6 +10499,10 @@ if ('serviceWorker' in navigator) {
         '<input type="text" id="diario-edit-label" value="' + escapeHtml(entry.customLabel || '') + '" maxlength="40" placeholder="' + (isEN ? 'e.g. Departure, Rest day...' : 'es. Partenza, Giorno di riposo...') + '">' +
         '<label>' + (isEN ? 'Text / Story' : 'Testo / Racconto') + '</label>' +
         '<textarea id="diario-edit-text" rows="4" maxlength="500">' + escapeHtml(entry.text || '') + '</textarea>' +
+        '<label>' + (isEN ? 'Km driven (0 to remove)' : 'Km guidati (0 per rimuovere)') + '</label>' +
+        '<input type="number" id="diario-edit-km" value="' + (entry.kmDriven || 0) + '" min="0" max="9999" step="1">' +
+        '<label>' + (isEN ? 'Drive time (empty to remove)' : 'Tempo guida (vuoto per rimuovere)') + '</label>' +
+        '<input type="text" id="diario-edit-drivetime" value="' + escapeHtml(entry.driveTime || '') + '" placeholder="' + (isEN ? 'e.g. 3h 45m' : 'es. 3h 45m') + '">' +
         '<label>' + (isEN ? 'Highlight of the day' : 'Momento top del giorno') + '</label>' +
         '<input type="text" id="diario-edit-highlight" value="' + escapeHtml(entry.highlight || '') + '" maxlength="120">' +
         '<div class="diario-edit-actions">' +
@@ -10517,12 +10521,16 @@ if ('serviceWorker' in navigator) {
         var customLabel = document.getElementById('diario-edit-label').value.trim();
         var text = document.getElementById('diario-edit-text').value.trim();
         var highlight = document.getElementById('diario-edit-highlight').value.trim();
+        var kmVal = parseInt(document.getElementById('diario-edit-km').value) || 0;
+        var driveTimeVal = document.getElementById('diario-edit-drivetime').value.trim();
         var updates = {};
         if (dateVal) updates['date'] = dateVal;
         updates['customType'] = customType || null;
         updates['customLabel'] = customLabel || null;
         updates['text'] = text || null;
         updates['highlight'] = highlight || null;
+        updates['kmDriven'] = kmVal > 0 ? kmVal : null;
+        updates['driveTime'] = driveTimeVal || null;
         diarioRef.child(dayKey).update(updates).then(function() {
           if (window.showToast) showToast(isEN ? 'Saved!' : 'Salvato!', 'success');
           overlay.remove();
