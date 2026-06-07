@@ -69,7 +69,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = '2.17';
+  var EXPECTED_VERSION = '2.20';
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
   var r = false;
@@ -7627,11 +7627,39 @@
 </section>
 <section id="tab-admin" class="tab-content">
 
-<h1 style="text-align:center; margin-top:16px;">🛠️ Admin &amp; Test Panel</h1>
+<h1 style="text-align:center; margin-top:16px;">🛠️ Admin</h1>
 <p style="text-align:center;color:var(--text-muted);font-size:0.85em;">🔒 Visible only to organizers</p>
 
-<!-- ═══ TRIP CONTROLS (moved from Posizione) ═══ -->
-<div id="pos-admin-panel" class="admin-card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:12px 0;">
+<!-- ═══ A) HEALTH BANNER ═══ -->
+<div id="admin-health-banner" class="admin-card" style="background:var(--bg-card);border:2px solid #38a169;border-radius:var(--radius);padding:14px 16px;margin:12px 0;display:flex;align-items:center;gap:12px;cursor:pointer;" onclick="document.getElementById('admin-diag-details').open=!document.getElementById('admin-diag-details').open;">
+  <span id="admin-health-icon" style="font-size:28px;">⏳</span>
+  <div style="flex:1;">
+    <div id="admin-health-title" style="font-weight:700;font-size:15px;">Running diagnostics...</div>
+    <div id="admin-health-subtitle" style="font-size:12px;color:var(--text-muted);margin-top:2px;">Checking push, SW, token, DB</div>
+  </div>
+  <span style="font-size:12px;color:var(--text-muted);">▼ details</span>
+</div>
+<details id="admin-diag-details" style="margin:0 0 12px;">
+<summary style="display:none;"></summary>
+<div class="admin-card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin:0;">
+  <div id="admin-diag-results" style="font-size:13px;line-height:1.8;">Loading...</div>
+  <button id="admin-diag-rerun" class="pos-btn pos-btn-blue" style="margin-top:10px;font-size:12px;">🔄 Re-run diagnostics</button>
+</div>
+</details>
+
+<!-- ═══ C) QUICK ACTIONS ═══ -->
+<div class="admin-card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin:0 0 12px;">
+<div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;">
+  <button id="pos-live-start-quick" class="pos-btn pos-btn-green pos-btn-large" style="flex:1;min-width:140px;">▶️ Start Tracking</button>
+  <button id="pos-live-stop-quick" class="pos-btn pos-btn-red pos-btn-large" style="flex:1;min-width:140px;display:none;">⏹️ End Day</button>
+  <button id="pos-parking-quick" class="pos-btn pos-btn-purple" style="flex:1;min-width:120px;">🅿️ Parking</button>
+</div>
+</div>
+
+<!-- ═══ B) ACCORDION 1: TRIP ═══ -->
+<details open class="admin-accordion">
+<summary class="admin-accordion-title">⚡ Trip</summary>
+<div id="pos-admin-panel" class="admin-card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:0 0 var(--radius) var(--radius);padding:16px;margin:0 0 12px;border-top:none;">
 <h3 style="margin-bottom:12px;">🚐 Trip Controls</h3>
 
 <!-- Live Tracking -->
@@ -7703,33 +7731,12 @@
     </div>
 </div>
 </div>
+</details>
 
-<!-- System Status -->
-<div class="admin-card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:12px 0;">
-<h3 style="margin-bottom:12px;">📊 System Status</h3>
-<div id="admin-status-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:0.88em;">
-  <div><strong>App Version:</strong></div><div id="admin-version">—</div>
-  <div><strong>Service Worker:</strong></div><div id="admin-sw-status">—</div>
-  <div><strong>Notification Permission:</strong></div><div id="admin-notif-perm">—</div>
-  <div><strong>FCM Token (local):</strong></div><div id="admin-fcm-status">—</div>
-  <div><strong>FCM Tokens (DB):</strong></div><div id="admin-fcm-db-count">—</div>
-  <div><strong>Firebase Auth:</strong></div><div id="admin-auth-status">—</div>
-  <div><strong>Database:</strong></div><div id="admin-db-status">—</div>
-</div>
-</div>
-
-<!-- Test Actions -->
-<div class="admin-card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:12px 0;">
-<h3 style="margin-bottom:12px;">🧪 Test Actions</h3>
-<div style="display:flex;gap:8px;flex-wrap:wrap;">
-  <button id="admin-test-push" class="pos-btn" style="font-size:13px;background:var(--accent);color:#fff;">🔔 Test Push</button>
-  <button id="admin-test-push-delay" class="pos-btn" style="font-size:13px;background:#e67e22;color:#fff;">⏱️ Test Push (5s)</button>
-  <button id="admin-request-notif" class="pos-btn" style="font-size:13px;">🔓 Request Permission</button>
-  <button id="admin-refresh-token" class="pos-btn" style="font-size:13px;">🔄 Refresh FCM Token</button>
-  <button id="admin-check-db" class="pos-btn" style="font-size:13px;">📡 Check DB Tokens</button>
-</div>
-<pre id="admin-log" style="margin-top:12px;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px;font-size:0.78em;max-height:200px;overflow-y:auto;white-space:pre-wrap;display:none;"></pre>
-</div>
+<!-- ═══ B) ACCORDION 2: USERS & NOTIFICATIONS ═══ -->
+<details class="admin-accordion">
+<summary class="admin-accordion-title">👥 Users & Notifications</summary>
+<div style="border:1px solid var(--border);border-top:none;border-radius:0 0 var(--radius) var(--radius);padding:0;margin:0 0 12px;">
 
 <!-- Post Editor -->
 <div class="admin-card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:12px 0;">
@@ -7743,7 +7750,7 @@
 </div>
 
 <!-- Centralized User Management -->
-<div class="admin-card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:12px 0;">
+<div class="admin-card" style="background:var(--bg-card);border:none;border-radius:0;padding:16px;margin:0;border-bottom:1px solid var(--border);">
 <h3 style="margin-bottom:12px;">👥 User Management</h3>
 <p style="font-size:12px;color:var(--text-muted);margin:0 0 12px;">Global ban: banned users cannot access any app feature.</p>
 <div id="admin-users-list" style="max-height:400px;overflow-y:auto;">
@@ -7755,17 +7762,15 @@
 </div>
 
 <!-- Pending Access Requests -->
-<div class="admin-card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:12px 0;">
+<div class="admin-card" style="background:var(--bg-card);border:none;border-radius:0;padding:16px;margin:0;border-bottom:1px solid var(--border);">
 <h3 style="margin-bottom:12px;">⏳ Pending access requests</h3>
 <div id="admin-pending-list">
   <p style="color:var(--text-muted);font-size:13px;">No pending requests.</p>
 </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════════ -->
-<!-- NOTIFICATION CONFIGURATION PANEL (v1.56) -->
-<!-- ═══════════════════════════════════════════════════════════ -->
-<div class="admin-card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:12px 0;">
+<!-- NOTIFICATION CONFIGURATION -->
+<div class="admin-card" style="background:var(--bg-card);border:none;border-radius:0 0 var(--radius) var(--radius);padding:16px;margin:0;">
 <h3 style="margin-bottom:12px;">🔔 Notification Configuration</h3>
 <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">Manage per-user notification preferences, automated notification schedules, and test the system.</p>
 
@@ -7829,9 +7834,43 @@
 <pre id="admin-notif-log" style="margin-top:10px;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px;font-size:0.78em;max-height:200px;overflow-y:auto;white-space:pre-wrap;display:none;"></pre>
 </details>
 </div>
+</div>
+</details>
+
+<!-- ═══ B) ACCORDION 3: SYSTEM & DEBUG ═══ -->
+<details class="admin-accordion">
+<summary class="admin-accordion-title">🔧 System & Debug</summary>
+<div style="border:1px solid var(--border);border-top:none;border-radius:0 0 var(--radius) var(--radius);padding:0;margin:0 0 12px;">
+
+<!-- System Status -->
+<div class="admin-card" style="background:var(--bg-card);border:none;border-radius:0;padding:16px;margin:0;border-bottom:1px solid var(--border);">
+<h3 style="margin-bottom:12px;">📊 System Status</h3>
+<div id="admin-status-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:0.88em;">
+  <div><strong>App Version:</strong></div><div id="admin-version">—</div>
+  <div><strong>Service Worker:</strong></div><div id="admin-sw-status">—</div>
+  <div><strong>Notification Permission:</strong></div><div id="admin-notif-perm">—</div>
+  <div><strong>FCM Token (local):</strong></div><div id="admin-fcm-status">—</div>
+  <div><strong>FCM Tokens (DB):</strong></div><div id="admin-fcm-db-count">—</div>
+  <div><strong>Firebase Auth:</strong></div><div id="admin-auth-status">—</div>
+  <div><strong>Database:</strong></div><div id="admin-db-status">—</div>
+</div>
+</div>
+
+<!-- Test Actions -->
+<div class="admin-card" style="background:var(--bg-card);border:none;border-radius:0;padding:16px;margin:0;border-bottom:1px solid var(--border);">
+<h3 style="margin-bottom:12px;">🧪 Test Actions</h3>
+<div style="display:flex;gap:8px;flex-wrap:wrap;">
+  <button id="admin-test-push" class="pos-btn" style="font-size:13px;background:var(--accent);color:#fff;">🔔 Test Push</button>
+  <button id="admin-test-push-delay" class="pos-btn" style="font-size:13px;background:#e67e22;color:#fff;">⏱️ Test Push (5s)</button>
+  <button id="admin-request-notif" class="pos-btn" style="font-size:13px;">🔓 Request Permission</button>
+  <button id="admin-refresh-token" class="pos-btn" style="font-size:13px;">🔄 Refresh FCM Token</button>
+  <button id="admin-check-db" class="pos-btn" style="font-size:13px;">📡 Check DB Tokens</button>
+</div>
+<pre id="admin-log" style="margin-top:12px;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px;font-size:0.78em;max-height:200px;overflow-y:auto;white-space:pre-wrap;display:none;"></pre>
+</div>
 
 <!-- Quick Links -->
-<div class="admin-card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:12px 0;">
+<div class="admin-card" style="background:var(--bg-card);border:none;border-radius:0 0 var(--radius) var(--radius);padding:16px;margin:0;">
 <h3 style="margin-bottom:12px;">🔗 Quick Links</h3>
 <div style="display:flex;gap:8px;flex-wrap:wrap;font-size:0.88em;">
   <a href="https://console.firebase.google.com/project/viaggio-europa-2026/database/viaggio-europa-2026-default-rtdb/data" target="_blank" rel="noopener" class="pos-btn pos-btn-blue" style="font-size:12px;">📦 Database</a>
@@ -7842,6 +7881,9 @@
   <a href="https://analytics.google.com/analytics/web/#/p/G-YSGVVPN5ZR" target="_blank" rel="noopener noreferrer" class="pos-btn pos-btn-blue" style="font-size:12px;">📈 Google Analytics</a>
 </div>
 </div>
+
+</div>
+</details>
 
 </section>
 
@@ -7940,6 +7982,7 @@
 <li class="task-item"><input type="checkbox" data-idx="infradito"> Flip-flops</li>
 <li class="task-item"><input type="checkbox" data-idx="costume"> Swimsuit</li>
 <li class="task-item"><input type="checkbox" data-idx="telo-mare"> Beach towel</li>
+<li class="task-item"><input type="checkbox" data-idx="cintura"> Belt</li>
 <li class="task-item"><input type="checkbox" data-idx="sacco-biancheria-sporca"> Dirty laundry bag</li>
 </ul>
 <h3 id="z-bagno">🚿 Bathroom &amp; Health</h3>
@@ -8143,6 +8186,12 @@
     <p style="text-align:center;font-size:12px;color:var(--text-muted);margin-top:4px;">Progress: <span id="stat-percent">0</span>% · Last: <span id="stat-last">—</span></p>
 </div>
 
+<!-- ─── v2.18: WEATHER STATS ─── -->
+<div id="pos-weather-stats" class="pos-section-card" style="display:none;">
+    <h3 style="font-size:14px;font-weight:700;margin:0 0 10px;">\u{1F326}\uFE0F Trip Weather</h3>
+    <!-- populated by loadWeatherStats() -->
+</div>
+
 <!-- ─── ACTIVITIES (colored chips) ─── -->
 <div class="pos-garmin-card" id="pos-garmin-card">
     <h3 class="pos-section-title">🏃 Activities</h3>
@@ -8161,8 +8210,8 @@
 </div>
 
 <!-- ─── HISTORICAL WEATHER (collapsible) ─── -->
-<details id="pos-meteo-storico" style="margin-top:16px;">
-<summary style="cursor:pointer;font-size:16px;font-weight:700;padding:12px 0;user-select:none;">📊 Historical Weather — by Area and Day <span style="font-size:13px;color:var(--text-muted);font-weight:400;">(climate averages)</span></summary>
+<details id="pos-meteo-storico" class="pos-accordion">
+<summary>📊 Historical Weather — by Area and Day <span class="pos-accordion-sub">(climate averages)</span></summary>
 <div style="padding:8px 0;">
 <span id="pos-meteo-anchor"></span>
 <blockquote>
@@ -8599,11 +8648,9 @@
 </div>
 </details>
 
-<hr>
-
 <!-- ─── STOPS (unified: itinerary + custom) ─── -->
-<details id="pos-checkin-details">
-<summary style="cursor:pointer;font-size:18px;font-weight:700;padding:12px 0;user-select:none;">✅ Stops <span style="font-size:13px;color:var(--text-muted);font-weight:400;">(<span id="pos-checkin-count">0</span>/<span id="pos-checkin-total">54</span>)</span></summary>
+<details id="pos-checkin-details" class="pos-accordion">
+<summary>✅ Stops <span class="pos-accordion-sub">(<span id="pos-checkin-count">0</span>/<span id="pos-checkin-total">54</span>)</span></summary>
 <p style="color:var(--text-muted);font-size:13px;margin:4px 0 12px;">Stops are automatically checked when you arrive nearby. You can also check them manually or add new ones.</p>
 
 <!-- Add custom stop (owner only, hidden via JS) -->
@@ -8625,20 +8672,16 @@
 <div id="pos-places-list"></div>
 </details>
 
-<hr>
-
 <!-- ─── OVERNIGHT PARKING (visible to all, read-only for visitors) ─── -->
-<details id="pos-parking-details">
-<summary style="cursor:pointer;font-size:18px;font-weight:700;padding:12px 0;user-select:none;">🅿️ Overnight Parking <span style="font-size:13px;color:var(--text-muted);font-weight:400;">(<span id="pos-parking-count">0</span>)</span></summary>
+<details id="pos-parking-details" class="pos-accordion">
+<summary>🅿️ Overnight Parking <span class="pos-accordion-sub">(<span id="pos-parking-count">0</span>)</span></summary>
 <p style="color:var(--text-muted);font-size:13px;margin:4px 0 12px;">Parking spots and campsites where they slept.</p>
 <div id="pos-parking-list"></div>
 </details>
 
-<hr>
-
 <!-- ─── DAILY SUMMARY (visible to all) ─── -->
-<details id="pos-daily-details">
-<summary style="cursor:pointer;font-size:18px;font-weight:700;padding:12px 0;user-select:none;">📊 Daily Summary</summary>
+<details id="pos-daily-details" class="pos-accordion">
+<summary>📊 Daily Summary</summary>
 <p style="color:var(--text-muted);font-size:13px;margin:4px 0 12px;">Km driven, drive time and average speed for each travel day.</p>
 <div id="pos-daily-list"></div>
 </details>
@@ -8713,9 +8756,27 @@
     <div class="notif-drawer-list" id="notifDrawerList"></div>
     <div class="notif-settings-panel" id="notifSettingsPanel" style="display:none;">
         <h4>⚙️ Notification Settings</h4>
+        <!-- Mini-diagnostica follower -->
+        <div id="notif-user-diag" style="background:var(--bg-alt,#f7f7f7);border-radius:10px;padding:12px 14px;margin-bottom:14px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+            <span id="notif-user-diag-icon" style="font-size:20px;">⏳</span>
+            <strong id="notif-user-diag-title" style="font-size:14px;">Checking...</strong>
+          </div>
+          <div id="notif-user-diag-list" style="font-size:12px;line-height:1.7;color:var(--text-muted,#666);">Loading...</div>
+        </div>
         <p class="notif-settings-desc">Enable push notifications to receive real-time trip updates.</p>
         <button class="notif-settings-toggle" id="notifSettingsToggle">🔔 Enable notifications</button>
         <p class="notif-settings-status" id="notifSettingsStatus"></p>
+        <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border,#eee);">
+          <details style="font-size:12px;">
+            <summary style="cursor:pointer;font-weight:600;color:var(--text-muted,#666);">Not receiving notifications — Help</summary>
+            <div style="margin-top:8px;line-height:1.6;color:var(--text-muted,#666);">
+              <p><strong>Android:</strong> Settings → Apps → Chrome/Quo Vadis → Notifications → Enable. Also disable "Battery optimization" for the app.</p>
+              <p><strong>iPhone:</strong> The app must be installed to the Home Screen ("Add to Home Screen" from Safari). Push works only on iOS 16.4+.</p>
+              <p><strong>Desktop:</strong> Check that the browser isn't blocking notifications for this site (lock icon in the URL bar).</p>
+            </div>
+          </details>
+        </div>
     </div>
 </div>
 

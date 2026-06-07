@@ -129,7 +129,65 @@
     padding: 14px 16px;
     box-shadow: var(--shadow-sm);
 }
-#tab-posizione details {
+#tab-posizione details.pos-accordion {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    margin: 12px 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+#tab-posizione details.pos-accordion:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--accent-light, rgba(44, 82, 130, 0.3));
+}
+#tab-posizione details.pos-accordion summary {
+    padding: 16px 18px;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    list-style: none;
+    transition: background 0.2s ease;
+}
+#tab-posizione details.pos-accordion summary::-webkit-details-marker {
+    display: none;
+}
+#tab-posizione details.pos-accordion summary::after {
+    content: '';
+    margin-left: auto;
+    width: 8px;
+    height: 8px;
+    border-right: 2px solid var(--text-muted);
+    border-bottom: 2px solid var(--text-muted);
+    transform: rotate(-45deg);
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+}
+#tab-posizione details.pos-accordion[open] summary::after {
+    transform: rotate(45deg);
+}
+#tab-posizione details.pos-accordion[open] summary {
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-alt);
+}
+#tab-posizione details.pos-accordion .pos-accordion-sub {
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: var(--text-muted);
+    margin-left: 4px;
+}
+#tab-posizione details.pos-accordion > div,
+#tab-posizione details.pos-accordion > p {
+    padding: 14px 18px;
+    font-size: 0.9rem;
+}
+/* Non-accordion details in posizione keep basic style */
+#tab-posizione details:not(.pos-accordion) {
     background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: 14px;
@@ -137,18 +195,18 @@
     overflow: hidden;
     box-shadow: var(--shadow-sm);
 }
-#tab-posizione details summary {
+#tab-posizione details:not(.pos-accordion) summary {
     padding: 14px 16px;
     font-weight: 700;
     font-size: 0.95rem;
     cursor: pointer;
     user-select: none;
 }
-#tab-posizione details[open] summary {
+#tab-posizione details:not(.pos-accordion)[open] summary {
     border-bottom: 1px solid var(--border);
 }
-#tab-posizione details > div,
-#tab-posizione details > p {
+#tab-posizione details:not(.pos-accordion) > div,
+#tab-posizione details:not(.pos-accordion) > p {
     padding: 12px 16px;
 }
 

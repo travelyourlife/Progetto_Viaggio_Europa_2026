@@ -909,7 +909,8 @@
         if (badge) html += '    <span class="hv-feed-type hv-type-' + (post.customType || 'update') + '">' + badge + '</span>';
         html += '  </div>';
         if (post.customLabel) {
-          html += '  <div class="hv-feed-title" style="font-weight:600;margin:4px 0;">' + escHtml(post.customLabel) + '</div>';
+          var feedTitle = (lang === 'en' && post.titleEn) ? post.titleEn : post.customLabel;
+          html += '  <div class="hv-feed-title" style="font-weight:600;margin:4px 0;">' + escHtml(feedTitle) + '</div>';
         }
         if (post.photos && Object.keys(post.photos).length > 0) {
           var firstPhoto = post.photos[Object.keys(post.photos)[0]];
@@ -919,11 +920,11 @@
             html += '  <div class="hv-feed-photo" style="background-image:url(' + safeFeedPhotoUrl + ');background-size:cover;background-position:center;"></div>';
           }
         }
-        var bodyText = post.text || '';
+        var bodyText = (lang === 'en' && post.textEn) ? post.textEn : (post.text || '');
         html += '  <div class="hv-feed-body">' + escHtml(bodyText) + '</div>';
-        // Translate button for EN followers (non-owner)
-        if (lang === 'en' && bodyText && !(typeof isOwner !== 'undefined' && isOwner)) {
-          html += '  <button class="hv-feed-translate-btn" data-text="' + escHtml(bodyText).replace(/"/g, '&quot;') + '" title="Translate to English">\uD83C\uDF10</button>';
+        // Translate button for EN followers (non-owner) — only if no auto-translation
+        if (lang === 'en' && post.text && !post.textEn && !(typeof isOwner !== 'undefined' && isOwner)) {
+          html += '  <button class="hv-feed-translate-btn" data-text="' + escHtml(post.text).replace(/"/g, '&quot;') + '" title="Translate to English">\uD83C\uDF10</button>';
         }
         html += '</div>';
       });
@@ -1320,15 +1321,7 @@
             if (typeof window.showToast === 'function') {
               window.showToast((typeof isEN !== 'undefined' && isEN) ? '\ud83d\udef0\ufe0f Tracking started! Remember to also start GPSLogger.' : '\ud83d\udef0\ufe0f Tracking avviato! Ricordati di avviare anche GPSLogger.', 'info', 5000);
             }
-            // Try to open GPSLogger via intent (Android)
-            try {
-              var gpsLink = document.createElement('a');
-              gpsLink.href = 'intent://#Intent;package=com.mendhak.gpslogger;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;end';
-              gpsLink.style.display = 'none';
-              document.body.appendChild(gpsLink);
-              gpsLink.click();
-              setTimeout(function() { gpsLink.remove(); }, 1000);
-            } catch(e) { /* ignore if not Android */ }
+
           }, 800);
         }
       }

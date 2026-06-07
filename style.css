@@ -3311,6 +3311,22 @@ html[lang="en"] .notif-drawer-list:empty::after {
   background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
   padding: 16px; margin-bottom: 16px; box-shadow: var(--shadow-sm);
 }
+
+/* v2.18: Weather Stats Section */
+.pos-section-card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 16px; margin-bottom: 16px; box-shadow: var(--shadow-sm);
+}
+.pos-weather-stats-grid {
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;
+}
+.pos-ws-item {
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  padding: 8px 4px; background: var(--bg-secondary); border-radius: 8px;
+}
+.pos-ws-icon { font-size: 20px; margin-bottom: 2px; }
+.pos-ws-val { font-size: 16px; font-weight: 700; color: var(--text-primary); }
+.pos-ws-label { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
 .pos-section-title { font-size: 15px; font-weight: 700; margin: 0 0 12px; }
 .pos-garmin-chips { display: flex; flex-wrap: wrap; gap: 8px; }
 .pos-garmin-chip {
@@ -4553,4 +4569,44 @@ html[lang="en"] .notif-drawer-list:empty::after {
     .home-lang-switch { display: none; }
     .hero-card-avatar { display: none; }
     #homeSearchOpen { display: none; }
+}
+
+/* ─── v2.19: Admin Accordion & Diagnostic ─── */
+.admin-accordion {
+    margin-bottom: 12px;
+}
+.admin-accordion > summary {
+    list-style: none;
+}
+.admin-accordion > summary::-webkit-details-marker {
+    display: none;
+}
+.admin-accordion-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s;
+}
+.admin-accordion-title:hover {
+    background: var(--bg-alt, #f0f4f8);
+}
+.admin-accordion-title::after {
+    content: '▸';
+    margin-left: auto;
+    transition: transform 0.2s;
+}
+.admin-accordion[open] > .admin-accordion-title {
+    border-radius: var(--radius) var(--radius) 0 0;
+    border-bottom: none;
+}
+.admin-accordion[open] > .admin-accordion-title::after {
+    transform: rotate(90deg);
 }

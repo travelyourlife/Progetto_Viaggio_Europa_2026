@@ -2055,6 +2055,47 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('stat-last').textContent = allTimes.length > 0 ? allTimes[allTimes.length - 1] : '—';
         }
 
+        // ─── v2.18: Weather Statistics (summary from weatherLog) ───
+        function loadWeatherStats() {
+            var weatherStatsEl = document.getElementById('pos-weather-stats');
+            if (!weatherStatsEl) return;
+            var ref = getFamilyRef('weatherLog');
+            if (!ref) return;
+            ref.once('value', function(snap) {
+                var logs = snap.val();
+                if (!logs) { weatherStatsEl.style.display = 'none'; return; }
+                var days = Object.values(logs);
+                if (days.length === 0) { weatherStatsEl.style.display = 'none'; return; }
+                var hottest = days[0], coldest = days[0], rainiestDay = days[0];
+                var totalRain = 0, sunnyDays = 0, rainyDays = 0;
+                var sumMax = 0, sumMin = 0;
+                days.forEach(function(d) {
+                    if (d.tempMax > hottest.tempMax) hottest = d;
+                    if (d.tempMin < coldest.tempMin) coldest = d;
+                    if (d.precipitation > rainiestDay.precipitation) rainiestDay = d;
+                    totalRain += (d.precipitation || 0);
+                    if (d.precipitation > 1) rainyDays++;
+                    if (d.weatherCode === 0 || d.weatherCode === 1) sunnyDays++;
+                    sumMax += d.tempMax;
+                    sumMin += d.tempMin;
+                });
+                var avgMax = Math.round(sumMax / days.length);
+                var avgMin = Math.round(sumMin / days.length);
+                var html = '<div class="pos-weather-stats-grid">';
+                html += '<div class="pos-ws-item"><span class="pos-ws-icon">\u{1F321}\uFE0F</span><span class="pos-ws-val">' + avgMax + '\u00b0/' + avgMin + '\u00b0</span><span class="pos-ws-label">' + (isEN ? 'Avg temp' : 'Media') + '</span></div>';
+                html += '<div class="pos-ws-item"><span class="pos-ws-icon">\u{1F525}</span><span class="pos-ws-val">' + hottest.tempMax + '\u00b0</span><span class="pos-ws-label">' + (isEN ? 'Hottest' : 'Pi\u00f9 caldo') + '</span></div>';
+                html += '<div class="pos-ws-item"><span class="pos-ws-icon">\u{2744}\uFE0F</span><span class="pos-ws-val">' + coldest.tempMin + '\u00b0</span><span class="pos-ws-label">' + (isEN ? 'Coldest' : 'Pi\u00f9 freddo') + '</span></div>';
+                html += '<div class="pos-ws-item"><span class="pos-ws-icon">\u2600\uFE0F</span><span class="pos-ws-val">' + sunnyDays + '</span><span class="pos-ws-label">' + (isEN ? 'Sunny days' : 'Giorni sole') + '</span></div>';
+                html += '<div class="pos-ws-item"><span class="pos-ws-icon">\u{1F327}\uFE0F</span><span class="pos-ws-val">' + rainyDays + '</span><span class="pos-ws-label">' + (isEN ? 'Rainy days' : 'Giorni pioggia') + '</span></div>';
+                html += '<div class="pos-ws-item"><span class="pos-ws-icon">\u{1F4A7}</span><span class="pos-ws-val">' + totalRain.toFixed(0) + 'mm</span><span class="pos-ws-label">' + (isEN ? 'Total rain' : 'Pioggia tot.') + '</span></div>';
+                html += '</div>';
+                weatherStatsEl.innerHTML = html;
+                weatherStatsEl.style.display = '';
+            });
+        }
+        // Call weather stats on load
+        loadWeatherStats();
+
         // ─── Map ───
         function initMap() {
             if (map) return;
@@ -2516,6 +2557,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 }, 30000);
             }
 
+            // v2.18: Save weather log 30min after start (backup, in case stopLive is missed)
+            setTimeout(function() {
+                if (liveActive && todayPoints.length > 0) {
+                    var lastPtWeather = todayPoints[todayPoints.length - 1];
+                    saveWeatherLog(lastPtWeather.lat, lastPtWeather.lng);
+                }
+            }, 30 * 60 * 1000);
+
             showToast(todayKm > 0 ? (isEN ? '🔄 Trip resumed! (' + todayKm.toFixed(1) + ' km today)' : '🔄 Viaggio ripreso! (' + todayKm.toFixed(1) + ' km oggi)') : (isEN ? '▶️ Trip started!' : '▶️ Viaggio avviato!'), 'success');
             if(window.haptic) window.haptic(15);
             updatePosAuthUI();
@@ -2631,6 +2680,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (sumRef) sumRef.set(summary);
             }
 
+            // v2.18: Save weather log using last known position
+            if (todayPoints.length > 0) {
+                var lastPtW = todayPoints[todayPoints.length - 1];
+                saveWeatherLog(lastPtW.lat, lastPtW.lng);
+            }
+
             // Update live status to stopped
             var liveRef = getFamilyRef('live/' + (firebaseUser ? firebaseUser.uid : 'driver'));
             if (liveRef) liveRef.update({ status: 'stopped', speed: 0 });
@@ -2676,6 +2731,42 @@ document.addEventListener('DOMContentLoaded', function() {
 
             liveStartTime = null;
             updatePosAuthUI();
+        }
+
+        // ─── v2.18: Save daily weather log to Firebase ───
+        function saveWeatherLog(lat, lng) {
+            if (!lat || !lng) return;
+            var dateKey = todayStr();
+            var weatherRef = getFamilyRef('weatherLog/' + dateKey);
+            if (!weatherRef) return;
+            // Check if already saved today
+            weatherRef.once('value', function(snap) {
+                if (snap.val()) return; // already saved
+                var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + lat + '&longitude=' + lng +
+                    '&daily=temperature_2m_max,temperature_2m_min,weathercode,sunrise,sunset,precipitation_sum,windspeed_10m_max' +
+                    '&start_date=' + dateKey + '&end_date=' + dateKey + '&timezone=auto';
+                fetch(url).then(function(r) { return r.json(); }).then(function(data) {
+                    if (!data.daily || !data.daily.temperature_2m_max) return;
+                    var entry = {
+                        date: dateKey,
+                        lat: lat,
+                        lng: lng,
+                        tempMax: Math.round(data.daily.temperature_2m_max[0]),
+                        tempMin: Math.round(data.daily.temperature_2m_min[0]),
+                        weatherCode: data.daily.weathercode[0],
+                        sunrise: data.daily.sunrise ? data.daily.sunrise[0] : null,
+                        sunset: data.daily.sunset ? data.daily.sunset[0] : null,
+                        precipitation: data.daily.precipitation_sum ? data.daily.precipitation_sum[0] : 0,
+                        windMax: data.daily.windspeed_10m_max ? data.daily.windspeed_10m_max[0] : 0,
+                        savedAt: Date.now(),
+                        savedBy: firebaseUser ? firebaseUser.uid : 'unknown'
+                    };
+                    weatherRef.set(entry);
+                    console.info('[Weather] Saved weather log for', dateKey, entry.tempMax + '°/' + entry.tempMin + '°');
+                }).catch(function(err) {
+                    console.warn('[Weather] Failed to save weather log:', err);
+                });
+            });
         }
 
         // Button handlers
@@ -3595,11 +3686,11 @@ document.addEventListener('DOMContentLoaded', function() {
         var percentEl = document.getElementById('zp-percent');
         var fillEl = document.getElementById('zp-fill');
         if (!countEl) return;
-        var allCbs = document.querySelectorAll('input[type="checkbox"][data-idx]');
+        var allCbs = document.querySelectorAll('#tab-zaino input[type="checkbox"][data-idx]');
         var total = allCbs.length;
         totalEl.textContent = total;
         function updateZainoProgress() {
-            var done = document.querySelectorAll('input[type="checkbox"][data-idx]:checked').length;
+            var done = document.querySelectorAll('#tab-zaino input[type="checkbox"][data-idx]:checked').length;
             countEl.textContent = done;
             var pct = total > 0 ? Math.round(done / total * 100) : 0;
             percentEl.textContent = pct + '% completato';
@@ -6237,36 +6328,11 @@ if ('serviceWorker' in navigator) {
     }
   }
 
-  // --- #10: Pending access notification (owner only, from Firebase) ---
-  function checkPendingAccess() {
-    if (!isOwner) return;
-    if (typeof firebase === 'undefined' || !firebase.database) return;
-    firebase.database().ref('trips/' + FAMILY_ID + '/pendingUsers').once('value', function(snap) {
-      var pending = snap.val();
-      var count = pending ? Object.keys(pending).length : 0;
-      if (count > 0 && !isDismissed('pending-access-' + todayStr)) {
-        var pendText = isEN
-          ? '<strong>' + count + ' pending access request' + (count > 1 ? 's' : '') + '</strong> waiting for approval.'
-          : '<strong>' + count + ' richiest' + (count > 1 ? 'e' : 'a') + ' di accesso</strong> in attesa di approvazione.';
-        var exists = localNotifs.some(function(n) { return n.id === 'pending-access-' + todayStr; });
-        if (!exists) {
-          localNotifs.push({
-            id: 'pending-access-' + todayStr,
-            icon: '\ud83d\udc65',
-            text: pendText,
-            type: 'owner',
-            actionLabel: isEN ? 'Open Admin' : 'Apri Admin',
-            action: function() { window.switchTabFromHome('admin'); },
-            ownerOnly: true,
-            createdAt: Date.now(),
-            source: 'client'
-          });
-          renderDrawer();
-          updateBadge();
-        }
-      }
-    });
-  }
+  // --- #10: Pending access notification — REMOVED in v2.19 ---
+  // The Cloud Function notifyNewPendingUser already generates a specific
+  // notification with name+email in notifications/history. No need for
+  // a duplicate generic local notification.
+  function checkPendingAccess() { /* no-op */ }
 
   // --- Merge local + Firebase notifications ---
   function mergeNotifications() {
@@ -6485,9 +6551,12 @@ if ('serviceWorker' in navigator) {
         firebaseNotifs = [];
         var data = snap.val();
         if (data) {
+          var currentUid = (firebase.auth && firebase.auth().currentUser) ? firebase.auth().currentUser.uid : null;
           Object.keys(data).forEach(function(key) {
             var n = data[key];
             if (!n || !n.type) return;
+            // Skip notifications sent by the current user (e.g. own chat messages)
+            if (n.senderUid && currentUid && n.senderUid === currentUid) return;
             firebaseNotifs.push({
               id: key,
               icon: n.icon || getIconForType(n.type),
@@ -6886,11 +6955,96 @@ if ('serviceWorker' in navigator) {
       notifSettingsStatusEl.style.color = '';
     }
   }
+  // Mini-diagnostica follower
+  function runUserNotifDiagnostic() {
+    var icon = document.getElementById('notif-user-diag-icon');
+    var title = document.getElementById('notif-user-diag-title');
+    var list = document.getElementById('notif-user-diag-list');
+    if (!icon || !title || !list) return;
+
+    var results = [];
+    var issues = 0;
+    var checks = [];
+
+    // 1. Permission
+    checks.push(new Promise(function(resolve) {
+      if (!('Notification' in window)) {
+        results.push('❌ ' + (isEN ? 'Notifications not supported' : 'Notifiche non supportate'));
+        issues++;
+      } else if (Notification.permission === 'granted') {
+        results.push('✅ ' + (isEN ? 'Permission granted' : 'Permesso concesso'));
+      } else if (Notification.permission === 'denied') {
+        results.push('❌ ' + (isEN ? 'Blocked — enable in phone Settings' : 'Bloccate — attiva nelle Impostazioni del telefono'));
+        issues++;
+      } else {
+        results.push('⚠️ ' + (isEN ? 'Not yet enabled — tap the button below' : 'Non ancora attivate — premi il bottone qui sotto'));
+        issues++;
+      }
+      resolve();
+    }));
+
+    // 2. Token
+    checks.push(new Promise(function(resolve) {
+      var token = localStorage.getItem('viaggio2026_fcm_token');
+      if (token) {
+        results.push('✅ ' + (isEN ? 'Device registered' : 'Dispositivo registrato'));
+      } else {
+        results.push('❌ ' + (isEN ? 'Device not registered — enable notifications first' : 'Dispositivo non registrato — attiva prima le notifiche'));
+        issues++;
+      }
+      resolve();
+    }));
+
+    // 3. PWA
+    checks.push(new Promise(function(resolve) {
+      var isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+      if (isStandalone) {
+        results.push('✅ ' + (isEN ? 'App installed' : 'App installata'));
+      } else {
+        results.push('⚠️ ' + (isEN ? 'App not installed — install for better background notifications' : 'App non installata — installa per notifiche migliori in background'));
+      }
+      resolve();
+    }));
+
+    // 4. Service Worker
+    checks.push(new Promise(function(resolve) {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistration().then(function(reg) {
+          if (reg && reg.active) {
+            results.push('✅ ' + (isEN ? 'Background service active' : 'Servizio background attivo'));
+          } else {
+            results.push('❌ ' + (isEN ? 'Background service not active' : 'Servizio background non attivo'));
+            issues++;
+          }
+          resolve();
+        }).catch(function() { resolve(); });
+      } else {
+        results.push('❌ ' + (isEN ? 'Not supported by browser' : 'Non supportato dal browser'));
+        issues++;
+        resolve();
+      }
+    }));
+
+    Promise.all(checks).then(function() {
+      if (issues === 0) {
+        icon.textContent = '🟢';
+        title.textContent = isEN ? 'Notifications working' : 'Notifiche funzionanti';
+        title.style.color = '#38a169';
+      } else {
+        icon.textContent = '🔴';
+        title.textContent = isEN ? issues + ' issue' + (issues > 1 ? 's' : '') + ' found' : issues + ' problema' + (issues > 1 ? 'i' : '') + ' trovato' + (issues > 1 ? 'i' : '');
+        title.style.color = '#e53e3e';
+      }
+      list.innerHTML = results.join('<br>');
+    });
+  }
+
   if (notifSettingsBtn) {
     notifSettingsBtn.addEventListener('click', function() {
       if (notifSettingsPanel.style.display === 'none') {
         notifSettingsPanel.style.display = 'block';
         updateNotifSettingsPanel();
+        runUserNotifDiagnostic();
       } else {
         notifSettingsPanel.style.display = 'none';
       }
@@ -9717,7 +9871,7 @@ if ('serviceWorker' in navigator) {
         var dn = entry.dayNumber;
         var dayLabel;
         if (entry.customLabel) {
-          dayLabel = entry.customLabel;
+          dayLabel = (isEN && entry.titleEn) ? entry.titleEn : entry.customLabel;
         } else if (dn < 0) {
           dayLabel = isEN ? 'Pre-trip' : 'Pre-viaggio';
         } else {
@@ -9800,16 +9954,18 @@ if ('serviceWorker' in navigator) {
 
         // Text
         if (entry.text) {
-          html += '    <p class="diario-text" data-entry-key="' + key + '">' + escapeHtml(entry.text) + '</p>';
-          // Translate button for non-owner users on EN version
-          if (!isOwner && isEN) {
+          var displayText = (isEN && entry.textEn) ? entry.textEn : entry.text;
+          html += '    <p class="diario-text" data-entry-key="' + key + '">' + escapeHtml(displayText) + '</p>';
+          // Translate button: show only if EN and no auto-translation available
+          if (isEN && !entry.textEn) {
             html += '    <button class="diario-translate-btn" data-key="' + key + '" data-text="' + escapeHtml(entry.text).replace(/"/g, '&quot;') + '" title="Translate to English">\uD83C\uDF10</button>';
           }
         }
 
         // Highlight
         if (entry.highlight) {
-          html += '    <div class="diario-highlight">\u2b50 ' + escapeHtml(entry.highlight) + '</div>';
+          var displayHighlight = (isEN && entry.highlightEn) ? entry.highlightEn : entry.highlight;
+          html += '    <div class="diario-highlight">\u2b50 ' + escapeHtml(displayHighlight) + '</div>';
         }
 
         // Auto stats
@@ -9843,8 +9999,9 @@ if ('serviceWorker' in navigator) {
 
         // Weather archive row (loaded async after render)
         var weatherDayIdx = (typeof dn === 'number' && dn >= 0) ? dn : -1;
-        if (weatherDayIdx >= 0) {
-          html += '    <div class="diario-weather-row" data-weather-day="' + weatherDayIdx + '" style="display:none;"></div>';
+        var weatherDateKey = entry.date || ''; // v2.18: use date key for weatherLog
+        if (weatherDayIdx >= 0 || weatherDateKey) {
+          html += '    <div class="diario-weather-row" data-weather-day="' + weatherDayIdx + '" data-weather-date="' + weatherDateKey + '" style="display:none;"></div>';
         }
 
         // Reactions row (only show if real data exists)
@@ -9885,24 +10042,64 @@ if ('serviceWorker' in navigator) {
     }
   }
 
-  // ─── Load weather archive for diary entries ───
+  // ─── Load weather archive for diary entries (v2.18: reads from weatherLog/{date}) ───
   function loadDiaryWeather() {
     if (!firebase.database) return;
     var familyId = (typeof FAMILY_ID !== 'undefined') ? FAMILY_ID : 'viaggio-europa-2026';
     var rows = timelineEl.querySelectorAll('.diario-weather-row');
     rows.forEach(function(row) {
-      var dayIdx = parseInt(row.getAttribute('data-weather-day'));
-      if (isNaN(dayIdx) || dayIdx < 0) return;
-      firebase.database().ref('trips/' + familyId + '/weatherArchive/' + dayIdx).once('value', function(snap) {
+      var dateKey = row.getAttribute('data-weather-date');
+      if (!dateKey) {
+        // Fallback: try old day-index format from weatherArchive
+        var dayIdx = parseInt(row.getAttribute('data-weather-day'));
+        if (isNaN(dayIdx) || dayIdx < 0) return;
+        firebase.database().ref('trips/' + familyId + '/weatherArchive/' + dayIdx).once('value', function(snap) {
+          if (!snap.exists()) return;
+          var w = snap.val();
+          row.innerHTML = '<span class="diario-weather-icon">' + (w.icon || '\u{1F324}\uFE0F') + '</span> ' +
+            w.high + '\u00b0/' + w.low + '\u00b0C \u00b7 ' + (w.condition || '') +
+            (w.sunrise ? ' \u00b7 \u{1F305} ' + w.sunrise + '\u2013' + w.sunset : '') +
+            (w.wind && w.wind > 15 ? ' \u00b7 \u{1F4A8} ' + w.wind + ' km/h' : '');
+          row.style.display = '';
+        });
+        return;
+      }
+      // v2.18: Read from weatherLog/{date}
+      firebase.database().ref('trips/' + familyId + '/weatherLog/' + dateKey).once('value', function(snap) {
         if (!snap.exists()) return;
         var w = snap.val();
-        row.innerHTML = '<span class="diario-weather-icon">' + (w.icon || '\u{1F324}\uFE0F') + '</span> ' +
-          w.high + '\u00b0/' + w.low + '\u00b0C \u00b7 ' + (w.condition || '') +
-          (w.sunrise ? ' \u00b7 \u{1F305} ' + w.sunrise + '\u2013' + w.sunset : '') +
-          (w.wind && w.wind > 15 ? ' \u00b7 \u{1F4A8} ' + w.wind + ' km/h' : '');
+        var icon = weatherCodeToIconDiary(w.weatherCode);
+        var html = '<span class="diario-weather-icon">' + icon + '</span> ' +
+          w.tempMax + '\u00b0/' + w.tempMin + '\u00b0C';
+        if (w.precipitation > 0) html += ' \u00b7 \u{1F4A7} ' + w.precipitation.toFixed(1) + 'mm';
+        if (w.windMax > 15) html += ' \u00b7 \u{1F4A8} ' + Math.round(w.windMax) + ' km/h';
+        if (w.sunrise && w.sunset) {
+          var rise = new Date(w.sunrise);
+          var set = new Date(w.sunset);
+          if (!isNaN(rise) && !isNaN(set)) {
+            var riseFmt = rise.getHours().toString().padStart(2,'0') + ':' + rise.getMinutes().toString().padStart(2,'0');
+            var setFmt = set.getHours().toString().padStart(2,'0') + ':' + set.getMinutes().toString().padStart(2,'0');
+            html += ' \u00b7 \u{1F305} ' + riseFmt + '\u2013' + setFmt;
+          }
+        }
+        row.innerHTML = html;
         row.style.display = '';
       });
     });
+  }
+
+  // Weather code to icon (WMO) — diary version
+  function weatherCodeToIconDiary(code) {
+    if (code === 0) return '\u2600\uFE0F';
+    if (code === 1 || code === 2) return '\u26C5';
+    if (code === 3) return '\u2601\uFE0F';
+    if (code >= 51 && code <= 55) return '\u{1F326}\uFE0F';
+    if (code >= 61 && code <= 65) return '\u{1F327}\uFE0F';
+    if (code >= 71 && code <= 77) return '\u{1F328}\uFE0F';
+    if (code >= 80 && code <= 82) return '\u{1F327}\uFE0F';
+    if (code >= 95 && code <= 99) return '\u26C8\uFE0F';
+    if (code >= 45 && code <= 48) return '\u{1F32B}\uFE0F';
+    return '\u{1F324}\uFE0F';
   }
 
   // ─── Country code to flag emoji ───
@@ -10638,6 +10835,246 @@ if ('serviceWorker' in navigator) {
       });
     }
   }
+
+  // ═══ ADMIN DIAGNOSTIC ═══
+  function runAdminDiagnostic() {
+    var results = [];
+    var issues = 0;
+    var warnings = 0;
+
+    // 1. Service Worker
+    var swOk = false;
+    var checks = [];
+
+    checks.push(new Promise(function(resolve) {
+      if (!('serviceWorker' in navigator)) {
+        results.push('❌ Service Worker non supportato');
+        issues++;
+        resolve();
+      } else {
+        navigator.serviceWorker.getRegistration().then(function(reg) {
+          if (reg && reg.active) {
+            results.push('✅ Service Worker attivo');
+            swOk = true;
+          } else if (reg) {
+            results.push('⚠️ Service Worker in installazione');
+            warnings++;
+          } else {
+            results.push('❌ Service Worker non registrato');
+            issues++;
+          }
+          resolve();
+        }).catch(function() { results.push('❌ SW check fallito'); issues++; resolve(); });
+      }
+    }));
+
+    // 2. Notification Permission
+    checks.push(new Promise(function(resolve) {
+      if (!('Notification' in window)) {
+        results.push('❌ Notifiche non supportate dal browser');
+        issues++;
+      } else if (Notification.permission === 'granted') {
+        results.push('✅ Permesso notifiche concesso');
+      } else if (Notification.permission === 'denied') {
+        results.push('❌ Notifiche bloccate — vai in Impostazioni > Notifiche > Chrome/PWA');
+        issues++;
+      } else {
+        results.push('⚠️ Permesso notifiche non richiesto — premi "Attiva push"');
+        warnings++;
+      }
+      resolve();
+    }));
+
+    // 3. FCM Token
+    checks.push(new Promise(function(resolve) {
+      var token = localStorage.getItem('viaggio2026_fcm_token');
+      if (token) {
+        results.push('✅ Token FCM salvato localmente');
+      } else {
+        results.push('❌ Token FCM assente — premi "Refresh Token" in Sistema & Debug');
+        issues++;
+      }
+      resolve();
+    }));
+
+    // 4. Token in DB
+    checks.push(new Promise(function(resolve) {
+      if (typeof db === 'undefined' || !db) {
+        results.push('❌ Database non connesso');
+        issues++;
+        resolve();
+        return;
+      }
+      var user = typeof firebaseUser !== 'undefined' ? firebaseUser : null;
+      if (!user) {
+        results.push('⚠️ Non autenticato — token non verificabile nel DB');
+        warnings++;
+        resolve();
+        return;
+      }
+      db.ref('fcm_tokens/' + user.uid).once('value').then(function(snap) {
+        if (snap.exists() && snap.numChildren() > 0) {
+          results.push('✅ ' + snap.numChildren() + ' dispositivo/i registrato/i nel DB');
+        } else {
+          results.push('❌ Nessun token nel DB per il tuo account — premi "Refresh Token"');
+          issues++;
+        }
+        resolve();
+      }).catch(function() { results.push('⚠️ Errore lettura token DB'); warnings++; resolve(); });
+    }));
+
+    // 5. Firebase Auth
+    checks.push(new Promise(function(resolve) {
+      var user = typeof firebaseUser !== 'undefined' ? firebaseUser : null;
+      if (user) {
+        results.push('✅ Autenticato come ' + (user.displayName || user.email));
+      } else {
+        results.push('❌ Non autenticato');
+        issues++;
+      }
+      resolve();
+    }));
+
+    // 6. Database connection
+    checks.push(new Promise(function(resolve) {
+      if (typeof db !== 'undefined' && db) {
+        results.push('✅ Database connesso');
+      } else {
+        results.push('❌ Database non connesso');
+        issues++;
+      }
+      resolve();
+    }));
+
+    // 7. Last push sent (check queue)
+    checks.push(new Promise(function(resolve) {
+      if (typeof db === 'undefined' || !db) { resolve(); return; }
+      db.ref('trips/' + FAMILY_ID + '/notifications/queue').orderByChild('sentAt').limitToLast(1).once('value').then(function(snap) {
+        if (snap.exists()) {
+          var last = null;
+          snap.forEach(function(c) { last = c.val(); });
+          if (last && last.sentAt) {
+            var ago = Math.round((Date.now() - last.sentAt) / 60000);
+            var agoStr = ago < 60 ? ago + ' min fa' : Math.round(ago/60) + 'h fa';
+            results.push('✅ Ultima push inviata: ' + agoStr);
+          } else {
+            results.push('⚠️ Push in coda ma non ancora inviata');
+            warnings++;
+          }
+        } else {
+          results.push('ℹ️ Nessuna push nella coda (normale se non hai ancora testato)');
+        }
+        resolve();
+      }).catch(function() { resolve(); });
+    }));
+
+    // 8. PWA installed
+    checks.push(new Promise(function(resolve) {
+      var isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+      if (isStandalone) {
+        results.push('✅ App installata (standalone)');
+      } else {
+        results.push('⚠️ App non installata — le push in background funzionano meglio con PWA installata');
+        warnings++;
+      }
+      resolve();
+    }));
+
+    Promise.all(checks).then(function() {
+      // Update banner
+      var banner = document.getElementById('admin-health-banner');
+      var icon = document.getElementById('admin-health-icon');
+      var title = document.getElementById('admin-health-title');
+      var subtitle = document.getElementById('admin-health-subtitle');
+      var diagResults = document.getElementById('admin-diag-results');
+
+      if (issues === 0 && warnings === 0) {
+        icon.textContent = '🟢';
+        title.textContent = 'Tutto OK';
+        subtitle.textContent = 'Push attive, SW aggiornato, token valido';
+        banner.style.borderColor = '#38a169';
+      } else if (issues === 0) {
+        icon.textContent = '🟡';
+        title.textContent = warnings + ' avviso' + (warnings > 1 ? 'i' : '');
+        subtitle.textContent = 'Funziona ma con possibili miglioramenti';
+        banner.style.borderColor = '#d69e2e';
+      } else {
+        icon.textContent = '🔴';
+        title.textContent = issues + ' problema' + (issues > 1 ? 'i' : '');
+        subtitle.textContent = 'Le push potrebbero non funzionare correttamente';
+        banner.style.borderColor = '#e53e3e';
+      }
+
+      if (diagResults) {
+        diagResults.innerHTML = results.join('<br>');
+      }
+    });
+  }
+
+  // Run diagnostic on Admin tab open
+  var _adminDiagRan = false;
+  document.addEventListener('tabChanged', function(e) {
+    if (e.detail === 'admin' && !_adminDiagRan) {
+      _adminDiagRan = true;
+      setTimeout(runAdminDiagnostic, 300);
+    }
+  });
+  // Also run if already on admin tab
+  if (document.getElementById('tab-admin') && document.getElementById('tab-admin').classList.contains('active')) {
+    setTimeout(runAdminDiagnostic, 500);
+  }
+  // Rerun button
+  var diagRerun = document.getElementById('admin-diag-rerun');
+  if (diagRerun) {
+    diagRerun.addEventListener('click', function() {
+      runAdminDiagnostic();
+      updateAdminStatus();
+    });
+  }
+
+  // ═══ QUICK ACTIONS (mirror of main buttons) ═══
+  var quickStart = document.getElementById('pos-live-start-quick');
+  var quickStop = document.getElementById('pos-live-stop-quick');
+  var quickParking = document.getElementById('pos-parking-quick');
+  if (quickStart) {
+    quickStart.addEventListener('click', function() {
+      var mainBtn = document.getElementById('pos-live-start');
+      if (mainBtn) mainBtn.click();
+    });
+  }
+  if (quickStop) {
+    quickStop.addEventListener('click', function() {
+      var mainBtn = document.getElementById('pos-live-stop');
+      if (mainBtn) mainBtn.click();
+    });
+  }
+  if (quickParking) {
+    quickParking.addEventListener('click', function() {
+      // Scroll to parking section in accordion
+      var accordion = document.querySelector('.admin-accordion[open] #pos-parking-name');
+      if (!accordion) {
+        // Open the viaggio accordion first
+        var details = document.querySelector('details.admin-accordion');
+        if (details) details.open = true;
+      }
+      var parkingInput = document.getElementById('pos-parking-name');
+      if (parkingInput) {
+        parkingInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        parkingInput.focus();
+      }
+    });
+  }
+  // Sync quick action visibility with main tracking buttons
+  var _syncQuickBtns = new MutationObserver(function() {
+    var mainStart = document.getElementById('pos-live-start');
+    var mainStop = document.getElementById('pos-live-stop');
+    if (quickStart && mainStart) quickStart.style.display = mainStart.style.display;
+    if (quickStop && mainStop) quickStop.style.display = mainStop.style.display;
+  });
+  var mainStartEl = document.getElementById('pos-live-start');
+  var mainStopEl = document.getElementById('pos-live-stop');
+  if (mainStartEl) _syncQuickBtns.observe(mainStartEl, { attributes: true, attributeFilter: ['style'] });
+  if (mainStopEl) _syncQuickBtns.observe(mainStopEl, { attributes: true, attributeFilter: ['style'] });
 
   // Admin Test Push
   var adminTestPush = document.getElementById('admin-test-push');

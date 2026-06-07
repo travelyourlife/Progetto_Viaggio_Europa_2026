@@ -27,11 +27,21 @@
  * 7. dailyWeatherArchiver: Cloud Scheduler — runs daily at 20:00 Europe/Rome.
  *    During trip: saves real weather data to Firebase for post-trip historical view.
  * 
+ * 8. dailyCuriosity: Cloud Scheduler — runs daily at 9:00 AM Europe/Rome.
+ *    Sends daily curiosity/fun fact about the trip route.
+ * 
+ * 9. translatePost: HTTP callable — on-demand IT→EN or EN→IT translation.
+ *    Used by Admin post editor and manual translate buttons.
+ * 
+ * 10. autoTranslateDiary: DB trigger (onValueWritten) — diary/{entryId}.
+ *     Auto-translates title, text, highlight to English when created/updated.
+ *     Saves as titleEn, textEn, highlightEn. Skips drafts.
+ * 
  * Deploy: firebase deploy --only functions
  * IMPORTANT: Answer N when asked about deleting Strava functions!
  */
 
-const { onValueCreated } = require("firebase-functions/v2/database");
+const { onValueCreated, onValueWritten } = require("firebase-functions/v2/database");
 const { onSchedule } = require("firebase-functions/v2/scheduler");
 const { initializeApp } = require("firebase-admin/app");
 const { getDatabase } = require("firebase-admin/database");
@@ -352,9 +362,9 @@ exports.sendPushNotification = onValueCreated(
     await markAsSent(db, pushId, successCount);
 
     // Also write to persistent notification history (for in-app bell)
-    // Skip chat messages from history to avoid clutter
+    // Include senderUid so client can filter out own messages
     if (notification.type !== 'chat') {
-      await db.ref(`trips/${FAMILY_ID}/notifications/history/${pushId}`).set({
+      const historyEntry = {
         type: notification.type || 'general',
         title: notification.title || 'Quo Vadis',
         body: notification.body || '',
@@ -364,7 +374,9 @@ exports.sendPushNotification = onValueCreated(
         tag: notification.tag || '',
         createdAt: notification.createdAt || Date.now(),
         source: notification.source || 'trigger',
-      });
+      };
+      if (notification.senderUid) historyEntry.senderUid = notification.senderUid;
+      await db.ref(`trips/${FAMILY_ID}/notifications/history/${pushId}`).set(historyEntry);
       console.log(`[Push] Written to notification history: ${pushId}`);
     }
 
@@ -1102,5 +1114,139 @@ exports.translatePost = onCall(
     }
 
     return { translated };
+  }
+);
+
+// ═══════════════════════════════════════════════════════════════
+// 10. AUTO-TRANSLATE DIARY ENTRIES (triggered on create/update)
+//     When a diary entry is created or updated, automatically
+//     translates title (customLabel), text, and highlight to English.
+//     Saves translated fields as titleEn, textEn, highlightEn.
+//     Only re-translates if source fields actually changed.
+// ═══════════════════════════════════════════════════════════════
+
+/**
+ * Helper: translate a single text string IT→EN using OpenAI.
+ * Returns translated string or null on failure.
+ */
+async function translateToEnglish(text, apiKey) {
+  if (!text || !text.trim()) return null;
+
+  try {
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: "gpt-4o-mini",
+        messages: [
+          {
+            role: "system",
+            content: "You are a translator for a family travel blog about a camper van trip across Europe. Translate the following Italian text to English. Keep the same tone (informal, enthusiastic). Preserve all emoji and formatting exactly as they are. Return ONLY the translated text, nothing else.",
+          },
+          { role: "user", content: text },
+        ],
+        temperature: 0.3,
+        max_tokens: 1000,
+      }),
+    });
+
+    if (!response.ok) {
+      const err = await response.text();
+      console.error("[AutoTranslate] OpenAI error:", err);
+      return null;
+    }
+
+    const result = await response.json();
+    return result.choices?.[0]?.message?.content?.trim() || null;
+  } catch (error) {
+    console.error("[AutoTranslate] Fetch error:", error.message);
+    return null;
+  }
+}
+
+exports.autoTranslateDiary = onValueWritten(
+  {
+    ref: `trips/${FAMILY_ID}/diary/{entryId}`,
+    instance: "viaggio-europa-2026-default-rtdb",
+    region: "europe-west1",
+    secrets: [openaiKey],
+  },
+  async (event) => {
+    const before = event.data.before.val();
+    const after = event.data.after.val();
+
+    // Entry deleted — nothing to translate
+    if (!after) return null;
+
+    // Skip if entry is a draft (don't waste API calls on drafts)
+    if (after.draft) {
+      console.log("[AutoTranslate] Skipping draft entry");
+      return null;
+    }
+
+    // Determine which fields need translation
+    const fieldsToTranslate = [];
+
+    // Check customLabel
+    const labelChanged = (before?.customLabel || '') !== (after.customLabel || '');
+    const labelNeedsTranslation = after.customLabel && (labelChanged || !after.titleEn);
+    if (labelNeedsTranslation) fieldsToTranslate.push('customLabel');
+
+    // Check text
+    const textChanged = (before?.text || '') !== (after.text || '');
+    const textNeedsTranslation = after.text && (textChanged || !after.textEn);
+    if (textNeedsTranslation) fieldsToTranslate.push('text');
+
+    // Check highlight
+    const highlightChanged = (before?.highlight || '') !== (after.highlight || '');
+    const highlightNeedsTranslation = after.highlight && (highlightChanged || !after.highlightEn);
+    if (highlightNeedsTranslation) fieldsToTranslate.push('highlight');
+
+    // Nothing to translate
+    if (fieldsToTranslate.length === 0) {
+      console.log("[AutoTranslate] No fields need translation — skipping");
+      return null;
+    }
+
+    const apiKey = openaiKey.value();
+    if (!apiKey) {
+      console.error("[AutoTranslate] OPENAI_API_KEY not configured");
+      return null;
+    }
+
+    console.log(`[AutoTranslate] Translating fields: ${fieldsToTranslate.join(', ')} for entry ${event.params.entryId}`);
+
+    const db = getDatabase();
+    const updates = {};
+
+    // Translate each field
+    for (const field of fieldsToTranslate) {
+      const sourceText = after[field];
+      const translated = await translateToEnglish(sourceText, apiKey);
+      if (translated) {
+        if (field === 'customLabel') updates['titleEn'] = translated;
+        else if (field === 'text') updates['textEn'] = translated;
+        else if (field === 'highlight') updates['highlightEn'] = translated;
+      }
+    }
+
+    // Also clear EN fields if source was removed
+    if (!after.customLabel && before?.customLabel) updates['titleEn'] = null;
+    if (!after.text && before?.text) updates['textEn'] = null;
+    if (!after.highlight && before?.highlight) updates['highlightEn'] = null;
+
+    if (Object.keys(updates).length === 0) {
+      console.log("[AutoTranslate] No successful translations");
+      return null;
+    }
+
+    // Write translated fields back to the entry
+    await db.ref(`trips/${FAMILY_ID}/diary/${event.params.entryId}`).update(updates);
+    console.log(`[AutoTranslate] Saved translations: ${Object.keys(updates).join(', ')}`);
+
+    return null;
   }
 );
