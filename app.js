@@ -1616,14 +1616,15 @@ document.addEventListener('DOMContentLoaded', function() {
         try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); if(window.firebaseSyncZaino) window.firebaseSyncZaino(data);; } catch(e) {}
     }
     loadProgress();
+    // Non-owner: disable all checkboxes (read-only view)
+    if (!isOwner) {
+        document.querySelectorAll('#tab-zaino input[type="checkbox"][data-idx]').forEach(function(cb) {
+            cb.disabled = true;
+        });
+    }
     document.addEventListener('change', function(e) {
         if (e.target.matches('input[type="checkbox"][data-idx]')) {
-            if (!isOwner) {
-                // Revert: non-owner cannot modify checkboxes
-                e.target.checked = !e.target.checked;
-                if (window.showToast) showToast((document.documentElement.lang === 'en') ? '🔒 Only organizers can edit the checklist' : '🔒 Solo gli organizzatori possono modificare la checklist', 'info');
-                return;
-            }
+            if (!isOwner) return; // safety fallback
             saveProgress();
         }
     });

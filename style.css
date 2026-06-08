@@ -2603,12 +2603,11 @@ html[lang="en"] .notif-drawer-list:empty::after {
     margin: 0;
     box-sizing: border-box;
 }
-/* Expand touch target to 56x56 minimum without changing visual size */
+/* Expand touch target massively for PWA touch offset compensation */
 .chat-send-btn::after {
     content: '';
     position: absolute;
-    top: -6px; right: -6px; bottom: -6px; left: -6px;
-    border-radius: 50%;
+    top: -20px; right: -20px; bottom: -20px; left: -20px;
 }
 .chat-send-btn svg {
     pointer-events: none;
