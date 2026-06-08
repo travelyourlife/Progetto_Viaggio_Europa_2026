@@ -9680,6 +9680,24 @@ if ('serviceWorker' in navigator) {
 
   if (!gate || !contentEl) return;
 
+  // ─── Event Delegation for Publish (always works regardless of bindEntryActions timing) ───
+  if (timelineEl) {
+    timelineEl.addEventListener('click', function(e) {
+      var btn = e.target.closest('.diario-publish-btn');
+      if (!btn) return;
+      if (!isOwner) return;
+      var key = btn.getAttribute('data-key');
+      if (!key) return;
+      var familyId = (typeof FAMILY_ID !== 'undefined') ? FAMILY_ID : 'viaggio-europa-2026';
+      firebase.database().ref('trips/' + familyId + '/diary/' + key).update({ draft: null, publishAt: null, date: new Date().toISOString().split('T')[0] }).then(function() {
+        if (window.showToast) showToast(document.documentElement.lang === 'en' ? '\u2705 Post published!' : '\u2705 Post pubblicato!', 'success');
+      }).catch(function(err) {
+        console.error('[Diario] Publish failed:', err);
+        if (window.showToast) showToast('Failed to publish', 'danger');
+      });
+    });
+  }
+
   // ─── Approval Logic ───
   function checkDiarioAccess(user) {
     if (!user) {
@@ -10025,16 +10043,7 @@ if ('serviceWorker' in navigator) {
         if (isOwner && !window._simRole) {
           html += '    <div class="diario-entry-actions">';
           if (isDraft) {
-            // v2.22: Publish mini-menu (Publish now / Schedule)
-            if (entry.publishAt) {
-              // Already scheduled — show scheduled badge + cancel
-              html += '      <span class="diario-scheduled-badge">' + (isEN ? '\ud83d\udd52 Scheduled: ' : '\ud83d\udd52 Programmato: ') + entry.publishAt + '</span>';
-              html += '      <button class="diario-unschedule-btn" data-key="' + key + '" style="background:none;border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:11px;cursor:pointer;" title="' + (isEN ? 'Cancel schedule' : 'Annulla programmazione') + '">\u274c</button>';
-            } else {
-              html += '      <div class="diario-publish-wrap" style="position:relative;display:inline-block;">';
-              html += '        <button class="diario-publish-btn" data-key="' + key + '" style="background:var(--success);color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;cursor:pointer;">\u2705 ' + (isEN ? 'Publish' : 'Pubblica') + '</button>';
-              html += '      </div>';
-            }
+            html += '      <button class="diario-publish-btn" data-key="' + key + '" style="background:var(--success);color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;cursor:pointer;">\u2705 ' + (isEN ? 'Publish' : 'Pubblica') + '</button>';
           }
           html += '      <button class="diario-edit-btn" data-key="' + key + '">\u270f\ufe0f</button>';
           html += '      <button class="diario-upload-btn" data-key="' + key + '">\ud83d\udcf7</button>';
@@ -10128,76 +10137,16 @@ if ('serviceWorker' in navigator) {
 
   // ─── Entry Actions (owner only) ───
   function bindEntryActions() {
-    // v2.22: Publish with mini-menu (Publish now / Schedule)
+    // Publish button (direct publish, one click)
     timelineEl.querySelectorAll('.diario-publish-btn').forEach(function(btn) {
       btn.addEventListener('click', function(e) {
         if (!isOwner) return;
         var key = btn.getAttribute('data-key');
-        // Show mini-menu
-        var existing = btn.parentElement.querySelector('.diario-publish-menu');
-        if (existing) { existing.remove(); return; }
-        var menu = document.createElement('div');
-        menu.className = 'diario-publish-menu';
-        menu.innerHTML = '<button class="dpm-now">' + (isEN ? '\u2705 Publish now' : '\u2705 Pubblica ora') + '</button>'
-          + '<button class="dpm-schedule">' + (isEN ? '\ud83d\udd52 Schedule' : '\ud83d\udd52 Programma') + '</button>';
-        btn.parentElement.appendChild(menu);
-        // Publish now
-        menu.querySelector('.dpm-now').addEventListener('click', function() {
-          diarioRef.child(key).update({ draft: null, publishAt: null, date: new Date().toISOString().split('T')[0] }).then(function() {
-            showToast(isEN ? '\u2705 Post published!' : '\u2705 Post pubblicato!', 'success');
-          }).catch(function(err) {
-            console.error('[Diario] Publish failed:', err);
-            showToast(isEN ? 'Failed to publish post' : 'Impossibile pubblicare il post', 'danger');
-          });
-          menu.remove();
-        });
-        // Schedule
-        menu.querySelector('.dpm-schedule').addEventListener('click', function() {
-          menu.remove();
-          var picker = document.createElement('div');
-          picker.className = 'diario-schedule-picker';
-          picker.innerHTML = '<label style="font-size:11px;color:var(--text-muted);">' + (isEN ? 'Publish on:' : 'Pubblica il:') + '</label>'
-            + '<input type="datetime-local" class="dsp-input" style="font-size:13px;border:1px solid var(--border);border-radius:6px;padding:4px 8px;margin:4px 0;">'
-            + '<button class="dsp-confirm" style="background:var(--accent);color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:600;cursor:pointer;margin-top:4px;">' + (isEN ? 'Confirm' : 'Conferma') + '</button>';
-          btn.parentElement.appendChild(picker);
-          var input = picker.querySelector('.dsp-input');
-          // Default to tomorrow 9:00
-          var tomorrow = new Date();
-          tomorrow.setDate(tomorrow.getDate() + 1);
-          tomorrow.setHours(9, 0, 0, 0);
-          input.value = tomorrow.toISOString().slice(0, 16);
-          picker.querySelector('.dsp-confirm').addEventListener('click', function() {
-            var val = input.value;
-            if (!val) return;
-            diarioRef.child(key).update({ publishAt: val }).then(function() {
-              showToast(isEN ? '\ud83d\udd52 Post scheduled!' : '\ud83d\udd52 Post programmato!', 'success');
-            }).catch(function(err) {
-              console.error('[Diario] Schedule failed:', err);
-            });
-            picker.remove();
-          });
-        });
-        // Close menu on outside click
-        setTimeout(function() {
-          document.addEventListener('click', function closeMenu(ev) {
-            if (!btn.parentElement.contains(ev.target)) {
-              if (menu.parentElement) menu.remove();
-              var pk = btn.parentElement.querySelector('.diario-schedule-picker');
-              if (pk) pk.remove();
-              document.removeEventListener('click', closeMenu);
-            }
-          });
-        }, 10);
-      });
-    });
-
-    // v2.22: Unschedule button
-    timelineEl.querySelectorAll('.diario-unschedule-btn').forEach(function(btn) {
-      btn.addEventListener('click', function() {
-        if (!isOwner) return;
-        var key = btn.getAttribute('data-key');
-        diarioRef.child(key).update({ publishAt: null }).then(function() {
-          showToast(isEN ? 'Schedule cancelled' : 'Programmazione annullata', 'success');
+        diarioRef.child(key).update({ draft: null, publishAt: null, date: new Date().toISOString().split('T')[0] }).then(function() {
+          showToast(isEN ? '\u2705 Post published!' : '\u2705 Post pubblicato!', 'success');
+        }).catch(function(err) {
+          console.error('[Diario] Publish failed:', err);
+          showToast(isEN ? 'Failed to publish post' : 'Impossibile pubblicare il post', 'danger');
         });
       });
     });
