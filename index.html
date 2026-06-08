@@ -69,7 +69,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = '2.24';
+  var EXPECTED_VERSION = '2.25';
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
   var r = false;
@@ -7967,8 +7967,8 @@
 <hr>
 <p><span id="checklist"></span></p>
 <h2 id="fonti">🔗 Fonti — Siti e Risorse Consultate</h2>
-<details>
-<summary style="cursor:pointer;font-weight:600;padding:8px 0;">Mostra tutte le fonti ▼</summary>
+<details class="fonti-details">
+<summary>Mostra tutte le fonti</summary>
 <p><strong>Pedaggi e strade:</strong></p>
 <p><a href="https://www.asfinag.at" target="_blank" rel="noopener noreferrer">asfinag.at</a> — vignetta Austria</p>
 <p><a href="https://edalnice.cz" target="_blank" rel="noopener noreferrer">edalnice.cz</a> — vignetta Rep. Ceca (310 CZK (~€13)/10 giorni)</p>

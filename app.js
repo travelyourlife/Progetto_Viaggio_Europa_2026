@@ -925,8 +925,7 @@ function initRouteMap() {
         }).addTo(routeMapInstance);
 
         // Build route polyline from TRIP_COORDS
-        // Prepend Casa (home) as visual starting point — not in TRIP_COORDS to keep index alignment
-        var HOME_COORDS = [45.3900, 11.8500]; // Selvazzano/Padova area
+        var HOME_COORDS = [45.3900, 11.8500];
         var routeCoords = [HOME_COORDS].concat(TRIP_COORDS.map(function(c) { return [c.lat, c.lng]; }));
 
         // Determine current trip day for coloring
@@ -937,19 +936,14 @@ function initRouteMap() {
         var tripActive = currentDay >= 0 && currentDay < tripDays;
 
         // Draw route line: solid for past, dashed for future
-        // routeCoords[0] = HOME, routeCoords[1] = G0 (Leoben), etc.
         if (currentDay >= tripDays) {
-            // Trip completed: all solid green
             L.polyline(routeCoords, { color: '#38a169', weight: 2.5, opacity: 0.8, lineJoin: 'round' }).addTo(routeMapInstance);
         } else if (currentDay < 0) {
-            // Before trip: all dashed blue
             L.polyline(routeCoords, { color: '#2c5282', weight: 2.5, opacity: 0.5, dashArray: '8,6', lineJoin: 'round' }).addTo(routeMapInstance);
         } else {
-            // During trip: solid past (green) + dashed future (blue)
-            // +1 offset for HOME point, +1 to include current day's destination
             var splitIdx = Math.min(currentDay + 2, routeCoords.length);
             var pastCoords = routeCoords.slice(0, splitIdx);
-            var futureCoords = routeCoords.slice(splitIdx - 1); // overlap 1 point for continuity
+            var futureCoords = routeCoords.slice(splitIdx - 1);
             if (pastCoords.length > 1) {
                 L.polyline(pastCoords, { color: '#38a169', weight: 3, opacity: 0.9, lineJoin: 'round' }).addTo(routeMapInstance);
             }
@@ -978,20 +972,19 @@ function initRouteMap() {
             var c = TRIP_COORDS[dayIdx];
             var city = isEN ? c.cityEn : c.city;
 
-            // Determine marker color
             var color, radius;
             var isStart = stop.startIdx === 0;
             var isEnd = stop.endIdx === TRIP_COORDS.length - 1;
             var isCurrent = tripActive && currentDay >= stop.startIdx && currentDay <= stop.endIdx;
 
             if (isStart || isEnd) {
-                color = '#e53e3e'; radius = 10; // Red for start/end
+                color = '#e53e3e'; radius = 10;
             } else if (isCurrent) {
-                color = '#e53e3e'; radius = 12; // Red pulsing for current
+                color = '#e53e3e'; radius = 12;
             } else if (tripActive && currentDay > stop.endIdx) {
-                color = '#38a169'; radius = 8; // Green for visited
+                color = '#38a169'; radius = 8;
             } else {
-                color = '#2c5282'; radius = 8; // Blue for future
+                color = '#2c5282'; radius = 8;
             }
 
             var marker = L.circleMarker([stop.lat, stop.lng], {
@@ -1002,12 +995,11 @@ function initRouteMap() {
                 fillOpacity: 0.9
             }).addTo(routeMapInstance);
 
-            // Build popup content with day info
             var dayLabel, dayRoute, dayDesc, dayFlags;
             if (stop.days.length > 1) {
                 var firstDay = itinerario[stop.startIdx];
                 var lastDay = itinerario[stop.endIdx];
-                dayLabel = (isEN ? firstDay.labelEn : firstDay.label) + '–' + (isEN ? lastDay.labelEn : lastDay.label);
+                dayLabel = (isEN ? firstDay.labelEn : firstDay.label) + '\u2013' + (isEN ? lastDay.labelEn : lastDay.label);
                 dayRoute = city;
                 dayDesc = (isEN ? firstDay.descEn : firstDay.desc);
                 if (stop.days.length > 2) dayDesc += ' ...';
@@ -1034,13 +1026,13 @@ function initRouteMap() {
         var bounds = L.latLngBounds(routeCoords);
         routeMapInstance.fitBounds(bounds, { padding: [15, 15] });
 
-        // Add small zoom control bottom-right
+        // Add zoom control
         L.control.zoom({ position: 'bottomright' }).addTo(routeMapInstance);
 
         // Add fullscreen button
         var fsBtn = document.createElement('button');
         fsBtn.className = 'map-fullscreen-btn';
-        fsBtn.innerHTML = '⛶';
+        fsBtn.innerHTML = '\u26F6';
         fsBtn.title = isEN ? 'Fullscreen' : 'Schermo intero';
         fsBtn.setAttribute('aria-label', fsBtn.title);
         fsBtn.style.position = 'absolute';
@@ -1051,31 +1043,9 @@ function initRouteMap() {
             window.openMapFullscreen(routeMapInstance, isEN ? 'Route Map' : 'Mappa Percorso');
         });
 
-        // ─── POI Layer on Route Map ───
-        if (typeof POI_ATTIVITA !== 'undefined' && POI_ATTIVITA.length) {
-            var catColors = { park: '#e53e3e', market: '#dd6b20', nature: '#38a169', museum: '#6b46c1', viewpoint: '#3182ce', festival: '#d53f8c', spa: '#e53e3e' };
-            var catIcons = { park: '🎢', market: '🛒', nature: '🌲', museum: '🏛️', viewpoint: '🌅', festival: '🎉', spa: '♨️' };
-            POI_ATTIVITA.forEach(function(poi) {
-                var name = isEN ? poi.nameEn : poi.name;
-                var desc = isEN ? poi.descEn : poi.desc;
-                var price = isEN ? poi.priceEn : poi.price;
-                var color = catColors[poi.cat];
-                var marker = L.circleMarker([poi.lat, poi.lng], {
-                    radius: 8,
-                    fillColor: color,
-                    color: '#fff',
-                    weight: 1.5,
-                    fillOpacity: 0.85
-                }).addTo(routeMapInstance);
-                var popupHtml = '<div style="max-width:220px">' +
-                    '<strong>' + catIcons[poi.cat] + ' ' + name + '</strong> ' + poi.country + '<br>' +
-                    '<small>' + desc.substring(0, 120) + (desc.length > 120 ? '...' : '') + '</small><br>' +
-                    '<small>💰 ' + price + '</small><br>' +
-                    '<a href="' + poi.mapsUrl + '" target="_blank" rel="noopener">📍 ' + (isEN ? 'Maps' : 'Maps') + '</a>' +
-                    (poi.url ? ' · <a href="' + poi.url + '" target="_blank" rel="noopener">🌐</a>' : '') +
-                '</div>';
-                marker.bindPopup(popupHtml);
-            });
+        // ─── POI Layer via UnifiedMap (same as Mappa Live) ───
+        if (typeof window.UnifiedMap !== 'undefined' && window.UnifiedMap.initForFullscreen) {
+            window.UnifiedMap.initForFullscreen(routeMapInstance, mapDiv);
         }
     }
 }
@@ -10227,35 +10197,9 @@ if ('serviceWorker' in navigator) {
 
   // ─── Entry Actions (owner only) ───
   function bindEntryActions() {
-    // Publish button (direct publish, one click)
-    timelineEl.querySelectorAll('.diario-publish-btn').forEach(function(btn) {
-      btn.addEventListener('click', function(e) {
-        if (!isOwner) return;
-        var key = btn.getAttribute('data-key');
-        diarioRef.child(key).update({ draft: null, publishAt: null, date: new Date().toISOString().split('T')[0] }).then(function() {
-          showToast(isEN ? '\u2705 Post published!' : '\u2705 Post pubblicato!', 'success');
-        }).catch(function(err) {
-          console.error('[Diario] Publish failed:', err);
-          showToast(isEN ? 'Failed to publish post' : 'Impossibile pubblicare il post', 'danger');
-        });
-      });
-    });
+    // Publish — handled via event delegation above (line ~9695) with schedule logic
 
-    // Delete
-    timelineEl.querySelectorAll('.diario-del-btn').forEach(function(btn) {
-      btn.addEventListener('click', function() {
-        if (!isOwner) return;
-        var key = btn.getAttribute('data-key');
-        showConfirm(isEN ? 'Delete this journal entry?' : 'Eliminare questa voce del diario?', function() {
-          diarioRef.child(key).remove().then(function() {
-            showToast(isEN ? 'Entry deleted' : 'Voce eliminata', 'info');
-          }).catch(function(err) {
-            console.error('[Diario] Delete failed:', err);
-            showToast(isEN ? 'Failed to delete entry' : 'Impossibile eliminare la voce', 'danger');
-          });
-        });
-      });
-    });
+    // Delete — handled via event delegation above (line ~9727)
 
     // Upload photo
     timelineEl.querySelectorAll('.diario-upload-btn').forEach(function(btn) {
