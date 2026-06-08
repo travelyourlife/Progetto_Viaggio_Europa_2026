@@ -797,6 +797,7 @@ mark.search-hl.current { background: #f97316; color: white; }
 /* ─── Tab Content ─── */
 .tab-content { display: none; animation: fadeSlideIn 0.3s ease; }
 .tab-content.active { display: block; }
+#tab-chat.active { display: flex; flex-direction: column; }
 #tab-home.active {
     display: flex; flex-direction: column;
     min-height: calc(100svh - env(safe-area-inset-top, 16px) - env(safe-area-inset-bottom, 16px) - 32px);
@@ -2460,7 +2461,7 @@ html[lang="en"] .notif-drawer-list:empty::after {
     display: flex;
     flex-direction: column;
     height: calc(100vh - 200px);
-    min-height: 400px;
+    min-height: 300px;
     max-height: 700px;
     border: 1px solid var(--border);
     border-radius: var(--radius);
@@ -2596,6 +2597,8 @@ html[lang="en"] .notif-drawer-list:empty::after {
     flex-shrink: 0;
     -webkit-tap-highlight-color: rgba(0,0,0,0.1);
     touch-action: manipulation;
+    position: relative;
+    z-index: 10;
 }
 .chat-send-btn svg {
     pointer-events: none;
@@ -2605,9 +2608,11 @@ html[lang="en"] .notif-drawer-list:empty::after {
 
 /* Fix send button cut off on small screens — chat goes edge-to-edge */
 @media (max-width: 480px) {
-  #tab-chat { padding: 0; }
+  #tab-chat { padding: 0; display: flex; flex-direction: column; height: calc(100svh - var(--top-bar-height) - var(--bottom-bar-height) - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 24px); overflow: hidden; }
+  .chat-header-row { flex-shrink: 0; padding: 8px 12px 0; }
+  .chat-header-row .section-title { margin: 0; font-size: 1.1em; }
   .chat-container { border-radius: 0; border-left: none; border-right: none; margin: 0;
-    height: calc(100svh - var(--top-bar-height) - var(--bottom-bar-height) - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 24px);
+    flex: 1; min-height: 0; height: auto;
     max-height: none;
   }
   .chat-input-bar { padding: 6px 8px; gap: 5px; padding-bottom: calc(6px + env(safe-area-inset-bottom, 0px)); }
@@ -4443,6 +4448,12 @@ html[lang="en"] .notif-drawer-list:empty::after {
   }
   .tab-content {
     padding-bottom: calc(var(--bottom-bar-height) + env(safe-area-inset-bottom, 0px) + 32px) !important;
+  }
+}
+/* Browser mode: chat tab needs to account for taller bottom bar */
+@media all and (display-mode: browser) and (max-width: 480px) {
+  #tab-chat {
+    height: calc(100svh - var(--top-bar-height) - var(--bottom-bar-height) - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 40px) !important;
   }
 }
 

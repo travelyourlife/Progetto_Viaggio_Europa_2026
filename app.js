@@ -6674,8 +6674,9 @@ if ('serviceWorker' in navigator) {
     tip.style.cssText = 'background:var(--bg-alt, rgba(214,158,46,0.15));border:1px solid var(--warning, #d69e2e);border-radius:10px;padding:12px 14px;margin:12px;font-size:12px;line-height:1.5;color:var(--warning, #d69e2e);';
     tip.innerHTML = '<div style="margin-bottom:6px;">⚠️ ' + helpText + '</div>' +
       '<div style="font-size:11px;opacity:0.8;">' + (isEN ? 'This way you\'ll only receive notifications from Quo Vadis, nothing else.' : 'Così riceverai notifiche solo da Quo Vadis, nient\'altro.') + '</div>';
-    var container = document.getElementById('notif-container');
+    var container = document.getElementById('notif-container') || document.getElementById('toastContainer');
     if (container) container.prepend(tip);
+    else document.body.appendChild(tip);
   }
 
   // Request permission and get token
@@ -6809,7 +6810,7 @@ if ('serviceWorker' in navigator) {
     var banner = document.createElement('div');
     banner.id = 'push-permission-banner';
     banner.className = 'notif-banner notif-info';
-    banner.style.cssText = 'cursor:pointer;animation:slideIn 0.3s ease;';
+    banner.style.cssText = 'cursor:pointer;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:9999;width:88%;max-width:360px;padding:20px 24px;border-radius:16px;background:var(--bg-card,#fff);box-shadow:0 8px 32px rgba(0,0,0,0.25);display:flex;align-items:center;gap:12px;font-size:15px;animation:slideIn 0.3s ease;';
     banner.innerHTML = '<span class="notif-icon">🔔</span>' +
       '<span class="notif-text">' + (isEN ? 'Get trip updates?' : 'Vuoi ricevere aggiornamenti sul viaggio?') + '</span>' +
       '<button class="notif-yes" style="background:var(--accent);color:#fff;border:none;border-radius:6px;padding:4px 12px;font-weight:600;">' + (isEN ? 'Yes' : 'S\u00ec') + '</button>' +
@@ -6826,8 +6827,8 @@ if ('serviceWorker' in navigator) {
       banner.style.opacity = '0';
       setTimeout(function() { if (banner.parentNode) banner.remove(); }, 300);
     });
-    var container = document.getElementById('notif-container');
-    if (container) container.prepend(banner);
+    // Always append to body (banner is position:fixed centered)
+    document.body.appendChild(banner);
   }
 
   // Also request when owner logs in, and refresh token for any logged-in user
@@ -8601,15 +8602,20 @@ if ('serviceWorker' in navigator) {
     if (!text) return;
     sendDebounce = true;
     sendMessage(text);
-    setTimeout(function() { sendDebounce = false; }, 500);
+    setTimeout(function() { sendDebounce = false; }, 600);
   }
+  // Use multiple event types for maximum compatibility on Android PWA
   chatSendBtn.addEventListener('click', function(e) {
     e.preventDefault();
     e.stopPropagation();
     handleSend();
   });
-  // Android PWA: touchend as fallback (click sometimes not fired)
   chatSendBtn.addEventListener('touchend', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    handleSend();
+  });
+  chatSendBtn.addEventListener('pointerup', function(e) {
     e.preventDefault();
     e.stopPropagation();
     handleSend();
@@ -9023,13 +9029,9 @@ if ('serviceWorker' in navigator) {
   });
 
   // ─── Delete for all (own messages + owner can delete any) ───
-  chatMessages.addEventListener('contextmenu', function(e) {
-    var msgEl = e.target.closest('.chat-msg');
-    if (!msgEl) return;
-    e.preventDefault();
+  function handleDeleteMsg(msgEl) {
     var key = msgEl.getAttribute('data-key');
     if (!key || !chatUser) return;
-    // Check if it's own message or user is owner
     var isMineMsg = msgEl.classList.contains('mine');
     if (!isMineMsg && !isOwner) return;
     var confirmText = isEN ? 'Delete this message for everyone?' : 'Eliminare questo messaggio per tutti?';
@@ -9038,7 +9040,44 @@ if ('serviceWorker' in navigator) {
         if (window.showToast) showToast(isEN ? 'Message deleted' : 'Messaggio eliminato', 'info');
       });
     });
+  }
+  // Desktop: right-click (contextmenu)
+  chatMessages.addEventListener('contextmenu', function(e) {
+    var msgEl = e.target.closest('.chat-msg');
+    if (!msgEl) return;
+    e.preventDefault();
+    handleDeleteMsg(msgEl);
   });
+  // Mobile: long-press (touchstart + timer)
+  (function() {
+    var lpTimer = null;
+    var lpMsgEl = null;
+    var lpMoved = false;
+    chatMessages.addEventListener('touchstart', function(e) {
+      var msgEl = e.target.closest('.chat-msg');
+      if (!msgEl) return;
+      lpMoved = false;
+      lpMsgEl = msgEl;
+      lpTimer = setTimeout(function() {
+        if (!lpMoved && lpMsgEl) {
+          handleDeleteMsg(lpMsgEl);
+          lpMsgEl = null;
+        }
+      }, 600);
+    }, { passive: true });
+    chatMessages.addEventListener('touchmove', function() {
+      lpMoved = true;
+      clearTimeout(lpTimer);
+    }, { passive: true });
+    chatMessages.addEventListener('touchend', function() {
+      clearTimeout(lpTimer);
+      lpMsgEl = null;
+    }, { passive: true });
+    chatMessages.addEventListener('touchcancel', function() {
+      clearTimeout(lpTimer);
+      lpMsgEl = null;
+    }, { passive: true });
+  })();
 
   // ─── Admin Panel ───
   var USERS_REF = db.ref('chat/users');
@@ -9680,21 +9719,67 @@ if ('serviceWorker' in navigator) {
 
   if (!gate || !contentEl) return;
 
-  // ─── Event Delegation for Publish (always works regardless of bindEntryActions timing) ───
+  // ─── Event Delegation for Diario buttons (always works regardless of bindEntryActions timing) ───
   if (timelineEl) {
+    // Publish button (with scheduled logic: future date = schedule, today/past = publish now)
     timelineEl.addEventListener('click', function(e) {
       var btn = e.target.closest('.diario-publish-btn');
       if (!btn) return;
       if (!isOwner) return;
       var key = btn.getAttribute('data-key');
       if (!key) return;
+      var isEN = document.documentElement.lang === 'en';
       var familyId = (typeof FAMILY_ID !== 'undefined') ? FAMILY_ID : 'viaggio-europa-2026';
-      firebase.database().ref('trips/' + familyId + '/diary/' + key).update({ draft: null, publishAt: null, date: new Date().toISOString().split('T')[0] }).then(function() {
-        if (window.showToast) showToast(document.documentElement.lang === 'en' ? '\u2705 Post published!' : '\u2705 Post pubblicato!', 'success');
-      }).catch(function(err) {
-        console.error('[Diario] Publish failed:', err);
-        if (window.showToast) showToast('Failed to publish', 'danger');
+      var entryRef = firebase.database().ref('trips/' + familyId + '/diary/' + key);
+      entryRef.once('value').then(function(snap) {
+        var entry = snap.val() || {};
+        var entryDate = entry.date || '';
+        var today = new Date().toISOString().split('T')[0];
+        if (entryDate > today) {
+          // Future date: schedule for that date
+          var publishTs = new Date(entryDate + 'T09:00:00').getTime();
+          entryRef.update({ publishAt: publishTs }).then(function() {
+            if (window.showToast) showToast(isEN ? '\ud83d\udd52 Scheduled for ' + entryDate : '\ud83d\udd52 Programmato per ' + entryDate, 'success');
+          });
+        } else {
+          // Today or past: publish immediately
+          entryRef.update({ draft: null, publishAt: null }).then(function() {
+            if (window.showToast) showToast(isEN ? '\u2705 Post published!' : '\u2705 Post pubblicato!', 'success');
+          }).catch(function(err) {
+            console.error('[Diario] Publish failed:', err);
+            if (window.showToast) showToast('Failed to publish', 'danger');
+          });
+        }
       });
+    });
+
+    // Delete button
+    timelineEl.addEventListener('click', function(e) {
+      var btn = e.target.closest('.diario-del-btn');
+      if (!btn) return;
+      if (!isOwner) return;
+      var key = btn.getAttribute('data-key');
+      if (!key) return;
+      var isEN = document.documentElement.lang === 'en';
+      var familyId = (typeof FAMILY_ID !== 'undefined') ? FAMILY_ID : 'viaggio-europa-2026';
+      showConfirm(isEN ? 'Delete this journal entry?' : 'Eliminare questa voce del diario?', function() {
+        firebase.database().ref('trips/' + familyId + '/diary/' + key).remove().then(function() {
+          if (window.showToast) showToast(isEN ? 'Entry deleted' : 'Voce eliminata', 'info');
+        }).catch(function(err) {
+          console.error('[Diario] Delete failed:', err);
+          if (window.showToast) showToast(isEN ? 'Failed to delete' : 'Impossibile eliminare', 'danger');
+        });
+      });
+    });
+
+    // Edit button
+    timelineEl.addEventListener('click', function(e) {
+      var btn = e.target.closest('.diario-edit-btn');
+      if (!btn) return;
+      if (!isOwner) return;
+      var key = btn.getAttribute('data-key');
+      if (!key) return;
+      showEditModal(key);
     });
   }
 
@@ -9949,7 +10034,12 @@ if ('serviceWorker' in navigator) {
         html += '  <div class="diario-entry-card' + (isDraft ? ' diario-card-draft' : '') + '">';
         html += '    <div class="diario-entry-header">';
         html += '      <div><div class="diario-day">' + dayLabel + '</div><div class="diario-date">' + dateStr + '</div></div>';
-        if (isDraft && isOwner) html += '      <span class="diario-draft-badge">' + (isEN ? '\u270f\ufe0f Draft' : '\u270f\ufe0f Bozza') + '</span>';
+        if (isDraft && isOwner && entry.publishAt) {
+          var schedDate = new Date(entry.publishAt).toISOString().split('T')[0];
+          html += '      <span class="diario-draft-badge" style="background:#e8f4fd;color:#1976d2;">\ud83d\udd52 ' + (isEN ? 'Scheduled: ' : 'Programmato: ') + schedDate + '</span>';
+        } else if (isDraft && isOwner) {
+          html += '      <span class="diario-draft-badge">' + (isEN ? '\u270f\ufe0f Draft' : '\u270f\ufe0f Bozza') + '</span>';
+        }
         if (flag) html += '      <span class="diario-flag">' + flag + ' ' + country + '</span>';
         html += '      <span class="diario-entry-type diario-type-' + entryType + '">' + entryTypeLabel + '</span>';
         html += '    </div>';
