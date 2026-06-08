@@ -3883,6 +3883,51 @@ html[lang="en"] .notif-drawer-list:empty::after {
 .diario-translate-btn:hover { background: var(--bg-alt); }
 .diario-translate-btn:disabled { opacity: 0.5; cursor: wait; }
 
+/* v2.22: Publish mini-menu */
+.diario-publish-menu {
+  position: absolute; top: 100%; left: 0; z-index: 10;
+  background: var(--card-bg, #fff); border: 1px solid var(--border, #e2e8f0);
+  border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  padding: 4px; margin-top: 4px; display: flex; flex-direction: column; gap: 2px;
+  min-width: 140px;
+}
+.diario-publish-menu button {
+  display: block; width: 100%; text-align: left;
+  background: none; border: none; padding: 8px 12px;
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  border-radius: 6px; white-space: nowrap;
+}
+.diario-publish-menu button:hover { background: var(--bg-alt, #f1f5f9); }
+.diario-schedule-picker {
+  position: absolute; top: 100%; left: 0; z-index: 10;
+  background: var(--card-bg, #fff); border: 1px solid var(--border, #e2e8f0);
+  border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  padding: 10px; margin-top: 4px; display: flex; flex-direction: column;
+}
+.diario-scheduled-badge {
+  display: inline-block; font-size: 11px; font-weight: 600;
+  color: var(--accent, #3b82f6); background: rgba(59,130,246,0.08);
+  border-radius: 6px; padding: 3px 8px; margin-right: 4px;
+}
+
+/* v2.22: Auto-translation disclaimer */
+.diario-auto-tl {
+  display: block;
+  font-size: 11px;
+  color: var(--text-muted, #94a3b8);
+  margin: 4px 0 0 0;
+  padding: 0 16px;
+}
+.diario-see-original {
+  color: var(--accent, #3b82f6);
+  text-decoration: none;
+  font-weight: 500;
+  cursor: pointer;
+}
+.diario-see-original:hover {
+  text-decoration: underline;
+}
+
 .diario-highlight {
   font-size: 14px;
   color: #d4760a;

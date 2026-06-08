@@ -320,6 +320,7 @@ function checkOwnerStatus() {
       isHardcodedOwner = !!(user && typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.indexOf(user.uid) !== -1);
       if (isHardcodedOwner) {
         isOwner = true;
+        try { localStorage.setItem('qv-owner-hint', '1'); } catch(e) {}
         console.info('[Auth] Owner mode (hardcoded): ' + user.displayName);
         // v2.11 FIX: Auto-reset simulated role on Owner login
         try {
@@ -334,6 +335,7 @@ function checkOwnerStatus() {
         firebase.database().ref('trips/' + FAMILY_ID + '/ownerUsers/' + user.uid).once('value', function(ownerSnap) {
           if (ownerSnap.exists() && ownerSnap.val() === true) {
             isOwner = true;
+            try { localStorage.setItem('qv-owner-hint', '1'); } catch(e) {}
             console.info('[Auth] Owner mode (dynamic): ' + user.displayName);
             try {
               var savedRole2 = localStorage.getItem('hv-role');
@@ -346,11 +348,13 @@ function checkOwnerStatus() {
             updateProtectedTabsUI(user);
           } else {
             isOwner = false;
+            try { localStorage.removeItem('qv-owner-hint'); } catch(e) {}
             console.info('[Auth] Authenticated but not owner: ' + user.email);
           }
         });
       } else {
         isOwner = false;
+        try { localStorage.removeItem('qv-owner-hint'); } catch(e) {}
       }
       // ─── Global Ban Check ───
       if (user && !isOwner && typeof firebase !== 'undefined' && firebase.database) {
@@ -9956,6 +9960,10 @@ if ('serviceWorker' in navigator) {
         if (entry.text) {
           var displayText = (isEN && entry.textEn) ? entry.textEn : entry.text;
           html += '    <p class="diario-text" data-entry-key="' + key + '">' + escapeHtml(displayText) + '</p>';
+          // v2.21: Auto-translation disclaimer with toggle to see original
+          if (isEN && entry.textEn) {
+            html += '    <span class="diario-auto-tl" data-key="' + key + '">Translated automatically · <a href="#" class="diario-see-original" data-original="' + escapeHtml(entry.text).replace(/"/g, '&quot;') + '" data-translated="' + escapeHtml(entry.textEn).replace(/"/g, '&quot;') + '">See original</a></span>';
+          }
           // Translate button: show only if EN and no auto-translation available
           if (isEN && !entry.textEn) {
             html += '    <button class="diario-translate-btn" data-key="' + key + '" data-text="' + escapeHtml(entry.text).replace(/"/g, '&quot;') + '" title="Translate to English">\uD83C\uDF10</button>';
@@ -10017,7 +10025,16 @@ if ('serviceWorker' in navigator) {
         if (isOwner && !window._simRole) {
           html += '    <div class="diario-entry-actions">';
           if (isDraft) {
-            html += '      <button class="diario-publish-btn" data-key="' + key + '" style="background:var(--success);color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;cursor:pointer;">\u2705 ' + (isEN ? 'Publish' : 'Pubblica') + '</button>';
+            // v2.22: Publish mini-menu (Publish now / Schedule)
+            if (entry.publishAt) {
+              // Already scheduled — show scheduled badge + cancel
+              html += '      <span class="diario-scheduled-badge">' + (isEN ? '\ud83d\udd52 Scheduled: ' : '\ud83d\udd52 Programmato: ') + entry.publishAt + '</span>';
+              html += '      <button class="diario-unschedule-btn" data-key="' + key + '" style="background:none;border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:11px;cursor:pointer;" title="' + (isEN ? 'Cancel schedule' : 'Annulla programmazione') + '">\u274c</button>';
+            } else {
+              html += '      <div class="diario-publish-wrap" style="position:relative;display:inline-block;">';
+              html += '        <button class="diario-publish-btn" data-key="' + key + '" style="background:var(--success);color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;cursor:pointer;">\u2705 ' + (isEN ? 'Publish' : 'Pubblica') + '</button>';
+              html += '      </div>';
+            }
           }
           html += '      <button class="diario-edit-btn" data-key="' + key + '">\u270f\ufe0f</button>';
           html += '      <button class="diario-upload-btn" data-key="' + key + '">\ud83d\udcf7</button>';
@@ -10111,16 +10128,76 @@ if ('serviceWorker' in navigator) {
 
   // ─── Entry Actions (owner only) ───
   function bindEntryActions() {
-    // Publish (remove draft flag)
+    // v2.22: Publish with mini-menu (Publish now / Schedule)
     timelineEl.querySelectorAll('.diario-publish-btn').forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        if (!isOwner) return;
+        var key = btn.getAttribute('data-key');
+        // Show mini-menu
+        var existing = btn.parentElement.querySelector('.diario-publish-menu');
+        if (existing) { existing.remove(); return; }
+        var menu = document.createElement('div');
+        menu.className = 'diario-publish-menu';
+        menu.innerHTML = '<button class="dpm-now">' + (isEN ? '\u2705 Publish now' : '\u2705 Pubblica ora') + '</button>'
+          + '<button class="dpm-schedule">' + (isEN ? '\ud83d\udd52 Schedule' : '\ud83d\udd52 Programma') + '</button>';
+        btn.parentElement.appendChild(menu);
+        // Publish now
+        menu.querySelector('.dpm-now').addEventListener('click', function() {
+          diarioRef.child(key).update({ draft: null, publishAt: null, date: new Date().toISOString().split('T')[0] }).then(function() {
+            showToast(isEN ? '\u2705 Post published!' : '\u2705 Post pubblicato!', 'success');
+          }).catch(function(err) {
+            console.error('[Diario] Publish failed:', err);
+            showToast(isEN ? 'Failed to publish post' : 'Impossibile pubblicare il post', 'danger');
+          });
+          menu.remove();
+        });
+        // Schedule
+        menu.querySelector('.dpm-schedule').addEventListener('click', function() {
+          menu.remove();
+          var picker = document.createElement('div');
+          picker.className = 'diario-schedule-picker';
+          picker.innerHTML = '<label style="font-size:11px;color:var(--text-muted);">' + (isEN ? 'Publish on:' : 'Pubblica il:') + '</label>'
+            + '<input type="datetime-local" class="dsp-input" style="font-size:13px;border:1px solid var(--border);border-radius:6px;padding:4px 8px;margin:4px 0;">'
+            + '<button class="dsp-confirm" style="background:var(--accent);color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:600;cursor:pointer;margin-top:4px;">' + (isEN ? 'Confirm' : 'Conferma') + '</button>';
+          btn.parentElement.appendChild(picker);
+          var input = picker.querySelector('.dsp-input');
+          // Default to tomorrow 9:00
+          var tomorrow = new Date();
+          tomorrow.setDate(tomorrow.getDate() + 1);
+          tomorrow.setHours(9, 0, 0, 0);
+          input.value = tomorrow.toISOString().slice(0, 16);
+          picker.querySelector('.dsp-confirm').addEventListener('click', function() {
+            var val = input.value;
+            if (!val) return;
+            diarioRef.child(key).update({ publishAt: val }).then(function() {
+              showToast(isEN ? '\ud83d\udd52 Post scheduled!' : '\ud83d\udd52 Post programmato!', 'success');
+            }).catch(function(err) {
+              console.error('[Diario] Schedule failed:', err);
+            });
+            picker.remove();
+          });
+        });
+        // Close menu on outside click
+        setTimeout(function() {
+          document.addEventListener('click', function closeMenu(ev) {
+            if (!btn.parentElement.contains(ev.target)) {
+              if (menu.parentElement) menu.remove();
+              var pk = btn.parentElement.querySelector('.diario-schedule-picker');
+              if (pk) pk.remove();
+              document.removeEventListener('click', closeMenu);
+            }
+          });
+        }, 10);
+      });
+    });
+
+    // v2.22: Unschedule button
+    timelineEl.querySelectorAll('.diario-unschedule-btn').forEach(function(btn) {
       btn.addEventListener('click', function() {
         if (!isOwner) return;
         var key = btn.getAttribute('data-key');
-        diarioRef.child(key).update({ draft: null, date: new Date().toISOString().split('T')[0] }).then(function() {
-          showToast(isEN ? '\u2705 Post published!' : '\u2705 Post pubblicato!', 'success');
-        }).catch(function(err) {
-          console.error('[Diario] Publish failed:', err);
-          showToast(isEN ? 'Failed to publish post' : 'Impossibile pubblicare il post', 'danger');
+        diarioRef.child(key).update({ publishAt: null }).then(function() {
+          showToast(isEN ? 'Schedule cancelled' : 'Programmazione annullata', 'success');
         });
       });
     });
@@ -10202,6 +10279,27 @@ if ('serviceWorker' in navigator) {
         }).finally(function() {
           btn.disabled = false;
         });
+      });
+    });
+
+    // v2.22: "See original" toggle for auto-translated entries
+    timelineEl.querySelectorAll('.diario-see-original').forEach(function(link) {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        var key = link.closest('.diario-auto-tl').getAttribute('data-key');
+        var textEl = timelineEl.querySelector('.diario-text[data-entry-key="' + key + '"]');
+        if (!textEl) return;
+        if (link.dataset.showing === 'original') {
+          // Switch back to translated
+          textEl.textContent = link.dataset.translated;
+          link.textContent = 'See original';
+          link.dataset.showing = 'translated';
+        } else {
+          // Show original
+          textEl.textContent = link.dataset.original;
+          link.textContent = 'See translation';
+          link.dataset.showing = 'original';
+        }
       });
     });
 

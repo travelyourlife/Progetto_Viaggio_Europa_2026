@@ -37,6 +37,9 @@
  *     Auto-translates title, text, highlight to English when created/updated.
  *     Saves as titleEn, textEn, highlightEn. Skips drafts.
  * 
+ * 11. scheduledPublish: Cloud Scheduler — runs every hour.
+ *     Auto-publishes diary drafts whose publishAt datetime has passed.
+ * 
  * Deploy: firebase deploy --only functions
  * IMPORTANT: Answer N when asked about deleting Strava functions!
  */
@@ -1247,6 +1250,47 @@ exports.autoTranslateDiary = onValueWritten(
     await db.ref(`trips/${FAMILY_ID}/diary/${event.params.entryId}`).update(updates);
     console.log(`[AutoTranslate] Saved translations: ${Object.keys(updates).join(', ')}`);
 
+    return null;
+  }
+);
+
+
+/**
+ * 11. scheduledPublish: Cloud Scheduler — runs every hour.
+ *     Checks diary entries with draft=true and publishAt <= now.
+ *     Auto-publishes them by removing the draft flag.
+ */
+exports.scheduledPublish = onSchedule(
+  { schedule: "every 60 minutes", timeZone: "Europe/Rome", region: "europe-west1" },
+  async (event) => {
+    const db = getDatabase();
+    const now = new Date().toISOString().slice(0, 16); // "YYYY-MM-DDTHH:mm"
+    console.log(`[ScheduledPublish] Checking for posts to publish at ${now}`);
+
+    const snap = await db.ref(`trips/${FAMILY_ID}/diary`).once("value");
+    if (!snap.exists()) {
+      console.log("[ScheduledPublish] No diary entries found.");
+      return null;
+    }
+
+    const entries = snap.val();
+    let publishedCount = 0;
+
+    for (const key of Object.keys(entries)) {
+      const entry = entries[key];
+      if (entry.draft && entry.publishAt && entry.publishAt <= now) {
+        // Publish this entry
+        await db.ref(`trips/${FAMILY_ID}/diary/${key}`).update({
+          draft: null,
+          publishAt: null,
+          date: entry.publishAt.split("T")[0] // Use scheduled date as publish date
+        });
+        publishedCount++;
+        console.log(`[ScheduledPublish] Published entry: ${key} (scheduled for ${entry.publishAt})`);
+      }
+    }
+
+    console.log(`[ScheduledPublish] Done. Published ${publishedCount} entries.`);
     return null;
   }
 );

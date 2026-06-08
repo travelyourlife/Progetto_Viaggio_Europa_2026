@@ -330,6 +330,24 @@
     }
 
     // ─── Translate buttons in home feed (EN followers) ───
+    // v2.22: "See original" toggle for auto-translated feed entries
+    container.querySelectorAll('.diario-see-original').forEach(function(link) {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        var bodyEl = link.closest('.hv-feed-item').querySelector('.hv-feed-body');
+        if (!bodyEl) return;
+        if (link.dataset.showing === 'original') {
+          bodyEl.textContent = link.dataset.translated;
+          link.textContent = 'See original';
+          link.dataset.showing = 'translated';
+        } else {
+          bodyEl.textContent = link.dataset.original;
+          link.textContent = 'See translation';
+          link.dataset.showing = 'original';
+        }
+      });
+    });
+
     var translateBtns = container.querySelectorAll('.hv-feed-translate-btn');
     translateBtns.forEach(function(btn) {
       btn.addEventListener('click', function() {
@@ -922,6 +940,10 @@
         }
         var bodyText = (lang === 'en' && post.textEn) ? post.textEn : (post.text || '');
         html += '  <div class="hv-feed-body">' + escHtml(bodyText) + '</div>';
+        // v2.22: Auto-translation disclaimer in feed
+        if (lang === 'en' && post.textEn && post.text) {
+          html += '  <span class="diario-auto-tl">Translated automatically \u00b7 <a href="#" class="diario-see-original" data-original="' + escHtml(post.text).replace(/"/g, '&quot;') + '" data-translated="' + escHtml(post.textEn).replace(/"/g, '&quot;') + '">See original</a></span>';
+        }
         // Translate button for EN followers (non-owner) — only if no auto-translation
         if (lang === 'en' && post.text && !post.textEn && !(typeof isOwner !== 'undefined' && isOwner)) {
           html += '  <button class="hv-feed-translate-btn" data-text="' + escHtml(post.text).replace(/"/g, '&quot;') + '" title="Translate to English">\uD83C\uDF10</button>';
@@ -1355,6 +1377,20 @@
   });
   setTimeout(showAdminCardIfOwner, 2000);
 
+  // v2.21: Instant owner hint — show owner tiles immediately if previously confirmed owner
+  // This eliminates the visual "pop-in" delay for returning owners
+  (function() {
+    try {
+      var ownerHint = localStorage.getItem('qv-owner-hint');
+      if (ownerHint === '1') {
+        var trackCard = document.getElementById('hv-tracking-card');
+        var adminCard = document.getElementById('hv-admin-card');
+        if (trackCard) trackCard.style.display = '';
+        if (adminCard) adminCard.style.display = '';
+      }
+    } catch(e) {}
+  })();
+
   // ─── v2.13: Tracking card state management ───
   function updateTrackingCard() {
     var card = document.getElementById('hv-tracking-card');
@@ -1392,6 +1428,7 @@
   }
   window.addEventListener('authStateChanged', function(e) {
     if (e.detail && e.detail.isOwner) { showTrackingCardIfOwner(); }
+    else { showTrackingCardIfOwner(); } // Also hide if not owner
   });
   // Also check on initial load (delayed to let auth resolve)
   setTimeout(showTrackingCardIfOwner, 2000);
