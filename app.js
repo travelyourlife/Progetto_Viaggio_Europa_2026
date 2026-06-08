@@ -1616,15 +1616,26 @@ document.addEventListener('DOMContentLoaded', function() {
         try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); if(window.firebaseSyncZaino) window.firebaseSyncZaino(data);; } catch(e) {}
     }
     loadProgress();
-    // Non-owner: disable all checkboxes (read-only view)
-    if (!isOwner) {
-        document.querySelectorAll('#tab-zaino input[type="checkbox"][data-idx]').forEach(function(cb) {
-            cb.disabled = true;
+    // Disable checkboxes for non-owners (respects role simulation)
+    function updateZainoCheckboxState() {
+        var effectiveOwner = isOwner && !window._simRole;
+        var cbs = document.querySelectorAll('#tab-zaino input[type="checkbox"][data-idx]');
+        cbs.forEach(function(cb) { cb.disabled = !effectiveOwner; });
+    }
+    // Listen for auth state to resolve, then apply
+    if (typeof firebase !== 'undefined' && firebase.auth) {
+        firebase.auth().onAuthStateChanged(function() {
+            // Delay to let isOwner be set by the main auth handler
+            setTimeout(updateZainoCheckboxState, 1500);
         });
     }
+    // Update when role simulation changes
+    window.addEventListener('simRoleChanged', function() { updateZainoCheckboxState(); });
+    window._updateZainoCheckboxState = updateZainoCheckboxState;
     document.addEventListener('change', function(e) {
-        if (e.target.matches('input[type="checkbox"][data-idx]')) {
-            if (!isOwner) return; // safety fallback
+        if (e.target.matches('#tab-zaino input[type="checkbox"][data-idx]')) {
+            var effectiveOwner = isOwner && !window._simRole;
+            if (!effectiveOwner) { e.target.checked = !e.target.checked; return; }
             saveProgress();
         }
     });

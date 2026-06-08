@@ -546,8 +546,7 @@
     border-bottom: none;
 }
 #tab-zaino .task-item.checked {
-    opacity: 0.5;
-    text-decoration: line-through;
+    opacity: 0.7;
 }
 
 /* ─── Compact tables (used in Riepilogo) ─── */
