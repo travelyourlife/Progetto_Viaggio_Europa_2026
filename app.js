@@ -1616,7 +1616,17 @@ document.addEventListener('DOMContentLoaded', function() {
         try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); if(window.firebaseSyncZaino) window.firebaseSyncZaino(data);; } catch(e) {}
     }
     loadProgress();
-    document.addEventListener('change', function(e) { if (e.target.matches('input[type="checkbox"][data-idx]')) saveProgress(); });
+    document.addEventListener('change', function(e) {
+        if (e.target.matches('input[type="checkbox"][data-idx]')) {
+            if (!isOwner) {
+                // Revert: non-owner cannot modify checkboxes
+                e.target.checked = !e.target.checked;
+                if (window.showToast) showToast((document.documentElement.lang === 'en') ? '🔒 Only organizers can edit the checklist' : '🔒 Solo gli organizzatori possono modificare la checklist', 'info');
+                return;
+            }
+            saveProgress();
+        }
+    });
 
 
     // ─── Zaino Export/Import ───
@@ -8574,20 +8584,17 @@ if ('serviceWorker' in navigator) {
     sendMessage(text);
     setTimeout(function() { sendDebounce = false; }, 600);
   }
-  // Use multiple event types for maximum compatibility on Android PWA
+  // Robust send: use touchstart (fires immediately on mobile, never missed)
+  // plus click as desktop/accessibility fallback
+  var sendFiredByTouch = false;
+  chatSendBtn.addEventListener('touchstart', function(e) {
+    e.preventDefault();
+    sendFiredByTouch = true;
+    handleSend();
+  }, { passive: false });
   chatSendBtn.addEventListener('click', function(e) {
     e.preventDefault();
-    e.stopPropagation();
-    handleSend();
-  });
-  chatSendBtn.addEventListener('touchend', function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    handleSend();
-  });
-  chatSendBtn.addEventListener('pointerup', function(e) {
-    e.preventDefault();
-    e.stopPropagation();
+    if (sendFiredByTouch) { sendFiredByTouch = false; return; }
     handleSend();
   });
 
@@ -10612,8 +10619,24 @@ if ('serviceWorker' in navigator) {
         updates['highlight'] = highlight || null;
         updates['kmDriven'] = kmVal > 0 ? kmVal : null;
         updates['driveTime'] = driveTimeVal || null;
+
+        // Auto-schedule logic: if date is in the future, make it a scheduled draft
+        var today = new Date().toISOString().split('T')[0];
+        if (dateVal && dateVal > today) {
+          updates['draft'] = true;
+          updates['publishAt'] = new Date(dateVal + 'T09:00:00').getTime();
+        } else if (dateVal && dateVal <= today) {
+          // Date is today or past: publish immediately (remove draft/schedule)
+          updates['draft'] = null;
+          updates['publishAt'] = null;
+        }
+
         diarioRef.child(dayKey).update(updates).then(function() {
-          if (window.showToast) showToast(isEN ? 'Saved!' : 'Salvato!', 'success');
+          if (dateVal && dateVal > today) {
+            if (window.showToast) showToast(isEN ? '\ud83d\udd52 Scheduled for ' + dateVal : '\ud83d\udd52 Programmato per ' + dateVal, 'success');
+          } else {
+            if (window.showToast) showToast(isEN ? 'Saved!' : 'Salvato!', 'success');
+          }
           overlay.remove();
         });
       });

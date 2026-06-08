@@ -7,8 +7,8 @@
   // ─── Configuration ───
   var POI_CATEGORIES = {
     star:        { label: '⭐ Imperdibili',       color: '#d69e2e', size: 30, defaultOn: true },
-    cultura:     { label: '🏛️ Cultura',           color: '#6b46c1', size: 24, defaultOn: false },
-    natura:      { label: '🌲 Natura',             color: '#276749', size: 24, defaultOn: false },
+    cultura:     { label: '🏛️ Cultura',           color: '#6b46c1', size: 24, defaultOn: true },
+    natura:      { label: '🌲 Natura',             color: '#276749', size: 24, defaultOn: true },
     sport:       { label: '🥾 Sport',             color: '#2b6cb0', size: 24, defaultOn: false },
     attivita:    { label: '🎭 Attività',          color: '#9b59b6', size: 24, defaultOn: false },
     monopattino: { label: '🛴 Monopattino',       color: '#84cc16', size: 24, defaultOn: false },
