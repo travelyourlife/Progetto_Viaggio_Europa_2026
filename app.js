@@ -243,17 +243,18 @@ function doGoogleSignIn(successCb) {
   });
 
   // ─── CAPACITOR NATIVE GOOGLE SIGN-IN ───
-  // v2.34 FIX: Uses @capacitor-firebase/authentication plugin (FirebaseAuthentication)
-  // Previously used @codetrix-studio/capacitor-google-auth (GoogleAuth) which was NOT installed
+  // v2.44 FIX: Uses native plugin if available, otherwise falls back to signInWithRedirect
   if (window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()) {
-    console.info('[Auth] Using Capacitor FirebaseAuthentication.signInWithGoogle()');
-    if (window.showToast) showToast(isEN ? '⏳ Opening Google login...' : '⏳ Apertura login Google...', 'info');
-    var FirebaseAuth = window.Capacitor.Plugins.FirebaseAuthentication;
+    var FirebaseAuth = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.FirebaseAuthentication;
     if (!FirebaseAuth) {
-      console.error('[Auth] FirebaseAuthentication plugin not available');
-      if (window.showToast) showToast('FirebaseAuthentication plugin not available', 'error');
+      // v2.45 FIX: Under Capacitor native, signInWithRedirect causes infinite loops
+      // (WebView loses context on redirect). Show error instead of attempting redirect.
+      console.error('[Auth] FirebaseAuthentication plugin not available under Capacitor native.');
+      if (window.showToast) showToast(isEN ? '❌ Login plugin not available. Please reinstall the app.' : '❌ Plugin login non disponibile. Reinstalla l\'app.', 'error');
       return;
     }
+    console.info('[Auth] Using Capacitor FirebaseAuthentication.signInWithGoogle()');
+    if (window.showToast) showToast(isEN ? '⏳ Opening Google login...' : '⏳ Apertura login Google...', 'info');
     FirebaseAuth.signInWithGoogle().then(function(result) {
       console.info('[Auth] Capacitor signInWithGoogle success:', result.user && result.user.email);
       // The plugin signs in on the native layer. We need to also sign in on the
@@ -287,6 +288,13 @@ function doGoogleSignIn(successCb) {
   // ─── END CAPACITOR NATIVE SIGN-IN ───
 
   if (typeof google === 'undefined' || !google.accounts) {
+    // v2.45 FIX: Under Capacitor native, GIS is never loaded and redirect is dangerous.
+    // Only attempt redirect on the web (non-Capacitor) platform.
+    if (window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()) {
+      console.error('[Auth] GIS not available under Capacitor and native plugin was not found.');
+      if (window.showToast) showToast(isEN ? '❌ Login not available. Reinstall the app.' : '❌ Login non disponibile. Reinstalla l\'app.', 'error');
+      return;
+    }
     // v2.11 FIX: GIS not loaded — show feedback + wait briefly before fallback
     console.warn('[Auth] GIS not loaded, attempting delayed retry...');
     if (window.showToast) showToast(isEN ? '⏳ Loading login...' : '⏳ Caricamento login...', 'info');
@@ -336,13 +344,18 @@ function doGoogleSignIn(successCb) {
       // v2.11 FIX: Handle GIS prompt blocked/dismissed (Safari, adblockers)
       if (notification.isNotDisplayed()) {
         console.warn('[Auth] GIS prompt blocked:', notification.getNotDisplayedReason());
-        if (window.showToast) showToast(isEN ? '⚠️ Popup blocked. Redirecting...' : '⚠️ Popup bloccato. Reindirizzamento...', 'warning');
-        // Fallback to redirect
-        var provider = new firebase.auth.GoogleAuthProvider();
-        try { localStorage.setItem('firebase_redirect_pending', '1'); } catch(e) {}
-        setTimeout(function() {
-          firebase.auth().signInWithRedirect(provider);
-        }, 1000);
+        // v2.45 FIX: Do NOT use signInWithRedirect under Capacitor native
+        if (window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()) {
+          if (window.showToast) showToast(isEN ? '❌ Login blocked. Reinstall the app.' : '❌ Login bloccato. Reinstalla l\'app.', 'error');
+        } else {
+          if (window.showToast) showToast(isEN ? '⚠️ Popup blocked. Redirecting...' : '⚠️ Popup bloccato. Reindirizzamento...', 'warning');
+          // Fallback to redirect (web only)
+          var provider = new firebase.auth.GoogleAuthProvider();
+          try { localStorage.setItem('firebase_redirect_pending', '1'); } catch(e) {}
+          setTimeout(function() {
+            firebase.auth().signInWithRedirect(provider);
+          }, 1000);
+        }
       } else if (notification.isSkippedMoment()) {
         console.info('[Auth] GIS prompt skipped:', notification.getSkippedReason());
         // User dismissed — no action needed, they can retry
@@ -351,10 +364,15 @@ function doGoogleSignIn(successCb) {
   } catch(gisErr) {
     // v2.11: Catch any GIS initialization errors (3rd party cookie blocks, etc.)
     console.error('[Auth] GIS initialization error:', gisErr);
-    if (window.showToast) showToast(isEN ? '⚠️ Login service error. Redirecting...' : '⚠️ Errore servizio login. Reindirizzamento...', 'warning');
-    var provider = new firebase.auth.GoogleAuthProvider();
-    try { localStorage.setItem('firebase_redirect_pending', '1'); } catch(e) {}
-    firebase.auth().signInWithRedirect(provider);
+    // v2.45 FIX: Do NOT use signInWithRedirect under Capacitor native
+    if (window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()) {
+      if (window.showToast) showToast(isEN ? '❌ Login service error.' : '❌ Errore servizio login.', 'error');
+    } else {
+      if (window.showToast) showToast(isEN ? '⚠️ Login service error. Redirecting...' : '⚠️ Errore servizio login. Reindirizzamento...', 'warning');
+      var provider = new firebase.auth.GoogleAuthProvider();
+      try { localStorage.setItem('firebase_redirect_pending', '1'); } catch(e) {}
+      firebase.auth().signInWithRedirect(provider);
+    }
   }
 }
 
@@ -8353,12 +8371,30 @@ if ('serviceWorker' in navigator) {
     }
   }
 
-  // Listen for auth changes
+  // Listen for auth changes — v2.45 FIX: Also (re-)start DB listeners reactively
   window.addEventListener('authStateChanged', function(e) {
     var user = e.detail ? e.detail.user : null;
+    var eventIsOwner = e.detail ? e.detail.isOwner : false;
     updateChatAuth(user);
-    // ─── Restore chat prefs from Firebase (cross-device sync) ───
-    if (user && db) {
+
+    if (user) {
+      // v2.45: Check if user is owner or approved before starting listeners
+      var isUserOwner = eventIsOwner || (typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.indexOf(user.uid) !== -1);
+      if (isUserOwner) {
+        // Owner: detach old listeners, re-attach fresh ones
+        window.detachFirebaseListeners('chat');
+        startListening();
+      } else {
+        // Non-owner: check approval before starting listeners
+        firebase.database().ref('trips/' + FAMILY_ID + '/approvedUsers/' + user.uid).once('value').then(function(snap) {
+          if (snap.exists()) {
+            window.detachFirebaseListeners('chat');
+            startListening();
+          }
+        }).catch(function() {});
+      }
+
+      // ─── Restore chat prefs from Firebase (cross-device sync) ───
       // 1. Restore chat notification preference
       db.ref('fcm_prefs/' + user.uid + '/chatNotif').once('value').then(function(snap) {
         var val = snap.val();
@@ -8377,6 +8413,9 @@ if ('serviceWorker' in navigator) {
           updateUnreadBadge();
         }
       }).catch(function() {});
+    } else {
+      // User logged out: detach all chat listeners
+      window.detachFirebaseListeners('chat');
     }
   });
   // v2.14: Re-check chat when simulation role changes
@@ -8396,22 +8435,13 @@ if ('serviceWorker' in navigator) {
     }
   });
 
-  // v2.34 FIX: Use waitForAuth to avoid race condition on cold start
+  // v2.45 FIX: Removed waitForAuth(5000) which resolved to null on cold start
+  // under Capacitor. The authStateChanged listener above now handles both
+  // cold-start (persisted session) and post-login transitions reactively.
   if (typeof firebase !== 'undefined' && firebase.auth) {
     var currentUser = firebase.auth().currentUser;
     if (currentUser) {
       updateChatAuth(currentUser);
-    } else if (typeof window.waitForAuth === 'function') {
-      window.waitForAuth(5000).then(function(user) {
-        if (user) updateChatAuth(user);
-      });
-    } else {
-      var _chatAuthUnsub = firebase.auth().onAuthStateChanged(function(user) {
-        if (user) {
-          updateChatAuth(user);
-          if (_chatAuthUnsub) _chatAuthUnsub();
-        }
-      });
     }
   }
 
@@ -9282,13 +9312,22 @@ if ('serviceWorker' in navigator) {
   CHAT_REF.push = patchedPush;
 
   // ─── Initialize ───
-  // Check if there are any messages first
-  CHAT_REF.orderByChild('timestamp').limitToLast(1).once('value', function(snap) {
-    if (snap.exists()) {
-      if (chatEmpty) chatEmpty.style.display = 'none';
+  // v2.45 FIX: Do NOT call startListening() unconditionally here.
+  // It will be called reactively by the authStateChanged listener above
+  // once the user is authenticated. This prevents PERMISSION_DENIED errors
+  // from killing the listener permanently before auth is ready.
+  // Check if user is already authenticated (e.g., page reload with persisted session)
+  var _chatInitUser = (typeof firebase !== 'undefined' && firebase.auth) ? firebase.auth().currentUser : null;
+  if (_chatInitUser) {
+    var _chatInitIsOwner = (typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.indexOf(_chatInitUser.uid) !== -1);
+    if (_chatInitIsOwner) {
+      startListening();
+    } else {
+      firebase.database().ref('trips/' + FAMILY_ID + '/approvedUsers/' + _chatInitUser.uid).once('value').then(function(snap) {
+        if (snap.exists()) startListening();
+      }).catch(function() {});
     }
-    startListening();
-  });
+  }
 
 })();
 
@@ -9381,13 +9420,13 @@ if ('serviceWorker' in navigator) {
 
   var activitiesRef = firebase.database().ref('trips/' + FAMILY_ID + '/activities');
 
-  activitiesRef.on('value', function(snapshot) {
+    // v2.45 FIX: Use registerFirebaseListener for proper cleanup on tab switch
+  var _actStatsCb = function(snapshot) {
     var activities = snapshot.val();
     if (!activities) {
       statsBar.classList.add('hidden');
       return;
     }
-
     var kmFoot = 0, kmBike = 0, kmWater = 0, elevation = 0;
 
     Object.values(activities).forEach(function(act) {
@@ -9452,7 +9491,8 @@ if ('serviceWorker' in navigator) {
     if (posGarminWalkDay) posGarminWalkDay.textContent = kmFootDay.toFixed(1);
     if (posGarminBikeDay) posGarminBikeDay.textContent = kmBikeDay.toFixed(1);
     if (posGarminElevDay) posGarminElevDay.textContent = elevDay.toLocaleString('it-IT');
-  });
+  };
+  window.registerFirebaseListener('posizione', activitiesRef, 'value', _actStatsCb);
 
   // ─── Activity Cards in Posizione tab ───
   var posSection = document.getElementById('posizione-content') || document.getElementById('tab-posizione');
@@ -9467,11 +9507,11 @@ if ('serviceWorker' in navigator) {
 
   var actList = document.getElementById('pos-activity-list');
 
-  // Listen for activities and filter by current day
-  activitiesRef.on('value', function(snapshot) {
+    // Listen for activities and filter by current day
+  // v2.45 FIX: Use registerFirebaseListener for proper cleanup on tab switch
+  (function() { var _actDayCb = function(snapshot) {
     var activities = snapshot.val();
     if (!activities || !actList) return;
-
     // Get today's date string (YYYY-MM-DD)
     var today = new Date().toISOString().split('T')[0];
 
@@ -9524,10 +9564,11 @@ if ('serviceWorker' in navigator) {
         showConfirm(isEN ? 'Delete this activity?' : 'Eliminare questa attivit\u00e0?', function() {
           activitiesRef.child(actkey).remove();
         });
-      });
+            });
     });
-  });
-
+  };
+  window.registerFirebaseListener('posizione', activitiesRef, 'value', _actDayCb);
+  })();
   // ─── Manual activity input button (owner only) ───
   if (isOwner) {
   var addKmBtn = document.createElement('button');
@@ -9784,21 +9825,15 @@ if ('serviceWorker' in navigator) {
     if (firebaseUser) checkPosizioneAccess(firebaseUser);
   });
 
-  // v2.34 FIX: Use waitForAuth to ensure auth is resolved before checking access
-  // This prevents the race condition where currentUser is null on cold start
+  // v2.45 FIX: Removed waitForAuth(5000) which resolved to null on cold start
+  // under Capacitor (no page reload after native login). Now purely event-driven:
+  // the authStateChanged listener above handles both cold-start (if user already
+  // persisted) and post-login transitions. We still do an immediate check if
+  // currentUser is already available (e.g., page reload with persisted session).
   if (firebaseUser) {
     checkPosizioneAccess(firebaseUser);
-  } else if (typeof window.waitForAuth === 'function') {
-    window.waitForAuth(5000).then(function(user) {
-      if (user) checkPosizioneAccess(user);
-    });
-  } else if (typeof firebase !== 'undefined' && firebase.auth) {
-    var _posAuthUnsub = firebase.auth().onAuthStateChanged(function(user) {
-      if (user) {
-        checkPosizioneAccess(user);
-        if (_posAuthUnsub) _posAuthUnsub();
-      }
-    });
+  } else if (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser) {
+    checkPosizioneAccess(firebase.auth().currentUser);
   }
 })();
 
@@ -9818,7 +9853,9 @@ if ('serviceWorker' in navigator) {
   var storageRef = (firebase.storage) ? firebase.storage().ref('diary/' + FAMILY_ID) : null;
 
   // Bridge: expose published diary entries for home feed (replaces old _preTripPostsOverride)
-  diarioRef.orderByChild('dayNumber').on('value', function(snap) {
+  // v2.45 FIX: Use registerFirebaseListener for proper cleanup on tab switch
+  var _diarioQuery = diarioRef.orderByChild('dayNumber');
+  var _diarioCb = function(snap) {
     var entries = snap.val();
     if (!entries) { window._diaryEntriesForHome = []; return; }
     var published = [];
@@ -9829,7 +9866,8 @@ if ('serviceWorker' in navigator) {
     // Sort by date descending
     published.sort(function(a, b) { return (b.date || '').localeCompare(a.date || ''); });
     window._diaryEntriesForHome = published;
-  });
+  };
+  window.registerFirebaseListener('diario', _diarioQuery, 'value', _diarioCb);
 
   // DOM elements
   var gate = document.getElementById('diario-gate');
@@ -10002,20 +10040,14 @@ if ('serviceWorker' in navigator) {
     if (firebaseUser) checkDiarioAccess(firebaseUser);
   });
 
-  // v2.34 FIX: Use waitForAuth to ensure auth is resolved before checking access
+  // v2.45 FIX: Removed waitForAuth(5000) which resolved to null on cold start
+  // under Capacitor (no page reload after native login). Now purely event-driven:
+  // the authStateChanged listener above handles both cold-start (if user already
+  // persisted) and post-login transitions.
   if (firebaseUser) {
     checkDiarioAccess(firebaseUser);
-  } else if (typeof window.waitForAuth === 'function') {
-    window.waitForAuth(5000).then(function(user) {
-      if (user) checkDiarioAccess(user);
-    });
-  } else if (firebase.auth) {
-    var _diarioAuthUnsub = firebase.auth().onAuthStateChanged(function(user) {
-      if (user) {
-        checkDiarioAccess(user);
-        if (_diarioAuthUnsub) _diarioAuthUnsub();
-      }
-    });
+  } else if (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser) {
+    checkDiarioAccess(firebase.auth().currentUser);
   }
 
   // ─── Diary Date Formatter ───
@@ -11602,15 +11634,13 @@ if ('serviceWorker' in navigator) {
   var globalBanned = {};
   var dynamicOwnerMap = {}; // v2.13: cache of dynamic owners
 
-  // Listen for banned list changes
-  bannedRef.on('value', function(snap) {
-    globalBanned = snap.val() || {};
-  });
-
+    // Listen for banned list changes
+  // v2.45 FIX: Use registerFirebaseListener for proper cleanup on tab switch
+  var _bannedCb = function(snap) { globalBanned = snap.val() || {}; };
+  var _ownerUsersCb = function(snap) { dynamicOwnerMap = snap.val() || {}; };
+  window.registerFirebaseListener('admin', bannedRef, 'value', _bannedCb);
   // v2.13: Listen for dynamic owner changes
-  ownerUsersRef.on('value', function(snap) {
-    dynamicOwnerMap = snap.val() || {};
-  });
+  window.registerFirebaseListener('admin', ownerUsersRef, 'value', _ownerUsersCb);
 
   function renderAdminUsers() {
     if (!adminUsersList) return;

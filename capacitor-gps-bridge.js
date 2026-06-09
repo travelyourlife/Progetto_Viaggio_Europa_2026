@@ -190,29 +190,56 @@
       bgLastLat = lat;
       bgLastLng = lng;
 
-      // Write to Firebase
+      // v2.45 FIX: Buffer & Flush strategy
+      // Instead of writing to Firebase on every GPS update (~100/min at highway speed),
+      // buffer track points locally and flush every 30 seconds.
+      // Only live position is written immediately (for real-time map display).
+
+      // 1. Live position — write immediately (debounced at 5s minimum interval)
       var currentRefs = getFirebaseRefs();
       if (!currentRefs) return;
 
       var basePath = 'trips/' + currentRefs.familyId;
+      var now = Date.now();
 
-      // 1. Live position
-      currentRefs.db.ref(basePath + '/live/' + currentRefs.uid).set({
-        lat: lat,
-        lng: lng,
-        speed: speed,
-        heading: heading,
-        time: time,
-        name: currentRefs.name,
-        status: 'moving'
-      });
+      if (!window._lastLiveWrite || (now - window._lastLiveWrite) >= 5000) {
+        window._lastLiveWrite = now;
+        currentRefs.db.ref(basePath + '/live/' + currentRefs.uid).set({
+          lat: lat,
+          lng: lng,
+          speed: speed,
+          heading: heading,
+          time: time,
+          name: currentRefs.name,
+          status: 'moving'
+        });
+      }
 
-      // 2. Track point (push)
-      var pt = { lat: lat, lng: lng, speed: speed, heading: heading, time: time };
-      currentRefs.db.ref(basePath + '/tracks/' + todayStr() + '/points').push(pt);
+      // 2. Buffer track point locally
+      if (!window._gpsTrackBuffer) window._gpsTrackBuffer = [];
+      window._gpsTrackBuffer.push({ lat: lat, lng: lng, speed: speed, heading: heading, time: time });
 
-      // 3. Update session km
-      currentRefs.db.ref(basePath + '/liveSession/' + currentRefs.uid + '/todayKm').set(bgTodayKm);
+      // 3. Flush buffer every 30 seconds
+      if (!window._gpsFlushInterval) {
+        window._gpsFlushInterval = setInterval(function() {
+          var buffer = window._gpsTrackBuffer;
+          if (!buffer || buffer.length === 0) return;
+          var flushRefs = getFirebaseRefs();
+          if (!flushRefs) return;
+          var flushPath = 'trips/' + flushRefs.familyId + '/tracks/' + todayStr() + '/points';
+          // Multi-path update: push all buffered points in a single write
+          var updates = {};
+          for (var i = 0; i < buffer.length; i++) {
+            var key = flushRefs.db.ref(flushPath).push().key;
+            updates[key] = buffer[i];
+          }
+          flushRefs.db.ref(flushPath).update(updates);
+          // Update session km once per flush
+          flushRefs.db.ref('trips/' + flushRefs.familyId + '/liveSession/' + flushRefs.uid + '/todayKm').set(bgTodayKm);
+          window._gpsTrackBuffer = [];
+          console.log('[CapGPS] Flushed ' + buffer.length + ' track points');
+        }, 30000); // 30 seconds
+      }
 
       // 4. Update UI if visible
       updateUIStats(speed, bgTodayKm);
@@ -235,6 +262,26 @@
     }
 
     bgGeoActive = false;
+
+    // v2.45: Flush remaining buffer and clear interval
+    if (window._gpsFlushInterval) {
+      clearInterval(window._gpsFlushInterval);
+      window._gpsFlushInterval = null;
+    }
+    if (window._gpsTrackBuffer && window._gpsTrackBuffer.length > 0) {
+      var flushRefs = getFirebaseRefs();
+      if (flushRefs) {
+        var flushPath = 'trips/' + flushRefs.familyId + '/tracks/' + todayStr() + '/points';
+        var updates = {};
+        for (var i = 0; i < window._gpsTrackBuffer.length; i++) {
+          var key = flushRefs.db.ref(flushPath).push().key;
+          updates[key] = window._gpsTrackBuffer[i];
+        }
+        flushRefs.db.ref(flushPath).update(updates);
+        console.log('[CapGPS] Final flush: ' + window._gpsTrackBuffer.length + ' points');
+      }
+      window._gpsTrackBuffer = [];
+    }
 
     // Update Firebase session
     var refs = getFirebaseRefs();
