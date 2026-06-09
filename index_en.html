@@ -1,6 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Auto language detection: Italian users → Italian version -->
+    <script>
+    (function() {
+      // Skip if user manually chose English (stored preference)
+      if (localStorage.getItem('quo-vadis-lang') === 'en') return;
+      // If user previously chose Italian, redirect back
+      if (localStorage.getItem('quo-vadis-lang') === 'it') {
+        window.location.replace('index.html' + window.location.hash);
+        return;
+      }
+      // Auto-detect: if browser language IS Italian, redirect to Italian version
+      var lang = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
+      if (lang.startsWith('it')) {
+        window.location.replace('index.html' + window.location.hash);
+      }
+    })();
+    </script>
     <!-- Google tag (gtag.js) — deferred config to exclude owner sessions -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-YSGVVPN5ZR"></script>
     <script>
@@ -69,7 +86,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = '2.28';
+  var EXPECTED_VERSION = '2.29';
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
   var r = false;

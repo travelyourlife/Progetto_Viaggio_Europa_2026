@@ -4296,6 +4296,20 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('[data-tab]').forEach(function(btn) {
             btn.addEventListener('click', function() { setTimeout(updateLangHref, 50); });
         });
+        // Save language preference when user manually switches
+        langBtn.addEventListener('click', function() {
+            // Determine target language from href
+            var targetLang = (langBtn.href.indexOf('index_en') > -1) ? 'en' : 'it';
+            localStorage.setItem('quo-vadis-lang', targetLang);
+        });
+    }
+    // Also handle the home page language switch link
+    var homeLangBtn = document.querySelector('.home-lang-switch');
+    if (homeLangBtn) {
+        homeLangBtn.addEventListener('click', function() {
+            var targetLang = (homeLangBtn.href.indexOf('index_en') > -1) ? 'en' : 'it';
+            localStorage.setItem('quo-vadis-lang', targetLang);
+        });
     }
 
 
@@ -12098,27 +12112,10 @@ if ('serviceWorker' in navigator) {
     // Write to queue (triggers Cloud Function for push)
     notifQueueRef.push(payload).then(function() {
       notifLog('\u2705 ' + (isEN ? 'Test queued: ' : 'Test in coda: ') + title);
+      if (window.showToast) showToast((isEN ? 'Test notification sent' : 'Notifica test inviata'), 'success');
+      // Cloud Function will write to history and send push — no client-side history write needed
     }).catch(function(err) {
       notifLog('\u274c Queue error: ' + err.message);
-    });
-    // Also write to history (so it appears in the in-app notification drawer immediately)
-    var historyRef = db.ref('trips/' + FAMILY_ID + '/notifications/history');
-    historyRef.push({
-      id: tag + '-' + ts,
-      type: type,
-      title: title,
-      body: body,
-      icon: type === 'countdown' ? '\uD83D\uDCC5' : type === 'zaino_reminder' ? '\uD83C\uDF92' : type === 'next_stage' ? '\uD83D\uDEE3\uFE0F' : '\uD83D\uDD14',
-      target: 'owner',
-      createdAt: ts,
-      source: 'admin-test'
-    }).then(function() {
-      notifLog('\u2705 ' + (isEN ? 'In-app notification added' : 'Notifica in-app aggiunta'));
-      if (window.showToast) showToast((isEN ? 'Test notification sent' : 'Notifica test inviata'), 'success');
-      // Trigger drawer refresh if available
-      if (window._notifDrawerUpdate) window._notifDrawerUpdate();
-    }).catch(function(err) {
-      notifLog('\u274c History error: ' + err.message);
     });
   }
 
