@@ -8608,19 +8608,11 @@ if ('serviceWorker' in navigator) {
     if (!text) return;
     sendDebounce = true;
     sendMessage(text);
-    setTimeout(function() { sendDebounce = false; }, 600);
+    setTimeout(function() { sendDebounce = false; }, 300);
   }
-  // Robust send: use touchstart (fires immediately on mobile, never missed)
-  // plus click as desktop/accessibility fallback
-  var sendFiredByTouch = false;
-  chatSendBtn.addEventListener('touchstart', function(e) {
-    e.preventDefault();
-    sendFiredByTouch = true;
-    handleSend();
-  }, { passive: false });
+  // ─── Send button (click only — reliable on all platforms) ───
   chatSendBtn.addEventListener('click', function(e) {
     e.preventDefault();
-    if (sendFiredByTouch) { sendFiredByTouch = false; return; }
     handleSend();
   });
 
