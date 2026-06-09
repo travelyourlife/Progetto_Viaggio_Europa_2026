@@ -1,1 +1,8 @@
-
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "io.github.travelyourlife.twa",
+    "sha256_cert_fingerprints": ["55:71:55:90:C2:4A:3B:7A:F6:9E:F2:F9:1F:D9:EE:D1:D1:9C:09:0D:C1:32:3C:97:FE:A1:96:D5:A2:B6:69:00"]
+  }
+}]
