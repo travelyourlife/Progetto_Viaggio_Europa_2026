@@ -31,6 +31,9 @@
   var isLongPress = false;
 
   // ─── Init ───
+  var _hvReady = false; // v2.38 FIX: track when home-variants is fully initialized
+  var _pendingAuthEvent = false; // v2.38 FIX: capture early auth events
+
   function init() {
     // Load saved preferences
     var savedRole = localStorage.getItem('hv-role');
@@ -44,6 +47,16 @@
     } else {
       window._simRole = null;
     }
+
+    // v2.38 FIX: Register authStateChanged listener EARLY (before templates load)
+    // This captures auth events that fire before templates are ready
+    window.addEventListener('authStateChanged', function() {
+      if (_hvReady) {
+        renderCurrentVariant();
+      } else {
+        _pendingAuthEvent = true;
+      }
+    });
 
     // Wait for DOM and templates to be ready
     if (document.readyState === 'loading') {
@@ -69,6 +82,8 @@
   }
 
   function onReady() {
+    _hvReady = true; // v2.38 FIX: mark as ready
+
     // Create container in tab-home
     var tabHome = document.getElementById('tab-home');
     if (!tabHome) return;
@@ -95,10 +110,12 @@
     // Setup role modal
     setupRoleModal();
 
-    // Listen for auth state changes
-    window.addEventListener('authStateChanged', function() {
+    // v2.38 FIX: authStateChanged listener is now registered in init() (early)
+    // Replay pending auth event if it fired before templates were ready
+    if (_pendingAuthEvent) {
+      _pendingAuthEvent = false;
       renderCurrentVariant();
-    });
+    }
 
     // Listen for day override changes (admin reset/sync)
     window.addEventListener('dayOverrideChanged', function() {
