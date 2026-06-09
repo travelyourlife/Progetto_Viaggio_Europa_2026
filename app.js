@@ -8295,8 +8295,9 @@ if ('serviceWorker' in navigator) {
   function updateChatAuth(user) {
     chatUser = user;
     if (user) {
-      // Check if owner or approved
-      if (typeof isOwner !== 'undefined' && isOwner) {
+      // v2.41 FIX: Check owner via BOTH global flag AND direct OWNER_UIDS to avoid race
+      var isUserOwner = (typeof isOwner !== 'undefined' && isOwner) || (typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.indexOf(user.uid) !== -1);
+      if (isUserOwner) {
         // Owner always has access
         chatInputBar.style.display = 'flex';
         chatLoginPrompt.style.display = 'none';
@@ -9657,43 +9658,53 @@ if ('serviceWorker' in navigator) {
       return;
     }
 
-    // Owners always have access
-    if (isOwner) {
+    // v2.41 FIX: Check owner status using BOTH the global isOwner flag AND
+    // direct OWNER_UIDS array check. This eliminates the race condition where
+    // isOwner is not yet set by checkOwnerStatus() when this function runs.
+    var isUserOwner = isOwner || (typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.indexOf(user.uid) !== -1);
+    if (isUserOwner) {
       showPosizioneContent();
       return;
     }
 
-    // Check if approved
+    // Check if approved OR dynamic owner (ownerUsers in database)
     approvedRef.child(user.uid).once('value', function(snap) {
       if (snap.exists()) {
         showPosizioneContent();
       } else {
-        // Check if pending
-        pendingRef.child(user.uid).once('value', function(pSnap) {
-          if (pSnap.exists()) {
-            window._pendingSubmitDone = true;
-            gate.style.display = 'none';
-            pendingEl.style.display = '';
-            contentEl.style.display = 'none';
-          } else if (!window._pendingSubmitDone) {
-            // v2.13 FIX: Use global flag to prevent duplicate auto-submits
-            window._pendingSubmitDone = true;
-            // Auto-submit request
-            pendingRef.child(user.uid).set({
-              email: user.email || '',
-              displayName: user.displayName || '',
-              photoURL: user.photoURL || '',
-              requestedAt: firebase.database.ServerValue.TIMESTAMP
-            }).then(function() {
-              gate.style.display = 'none';
-              pendingEl.style.display = '';
-              contentEl.style.display = 'none';
-            });
+        // v2.41: Also check dynamic ownerUsers before showing pending
+        firebase.database().ref('trips/' + FAMILY_ID + '/ownerUsers/' + user.uid).once('value', function(ownerSnap) {
+          if (ownerSnap.exists() && ownerSnap.val() === true) {
+            showPosizioneContent();
           } else {
-            // Already submitted by another code path
-            gate.style.display = 'none';
-            pendingEl.style.display = '';
-            contentEl.style.display = 'none';
+            // Check if pending
+            pendingRef.child(user.uid).once('value', function(pSnap) {
+              if (pSnap.exists()) {
+                window._pendingSubmitDone = true;
+                gate.style.display = 'none';
+                pendingEl.style.display = '';
+                contentEl.style.display = 'none';
+              } else if (!window._pendingSubmitDone) {
+                // v2.13 FIX: Use global flag to prevent duplicate auto-submits
+                window._pendingSubmitDone = true;
+                // Auto-submit request
+                pendingRef.child(user.uid).set({
+                  email: user.email || '',
+                  displayName: user.displayName || '',
+                  photoURL: user.photoURL || '',
+                  requestedAt: firebase.database.ServerValue.TIMESTAMP
+                }).then(function() {
+                  gate.style.display = 'none';
+                  pendingEl.style.display = '';
+                  contentEl.style.display = 'none';
+                });
+              } else {
+                // Already submitted by another code path
+                gate.style.display = 'none';
+                pendingEl.style.display = '';
+                contentEl.style.display = 'none';
+              }
+            });
           }
         });
       }
@@ -9903,43 +9914,53 @@ if ('serviceWorker' in navigator) {
       return;
     }
 
-    // Owners always have access
-    if (isOwner) {
+    // v2.41 FIX: Check owner status using BOTH the global isOwner flag AND
+    // direct OWNER_UIDS array check. This eliminates the race condition where
+    // isOwner is not yet set by checkOwnerStatus() when this function runs.
+    var isUserOwner = isOwner || (typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.indexOf(user.uid) !== -1);
+    if (isUserOwner) {
       showDiarioContent(true);
       return;
     }
 
-    // Check if approved
+    // Check if approved OR dynamic owner (ownerUsers in database)
     approvedRef.child(user.uid).once('value', function(snap) {
       if (snap.exists()) {
         showDiarioContent(false);
       } else {
-        // Check if pending
-        pendingRef.child(user.uid).once('value', function(pSnap) {
-          if (pSnap.exists()) {
-            window._pendingSubmitDone = true;
-            gate.style.display = 'none';
-            pendingEl.style.display = '';
-            contentEl.style.display = 'none';
-          } else if (!window._pendingSubmitDone) {
-            // v2.13 FIX: Use global flag to prevent duplicate auto-submits
-            window._pendingSubmitDone = true;
-            // Auto-submit request
-            pendingRef.child(user.uid).set({
-              email: user.email || '',
-              displayName: user.displayName || '',
-              photoURL: user.photoURL || '',
-              requestedAt: firebase.database.ServerValue.TIMESTAMP
-            }).then(function() {
-              gate.style.display = 'none';
-              pendingEl.style.display = '';
-              contentEl.style.display = 'none';
-            });
+        // v2.41: Also check dynamic ownerUsers before showing pending
+        firebase.database().ref('trips/' + FAMILY_ID + '/ownerUsers/' + user.uid).once('value', function(ownerSnap) {
+          if (ownerSnap.exists() && ownerSnap.val() === true) {
+            showDiarioContent(true);
           } else {
-            // Already submitted by another code path
-            gate.style.display = 'none';
-            pendingEl.style.display = '';
-            contentEl.style.display = 'none';
+            // Check if pending
+            pendingRef.child(user.uid).once('value', function(pSnap) {
+              if (pSnap.exists()) {
+                window._pendingSubmitDone = true;
+                gate.style.display = 'none';
+                pendingEl.style.display = '';
+                contentEl.style.display = 'none';
+              } else if (!window._pendingSubmitDone) {
+                // v2.13 FIX: Use global flag to prevent duplicate auto-submits
+                window._pendingSubmitDone = true;
+                // Auto-submit request
+                pendingRef.child(user.uid).set({
+                  email: user.email || '',
+                  displayName: user.displayName || '',
+                  photoURL: user.photoURL || '',
+                  requestedAt: firebase.database.ServerValue.TIMESTAMP
+                }).then(function() {
+                  gate.style.display = 'none';
+                  pendingEl.style.display = '';
+                  contentEl.style.display = 'none';
+                });
+              } else {
+                // Already submitted by another code path
+                gate.style.display = 'none';
+                pendingEl.style.display = '';
+                contentEl.style.display = 'none';
+              }
+            });
           }
         });
       }
