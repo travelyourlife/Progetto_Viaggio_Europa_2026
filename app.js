@@ -187,6 +187,40 @@ function doGoogleSignIn(successCb) {
     console.warn('[Auth] setPersistence error:', e.message);
   });
 
+  // ─── CAPACITOR NATIVE GOOGLE SIGN-IN ───
+  // Uses @codetrix-studio/capacitor-google-auth plugin for native login
+  // This bypasses WebView OAuth restrictions completely
+  if (window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()) {
+    console.info('[Auth] Using Capacitor native Google Sign-In');
+    if (window.showToast) showToast(isEN ? '⏳ Opening Google login...' : '⏳ Apertura login Google...', 'info');
+    var GoogleAuth = window.Capacitor.Plugins.GoogleAuth;
+    if (!GoogleAuth) {
+      console.error('[Auth] GoogleAuth plugin not available');
+      if (window.showToast) showToast('GoogleAuth plugin not available', 'error');
+      return;
+    }
+    GoogleAuth.signIn().then(function(googleUser) {
+      console.info('[Auth] Capacitor Google Sign-In success:', googleUser.email);
+      // Use the idToken to sign in with Firebase
+      var credential = firebase.auth.GoogleAuthProvider.credential(googleUser.authentication.idToken);
+      return firebase.auth().signInWithCredential(credential);
+    }).then(function(result) {
+      console.info('[Auth] Firebase sign-in success:', result.user.email);
+      if (successCb) {
+        successCb(result.user);
+      } else {
+        if (window.showToast) showToast((isEN ? 'Welcome, ' : 'Benvenuto, ') + (result.user.displayName || result.user.email), 'success');
+      }
+    }).catch(function(err) {
+      console.error('[Auth] Capacitor Google Sign-In error:', err);
+      if (err.message && err.message.indexOf('canceled') === -1 && err.message.indexOf('cancelled') === -1) {
+        if (window.showToast) showToast((isEN ? 'Login error: ' : 'Errore login: ') + (err.message || err), 'error');
+      }
+    });
+    return;
+  }
+  // ─── END CAPACITOR NATIVE SIGN-IN ───
+
   if (typeof google === 'undefined' || !google.accounts) {
     // v2.11 FIX: GIS not loaded — show feedback + wait briefly before fallback
     console.warn('[Auth] GIS not loaded, attempting delayed retry...');
@@ -5029,6 +5063,8 @@ if ('serviceWorker' in navigator) {
 
     // Don't show if already installed (standalone mode) or running in Capacitor native app
     if (window.Capacitor && window.Capacitor.isNativePlatform()) return;
+    // Capacitor WebView detection (user-agent contains app package name or 'wv' flag)
+    if (/quovadis|; wv\)/.test(navigator.userAgent)) return;
     var isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
                        window.navigator.standalone === true;
     if (isStandalone) return;
