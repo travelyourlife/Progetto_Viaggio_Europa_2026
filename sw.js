@@ -27,7 +27,7 @@ var messaging = firebase.messaging();
 // ─── CACHING CONFIG ───
 // ═══════════════════════════════════════════════════════════════
 
-const CACHE_NAME = 'quo-vadis-v2.31';
+const CACHE_NAME = 'quo-vadis-v2.32';
 const IMAGE_CACHE_NAME = 'quo-vadis-images-v1';
 const IMAGE_CACHE_LIMIT = 80;
 const STATIC_ASSETS = [
@@ -49,6 +49,7 @@ const STATIC_ASSETS = [
   './icon-maskable-512.png',
   './icons/van-marker.svg',
   './firebase-messaging-sw.js',
+  './capacitor-gps-bridge.js',
   './offline.html',
   './home-variants.html',
   './home-variants_en.html',

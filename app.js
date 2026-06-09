@@ -152,6 +152,7 @@ function escapeHtml(str) {
 // ─── Firebase Initialization (safe — app works offline without Firebase) ───
 var db = null;
 var FAMILY_ID = 'viaggio-europa-2026';
+window.FAMILY_ID = FAMILY_ID; // Exposed for Capacitor GPS bridge
 var dbRef = null;
 var firebaseUser = null; // Will hold the authenticated user (owner) or null (viewer)
 try {
@@ -5026,7 +5027,8 @@ if ('serviceWorker' in navigator) {
     var closeBtn = document.getElementById('installClose');
     if (!banner || !btn) return;
 
-    // Don't show if already installed (standalone mode)
+    // Don't show if already installed (standalone mode) or running in Capacitor native app
+    if (window.Capacitor && window.Capacitor.isNativePlatform()) return;
     var isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
                        window.navigator.standalone === true;
     if (isStandalone) return;
