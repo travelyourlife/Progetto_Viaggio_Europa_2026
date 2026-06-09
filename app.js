@@ -8396,23 +8396,24 @@ if ('serviceWorker' in navigator) {
     }
   });
 
-  // v2.34 FIX: Use waitForAuth to avoid race condition on cold start
+  // v2.42 FIX: Direct firebase.auth().onAuthStateChanged (same pattern as Posizione/Diario)
   if (typeof firebase !== 'undefined' && firebase.auth) {
-    var currentUser = firebase.auth().currentUser;
-    if (currentUser) {
-      updateChatAuth(currentUser);
-    } else if (typeof window.waitForAuth === 'function') {
-      window.waitForAuth(5000).then(function(user) {
-        if (user) updateChatAuth(user);
-      });
-    } else {
-      var _chatAuthUnsub = firebase.auth().onAuthStateChanged(function(user) {
-        if (user) {
-          updateChatAuth(user);
-          if (_chatAuthUnsub) _chatAuthUnsub();
-        }
-      });
+    // 1. Synchronous check: if auth already resolved
+    var _chatCurrentUser = firebase.auth().currentUser;
+    if (_chatCurrentUser) {
+      updateChatAuth(_chatCurrentUser);
     }
+    // 2. Primary listener: always fires for new subscribers
+    firebase.auth().onAuthStateChanged(function(user) {
+      updateChatAuth(user);
+    });
+    // 3. Re-check when tab becomes active
+    window.addEventListener('tabSwitched', function(e) {
+      if (e.detail === 'chat') {
+        var u = firebase.auth().currentUser;
+        if (u) updateChatAuth(u);
+      }
+    });
   }
 
   // Login link in chat
@@ -9774,32 +9775,41 @@ if ('serviceWorker' in navigator) {
     });
   }
 
-  // ─── Listen for auth changes ───
+  // ─── v2.42 FIX: Direct firebase.auth().onAuthStateChanged (not custom event) ───
+  // The custom 'authStateChanged' window event fires BEFORE this IIFE registers its
+  // listener in Capacitor (checkOwnerStatus runs at line 571, this IIFE at ~9637).
+  // Solution: use Firebase's own onAuthStateChanged which is guaranteed to fire
+  // for any new subscriber, plus check currentUser synchronously as immediate fallback.
+
+  // 1. Synchronous check: if auth already resolved (e.g. returning from another tab)
+  var _posCurrentUser = firebase.auth().currentUser;
+  if (_posCurrentUser) {
+    checkPosizioneAccess(_posCurrentUser);
+  }
+
+  // 2. Primary listener: firebase.auth().onAuthStateChanged (always fires for new subscribers)
+  firebase.auth().onAuthStateChanged(function(user) {
+    checkPosizioneAccess(user);
+  });
+
+  // 3. Backup: also listen to custom event (for role simulation changes, dynamic owner updates)
   window.addEventListener('authStateChanged', function(e) {
     var user = e.detail.user;
     checkPosizioneAccess(user);
   });
-  // v2.14: Re-check posizione when simulation role changes
+
+  // 4. Re-check on simulation role changes
   window.addEventListener('simRoleChanged', function() {
     if (firebaseUser) checkPosizioneAccess(firebaseUser);
   });
 
-  // v2.34 FIX: Use waitForAuth to ensure auth is resolved before checking access
-  // This prevents the race condition where currentUser is null on cold start
-  if (firebaseUser) {
-    checkPosizioneAccess(firebaseUser);
-  } else if (typeof window.waitForAuth === 'function') {
-    window.waitForAuth(5000).then(function(user) {
-      if (user) checkPosizioneAccess(user);
-    });
-  } else if (typeof firebase !== 'undefined' && firebase.auth) {
-    var _posAuthUnsub = firebase.auth().onAuthStateChanged(function(user) {
-      if (user) {
-        checkPosizioneAccess(user);
-        if (_posAuthUnsub) _posAuthUnsub();
-      }
-    });
-  }
+  // 5. Re-check when tab becomes active (handles edge case of late auth resolution)
+  window.addEventListener('tabSwitched', function(e) {
+    if (e.detail === 'posizione') {
+      var u = firebase.auth().currentUser;
+      if (u) checkPosizioneAccess(u);
+    }
+  });
 })();
 
 
@@ -9992,31 +10002,39 @@ if ('serviceWorker' in navigator) {
 
   // Redirect result is handled automatically by onAuthStateChanged
 
-  // ─── Listen for auth changes ───
+  // ─── v2.42 FIX: Direct firebase.auth().onAuthStateChanged (not custom event) ───
+  // Same fix as Posizione: use Firebase's own onAuthStateChanged which is guaranteed
+  // to fire for any new subscriber, plus check currentUser synchronously.
+
+  // 1. Synchronous check: if auth already resolved
+  var _diarioCurrentUser = firebase.auth().currentUser;
+  if (_diarioCurrentUser) {
+    checkDiarioAccess(_diarioCurrentUser);
+  }
+
+  // 2. Primary listener: firebase.auth().onAuthStateChanged (always fires for new subscribers)
+  firebase.auth().onAuthStateChanged(function(user) {
+    checkDiarioAccess(user);
+  });
+
+  // 3. Backup: also listen to custom event (for role simulation changes, dynamic owner updates)
   window.addEventListener('authStateChanged', function(e) {
     var user = e.detail.user;
     checkDiarioAccess(user);
   });
-  // v2.14: Re-render diario when simulation role changes
+
+  // 4. Re-render diario when simulation role changes
   window.addEventListener('simRoleChanged', function() {
     if (firebaseUser) checkDiarioAccess(firebaseUser);
   });
 
-  // v2.34 FIX: Use waitForAuth to ensure auth is resolved before checking access
-  if (firebaseUser) {
-    checkDiarioAccess(firebaseUser);
-  } else if (typeof window.waitForAuth === 'function') {
-    window.waitForAuth(5000).then(function(user) {
-      if (user) checkDiarioAccess(user);
-    });
-  } else if (firebase.auth) {
-    var _diarioAuthUnsub = firebase.auth().onAuthStateChanged(function(user) {
-      if (user) {
-        checkDiarioAccess(user);
-        if (_diarioAuthUnsub) _diarioAuthUnsub();
-      }
-    });
-  }
+  // 5. Re-check when tab becomes active
+  window.addEventListener('tabSwitched', function(e) {
+    if (e.detail === 'diario') {
+      var u = firebase.auth().currentUser;
+      if (u) checkDiarioAccess(u);
+    }
+  });
 
   // ─── Diary Date Formatter ───
   function formatHybridDateDiary(dateStr, lang) {
