@@ -9825,6 +9825,18 @@ if ('serviceWorker' in navigator) {
     if (firebaseUser) checkPosizioneAccess(firebaseUser);
   });
 
+  // v2.46 FIX: Re-check access every time user navigates to Posizione tab.
+  // This fixes the case where login happens on Home, then user navigates to Live:
+  // the authStateChanged event was already dispatched before navigation.
+  window.addEventListener('tabSwitched', function(e) {
+    if (e.detail === 'posizione') {
+      var user = firebaseUser || (firebase.auth && firebase.auth().currentUser);
+      if (user) {
+        checkPosizioneAccess(user);
+      }
+    }
+  });
+
   // v2.45 FIX: Removed waitForAuth(5000) which resolved to null on cold start
   // under Capacitor (no page reload after native login). Now purely event-driven:
   // the authStateChanged listener above handles both cold-start (if user already
@@ -10038,6 +10050,18 @@ if ('serviceWorker' in navigator) {
   // v2.14: Re-render diario when simulation role changes
   window.addEventListener('simRoleChanged', function() {
     if (firebaseUser) checkDiarioAccess(firebaseUser);
+  });
+
+  // v2.46 FIX: Re-check access every time user navigates to Diario tab.
+  // This fixes the case where login happens on Home, then user navigates to Journal:
+  // the authStateChanged event was already dispatched before navigation.
+  window.addEventListener('tabSwitched', function(e) {
+    if (e.detail === 'diario') {
+      var user = firebaseUser || (firebase.auth && firebase.auth().currentUser);
+      if (user) {
+        checkDiarioAccess(user);
+      }
+    }
   });
 
   // v2.45 FIX: Removed waitForAuth(5000) which resolved to null on cold start
@@ -11052,6 +11076,13 @@ if ('serviceWorker' in navigator) {
     if (e.detail && e.detail.user) showAdminForOwner();
   });
   window.addEventListener('simRoleChanged', function() { showAdminForOwner(); });
+  // v2.46 FIX: Re-run admin setup when navigating to admin tab (fixes case where
+  // login happens on Home, then user navigates to Admin — diagnostics/users not loaded)
+  window.addEventListener('tabSwitched', function(e) {
+    if (e.detail === 'admin') {
+      showAdminForOwner();
+    }
+  });
   showAdminForOwner();
 
   function adminLog(msg) {
@@ -11342,11 +11373,10 @@ if ('serviceWorker' in navigator) {
   }
 
   // Run diagnostic on Admin tab open
-  var _adminDiagRan = false;
-  // v2.34 FIX: Corrected event name from 'tabChanged' (non-existent) to 'tabSwitched'
+  // v2.46 FIX: Removed _adminDiagRan guard — always re-run diagnostics when
+  // navigating to admin tab (fixes case where first visit had no auth yet)
   window.addEventListener('tabSwitched', function(e) {
-    if (e.detail === 'admin' && !_adminDiagRan) {
-      _adminDiagRan = true;
+    if (e.detail === 'admin') {
       setTimeout(runAdminDiagnostic, 300);
     }
   });

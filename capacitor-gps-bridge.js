@@ -17,6 +17,52 @@
   // Only activate if Capacitor is available (native app, not browser)
   if (!window.Capacitor || !window.Capacitor.isNativePlatform()) return;
 
+  // ─── v2.46: Android Back Button Handler ───
+  // Intercepts hardware back button: closes menu/modal if open,
+  // navigates to Home if on another tab, or minimizes app if already on Home.
+  (function initBackButton() {
+    var AppPlugin = window.Capacitor.Plugins && window.Capacitor.Plugins.App;
+    if (!AppPlugin) {
+      // Retry after plugins load
+      setTimeout(initBackButton, 500);
+      return;
+    }
+    AppPlugin.addListener('backButton', function(ev) {
+      // 1. Close side menu if open
+      var sideMenu = document.getElementById('sideMenu');
+      if (sideMenu && sideMenu.classList.contains('open')) {
+        sideMenu.classList.remove('open');
+        var overlay = document.getElementById('menuOverlay');
+        if (overlay) overlay.classList.remove('active');
+        return;
+      }
+      // 2. Close any open modal
+      var modal = document.querySelector('.modal-overlay.active, .modal.active, .confirm-overlay.active');
+      if (modal) {
+        modal.classList.remove('active');
+        modal.style.display = 'none';
+        return;
+      }
+      // 3. Close bottom sheet if open
+      var bottomSheet = document.querySelector('.bottom-sheet.open');
+      if (bottomSheet) {
+        bottomSheet.classList.remove('open');
+        return;
+      }
+      // 4. If not on Home tab, navigate to Home
+      var activeSection = document.querySelector('.tab-content.active');
+      if (activeSection && activeSection.id !== 'tab-home') {
+        if (typeof window.switchTab === 'function') {
+          window.switchTab('home');
+        }
+        return;
+      }
+      // 5. Already on Home — minimize app (don't exit)
+      AppPlugin.minimizeApp();
+    });
+    console.info('[Capacitor] Back button handler registered');
+  })();
+
   var BackgroundGeolocation = null;
   var bgGeoActive = false;
   var bgTodayKm = 0;
