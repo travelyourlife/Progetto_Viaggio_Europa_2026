@@ -9775,12 +9775,7 @@ if ('serviceWorker' in navigator) {
     });
   }
 
-  // ─── v2.42 FIX: Direct firebase.auth().onAuthStateChanged (not custom event) ───
-  // The custom 'authStateChanged' window event fires BEFORE this IIFE registers its
-  // listener in Capacitor (checkOwnerStatus runs at line 571, this IIFE at ~9637).
-  // Solution: use Firebase's own onAuthStateChanged which is guaranteed to fire
-  // for any new subscriber, plus check currentUser synchronously as immediate fallback.
-
+  // ─── v2.43 FIX: Direct firebase.auth().onAuthStateChanged (not custom event) ───
   // 1. Synchronous check: if auth already resolved (e.g. returning from another tab)
   var _posCurrentUser = firebase.auth().currentUser;
   if (_posCurrentUser) {
