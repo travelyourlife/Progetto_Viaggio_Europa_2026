@@ -160,15 +160,70 @@ try {
     firebase.initializeApp(firebaseConfig);
     db = firebase.database();
     dbRef = db.ref('trips/' + FAMILY_ID);
+    // v2.34 FIX: Force LOCAL persistence immediately after init (critical for Capacitor WebView)
+    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(function(e) {
+      console.warn('[Auth] setPersistence(LOCAL) at init error:', e.message);
+    });
   }
 } catch(e) {
   console.warn('[Firebase] Init failed (offline?):', e.message);
 }
 
+// v2.34 FIX: Global auth-ready promise — waits for onAuthStateChanged to fire once
+// Used by protected sections to avoid reading currentUser synchronously before auth resolves
+var _authReadyResolve = null;
+var authReadyPromise = new Promise(function(resolve) { _authReadyResolve = resolve; });
+if (typeof firebase !== 'undefined' && firebase.auth) {
+  var _authInitUnsub = firebase.auth().onAuthStateChanged(function(user) {
+    if (_authReadyResolve) { _authReadyResolve(user); _authReadyResolve = null; }
+    if (_authInitUnsub) { _authInitUnsub(); _authInitUnsub = null; }
+  });
+}
+
+// v2.34: Helper — wait for auth to be ready (max timeout)
+function waitForAuth(timeoutMs) {
+  if (typeof timeoutMs === 'undefined') timeoutMs = 5000;
+  return Promise.race([
+    authReadyPromise,
+    new Promise(function(resolve) { setTimeout(function() { resolve(null); }, timeoutMs); })
+  ]);
+}
+window.waitForAuth = waitForAuth;
+
 // ─── Standalone PWA detection ───
 var isStandalonePWA = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) ||
                      (window.navigator.standalone === true) ||
                      (document.referrer.includes('android-app://'));
+
+// v2.34: Capacitor-aware Platform detection utility
+var Platform = {
+  isCapacitor: function() { return !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()); },
+  isAndroid: function() { return window.Capacitor && window.Capacitor.getPlatform && window.Capacitor.getPlatform() === 'android'; },
+  isIOS: function() { return window.Capacitor && window.Capacitor.getPlatform && window.Capacitor.getPlatform() === 'ios'; },
+  isWeb: function() { return !Platform.isCapacitor(); }
+};
+window.Platform = Platform;
+
+// v2.34: Debug logging for Capacitor (monitors auth state and failed fetches)
+if (Platform.isCapacitor()) {
+  // Monitor auth state changes
+  if (typeof firebase !== 'undefined' && firebase.auth) {
+    firebase.auth().onAuthStateChanged(function(user) {
+      console.log('[Auth State]', user ? '\u2705 ' + (user.email || user.uid) : '\u274c null');
+    });
+  }
+  // Monitor failed network requests
+  var _origFetch = window.fetch;
+  window.fetch = function() {
+    var args = arguments;
+    return _origFetch.apply(this, args).then(function(response) {
+      if (!response.ok && response.status !== 304) {
+        console.warn('[Fetch Fail]', args[0], '\u2192', response.status);
+      }
+      return response;
+    });
+  };
+}
 
 // ─── Google Identity Services (GIS) + signInWithCredential ───
 // Uses Google's native One Tap / account chooser. No popup, no redirect.
@@ -188,33 +243,43 @@ function doGoogleSignIn(successCb) {
   });
 
   // ─── CAPACITOR NATIVE GOOGLE SIGN-IN ───
-  // Uses @codetrix-studio/capacitor-google-auth plugin for native login
-  // This bypasses WebView OAuth restrictions completely
+  // v2.34 FIX: Uses @capacitor-firebase/authentication plugin (FirebaseAuthentication)
+  // Previously used @codetrix-studio/capacitor-google-auth (GoogleAuth) which was NOT installed
   if (window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()) {
-    console.info('[Auth] Using Capacitor native Google Sign-In');
+    console.info('[Auth] Using Capacitor FirebaseAuthentication.signInWithGoogle()');
     if (window.showToast) showToast(isEN ? '⏳ Opening Google login...' : '⏳ Apertura login Google...', 'info');
-    var GoogleAuth = window.Capacitor.Plugins.GoogleAuth;
-    if (!GoogleAuth) {
-      console.error('[Auth] GoogleAuth plugin not available');
-      if (window.showToast) showToast('GoogleAuth plugin not available', 'error');
+    var FirebaseAuth = window.Capacitor.Plugins.FirebaseAuthentication;
+    if (!FirebaseAuth) {
+      console.error('[Auth] FirebaseAuthentication plugin not available');
+      if (window.showToast) showToast('FirebaseAuthentication plugin not available', 'error');
       return;
     }
-    GoogleAuth.signIn().then(function(googleUser) {
-      console.info('[Auth] Capacitor Google Sign-In success:', googleUser.email);
-      // Use the idToken to sign in with Firebase
-      var credential = firebase.auth.GoogleAuthProvider.credential(googleUser.authentication.idToken);
-      return firebase.auth().signInWithCredential(credential);
-    }).then(function(result) {
-      console.info('[Auth] Firebase sign-in success:', result.user.email);
-      if (successCb) {
-        successCb(result.user);
+    FirebaseAuth.signInWithGoogle().then(function(result) {
+      console.info('[Auth] Capacitor signInWithGoogle success:', result.user && result.user.email);
+      // The plugin signs in on the native layer. We need to also sign in on the
+      // web layer (Firebase JS SDK) using the idToken from the credential.
+      if (result.credential && result.credential.idToken) {
+        var credential = firebase.auth.GoogleAuthProvider.credential(result.credential.idToken);
+        return firebase.auth().signInWithCredential(credential);
       } else {
-        if (window.showToast) showToast((isEN ? 'Welcome, ' : 'Benvenuto, ') + (result.user.displayName || result.user.email), 'success');
+        // If no credential returned, the native layer already signed in.
+        // Try to get the current user from the native auth state.
+        console.warn('[Auth] No credential.idToken returned, checking native auth state');
+        return firebase.auth().currentUser ? Promise.resolve({ user: firebase.auth().currentUser }) : Promise.reject(new Error('No idToken and no currentUser'));
+      }
+    }).then(function(fbResult) {
+      var user = fbResult.user || fbResult;
+      console.info('[Auth] Firebase web-layer sign-in success:', user.email);
+      if (successCb) {
+        successCb(user);
+      } else {
+        if (window.showToast) showToast((isEN ? 'Welcome, ' : 'Benvenuto, ') + (user.displayName || user.email), 'success');
       }
     }).catch(function(err) {
       console.error('[Auth] Capacitor Google Sign-In error:', err);
-      if (err.message && err.message.indexOf('canceled') === -1 && err.message.indexOf('cancelled') === -1) {
-        if (window.showToast) showToast((isEN ? 'Login error: ' : 'Errore login: ') + (err.message || err), 'error');
+      var msg = err.message || String(err);
+      if (msg.indexOf('canceled') === -1 && msg.indexOf('cancelled') === -1 && msg.indexOf('popup_closed') === -1) {
+        if (window.showToast) showToast((isEN ? 'Login error: ' : 'Errore login: ') + msg, 'error');
       }
     });
     return;
@@ -780,7 +845,10 @@ window.openMapFullscreen = function openMapFullscreen(mapInstance, title) {
         window._mapFsOpen = true;
         window._closeMapFs = closeFs2;
         history.pushState({ mapFsOpen: true }, '', '');
-        overlay.querySelector('.map-fs-close').addEventListener('click', closeFs2);
+        var closeBtnEl2 = overlay.querySelector('.map-fs-close');
+        closeBtnEl2.addEventListener('click', closeFs2);
+        // v2.34 FIX: Also handle touchend for reliable mobile close
+        closeBtnEl2.addEventListener('touchend', function(e) { e.preventDefault(); closeFs2(); });
         function onEsc2(e) { if (e.key === 'Escape') { closeFs2(); document.removeEventListener('keydown', onEsc2); } }
         document.addEventListener('keydown', onEsc2);
         return;
@@ -881,7 +949,10 @@ window.openMapFullscreen = function openMapFullscreen(mapInstance, title) {
     window._mapFsOpen = true;
     window._closeMapFs = closeFs;
     history.pushState({ mapFsOpen: true }, '', '');
-    overlay.querySelector('.map-fs-close').addEventListener('click', closeFs);
+    var closeBtnEl = overlay.querySelector('.map-fs-close');
+    closeBtnEl.addEventListener('click', closeFs);
+    // v2.34 FIX: Also handle touchend for reliable mobile close
+    closeBtnEl.addEventListener('touchend', function(e) { e.preventDefault(); closeFs(); });
     // Escape key
     function onEsc(e) { if (e.key === 'Escape') { closeFs(); document.removeEventListener('keydown', onEsc); } }
     document.addEventListener('keydown', onEsc);
@@ -8324,17 +8395,19 @@ if ('serviceWorker' in navigator) {
     }
   });
 
-  // Initial check + secondary auth listener to avoid race condition
+  // v2.34 FIX: Use waitForAuth to avoid race condition on cold start
   if (typeof firebase !== 'undefined' && firebase.auth) {
     var currentUser = firebase.auth().currentUser;
     if (currentUser) {
       updateChatAuth(currentUser);
+    } else if (typeof window.waitForAuth === 'function') {
+      window.waitForAuth(5000).then(function(user) {
+        if (user) updateChatAuth(user);
+      });
     } else {
-      // Auth might not have resolved yet — register a direct listener as fallback
       var _chatAuthUnsub = firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
           updateChatAuth(user);
-          // Unsubscribe after first resolution to avoid double-firing
           if (_chatAuthUnsub) _chatAuthUnsub();
         }
       });
@@ -9700,9 +9773,14 @@ if ('serviceWorker' in navigator) {
     if (firebaseUser) checkPosizioneAccess(firebaseUser);
   });
 
-  // Initial check (in case auth already resolved) + fallback listener
+  // v2.34 FIX: Use waitForAuth to ensure auth is resolved before checking access
+  // This prevents the race condition where currentUser is null on cold start
   if (firebaseUser) {
     checkPosizioneAccess(firebaseUser);
+  } else if (typeof window.waitForAuth === 'function') {
+    window.waitForAuth(5000).then(function(user) {
+      if (user) checkPosizioneAccess(user);
+    });
   } else if (typeof firebase !== 'undefined' && firebase.auth) {
     var _posAuthUnsub = firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
@@ -9903,9 +9981,13 @@ if ('serviceWorker' in navigator) {
     if (firebaseUser) checkDiarioAccess(firebaseUser);
   });
 
-  // Initial check (in case auth already resolved) + fallback listener
+  // v2.34 FIX: Use waitForAuth to ensure auth is resolved before checking access
   if (firebaseUser) {
     checkDiarioAccess(firebaseUser);
+  } else if (typeof window.waitForAuth === 'function') {
+    window.waitForAuth(5000).then(function(user) {
+      if (user) checkDiarioAccess(user);
+    });
   } else if (firebase.auth) {
     var _diarioAuthUnsub = firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
@@ -11010,11 +11092,20 @@ if ('serviceWorker' in navigator) {
     var issues = 0;
     var warnings = 0;
 
+    // v2.34: Detect Capacitor native environment
+    var isCapacitorNative = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
+
     // 1. Service Worker
     var swOk = false;
     var checks = [];
 
     checks.push(new Promise(function(resolve) {
+      // v2.34 FIX: Skip SW check in Capacitor (not supported in native WebView)
+      if (isCapacitorNative) {
+        results.push('⏭️ Service Worker: N/A (app nativa, usa FCM nativo)');
+        resolve();
+        return;
+      }
       if (!('serviceWorker' in navigator)) {
         results.push('❌ Service Worker non supportato');
         issues++;
@@ -11038,6 +11129,12 @@ if ('serviceWorker' in navigator) {
 
     // 2. Notification Permission
     checks.push(new Promise(function(resolve) {
+      // v2.34 FIX: Skip web notification check in Capacitor
+      if (isCapacitorNative) {
+        results.push('⏭️ Notifiche Push: N/A (usa FCM nativo)');
+        resolve();
+        return;
+      }
       if (!('Notification' in window)) {
         results.push('❌ Notifiche non supportate dal browser');
         issues++;
@@ -11055,6 +11152,12 @@ if ('serviceWorker' in navigator) {
 
     // 3. FCM Token
     checks.push(new Promise(function(resolve) {
+      // v2.34 FIX: In Capacitor, FCM token is managed natively
+      if (isCapacitorNative) {
+        results.push('⏭️ Token FCM: gestito nativamente dal plugin');
+        resolve();
+        return;
+      }
       var token = localStorage.getItem('viaggio2026_fcm_token');
       if (token) {
         results.push('✅ Token FCM salvato localmente');
@@ -11136,8 +11239,14 @@ if ('serviceWorker' in navigator) {
       }).catch(function() { resolve(); });
     }));
 
-    // 8. PWA installed
+    // 8. PWA installed / Native app
     checks.push(new Promise(function(resolve) {
+      // v2.34 FIX: In Capacitor, the app IS installed natively
+      if (isCapacitorNative) {
+        results.push('✅ App nativa installata (Capacitor Android)');
+        resolve();
+        return;
+      }
       var isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
       if (isStandalone) {
         results.push('✅ App installata (standalone)');
@@ -11181,7 +11290,8 @@ if ('serviceWorker' in navigator) {
 
   // Run diagnostic on Admin tab open
   var _adminDiagRan = false;
-  document.addEventListener('tabChanged', function(e) {
+  // v2.34 FIX: Corrected event name from 'tabChanged' (non-existent) to 'tabSwitched'
+  window.addEventListener('tabSwitched', function(e) {
     if (e.detail === 'admin' && !_adminDiagRan) {
       _adminDiagRan = true;
       setTimeout(runAdminDiagnostic, 300);

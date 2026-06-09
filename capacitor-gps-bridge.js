@@ -1,5 +1,6 @@
 /**
  * Capacitor GPS Bridge — Background Geolocation → Firebase
+ * v2.34: Refactored with Event Delegation (no more cloneNode timing issues)
  * 
  * This script runs inside the WebView and uses the Capacitor background
  * geolocation plugin to track GPS in the background. It writes data to
@@ -29,67 +30,47 @@
     if (window.Capacitor.Plugins && window.Capacitor.Plugins.BackgroundGeolocation) {
       BackgroundGeolocation = window.Capacitor.Plugins.BackgroundGeolocation;
       console.log('[CapGPS] Background Geolocation plugin available');
-      overrideTrackingButtons();
     } else {
       console.warn('[CapGPS] Background Geolocation plugin NOT available');
     }
   });
 
-  function overrideTrackingButtons() {
-    // Wait for the app to fully initialize and buttons to exist
-    var checkInterval = setInterval(function() {
-      var startBtn = document.getElementById('pos-live-start');
-      var stopBtn = document.getElementById('pos-live-stop');
-      if (startBtn && stopBtn) {
-        clearInterval(checkInterval);
-        hijackTracking(startBtn, stopBtn);
-      }
-    }, 500);
+  // v2.34: EVENT DELEGATION — intercepts clicks on tracking buttons regardless of timing
+  // This replaces the fragile cloneNode approach that lost event listeners
+  document.addEventListener('click', function(e) {
+    if (!BackgroundGeolocation) return;
 
-    // Timeout after 30 seconds
-    setTimeout(function() { clearInterval(checkInterval); }, 30000);
-  }
-
-  function hijackTracking(startBtn, stopBtn) {
-    // Clone buttons to remove existing event listeners
-    var newStart = startBtn.cloneNode(true);
-    var newStop = stopBtn.cloneNode(true);
-    startBtn.parentNode.replaceChild(newStart, startBtn);
-    stopBtn.parentNode.replaceChild(newStop, stopBtn);
-
-    newStart.addEventListener('click', function(e) {
+    var target = e.target.closest('#pos-live-start, #pos-live-start-quick, [data-action="start-tracking"]');
+    if (target) {
       e.preventDefault();
       e.stopPropagation();
       startBackgroundTracking();
-    });
+      return;
+    }
 
-    newStop.addEventListener('click', function(e) {
+    var stopTarget = e.target.closest('#pos-live-stop, #pos-live-stop-quick, [data-action="stop-tracking"]');
+    if (stopTarget) {
       e.preventDefault();
       e.stopPropagation();
       stopBackgroundTracking();
-    });
+      return;
+    }
 
-    // Also hijack the quick start/stop buttons
-    setTimeout(function() {
-      var quickStart = document.getElementById('pos-quick-start');
-      var quickStop = document.getElementById('pos-quick-stop');
-      if (quickStart) {
-        quickStart.addEventListener('click', function(e) {
-          e.preventDefault();
-          e.stopPropagation();
-          if (bgGeoActive) stopBackgroundTracking();
-          else startBackgroundTracking();
-        });
-      }
-    }, 2000);
+    // Quick toggle button (single button that starts/stops)
+    var quickToggle = e.target.closest('#pos-quick-start, #pos-quick-stop');
+    if (quickToggle) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (bgGeoActive) stopBackgroundTracking();
+      else startBackgroundTracking();
+      return;
+    }
+  }, true); // capture phase to intercept before other handlers
 
-    // Expose globally for the home card
-    window._startLiveTracking = startBackgroundTracking;
-    window._stopLiveTracking = stopBackgroundTracking;
-    window._isLiveTrackingActive = function() { return bgGeoActive; };
-
-    console.log('[CapGPS] Tracking buttons hijacked for native GPS');
-  }
+  // Expose globally for home card and other components
+  window._startLiveTracking = function() { startBackgroundTracking(); };
+  window._stopLiveTracking = function() { stopBackgroundTracking(); };
+  window._isLiveTrackingActive = function() { return bgGeoActive; };
 
   function getFirebaseRefs() {
     // Access Firebase from the global scope (already initialized by app.js)
@@ -133,13 +114,33 @@
 
   function startBackgroundTracking() {
     if (bgGeoActive) return;
+    if (!BackgroundGeolocation) {
+      if (window.showToast) window.showToast('GPS: Plugin non disponibile', 'error');
+      return;
+    }
 
     var refs = getFirebaseRefs();
     if (!refs) {
+      // v2.34: If auth not ready yet, wait and retry once
+      if (typeof window.waitForAuth === 'function') {
+        window.waitForAuth(3000).then(function() {
+          var retryRefs = getFirebaseRefs();
+          if (retryRefs) {
+            doStartTracking(retryRefs);
+          } else {
+            if (window.showToast) window.showToast('GPS: Firebase non pronto. Riprova.', 'error');
+          }
+        });
+        return;
+      }
       if (window.showToast) window.showToast('GPS: Firebase non pronto. Riprova.', 'error');
       return;
     }
 
+    doStartTracking(refs);
+  }
+
+  function doStartTracking(refs) {
     bgTodayKm = 0;
     bgLastLat = null;
     bgLastLng = null;
@@ -282,9 +283,14 @@
     }
   }
 
-  // Auto-resume on app restart
+  // Auto-resume on app restart (waits for auth to be ready)
   document.addEventListener('DOMContentLoaded', function() {
-    setTimeout(function() {
+    // v2.34: Use waitForAuth instead of arbitrary 3s timeout
+    var resumeDelay = typeof window.waitForAuth === 'function'
+      ? window.waitForAuth(5000)
+      : new Promise(function(r) { setTimeout(r, 3000); });
+
+    resumeDelay.then(function() {
       var refs = getFirebaseRefs();
       if (!refs) return;
       refs.db.ref('trips/' + refs.familyId + '/liveSession/' + refs.uid).once('value', function(snap) {
@@ -293,10 +299,10 @@
           console.log('[CapGPS] Resuming tracking from previous session');
           bgTodayKm = session.todayKm || 0;
           bgStartTime = session.startTime || Date.now();
-          startBackgroundTracking();
+          doStartTracking(refs);
         }
       });
-    }, 3000); // Wait for Firebase auth to complete
+    });
   });
 
 })();
