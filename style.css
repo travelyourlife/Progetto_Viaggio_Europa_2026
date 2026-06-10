@@ -2097,12 +2097,229 @@ table { max-width: 100%; }
 
 
 
-/* ─── Interactive Quiz Buttons ─── */
-.quiz-reveal-btn { background: var(--accent-light); color: white; border: none; border-radius: 12px; padding: 2px 10px; font-size: 14px; cursor: pointer; margin-left: 4px; transition: background 0.2s, transform 0.1s; vertical-align: middle; }
-.quiz-reveal-btn:hover { background: var(--accent); transform: scale(1.1); }
-.quiz-reveal-btn:active { transform: scale(0.95); }
-.quiz-answer { color: var(--success); }
-.quiz-answer strong { color: var(--success); font-weight: 700; }
+/* ═══════════════════════════════════════════════════════════════
+   KID-FRIENDLY QUIZ SYSTEM — Fun, colorful, animated
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Quiz Section Container */
+.quiz-section {
+  background: linear-gradient(135deg, #fff9e6 0%, #fff0f5 50%, #e8f4fd 100%);
+  border-radius: 20px;
+  padding: 20px 16px;
+  margin: 16px 0;
+  border: 2px dashed #ffb347;
+  position: relative;
+  overflow: hidden;
+}
+.quiz-section::before {
+  content: '🎯';
+  position: absolute;
+  top: -5px;
+  right: 10px;
+  font-size: 40px;
+  opacity: 0.15;
+  transform: rotate(15deg);
+}
+
+/* Quiz Header with Score */
+.quiz-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px dotted #ffb347;
+}
+.quiz-header h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #2d3748;
+}
+.quiz-score-badge {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+.quiz-score-badge .star { font-size: 14px; }
+
+/* Individual Quiz Card */
+.quiz-card {
+  background: white;
+  border-radius: 16px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  border-left: 4px solid #ffb347;
+  transition: transform 0.2s, box-shadow 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.quiz-card:nth-child(odd) { border-left-color: #48bb78; }
+.quiz-card:nth-child(3n) { border-left-color: #667eea; }
+.quiz-card:nth-child(4n) { border-left-color: #ed64a6; }
+.quiz-card.revealed {
+  background: linear-gradient(135deg, #f0fff4 0%, #e8f8f0 100%);
+  border-left-color: #48bb78;
+}
+.quiz-card.revealed .quiz-card-num {
+  background: #48bb78;
+}
+
+/* Card Number Badge */
+.quiz-card-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #ffb347;
+  color: white;
+  font-size: 13px;
+  font-weight: 700;
+  margin-right: 10px;
+  flex-shrink: 0;
+}
+
+/* Question Text */
+.quiz-question {
+  font-size: 15px;
+  color: #2d3748;
+  line-height: 1.5;
+  display: flex;
+  align-items: flex-start;
+}
+.quiz-question-text {
+  flex: 1;
+}
+
+/* Reveal Button — Big and Fun */
+.quiz-reveal-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3);
+  animation: quiz-pulse 2s infinite;
+}
+.quiz-reveal-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+.quiz-reveal-btn:active {
+  transform: scale(0.95);
+  animation: none;
+}
+@keyframes quiz-pulse {
+  0%, 100% { box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3); }
+  50% { box-shadow: 0 3px 20px rgba(102, 126, 234, 0.5); }
+}
+
+/* Answer Reveal */
+.quiz-answer {
+  display: none;
+  margin-top: 10px;
+  padding: 10px 14px;
+  background: linear-gradient(135deg, #f0fff4, #e8f8f0);
+  border-radius: 12px;
+  border: 1px solid #c6f6d5;
+  color: #276749;
+  font-size: 14px;
+  line-height: 1.5;
+  animation: quiz-answer-in 0.4s ease-out;
+}
+.quiz-answer.visible { display: block; }
+.quiz-answer strong { color: #276749; font-weight: 700; }
+@keyframes quiz-answer-in {
+  from { opacity: 0; transform: translateY(-8px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Confetti Animation */
+.quiz-confetti {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 10;
+}
+.confetti-piece {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  animation: confetti-fall 1.5s ease-out forwards;
+  opacity: 0;
+}
+@keyframes confetti-fall {
+  0% { opacity: 1; transform: translateY(0) rotate(0deg) scale(1); }
+  100% { opacity: 0; transform: translateY(80px) rotate(720deg) scale(0.3); }
+}
+
+/* Streak Banner */
+.quiz-streak {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #f6ad55, #ed8936);
+  color: white;
+  border-radius: 12px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  animation: streak-bounce 0.5s ease-out;
+}
+.quiz-streak.visible { display: flex; }
+@keyframes streak-bounce {
+  0% { transform: scale(0.5); opacity: 0; }
+  60% { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Country Badge */
+.quiz-badge {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #ffd700, #ffb347);
+  color: #5a3e00;
+  border-radius: 16px;
+  padding: 12px 20px;
+  font-size: 15px;
+  font-weight: 700;
+  margin-top: 16px;
+  animation: badge-appear 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  box-shadow: 0 4px 15px rgba(255, 179, 71, 0.4);
+}
+.quiz-badge.visible { display: flex; }
+@keyframes badge-appear {
+  0% { transform: scale(0) rotate(-180deg); opacity: 0; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+.quiz-badge .badge-icon { font-size: 24px; }
+.quiz-badge .badge-text { font-size: 13px; line-height: 1.3; }
 
 /* ─── Remove bullet points from zaino checklist ─── */
 #tab-zaino ul { list-style: none; padding-left: 12px; }
