@@ -4,6 +4,20 @@
     <!-- Auto language detection: Italian users → Italian version -->
     <script>
     (function() {
+      // v2.56 FIX: If this page was loaded as part of an OAuth redirect return,
+      // send back to index.html so Firebase SDK can call getRedirectResult()
+      // on the page that initiated signInWithRedirect.
+      var search = window.location.search || '';
+      var isOAuthReturn = search.indexOf('state=') !== -1 ||
+                          search.indexOf('code=') !== -1 ||
+                          search.indexOf('firebase') !== -1 ||
+                          document.referrer.indexOf('firebaseapp.com') !== -1 ||
+                          document.referrer.indexOf('accounts.google.com') !== -1;
+      if (isOAuthReturn) {
+        window.location.replace('index.html' + window.location.search + window.location.hash);
+        return;
+      }
+
       // Skip if user manually chose English (stored preference)
       if (localStorage.getItem('quo-vadis-lang') === 'en') return;
       // If user previously chose Italian, redirect back
@@ -83,10 +97,10 @@
 <script src="https://accounts.google.com/gsi/client" async></script>
 <script>
 // SW auto-update: smooth reload when new Service Worker activates.
-// v2.55 FIX: Added reload-loop guard via sessionStorage to prevent infinite reload
+// v2.56 FIX: Added reload-loop guard via sessionStorage to prevent infinite reload
 // when SW cache invalidation takes more than one cycle.
 (function(){
-  var EXPECTED_VERSION = '2.55';
+  var EXPECTED_VERSION = '2.56';
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
 

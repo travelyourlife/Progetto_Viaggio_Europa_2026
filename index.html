@@ -4,6 +4,19 @@
     <!-- Auto language detection: non-Italian → English version -->
     <script>
     (function() {
+      // v2.56 FIX: Skip language redirect if returning from Firebase OAuth redirect.
+      // When Firebase Auth completes signInWithRedirect, it lands back on this page
+      // with query params (e.g. ?state=, or the URL contains firebaseapp.com referrer).
+      // Redirecting to index_en.html at that point breaks the auth flow because
+      // Firebase SDK needs to call getRedirectResult() on the same page it started on.
+      var search = window.location.search || '';
+      var isOAuthReturn = search.indexOf('state=') !== -1 ||
+                          search.indexOf('code=') !== -1 ||
+                          search.indexOf('firebase') !== -1 ||
+                          document.referrer.indexOf('firebaseapp.com') !== -1 ||
+                          document.referrer.indexOf('accounts.google.com') !== -1;
+      if (isOAuthReturn) return; // Let Firebase handle it, don't redirect
+
       // Skip if user manually chose Italian (stored preference)
       if (localStorage.getItem('quo-vadis-lang') === 'it') return;
       // If user previously chose English, redirect
@@ -83,10 +96,10 @@
 <script src="https://accounts.google.com/gsi/client" async></script>
 <script>
 // SW auto-update: smooth reload when new Service Worker activates.
-// v2.55 FIX: Added reload-loop guard via sessionStorage to prevent infinite reload
+// v2.56 FIX: Added reload-loop guard via sessionStorage to prevent infinite reload
 // when SW cache invalidation takes more than one cycle.
 (function(){
-  var EXPECTED_VERSION = '2.55';
+  var EXPECTED_VERSION = '2.56';
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
 
