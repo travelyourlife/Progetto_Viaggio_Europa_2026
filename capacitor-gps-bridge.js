@@ -248,7 +248,7 @@
       var basePath = 'trips/' + currentRefs.familyId;
       var now = Date.now();
 
-      if (!window._lastLiveWrite || (now - window._lastLiveWrite) >= 5000) {
+      if (!window._lastLiveWrite || (now - window._lastLiveWrite) >= 15000) {
         window._lastLiveWrite = now;
         currentRefs.db.ref(basePath + '/live/' + currentRefs.uid).set({
           lat: lat,
@@ -284,7 +284,7 @@
           flushRefs.db.ref('trips/' + flushRefs.familyId + '/liveSession/' + flushRefs.uid + '/todayKm').set(bgTodayKm);
           window._gpsTrackBuffer = [];
           console.log('[CapGPS] Flushed ' + buffer.length + ' track points');
-        }, 30000); // 30 seconds
+        }, 60000); // 60 seconds (v2.48: was 30s, reduced writes by 50%)
       }
 
       // 4. Update UI if visible
@@ -375,6 +375,61 @@
                            Math.round(speed) + ' km/h · ' + timeStr;
     }
   }
+
+  // v2.48: Flush GPS buffer when app goes to background
+  document.addEventListener('visibilitychange', function() {
+    if (document.visibilityState === 'hidden' && window._gpsTrackBuffer && window._gpsTrackBuffer.length > 0) {
+      var flushRefs = getFirebaseRefs();
+      if (flushRefs) {
+        var flushPath = 'trips/' + flushRefs.familyId + '/tracks/' + todayStr() + '/points';
+        var updates = {};
+        for (var i = 0; i < window._gpsTrackBuffer.length; i++) {
+          var key = flushRefs.db.ref(flushPath).push().key;
+          updates[key] = window._gpsTrackBuffer[i];
+        }
+        flushRefs.db.ref(flushPath).update(updates);
+        console.log('[CapGPS] Background flush: ' + window._gpsTrackBuffer.length + ' points');
+        window._gpsTrackBuffer = [];
+      }
+    }
+  });
+
+  // v2.48: Flush on Capacitor appStateChange (Android/iOS background)
+  if (window.Capacitor.Plugins && window.Capacitor.Plugins.App) {
+    window.Capacitor.Plugins.App.addListener('appStateChange', function(state) {
+      if (!state.isActive && window._gpsTrackBuffer && window._gpsTrackBuffer.length > 0) {
+        var flushRefs = getFirebaseRefs();
+        if (flushRefs) {
+          var flushPath = 'trips/' + flushRefs.familyId + '/tracks/' + todayStr() + '/points';
+          var updates = {};
+          for (var i = 0; i < window._gpsTrackBuffer.length; i++) {
+            var key = flushRefs.db.ref(flushPath).push().key;
+            updates[key] = window._gpsTrackBuffer[i];
+          }
+          flushRefs.db.ref(flushPath).update(updates);
+          console.log('[CapGPS] AppState flush: ' + window._gpsTrackBuffer.length + ' points');
+          window._gpsTrackBuffer = [];
+        }
+      }
+    });
+  }
+
+  // v2.48: Flush before page unload (web)
+  window.addEventListener('beforeunload', function() {
+    if (window._gpsTrackBuffer && window._gpsTrackBuffer.length > 0) {
+      var flushRefs = getFirebaseRefs();
+      if (flushRefs) {
+        var flushPath = 'trips/' + flushRefs.familyId + '/tracks/' + todayStr() + '/points';
+        var updates = {};
+        for (var i = 0; i < window._gpsTrackBuffer.length; i++) {
+          var key = flushRefs.db.ref(flushPath).push().key;
+          updates[key] = window._gpsTrackBuffer[i];
+        }
+        flushRefs.db.ref(flushPath).update(updates);
+        window._gpsTrackBuffer = [];
+      }
+    }
+  });
 
   // Auto-resume on app restart (waits for auth to be ready)
   document.addEventListener('DOMContentLoaded', function() {
