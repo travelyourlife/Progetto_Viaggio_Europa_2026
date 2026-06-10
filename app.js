@@ -1497,7 +1497,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function switchTab(tabId, scrollToId) {
         // Block access to protected tabs for non-authenticated users
-        if (PROTECTED_TABS.indexOf(tabId) !== -1 && !firebaseUser) {
+        // v2.52 FIX: Under Capacitor, firebaseUser may be null during onAuthStateChanged
+        // resolution. Check AuthManager and currentUser to avoid blocking nav on cold-start.
+        var _authUser = firebaseUser ||
+                        (typeof AuthManager !== 'undefined' && AuthManager.getUser()) ||
+                        (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser);
+        if (PROTECTED_TABS.indexOf(tabId) !== -1 && !_authUser) {
             showToast(isEN ? '🔒 Sign in to access this section' : '🔒 Accedi per visualizzare questa sezione', 'info');
             // Trigger login
             if (typeof doGoogleSignIn === 'function') doGoogleSignIn();
@@ -9245,6 +9250,9 @@ if ('serviceWorker' in navigator) {
       updateUnreadBadge();
       // Re-attach listeners if they were detached
       if (window._fbListeners && (!window._fbListeners['chat'] || window._fbListeners['chat'].length === 0)) {
+        // v2.52 FIX: Clear rendered messages before re-attaching to avoid duplicates
+        // child_added re-emits all messages on re-attach, so DOM must be clean first
+        if (chatMessages) chatMessages.innerHTML = '';
         startListening();
       }
       scrollToBottom();
@@ -9990,6 +9998,8 @@ if ('serviceWorker' in navigator) {
 (function() {
   if (typeof firebase === 'undefined' || !firebase.database || !firebase.auth) return;
   if (!FAMILY_ID) return;
+  // v2.52 FIX: Guard to prevent repeated loadTimeline() calls on every tab switch
+  var _diarioLoaded = false;
 
   var diarioRef = firebase.database().ref('trips/' + FAMILY_ID + '/diary');
   var approvedRef = firebase.database().ref('trips/' + FAMILY_ID + '/approvedUsers');
@@ -10187,7 +10197,7 @@ if ('serviceWorker' in navigator) {
         gate.style.display = 'none';
         if (pendingEl) pendingEl.style.display = 'none';
         contentEl.style.display = '';
-        if (typeof loadTimeline === 'function') loadTimeline();
+        if (typeof loadTimeline === 'function' && !_diarioLoaded) { loadTimeline(); _diarioLoaded = true; }
       } else {
         checkDiarioAccess(effectiveUser);
       }
@@ -10218,7 +10228,7 @@ if ('serviceWorker' in navigator) {
           gate.style.display = 'none';
           if (pendingEl) pendingEl.style.display = 'none';
           contentEl.style.display = '';
-          if (typeof loadTimeline === 'function') loadTimeline();
+          if (typeof loadTimeline === 'function' && !_diarioLoaded) { loadTimeline(); _diarioLoaded = true; }
         } else {
           checkDiarioAccess(user);
         }
@@ -11155,6 +11165,7 @@ if ('serviceWorker' in navigator) {
       if (altroBtn) altroBtn.classList.add('active');
       // Re-attach diary listener if it was detached
       if (window._fbListeners && (!window._fbListeners['diario'] || window._fbListeners['diario'].length === 0)) {
+        // v2.52 FIX: _diarioLoaded is scoped to the diario IIFE; re-attach always reloads
         loadTimeline();
       }
     }
