@@ -104,12 +104,21 @@
       var content = document.getElementById('posizione-content');
       log('  posizione-gate display: "' + (gate ? gate.style.display : 'NOT FOUND') + '"', '#f0f');
       log('  posizione-content display: "' + (content ? content.style.display : 'NOT FOUND') + '"', '#f0f');
+      // Delayed check to see if handlers fixed it
+      setTimeout(function() {
+        log('  [500ms LATER] posizione-gate: "' + (gate ? gate.style.display : '?') + '"', '#f0f');
+        log('  [500ms LATER] posizione-content: "' + (content ? content.style.display : '?') + '"', '#f0f');
+      }, 500);
     }
     if (tab === 'diario') {
       var gateD = document.getElementById('diario-gate');
       var contentD = document.getElementById('diario-content');
       log('  diario-gate display: "' + (gateD ? gateD.style.display : 'NOT FOUND') + '"', '#f0f');
       log('  diario-content display: "' + (contentD ? contentD.style.display : 'NOT FOUND') + '"', '#f0f');
+      setTimeout(function() {
+        log('  [500ms LATER] diario-gate: "' + (gateD ? gateD.style.display : '?') + '"', '#f0f');
+        log('  [500ms LATER] diario-content: "' + (contentD ? contentD.style.display : '?') + '"', '#f0f');
+      }, 500);
     }
   });
 

@@ -311,6 +311,30 @@ function doGoogleSignIn(successCb) {
     }).then(function(fbResult) {
       var user = fbResult.user || fbResult;
       console.info('[Auth] Firebase web-layer sign-in success:', user.email);
+      // v2.49 FIX: Force-unlock all gates immediately after successful login
+      // This is a safety net in case onAuthStateChanged doesn't re-fire
+      var _isOw = (typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.indexOf(user.uid) !== -1);
+      if (_isOw) {
+        isOwner = true;
+        firebaseUser = user;
+        // Force-hide all gates
+        var _pg = document.getElementById('posizione-gate');
+        var _pc = document.getElementById('posizione-content');
+        var _pp = document.getElementById('posizione-pending');
+        var _dg = document.getElementById('diario-gate');
+        var _dc = document.getElementById('diario-content');
+        var _dp = document.getElementById('diario-pending');
+        if (_pg) _pg.style.display = 'none';
+        if (_pc) _pc.style.display = '';
+        if (_pp) _pp.style.display = 'none';
+        if (_dg) _dg.style.display = 'none';
+        if (_dc) _dc.style.display = '';
+        if (_dp) _dp.style.display = 'none';
+        // Also notify AuthManager
+        if (typeof AuthManager !== 'undefined') AuthManager._notify(user, true);
+        updateProtectedTabsUI(user);
+        window.dispatchEvent(new CustomEvent('authStateChanged', { detail: { user: user, isOwner: true } }));
+      }
       if (successCb) {
         successCb(user);
       } else {
@@ -9880,7 +9904,16 @@ if ('serviceWorker' in navigator) {
   // the callback fires immediately. Otherwise it fires when auth resolves.
   function posizioneHandleAuth(user, authIsOwner) {
     if (user) {
-      checkPosizioneAccess(user);
+      // v2.49: Direct gate override for owners — no async, no Firebase query
+      var directOwner = authIsOwner || (typeof isOwner !== 'undefined' && isOwner) ||
+                        (typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.indexOf(user.uid) !== -1);
+      if (directOwner) {
+        gate.style.display = 'none';
+        if (pendingEl) pendingEl.style.display = 'none';
+        contentEl.style.display = '';
+      } else {
+        checkPosizioneAccess(user);
+      }
     } else {
       // Show lock
       gate.style.display = '';
@@ -9901,7 +9934,17 @@ if ('serviceWorker' in navigator) {
     if (e.detail === 'posizione') {
       var user = AuthManager.getUser() || firebaseUser || (firebase.auth && firebase.auth().currentUser);
       if (user) {
-        checkPosizioneAccess(user);
+        // v2.49 FIX: Direct gate override for owners — bypasses any potential
+        // error in checkPosizioneAccess by doing the DOM manipulation inline
+        var directOwner = (typeof isOwner !== 'undefined' && isOwner) ||
+                          (typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.indexOf(user.uid) !== -1);
+        if (directOwner) {
+          gate.style.display = 'none';
+          if (pendingEl) pendingEl.style.display = 'none';
+          contentEl.style.display = '';
+        } else {
+          checkPosizioneAccess(user);
+        }
       }
     }
   });
@@ -10109,7 +10152,17 @@ if ('serviceWorker' in navigator) {
   // Uses AuthManager.subscribe for persistent auth state.
   function diarioHandleAuth(user, authIsOwner) {
     if (user) {
-      checkDiarioAccess(user);
+      // v2.49: Direct gate override for owners — no async, no Firebase query
+      var directOwner = authIsOwner || (typeof isOwner !== 'undefined' && isOwner) ||
+                        (typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.indexOf(user.uid) !== -1);
+      if (directOwner) {
+        gate.style.display = 'none';
+        if (pendingEl) pendingEl.style.display = 'none';
+        contentEl.style.display = '';
+        if (typeof loadTimeline === 'function') loadTimeline();
+      } else {
+        checkDiarioAccess(user);
+      }
     } else {
       // Show lock
       gate.style.display = '';
@@ -10130,7 +10183,17 @@ if ('serviceWorker' in navigator) {
     if (e.detail === 'diario') {
       var user = AuthManager.getUser() || firebaseUser || (firebase.auth && firebase.auth().currentUser);
       if (user) {
-        checkDiarioAccess(user);
+        // v2.49 FIX: Direct gate override for owners
+        var directOwner = (typeof isOwner !== 'undefined' && isOwner) ||
+                          (typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.indexOf(user.uid) !== -1);
+        if (directOwner) {
+          gate.style.display = 'none';
+          if (pendingEl) pendingEl.style.display = 'none';
+          contentEl.style.display = '';
+          if (typeof loadTimeline === 'function') loadTimeline();
+        } else {
+          checkDiarioAccess(user);
+        }
       }
     }
   });
