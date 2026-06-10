@@ -126,9 +126,16 @@ var weatherCodes = {
 };
 
 // ─── Firebase Configuration ───
-// NOTE (v1.99): Firebase API keys are safe to expose client-side (they only identify the project).
-// Security is enforced by Firebase Security Rules + Auth. However, restrict this key in
-// Google Cloud Console → API Restrictions → HTTP referrers: viaggio-europa-2026.web.app/*
+// NOTE (v2.34): Firebase API keys are safe to expose client-side (they only identify the project).
+// Security is enforced by Firebase Security Rules + Auth. Restrict this key in
+// Google Cloud Console → API Restrictions → HTTP referrers:
+//   viaggio-europa-2026.web.app/*
+//   https://localhost
+//   https://localhost/*
+//   http://localhost
+//   http://localhost/*
+// The localhost entries are required for Capacitor WebView (which serves from https://localhost).
+// For production Android, prefer a separate API key with Android app restriction (SHA-1 + package name).
 var firebaseConfig = {
   apiKey: "AIzaSyCuUYGu_5PlIlDbxwYsFYL5y4OmoGehzzg",
   authDomain: "viaggio-europa-2026.firebaseapp.com",
