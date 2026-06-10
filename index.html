@@ -83,18 +83,29 @@
 <script src="https://accounts.google.com/gsi/client" async></script>
 <script>
 // SW auto-update: smooth reload when new Service Worker activates.
-// Fetches version.json from network. On mismatch, installs new SW first,
-// then reloads — avoids blank page by ensuring new SW is ready.
+// v2.54 FIX: Added reload-loop guard via sessionStorage to prevent infinite reload
+// when SW cache invalidation takes more than one cycle.
 (function(){
-  var EXPECTED_VERSION = '2.52';
+  var EXPECTED_VERSION = '2.54';
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
+
+  // Loop guard: if we already reloaded once for this version, don't reload again
+  var reloadKey = 'qv-reload-for-' + EXPECTED_VERSION;
+  var alreadyReloaded = sessionStorage.getItem(reloadKey) === '1';
+
   var r = false;
-  var versionMismatch = false; // Only reload if version actually differs
+  var versionMismatch = false;
   function safeReload(){
-    if(!r && versionMismatch){ r=true; window.location.href=window.location.href.split('?')[0]+'?v='+Date.now(); }
+    if(!r && versionMismatch && !alreadyReloaded){
+      r = true;
+      sessionStorage.setItem(reloadKey, '1');
+      window.location.href = window.location.href.split('?')[0] + '?v=' + Date.now();
+    }
   }
   function checkVersion(){
+    // If we already reloaded for this version, skip the check entirely
+    if(alreadyReloaded) return;
     fetch('./version.json?_=' + Date.now(), {cache:'no-store'}).then(function(res){
       return res.json();
     }).then(function(data){
