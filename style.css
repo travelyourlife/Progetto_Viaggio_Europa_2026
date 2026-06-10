@@ -795,7 +795,7 @@ mark.search-hl.current { background: #f97316; color: white; }
 .menu-divider { height: 1px; background: var(--border); margin: 8px 0; }
 
 /* ─── Tab Content ─── */
-.tab-content { display: none; animation: fadeSlideIn 0.25s ease; will-change: opacity, transform; }
+.tab-content { display: none; animation: fadeSlideIn 0.3s ease; }
 .tab-content.active { display: block; }
 #tab-chat.active { display: flex; flex-direction: column; }
 #tab-home.active {

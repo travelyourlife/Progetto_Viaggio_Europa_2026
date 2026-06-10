@@ -86,7 +86,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = '2.49';
+  var EXPECTED_VERSION = '2.46';
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
   var r = false;
@@ -387,7 +387,7 @@
             <span class="hc-label">Itinerario</span>
         </a>
         <a class="home-card hc-highlight" data-tab="posizione" href="#" onclick="event.preventDefault(); switchTabFromHome('posizione');">
-            <span class="hc-icon"><img src="./icons/icon-posizione.png" alt="" width="48" height="48" loading="lazy"></span>
+            <span class="hc-icon"><img src="./icons/icon-posizione.png" alt="" width="48" height="48"></span>
             <span class="hc-label">In viaggio</span>
         </a>
         <a class="home-card hc-highlight" data-tab="diario" href="#" onclick="event.preventDefault(); switchTabFromHome('diario');">
@@ -402,15 +402,15 @@
             <span class="hc-label">Cibo</span>
         </a>
         <a class="home-card" data-tab="cultura" href="#" onclick="event.preventDefault(); switchTabFromHome('cultura');">
-            <span class="hc-icon"><img src="./icons/icon-cultura.png" alt="" width="48" height="48" loading="lazy"></span>
+            <span class="hc-icon"><img src="./icons/icon-cultura.png" alt="" width="48" height="48"></span>
             <span class="hc-label">Cultura</span>
         </a>
         <a class="home-card" data-tab="attivita" href="#" onclick="event.preventDefault(); switchTabFromHome('attivita');">
-            <span class="hc-icon"><img src="./icons/icon-attivita.png" alt="" width="48" height="48" loading="lazy"></span>
+            <span class="hc-icon"><img src="./icons/icon-attivita.png" alt="" width="48" height="48"></span>
             <span class="hc-label">Attività</span>
         </a>
         <a class="home-card" data-tab="luoghi" href="#" onclick="event.preventDefault(); switchTabFromHome('luoghi');">
-            <span class="hc-icon"><img src="./icons/icon-luoghi.png" alt="" width="48" height="48" loading="lazy"></span>
+            <span class="hc-icon"><img src="./icons/icon-luoghi.png" alt="" width="48" height="48"></span>
             <span class="hc-label">Luoghi</span>
         </a>
     </div>
@@ -421,11 +421,11 @@
             <span class="hc-label">Riepilogo</span>
         </a>
         <a class="home-card" data-tab="piano" href="#" onclick="event.preventDefault(); switchTabFromHome('piano');">
-            <span class="hc-icon"><img src="./icons/icon-piano.png" alt="" width="48" height="48" loading="lazy"></span>
+            <span class="hc-icon"><img src="./icons/icon-piano.png" alt="" width="48" height="48"></span>
             <span class="hc-label">Piano</span>
         </a>
         <a class="home-card" data-tab="zaino" href="#" onclick="event.preventDefault(); switchTabFromHome('zaino');">
-            <span class="hc-icon"><img src="./icons/icon-zaino.png" alt="" width="48" height="48" loading="lazy"></span>
+            <span class="hc-icon"><img src="./icons/icon-zaino.png" alt="" width="48" height="48"></span>
             <span class="hc-label">Zaino</span>
         </a>
         <a class="home-card" data-tab="chat" href="#" onclick="event.preventDefault(); switchTabFromHome('chat');">
@@ -5169,7 +5169,7 @@
   <div class="diario-gate-icon">🔒</div>
   <p class="diario-gate-text">Accedi con Google per leggere il diario del nostro viaggio.</p>
   <button id="diario-login-btn" class="diario-login-btn">
-    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="" width="20" height="20" loading="lazy">
+    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="" width="20" height="20">
     Accedi con Google
   </button>
 </div>
@@ -8561,7 +8561,7 @@
   <div class="diario-gate-icon">🔒</div>
   <p class="diario-gate-text">Accedi con Google per vedere posizione live, mappa e statistiche del viaggio.</p>
   <button id="posizione-login-btn" class="diario-login-btn">
-    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="" width="20" height="20" loading="lazy">
+    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="" width="20" height="20">
     Accedi con Google
   </button>
 </div>
@@ -9197,7 +9197,7 @@
     <div class="diario-gate-icon">🔒</div>
     <p class="diario-gate-text">Accedi con Google per leggere e scrivere nella chat.</p>
     <button id="chat-login-link" class="diario-login-btn">
-      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="" width="20" height="20" loading="lazy">
+      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="" width="20" height="20">
       Accedi con Google
     </button>
   </div>
@@ -9268,9 +9268,7 @@
 })();
 </script>
 
-<!-- Debug Overlay (v2.47 diagnostic) -->
-<script src="debug-overlay.js" defer></script>
 <!-- Capacitor GPS Bridge (only activates inside native app, ignored in browser) -->
-<script src="capacitor-gps-bridge.js" defer></script>
+<script src="capacitor-gps-bridge.js"></script>
 </body>
 </html>

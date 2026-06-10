@@ -27,7 +27,7 @@ var messaging = firebase.messaging();
 // ─── CACHING CONFIG ───
 // ═══════════════════════════════════════════════════════════════
 
-const CACHE_NAME = 'quo-vadis-v2.49';
+const CACHE_NAME = 'quo-vadis-v2.46';
 const IMAGE_CACHE_NAME = 'quo-vadis-images-v1';
 const IMAGE_CACHE_LIMIT = 80;
 const STATIC_ASSETS = [
@@ -59,8 +59,7 @@ const STATIC_ASSETS = [
   './unified-map.css',
   './poi-data.js',
   './modern-pages.css',
-  './curiosita-data.js',
-  './debug-overlay.js'
+  './curiosita-data.js'
 ];
 
 const CDN_ASSETS = [

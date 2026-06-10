@@ -169,66 +169,26 @@ try {
   console.warn('[Firebase] Init failed (offline?):', e.message);
 }
 
-// ============================================================
-// AUTH MANAGER — Persistent Auth State (v2.48 FIX per Capacitor)
-// Replaces one-shot authReadyPromise with a persistent subscribe model.
-// Modules subscribe and get called immediately if auth already resolved,
-// or later when auth state changes. Fixes the Capacitor cold-start bug
-// where authReadyPromise resolved to null and never updated.
-// ============================================================
-var AuthManager = {
-    _user: undefined,        // undefined = non ancora risolto, null = non autenticato
-    _isOwner: false,
-    _listeners: [],
-    _resolved: false,
+// v2.34 FIX: Global auth-ready promise — waits for onAuthStateChanged to fire once
+// Used by protected sections to avoid reading currentUser synchronously before auth resolves
+var _authReadyResolve = null;
+var authReadyPromise = new Promise(function(resolve) { _authReadyResolve = resolve; });
+if (typeof firebase !== 'undefined' && firebase.auth) {
+  var _authInitUnsub = firebase.auth().onAuthStateChanged(function(user) {
+    if (_authReadyResolve) { _authReadyResolve(user); _authReadyResolve = null; }
+    if (_authInitUnsub) { _authInitUnsub(); _authInitUnsub = null; }
+  });
+}
 
-    subscribe: function(fn) {
-        this._listeners.push(fn);
-        // Se già risolto, chiama subito con lo stato corrente
-        if (this._resolved) {
-            try { fn(this._user, this._isOwner); } catch(e) { console.error('[AuthManager]', e); }
-        }
-        // Ritorna funzione di unsubscribe
-        var self = this;
-        return function() { self._listeners = self._listeners.filter(function(l) { return l !== fn; }); };
-    },
-
-    _notify: function(user, ownerFlag) {
-        this._user = user;
-        this._isOwner = (ownerFlag === true);
-        this._resolved = true;
-        console.log('[AuthManager] State updated:', user ? user.email : 'null', 'owner:', this._isOwner);
-        this._listeners.forEach(function(fn) {
-            try { fn(user, ownerFlag === true); } catch(e) { console.error('[AuthManager] listener error:', e); }
-        });
-    },
-
-    getUser: function() { return this._user; },
-    getIsOwner: function() { return this._isOwner; },
-    isResolved: function() { return this._resolved; }
-};
-window.AuthManager = AuthManager;
-
-// Compatibilità con waitForAuth() esistente (usato dai moduli)
-function waitForAuth(timeout) {
-    if (AuthManager.isResolved()) {
-        return Promise.resolve(AuthManager.getUser());
-    }
-    return new Promise(function(resolve) {
-        var timer = setTimeout(function() { resolve(null); }, timeout || 10000);
-        var unsub = AuthManager.subscribe(function(user) {
-            clearTimeout(timer);
-            unsub();
-            resolve(user);
-        });
-    });
+// v2.34: Helper — wait for auth to be ready (max timeout)
+function waitForAuth(timeoutMs) {
+  if (typeof timeoutMs === 'undefined') timeoutMs = 5000;
+  return Promise.race([
+    authReadyPromise,
+    new Promise(function(resolve) { setTimeout(function() { resolve(null); }, timeoutMs); })
+  ]);
 }
 window.waitForAuth = waitForAuth;
-
-// Legacy: keep authReadyPromise for any code that still references it
-var authReadyPromise = new Promise(function(resolve) {
-    AuthManager.subscribe(function(user) { resolve(user); });
-});
 
 // ─── Standalone PWA detection ───
 var isStandalonePWA = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) ||
@@ -311,30 +271,6 @@ function doGoogleSignIn(successCb) {
     }).then(function(fbResult) {
       var user = fbResult.user || fbResult;
       console.info('[Auth] Firebase web-layer sign-in success:', user.email);
-      // v2.49 FIX: Force-unlock all gates immediately after successful login
-      // This is a safety net in case onAuthStateChanged doesn't re-fire
-      var _isOw = (typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.indexOf(user.uid) !== -1);
-      if (_isOw) {
-        isOwner = true;
-        firebaseUser = user;
-        // Force-hide all gates
-        var _pg = document.getElementById('posizione-gate');
-        var _pc = document.getElementById('posizione-content');
-        var _pp = document.getElementById('posizione-pending');
-        var _dg = document.getElementById('diario-gate');
-        var _dc = document.getElementById('diario-content');
-        var _dp = document.getElementById('diario-pending');
-        if (_pg) _pg.style.display = 'none';
-        if (_pc) _pc.style.display = '';
-        if (_pp) _pp.style.display = 'none';
-        if (_dg) _dg.style.display = 'none';
-        if (_dc) _dc.style.display = '';
-        if (_dp) _dp.style.display = 'none';
-        // Also notify AuthManager
-        if (typeof AuthManager !== 'undefined') AuthManager._notify(user, true);
-        updateProtectedTabsUI(user);
-        window.dispatchEvent(new CustomEvent('authStateChanged', { detail: { user: user, isOwner: true } }));
-      }
       if (successCb) {
         successCb(user);
       } else {
@@ -512,10 +448,6 @@ function checkOwnerStatus() {
             localStorage.setItem('hv-role', 'owner');
           }
         } catch(e) {}
-        // v2.48: Notify AuthManager IMMEDIATELY for hardcoded owner (synchronous)
-        AuthManager._notify(user, true);
-        window.dispatchEvent(new CustomEvent('authStateChanged', { detail: { user: user, isOwner: true } }));
-        updateProtectedTabsUI(user);
       } else if (user) {
         // v2.13: Check dynamic ownerUsers in database
         firebase.database().ref('trips/' + FAMILY_ID + '/ownerUsers/' + user.uid).once('value', function(ownerSnap) {
@@ -529,33 +461,18 @@ function checkOwnerStatus() {
                 localStorage.setItem('hv-role', 'owner');
               }
             } catch(e) {}
-            // v2.48: Notify AuthManager for dynamic owner
-            AuthManager._notify(user, true);
+            // Re-dispatch auth event with updated isOwner
             window.dispatchEvent(new CustomEvent('authStateChanged', { detail: { user: user, isOwner: true } }));
             updateProtectedTabsUI(user);
           } else {
             isOwner = false;
             try { localStorage.removeItem('qv-owner-hint'); } catch(e) {}
             console.info('[Auth] Authenticated but not owner: ' + user.email);
-            // v2.48: Notify AuthManager for non-owner authenticated user
-            AuthManager._notify(user, false);
-            window.dispatchEvent(new CustomEvent('authStateChanged', { detail: { user: user, isOwner: false } }));
-            updateProtectedTabsUI(user);
           }
-        }).catch(function(err) {
-          console.error('[Auth] Owner check failed:', err);
-          // v2.48: On error, still notify with non-owner so tabs don't stay locked forever
-          AuthManager._notify(user, false);
-          window.dispatchEvent(new CustomEvent('authStateChanged', { detail: { user: user, isOwner: false } }));
-          updateProtectedTabsUI(user);
         });
       } else {
         isOwner = false;
         try { localStorage.removeItem('qv-owner-hint'); } catch(e) {}
-        // v2.48: Notify AuthManager for logout
-        AuthManager._notify(null, false);
-        window.dispatchEvent(new CustomEvent('authStateChanged', { detail: { user: null, isOwner: false } }));
-        updateProtectedTabsUI(null);
       }
       // ─── Global Ban Check ───
       if (user && !isOwner && typeof firebase !== 'undefined' && firebase.database) {
@@ -566,6 +483,10 @@ function checkOwnerStatus() {
           }
         });
       }
+
+      window.dispatchEvent(new CustomEvent('authStateChanged', { detail: { user: user, isOwner: isOwner } }));
+      // Update protected tab visibility
+      updateProtectedTabsUI(user);
 
       // ─── Owner: save profile to approvedUsers (so Gestisci shows name, not UID) ───
       if (isOwner && user && typeof firebase !== 'undefined' && firebase.database) {
@@ -9390,27 +9311,23 @@ if ('serviceWorker' in navigator) {
   };
   CHAT_REF.push = patchedPush;
 
-  // === CHAT: AUTH-AWARE INITIALIZATION (v2.48) ===
-  // Uses AuthManager.subscribe so that if auth already resolved before
-  // this IIFE runs, the callback fires immediately with the current user.
-  var _chatAuthSubscribed = false;
-  function chatHandleAuthInit(user, authIsOwner) {
-    if (_chatAuthSubscribed) return; // Avoid duplicate from both subscribe + event
-    if (user) {
-      _chatAuthSubscribed = true;
-      updateChatAuth(user);
-      var isUserOwner = authIsOwner || (typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.indexOf(user.uid) !== -1);
-      if (isUserOwner) {
-        startListening();
-      } else {
-        firebase.database().ref('trips/' + FAMILY_ID + '/approvedUsers/' + user.uid).once('value').then(function(snap) {
-          if (snap.exists()) startListening();
-        }).catch(function() {});
-      }
+  // ─── Initialize ───
+  // v2.45 FIX: Do NOT call startListening() unconditionally here.
+  // It will be called reactively by the authStateChanged listener above
+  // once the user is authenticated. This prevents PERMISSION_DENIED errors
+  // from killing the listener permanently before auth is ready.
+  // Check if user is already authenticated (e.g., page reload with persisted session)
+  var _chatInitUser = (typeof firebase !== 'undefined' && firebase.auth) ? firebase.auth().currentUser : null;
+  if (_chatInitUser) {
+    var _chatInitIsOwner = (typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.indexOf(_chatInitUser.uid) !== -1);
+    if (_chatInitIsOwner) {
+      startListening();
+    } else {
+      firebase.database().ref('trips/' + FAMILY_ID + '/approvedUsers/' + _chatInitUser.uid).once('value').then(function(snap) {
+        if (snap.exists()) startListening();
+      }).catch(function() {});
     }
   }
-  AuthManager.subscribe(chatHandleAuthInit);
-  // === END CHAT AUTH-AWARE INITIALIZATION ===
 
 })();
 
@@ -9898,63 +9815,38 @@ if ('serviceWorker' in navigator) {
     });
   }
 
-  // === POSIZIONE: AUTH-AWARE INITIALIZATION (v2.48) ===
-  // Uses AuthManager.subscribe for persistent auth state.
-  // If auth already resolved (e.g. login happened before navigating here),
-  // the callback fires immediately. Otherwise it fires when auth resolves.
-  function posizioneHandleAuth(user, authIsOwner) {
-    if (user) {
-      // v2.49: Direct gate override for owners — no async, no Firebase query
-      var directOwner = authIsOwner || (typeof isOwner !== 'undefined' && isOwner) ||
-                        (typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.indexOf(user.uid) !== -1);
-      if (directOwner) {
-        gate.style.display = 'none';
-        if (pendingEl) pendingEl.style.display = 'none';
-        contentEl.style.display = '';
-      } else {
-        checkPosizioneAccess(user);
-      }
-    } else {
-      // Show lock
-      gate.style.display = '';
-      if (pendingEl) pendingEl.style.display = 'none';
-      contentEl.style.display = 'none';
-    }
-  }
-
-  AuthManager.subscribe(posizioneHandleAuth);
-
-  // Also listen for custom event (belt-and-suspenders)
+  // ─── Listen for auth changes ───
   window.addEventListener('authStateChanged', function(e) {
-    posizioneHandleAuth(e.detail.user, e.detail.isOwner);
+    var user = e.detail.user;
+    checkPosizioneAccess(user);
   });
-
-  // Re-check on tab switch (covers navigation after login)
-  window.addEventListener('tabSwitched', function(e) {
-    if (e.detail === 'posizione') {
-      var user = AuthManager.getUser() || firebaseUser || (firebase.auth && firebase.auth().currentUser);
-      if (user) {
-        // v2.49 FIX: Direct gate override for owners — bypasses any potential
-        // error in checkPosizioneAccess by doing the DOM manipulation inline
-        var directOwner = (typeof isOwner !== 'undefined' && isOwner) ||
-                          (typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.indexOf(user.uid) !== -1);
-        if (directOwner) {
-          gate.style.display = 'none';
-          if (pendingEl) pendingEl.style.display = 'none';
-          contentEl.style.display = '';
-        } else {
-          checkPosizioneAccess(user);
-        }
-      }
-    }
-  });
-
   // v2.14: Re-check posizione when simulation role changes
   window.addEventListener('simRoleChanged', function() {
-    var user = AuthManager.getUser() || firebaseUser;
-    if (user) checkPosizioneAccess(user);
+    if (firebaseUser) checkPosizioneAccess(firebaseUser);
   });
-  // === END POSIZIONE AUTH-AWARE INITIALIZATION ===
+
+  // v2.46 FIX: Re-check access every time user navigates to Posizione tab.
+  // This fixes the case where login happens on Home, then user navigates to Live:
+  // the authStateChanged event was already dispatched before navigation.
+  window.addEventListener('tabSwitched', function(e) {
+    if (e.detail === 'posizione') {
+      var user = firebaseUser || (firebase.auth && firebase.auth().currentUser);
+      if (user) {
+        checkPosizioneAccess(user);
+      }
+    }
+  });
+
+  // v2.45 FIX: Removed waitForAuth(5000) which resolved to null on cold start
+  // under Capacitor (no page reload after native login). Now purely event-driven:
+  // the authStateChanged listener above handles both cold-start (if user already
+  // persisted) and post-login transitions. We still do an immediate check if
+  // currentUser is already available (e.g., page reload with persisted session).
+  if (firebaseUser) {
+    checkPosizioneAccess(firebaseUser);
+  } else if (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser) {
+    checkPosizioneAccess(firebase.auth().currentUser);
+  }
 })();
 
 
@@ -10148,62 +10040,39 @@ if ('serviceWorker' in navigator) {
     });
   }
 
-  // === DIARIO: AUTH-AWARE INITIALIZATION (v2.48) ===
-  // Uses AuthManager.subscribe for persistent auth state.
-  function diarioHandleAuth(user, authIsOwner) {
-    if (user) {
-      // v2.49: Direct gate override for owners — no async, no Firebase query
-      var directOwner = authIsOwner || (typeof isOwner !== 'undefined' && isOwner) ||
-                        (typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.indexOf(user.uid) !== -1);
-      if (directOwner) {
-        gate.style.display = 'none';
-        if (pendingEl) pendingEl.style.display = 'none';
-        contentEl.style.display = '';
-        if (typeof loadTimeline === 'function') loadTimeline();
-      } else {
-        checkDiarioAccess(user);
-      }
-    } else {
-      // Show lock
-      gate.style.display = '';
-      if (pendingEl) pendingEl.style.display = 'none';
-      contentEl.style.display = 'none';
-    }
-  }
+  // Redirect result is handled automatically by onAuthStateChanged
 
-  AuthManager.subscribe(diarioHandleAuth);
-
-  // Also listen for custom event (belt-and-suspenders)
+  // ─── Listen for auth changes ───
   window.addEventListener('authStateChanged', function(e) {
-    diarioHandleAuth(e.detail.user, e.detail.isOwner);
+    var user = e.detail.user;
+    checkDiarioAccess(user);
   });
-
-  // Re-check on tab switch (covers navigation after login)
-  window.addEventListener('tabSwitched', function(e) {
-    if (e.detail === 'diario') {
-      var user = AuthManager.getUser() || firebaseUser || (firebase.auth && firebase.auth().currentUser);
-      if (user) {
-        // v2.49 FIX: Direct gate override for owners
-        var directOwner = (typeof isOwner !== 'undefined' && isOwner) ||
-                          (typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.indexOf(user.uid) !== -1);
-        if (directOwner) {
-          gate.style.display = 'none';
-          if (pendingEl) pendingEl.style.display = 'none';
-          contentEl.style.display = '';
-          if (typeof loadTimeline === 'function') loadTimeline();
-        } else {
-          checkDiarioAccess(user);
-        }
-      }
-    }
-  });
-
   // v2.14: Re-render diario when simulation role changes
   window.addEventListener('simRoleChanged', function() {
-    var user = AuthManager.getUser() || firebaseUser;
-    if (user) checkDiarioAccess(user);
+    if (firebaseUser) checkDiarioAccess(firebaseUser);
   });
-  // === END DIARIO AUTH-AWARE INITIALIZATION ===
+
+  // v2.46 FIX: Re-check access every time user navigates to Diario tab.
+  // This fixes the case where login happens on Home, then user navigates to Journal:
+  // the authStateChanged event was already dispatched before navigation.
+  window.addEventListener('tabSwitched', function(e) {
+    if (e.detail === 'diario') {
+      var user = firebaseUser || (firebase.auth && firebase.auth().currentUser);
+      if (user) {
+        checkDiarioAccess(user);
+      }
+    }
+  });
+
+  // v2.45 FIX: Removed waitForAuth(5000) which resolved to null on cold start
+  // under Capacitor (no page reload after native login). Now purely event-driven:
+  // the authStateChanged listener above handles both cold-start (if user already
+  // persisted) and post-login transitions.
+  if (firebaseUser) {
+    checkDiarioAccess(firebaseUser);
+  } else if (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser) {
+    checkDiarioAccess(firebase.auth().currentUser);
+  }
 
   // ─── Diary Date Formatter ───
   function formatHybridDateDiary(dateStr, lang) {
