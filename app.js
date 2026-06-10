@@ -184,13 +184,18 @@ var AuthManager = {
 
     subscribe: function(fn) {
         this._listeners.push(fn);
-        // Se già risolto, chiama subito con lo stato corrente
+        // v2.50 FIX: Se già risolto, chiama con microtask asincrono per garantire
+        // che le closure della IIFE chiamante siano completamente inizializzate.
+        // (Race condition: onAuthStateChanged fires a riga 500, IIFE Posizione è a riga 9761)
         if (this._resolved) {
-            try { fn(this._user, this._isOwner); } catch(e) { console.error('[AuthManager]', e); }
+            var self = this;
+            setTimeout(function() {
+                try { fn(self._user, self._isOwner); } catch(e) { console.error('[AuthManager]', e); }
+            }, 0);
         }
         // Ritorna funzione di unsubscribe
-        var self = this;
-        return function() { self._listeners = self._listeners.filter(function(l) { return l !== fn; }); };
+        var self2 = this;
+        return function() { self2._listeners = self2._listeners.filter(function(l) { return l !== fn; }); };
     },
 
     _notify: function(user, ownerFlag) {
@@ -9396,14 +9401,16 @@ if ('serviceWorker' in navigator) {
   var _chatAuthSubscribed = false;
   function chatHandleAuthInit(user, authIsOwner) {
     if (_chatAuthSubscribed) return; // Avoid duplicate from both subscribe + event
-    if (user) {
+    // v2.50 FIX: Fallback to firebase.auth().currentUser if AuthManager passes null
+    var effectiveUser = user || (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser) || null;
+    if (effectiveUser) {
       _chatAuthSubscribed = true;
-      updateChatAuth(user);
-      var isUserOwner = authIsOwner || (typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.indexOf(user.uid) !== -1);
+      updateChatAuth(effectiveUser);
+      var isUserOwner = authIsOwner || (typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.indexOf(effectiveUser.uid) !== -1);
       if (isUserOwner) {
         startListening();
       } else {
-        firebase.database().ref('trips/' + FAMILY_ID + '/approvedUsers/' + user.uid).once('value').then(function(snap) {
+        firebase.database().ref('trips/' + FAMILY_ID + '/approvedUsers/' + effectiveUser.uid).once('value').then(function(snap) {
           if (snap.exists()) startListening();
         }).catch(function() {});
       }
@@ -9903,19 +9910,22 @@ if ('serviceWorker' in navigator) {
   // If auth already resolved (e.g. login happened before navigating here),
   // the callback fires immediately. Otherwise it fires when auth resolves.
   function posizioneHandleAuth(user, authIsOwner) {
-    if (user) {
-      // v2.49: Direct gate override for owners — no async, no Firebase query
-      var directOwner = authIsOwner || (typeof isOwner !== 'undefined' && isOwner) ||
-                        (typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.indexOf(user.uid) !== -1);
-      if (directOwner) {
+    // v2.50 FIX: Fallback to firebase.auth().currentUser if AuthManager passes null
+    // (race condition: native Capacitor login resolves before AuthManager._notify)
+    var effectiveUser = user || (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser) || null;
+    if (effectiveUser) {
+      var effectiveIsOwner = authIsOwner ||
+                             (typeof isOwner !== 'undefined' && isOwner) ||
+                             (typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.indexOf(effectiveUser.uid) !== -1);
+      if (effectiveIsOwner) {
         gate.style.display = 'none';
         if (pendingEl) pendingEl.style.display = 'none';
         contentEl.style.display = '';
       } else {
-        checkPosizioneAccess(user);
+        checkPosizioneAccess(effectiveUser);
       }
     } else {
-      // Show lock
+      // Show lock only if truly no user
       gate.style.display = '';
       if (pendingEl) pendingEl.style.display = 'none';
       contentEl.style.display = 'none';
@@ -10151,20 +10161,22 @@ if ('serviceWorker' in navigator) {
   // === DIARIO: AUTH-AWARE INITIALIZATION (v2.48) ===
   // Uses AuthManager.subscribe for persistent auth state.
   function diarioHandleAuth(user, authIsOwner) {
-    if (user) {
-      // v2.49: Direct gate override for owners — no async, no Firebase query
-      var directOwner = authIsOwner || (typeof isOwner !== 'undefined' && isOwner) ||
-                        (typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.indexOf(user.uid) !== -1);
-      if (directOwner) {
+    // v2.50 FIX: Fallback to firebase.auth().currentUser if AuthManager passes null
+    var effectiveUser = user || (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser) || null;
+    if (effectiveUser) {
+      var effectiveIsOwner = authIsOwner ||
+                             (typeof isOwner !== 'undefined' && isOwner) ||
+                             (typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.indexOf(effectiveUser.uid) !== -1);
+      if (effectiveIsOwner) {
         gate.style.display = 'none';
         if (pendingEl) pendingEl.style.display = 'none';
         contentEl.style.display = '';
         if (typeof loadTimeline === 'function') loadTimeline();
       } else {
-        checkDiarioAccess(user);
+        checkDiarioAccess(effectiveUser);
       }
     } else {
-      // Show lock
+      // Show lock only if truly no user
       gate.style.display = '';
       if (pendingEl) pendingEl.style.display = 'none';
       contentEl.style.display = 'none';
