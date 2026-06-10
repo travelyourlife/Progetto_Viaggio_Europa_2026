@@ -27,7 +27,7 @@ var messaging = firebase.messaging();
 // ─── CACHING CONFIG ───
 // ═══════════════════════════════════════════════════════════════
 
-const CACHE_NAME = 'quo-vadis-v2.54';
+const CACHE_NAME = 'quo-vadis-v2.55';
 const IMAGE_CACHE_NAME = 'quo-vadis-images-v1';
 const IMAGE_CACHE_LIMIT = 80;
 const STATIC_ASSETS = [
@@ -136,7 +136,36 @@ self.addEventListener('fetch', function(event) {
     return;
   }
 
-  // Stale-While-Revalidate for OWN assets (instant load + background refresh)
+  // v2.54 FIX: index.html always network-first so EXPECTED_VERSION is always fresh.
+  // Fallback to cache only when offline. This prevents the SW from serving a stale
+  // index.html that contains an old EXPECTED_VERSION, which would cause reload loops.
+  var pathname = url.pathname;
+  var isShell = pathname === '/' ||
+                pathname.endsWith('/index.html') ||
+                pathname.endsWith('/index_en.html') ||
+                event.request.mode === 'navigate';
+
+  if (isShell) {
+    event.respondWith(
+      fetch(event.request).then(function(networkResponse) {
+        if (networkResponse && networkResponse.status === 200) {
+          var cacheCopy = networkResponse.clone();
+          caches.open(CACHE_NAME).then(function(cache) { cache.put(event.request, cacheCopy); });
+        }
+        return networkResponse;
+      }).catch(function() {
+        // Offline fallback: serve cached shell
+        return caches.match(event.request).then(function(cached) {
+          return cached || caches.match('./index.html').then(function(shell) {
+            return shell || caches.match('./offline.html');
+          });
+        });
+      })
+    );
+    return;
+  }
+
+  // Stale-While-Revalidate for all other OWN assets (instant load + background refresh)
   event.respondWith(staleWhileRevalidate(event.request));
 });
 

@@ -11897,14 +11897,52 @@ if ('serviceWorker' in navigator) {
         html += '</div>';
       }
 
-      html += '<table class="admin-table" style="width:100%;border-collapse:collapse;font-size:0.85em;">';
-      html += '<thead><tr style="border-bottom:1px solid var(--border-color,#e2e8f0);">';
-      html += '<th style="padding:6px 4px;text-align:left;"></th>';
-      html += '<th style="padding:6px 4px;text-align:left;">' + (isEN ? 'Name' : 'Nome') + '</th>';
-      html += '<th style="padding:6px 4px;text-align:left;">Email</th>';
-      html += '<th style="padding:6px 4px;text-align:left;">' + (isEN ? 'Last seen' : 'Ultimo accesso') + '</th>';
-      html += '<th style="padding:6px 4px;text-align:left;">' + (isEN ? 'Status' : 'Stato') + '</th>';
-      html += '<th style="padding:6px 4px;text-align:center;">' + (isEN ? 'Action' : 'Azione') + '</th>';
+      // v2.54: Responsive user table — card layout on mobile, full table on tablet+
+      html += '<style>';
+      html += '.admin-users-table{width:100%;border-collapse:separate;border-spacing:0;font-size:0.88em;}';
+      html += '.admin-users-table thead tr{background:var(--surface2,#f7fafc);}';
+      html += '.admin-users-table th{padding:10px 12px;text-align:left;font-size:0.78em;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:var(--text-muted,#718096);border-bottom:2px solid var(--border-color,#e2e8f0);white-space:nowrap;}';
+      html += '.admin-users-table td{padding:10px 12px;vertical-align:middle;border-bottom:1px solid var(--border-color,#e2e8f0);}';
+      html += '.admin-users-table tr:last-child td{border-bottom:none;}';
+      html += '.admin-users-table tbody tr:hover{background:var(--surface2,#f7fafc);}';
+      html += '.admin-user-avatar{width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid var(--border-color,#e2e8f0);}';
+      html += '.admin-user-name{font-weight:600;color:var(--text,#2d3748);white-space:nowrap;}';
+      html += '.admin-user-email{font-size:0.82em;color:var(--text-muted,#718096);}';
+      html += '.admin-uid{font-size:10px;color:var(--text-muted,#a0aec0);font-family:monospace;background:var(--surface2,#f7fafc);padding:2px 5px;border-radius:4px;}';
+      html += '.admin-badge{display:inline-flex;align-items:center;gap:3px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap;}';
+      html += '.admin-badge-owner{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;}';
+      html += '.admin-badge-active{background:#dcfce7;color:#166534;}';
+      html += '.admin-badge-pending{background:#fef9c3;color:#854d0e;}';
+      html += '.admin-badge-banned{background:#fee2e2;color:#991b1b;}';
+      html += '.admin-badge-unknown{background:#f1f5f9;color:#64748b;}';
+      html += '.admin-action-cell{display:flex;flex-wrap:nowrap;gap:6px;align-items:center;}';
+      html += '.admin-btn{display:inline-flex;align-items:center;gap:4px;padding:5px 12px;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;transition:opacity .15s;}';
+      html += '.admin-btn:hover{opacity:0.85;}';
+      html += '.admin-btn-remove{background:#fef3c7;color:#92400e;}';
+      html += '.admin-btn-ban{background:#fee2e2;color:#991b1b;}';
+      html += '.admin-btn-unban{background:#dcfce7;color:#166534;}';
+      html += '.admin-btn-delete{background:#f1f5f9;color:#475569;}';
+      html += '.admin-btn-approve{background:#dcfce7;color:#166534;}';
+      html += '.admin-btn-reject{background:#fef3c7;color:#92400e;}';
+      html += '.admin-btn-promote{background:#ede9fe;color:#5b21b6;}';
+      html += '.admin-btn-demote{background:#fef3c7;color:#92400e;}';
+      // Responsive: stack as cards on narrow screens
+      html += '@media(max-width:600px){';
+      html += '.admin-users-table,.admin-users-table thead,.admin-users-table tbody,.admin-users-table th,.admin-users-table td,.admin-users-table tr{display:block;}';
+      html += '.admin-users-table thead tr{display:none;}';
+      html += '.admin-users-table tbody tr{margin-bottom:12px;border:1px solid var(--border-color,#e2e8f0);border-radius:12px;padding:10px;background:var(--surface,#fff);}';
+      html += '.admin-users-table td{border:none;padding:4px 8px;}';
+      html += '.admin-action-cell{flex-wrap:wrap;}';
+      html += '}';
+      html += '</style>';
+      html += '<div style="overflow-x:auto;border-radius:12px;border:1px solid var(--border-color,#e2e8f0);">';
+      html += '<table class="admin-users-table">';
+      html += '<thead><tr>';
+      html += '<th style="width:44px;"></th>';
+      html += '<th>' + (isEN ? 'User' : 'Utente') + '</th>';
+      html += '<th>' + (isEN ? 'Last seen' : 'Ultimo accesso') + '</th>';
+      html += '<th>' + (isEN ? 'Status' : 'Stato') + '</th>';
+      html += '<th>' + (isEN ? 'Actions' : 'Azioni') + '</th>';
       html += '</tr></thead><tbody>';
 
       deduped.forEach(function(entry) {
@@ -11916,7 +11954,7 @@ if ('serviceWorker' in navigator) {
         var isBanned = !!globalBanned[uid];
         var lastSeen = u.lastSeen ? new Date(u.lastSeen).toLocaleString(isEN ? 'en-GB' : 'it-IT', {day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : '\u2014';
         var safePhoto = (u.photo && /^https:\/\//.test(u.photo)) ? escapeHtml(u.photo) : '';
-        var photo = safePhoto ? '<img src="' + safePhoto + '" style="width:28px;height:28px;border-radius:50%;vertical-align:middle;" loading="lazy">' : '<span style="font-size:20px;">\ud83d\udc64</span>';
+        var photo = safePhoto ? '<img src="' + safePhoto + '" class="admin-user-avatar" loading="lazy" onerror="this.style.display='none'">' : '<div style="width:36px;height:36px;border-radius:50%;background:var(--accent,#6366f1);display:flex;align-items:center;justify-content:center;font-size:15px;color:#fff;flex-shrink:0;">\ud83d\udc64</div>';
         var isApproved = !!approvedMap[uid];
         var isPending = !!pendingMap[uid];
         // v1.99: Ghost indicator — user in DB but inactive > 30 days (may be deleted from Auth)
@@ -11924,62 +11962,62 @@ if ('serviceWorker' in navigator) {
         var ghostBadge = isGhost ? ' <span title="' + (isEN ? 'Inactive > 30 days (possible ghost account)' : 'Inattivo > 30 giorni (possibile account fantasma)') + '" style="font-size:11px;cursor:help;">\ud83d\udc7b</span>' : '';
         var statusBadge;
         if (isHardcodedOwnerUser) {
-          statusBadge = '<span style="background:var(--accent,#6366f1);color:#fff;padding:2px 8px;border-radius:8px;font-size:11px;">Owner ★</span>';
+          statusBadge = '<span class="admin-badge admin-badge-owner">👑 Owner ★</span>';
         } else if (isDynamicOwnerUser) {
-          statusBadge = '<span style="background:var(--accent,#6366f1);color:#fff;padding:2px 8px;border-radius:8px;font-size:11px;">Owner</span>';
+          statusBadge = '<span class="admin-badge admin-badge-owner">👑 Owner</span>';
         } else if (isBanned) {
-          statusBadge = '<span style="background:var(--danger,#e53e3e);color:#fff;padding:2px 8px;border-radius:8px;font-size:11px;">' + (isEN ? 'Banned' : 'Bannato') + '</span>';
+          statusBadge = '<span class="admin-badge admin-badge-banned">🚫 ' + (isEN ? 'Banned' : 'Bannato') + '</span>';
         } else if (isPending) {
-          statusBadge = '<span style="background:var(--warning,#d69e2e);color:#fff;padding:2px 8px;border-radius:8px;font-size:11px;">' + (isEN ? 'Pending' : 'In attesa') + '</span>';
+          statusBadge = '<span class="admin-badge admin-badge-pending">⏳ ' + (isEN ? 'Pending' : 'In attesa') + '</span>';
         } else if (isApproved) {
-          statusBadge = '<span style="background:var(--success,#38a169);color:#fff;padding:2px 8px;border-radius:8px;font-size:11px;">' + (isEN ? 'Active' : 'Attivo') + '</span>';
+          statusBadge = '<span class="admin-badge admin-badge-active">✓ ' + (isEN ? 'Active' : 'Attivo') + '</span>';
         } else {
-          statusBadge = '<span style="background:var(--text-muted,#a0aec0);color:#fff;padding:2px 8px;border-radius:8px;font-size:11px;">' + (isEN ? 'Unknown' : 'Sconosciuto') + '</span>';
+          statusBadge = '<span class="admin-badge admin-badge-unknown">' + (isEN ? 'Unknown' : 'Sconosciuto') + '</span>';
         }
-        var uidShort = '<span style="font-size:10px;color:var(--text-muted);font-family:monospace;">' + uid.substring(0, 8) + '...</span>';
+        var uidShort = '<span class="admin-uid">' + uid.substring(0, 8) + '…</span>';
+        // v2.54: New inline action buttons with semantic classes
         var actionBtn = '';
-        // v2.13: Promote/Demote buttons (only hardcoded owners can do this)
         if (isOwnerUser && !isHardcodedOwnerUser && isHardcodedOwner) {
-          // Dynamic owner: show Demote button (only hardcoded super-admins can demote)
           actionBtn = uidShort + ' ';
-          actionBtn += '<button class="admin-demote-owner pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--warning,#d69e2e);color:#fff;border:none;border-radius:6px;cursor:pointer;margin-right:4px;">' + (isEN ? '⬇️ Demote' : '⬇️ Rimuovi Owner') + '</button>';
+          actionBtn += '<button class="admin-demote-owner admin-btn admin-btn-demote" data-uid="' + uid + '">⬇️ ' + (isEN ? 'Demote' : 'Rimuovi Owner') + '</button>';
         } else if (!isOwnerUser && isApproved && isHardcodedOwner) {
-          // Approved non-owner: show Promote button (only hardcoded super-admins can promote)
           actionBtn = uidShort + ' ';
-          actionBtn += '<button class="admin-promote-owner pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--accent,#6366f1);color:#fff;border:none;border-radius:6px;cursor:pointer;margin-right:4px;">' + (isEN ? '⬆️ Promote' : '⬆️ Promuovi Owner') + '</button>';
+          actionBtn += '<button class="admin-promote-owner admin-btn admin-btn-promote" data-uid="' + uid + '">⬆️ ' + (isEN ? 'Promote' : 'Promuovi') + '</button>';
         }
         if (!isOwnerUser) {
           if (isBanned) {
-            // Banned: show Unban + Delete
-            actionBtn = uidShort + ' <button class="admin-global-unban pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--success,#38a169);color:#fff;border:none;border-radius:6px;cursor:pointer;margin-right:4px;">' + (isEN ? 'Unban' : 'Sblocca') + '</button>';
-            actionBtn += '<button class="admin-delete-user pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:#718096;color:#fff;border:none;border-radius:6px;cursor:pointer;">' + (isEN ? '🗑️ Delete' : '🗑️ Elimina') + '</button>';
+            actionBtn = '<div class="admin-action-cell">' + uidShort;
+            actionBtn += '<button class="admin-global-unban admin-btn admin-btn-unban" data-uid="' + uid + '">✓ ' + (isEN ? 'Unban' : 'Sblocca') + '</button>';
+            actionBtn += '<button class="admin-delete-user admin-btn admin-btn-delete" data-uid="' + uid + '">🗑️</button>';
+            actionBtn += '</div>';
           } else if (isApproved) {
-            // Active/Approved: show Remove (soft revoke) + Ban (hard block)
-            actionBtn = uidShort + ' ';
-            actionBtn += '<button class="admin-remove-user pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--warning,#d69e2e);color:#fff;border:none;border-radius:6px;cursor:pointer;margin-right:4px;">' + (isEN ? 'Remove' : 'Rimuovi') + '</button>';
-            actionBtn += '<button class="admin-global-ban pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--danger,#e53e3e);color:#fff;border:none;border-radius:6px;cursor:pointer;margin-right:4px;">' + (isEN ? 'Ban' : 'Blocca') + '</button>';
-            actionBtn += '<button class="admin-delete-user pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:#718096;color:#fff;border:none;border-radius:6px;cursor:pointer;">' + (isEN ? '🗑️ Delete' : '🗑️ Elimina') + '</button>';
+            actionBtn = '<div class="admin-action-cell">' + uidShort;
+            actionBtn += '<button class="admin-remove-user admin-btn admin-btn-remove" data-uid="' + uid + '">✕ ' + (isEN ? 'Remove' : 'Rimuovi') + '</button>';
+            actionBtn += '<button class="admin-global-ban admin-btn admin-btn-ban" data-uid="' + uid + '">🚫 ' + (isEN ? 'Ban' : 'Blocca') + '</button>';
+            actionBtn += '<button class="admin-delete-user admin-btn admin-btn-delete" data-uid="' + uid + '">🗑️</button>';
+            actionBtn += '</div>';
           } else {
-            // Pending or Sconosciuto: show Approve + Reject + Ban
-            actionBtn = uidShort + ' ';
-            actionBtn += '<button class="admin-inline-approve pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--success,#38a169);color:#fff;border:none;border-radius:6px;cursor:pointer;margin-right:4px;">\u2705 ' + (isEN ? 'Approve' : 'Approva') + '</button>';
-            actionBtn += '<button class="admin-inline-reject pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--warning,#d69e2e);color:#fff;border:none;border-radius:6px;cursor:pointer;margin-right:4px;">\u274c ' + (isEN ? 'Reject' : 'Rifiuta') + '</button>';
-            actionBtn += '<button class="admin-global-ban pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--danger,#e53e3e);color:#fff;border:none;border-radius:6px;cursor:pointer;margin-right:4px;">' + (isEN ? 'Ban' : 'Blocca') + '</button>';
-            actionBtn += '<button class="admin-delete-user pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:#718096;color:#fff;border:none;border-radius:6px;cursor:pointer;">' + (isEN ? '🗑️ Delete' : '🗑️ Elimina') + '</button>';
+            actionBtn = '<div class="admin-action-cell">' + uidShort;
+            actionBtn += '<button class="admin-inline-approve admin-btn admin-btn-approve" data-uid="' + uid + '">✅ ' + (isEN ? 'Approve' : 'Approva') + '</button>';
+            actionBtn += '<button class="admin-inline-reject admin-btn admin-btn-reject" data-uid="' + uid + '">✕ ' + (isEN ? 'Reject' : 'Rifiuta') + '</button>';
+            actionBtn += '<button class="admin-global-ban admin-btn admin-btn-ban" data-uid="' + uid + '">🚫 ' + (isEN ? 'Ban' : 'Blocca') + '</button>';
+            actionBtn += '<button class="admin-delete-user admin-btn admin-btn-delete" data-uid="' + uid + '">🗑️</button>';
+            actionBtn += '</div>';
           }
         }
 
-        html += '<tr style="border-bottom:1px solid var(--border-color,#e2e8f0);' + (isBanned ? 'opacity:0.6;' : '') + '">';
-        html += '<td style="padding:6px 4px;">' + photo + '</td>';
-        html += '<td style="padding:6px 4px;">' + escapeHtml(u.name || 'Anonimo') + '</td>';
-        html += '<td style="padding:6px 4px;font-size:0.85em;color:var(--text-muted);">' + escapeHtml(u.email || '\u2014') + '</td>';
-        html += '<td style="padding:6px 4px;">' + lastSeen + '</td>';
-        html += '<td style="padding:6px 4px;">' + statusBadge + ghostBadge + '</td>';
-        html += '<td style="padding:6px 4px;text-align:center;">' + actionBtn + '</td>';
+        // v2.54: Merged name+email cell, avatar with fallback, inline actions
+        html += '<tr' + (isBanned ? ' style="opacity:0.55;"' : '') + '>';
+        html += '<td style="padding:10px 12px;width:44px;">' + photo + '</td>';
+        html += '<td><div class="admin-user-name">' + escapeHtml(u.name || 'Anonimo') + ghostBadge + '</div>';
+        html += '<div class="admin-user-email">' + escapeHtml(u.email || '\u2014') + '</div></td>';
+        html += '<td style="white-space:nowrap;color:var(--text-muted,#718096);font-size:0.85em;">' + lastSeen + '</td>';
+        html += '<td>' + statusBadge + '</td>';
+        html += '<td>' + actionBtn + '</td>';
         html += '</tr>';
       });
 
-      html += '</tbody></table>';
+      html += '</tbody></table></div>'; // close overflow-x wrapper
       adminUsersList.innerHTML = html;
 
       // Attach cleanup handler

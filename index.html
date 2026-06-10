@@ -83,10 +83,10 @@
 <script src="https://accounts.google.com/gsi/client" async></script>
 <script>
 // SW auto-update: smooth reload when new Service Worker activates.
-// v2.54 FIX: Added reload-loop guard via sessionStorage to prevent infinite reload
+// v2.55 FIX: Added reload-loop guard via sessionStorage to prevent infinite reload
 // when SW cache invalidation takes more than one cycle.
 (function(){
-  var EXPECTED_VERSION = '2.54';
+  var EXPECTED_VERSION = '2.55';
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
 
