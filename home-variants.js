@@ -31,9 +31,6 @@
   var isLongPress = false;
 
   // ─── Init ───
-  var _hvReady = false; // v2.38 FIX: track when home-variants is fully initialized
-  var _pendingAuthEvent = false; // v2.38 FIX: capture early auth events
-
   function init() {
     // Load saved preferences
     var savedRole = localStorage.getItem('hv-role');
@@ -47,16 +44,6 @@
     } else {
       window._simRole = null;
     }
-
-    // v2.38 FIX: Register authStateChanged listener EARLY (before templates load)
-    // This captures auth events that fire before templates are ready
-    window.addEventListener('authStateChanged', function() {
-      if (_hvReady) {
-        renderCurrentVariant();
-      } else {
-        _pendingAuthEvent = true;
-      }
-    });
 
     // Wait for DOM and templates to be ready
     if (document.readyState === 'loading') {
@@ -82,8 +69,6 @@
   }
 
   function onReady() {
-    _hvReady = true; // v2.38 FIX: mark as ready
-
     // Create container in tab-home
     var tabHome = document.getElementById('tab-home');
     if (!tabHome) return;
@@ -110,12 +95,10 @@
     // Setup role modal
     setupRoleModal();
 
-    // v2.38 FIX: authStateChanged listener is now registered in init() (early)
-    // Replay pending auth event if it fired before templates were ready
-    if (_pendingAuthEvent) {
-      _pendingAuthEvent = false;
+    // Listen for auth state changes
+    window.addEventListener('authStateChanged', function() {
       renderCurrentVariant();
-    }
+    });
 
     // Listen for day override changes (admin reset/sync)
     window.addEventListener('dayOverrideChanged', function() {
@@ -131,16 +114,6 @@
       // homepage appearance, never hides admin panel or diary buttons globally.
       // If the Owner is simulating follower/visitor, only the homepage changes.
     }, 500);
-
-    // v2.37 FIX: Re-render after auth fully resolves (Capacitor native auth is slower)
-    if (typeof window.waitForAuth === 'function') {
-      window.waitForAuth().then(function() {
-        setTimeout(renderCurrentVariant, 200);
-      });
-    } else {
-      // Fallback: re-render at 3s in case auth was slow
-      setTimeout(renderCurrentVariant, 3000);
-    }
   }
 
   // ─── Load HTML Templates ───
@@ -1404,28 +1377,6 @@
   });
   setTimeout(showAdminCardIfOwner, 2000);
 
-  // v2.37 FIX: Retry owner card visibility with exponential backoff
-  // Fixes race condition in Capacitor where auth resolves after the 2s timeout
-  (function retryOwnerCards() {
-    var delays = [3000, 5000, 8000]; // retry at 3s, 5s, 8s
-    delays.forEach(function(delay) {
-      setTimeout(function() {
-        if (typeof isOwner !== 'undefined' && isOwner) {
-          showAdminCardIfOwner();
-          showTrackingCardIfOwner();
-        }
-      }, delay);
-    });
-    // Also hook into waitForAuth if available (Capacitor auth sync)
-    if (typeof window.waitForAuth === 'function') {
-      window.waitForAuth().then(function() {
-        showAdminCardIfOwner();
-        showTrackingCardIfOwner();
-        renderCurrentVariant();
-      });
-    }
-  })();
-
   // v2.21: Instant owner hint — show owner tiles immediately if previously confirmed owner
   // This eliminates the visual "pop-in" delay for returning owners
   (function() {
@@ -1481,9 +1432,6 @@
   });
   // Also check on initial load (delayed to let auth resolve)
   setTimeout(showTrackingCardIfOwner, 2000);
-  // v2.37 FIX: Additional retry for Capacitor slow auth
-  setTimeout(showTrackingCardIfOwner, 4000);
-  setTimeout(showTrackingCardIfOwner, 7000);
   // Update card state periodically (in case tracking started/stopped from Posizione tab)
   setInterval(function() {
     var card = document.getElementById('hv-tracking-card');

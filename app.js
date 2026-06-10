@@ -160,116 +160,15 @@ try {
     firebase.initializeApp(firebaseConfig);
     db = firebase.database();
     dbRef = db.ref('trips/' + FAMILY_ID);
-    // v2.34 FIX: Force LOCAL persistence immediately after init (critical for Capacitor WebView)
-    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(function(e) {
-      console.warn('[Auth] setPersistence(LOCAL) at init error:', e.message);
-    });
   }
 } catch(e) {
   console.warn('[Firebase] Init failed (offline?):', e.message);
 }
 
-// ============================================================
-// AUTH MANAGER — Persistent Auth State (v2.48 FIX per Capacitor)
-// Replaces one-shot authReadyPromise with a persistent subscribe model.
-// Modules subscribe and get called immediately if auth already resolved,
-// or later when auth state changes. Fixes the Capacitor cold-start bug
-// where authReadyPromise resolved to null and never updated.
-// ============================================================
-var AuthManager = {
-    _user: undefined,        // undefined = non ancora risolto, null = non autenticato
-    _isOwner: false,
-    _listeners: [],
-    _resolved: false,
-
-    subscribe: function(fn) {
-        this._listeners.push(fn);
-        // Se già risolto, chiama subito con lo stato corrente (sincrono per compatibilità)
-        if (this._resolved) {
-            try { fn(this._user, this._isOwner); } catch(e) { console.error('[AuthManager]', e); }
-            // v2.50 FIX: ALSO call again deferred (microtask) to handle IIFE closure race
-            // where gate/content DOM refs may not be captured yet at sync time
-            var self = this;
-            setTimeout(function() {
-                try { fn(self._user, self._isOwner); } catch(e) { /* ignore deferred errors */ }
-            }, 50);
-        }
-        // Ritorna funzione di unsubscribe
-        var self2 = this;
-        return function() { self2._listeners = self2._listeners.filter(function(l) { return l !== fn; }); };
-    },
-
-    _notify: function(user, ownerFlag) {
-        this._user = user;
-        this._isOwner = (ownerFlag === true);
-        this._resolved = true;
-        console.log('[AuthManager] State updated:', user ? user.email : 'null', 'owner:', this._isOwner);
-        this._listeners.forEach(function(fn) {
-            try { fn(user, ownerFlag === true); } catch(e) { console.error('[AuthManager] listener error:', e); }
-        });
-    },
-
-    getUser: function() { return this._user; },
-    getIsOwner: function() { return this._isOwner; },
-    isResolved: function() { return this._resolved; }
-};
-window.AuthManager = AuthManager;
-
-// Compatibilità con waitForAuth() esistente (usato dai moduli)
-function waitForAuth(timeout) {
-    if (AuthManager.isResolved()) {
-        return Promise.resolve(AuthManager.getUser());
-    }
-    return new Promise(function(resolve) {
-        var timer = setTimeout(function() { resolve(null); }, timeout || 10000);
-        var unsub = AuthManager.subscribe(function(user) {
-            clearTimeout(timer);
-            unsub();
-            resolve(user);
-        });
-    });
-}
-window.waitForAuth = waitForAuth;
-
-// Legacy: keep authReadyPromise for any code that still references it
-var authReadyPromise = new Promise(function(resolve) {
-    AuthManager.subscribe(function(user) { resolve(user); });
-});
-
 // ─── Standalone PWA detection ───
 var isStandalonePWA = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) ||
                      (window.navigator.standalone === true) ||
                      (document.referrer.includes('android-app://'));
-
-// v2.34: Capacitor-aware Platform detection utility
-var Platform = {
-  isCapacitor: function() { return !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()); },
-  isAndroid: function() { return window.Capacitor && window.Capacitor.getPlatform && window.Capacitor.getPlatform() === 'android'; },
-  isIOS: function() { return window.Capacitor && window.Capacitor.getPlatform && window.Capacitor.getPlatform() === 'ios'; },
-  isWeb: function() { return !Platform.isCapacitor(); }
-};
-window.Platform = Platform;
-
-// v2.34: Debug logging for Capacitor (monitors auth state and failed fetches)
-if (Platform.isCapacitor()) {
-  // Monitor auth state changes
-  if (typeof firebase !== 'undefined' && firebase.auth) {
-    firebase.auth().onAuthStateChanged(function(user) {
-      console.log('[Auth State]', user ? '\u2705 ' + (user.email || user.uid) : '\u274c null');
-    });
-  }
-  // Monitor failed network requests
-  var _origFetch = window.fetch;
-  window.fetch = function() {
-    var args = arguments;
-    return _origFetch.apply(this, args).then(function(response) {
-      if (!response.ok && response.status !== 304) {
-        console.warn('[Fetch Fail]', args[0], '\u2192', response.status);
-      }
-      return response;
-    });
-  };
-}
 
 // ─── Google Identity Services (GIS) + signInWithCredential ───
 // Uses Google's native One Tap / account chooser. No popup, no redirect.
@@ -289,68 +188,33 @@ function doGoogleSignIn(successCb) {
   });
 
   // ─── CAPACITOR NATIVE GOOGLE SIGN-IN ───
-  // v2.44 FIX: Uses native plugin if available, otherwise falls back to signInWithRedirect
+  // Uses @codetrix-studio/capacitor-google-auth plugin for native login
+  // This bypasses WebView OAuth restrictions completely
   if (window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()) {
-    var FirebaseAuth = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.FirebaseAuthentication;
-    if (!FirebaseAuth) {
-      // v2.45 FIX: Under Capacitor native, signInWithRedirect causes infinite loops
-      // (WebView loses context on redirect). Show error instead of attempting redirect.
-      console.error('[Auth] FirebaseAuthentication plugin not available under Capacitor native.');
-      if (window.showToast) showToast(isEN ? '❌ Login plugin not available. Please reinstall the app.' : '❌ Plugin login non disponibile. Reinstalla l\'app.', 'error');
+    console.info('[Auth] Using Capacitor native Google Sign-In');
+    if (window.showToast) showToast(isEN ? '⏳ Opening Google login...' : '⏳ Apertura login Google...', 'info');
+    var GoogleAuth = window.Capacitor.Plugins.GoogleAuth;
+    if (!GoogleAuth) {
+      console.error('[Auth] GoogleAuth plugin not available');
+      if (window.showToast) showToast('GoogleAuth plugin not available', 'error');
       return;
     }
-    console.info('[Auth] Using Capacitor FirebaseAuthentication.signInWithGoogle()');
-    if (window.showToast) showToast(isEN ? '⏳ Opening Google login...' : '⏳ Apertura login Google...', 'info');
-    FirebaseAuth.signInWithGoogle().then(function(result) {
-      console.info('[Auth] Capacitor signInWithGoogle success:', result.user && result.user.email);
-      // The plugin signs in on the native layer. We need to also sign in on the
-      // web layer (Firebase JS SDK) using the idToken from the credential.
-      if (result.credential && result.credential.idToken) {
-        var credential = firebase.auth.GoogleAuthProvider.credential(result.credential.idToken);
-        return firebase.auth().signInWithCredential(credential);
-      } else {
-        // If no credential returned, the native layer already signed in.
-        // Try to get the current user from the native auth state.
-        console.warn('[Auth] No credential.idToken returned, checking native auth state');
-        return firebase.auth().currentUser ? Promise.resolve({ user: firebase.auth().currentUser }) : Promise.reject(new Error('No idToken and no currentUser'));
-      }
-    }).then(function(fbResult) {
-      var user = fbResult.user || fbResult;
-      console.info('[Auth] Firebase web-layer sign-in success:', user.email);
-      // v2.49 FIX: Force-unlock all gates immediately after successful login
-      // This is a safety net in case onAuthStateChanged doesn't re-fire
-      var _isOw = (typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.indexOf(user.uid) !== -1);
-      if (_isOw) {
-        isOwner = true;
-        firebaseUser = user;
-        // Force-hide all gates
-        var _pg = document.getElementById('posizione-gate');
-        var _pc = document.getElementById('posizione-content');
-        var _pp = document.getElementById('posizione-pending');
-        var _dg = document.getElementById('diario-gate');
-        var _dc = document.getElementById('diario-content');
-        var _dp = document.getElementById('diario-pending');
-        if (_pg) _pg.style.display = 'none';
-        if (_pc) _pc.style.display = '';
-        if (_pp) _pp.style.display = 'none';
-        if (_dg) _dg.style.display = 'none';
-        if (_dc) _dc.style.display = '';
-        if (_dp) _dp.style.display = 'none';
-        // Also notify AuthManager
-        if (typeof AuthManager !== 'undefined') AuthManager._notify(user, true);
-        updateProtectedTabsUI(user);
-        window.dispatchEvent(new CustomEvent('authStateChanged', { detail: { user: user, isOwner: true } }));
-      }
+    GoogleAuth.signIn().then(function(googleUser) {
+      console.info('[Auth] Capacitor Google Sign-In success:', googleUser.email);
+      // Use the idToken to sign in with Firebase
+      var credential = firebase.auth.GoogleAuthProvider.credential(googleUser.authentication.idToken);
+      return firebase.auth().signInWithCredential(credential);
+    }).then(function(result) {
+      console.info('[Auth] Firebase sign-in success:', result.user.email);
       if (successCb) {
-        successCb(user);
+        successCb(result.user);
       } else {
-        if (window.showToast) showToast((isEN ? 'Welcome, ' : 'Benvenuto, ') + (user.displayName || user.email), 'success');
+        if (window.showToast) showToast((isEN ? 'Welcome, ' : 'Benvenuto, ') + (result.user.displayName || result.user.email), 'success');
       }
     }).catch(function(err) {
       console.error('[Auth] Capacitor Google Sign-In error:', err);
-      var msg = err.message || String(err);
-      if (msg.indexOf('canceled') === -1 && msg.indexOf('cancelled') === -1 && msg.indexOf('popup_closed') === -1) {
-        if (window.showToast) showToast((isEN ? 'Login error: ' : 'Errore login: ') + msg, 'error');
+      if (err.message && err.message.indexOf('canceled') === -1 && err.message.indexOf('cancelled') === -1) {
+        if (window.showToast) showToast((isEN ? 'Login error: ' : 'Errore login: ') + (err.message || err), 'error');
       }
     });
     return;
@@ -358,13 +222,6 @@ function doGoogleSignIn(successCb) {
   // ─── END CAPACITOR NATIVE SIGN-IN ───
 
   if (typeof google === 'undefined' || !google.accounts) {
-    // v2.45 FIX: Under Capacitor native, GIS is never loaded and redirect is dangerous.
-    // Only attempt redirect on the web (non-Capacitor) platform.
-    if (window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()) {
-      console.error('[Auth] GIS not available under Capacitor and native plugin was not found.');
-      if (window.showToast) showToast(isEN ? '❌ Login not available. Reinstall the app.' : '❌ Login non disponibile. Reinstalla l\'app.', 'error');
-      return;
-    }
     // v2.11 FIX: GIS not loaded — show feedback + wait briefly before fallback
     console.warn('[Auth] GIS not loaded, attempting delayed retry...');
     if (window.showToast) showToast(isEN ? '⏳ Loading login...' : '⏳ Caricamento login...', 'info');
@@ -414,18 +271,13 @@ function doGoogleSignIn(successCb) {
       // v2.11 FIX: Handle GIS prompt blocked/dismissed (Safari, adblockers)
       if (notification.isNotDisplayed()) {
         console.warn('[Auth] GIS prompt blocked:', notification.getNotDisplayedReason());
-        // v2.45 FIX: Do NOT use signInWithRedirect under Capacitor native
-        if (window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()) {
-          if (window.showToast) showToast(isEN ? '❌ Login blocked. Reinstall the app.' : '❌ Login bloccato. Reinstalla l\'app.', 'error');
-        } else {
-          if (window.showToast) showToast(isEN ? '⚠️ Popup blocked. Redirecting...' : '⚠️ Popup bloccato. Reindirizzamento...', 'warning');
-          // Fallback to redirect (web only)
-          var provider = new firebase.auth.GoogleAuthProvider();
-          try { localStorage.setItem('firebase_redirect_pending', '1'); } catch(e) {}
-          setTimeout(function() {
-            firebase.auth().signInWithRedirect(provider);
-          }, 1000);
-        }
+        if (window.showToast) showToast(isEN ? '⚠️ Popup blocked. Redirecting...' : '⚠️ Popup bloccato. Reindirizzamento...', 'warning');
+        // Fallback to redirect
+        var provider = new firebase.auth.GoogleAuthProvider();
+        try { localStorage.setItem('firebase_redirect_pending', '1'); } catch(e) {}
+        setTimeout(function() {
+          firebase.auth().signInWithRedirect(provider);
+        }, 1000);
       } else if (notification.isSkippedMoment()) {
         console.info('[Auth] GIS prompt skipped:', notification.getSkippedReason());
         // User dismissed — no action needed, they can retry
@@ -434,15 +286,10 @@ function doGoogleSignIn(successCb) {
   } catch(gisErr) {
     // v2.11: Catch any GIS initialization errors (3rd party cookie blocks, etc.)
     console.error('[Auth] GIS initialization error:', gisErr);
-    // v2.45 FIX: Do NOT use signInWithRedirect under Capacitor native
-    if (window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()) {
-      if (window.showToast) showToast(isEN ? '❌ Login service error.' : '❌ Errore servizio login.', 'error');
-    } else {
-      if (window.showToast) showToast(isEN ? '⚠️ Login service error. Redirecting...' : '⚠️ Errore servizio login. Reindirizzamento...', 'warning');
-      var provider = new firebase.auth.GoogleAuthProvider();
-      try { localStorage.setItem('firebase_redirect_pending', '1'); } catch(e) {}
-      firebase.auth().signInWithRedirect(provider);
-    }
+    if (window.showToast) showToast(isEN ? '⚠️ Login service error. Redirecting...' : '⚠️ Errore servizio login. Reindirizzamento...', 'warning');
+    var provider = new firebase.auth.GoogleAuthProvider();
+    try { localStorage.setItem('firebase_redirect_pending', '1'); } catch(e) {}
+    firebase.auth().signInWithRedirect(provider);
   }
 }
 
@@ -518,10 +365,6 @@ function checkOwnerStatus() {
             localStorage.setItem('hv-role', 'owner');
           }
         } catch(e) {}
-        // v2.48: Notify AuthManager IMMEDIATELY for hardcoded owner (synchronous)
-        AuthManager._notify(user, true);
-        window.dispatchEvent(new CustomEvent('authStateChanged', { detail: { user: user, isOwner: true } }));
-        updateProtectedTabsUI(user);
       } else if (user) {
         // v2.13: Check dynamic ownerUsers in database
         firebase.database().ref('trips/' + FAMILY_ID + '/ownerUsers/' + user.uid).once('value', function(ownerSnap) {
@@ -535,33 +378,18 @@ function checkOwnerStatus() {
                 localStorage.setItem('hv-role', 'owner');
               }
             } catch(e) {}
-            // v2.48: Notify AuthManager for dynamic owner
-            AuthManager._notify(user, true);
+            // Re-dispatch auth event with updated isOwner
             window.dispatchEvent(new CustomEvent('authStateChanged', { detail: { user: user, isOwner: true } }));
             updateProtectedTabsUI(user);
           } else {
             isOwner = false;
             try { localStorage.removeItem('qv-owner-hint'); } catch(e) {}
             console.info('[Auth] Authenticated but not owner: ' + user.email);
-            // v2.48: Notify AuthManager for non-owner authenticated user
-            AuthManager._notify(user, false);
-            window.dispatchEvent(new CustomEvent('authStateChanged', { detail: { user: user, isOwner: false } }));
-            updateProtectedTabsUI(user);
           }
-        }).catch(function(err) {
-          console.error('[Auth] Owner check failed:', err);
-          // v2.48: On error, still notify with non-owner so tabs don't stay locked forever
-          AuthManager._notify(user, false);
-          window.dispatchEvent(new CustomEvent('authStateChanged', { detail: { user: user, isOwner: false } }));
-          updateProtectedTabsUI(user);
         });
       } else {
         isOwner = false;
         try { localStorage.removeItem('qv-owner-hint'); } catch(e) {}
-        // v2.48: Notify AuthManager for logout
-        AuthManager._notify(null, false);
-        window.dispatchEvent(new CustomEvent('authStateChanged', { detail: { user: null, isOwner: false } }));
-        updateProtectedTabsUI(null);
       }
       // ─── Global Ban Check ───
       if (user && !isOwner && typeof firebase !== 'undefined' && firebase.database) {
@@ -572,6 +400,10 @@ function checkOwnerStatus() {
           }
         });
       }
+
+      window.dispatchEvent(new CustomEvent('authStateChanged', { detail: { user: user, isOwner: isOwner } }));
+      // Update protected tab visibility
+      updateProtectedTabsUI(user);
 
       // ─── Owner: save profile to approvedUsers (so Gestisci shows name, not UID) ───
       if (isOwner && user && typeof firebase !== 'undefined' && firebase.database) {
@@ -948,10 +780,7 @@ window.openMapFullscreen = function openMapFullscreen(mapInstance, title) {
         window._mapFsOpen = true;
         window._closeMapFs = closeFs2;
         history.pushState({ mapFsOpen: true }, '', '');
-        var closeBtnEl2 = overlay.querySelector('.map-fs-close');
-        closeBtnEl2.addEventListener('click', closeFs2);
-        // v2.34 FIX: Also handle touchend for reliable mobile close
-        closeBtnEl2.addEventListener('touchend', function(e) { e.preventDefault(); closeFs2(); });
+        overlay.querySelector('.map-fs-close').addEventListener('click', closeFs2);
         function onEsc2(e) { if (e.key === 'Escape') { closeFs2(); document.removeEventListener('keydown', onEsc2); } }
         document.addEventListener('keydown', onEsc2);
         return;
@@ -1052,10 +881,7 @@ window.openMapFullscreen = function openMapFullscreen(mapInstance, title) {
     window._mapFsOpen = true;
     window._closeMapFs = closeFs;
     history.pushState({ mapFsOpen: true }, '', '');
-    var closeBtnEl = overlay.querySelector('.map-fs-close');
-    closeBtnEl.addEventListener('click', closeFs);
-    // v2.34 FIX: Also handle touchend for reliable mobile close
-    closeBtnEl.addEventListener('touchend', function(e) { e.preventDefault(); closeFs(); });
+    overlay.querySelector('.map-fs-close').addEventListener('click', closeFs);
     // Escape key
     function onEsc(e) { if (e.key === 'Escape') { closeFs(); document.removeEventListener('keydown', onEsc); } }
     document.addEventListener('keydown', onEsc);
@@ -1477,10 +1303,6 @@ document.addEventListener('DOMContentLoaded', function() {
             entry.ref.off(entry.event, entry.callback);
         });
         _fbListeners[tab] = [];
-        // v2.50 FIX: Reset chat auth guard so re-attach works on tab return
-        if (tab === 'chat' && typeof window._resetChatAuthGuard === 'function') {
-            window._resetChatAuthGuard();
-        }
     };
     // Clean up tab-specific listeners on tab switch
     var _previousTab = null;
@@ -1497,12 +1319,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function switchTab(tabId, scrollToId) {
         // Block access to protected tabs for non-authenticated users
-        // v2.52 FIX: Under Capacitor, firebaseUser may be null during onAuthStateChanged
-        // resolution. Check AuthManager and currentUser to avoid blocking nav on cold-start.
-        var _authUser = firebaseUser ||
-                        (typeof AuthManager !== 'undefined' && AuthManager.getUser()) ||
-                        (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser);
-        if (PROTECTED_TABS.indexOf(tabId) !== -1 && !_authUser) {
+        if (PROTECTED_TABS.indexOf(tabId) !== -1 && !firebaseUser) {
             showToast(isEN ? '🔒 Sign in to access this section' : '🔒 Accedi per visualizzare questa sezione', 'info');
             // Trigger login
             if (typeof doGoogleSignIn === 'function') doGoogleSignIn();
@@ -8407,9 +8224,8 @@ if ('serviceWorker' in navigator) {
   function updateChatAuth(user) {
     chatUser = user;
     if (user) {
-      // v2.41 FIX: Check owner via BOTH global flag AND direct OWNER_UIDS to avoid race
-      var isUserOwner = (typeof isOwner !== 'undefined' && isOwner) || (typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.indexOf(user.uid) !== -1);
-      if (isUserOwner) {
+      // Check if owner or approved
+      if (typeof isOwner !== 'undefined' && isOwner) {
         // Owner always has access
         chatInputBar.style.display = 'flex';
         chatLoginPrompt.style.display = 'none';
@@ -8465,30 +8281,12 @@ if ('serviceWorker' in navigator) {
     }
   }
 
-  // Listen for auth changes — v2.45 FIX: Also (re-)start DB listeners reactively
+  // Listen for auth changes
   window.addEventListener('authStateChanged', function(e) {
     var user = e.detail ? e.detail.user : null;
-    var eventIsOwner = e.detail ? e.detail.isOwner : false;
     updateChatAuth(user);
-
-    if (user) {
-      // v2.45: Check if user is owner or approved before starting listeners
-      var isUserOwner = eventIsOwner || (typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.indexOf(user.uid) !== -1);
-      if (isUserOwner) {
-        // Owner: detach old listeners, re-attach fresh ones
-        window.detachFirebaseListeners('chat');
-        startListening();
-      } else {
-        // Non-owner: check approval before starting listeners
-        firebase.database().ref('trips/' + FAMILY_ID + '/approvedUsers/' + user.uid).once('value').then(function(snap) {
-          if (snap.exists()) {
-            window.detachFirebaseListeners('chat');
-            startListening();
-          }
-        }).catch(function() {});
-      }
-
-      // ─── Restore chat prefs from Firebase (cross-device sync) ───
+    // ─── Restore chat prefs from Firebase (cross-device sync) ───
+    if (user && db) {
       // 1. Restore chat notification preference
       db.ref('fcm_prefs/' + user.uid + '/chatNotif').once('value').then(function(snap) {
         var val = snap.val();
@@ -8507,9 +8305,6 @@ if ('serviceWorker' in navigator) {
           updateUnreadBadge();
         }
       }).catch(function() {});
-    } else {
-      // User logged out: detach all chat listeners
-      window.detachFirebaseListeners('chat');
     }
   });
   // v2.14: Re-check chat when simulation role changes
@@ -8529,13 +8324,20 @@ if ('serviceWorker' in navigator) {
     }
   });
 
-  // v2.45 FIX: Removed waitForAuth(5000) which resolved to null on cold start
-  // under Capacitor. The authStateChanged listener above now handles both
-  // cold-start (persisted session) and post-login transitions reactively.
+  // Initial check + secondary auth listener to avoid race condition
   if (typeof firebase !== 'undefined' && firebase.auth) {
     var currentUser = firebase.auth().currentUser;
     if (currentUser) {
       updateChatAuth(currentUser);
+    } else {
+      // Auth might not have resolved yet — register a direct listener as fallback
+      var _chatAuthUnsub = firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+          updateChatAuth(user);
+          // Unsubscribe after first resolution to avoid double-firing
+          if (_chatAuthUnsub) _chatAuthUnsub();
+        }
+      });
     }
   }
 
@@ -9250,9 +9052,6 @@ if ('serviceWorker' in navigator) {
       updateUnreadBadge();
       // Re-attach listeners if they were detached
       if (window._fbListeners && (!window._fbListeners['chat'] || window._fbListeners['chat'].length === 0)) {
-        // v2.52 FIX: Clear rendered messages before re-attaching to avoid duplicates
-        // child_added re-emits all messages on re-attach, so DOM must be clean first
-        if (chatMessages) chatMessages.innerHTML = '';
         startListening();
       }
       scrollToBottom();
@@ -9408,31 +9207,14 @@ if ('serviceWorker' in navigator) {
   };
   CHAT_REF.push = patchedPush;
 
-  // === CHAT: AUTH-AWARE INITIALIZATION (v2.48) ===
-  // Uses AuthManager.subscribe so that if auth already resolved before
-  // this IIFE runs, the callback fires immediately with the current user.
-  var _chatAuthSubscribed = false;
-  // v2.50 FIX: Expose guard reset so detachFirebaseListeners can allow re-init
-  window._resetChatAuthGuard = function() { _chatAuthSubscribed = false; };
-  function chatHandleAuthInit(user, authIsOwner) {
-    if (_chatAuthSubscribed) return; // Avoid duplicate from both subscribe + event
-    // v2.50 FIX: Fallback to firebase.auth().currentUser if AuthManager passes null
-    var effectiveUser = user || (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser) || null;
-    if (effectiveUser) {
-      _chatAuthSubscribed = true;
-      updateChatAuth(effectiveUser);
-      var isUserOwner = authIsOwner || (typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.indexOf(effectiveUser.uid) !== -1);
-      if (isUserOwner) {
-        startListening();
-      } else {
-        firebase.database().ref('trips/' + FAMILY_ID + '/approvedUsers/' + effectiveUser.uid).once('value').then(function(snap) {
-          if (snap.exists()) startListening();
-        }).catch(function() {});
-      }
+  // ─── Initialize ───
+  // Check if there are any messages first
+  CHAT_REF.orderByChild('timestamp').limitToLast(1).once('value', function(snap) {
+    if (snap.exists()) {
+      if (chatEmpty) chatEmpty.style.display = 'none';
     }
-  }
-  AuthManager.subscribe(chatHandleAuthInit);
-  // === END CHAT AUTH-AWARE INITIALIZATION ===
+    startListening();
+  });
 
 })();
 
@@ -9446,19 +9228,11 @@ if ('serviceWorker' in navigator) {
   var altroSheet = document.getElementById('altroSheet');
   if (!altroBtn || !altroOverlay || !altroSheet) return;
 
-  // v2.50 FIX: Under Capacitor, history.pushState can trigger popstate immediately
-  // which closes the sheet. Use a simple flag instead.
-  var _altroOpen = false;
-  var _isCapacitor = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
-
   function openAltro() {
     altroOverlay.classList.add('open');
     altroSheet.classList.add('open');
     document.body.style.overflow = 'hidden';
-    _altroOpen = true;
-    if (!_isCapacitor) {
-      history.pushState({ altroOpen: true }, '', '');
-    }
+    history.pushState({ altroOpen: true }, '', '');
     if (window.haptic) window.haptic(10);
   }
 
@@ -9466,14 +9240,13 @@ if ('serviceWorker' in navigator) {
     altroOverlay.classList.remove('open');
     altroSheet.classList.remove('open');
     document.body.style.overflow = '';
-    _altroOpen = false;
   }
 
   altroBtn.addEventListener('click', function(e) {
     e.stopPropagation();
     if (altroSheet.classList.contains('open')) {
       closeAltro();
-      if (!_isCapacitor && history.state && history.state.altroOpen) history.back();
+      if (history.state && history.state.altroOpen) history.back();
     } else {
       openAltro();
     }
@@ -9481,7 +9254,7 @@ if ('serviceWorker' in navigator) {
 
   altroOverlay.addEventListener('click', function() {
     closeAltro();
-    if (!_isCapacitor && history.state && history.state.altroOpen) history.back();
+    if (history.state && history.state.altroOpen) history.back();
   });
 
   // Handle item clicks inside Altro sheet
@@ -9503,7 +9276,7 @@ if ('serviceWorker' in navigator) {
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape' && altroSheet.classList.contains('open')) {
       closeAltro();
-      if (!_isCapacitor && history.state && history.state.altroOpen) history.back();
+      if (history.state && history.state.altroOpen) history.back();
     }
   });
 
@@ -9534,13 +9307,13 @@ if ('serviceWorker' in navigator) {
 
   var activitiesRef = firebase.database().ref('trips/' + FAMILY_ID + '/activities');
 
-    // v2.45 FIX: Use registerFirebaseListener for proper cleanup on tab switch
-  var _actStatsCb = function(snapshot) {
+  activitiesRef.on('value', function(snapshot) {
     var activities = snapshot.val();
     if (!activities) {
       statsBar.classList.add('hidden');
       return;
     }
+
     var kmFoot = 0, kmBike = 0, kmWater = 0, elevation = 0;
 
     Object.values(activities).forEach(function(act) {
@@ -9605,8 +9378,7 @@ if ('serviceWorker' in navigator) {
     if (posGarminWalkDay) posGarminWalkDay.textContent = kmFootDay.toFixed(1);
     if (posGarminBikeDay) posGarminBikeDay.textContent = kmBikeDay.toFixed(1);
     if (posGarminElevDay) posGarminElevDay.textContent = elevDay.toLocaleString('it-IT');
-  };
-  window.registerFirebaseListener('posizione', activitiesRef, 'value', _actStatsCb);
+  });
 
   // ─── Activity Cards in Posizione tab ───
   var posSection = document.getElementById('posizione-content') || document.getElementById('tab-posizione');
@@ -9621,11 +9393,11 @@ if ('serviceWorker' in navigator) {
 
   var actList = document.getElementById('pos-activity-list');
 
-    // Listen for activities and filter by current day
-  // v2.45 FIX: Use registerFirebaseListener for proper cleanup on tab switch
-  (function() { var _actDayCb = function(snapshot) {
+  // Listen for activities and filter by current day
+  activitiesRef.on('value', function(snapshot) {
     var activities = snapshot.val();
     if (!activities || !actList) return;
+
     // Get today's date string (YYYY-MM-DD)
     var today = new Date().toISOString().split('T')[0];
 
@@ -9678,11 +9450,10 @@ if ('serviceWorker' in navigator) {
         showConfirm(isEN ? 'Delete this activity?' : 'Eliminare questa attivit\u00e0?', function() {
           activitiesRef.child(actkey).remove();
         });
-            });
+      });
     });
-  };
-  window.registerFirebaseListener('posizione', activitiesRef, 'value', _actDayCb);
-  })();
+  });
+
   // ─── Manual activity input button (owner only) ───
   if (isOwner) {
   var addKmBtn = document.createElement('button');
@@ -9813,53 +9584,43 @@ if ('serviceWorker' in navigator) {
       return;
     }
 
-    // v2.41 FIX: Check owner status using BOTH the global isOwner flag AND
-    // direct OWNER_UIDS array check. This eliminates the race condition where
-    // isOwner is not yet set by checkOwnerStatus() when this function runs.
-    var isUserOwner = isOwner || (typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.indexOf(user.uid) !== -1);
-    if (isUserOwner) {
+    // Owners always have access
+    if (isOwner) {
       showPosizioneContent();
       return;
     }
 
-    // Check if approved OR dynamic owner (ownerUsers in database)
+    // Check if approved
     approvedRef.child(user.uid).once('value', function(snap) {
       if (snap.exists()) {
         showPosizioneContent();
       } else {
-        // v2.41: Also check dynamic ownerUsers before showing pending
-        firebase.database().ref('trips/' + FAMILY_ID + '/ownerUsers/' + user.uid).once('value', function(ownerSnap) {
-          if (ownerSnap.exists() && ownerSnap.val() === true) {
-            showPosizioneContent();
-          } else {
-            // Check if pending
-            pendingRef.child(user.uid).once('value', function(pSnap) {
-              if (pSnap.exists()) {
-                window._pendingSubmitDone = true;
-                gate.style.display = 'none';
-                pendingEl.style.display = '';
-                contentEl.style.display = 'none';
-              } else if (!window._pendingSubmitDone) {
-                // v2.13 FIX: Use global flag to prevent duplicate auto-submits
-                window._pendingSubmitDone = true;
-                // Auto-submit request
-                pendingRef.child(user.uid).set({
-                  email: user.email || '',
-                  displayName: user.displayName || '',
-                  photoURL: user.photoURL || '',
-                  requestedAt: firebase.database.ServerValue.TIMESTAMP
-                }).then(function() {
-                  gate.style.display = 'none';
-                  pendingEl.style.display = '';
-                  contentEl.style.display = 'none';
-                });
-              } else {
-                // Already submitted by another code path
-                gate.style.display = 'none';
-                pendingEl.style.display = '';
-                contentEl.style.display = 'none';
-              }
+        // Check if pending
+        pendingRef.child(user.uid).once('value', function(pSnap) {
+          if (pSnap.exists()) {
+            window._pendingSubmitDone = true;
+            gate.style.display = 'none';
+            pendingEl.style.display = '';
+            contentEl.style.display = 'none';
+          } else if (!window._pendingSubmitDone) {
+            // v2.13 FIX: Use global flag to prevent duplicate auto-submits
+            window._pendingSubmitDone = true;
+            // Auto-submit request
+            pendingRef.child(user.uid).set({
+              email: user.email || '',
+              displayName: user.displayName || '',
+              photoURL: user.photoURL || '',
+              requestedAt: firebase.database.ServerValue.TIMESTAMP
+            }).then(function() {
+              gate.style.display = 'none';
+              pendingEl.style.display = '';
+              contentEl.style.display = 'none';
             });
+          } else {
+            // Already submitted by another code path
+            gate.style.display = 'none';
+            pendingEl.style.display = '';
+            contentEl.style.display = 'none';
           }
         });
       }
@@ -9929,66 +9690,27 @@ if ('serviceWorker' in navigator) {
     });
   }
 
-  // === POSIZIONE: AUTH-AWARE INITIALIZATION (v2.48) ===
-  // Uses AuthManager.subscribe for persistent auth state.
-  // If auth already resolved (e.g. login happened before navigating here),
-  // the callback fires immediately. Otherwise it fires when auth resolves.
-  function posizioneHandleAuth(user, authIsOwner) {
-    // v2.50 FIX: Fallback to firebase.auth().currentUser if AuthManager passes null
-    // (race condition: native Capacitor login resolves before AuthManager._notify)
-    var effectiveUser = user || (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser) || null;
-    if (effectiveUser) {
-      var effectiveIsOwner = authIsOwner ||
-                             (typeof isOwner !== 'undefined' && isOwner) ||
-                             (typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.indexOf(effectiveUser.uid) !== -1);
-      if (effectiveIsOwner) {
-        gate.style.display = 'none';
-        if (pendingEl) pendingEl.style.display = 'none';
-        contentEl.style.display = '';
-      } else {
-        checkPosizioneAccess(effectiveUser);
-      }
-    } else {
-      // Show lock only if truly no user
-      gate.style.display = '';
-      if (pendingEl) pendingEl.style.display = 'none';
-      contentEl.style.display = 'none';
-    }
-  }
-
-  AuthManager.subscribe(posizioneHandleAuth);
-
-  // Also listen for custom event (belt-and-suspenders)
+  // ─── Listen for auth changes ───
   window.addEventListener('authStateChanged', function(e) {
-    posizioneHandleAuth(e.detail.user, e.detail.isOwner);
+    var user = e.detail.user;
+    checkPosizioneAccess(user);
   });
-
-  // Re-check on tab switch (covers navigation after login)
-  window.addEventListener('tabSwitched', function(e) {
-    if (e.detail === 'posizione') {
-      var user = AuthManager.getUser() || firebaseUser || (firebase.auth && firebase.auth().currentUser);
-      if (user) {
-        // v2.49 FIX: Direct gate override for owners — bypasses any potential
-        // error in checkPosizioneAccess by doing the DOM manipulation inline
-        var directOwner = (typeof isOwner !== 'undefined' && isOwner) ||
-                          (typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.indexOf(user.uid) !== -1);
-        if (directOwner) {
-          gate.style.display = 'none';
-          if (pendingEl) pendingEl.style.display = 'none';
-          contentEl.style.display = '';
-        } else {
-          checkPosizioneAccess(user);
-        }
-      }
-    }
-  });
-
   // v2.14: Re-check posizione when simulation role changes
   window.addEventListener('simRoleChanged', function() {
-    var user = AuthManager.getUser() || firebaseUser;
-    if (user) checkPosizioneAccess(user);
+    if (firebaseUser) checkPosizioneAccess(firebaseUser);
   });
-  // === END POSIZIONE AUTH-AWARE INITIALIZATION ===
+
+  // Initial check (in case auth already resolved) + fallback listener
+  if (firebaseUser) {
+    checkPosizioneAccess(firebaseUser);
+  } else if (typeof firebase !== 'undefined' && firebase.auth) {
+    var _posAuthUnsub = firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        checkPosizioneAccess(user);
+        if (_posAuthUnsub) _posAuthUnsub();
+      }
+    });
+  }
 })();
 
 
@@ -9998,8 +9720,6 @@ if ('serviceWorker' in navigator) {
 (function() {
   if (typeof firebase === 'undefined' || !firebase.database || !firebase.auth) return;
   if (!FAMILY_ID) return;
-  // v2.52 FIX: Guard to prevent repeated loadTimeline() calls on every tab switch
-  var _diarioLoaded = false;
 
   var diarioRef = firebase.database().ref('trips/' + FAMILY_ID + '/diary');
   var approvedRef = firebase.database().ref('trips/' + FAMILY_ID + '/approvedUsers');
@@ -10009,9 +9729,7 @@ if ('serviceWorker' in navigator) {
   var storageRef = (firebase.storage) ? firebase.storage().ref('diary/' + FAMILY_ID) : null;
 
   // Bridge: expose published diary entries for home feed (replaces old _preTripPostsOverride)
-  // v2.45 FIX: Use registerFirebaseListener for proper cleanup on tab switch
-  var _diarioQuery = diarioRef.orderByChild('dayNumber');
-  var _diarioCb = function(snap) {
+  diarioRef.orderByChild('dayNumber').on('value', function(snap) {
     var entries = snap.val();
     if (!entries) { window._diaryEntriesForHome = []; return; }
     var published = [];
@@ -10022,8 +9740,7 @@ if ('serviceWorker' in navigator) {
     // Sort by date descending
     published.sort(function(a, b) { return (b.date || '').localeCompare(a.date || ''); });
     window._diaryEntriesForHome = published;
-  };
-  window.registerFirebaseListener('diario', _diarioQuery, 'value', _diarioCb);
+  });
 
   // DOM elements
   var gate = document.getElementById('diario-gate');
@@ -10108,53 +9825,43 @@ if ('serviceWorker' in navigator) {
       return;
     }
 
-    // v2.41 FIX: Check owner status using BOTH the global isOwner flag AND
-    // direct OWNER_UIDS array check. This eliminates the race condition where
-    // isOwner is not yet set by checkOwnerStatus() when this function runs.
-    var isUserOwner = isOwner || (typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.indexOf(user.uid) !== -1);
-    if (isUserOwner) {
+    // Owners always have access
+    if (isOwner) {
       showDiarioContent(true);
       return;
     }
 
-    // Check if approved OR dynamic owner (ownerUsers in database)
+    // Check if approved
     approvedRef.child(user.uid).once('value', function(snap) {
       if (snap.exists()) {
         showDiarioContent(false);
       } else {
-        // v2.41: Also check dynamic ownerUsers before showing pending
-        firebase.database().ref('trips/' + FAMILY_ID + '/ownerUsers/' + user.uid).once('value', function(ownerSnap) {
-          if (ownerSnap.exists() && ownerSnap.val() === true) {
-            showDiarioContent(true);
-          } else {
-            // Check if pending
-            pendingRef.child(user.uid).once('value', function(pSnap) {
-              if (pSnap.exists()) {
-                window._pendingSubmitDone = true;
-                gate.style.display = 'none';
-                pendingEl.style.display = '';
-                contentEl.style.display = 'none';
-              } else if (!window._pendingSubmitDone) {
-                // v2.13 FIX: Use global flag to prevent duplicate auto-submits
-                window._pendingSubmitDone = true;
-                // Auto-submit request
-                pendingRef.child(user.uid).set({
-                  email: user.email || '',
-                  displayName: user.displayName || '',
-                  photoURL: user.photoURL || '',
-                  requestedAt: firebase.database.ServerValue.TIMESTAMP
-                }).then(function() {
-                  gate.style.display = 'none';
-                  pendingEl.style.display = '';
-                  contentEl.style.display = 'none';
-                });
-              } else {
-                // Already submitted by another code path
-                gate.style.display = 'none';
-                pendingEl.style.display = '';
-                contentEl.style.display = 'none';
-              }
+        // Check if pending
+        pendingRef.child(user.uid).once('value', function(pSnap) {
+          if (pSnap.exists()) {
+            window._pendingSubmitDone = true;
+            gate.style.display = 'none';
+            pendingEl.style.display = '';
+            contentEl.style.display = 'none';
+          } else if (!window._pendingSubmitDone) {
+            // v2.13 FIX: Use global flag to prevent duplicate auto-submits
+            window._pendingSubmitDone = true;
+            // Auto-submit request
+            pendingRef.child(user.uid).set({
+              email: user.email || '',
+              displayName: user.displayName || '',
+              photoURL: user.photoURL || '',
+              requestedAt: firebase.database.ServerValue.TIMESTAMP
+            }).then(function() {
+              gate.style.display = 'none';
+              pendingEl.style.display = '';
+              contentEl.style.display = 'none';
             });
+          } else {
+            // Already submitted by another code path
+            gate.style.display = 'none';
+            pendingEl.style.display = '';
+            contentEl.style.display = 'none';
           }
         });
       }
@@ -10184,64 +9891,29 @@ if ('serviceWorker' in navigator) {
     });
   }
 
-  // === DIARIO: AUTH-AWARE INITIALIZATION (v2.48) ===
-  // Uses AuthManager.subscribe for persistent auth state.
-  function diarioHandleAuth(user, authIsOwner) {
-    // v2.50 FIX: Fallback to firebase.auth().currentUser if AuthManager passes null
-    var effectiveUser = user || (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser) || null;
-    if (effectiveUser) {
-      var effectiveIsOwner = authIsOwner ||
-                             (typeof isOwner !== 'undefined' && isOwner) ||
-                             (typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.indexOf(effectiveUser.uid) !== -1);
-      if (effectiveIsOwner) {
-        gate.style.display = 'none';
-        if (pendingEl) pendingEl.style.display = 'none';
-        contentEl.style.display = '';
-        if (typeof loadTimeline === 'function' && !_diarioLoaded) { loadTimeline(); _diarioLoaded = true; }
-      } else {
-        checkDiarioAccess(effectiveUser);
-      }
-    } else {
-      // Show lock only if truly no user
-      gate.style.display = '';
-      if (pendingEl) pendingEl.style.display = 'none';
-      contentEl.style.display = 'none';
-    }
-  }
+  // Redirect result is handled automatically by onAuthStateChanged
 
-  AuthManager.subscribe(diarioHandleAuth);
-
-  // Also listen for custom event (belt-and-suspenders)
+  // ─── Listen for auth changes ───
   window.addEventListener('authStateChanged', function(e) {
-    diarioHandleAuth(e.detail.user, e.detail.isOwner);
+    var user = e.detail.user;
+    checkDiarioAccess(user);
   });
-
-  // Re-check on tab switch (covers navigation after login)
-  window.addEventListener('tabSwitched', function(e) {
-    if (e.detail === 'diario') {
-      var user = AuthManager.getUser() || firebaseUser || (firebase.auth && firebase.auth().currentUser);
-      if (user) {
-        // v2.49 FIX: Direct gate override for owners
-        var directOwner = (typeof isOwner !== 'undefined' && isOwner) ||
-                          (typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.indexOf(user.uid) !== -1);
-        if (directOwner) {
-          gate.style.display = 'none';
-          if (pendingEl) pendingEl.style.display = 'none';
-          contentEl.style.display = '';
-          if (typeof loadTimeline === 'function' && !_diarioLoaded) { loadTimeline(); _diarioLoaded = true; }
-        } else {
-          checkDiarioAccess(user);
-        }
-      }
-    }
-  });
-
   // v2.14: Re-render diario when simulation role changes
   window.addEventListener('simRoleChanged', function() {
-    var user = AuthManager.getUser() || firebaseUser;
-    if (user) checkDiarioAccess(user);
+    if (firebaseUser) checkDiarioAccess(firebaseUser);
   });
-  // === END DIARIO AUTH-AWARE INITIALIZATION ===
+
+  // Initial check (in case auth already resolved) + fallback listener
+  if (firebaseUser) {
+    checkDiarioAccess(firebaseUser);
+  } else if (firebase.auth) {
+    var _diarioAuthUnsub = firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        checkDiarioAccess(user);
+        if (_diarioAuthUnsub) _diarioAuthUnsub();
+      }
+    });
+  }
 
   // ─── Diary Date Formatter ───
   function formatHybridDateDiary(dateStr, lang) {
@@ -11165,7 +10837,6 @@ if ('serviceWorker' in navigator) {
       if (altroBtn) altroBtn.classList.add('active');
       // Re-attach diary listener if it was detached
       if (window._fbListeners && (!window._fbListeners['diario'] || window._fbListeners['diario'].length === 0)) {
-        // v2.52 FIX: _diarioLoaded is scoped to the diario IIFE; re-attach always reloads
         loadTimeline();
       }
     }
@@ -11246,13 +10917,6 @@ if ('serviceWorker' in navigator) {
     if (e.detail && e.detail.user) showAdminForOwner();
   });
   window.addEventListener('simRoleChanged', function() { showAdminForOwner(); });
-  // v2.46 FIX: Re-run admin setup when navigating to admin tab (fixes case where
-  // login happens on Home, then user navigates to Admin — diagnostics/users not loaded)
-  window.addEventListener('tabSwitched', function(e) {
-    if (e.detail === 'admin') {
-      showAdminForOwner();
-    }
-  });
   showAdminForOwner();
 
   function adminLog(msg) {
@@ -11346,20 +11010,11 @@ if ('serviceWorker' in navigator) {
     var issues = 0;
     var warnings = 0;
 
-    // v2.34: Detect Capacitor native environment
-    var isCapacitorNative = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
-
     // 1. Service Worker
     var swOk = false;
     var checks = [];
 
     checks.push(new Promise(function(resolve) {
-      // v2.34 FIX: Skip SW check in Capacitor (not supported in native WebView)
-      if (isCapacitorNative) {
-        results.push('⏭️ Service Worker: N/A (app nativa, usa FCM nativo)');
-        resolve();
-        return;
-      }
       if (!('serviceWorker' in navigator)) {
         results.push('❌ Service Worker non supportato');
         issues++;
@@ -11383,12 +11038,6 @@ if ('serviceWorker' in navigator) {
 
     // 2. Notification Permission
     checks.push(new Promise(function(resolve) {
-      // v2.34 FIX: Skip web notification check in Capacitor
-      if (isCapacitorNative) {
-        results.push('⏭️ Notifiche Push: N/A (usa FCM nativo)');
-        resolve();
-        return;
-      }
       if (!('Notification' in window)) {
         results.push('❌ Notifiche non supportate dal browser');
         issues++;
@@ -11406,12 +11055,6 @@ if ('serviceWorker' in navigator) {
 
     // 3. FCM Token
     checks.push(new Promise(function(resolve) {
-      // v2.34 FIX: In Capacitor, FCM token is managed natively
-      if (isCapacitorNative) {
-        results.push('⏭️ Token FCM: gestito nativamente dal plugin');
-        resolve();
-        return;
-      }
       var token = localStorage.getItem('viaggio2026_fcm_token');
       if (token) {
         results.push('✅ Token FCM salvato localmente');
@@ -11493,14 +11136,8 @@ if ('serviceWorker' in navigator) {
       }).catch(function() { resolve(); });
     }));
 
-    // 8. PWA installed / Native app
+    // 8. PWA installed
     checks.push(new Promise(function(resolve) {
-      // v2.34 FIX: In Capacitor, the app IS installed natively
-      if (isCapacitorNative) {
-        results.push('✅ App nativa installata (Capacitor Android)');
-        resolve();
-        return;
-      }
       var isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
       if (isStandalone) {
         results.push('✅ App installata (standalone)');
@@ -11543,10 +11180,10 @@ if ('serviceWorker' in navigator) {
   }
 
   // Run diagnostic on Admin tab open
-  // v2.46 FIX: Removed _adminDiagRan guard — always re-run diagnostics when
-  // navigating to admin tab (fixes case where first visit had no auth yet)
-  window.addEventListener('tabSwitched', function(e) {
-    if (e.detail === 'admin') {
+  var _adminDiagRan = false;
+  document.addEventListener('tabChanged', function(e) {
+    if (e.detail === 'admin' && !_adminDiagRan) {
+      _adminDiagRan = true;
       setTimeout(runAdminDiagnostic, 300);
     }
   });
@@ -11834,13 +11471,15 @@ if ('serviceWorker' in navigator) {
   var globalBanned = {};
   var dynamicOwnerMap = {}; // v2.13: cache of dynamic owners
 
-    // Listen for banned list changes
-  // v2.45 FIX: Use registerFirebaseListener for proper cleanup on tab switch
-  var _bannedCb = function(snap) { globalBanned = snap.val() || {}; };
-  var _ownerUsersCb = function(snap) { dynamicOwnerMap = snap.val() || {}; };
-  window.registerFirebaseListener('admin', bannedRef, 'value', _bannedCb);
+  // Listen for banned list changes
+  bannedRef.on('value', function(snap) {
+    globalBanned = snap.val() || {};
+  });
+
   // v2.13: Listen for dynamic owner changes
-  window.registerFirebaseListener('admin', ownerUsersRef, 'value', _ownerUsersCb);
+  ownerUsersRef.on('value', function(snap) {
+    dynamicOwnerMap = snap.val() || {};
+  });
 
   function renderAdminUsers() {
     if (!adminUsersList) return;
@@ -11897,52 +11536,14 @@ if ('serviceWorker' in navigator) {
         html += '</div>';
       }
 
-      // v2.54: Responsive user table — card layout on mobile, full table on tablet+
-      html += '<style>';
-      html += '.admin-users-table{width:100%;border-collapse:separate;border-spacing:0;font-size:0.88em;}';
-      html += '.admin-users-table thead tr{background:var(--surface2,#f7fafc);}';
-      html += '.admin-users-table th{padding:10px 12px;text-align:left;font-size:0.78em;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:var(--text-muted,#718096);border-bottom:2px solid var(--border-color,#e2e8f0);white-space:nowrap;}';
-      html += '.admin-users-table td{padding:10px 12px;vertical-align:middle;border-bottom:1px solid var(--border-color,#e2e8f0);}';
-      html += '.admin-users-table tr:last-child td{border-bottom:none;}';
-      html += '.admin-users-table tbody tr:hover{background:var(--surface2,#f7fafc);}';
-      html += '.admin-user-avatar{width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid var(--border-color,#e2e8f0);}';
-      html += '.admin-user-name{font-weight:600;color:var(--text,#2d3748);white-space:nowrap;}';
-      html += '.admin-user-email{font-size:0.82em;color:var(--text-muted,#718096);}';
-      html += '.admin-uid{font-size:10px;color:var(--text-muted,#a0aec0);font-family:monospace;background:var(--surface2,#f7fafc);padding:2px 5px;border-radius:4px;}';
-      html += '.admin-badge{display:inline-flex;align-items:center;gap:3px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap;}';
-      html += '.admin-badge-owner{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;}';
-      html += '.admin-badge-active{background:#dcfce7;color:#166534;}';
-      html += '.admin-badge-pending{background:#fef9c3;color:#854d0e;}';
-      html += '.admin-badge-banned{background:#fee2e2;color:#991b1b;}';
-      html += '.admin-badge-unknown{background:#f1f5f9;color:#64748b;}';
-      html += '.admin-action-cell{display:flex;flex-wrap:nowrap;gap:6px;align-items:center;}';
-      html += '.admin-btn{display:inline-flex;align-items:center;gap:4px;padding:5px 12px;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;transition:opacity .15s;}';
-      html += '.admin-btn:hover{opacity:0.85;}';
-      html += '.admin-btn-remove{background:#fef3c7;color:#92400e;}';
-      html += '.admin-btn-ban{background:#fee2e2;color:#991b1b;}';
-      html += '.admin-btn-unban{background:#dcfce7;color:#166534;}';
-      html += '.admin-btn-delete{background:#f1f5f9;color:#475569;}';
-      html += '.admin-btn-approve{background:#dcfce7;color:#166534;}';
-      html += '.admin-btn-reject{background:#fef3c7;color:#92400e;}';
-      html += '.admin-btn-promote{background:#ede9fe;color:#5b21b6;}';
-      html += '.admin-btn-demote{background:#fef3c7;color:#92400e;}';
-      // Responsive: stack as cards on narrow screens
-      html += '@media(max-width:600px){';
-      html += '.admin-users-table,.admin-users-table thead,.admin-users-table tbody,.admin-users-table th,.admin-users-table td,.admin-users-table tr{display:block;}';
-      html += '.admin-users-table thead tr{display:none;}';
-      html += '.admin-users-table tbody tr{margin-bottom:12px;border:1px solid var(--border-color,#e2e8f0);border-radius:12px;padding:10px;background:var(--surface,#fff);}';
-      html += '.admin-users-table td{border:none;padding:4px 8px;}';
-      html += '.admin-action-cell{flex-wrap:wrap;}';
-      html += '}';
-      html += '</style>';
-      html += '<div style="overflow-x:auto;border-radius:12px;border:1px solid var(--border-color,#e2e8f0);">';
-      html += '<table class="admin-users-table">';
-      html += '<thead><tr>';
-      html += '<th style="width:44px;"></th>';
-      html += '<th>' + (isEN ? 'User' : 'Utente') + '</th>';
-      html += '<th>' + (isEN ? 'Last seen' : 'Ultimo accesso') + '</th>';
-      html += '<th>' + (isEN ? 'Status' : 'Stato') + '</th>';
-      html += '<th>' + (isEN ? 'Actions' : 'Azioni') + '</th>';
+      html += '<table class="admin-table" style="width:100%;border-collapse:collapse;font-size:0.85em;">';
+      html += '<thead><tr style="border-bottom:1px solid var(--border-color,#e2e8f0);">';
+      html += '<th style="padding:6px 4px;text-align:left;"></th>';
+      html += '<th style="padding:6px 4px;text-align:left;">' + (isEN ? 'Name' : 'Nome') + '</th>';
+      html += '<th style="padding:6px 4px;text-align:left;">Email</th>';
+      html += '<th style="padding:6px 4px;text-align:left;">' + (isEN ? 'Last seen' : 'Ultimo accesso') + '</th>';
+      html += '<th style="padding:6px 4px;text-align:left;">' + (isEN ? 'Status' : 'Stato') + '</th>';
+      html += '<th style="padding:6px 4px;text-align:center;">' + (isEN ? 'Action' : 'Azione') + '</th>';
       html += '</tr></thead><tbody>';
 
       deduped.forEach(function(entry) {
@@ -11954,7 +11555,7 @@ if ('serviceWorker' in navigator) {
         var isBanned = !!globalBanned[uid];
         var lastSeen = u.lastSeen ? new Date(u.lastSeen).toLocaleString(isEN ? 'en-GB' : 'it-IT', {day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : '\u2014';
         var safePhoto = (u.photo && /^https:\/\//.test(u.photo)) ? escapeHtml(u.photo) : '';
-        var photo = safePhoto ? '<img src="' + safePhoto + '" class="admin-user-avatar" loading="lazy" onerror="this.style.display='none'">' : '<div style="width:36px;height:36px;border-radius:50%;background:var(--accent,#6366f1);display:flex;align-items:center;justify-content:center;font-size:15px;color:#fff;flex-shrink:0;">\ud83d\udc64</div>';
+        var photo = safePhoto ? '<img src="' + safePhoto + '" style="width:28px;height:28px;border-radius:50%;vertical-align:middle;" loading="lazy">' : '<span style="font-size:20px;">\ud83d\udc64</span>';
         var isApproved = !!approvedMap[uid];
         var isPending = !!pendingMap[uid];
         // v1.99: Ghost indicator — user in DB but inactive > 30 days (may be deleted from Auth)
@@ -11962,62 +11563,62 @@ if ('serviceWorker' in navigator) {
         var ghostBadge = isGhost ? ' <span title="' + (isEN ? 'Inactive > 30 days (possible ghost account)' : 'Inattivo > 30 giorni (possibile account fantasma)') + '" style="font-size:11px;cursor:help;">\ud83d\udc7b</span>' : '';
         var statusBadge;
         if (isHardcodedOwnerUser) {
-          statusBadge = '<span class="admin-badge admin-badge-owner">👑 Owner ★</span>';
+          statusBadge = '<span style="background:var(--accent,#6366f1);color:#fff;padding:2px 8px;border-radius:8px;font-size:11px;">Owner ★</span>';
         } else if (isDynamicOwnerUser) {
-          statusBadge = '<span class="admin-badge admin-badge-owner">👑 Owner</span>';
+          statusBadge = '<span style="background:var(--accent,#6366f1);color:#fff;padding:2px 8px;border-radius:8px;font-size:11px;">Owner</span>';
         } else if (isBanned) {
-          statusBadge = '<span class="admin-badge admin-badge-banned">🚫 ' + (isEN ? 'Banned' : 'Bannato') + '</span>';
+          statusBadge = '<span style="background:var(--danger,#e53e3e);color:#fff;padding:2px 8px;border-radius:8px;font-size:11px;">' + (isEN ? 'Banned' : 'Bannato') + '</span>';
         } else if (isPending) {
-          statusBadge = '<span class="admin-badge admin-badge-pending">⏳ ' + (isEN ? 'Pending' : 'In attesa') + '</span>';
+          statusBadge = '<span style="background:var(--warning,#d69e2e);color:#fff;padding:2px 8px;border-radius:8px;font-size:11px;">' + (isEN ? 'Pending' : 'In attesa') + '</span>';
         } else if (isApproved) {
-          statusBadge = '<span class="admin-badge admin-badge-active">✓ ' + (isEN ? 'Active' : 'Attivo') + '</span>';
+          statusBadge = '<span style="background:var(--success,#38a169);color:#fff;padding:2px 8px;border-radius:8px;font-size:11px;">' + (isEN ? 'Active' : 'Attivo') + '</span>';
         } else {
-          statusBadge = '<span class="admin-badge admin-badge-unknown">' + (isEN ? 'Unknown' : 'Sconosciuto') + '</span>';
+          statusBadge = '<span style="background:var(--text-muted,#a0aec0);color:#fff;padding:2px 8px;border-radius:8px;font-size:11px;">' + (isEN ? 'Unknown' : 'Sconosciuto') + '</span>';
         }
-        var uidShort = '<span class="admin-uid">' + uid.substring(0, 8) + '…</span>';
-        // v2.54: New inline action buttons with semantic classes
+        var uidShort = '<span style="font-size:10px;color:var(--text-muted);font-family:monospace;">' + uid.substring(0, 8) + '...</span>';
         var actionBtn = '';
+        // v2.13: Promote/Demote buttons (only hardcoded owners can do this)
         if (isOwnerUser && !isHardcodedOwnerUser && isHardcodedOwner) {
+          // Dynamic owner: show Demote button (only hardcoded super-admins can demote)
           actionBtn = uidShort + ' ';
-          actionBtn += '<button class="admin-demote-owner admin-btn admin-btn-demote" data-uid="' + uid + '">⬇️ ' + (isEN ? 'Demote' : 'Rimuovi Owner') + '</button>';
+          actionBtn += '<button class="admin-demote-owner pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--warning,#d69e2e);color:#fff;border:none;border-radius:6px;cursor:pointer;margin-right:4px;">' + (isEN ? '⬇️ Demote' : '⬇️ Rimuovi Owner') + '</button>';
         } else if (!isOwnerUser && isApproved && isHardcodedOwner) {
+          // Approved non-owner: show Promote button (only hardcoded super-admins can promote)
           actionBtn = uidShort + ' ';
-          actionBtn += '<button class="admin-promote-owner admin-btn admin-btn-promote" data-uid="' + uid + '">⬆️ ' + (isEN ? 'Promote' : 'Promuovi') + '</button>';
+          actionBtn += '<button class="admin-promote-owner pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--accent,#6366f1);color:#fff;border:none;border-radius:6px;cursor:pointer;margin-right:4px;">' + (isEN ? '⬆️ Promote' : '⬆️ Promuovi Owner') + '</button>';
         }
         if (!isOwnerUser) {
           if (isBanned) {
-            actionBtn = '<div class="admin-action-cell">' + uidShort;
-            actionBtn += '<button class="admin-global-unban admin-btn admin-btn-unban" data-uid="' + uid + '">✓ ' + (isEN ? 'Unban' : 'Sblocca') + '</button>';
-            actionBtn += '<button class="admin-delete-user admin-btn admin-btn-delete" data-uid="' + uid + '">🗑️</button>';
-            actionBtn += '</div>';
+            // Banned: show Unban + Delete
+            actionBtn = uidShort + ' <button class="admin-global-unban pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--success,#38a169);color:#fff;border:none;border-radius:6px;cursor:pointer;margin-right:4px;">' + (isEN ? 'Unban' : 'Sblocca') + '</button>';
+            actionBtn += '<button class="admin-delete-user pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:#718096;color:#fff;border:none;border-radius:6px;cursor:pointer;">' + (isEN ? '🗑️ Delete' : '🗑️ Elimina') + '</button>';
           } else if (isApproved) {
-            actionBtn = '<div class="admin-action-cell">' + uidShort;
-            actionBtn += '<button class="admin-remove-user admin-btn admin-btn-remove" data-uid="' + uid + '">✕ ' + (isEN ? 'Remove' : 'Rimuovi') + '</button>';
-            actionBtn += '<button class="admin-global-ban admin-btn admin-btn-ban" data-uid="' + uid + '">🚫 ' + (isEN ? 'Ban' : 'Blocca') + '</button>';
-            actionBtn += '<button class="admin-delete-user admin-btn admin-btn-delete" data-uid="' + uid + '">🗑️</button>';
-            actionBtn += '</div>';
+            // Active/Approved: show Remove (soft revoke) + Ban (hard block)
+            actionBtn = uidShort + ' ';
+            actionBtn += '<button class="admin-remove-user pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--warning,#d69e2e);color:#fff;border:none;border-radius:6px;cursor:pointer;margin-right:4px;">' + (isEN ? 'Remove' : 'Rimuovi') + '</button>';
+            actionBtn += '<button class="admin-global-ban pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--danger,#e53e3e);color:#fff;border:none;border-radius:6px;cursor:pointer;margin-right:4px;">' + (isEN ? 'Ban' : 'Blocca') + '</button>';
+            actionBtn += '<button class="admin-delete-user pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:#718096;color:#fff;border:none;border-radius:6px;cursor:pointer;">' + (isEN ? '🗑️ Delete' : '🗑️ Elimina') + '</button>';
           } else {
-            actionBtn = '<div class="admin-action-cell">' + uidShort;
-            actionBtn += '<button class="admin-inline-approve admin-btn admin-btn-approve" data-uid="' + uid + '">✅ ' + (isEN ? 'Approve' : 'Approva') + '</button>';
-            actionBtn += '<button class="admin-inline-reject admin-btn admin-btn-reject" data-uid="' + uid + '">✕ ' + (isEN ? 'Reject' : 'Rifiuta') + '</button>';
-            actionBtn += '<button class="admin-global-ban admin-btn admin-btn-ban" data-uid="' + uid + '">🚫 ' + (isEN ? 'Ban' : 'Blocca') + '</button>';
-            actionBtn += '<button class="admin-delete-user admin-btn admin-btn-delete" data-uid="' + uid + '">🗑️</button>';
-            actionBtn += '</div>';
+            // Pending or Sconosciuto: show Approve + Reject + Ban
+            actionBtn = uidShort + ' ';
+            actionBtn += '<button class="admin-inline-approve pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--success,#38a169);color:#fff;border:none;border-radius:6px;cursor:pointer;margin-right:4px;">\u2705 ' + (isEN ? 'Approve' : 'Approva') + '</button>';
+            actionBtn += '<button class="admin-inline-reject pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--warning,#d69e2e);color:#fff;border:none;border-radius:6px;cursor:pointer;margin-right:4px;">\u274c ' + (isEN ? 'Reject' : 'Rifiuta') + '</button>';
+            actionBtn += '<button class="admin-global-ban pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--danger,#e53e3e);color:#fff;border:none;border-radius:6px;cursor:pointer;margin-right:4px;">' + (isEN ? 'Ban' : 'Blocca') + '</button>';
+            actionBtn += '<button class="admin-delete-user pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:#718096;color:#fff;border:none;border-radius:6px;cursor:pointer;">' + (isEN ? '🗑️ Delete' : '🗑️ Elimina') + '</button>';
           }
         }
 
-        // v2.54: Merged name+email cell, avatar with fallback, inline actions
-        html += '<tr' + (isBanned ? ' style="opacity:0.55;"' : '') + '>';
-        html += '<td style="padding:10px 12px;width:44px;">' + photo + '</td>';
-        html += '<td><div class="admin-user-name">' + escapeHtml(u.name || 'Anonimo') + ghostBadge + '</div>';
-        html += '<div class="admin-user-email">' + escapeHtml(u.email || '\u2014') + '</div></td>';
-        html += '<td style="white-space:nowrap;color:var(--text-muted,#718096);font-size:0.85em;">' + lastSeen + '</td>';
-        html += '<td>' + statusBadge + '</td>';
-        html += '<td>' + actionBtn + '</td>';
+        html += '<tr style="border-bottom:1px solid var(--border-color,#e2e8f0);' + (isBanned ? 'opacity:0.6;' : '') + '">';
+        html += '<td style="padding:6px 4px;">' + photo + '</td>';
+        html += '<td style="padding:6px 4px;">' + escapeHtml(u.name || 'Anonimo') + '</td>';
+        html += '<td style="padding:6px 4px;font-size:0.85em;color:var(--text-muted);">' + escapeHtml(u.email || '\u2014') + '</td>';
+        html += '<td style="padding:6px 4px;">' + lastSeen + '</td>';
+        html += '<td style="padding:6px 4px;">' + statusBadge + ghostBadge + '</td>';
+        html += '<td style="padding:6px 4px;text-align:center;">' + actionBtn + '</td>';
         html += '</tr>';
       });
 
-      html += '</tbody></table></div>'; // close overflow-x wrapper
+      html += '</tbody></table>';
       adminUsersList.innerHTML = html;
 
       // Attach cleanup handler
