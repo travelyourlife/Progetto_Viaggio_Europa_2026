@@ -184,14 +184,15 @@ var AuthManager = {
 
     subscribe: function(fn) {
         this._listeners.push(fn);
-        // v2.50 FIX: Se già risolto, chiama con microtask asincrono per garantire
-        // che le closure della IIFE chiamante siano completamente inizializzate.
-        // (Race condition: onAuthStateChanged fires a riga 500, IIFE Posizione è a riga 9761)
+        // Se già risolto, chiama subito con lo stato corrente (sincrono per compatibilità)
         if (this._resolved) {
+            try { fn(this._user, this._isOwner); } catch(e) { console.error('[AuthManager]', e); }
+            // v2.50 FIX: ALSO call again deferred (microtask) to handle IIFE closure race
+            // where gate/content DOM refs may not be captured yet at sync time
             var self = this;
             setTimeout(function() {
-                try { fn(self._user, self._isOwner); } catch(e) { console.error('[AuthManager]', e); }
-            }, 0);
+                try { fn(self._user, self._isOwner); } catch(e) { /* ignore deferred errors */ }
+            }, 50);
         }
         // Ritorna funzione di unsubscribe
         var self2 = this;
@@ -1476,6 +1477,10 @@ document.addEventListener('DOMContentLoaded', function() {
             entry.ref.off(entry.event, entry.callback);
         });
         _fbListeners[tab] = [];
+        // v2.50 FIX: Reset chat auth guard so re-attach works on tab return
+        if (tab === 'chat' && typeof window._resetChatAuthGuard === 'function') {
+            window._resetChatAuthGuard();
+        }
     };
     // Clean up tab-specific listeners on tab switch
     var _previousTab = null;
@@ -9399,6 +9404,8 @@ if ('serviceWorker' in navigator) {
   // Uses AuthManager.subscribe so that if auth already resolved before
   // this IIFE runs, the callback fires immediately with the current user.
   var _chatAuthSubscribed = false;
+  // v2.50 FIX: Expose guard reset so detachFirebaseListeners can allow re-init
+  window._resetChatAuthGuard = function() { _chatAuthSubscribed = false; };
   function chatHandleAuthInit(user, authIsOwner) {
     if (_chatAuthSubscribed) return; // Avoid duplicate from both subscribe + event
     // v2.50 FIX: Fallback to firebase.auth().currentUser if AuthManager passes null
@@ -9431,11 +9438,19 @@ if ('serviceWorker' in navigator) {
   var altroSheet = document.getElementById('altroSheet');
   if (!altroBtn || !altroOverlay || !altroSheet) return;
 
+  // v2.50 FIX: Under Capacitor, history.pushState can trigger popstate immediately
+  // which closes the sheet. Use a simple flag instead.
+  var _altroOpen = false;
+  var _isCapacitor = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
+
   function openAltro() {
     altroOverlay.classList.add('open');
     altroSheet.classList.add('open');
     document.body.style.overflow = 'hidden';
-    history.pushState({ altroOpen: true }, '', '');
+    _altroOpen = true;
+    if (!_isCapacitor) {
+      history.pushState({ altroOpen: true }, '', '');
+    }
     if (window.haptic) window.haptic(10);
   }
 
@@ -9443,13 +9458,14 @@ if ('serviceWorker' in navigator) {
     altroOverlay.classList.remove('open');
     altroSheet.classList.remove('open');
     document.body.style.overflow = '';
+    _altroOpen = false;
   }
 
   altroBtn.addEventListener('click', function(e) {
     e.stopPropagation();
     if (altroSheet.classList.contains('open')) {
       closeAltro();
-      if (history.state && history.state.altroOpen) history.back();
+      if (!_isCapacitor && history.state && history.state.altroOpen) history.back();
     } else {
       openAltro();
     }
@@ -9457,7 +9473,7 @@ if ('serviceWorker' in navigator) {
 
   altroOverlay.addEventListener('click', function() {
     closeAltro();
-    if (history.state && history.state.altroOpen) history.back();
+    if (!_isCapacitor && history.state && history.state.altroOpen) history.back();
   });
 
   // Handle item clicks inside Altro sheet
@@ -9479,7 +9495,7 @@ if ('serviceWorker' in navigator) {
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape' && altroSheet.classList.contains('open')) {
       closeAltro();
-      if (history.state && history.state.altroOpen) history.back();
+      if (!_isCapacitor && history.state && history.state.altroOpen) history.back();
     }
   });
 

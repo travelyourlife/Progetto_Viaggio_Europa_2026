@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-// DEBUG OVERLAY — v2.49 — Admin section "Debug Log"
+// DEBUG OVERLAY — v2.51 — Admin section "Debug Log"
 // Injects a collapsible debug log panel into the Admin tab.
 // No floating button — accessible only from Admin > Debug Log.
 // ═══════════════════════════════════════════════════════════════
