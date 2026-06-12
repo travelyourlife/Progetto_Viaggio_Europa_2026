@@ -35,11 +35,17 @@ exports.processNotificationQueue = functions
     const payload = snap.val();
     if (!payload || payload.sent) return null;
 
-    const { title, body, target, url, tag, senderUid } = payload;
-    const familyId = context.params.familyId;
+    // v2.62 FIX BUG-15: use transaction for atomic lock to prevent double-send on CF retries
+    const lockResult = await snap.ref.transaction(data => {
+      if (!data || data.sent) return; // abort — already locked by another invocation
+      return { ...data, sent: true, sentAt: Date.now() };
+    });
+    if (!lockResult.committed) {
+      console.log('[Push] Skipped — already locked by another invocation');
+      return null;
+    }
 
-    // Mark as processing immediately to prevent double-send on retries
-    await snap.ref.update({ sent: true, sentAt: Date.now() });
+    const { title, body, target, url, tag, senderUid } = snap.val();
 
     // Load all FCM tokens
     const tokensSnap = await db.ref('fcm_tokens').once('value');
@@ -136,47 +142,39 @@ exports.publishScheduledPosts = functions
     const now = Date.now();
     console.log(`[ScheduledPublish] Running at ${new Date(now).toISOString()}`);
 
-    // Scan all families (future-proof, currently only one)
-    const tripsSnap = await db.ref('trips').once('value');
-    const trips = tripsSnap.val() || {};
-
+    // v2.62 FIX BUG-14: read only the diary node, not the entire trips tree
+    // Previously read all of trips/ (~5-10MB with 55 days of data)
+    const diarySnap = await db.ref(`trips/${FAMILY_ID}/diary`).once('value');
+    const diary = diarySnap.val() || {};
     let totalPublished = 0;
 
-    for (const [familyId, tripData] of Object.entries(trips)) {
-      const diary = tripData.diary || {};
+    const toPublish = Object.entries(diary).filter(([key, entry]) => {
+      return entry &&
+             entry.draft === true &&
+             entry.publishAt &&
+             entry.publishAt <= now;
+    });
 
-      const toPublish = Object.entries(diary).filter(([key, entry]) => {
-        return entry &&
-               entry.draft === true &&
-               entry.publishAt &&
-               entry.publishAt <= now;
+    for (const [key, entry] of toPublish) {
+      await db.ref(`trips/${FAMILY_ID}/diary/${key}`).update({
+        draft:     null,
+        publishAt: null,
+        publishedAt: now,
       });
+      console.log(`[ScheduledPublish] Published: ${FAMILY_ID}/diary/${key} — "${entry.title || ''}"`);
+      totalPublished++;
 
-      if (toPublish.length === 0) continue;
-
-      for (const [key, entry] of toPublish) {
-        await db.ref(`trips/${familyId}/diary/${key}`).update({
-          draft:     null,   // remove draft flag — null deletes the key in RTDB
-          publishAt: null,   // remove schedule
-          publishedAt: now,  // record actual publish time
-        });
-
-        console.log(`[ScheduledPublish] Published: ${familyId}/diary/${key} — "${entry.title || ''}"`);
-        totalPublished++;
-
-        // Push notification to family
-        const notifRef = db.ref(`trips/${familyId}/notifications/queue`);
-        await notifRef.push({
-          type:      'diary_published',
-          title:     '📖 Nuovo post nel diario',
-          body:      entry.title || 'Un nuovo aggiornamento è disponibile nel diario.',
-          target:    'family',
-          url:       './#tab-diario',
-          tag:       'diary_published',
-          createdAt: now,
-          sent:      false,
-        });
-      }
+      const notifRef = db.ref(`trips/${FAMILY_ID}/notifications/queue`);
+      await notifRef.push({
+        type:      'diary_published',
+        title:     '📖 Nuovo post nel diario',
+        body:      entry.title || 'Un nuovo aggiornamento è disponibile nel diario.',
+        target:    'family',
+        url:       './#tab-diario',
+        tag:       'diary_published',
+        createdAt: now,
+        sent:      false,
+      });
     }
 
     console.log(`[ScheduledPublish] Done — published ${totalPublished} post(s)`);

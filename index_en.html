@@ -86,7 +86,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = '2.61';
+  var EXPECTED_VERSION = '2.64';
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
   var r = false;
@@ -164,7 +164,7 @@
 <div class="splash-screen" id="splash">
     <img src="./icon.png" alt="" class="splash-logo">
     <div class="splash-title">Quo Vadis</div>
-    <div class="splash-sub">54 days · 13 countries · 12,000 km</div>
+    <div class="splash-sub">55 days · 13 countries · 12,000 km</div>
 </div>
 
 <!-- ─── Offline Banner ─── -->
@@ -221,7 +221,7 @@
 <nav class="side-menu" id="sideMenu">
     <div class="side-menu-header">
         <h3>Quo Vadis</h3>
-        <p>54 days · 13 countries</p>
+        <p>55 days · 13 countries</p>
         <button class="menu-close" id="menuClose">✕</button>
     </div>
     <a class="menu-item active" data-tab="home"><span class="menu-icon">🏠</span><span class="menu-text">Home</span></a>
@@ -327,7 +327,7 @@
             <span class="hero-card-number" id="home-countdown-num">--</span>
             <span class="hero-card-text">days to departure</span>
         </div>
-        <div class="hero-card-date">📅 June 26, 2026</div>
+        <div class="hero-card-date" data-trip-meta="startEN">📅 June 25, 2026</div>
     </div>
     <!-- During-trip content (hidden by default) -->
     <div class="hero-card-trip" id="hero-during-trip" style="display:none;">
@@ -447,13 +447,13 @@
 <a href="#curiosita-dati-geografici">🌍 Fun Facts</a>
 <a href="#legenda">🏷️ Legend</a>
 <a href="#mappa">🗺️ Map</a>
-<a href="#itinerario-54-giorni">🌟 Itinerary</a>
+<a href="#itinerario-giorni">🌟 Itinerary</a>
 </div></div>
 <div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerary</a> · 📍 <a href="javascript:void(0)" class="protected-link" onclick="switchTab('posizione')">Live Position</a> · 🍝 <a href="javascript:void(0)" onclick="switchTab('cibo')">Food</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura')">Culture</a> · 📋 <a href="javascript:void(0)" onclick="switchTab('piano')">Plan</a></div>
 <h2 id="sintesi">📋 Summary — Crew and Vehicle</h2>
 <p>👨‍👩‍👧‍👦 <strong>Crew:</strong> 2 adults + 2 children (8 and 6 years old)</p>
 <p>🚐 <strong>Vehicle:</strong> self-sufficient camper van (LiFePo4 + 5 kg gas cylinder)</p>
-<p>📅 <strong>Period:</strong> 26/06/2026 (afternoon) → 18/08/2026 (evening) — <strong>54 days</strong></p>
+<p>📅 <strong>Period:</strong> 25/06/2026 (afternoon) → 18/08/2026 (evening) — <strong>55 days</strong></p>
 <p>🛣️ <strong>Total km:</strong> ~12,320 km</p>
 <p>🌑 <strong>Key event:</strong> 🌒 <strong>Total Solar Eclipse — 12/08/2026</strong>, area <strong>Palencia (🇪🇸)</strong>, totality ~8:29 pm local, Sun at ~11° above West horizon</p>
 <p>🎯 <strong>Trip focus:</strong> nature, parks and museums for children, scenic roads (🛣️), total eclipse, thermal experiences, fishing 🎣, trekking 🥾</p>
@@ -605,7 +605,7 @@
 </tbody>
 </table>
 <hr>
-<h2 id="itinerario-54-giorni">🌟 Itinerary — 54 Days</h2>
+<h2 id="itinerario-giorni">🌟 Itinerary — 55 Days</h2>
 <p><strong>Legend:</strong> ♨️ = thermal spa accessible (see <a href="#secA">Spas</a>) · ➕ = alternative detour (see <a href="#secB">Alternatives</a>) · 🎣 = fishing possible (see <a href="#pesca">Fishing Guide</a>) · 🥾 = trekking (see <a href="#trekking">Trekking Guide</a>)</p>
 <p><strong>Click the Dx to jump to details.</strong></p>
 <table class="no-responsive table-large">
@@ -670,7 +670,7 @@
 <span id="meteo"></span>
 <h3 id="giorni-meteo-storico">☀️🌧️ Weather — by Zone and Day</h3>
 <blockquote>
-<p>Historical climate averages for the <strong>exact dates</strong> you will be in each zone (26/06 → 18/08). Sources: WeatherSpark, Climate-Data.org, VisitNorway, VisitFinland, AccuWeather.</p>
+<p>Historical climate averages for the <strong>exact dates you will be in each zone (25/06 → 18/08). Sources: WeatherSpark, Climate-Data.org, VisitNorway, VisitFinland, AccuWeather.</p>
 </blockquote>
 <h4 id="meteo-tabella-riassuntiva" style="font-size:1.2em;margin-top:1.5em;">📊 Weather — Summary Table</h4>
 <table class="no-responsive">
@@ -6986,7 +6986,7 @@
 <hr>
 
 <h2 id="feste">🎉 Festivals — Events along the Route</h2>
-<p>The trip (June 26 – August 18) coincides with the high season for festivals and popular celebrations across Europe. Here are the events that <strong>fall exactly on the days you will be there</strong>.</p>
+<p>The trip (June 25 – August 18) coincides with the high season for festivals and popular celebrations across Europe. Here are the events that <strong>fall exactly on the days you will be there</strong>.</p>
 <div id="poi-list-festival"></div>
 <p style="margin-top:12px;"><strong>💡 Tip:</strong> 🇪🇸 In August almost every Spanish town has its own patron saint festival. Expect: live music in the square until late, market stalls, fireworks!</p>
 <hr>
@@ -7139,7 +7139,7 @@
 <li class="task-item"><input type="checkbox" data-idx="piano-skyttelpass"> <strong>Order SkyttelPASS tag</strong> (4–6 weeks before) — <a href="https://skyttelpass.no/en/order-tag/" target="_blank" rel="noopener noreferrer">skyttelpass.no</a> (NOK 200 (~€19), 20% discount on tolls + 10% on ferries)</li>
 <li class="task-item"><input type="checkbox" data-idx="piano-autopass-ferje"> Activate AutoPASS ferje prepayment agreement — <a href="https://autopassferje.no/en/" target="_blank" rel="noopener noreferrer">autopassferje.no</a> (deposit NOK 3,600 (~€333), 50% discount on internal ferries)</li>
 <li class="task-item"><input type="checkbox" data-idx="piano-copenhagen-card"> Buy Copenhagen Card 48h online — <a href="https://copenhagencard.com/" target="_blank" rel="noopener noreferrer">copenhagencard.com</a> (~€268 for 4 pax, includes Tivoli+Experimentarium+transport)</li>
-<li class="task-item"><input type="checkbox" data-idx="piano-polizza-sanitaria"> Supplemental health insurance 54 days + 2 minors (TEAM valid, but extra policy for repatriation)</li>
+<li class="task-item"><input type="checkbox" data-idx="piano-polizza-sanitaria"> Supplemental health insurance 55 days + 2 minors (TEAM valid, but extra policy for repatriation)</li>
 <li class="task-item"><input type="checkbox" data-idx="piano-triangolo-gilet"> Warning triangle + reflective vest (mandatory in many countries)</li>
 </ul>
 <hr>
@@ -7216,7 +7216,7 @@
 <p>Parents' mobile number</p>
 <hr>
 <h3 id="note-bombola-gas">⛽ Gas Cylinder Notes</h3>
-<p>The 5 kg cylinder lasts ~2-3 weeks with daily cooking. For 54 days at least 2-3 refills are needed.</p>
+<p>The 5 kg cylinder lasts ~2-3 weeks with daily cooking. For 55 days at least 2-3 refills are needed.</p>
 <table class="no-responsive">
 <thead>
 <tr>
@@ -7313,7 +7313,7 @@
 </tbody>
 </table>
 <hr>
-<h2 id="budget">💶 Budget — Estimate 54 Days, 4 Pax</h2>
+<h2 id="budget">💶 Budget — Estimate 55 Days, 4 Pax</h2>
 <table class="no-responsive">
 <thead>
 <tr>
@@ -7339,7 +7339,7 @@
 <td data-label="Max">€950</td>
 </tr>
 <tr>
-<td data-label="Item">🍽️ Food (54 days × 4)</td>
+<td data-label="Item">🍽️ Food (55 days × 4)</td>
 <td data-label="Min">€3,200</td>
 <td data-label="Max">€4,200</td>
 </tr>
@@ -7386,7 +7386,7 @@
 </blockquote>
 <p>🎯 <strong>Food in Scandinavia:</strong> food prices in Norway/Finland/Denmark are 50-100% higher than Italy. Cook in the van as much as possible! Cheap supermarkets: Rema 1000, Kiwi (NO), Lidl (FI/DK).</p>
 <blockquote>
-<p><strong>Laundry:</strong> estimate 6-8 washes in 54 days (~€50 total, included in "Miscellaneous"). Campsites with washing machines: check on Park4Night.</p>
+<p><strong>Laundry:</strong> estimate 6-8 washes in 55 days (~€50 total, included in "Miscellaneous"). Campsites with washing machines: check on Park4Night.</p>
 </blockquote>
 <hr>
 <h2 id="valute">💱 Currencies — Approximate Exchange Rates</h2>
@@ -8235,7 +8235,7 @@
 <div style="padding:8px 0;">
 <span id="pos-meteo-anchor"></span>
 <blockquote>
-<p>Historical climate averages for the <strong>exact dates</strong> you will be in each area (26/06 → 18/08). Sources: WeatherSpark, Climate-Data.org, VisitNorway, VisitFinland, AccuWeather.</p>
+<p>Historical climate averages for the <strong>exact dates</strong> you will be in each area (25/06 → 18/08). Sources: WeatherSpark, Climate-Data.org, VisitNorway, VisitFinland, AccuWeather.</p>
 </blockquote>
 <h4 id="pos-meteo-tabella" style="font-size:1.2em;margin-top:1.5em;">📊 Weather — Summary Table</h4>
 <table>

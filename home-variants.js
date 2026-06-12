@@ -310,7 +310,7 @@
     var timeEls = container.querySelectorAll('.hv-status-time, .hv-story-time');
     timeEls.forEach(function(el) {
       if (tripData.tripPreMode) {
-        el.textContent = 'Partenza: 26 giugno 2026';
+        el.textContent = (typeof window.TRIP_META !== 'undefined') ? 'Partenza: ' + window.TRIP_META.startIT : 'Partenza: 25 giugno 2026';
       }
     });
 
@@ -413,7 +413,7 @@
     var data = {};
     var now = new Date();
     var _en = (typeof isEN !== 'undefined' && isEN);
-    var tripStart = (typeof TRIP_START !== 'undefined') ? TRIP_START : new Date(2026, 5, 26);
+    var tripStart = (typeof TRIP_START !== 'undefined') ? TRIP_START : new Date(2026, 5, 25);
     var tripDays = (typeof TRIP_DAYS !== 'undefined') ? TRIP_DAYS : 54;
 
     // v1.84: Use session-only override (window._dayOverride) or real date
@@ -518,8 +518,8 @@
         data.weatherIcon = '☀️';
         data.weatherDesc = previewDay.meteo ? previewDay.meteo.cond : 'Bel tempo';
         data.daylight = previewDay.meteo ? previewDay.meteo.daylight : '16h di luce';
-        data.dayDate = previewDay.date || '26/06';
-        data.dayFullDate = 'Giovedì 26 Giugno 2026';
+        data.dayDate = previewDay.date || '25/06';
+        data.dayFullDate = (typeof TRIP_START !== 'undefined') ? TRIP_START.toLocaleDateString('it-IT', {weekday:'long',day:'numeric',month:'long',year:'numeric'}) : 'Giovedì 25 Giugno 2026';
         data.kmToday = previewDay.km || '350';
         data.routeTitle = previewDay.title || 'Selvazzano → Leoben';
         data.routeKm = '~' + (previewDay.km || '350') + ' km';
@@ -533,8 +533,8 @@
         data.weatherIcon = '☀️';
         data.weatherDesc = 'Bel tempo';
         data.daylight = '16h di luce';
-        data.dayDate = '26/06';
-        data.dayFullDate = 'Giovedì 26 Giugno 2026';
+        data.dayDate = '25/06';
+        data.dayFullDate = (typeof TRIP_START !== 'undefined') ? TRIP_START.toLocaleDateString('it-IT', {weekday:'long',day:'numeric',month:'long',year:'numeric'}) : 'Giovedì 25 Giugno 2026';
         data.kmToday = '350';
         data.routeTitle = 'Selvazzano → Leoben';
         data.routeKm = '~350 km';
@@ -587,12 +587,14 @@
       data.totalCountries = '0';
       data.totalCheckins = '0';
       var countdownWord = data.daysUntil === 1 ? (_en ? 'day' : 'giorno') : (_en ? 'days' : 'giorni');
-      data.progressText = (_en ? 'Departure in ' : 'Partenza tra ') + data.daysUntil + ' ' + countdownWord + ' · 54 ' + (_en ? 'days' : 'giorni') + ' · 13 ' + (_en ? 'countries' : 'paesi');
+      var _tripDays = (typeof TRIP_DAYS !== 'undefined') ? TRIP_DAYS : (typeof window.TRIP_META !== 'undefined' ? window.TRIP_META.days : 55);
+      data.progressText = (_en ? 'Departure in ' : 'Partenza tra ') + data.daysUntil + ' ' + countdownWord + ' · ' + _tripDays + ' ' + (_en ? 'days' : 'giorni') + ' · 13 ' + (_en ? 'countries' : 'paesi');
       data.kmBar = 0;
       data.lastUpdate = '';
       data.distanceFromHome = '';
     } else {
-      data.progressText = 'G' + currentDay + '/54 · ' + data.totalKm + ' km · ' + data.totalCountries + '/13 paesi';
+      var _td = (typeof TRIP_DAYS !== 'undefined') ? TRIP_DAYS : 55;
+      data.progressText = 'G' + currentDay + '/' + _td + ' · ' + data.totalKm + ' km · ' + data.totalCountries + '/13 paesi';
       data.kmBar = Math.min(100, Math.round((parseInt(data.totalKm.replace(/\./g, '')) || 0) / 12000 * 100));
       data.lastUpdate = '';
 
@@ -655,7 +657,7 @@
       data.storyHeroBg = placeholderPhotos[randIdx];
       data.photoBg = placeholderPhotos[(randIdx + 1) % placeholderPhotos.length];
       data.photoCaption = 'Anteprima del viaggio';
-      data.photoMeta = '54 giorni · 13 paesi · 12.000 km';
+      data.photoMeta = (typeof window.TRIP_META !== 'undefined') ? window.TRIP_META.summaryIT : '55 giorni · 13 paesi · 12.000 km';
       data.photoCount = placeholderPhotos.length;
     }
 
@@ -691,7 +693,7 @@
     if (!familyId) return;
 
     var now = new Date();
-    var tripStart = (typeof TRIP_START !== 'undefined') ? TRIP_START : new Date(2026, 5, 26);
+    var tripStart = (typeof TRIP_START !== 'undefined') ? TRIP_START : new Date(2026, 5, 25);
     // v1.84: Use session-only override or real date
     var currentDay;
     if (typeof window._dayOverride === 'number') {
@@ -1034,7 +1036,7 @@
       html += '    <div class="hv-diary-preview-time">' + (lang === 'en' ? 'Departure in ' + daysUntilStr : 'Partenza tra ' + daysUntilStr) + '</div>';
       html += '  </div>';
       html += '</div>';
-      html += '<div class="hv-diary-preview-highlight">\u2b50 ' + (lang === 'en' ? '54 days, 13 countries, 12,000 km in a van with the whole family!' : '54 giorni, 13 paesi, 12.000 km in furgone con tutta la famiglia!') + '</div>';
+      html += '<div class="hv-diary-preview-highlight">\u2b50 ' + (lang === 'en' ? '55 days, 13 countries, 12,000 km in a van with the whole family!' : '55 giorni, 13 paesi, 12.000 km in furgone con tutta la famiglia!') + '</div>';
       if (latestPost && latestPost.text) {
         var bodyText = (latestPost.text || '').substring(0, 120);
         html += '<div class="hv-diary-preview-text">' + escHtml(bodyText) + '</div>';
@@ -1526,7 +1528,7 @@
   // ─── Live Weather for Hero ───
   function fetchHeroLiveWeather() {
     // Only fetch if trip is active or within 16 days
-    var tripStart = (typeof TRIP_START !== 'undefined') ? TRIP_START : new Date(2026, 5, 26);
+    var tripStart = (typeof TRIP_START !== 'undefined') ? TRIP_START : new Date(2026, 5, 25);
     var tripDays = (typeof TRIP_DAYS !== 'undefined') ? TRIP_DAYS : 54;
     var now = new Date();
     // v1.84: Use session-only override or real date

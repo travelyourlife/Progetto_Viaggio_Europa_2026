@@ -3,9 +3,9 @@
 // data.js — Unica fonte di verità per Quo Vadis V4.8
 // ═══════════════════════════════════════════════════════════════
 
-var TRIP_START = new Date(2026, 5, 26, 0, 0, 0); // Month is 0-indexed: 5 = June
+var TRIP_START = new Date(2026, 5, 25, 0, 0, 0); // Month is 0-indexed: 5 = June — partenza 25 giugno (pomeriggio)
 var TRIP_END = new Date(2026, 7, 18, 23, 59, 59);   // Month is 0-indexed: 7 = August
-var TRIP_DAYS = 54;
+var TRIP_DAYS = 55;
 
 // Tab order for swipe navigation (shared between app.js sections)
 var TAB_ORDER = ['home', 'riepilogo', 'giorni', 'posizione', 'diario', 'cibo', 'cultura', 'attivita', 'piano', 'zaino', 'chat'];
@@ -16,7 +16,7 @@ var OWNER_UIDS = ['RxlVlsfeaEeSwFUVYbKQujEsbBo1', 'Mh8BOeFPnFe7WObcsUoP6wyRgPw1'
 // ─── Itinerario completo (54 giorni) ───
 // Ogni entry alimenta: tabella, timeline, mappa, countdown
 var itinerario = [
-  {"id": "g0", "label": "G0", "labelEn": "D0", "data": "26/06", "tragitto": "Selvazzano ➔ Leoben", "tragittoEn": "Selvazzano ➔ Leoben", "km": "350", "ore": "3h 30m", "oreEn": "3h 30m", "paesi": "🇮🇹➔🇦🇹", "note": "Partenza pomeriggio, notte a Leoben — dove tutto è iniziato 🌒", "noteEn": "Departure afternoon, night in Leoben — where it all began 🌒", "mapsUrl": "https://maps.google.com/?q=Leoben+Austria", "mapsLabel": "📍 Leoben", "iconsText": "🌒", "icons": [], "region": 0, "desc": "Partenza pomeriggio, notte a Leoben — dove tutto è iniziato 🌒", "descEn": "Departure afternoon, night in Leoben — where it all began 🌒", "bottom": [{"type": "link", "href": "https://maps.google.com/?q=Leoben+Austria", "text": "📍 Leoben", "target": "_blank"}]},
+  {"id": "g0", "label": "G0", "labelEn": "D0", "data": "25/06", "tragitto": "Selvazzano ➔ Leoben", "tragittoEn": "Selvazzano ➔ Leoben", "km": "350", "ore": "3h 30m", "oreEn": "3h 30m", "paesi": "🇮🇹➔🇦🇹", "note": "Partenza pomeriggio, notte a Leoben — dove tutto è iniziato 🌒", "noteEn": "Departure afternoon, night in Leoben — where it all began 🌒", "mapsUrl": "https://maps.google.com/?q=Leoben+Austria", "mapsLabel": "📍 Leoben", "iconsText": "🌒", "icons": [], "region": 0, "desc": "Partenza pomeriggio, notte a Leoben — dove tutto è iniziato 🌒", "descEn": "Departure afternoon, night in Leoben — where it all began 🌒", "bottom": [{"type": "link", "href": "https://maps.google.com/?q=Leoben+Austria", "text": "📍 Leoben", "target": "_blank"}]},
   {"id": "g1", "label": "G1", "labelEn": "D1", "data": "27/06", "tragitto": "Leoben ➔ Vienna", "tragittoEn": "Leoben ➔ Vienna", "km": "150", "ore": "1h 45m", "oreEn": "1h 45m", "paesi": "🇦🇹", "note": "Amici a Vienna. Prater o Haus der Musik", "noteEn": "Friends in Vienna. Prater or Haus der Musik", "mapsUrl": "https://maps.google.com/?q=Prater+Wien", "mapsLabel": "📍 Prater Wien", "iconsText": "♨️ ♨️ Terme Wien", "icons": [{"href": "#a1", "text": "♨️ ♨️ Terme Wien"}], "region": 0, "desc": "Amici a Vienna. Prater o Haus der Musik", "descEn": "Friends in Vienna. Prater or Haus der Musik", "bottom": [{"type": "link", "href": "https://maps.google.com/?q=Prater+Wien", "text": "📍 Prater Wien", "target": "_blank"}, {"type": "tag", "class": "hot", "href": "#a1", "text": "♨️ ♨️ Terme Wien"}]},
   {"id": "g2", "label": "G2", "labelEn": "D2", "data": "28/06", "tragitto": "Vienna ➔ Varsavia", "tragittoEn": "Vienna ➔ Warsaw", "km": "670", "ore": "7h 30m", "oreEn": "7h 30m", "paesi": "🇦🇹➔🇨🇿➔🇵🇱", "note": "Sosta Brno. Parco Fontane (⚠️ dom: no show serale)", "noteEn": "Stop in Brno. Fountain Park (⚠️ Sun: no evening show)", "mapsUrl": "https://maps.google.com/?q=Multimedia+Fountain+Park+Warsaw", "mapsLabel": "📍 Multimedia Fountain Warsaw", "iconsText": "➕ ➕ Europa C.", "icons": [{"href": "#b1", "text": "➕ ➕ Europa C."}], "region": 1, "desc": "Sosta Brno. Parco Fontane (⚠️ dom: no show serale)", "descEn": "Stop in Brno. Fountain Park (⚠️ Sun: no evening show)", "bottom": [{"type": "link", "href": "https://maps.google.com/?q=Multimedia+Fountain+Park+Warsaw", "text": "📍 Multimedia Fountain Warsaw", "target": "_blank"}, {"type": "tag", "class": "alt", "href": "#b1", "text": "➕ ➕ Europa C."}]},
   {"id": "g3", "label": "G3", "labelEn": "D3", "data": "29/06", "tragitto": "Varsavia ➔ Vilnius", "tragittoEn": "Warsaw ➔ Vilnius", "km": "470", "ore": "6h 30m", "oreEn": "6h 30m", "paesi": "🇵🇱➔🇱🇹", "note": "Bernardinai Garden, Uzupis", "noteEn": "Bernardinai Garden, Uzupis", "mapsUrl": "https://maps.google.com/?q=Bernardine+Garden+Vilnius", "mapsLabel": "📍 Bernardine Garden Vilnius", "iconsText": "➕ ➕ Baltici", "icons": [{"href": "#b2", "text": "➕ ➕ Baltici"}], "region": 1, "desc": "Bernardinai Garden, Uzupis", "descEn": "Bernardinai Garden, Uzupis", "bottom": [{"type": "link", "href": "https://maps.google.com/?q=Bernardine+Garden+Vilnius", "text": "📍 Bernardine Garden Vilnius", "target": "_blank"}, {"type": "tag", "class": "alt", "href": "#b2", "text": "➕ ➕ Baltici"}]},
@@ -654,3 +654,47 @@ window._haversineKm = function(lat1, lng1, lat2, lng2) {
           Math.sin(dLon / 2) * Math.sin(dLon / 2);
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 };
+
+// ─── v2.63: TRIP_META — single source of truth for all UI date/duration strings ───
+// Generated from TRIP_START and TRIP_DAYS. Every file that displays dates uses this.
+// Update ONLY data.js when the trip dates change — everything else auto-updates.
+(function() {
+  var s = TRIP_START;
+  var e = TRIP_END;
+  var days = TRIP_DAYS;
+
+  function pad(n) { return String(n).padStart(2, '0'); }
+  function fmtIT(d) {
+    var months = ['gennaio','febbraio','marzo','aprile','maggio','giugno',
+                  'luglio','agosto','settembre','ottobre','novembre','dicembre'];
+    return d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+  }
+  function fmtEN(d) {
+    var months = ['January','February','March','April','May','June',
+                  'July','August','September','October','November','December'];
+    return months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
+  }
+  function fmtShort(d) {
+    return pad(d.getDate()) + '/' + pad(d.getMonth()+1) + '/' + d.getFullYear();
+  }
+
+  window.TRIP_META = {
+    days:        days,
+    // Italian
+    startIT:     fmtIT(s),                              // "25 giugno 2026"
+    endIT:       fmtIT(e),                              // "18 agosto 2026"
+    rangeIT:     fmtIT(s) + ' – ' + fmtIT(e),          // "25 giugno 2026 – 18 agosto 2026"
+    shortRangeIT: pad(s.getDate())+'/'+pad(s.getMonth()+1)+' → '+pad(e.getDate())+'/'+pad(e.getMonth()+1),
+    daysIT:      days + ' giorni',                      // "55 giorni"
+    summaryIT:   days + ' giorni · 13 paesi · 12.000 km',
+    periodIT:    fmtShort(s) + ' (pomeriggio) → ' + fmtShort(e) + ' (sera) — ' + days + ' giorni',
+    // English
+    startEN:     fmtEN(s),                              // "June 25, 2026"
+    endEN:       fmtEN(e),                              // "August 18, 2026"
+    rangeEN:     fmtEN(s) + ' – ' + fmtEN(e),
+    shortRangeEN: pad(s.getDate())+'/'+pad(s.getMonth()+1)+' → '+pad(e.getDate())+'/'+pad(e.getMonth()+1),
+    daysEN:      days + ' days',
+    summaryEN:   days + ' days · 13 countries · 12,000 km',
+    periodEN:    fmtShort(s) + ' (afternoon) → ' + fmtShort(e) + ' (evening) — ' + days + ' days',
+  };
+})();

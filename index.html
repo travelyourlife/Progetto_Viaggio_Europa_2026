@@ -86,7 +86,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = '2.61';
+  var EXPECTED_VERSION = '2.64';
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
   var r = false;
@@ -164,7 +164,7 @@
 <div class="splash-screen" id="splash">
     <img src="./icon.png" alt="" class="splash-logo">
     <div class="splash-title">Quo Vadis</div>
-    <div class="splash-sub">54 giorni · 13 paesi · 12.000 km</div>
+    <div class="splash-sub">55 giorni · 13 paesi · 12.000 km</div>
 </div>
 
 <!-- ─── Offline Banner ─── -->
@@ -221,7 +221,7 @@
 <nav class="side-menu" role="navigation" id="sideMenu">
     <div class="side-menu-header">
         <h3>Quo Vadis</h3>
-        <p>54 giorni · 13 paesi</p>
+        <p data-trip-meta="summaryIT">55 giorni · 13 paesi</p>
         <button class="menu-close" id="menuClose">✕</button>
     </div>
     <a class="menu-item active" data-tab="home"><span class="menu-icon">🏠</span><span class="menu-text">Home</span></a>
@@ -327,7 +327,7 @@
             <span class="hero-card-number" id="home-countdown-num">--</span>
             <span class="hero-card-text">giorni alla partenza</span>
         </div>
-        <div class="hero-card-date">📅 26 giugno 2026</div>
+        <div class="hero-card-date" data-trip-meta="startIT">📅 25 giugno 2026</div>
     </div>
     <!-- During-trip content (hidden by default) -->
     <div class="hero-card-trip" id="hero-during-trip" style="display:none;">
@@ -462,13 +462,13 @@
 <a href="#meteo-viaggio">🌤️ Meteo</a>
 <a href="#legenda">🏷️ Legenda</a>
 <a href="#mappa">🗺️ Mappa</a>
-<a href="#itinerario-54-giorni">🌟 Itinerario</a>
+<a href="#itinerario-giorni">🌟 Itinerario</a>
 </div></div>
 <div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerario</a> · 📍 <a href="javascript:void(0)" class="protected-link" onclick="switchTab('posizione')">Posizione Live</a> · 🍝 <a href="javascript:void(0)" onclick="switchTab('cibo')">Cibo</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura')">Cultura</a> · 📋 <a href="javascript:void(0)" onclick="switchTab('piano')">Piano</a></div>
 <h2 id="sintesi">📋 Sintesi — Equipaggio e Mezzo</h2>
 <p>👨‍👩‍👧‍👦 <strong>Equipaggio:</strong> 2 adulti + 2 bambini (8 e 6 anni)</p>
 <p>🚐 <strong>Mezzo:</strong> furgone camperizzato autonomo (LiFePo4 + bombola gas 5 kg)</p>
-<p>📅 <strong>Periodo:</strong> 26/06/2026 (pomeriggio) → 18/08/2026 (sera) — <strong>54 giorni</strong></p>
+<p>📅 <strong>Periodo:</strong> 25/06/2026 (pomeriggio) → 18/08/2026 (sera) — <strong>55 giorni</strong></p>
 <p>🛣️ <strong>Km totali:</strong> ~12.320 km</p>
 <p>🌑 <strong>Evento cardine:</strong> 🌒 <strong>Eclissi Totale di Sole — 12/08/2026</strong>, zona <strong>Palencia (🇪🇸)</strong>, totalità ~h 20:29 locale, Sole a ~11° sull'orizzonte Ovest</p>
 <p>🎯 <strong>Focus viaggio:</strong> natura, parchi e musei per bambini, strade panoramiche (🛣️), eclissi totale, esperienze termali, pesca 🎣, trekking 🥾</p>
@@ -620,7 +620,7 @@
 </tbody>
 </table>
 <hr>
-<h2 id="itinerario-54-giorni">🌟 Itinerario — 54 Giorni</h2>
+<h2 id="itinerario-giorni">🌟 Itinerario — 55 Giorni</h2>
 <p><strong>Legenda:</strong> ♨️ = terma agganciabile (vedi <a href="#secA">Terme</a>) · ➕ = deviazione alternativa (vedi <a href="#secB">Alternative</a>) · 🎣 = pesca possibile (vedi <a href="#pesca">Guida Pesca</a>) · 🥾 = trekking (vedi <a href="#trekking">Guida Trekking</a>)</p>
 <p><strong>Clicca il Gx per saltare ai dettagli.</strong></p>
 <!--KEEP-NO-RESPONSIVE--><table class="table-large">
@@ -7469,7 +7469,7 @@
 <hr>
 
 <h2 id="feste">🎉 Festival — Eventi lungo il Percorso</h2>
-<p>Il viaggio (26 giugno – 18 agosto) coincide con l'alta stagione di festival e feste popolari in tutta Europa. Ecco gli eventi che <strong>cadono esattamente nei giorni in cui sarete sul posto</strong>.</p>
+<p>Il viaggio (25 giugno – 18 agosto) coincide con l'alta stagione di festival e feste popolari in tutta Europa. Ecco gli eventi che <strong>cadono esattamente nei giorni in cui sarete sul posto</strong>.</p>
 <div id="poi-list-festival"></div>
 <p style="margin-top:12px;"><strong>💡 Tip:</strong> 🇪🇸 In agosto quasi ogni città spagnola ha la sua festa patronale. Aspettatevi: musica in piazza fino a tardi, bancarelle, fuochi d'artificio!</p>
 <hr>
@@ -7622,7 +7622,7 @@
 <li class="task-item"><input type="checkbox" data-idx="piano-skyttelpass"> <strong>Ordinare SkyttelPASS tag</strong> (4–6 settimane prima) — <a href="https://skyttelpass.no/en/order-tag/" target="_blank" rel="noopener noreferrer">skyttelpass.no</a> (NOK 200 (~€19), sconto 20% pedaggi + 10% traghetti)</li>
 <li class="task-item"><input type="checkbox" data-idx="piano-autopass-ferje"> Attivare AutoPASS ferje prepayment agreement — <a href="https://autopassferje.no/en/" target="_blank" rel="noopener noreferrer">autopassferje.no</a> (deposito NOK 3.600 (~€333), sconto 50% traghetti interni)</li>
 <li class="task-item"><input type="checkbox" data-idx="piano-copenhagen-card"> Acquistare Copenhagen Card 48h online — <a href="https://copenhagencard.com/" target="_blank" rel="noopener noreferrer">copenhagencard.com</a> (~€268 per 4 pax, include Tivoli+Experimentarium+trasporti)</li>
-<li class="task-item"><input type="checkbox" data-idx="piano-polizza-sanitaria"> Polizza sanitaria integrativa 54 giorni + 2 minori (TEAM valida, ma polizza extra per rimpatrio)</li>
+<li class="task-item"><input type="checkbox" data-idx="piano-polizza-sanitaria"> Polizza sanitaria integrativa 55 giorni + 2 minori (TEAM valida, ma polizza extra per rimpatrio)</li>
 <li class="task-item"><input type="checkbox" data-idx="piano-triangolo-gilet"> Triangolo + gilet catarifrangenti (obbligatori in molti Paesi)</li>
 </ul>
 <hr>
@@ -7699,7 +7699,7 @@
 <p>Numero cellulare genitori</p>
 <hr>
 <h3 id="note-bombola-gas">⛽ Note Bombola Gas</h3>
-<p>La bombola da 5 kg dura ~2-3 settimane con cottura quotidiana. Per 54 giorni servono almeno 2-3 ricariche.</p>
+<p>La bombola da 5 kg dura ~2-3 settimane con cottura quotidiana. Per 55 giorni servono almeno 2-3 ricariche.</p>
 <table>
 <thead>
 <tr>
@@ -7796,7 +7796,7 @@
 </tbody>
 </table>
 <hr>
-<h2 id="budget">💶 Budget — Stima 54 Giorni, 4 Pax</h2>
+<h2 id="budget">💶 Budget — Stima 55 Giorni, 4 Pax</h2>
 <table>
 <thead>
 <tr>
@@ -7869,7 +7869,7 @@
 </blockquote>
 <p>🎯 <strong>Vitto in Scandinavia:</strong> i prezzi alimentari in Norvegia/Finlandia/Danimarca sono 50-100% superiori all'Italia. Cucinare nel furgone il più possibile! Supermercati economici: Rema 1000, Kiwi (NO), Lidl (FI/DK).</p>
 <blockquote>
-<p><strong>Lavanderia:</strong> stimare 6-8 lavaggi in 54 giorni (~€50 totali, inclusi in "Varie"). Campeggi con lavatrice: verificare su Park4Night.</p>
+<p><strong>Lavanderia:</strong> stimare 6-8 lavaggi in 55 giorni (~€50 totali, inclusi in "Varie"). Campeggi con lavatrice: verificare su Park4Night.</p>
 </blockquote>
 <hr>
 <h2 id="valute">💱 Valute — Cambi Approssimativi</h2>
@@ -8725,7 +8725,7 @@
 <!-- v2.59: alias anchors for app.js ID compatibility with EN version -->
 <span id="pos-meteo-anchor"></span>
 <blockquote>
-<p>Medie climatiche storiche per le <strong>date esatte</strong> in cui sarete in ogni zona (26/06 → 18/08). Fonti: WeatherSpark, Climate-Data.org, VisitNorway, VisitFinland, AccuWeather.</p>
+<p>Medie climatiche storiche per le <strong>date esatte in cui sarete in ogni zona (25/06 → 18/08). Fonti: WeatherSpark, Climate-Data.org, VisitNorway, VisitFinland, AccuWeather.</p>
 </blockquote>
 <h4 id="meteo-tabella-riassuntiva" style="font-size:1.2em;margin-top:1.5em;">📊 Meteo — Tabella Riassuntiva</h4>
 <table>

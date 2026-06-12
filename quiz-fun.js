@@ -126,6 +126,27 @@
     var btn = card.querySelector('.quiz-reveal-btn');
     var answer = card.querySelector('.quiz-answer');
 
+    // v2.63 FIX: restore progress from localStorage on reload
+    try {
+      var _savedProgress = JSON.parse(localStorage.getItem('quovadis-quiz-progress') || '{}');
+      var _countryId = section.getAttribute('data-country') || section.id || '';
+      var _cp = _savedProgress[_countryId];
+      if (_cp && idx < _cp.revealed) {
+        card.classList.add('revealed');
+        answer.classList.add('visible');
+        btn.style.display = 'none';
+        // Update section revealed counter (used by score display)
+        var _curRevealed = parseInt(section.getAttribute('data-revealed') || '0');
+        section.setAttribute('data-revealed', _curRevealed + 1);
+        // Update score text if present
+        var _scoreEl = section.querySelector('.quiz-score-text');
+        if (_scoreEl) {
+          var _total = parseInt(section.getAttribute('data-total') || '0');
+          _scoreEl.textContent = (_curRevealed + 1) + '/' + _total;
+        }
+      }
+    } catch(e) {}
+
     btn.addEventListener('click', function() {
       if (card.classList.contains('revealed')) return;
 

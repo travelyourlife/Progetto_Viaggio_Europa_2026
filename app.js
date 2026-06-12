@@ -129,7 +129,7 @@ var KEYS = {
 })();
 
 // Safety guard: if data.js failed to load, provide minimal fallbacks
-if (typeof TRIP_START === 'undefined') { var TRIP_START = new Date(2026, 5, 26, 0, 0, 0); }
+if (typeof TRIP_START === 'undefined') { var TRIP_START = new Date(2026, 5, 25, 0, 0, 0); }
 if (typeof TRIP_DAYS === 'undefined') { var TRIP_DAYS = 54; }
 if (typeof itinerario === 'undefined') { var itinerario = []; }
 if (typeof regioni === 'undefined') { var regioni = []; }
@@ -560,6 +560,14 @@ document.addEventListener('DOMContentLoaded', function() {
       if (_aal) _aal.style.display = '';
     }
   } catch(e) {}
+  // v2.63: populate all [data-trip-meta] elements from TRIP_META (centralized dates)
+  // Change TRIP_START/TRIP_DAYS in data.js — all UI text updates automatically
+  if (typeof window.TRIP_META !== 'undefined') {
+    document.querySelectorAll('[data-trip-meta]').forEach(function(el) {
+      var val = window.TRIP_META[el.getAttribute('data-trip-meta')];
+      if (val !== undefined) el.textContent = val;
+    });
+  }
 });
 
 // ─── Owner/Viewer Auth State (V4.8) ───
@@ -953,9 +961,9 @@ window.openMapFullscreen = function openMapFullscreen(mapInstance, title) {
             var HOME_COORDS = [45.39, 11.85];
             var routeCoords = [HOME_COORDS].concat(TRIP_COORDS.map(function(c) { return [c.lat, c.lng]; }));
             var now = new Date();
-            var tripStart = typeof TRIP_START !== 'undefined' ? TRIP_START : new Date(2026, 5, 26);
+            var tripStart = typeof TRIP_START !== 'undefined' ? TRIP_START : new Date(2026, 5, 25);
             var currentDay = Math.floor((now - tripStart) / 86400000);
-            var totalDays = typeof TRIP_DAYS !== 'undefined' ? TRIP_DAYS : 54;
+            var totalDays = typeof TRIP_DAYS !== 'undefined' ? TRIP_DAYS : 55;
             if (currentDay >= totalDays) {
                 L.polyline(routeCoords, { color: '#38a169', weight: 3, opacity: 0.8, lineJoin: 'round' }).addTo(fsMap);
             } else if (currentDay >= 0) {
@@ -1222,9 +1230,9 @@ function initRouteMap() {
 
         // Determine current trip day for coloring
         var now = new Date();
-        var tripStart = typeof TRIP_START !== 'undefined' ? TRIP_START : new Date(2026, 5, 26);
+        var tripStart = typeof TRIP_START !== 'undefined' ? TRIP_START : new Date(2026, 5, 25);
         var currentDay = Math.floor((now - tripStart) / 86400000);
-        var tripDays = typeof TRIP_DAYS !== 'undefined' ? TRIP_DAYS : 54;
+        var tripDays = typeof TRIP_DAYS !== 'undefined' ? TRIP_DAYS : 55;
         var tripActive = currentDay >= 0 && currentDay < tripDays;
 
         // Draw route line: solid for past, dashed for future
@@ -1466,7 +1474,7 @@ document.addEventListener('DOMContentLoaded', function() {
             dayEl.textContent = '-' + diffDays;
             infoEl.innerHTML = isEN ? '<strong>' + diffDays + ' days</strong> until departure<br>' + tripDays[0].title : 'Mancano <strong>' + diffDays + ' giorni</strong> alla partenza<br>' + tripDays[0].title;
             if (progressFill) progressFill.style.width = '0%';
-            if (progressText) progressText.textContent = isEN ? 'Departure: 26 June 2026' : 'Partenza: 26 giugno 2026';
+            if (progressText) progressText.textContent = (typeof window.TRIP_META !== 'undefined') ? (isEN ? 'Departure: ' + window.TRIP_META.startEN : 'Partenza: ' + window.TRIP_META.startIT) : (isEN ? 'Departure: 25 June 2026' : 'Partenza: 25 giugno 2026');
         } else if (diffDays <= 0 && today <= endDate) {
             var tripDay = Math.abs(diffDays);
             if (tripDay < tripDays.length) {
@@ -1507,7 +1515,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 var dLeft = Math.ceil((tripStart - today) / 86400000);
                 miniLabel.textContent = isEN ? 'Departure in ' + dLeft + ' days' : 'Partenza tra ' + dLeft + ' giorni';
             } else if (currentDay < days.length) {
-                miniLabel.textContent = (isEN ? 'Day ' : 'Giorno ') + (currentDay + 1) + '/54 — ' + days[currentDay].title;
+                miniLabel.textContent = (isEN ? 'Day ' : 'Giorno ') + (currentDay + 1) + '/' + (typeof TRIP_DAYS !== 'undefined' ? TRIP_DAYS : 55) + ' — ' + days[currentDay].title;
             } else {
                 miniLabel.textContent = isEN ? 'Trip completed!' : 'Viaggio completato!';
             }
@@ -2069,7 +2077,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 todayPoints.splice(0, Math.floor(MAX_TRACK_POINTS * 0.1));
                 console.warn('[Tracking] todayPoints capped at', MAX_TRACK_POINTS, '— dropped oldest 10%');
             }
-            todayPoints.push(pt);
+            pushTrackPoint(pt);
         }
         var checkins = {};
 
@@ -2124,6 +2132,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         todayKm += straightDist;
                         console.info('[GPS Gap] OSRM unreasonable, using straight-line: ' + straightDist.toFixed(1) + ' km');
                     }
+                } else {
+                    // v2.62 FIX BUG-07: OSRM no route (ferry, remote area, no road) — use straight ×1.15
+                    todayKm += straightDist * 1.15;
+                    console.warn('[GPS Gap] OSRM no route, using straight ×1.15:', (straightDist * 1.15).toFixed(1), 'km');
                 }
             }).catch(function(err) {
                 // Fallback: use straight-line if OSRM fails
@@ -3059,6 +3071,14 @@ document.addEventListener('DOMContentLoaded', function() {
         function stopLive() {
             liveActive = false;
             if (liveWatchId) { navigator.geolocation.clearWatch(liveWatchId); liveWatchId = null; }
+            // v2.62 FIX BUG-03: reset effective drive time counters for next session
+            window._effectiveDriveMs = 0;
+            window._lastGpsFix = null;
+            var driveEl = document.getElementById('live-drive-effective');
+            if (driveEl) driveEl.textContent = '0:00';
+            // v2.62 FIX BUG-04: hide live stats panel
+            var statsDiv = document.getElementById('pos-live-stats');
+            if (statsDiv) statsDiv.style.display = 'none';
             if (liveTimer) { clearInterval(liveTimer); liveTimer = null; }
             if (idleCheckTimer) { clearInterval(idleCheckTimer); idleCheckTimer = null; }
             if (window._autoSaveTimer) { clearInterval(window._autoSaveTimer); window._autoSaveTimer = null; }
@@ -4689,13 +4709,23 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!match) return;
             const day = parseInt(match[1]);
             let region = '';
+            // v2.63 FIX: ranges updated for 55-day itinerary (G5 Riga rest day added)
+            // G0-G2: Central Europe (Austria, Poland)
+            // G3-G6: Baltic States (Lithuania, Latvia x2, Estonia)
+            // G7-G15: Finland (Lappeenranta → Kilpisjärvi)
+            // G16-G33: Norway (Tromsø → Kristiansand)
+            // G34-G40: Denmark + Legoland
+            // G41-G43: France (Amiens, Loire)
+            // G44-G50: Spain (San Sebastián → Costa Brava)
+            // G51-G54: Return (French Riviera, Genova, home)
             if (day <= 2) region = 'central';
-            else if (day <= 5) region = 'baltic';
-            else if (day <= 14) region = 'finland';
-            else if (day <= 32) region = 'norway';
-            else if (day <= 39) region = 'denmark';
-            else if (day <= 42) region = 'france';
-            else if (day <= 49) region = 'spain';
+            else if (day <= 6) region = 'baltic';
+            else if (day <= 15) region = 'finland';
+            else if (day <= 33) region = 'norway';
+            else if (day <= 40) region = 'denmark';
+            else if (day <= 43) region = 'france';
+            else if (day <= 50) region = 'spain';
+            else if (day <= 51) region = 'france';
             else region = 'return';
             h.setAttribute('data-region', region);
         });
@@ -4768,14 +4798,14 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!pillsContainer) return;
 
         var regionDefs = [
-            { id: 'central', flags: '🇮🇹🇦🇹', it: 'Centrale', en: 'Central', days: 'G0-G2' },
-            { id: 'baltic',  flags: '🇵🇱🇱🇹🇱🇻🇪🇪', it: 'Baltici', en: 'Baltic', days: 'G3-G5' },
-            { id: 'finland', flags: '🇫🇮', it: 'Finlandia', en: 'Finland', days: 'G6-G14' },
-            { id: 'norway',  flags: '🇳🇴', it: 'Norvegia', en: 'Norway', days: 'G15-G32' },
-            { id: 'denmark', flags: '🇩🇰', it: 'Danimarca', en: 'Denmark', days: 'G33-G39' },
-            { id: 'france',  flags: '🇫🇷', it: 'Francia', en: 'France', days: 'G40-G42' },
-            { id: 'spain',   flags: '🇪🇸', it: 'Spagna', en: 'Spain', days: 'G43-G49' },
-            { id: 'return',  flags: '🇮🇹', it: 'Ritorno', en: 'Return', days: 'G50-G53' }
+            { id: 'central', flags: '🇮🇹🇦🇹🇵🇱', it: 'Centrale', en: 'Central', days: 'G0-G2' },
+            { id: 'baltic',  flags: '🇱🇹🇱🇻🇪🇪', it: 'Baltici', en: 'Baltic', days: 'G3-G6' },
+            { id: 'finland', flags: '🇫🇮', it: 'Finlandia', en: 'Finland', days: 'G7-G15' },
+            { id: 'norway',  flags: '🇳🇴', it: 'Norvegia', en: 'Norway', days: 'G16-G33' },
+            { id: 'denmark', flags: '🇩🇰', it: 'Danimarca', en: 'Denmark', days: 'G34-G40' },
+            { id: 'france',  flags: '🇫🇷', it: 'Francia', en: 'France', days: 'G41-G43' },
+            { id: 'spain',   flags: '🇪🇸', it: 'Spagna', en: 'Spain', days: 'G44-G50' },
+            { id: 'return',  flags: '🇮🇹', it: 'Ritorno', en: 'Return', days: 'G51-G54' }
         ];
 
         // Scroll lock flag to prevent IntersectionObserver from interfering during programmatic scrolls
@@ -5173,16 +5203,16 @@ if ('serviceWorker' in navigator) {
   async function updateMeteo() {
     const today = new Date();
     today.setHours(0,0,0,0);
-    for (const el of meteoElements) {
+    // v2.62 FIX BUG-05: parallel fetch (groups of 8) instead of sequential
+    async function fetchAndRender(el) {
       const dayIdx = parseInt(el.dataset.day);
       const dayDate = getDayDate(dayIdx);
       const daysUntil = Math.ceil((dayDate - today) / (1000*60*60*24));
-      // Open-Meteo gives up to 16 days of forecast
-      if (daysUntil <= 16 && daysUntil >= 0) {
-        const lat = parseFloat(el.dataset.lat);
-        const lon = parseFloat(el.dataset.lon);
-        const dateStr = formatDate(dayDate);
-        const forecast = await fetchForecast(lat, lon, dateStr);
+      if (daysUntil > 16 || daysUntil < 0) return;
+      const lat = parseFloat(el.dataset.lat);
+      const lon = parseFloat(el.dataset.lon);
+      const dateStr = formatDate(dayDate);
+      const forecast = await fetchForecast(lat, lon, dateStr);
         if (forecast) {
           const wInfo = weatherCodes[forecast.code] || {it: 'Variabile', en: 'Variable', icon: '🌤️'};
           const label = isEN ? wInfo.en : wInfo.it;
@@ -5200,10 +5230,12 @@ if ('serviceWorker' in navigator) {
           if (forecast.precipProb != null && forecast.precipProb > 0) extra += ' · ' + (isEN ? 'Rain ' : 'Pioggia ') + forecast.precipProb + '%';
           el.innerHTML = `${wInfo.icon} ${forecast.high}°C / ${forecast.low}°C · ${label} · ${daylightStr}${extra} <span class="meteo-badge meteo-live">${badge}</span>`;
         }
-      } else if (daysUntil < 0) {
-        // Try to load real weather from Firebase archive
-        await loadArchivedWeather(el, dayIdx);
-      }
+    }
+    // v2.62 FIX BUG-05: execute fetchAndRender in parallel batches of 8
+    var eligible = Array.from(meteoElements);
+    var BATCH = 8;
+    for (var _b = 0; _b < eligible.length; _b += BATCH) {
+      await Promise.all(eligible.slice(_b, _b + BATCH).map(fetchAndRender));
     }
   }
 
@@ -5246,7 +5278,12 @@ if ('serviceWorker' in navigator) {
   window.fetchLiveWeather = function() { return updateMeteo(); };
 
   if (document.readyState === 'loading') {
+    // v2.62 FIX BUG-13: check readyState — if DOM already loaded, DOMContentLoaded won't fire
+if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', updateMeteo);
+} else {
+    setTimeout(updateMeteo, 0);
+}
   } else {
     updateMeteo();
   }
@@ -8116,6 +8153,11 @@ if ('serviceWorker' in navigator) {
           showToast(isEN ? '\u2705 Day saved to journal!' : '\u2705 Giorno salvato nel diario!', 'success');
         }
         if (window.haptic) window.haptic(15);
+        // v2.63 FIX: reload gallery if it's open so new photos appear immediately
+        if (typeof loadGallery === 'function' && document.getElementById('diario-gallery') &&
+            document.getElementById('diario-gallery').style.display !== 'none') {
+          loadGallery(true);
+        }
 
         // Queue evening push notification to visitors
         queuePushNotification('evening_recap', {
@@ -8164,6 +8206,20 @@ if ('serviceWorker' in navigator) {
   var _placeLastLat = null, _placeLastLng = null;
   var _placeNotified = false;
   var _placeReverseCache = {};
+  var _placeReverseCacheKeys = []; // v2.63: track insertion order for LRU eviction
+  var _PLACE_CACHE_MAX = 300;      // cap at 300 entries (~55 days × ~5 new coords/day)
+  function _placeReverseCacheSet(key, value) {
+    if (!_placeReverseCache[key]) {
+      _placeReverseCacheKeys.push(key);
+      // Evict oldest 20% when limit reached
+      if (_placeReverseCacheKeys.length > _PLACE_CACHE_MAX) {
+        var drop = Math.floor(_PLACE_CACHE_MAX * 0.2);
+        var evicted = _placeReverseCacheKeys.splice(0, drop);
+        evicted.forEach(function(k) { delete _placeReverseCache[k]; });
+      }
+    }
+    _placeReverseCache[key] = value;
+  }
   var PLACE_IDLE_THRESHOLD = 10 * 60 * 1000; // 10 minutes
   var PLACE_SPEED_THRESHOLD = 2; // km/h
 
@@ -8241,7 +8297,7 @@ if ('serviceWorker' in navigator) {
       } else if (data.display_name) {
         name = data.display_name.split(',').slice(0, 2).join(',');
       }
-      _placeReverseCache[key] = name;
+      _placeReverseCacheSet(key, name);
       callback(name);
     }).catch(function() { callback(null); });
   }
@@ -9464,6 +9520,15 @@ if ('serviceWorker' in navigator) {
     if (!chatFileInput.files || !chatFileInput.files.length) return;
     var file = chatFileInput.files[0];
 
+    // v2.63 FIX: validate MIME type before upload
+    var ALLOWED_MIME = ['image/', 'audio/', 'video/', 'application/pdf'];
+    var isMimeAllowed = ALLOWED_MIME.some(function(t) { return file.type.startsWith(t); });
+    if (!isMimeAllowed) {
+      showToast(isEN ? '❌ File type not allowed. Use images, audio, video or PDF.' : '❌ Tipo file non supportato. Usa immagini, audio, video o PDF.', 'error');
+      chatFileInput.value = '';
+      return;
+    }
+
     // Check file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
       if (window.showToast) showToast(isEN ? 'File too large (max 5MB)' : 'File troppo grande (max 5MB)', 'error');
@@ -9536,12 +9601,13 @@ if ('serviceWorker' in navigator) {
     navigator.mediaDevices.getUserMedia({ audio: true }).then(function(stream) {
       isRecording = true;
       audioChunks = [];
+      var _chatRecStream = stream; // v2.63 FIX: save stream in closure (mediaRecorder.stream undefined in some browsers)
       mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm;codecs=opus' });
       mediaRecorder.ondataavailable = function(e) {
         if (e.data.size > 0) audioChunks.push(e.data);
       };
       mediaRecorder.onstop = function() {
-        stream.getTracks().forEach(function(t) { t.stop(); });
+        _chatRecStream.getTracks().forEach(function(t) { t.stop(); });
       };
       mediaRecorder.start();
       // UI
@@ -9570,7 +9636,7 @@ if ('serviceWorker' in navigator) {
 
     if (send) {
       mediaRecorder.onstop = function() {
-        mediaRecorder.stream.getTracks().forEach(function(t) { t.stop(); });
+        _chatRecStream.getTracks().forEach(function(t) { t.stop(); });
         var blob = new Blob(audioChunks, { type: 'audio/webm' });
         if (blob.size < 1000) {
           if (window.showToast) showToast(isEN ? 'Recording too short' : 'Registrazione troppo breve', 'info');
@@ -9598,7 +9664,7 @@ if ('serviceWorker' in navigator) {
     } else {
       // Cancel — just stop and discard
       mediaRecorder.onstop = function() {
-        mediaRecorder.stream.getTracks().forEach(function(t) { t.stop(); });
+        _chatRecStream.getTracks().forEach(function(t) { t.stop(); });
         audioChunks = [];
       };
     }
@@ -9736,7 +9802,8 @@ if ('serviceWorker' in navigator) {
       var trailing = url.slice(cleaned.length);
       // Extra sanitization: ensure no unescaped quotes in URL that could break href attribute
       var safeUrl = cleaned.replace(/"/g, '%22').replace(/'/g, '%27');
-      return '<a href="' + safeUrl + '" target="_blank" rel="noopener noreferrer">' + cleaned + '</a>' + escapeHtml(trailing);
+      // v2.63 FIX: escape link text to prevent XSS via crafted URLs
+      return '<a href="' + safeUrl + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(cleaned) + '</a>' + escapeHtml(trailing);
     });
   }
 
@@ -10618,9 +10685,12 @@ if ('serviceWorker' in navigator) {
     if (isGallery) loadGallery();
   }
 
-  function loadGallery() {
+  function loadGallery(forceReload) {
     if (!galleryGrid) return;
-    if (galleryGrid.children.length > 0) return; // already loaded
+    // v2.63 FIX: support forceReload to refresh after new photo uploaded
+    if (!forceReload && galleryGrid.children.length > 0) return;
+    galleryGrid.innerHTML = ''; // clear before reload
+    if (galleryEmpty) galleryEmpty.style.display = 'none';
     if (typeof firebase === 'undefined' || !firebase.database) return;
     var familyId = (typeof FAMILY_ID !== 'undefined') ? FAMILY_ID : 'viaggio-europa-2026';
     var db = firebase.database();
@@ -10794,6 +10864,27 @@ if ('serviceWorker' in navigator) {
     var effectiveOwner = asOwner && !window._simRole;
     if (addEntryBtn) addEntryBtn.style.display = effectiveOwner ? '' : 'none';
     loadTimeline();
+    // v2.64 FIX: client-side auto-publish for expired scheduled posts
+    // CF publishScheduledPosts handles this server-side but may not be deployed yet.
+    // Owner triggers this check on every diario open — safe, idempotent, fast.
+    if (effectiveOwner) {
+      var _now = Date.now();
+      var _familyId = (typeof FAMILY_ID !== 'undefined') ? FAMILY_ID : 'viaggio-europa-2026';
+      firebase.database().ref('trips/' + _familyId + '/diary').once('value', function(snap) {
+        var entries = snap.val() || {};
+        Object.entries(entries).forEach(function(_kv) {
+          var key = _kv[0]; var entry = _kv[1];
+          if (entry && entry.draft === true && entry.publishAt && entry.publishAt <= _now) {
+            firebase.database().ref('trips/' + _familyId + '/diary/' + key)
+              .update({ draft: null, publishAt: null, publishedAt: _now })
+              .then(function() {
+                console.info('[Diario] Auto-published scheduled post:', key, entry.title || '');
+                if (window.showToast) showToast('📖 ' + (entry.title || 'Post') + ' — ' + (isEN ? 'published!' : 'pubblicato!'), 'success');
+              });
+          }
+        });
+      });
+    }
   }
 
   // ─── Login Button ───
@@ -10917,7 +11008,7 @@ if ('serviceWorker' in navigator) {
         date: today,
         customLabel: 'Pre-viaggio',
         customType: 'recap',
-        text: isEN ? 'The route is ready! 54 days, 13 countries, 12,000 km in a van with the whole family.' : 'Il percorso \u00e8 pronto! 54 giorni, 13 paesi, 12.000 km in furgone con tutta la famiglia.',
+        text: isEN ? 'The route is ready! 55 days, 13 countries, 12,000 km in a van with the whole family.' : 'Il percorso \u00e8 pronto! 55 giorni, 13 paesi, 12.000 km in furgone con tutta la famiglia.',
         draft: true,
         createdAt: firebase.database.ServerValue.TIMESTAMP
       }
@@ -11149,44 +11240,46 @@ if ('serviceWorker' in navigator) {
     }
   }
 
-  // ─── Load weather archive for diary entries (v2.18: reads from weatherLog/{date}) ───
+  // ─── Load weather archive for diary entries ───
+  // v2.63 FIX: single query for entire weatherLog instead of N separate queries
   function loadDiaryWeather() {
     if (!firebase.database) return;
     var familyId = (typeof FAMILY_ID !== 'undefined') ? FAMILY_ID : 'viaggio-europa-2026';
-    var rows = timelineEl.querySelectorAll('.diario-weather-row');
-    rows.forEach(function(row) {
-      var dateKey = row.getAttribute('data-weather-date');
-      if (!dateKey) {
-        // Fallback: try old day-index format from weatherArchive
-        var dayIdx = parseInt(row.getAttribute('data-weather-day'));
-        if (isNaN(dayIdx) || dayIdx < 0) return;
-        firebase.database().ref('trips/' + familyId + '/weatherArchive/' + dayIdx).once('value', function(snap) {
-          if (!snap.exists()) return;
-          var w = snap.val();
-          row.innerHTML = '<span class="diario-weather-icon">' + (w.icon || '\u{1F324}\uFE0F') + '</span> ' +
-            w.high + '\u00b0/' + w.low + '\u00b0C \u00b7 ' + (w.condition || '') +
-            (w.sunrise ? ' \u00b7 \u{1F305} ' + w.sunrise + '\u2013' + w.sunset : '') +
-            (w.wind && w.wind > 15 ? ' \u00b7 \u{1F4A8} ' + w.wind + ' km/h' : '');
-          row.style.display = '';
-        });
-        return;
-      }
-      // v2.18: Read from weatherLog/{date}
-      firebase.database().ref('trips/' + familyId + '/weatherLog/' + dateKey).once('value', function(snap) {
-        if (!snap.exists()) return;
-        var w = snap.val();
+    var rows = Array.from(timelineEl.querySelectorAll('.diario-weather-row'));
+    if (rows.length === 0) return;
+
+    // One query for all dates, then distribute to rows
+    firebase.database().ref('trips/' + familyId + '/weatherLog').once('value', function(snap) {
+      var allWeather = snap.val() || {};
+      rows.forEach(function(row) {
+        var dateKey = row.getAttribute('data-weather-date');
+        if (!dateKey) {
+          var dayIdx = parseInt(row.getAttribute('data-weather-day'));
+          if (isNaN(dayIdx) || dayIdx < 0) return;
+          firebase.database().ref('trips/' + familyId + '/weatherArchive/' + dayIdx).once('value', function(s2) {
+            if (!s2.exists()) return;
+            var w = s2.val();
+            row.innerHTML = '<span class="diario-weather-icon">' + (w.icon || '\u{1F324}\uFE0F') + '</span> ' +
+              w.high + '\u00b0/' + w.low + '\u00b0C \u00b7 ' + (w.condition || '') +
+              (w.sunrise ? ' \u00b7 \u{1F305} ' + w.sunrise + '\u2013' + w.sunset : '') +
+              (w.wind && w.wind > 15 ? ' \u00b7 \u{1F4A8} ' + w.wind + ' km/h' : '');
+            row.style.display = '';
+          });
+          return;
+        }
+        var w = allWeather[dateKey];
+        if (!w) return;
         var icon = weatherCodeToIconDiary(w.weatherCode);
         var html = '<span class="diario-weather-icon">' + icon + '</span> ' +
           w.tempMax + '\u00b0/' + w.tempMin + '\u00b0C';
         if (w.precipitation > 0) html += ' \u00b7 \u{1F4A7} ' + w.precipitation.toFixed(1) + 'mm';
         if (w.windMax > 15) html += ' \u00b7 \u{1F4A8} ' + Math.round(w.windMax) + ' km/h';
         if (w.sunrise && w.sunset) {
-          var rise = new Date(w.sunrise);
-          var set = new Date(w.sunset);
+          var rise = new Date(w.sunrise); var set = new Date(w.sunset);
           if (!isNaN(rise) && !isNaN(set)) {
-            var riseFmt = rise.getHours().toString().padStart(2,'0') + ':' + rise.getMinutes().toString().padStart(2,'0');
-            var setFmt = set.getHours().toString().padStart(2,'0') + ':' + set.getMinutes().toString().padStart(2,'0');
-            html += ' \u00b7 \u{1F305} ' + riseFmt + '\u2013' + setFmt;
+            var rf = rise.getHours().toString().padStart(2,'0') + ':' + rise.getMinutes().toString().padStart(2,'0');
+            var sf = set.getHours().toString().padStart(2,'0') + ':' + set.getMinutes().toString().padStart(2,'0');
+            html += ' \u00b7 \u{1F305} ' + rf + '\u2013' + sf;
           }
         }
         row.innerHTML = html;
@@ -13338,7 +13431,7 @@ if ('serviceWorker' in navigator) {
       html += '</div>';
 
       // Summary line
-      html += '<p class="weather-summary"><strong>' + totalDays + '/' + 54 + '</strong> ' + (isEN ? 'days recorded' : 'giorni registrati') + '</p>';
+      html += '<p class="weather-summary"><strong>' + totalDays + '/' + (typeof TRIP_DAYS !== 'undefined' ? TRIP_DAYS : 55) + '</strong> ' + (isEN ? 'days recorded' : 'giorni registrati') + '</p>';
 
       container.innerHTML = html;
     });
@@ -13649,8 +13742,8 @@ if ('serviceWorker' in navigator) {
       badge: '\ud83d\uddfa\ufe0f Piano',
       typeLabel: {it: '\ud83d\uddfa\ufe0f Piano', en: '\ud83d\uddfa\ufe0f Route'},
       body: {
-        it: '\ud83d\ude90 12.000 km &nbsp; \ud83c\uddf3\ud83c\uddf4\ud83c\uddec\ud83c\udde7\ud83c\uddf8\ud83c\uddea\ud83c\uddeb\ud83c\uddee\ud83c\uddea\ud83c\uddea\ud83c\uddf1\ud83c\uddfb\ud83c\uddf1\ud83c\uddf9\ud83c\uddf5\ud83c\uddf1\ud83c\udde6\ud83c\uddf9 13 paesi &nbsp; \ud83d\udcc5 54 giorni',
-        en: '\ud83d\ude90 12,000 km &nbsp; \ud83c\uddf3\ud83c\uddf4\ud83c\uddec\ud83c\udde7\ud83c\uddf8\ud83c\uddea\ud83c\uddeb\ud83c\uddee\ud83c\uddea\ud83c\uddea\ud83c\uddf1\ud83c\uddfb\ud83c\uddf1\ud83c\uddf9\ud83c\uddf5\ud83c\uddf1\ud83c\udde6\ud83c\uddf9 13 countries &nbsp; \ud83d\udcc5 54 days'
+        it: '\ud83d\ude90 12.000 km &nbsp; \ud83c\uddf3\ud83c\uddf4\ud83c\uddec\ud83c\udde7\ud83c\uddf8\ud83c\uddea\ud83c\uddeb\ud83c\uddee\ud83c\uddea\ud83c\uddea\ud83c\uddf1\ud83c\uddfb\ud83c\uddf1\ud83c\uddf9\ud83c\uddf5\ud83c\uddf1\ud83c\udde6\ud83c\uddf9 13 paesi &nbsp; \ud83d\udcc5 55 giorni',
+        en: '\ud83d\ude90 12,000 km &nbsp; \ud83c\uddf3\ud83c\uddf4\ud83c\uddec\ud83c\udde7\ud83c\uddf8\ud83c\uddea\ud83c\uddeb\ud83c\uddee\ud83c\uddea\ud83c\uddea\ud83c\uddf1\ud83c\uddfb\ud83c\uddf1\ud83c\uddf9\ud83c\uddf5\ud83c\uddf1\ud83c\udde6\ud83c\uddf9 13 countries &nbsp; \ud83d\udcc5 55 days'
       },
       image: null
     }

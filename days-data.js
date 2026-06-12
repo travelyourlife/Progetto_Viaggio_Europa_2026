@@ -3,7 +3,7 @@
 var DAYS_DATA = [
   {
     "id": "g0",
-    "date": "26/06",
+    "date": "25/06",
     "title": "Selvazzano → Leoben",
     "flags": "🇮🇹→🇦🇹",
     "country": "AT",
@@ -95,7 +95,7 @@ var DAYS_DATA = [
   },
   {
     "id": "g1",
-    "date": "27/06",
+    "date": "26/06",
     "title": "Leoben → Vienna",
     "flags": "🇦🇹",
     "country": "AT",
@@ -220,7 +220,7 @@ var DAYS_DATA = [
   },
   {
     "id": "g2",
-    "date": "28/06",
+    "date": "27/06",
     "title": "Vienna → Varsavia",
     "flags": "🇦🇹→🇨🇿→🇵🇱",
     "country": "PL",
@@ -355,7 +355,7 @@ var DAYS_DATA = [
   },
   {
     "id": "g3",
-    "date": "29/06",
+    "date": "28/06",
     "title": "Varsavia → Vilnius",
     "flags": "🇵🇱→🇱🇹",
     "country": "LT",
@@ -465,7 +465,7 @@ var DAYS_DATA = [
   },
   {
     "id": "g4",
-    "date": "30/06",
+    "date": "29/06",
     "title": "Vilnius → Riga",
     "flags": "🇱🇹→🇱🇻",
     "country": "LV",
@@ -600,6 +600,127 @@ var DAYS_DATA = [
   },
   {
     "id": "g5",
+    "date": "30/06",
+    "title": "Riga — giorno libero",
+    "flags": "🇱🇻",
+    "country": "LV",
+    "region": "lettonia",
+    "km": 0,
+    "hours": "—",
+    "tolls": "Gratis",
+    "tollLinks": [],
+    "narrative": "Una giornata intera per respirare Riga senza fretta. La città più grande delle Baltiche merita più di una notte.",
+    "highlights": [
+      {
+        "icon": "🏛️",
+        "title": "Art Nouveau — Alberta iela",
+        "text": "Il quartiere più denso di Europa per architettura Liberty. A piedi in 30 minuti si vedono decine di facciate straordinarie.",
+        "star": true,
+        "familyFriendly": true
+      },
+      {
+        "icon": "🏛️",
+        "title": "Mercato Centrale",
+        "text": "5 hangar zeppelin riconvertiti — pesce, carne, pane nero, spezie. Uno dei mercati più grandi d'Europa.",
+        "star": true,
+        "familyFriendly": true
+      },
+      {
+        "icon": "🏛️",
+        "title": "Città Vecchia (Vecriga)",
+        "text": "Centro medievale UNESCO, la Casa delle Teste Nere, piazza del Duomo, torre di San Pietro (ascensore con panorama).",
+        "star": false,
+        "familyFriendly": true
+      },
+      {
+        "icon": "🏛️",
+        "title": "Riga Motor Museum",
+        "text": "Auto sovietiche rarissime, ZIL presidenziali, limousine di Stalin. I bambini adorano i manichini in cera al volante.",
+        "star": false,
+        "familyFriendly": true
+      }
+    ],
+    "food": [
+      {
+        "type": "street",
+        "title": "Riga — cibo locale",
+        "text": "<em>Piragi</em> (panini al bacon) dai banchi del Mercato Centrale ~€1-2 l'uno. <em>Lido</em> (Krasta iela 76) — self-service enorme ~€8/pax, parco giochi per bambini. Gelato <em>Ekselence</em>."
+      },
+      {
+        "type": "market",
+        "title": "Mercato Centrale",
+        "text": "Rīgas Centrāltirgus (Nēģu iela 7) — imperdibile al mattino. Pane di segale, formaggi, affumicati, miele.",
+        "schedule": "Lun-Dom 7:00-18:00"
+      }
+    ],
+    "kids": [
+      {
+        "name": "Līvu Akvaparks",
+        "desc": "(Jūrmala, 30 min da Riga) — grande parco acquatico con scivoli, onde, aree bimbi piccoli. Ottimo se fa caldo.",
+        "maps": "https://maps.google.com/?q=Līvu+Akvaparks+Jūrmala"
+      },
+      {
+        "name": "Riga Zoo",
+        "desc": "(Mežaparks) — zoo ben curato con percorsi naturalistici nel parco.",
+        "maps": "https://maps.google.com/?q=Riga+Zoo+Mežaparks"
+      },
+      {
+        "name": "Esplanāde Park",
+        "desc": "Grande parco centrale con aree gioco, fontane, spazio per correre. Gratuito.",
+        "maps": "https://maps.google.com/?q=Esplanāde+Park+Riga"
+      }
+    ],
+    "practical": {
+      "budget": "~€80-120/giorno (sosta)",
+      "parking": [
+        {
+          "name": "Riga City Camping",
+          "notes": "Seconda notte — elettricità, acqua, WiFi, docce, vicino al centro.",
+          "price": "~€25-30/notte",
+          "maps": "https://maps.google.com/?q=56.955,24.078",
+          "address": ""
+        }
+      ],
+      "fuel": "Circle K, Neste — diesel ~€1.85-1.92/L.",
+      "grocery": [
+        {
+          "name": "Maxima XXX o Rimi Hypermarket",
+          "location": "(periferia di Riga)",
+          "maps": "https://maps.google.com/?q=Maxima+XXX+Riga"
+        }
+      ],
+      "laundry": {
+        "text": "Speed Queen (centro di Riga) — ottimo momento per fare il bucato con calma.",
+        "maps": "https://maps.google.com/?q=Speed+Queen+Riga"
+      },
+      "camper": {
+        "text": "Rimani al Riga City Camping — stesso parcheggio del giorno precedente.",
+        "maps": "https://maps.google.com/?q=Riga+City+Camping"
+      },
+      "emergency": {
+        "name": "Riga East Clinical University Hospital",
+        "phones": "112 (Generale), 113 (Ambulanza)",
+        "notes": "",
+        "maps": "https://maps.google.com/?q=Riga+East+Clinical+University+Hospital+Riga"
+      }
+    },
+    "meteo": {
+      "high": 22,
+      "low": 12,
+      "cond": "Bel tempo",
+      "daylight": "18h di luce",
+      "lat": 56.9496,
+      "lon": 24.1052
+    },
+    "scooter": "Riga centro compatto — ideale per monopattino o bici → <a href=\"#noleggi\">vedi noleggi</a>",
+    "trekking": null,
+    "waterSports": null,
+    "fishing": null,
+    "events": [],
+    "alternatives": []
+  },
+  {
+    "id": "g6",
     "date": "01/07",
     "title": "Riga → Tallinn",
     "flags": "🇱🇻→🇪🇪",
@@ -727,7 +848,7 @@ var DAYS_DATA = [
     }
   },
   {
-    "id": "g6",
+    "id": "g7",
     "date": "02/07",
     "title": "Tallinn → Lappeenranta",
     "flags": "🇪🇪→🇫🇮",
@@ -857,7 +978,7 @@ var DAYS_DATA = [
     }
   },
   {
-    "id": "g7",
+    "id": "g8",
     "date": "03/07",
     "title": "Lappeenranta → Punkaharju",
     "flags": "🇫🇮",
@@ -995,7 +1116,7 @@ var DAYS_DATA = [
     }
   },
   {
-    "id": "g8",
+    "id": "g9",
     "date": "04/07",
     "title": "Regione dei Laghi (Saimaa)",
     "flags": "🇫🇮",
@@ -1124,7 +1245,7 @@ var DAYS_DATA = [
     }
   },
   {
-    "id": "g9",
+    "id": "g10",
     "date": "05/07",
     "title": "Laghi → Oulu",
     "flags": "🇫🇮",
@@ -1217,7 +1338,7 @@ var DAYS_DATA = [
     ]
   },
   {
-    "id": "g10",
+    "id": "g11",
     "date": "06/07",
     "title": "Oulu → Ranua",
     "flags": "🇫🇮",
@@ -1309,7 +1430,7 @@ var DAYS_DATA = [
     }
   },
   {
-    "id": "g11",
+    "id": "g12",
     "date": "07/07",
     "title": "Ranua → Rovaniemi",
     "flags": "🇫🇮",
@@ -1413,7 +1534,7 @@ var DAYS_DATA = [
     ]
   },
   {
-    "id": "g12",
+    "id": "g13",
     "date": "08/07",
     "title": "Rovaniemi",
     "flags": "🇫🇮",
@@ -1522,7 +1643,7 @@ var DAYS_DATA = [
     }
   },
   {
-    "id": "g13",
+    "id": "g14",
     "date": "09/07",
     "title": "Rovaniemi → Inari",
     "flags": "🇫🇮",
@@ -1650,7 +1771,7 @@ var DAYS_DATA = [
     }
   },
   {
-    "id": "g14",
+    "id": "g15",
     "date": "10/07",
     "title": "Inari → Kilpisjärvi",
     "flags": "🇫🇮",
@@ -1751,7 +1872,7 @@ var DAYS_DATA = [
     }
   },
   {
-    "id": "g15",
+    "id": "g16",
     "date": "11/07",
     "title": "Kilpisjärvi → Tromsø",
     "flags": "🇫🇮→🇳🇴",
@@ -1905,7 +2026,7 @@ var DAYS_DATA = [
     }
   },
   {
-    "id": "g16",
+    "id": "g17",
     "date": "12/07",
     "title": "Tromsø → Senja",
     "flags": "🇳🇴",
@@ -2083,7 +2204,7 @@ var DAYS_DATA = [
     }
   },
   {
-    "id": "g17",
+    "id": "g18",
     "date": "13/07",
     "title": "Senja → Andenes",
     "flags": "🇳🇴",
@@ -2191,7 +2312,7 @@ var DAYS_DATA = [
     }
   },
   {
-    "id": "g18",
+    "id": "g19",
     "date": "14/07",
     "title": "Andenes (Vesterålen)",
     "flags": "🇳🇴",
@@ -2314,7 +2435,7 @@ var DAYS_DATA = [
     }
   },
   {
-    "id": "g19",
+    "id": "g20",
     "date": "15/07",
     "title": "Andenes → Svolvær (Lofoten)",
     "flags": "🇳🇴",
@@ -2450,7 +2571,7 @@ var DAYS_DATA = [
     }
   },
   {
-    "id": "g20",
+    "id": "g21",
     "date": "16/07",
     "title": "Svolvær → Henningsvær",
     "flags": "🇳🇴",
@@ -2580,7 +2701,7 @@ var DAYS_DATA = [
     }
   },
   {
-    "id": "g21",
+    "id": "g22",
     "date": "17/07",
     "title": "Lofoten (Spiagge)",
     "flags": "🇳🇴",
@@ -2712,7 +2833,7 @@ var DAYS_DATA = [
     }
   },
   {
-    "id": "g22",
+    "id": "g23",
     "date": "18/07",
     "title": "Lofoten (Reine)",
     "flags": "🇳🇴",
@@ -2834,7 +2955,7 @@ var DAYS_DATA = [
     }
   },
   {
-    "id": "g23",
+    "id": "g24",
     "date": "19/07",
     "title": "Lofoten (Relax + Nusfjord)",
     "flags": "🇳🇴",
@@ -2939,7 +3060,7 @@ var DAYS_DATA = [
     }
   },
   {
-    "id": "g24",
+    "id": "g25",
     "date": "20/07",
     "title": "Lofoten → Mo i Rana",
     "flags": "🇳🇴",
@@ -3047,7 +3168,7 @@ var DAYS_DATA = [
     }
   },
   {
-    "id": "g25",
+    "id": "g26",
     "date": "21/07",
     "title": "Mo i Rana → Trondheim",
     "flags": "🇳🇴",
@@ -3158,7 +3279,7 @@ var DAYS_DATA = [
     }
   },
   {
-    "id": "g26",
+    "id": "g27",
     "date": "22/07",
     "title": "Trondheim",
     "flags": "🇳🇴",
@@ -3291,7 +3412,7 @@ var DAYS_DATA = [
     ]
   },
   {
-    "id": "g27",
+    "id": "g28",
     "date": "23/07",
     "title": "Trondheim → Molde",
     "flags": "🇳🇴",
@@ -3402,7 +3523,7 @@ var DAYS_DATA = [
     }
   },
   {
-    "id": "g28",
+    "id": "g29",
     "date": "24/07",
     "title": "Molde → Geiranger",
     "flags": "🇳🇴",
@@ -3572,7 +3693,7 @@ var DAYS_DATA = [
     }
   },
   {
-    "id": "g29",
+    "id": "g30",
     "date": "25/07",
     "title": "Geiranger → Bergen",
     "flags": "🇳🇴",
@@ -3683,7 +3804,7 @@ var DAYS_DATA = [
     }
   },
   {
-    "id": "g30",
+    "id": "g31",
     "date": "26/07",
     "title": "Bergen",
     "flags": "🇳🇴",
@@ -3841,7 +3962,7 @@ var DAYS_DATA = [
     }
   },
   {
-    "id": "g31",
+    "id": "g32",
     "date": "27/07",
     "title": "Bergen → Stavanger",
     "flags": "🇳🇴",
@@ -3949,7 +4070,7 @@ var DAYS_DATA = [
     ]
   },
   {
-    "id": "g32",
+    "id": "g33",
     "date": "28/07",
     "title": "Stavanger → Kristiansand",
     "flags": "🇳🇴",
@@ -4067,7 +4188,7 @@ var DAYS_DATA = [
     }
   },
   {
-    "id": "g33",
+    "id": "g34",
     "date": "29/07",
     "title": "Kristiansand → Copenhagen",
     "flags": "🇳🇴→🇩🇰",
@@ -4199,7 +4320,7 @@ var DAYS_DATA = [
     }
   },
   {
-    "id": "g34",
+    "id": "g35",
     "date": "30/07",
     "title": "Copenhagen",
     "flags": "🇩🇰",
@@ -4340,7 +4461,7 @@ var DAYS_DATA = [
     ]
   },
   {
-    "id": "g35",
+    "id": "g36",
     "date": "31/07",
     "title": "Copenhagen",
     "flags": "🇩🇰",
@@ -4454,7 +4575,7 @@ var DAYS_DATA = [
     ]
   },
   {
-    "id": "g36",
+    "id": "g37",
     "date": "01/08",
     "title": "Copenhagen → Billund",
     "flags": "🇩🇰",
@@ -4576,7 +4697,7 @@ var DAYS_DATA = [
     }
   },
   {
-    "id": "g37",
+    "id": "g38",
     "date": "02/08",
     "title": "Legoland",
     "flags": "🇩🇰",
@@ -4678,7 +4799,7 @@ var DAYS_DATA = [
     }
   },
   {
-    "id": "g38",
+    "id": "g39",
     "date": "03/08",
     "title": "LEGO House + Lalandia",
     "flags": "🇩🇰",
@@ -4770,7 +4891,7 @@ var DAYS_DATA = [
     }
   },
   {
-    "id": "g39",
+    "id": "g40",
     "date": "04/08",
     "title": "Billund → Brema",
     "flags": "🇩🇰→🇩🇪",
@@ -4887,7 +5008,7 @@ var DAYS_DATA = [
     ]
   },
   {
-    "id": "g40",
+    "id": "g41",
     "date": "05/08",
     "title": "Brema → Amiens",
     "flags": "🇩🇪→🇫🇷",
@@ -5006,7 +5127,7 @@ var DAYS_DATA = [
     }
   },
   {
-    "id": "g41",
+    "id": "g42",
     "date": "06/08",
     "title": "Amiens → Loira",
     "flags": "🇫🇷",
@@ -5111,7 +5232,7 @@ var DAYS_DATA = [
     ]
   },
   {
-    "id": "g42",
+    "id": "g43",
     "date": "07/08",
     "title": "Castelli della Loira",
     "flags": "🇫🇷",
@@ -5241,7 +5362,7 @@ var DAYS_DATA = [
     }
   },
   {
-    "id": "g43",
+    "id": "g44",
     "date": "08/08",
     "title": "Loira → San Sebastián",
     "flags": "🇫🇷→🇪🇸",
@@ -5392,7 +5513,7 @@ var DAYS_DATA = [
     }
   },
   {
-    "id": "g44",
+    "id": "g45",
     "date": "09/08",
     "title": "San Sebastián → Bilbao",
     "flags": "🇪🇸",
@@ -5558,7 +5679,7 @@ var DAYS_DATA = [
     }
   },
   {
-    "id": "g45",
+    "id": "g46",
     "date": "10/08",
     "title": "Bilbao → Picos de Europa",
     "flags": "🇪🇸",
@@ -5699,7 +5820,7 @@ var DAYS_DATA = [
     }
   },
   {
-    "id": "g46",
+    "id": "g47",
     "date": "11/08",
     "title": "Picos → Palencia",
     "flags": "🇪🇸",
@@ -5818,7 +5939,7 @@ var DAYS_DATA = [
     }
   },
   {
-    "id": "g47",
+    "id": "g48",
     "date": "12/08",
     "title": "🌒 ECLISSI TOTALE DI SOLE",
     "flags": "🇪🇸",
@@ -5912,7 +6033,7 @@ var DAYS_DATA = [
     }
   },
   {
-    "id": "g48",
+    "id": "g49",
     "date": "13/08",
     "title": "Palencia → Costa Brava",
     "flags": "🇪🇸",
@@ -6012,7 +6133,7 @@ var DAYS_DATA = [
     }
   },
   {
-    "id": "g49",
+    "id": "g50",
     "date": "14/08",
     "title": "Costa Brava (relax)",
     "flags": "🇪🇸",
@@ -6130,7 +6251,7 @@ var DAYS_DATA = [
     }
   },
   {
-    "id": "g50",
+    "id": "g51",
     "date": "15/08",
     "title": "Costa Brava → Costa Azzurra",
     "flags": "🇪🇸→🇫🇷",
@@ -6219,7 +6340,7 @@ var DAYS_DATA = [
     }
   },
   {
-    "id": "g51",
+    "id": "g52",
     "date": "16/08",
     "title": "Costa Azzurra → Genova",
     "flags": "🇫🇷→🇮🇹",
@@ -6338,7 +6459,7 @@ var DAYS_DATA = [
     }
   },
   {
-    "id": "g52",
+    "id": "g53",
     "date": "17/08",
     "title": "Genova",
     "flags": "🇮🇹",
@@ -6474,7 +6595,7 @@ var DAYS_DATA = [
     }
   },
   {
-    "id": "g53",
+    "id": "g54",
     "date": "18/08",
     "title": "Genova → Selvazzano",
     "flags": "🇮🇹",
