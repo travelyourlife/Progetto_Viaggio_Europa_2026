@@ -954,7 +954,7 @@ window.openMapFullscreen = function openMapFullscreen(mapInstance, title) {
         document.body.style.overflow = 'hidden';
         var fsMapDiv = overlay.querySelector('#map-fs-container');
         var fsMap = L.map(fsMapDiv, { zoomControl: false, attributionControl: false, scrollWheelZoom: true, dragging: true, tap: true, zoomAnimation: false, fadeAnimation: false }).setView([52.0, 15.0], 4);
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { maxZoom: 19 }).addTo(fsMap);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(fsMap);
         L.control.zoom({ position: 'bottomright' }).addTo(fsMap);
         // Draw route from TRIP_COORDS
         if (typeof TRIP_COORDS !== 'undefined') {
@@ -1073,7 +1073,7 @@ window.openMapFullscreen = function openMapFullscreen(mapInstance, title) {
     }).setView(center, zoom);
 
     // Copy tile layer
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19
     }).addTo(fsMap);
 
@@ -1220,7 +1220,7 @@ function initRouteMap() {
             tap: true
         });
 
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 18
         }).addTo(routeMapInstance);
 
@@ -1557,8 +1557,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (!tooltip) return;
                 tooltip.textContent = 'G' + idx + ' ' + d.date + ' · ' + d.title + (km ? ' · ' + km + 'km' : ' · sosta');
                 tooltip.style.display = 'block';
+                // v2.64 FIX: prevent tooltip from overflowing right edge
                 var r = seg.getBoundingClientRect();
-                tooltip.style.left = Math.min(r.left + window.scrollX, window.innerWidth - 220) + 'px';
+                var tipW = tooltip.offsetWidth || 200;
+                var leftPos = r.left + window.scrollX;
+                var maxLeft = window.innerWidth - tipW - 8;
+                tooltip.style.left = Math.min(leftPos, maxLeft) + 'px';
                 tooltip.style.top  = (r.top + window.scrollY - 34) + 'px';
                 seg.style.opacity = isPast ? '0.45' : '0.75';
                 if (isCurrent) seg.style.transform = 'scaleY(1.15)';
@@ -2508,7 +2512,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 tap: !L.Browser.mobile,
                 scrollWheelZoom: true
             }).setView([52.0, 15.0], 4);
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '© OpenStreetMap © CARTO', maxZoom: 19
             }).addTo(map);
             window._posMapInstance = map; // expose for UnifiedMap integration
@@ -2627,22 +2631,54 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!ref) return;
             ref.on('value', function(snap) {
                 var liveData = snap.val() || {};
-                Object.keys(liveData).forEach(function(uid) {
-                    var d = liveData[uid];
-                    if (!d || !d.lat) return;
-                    // Show/update van marker for the active driver
-                    if (!vanMarker) {
-                        vanMarker = L.marker([d.lat, d.lng], { icon: createVanIcon(d.heading || 0), zIndexOffset: 2000 })
-                            .bindPopup('<strong>🚐 ' + (d.name || 'Furgone') + '</strong><br>' + (isEN ? 'Speed: ' : 'Velocità: ') + (d.speed || 0).toFixed(0) + ' km/h')
-                            .addTo(map);
-                    } else {
-                        vanMarker.setLatLng([d.lat, d.lng]);
-                        vanMarker.setIcon(createVanIcon(d.heading || 0));
-                        vanMarker.setPopupContent('<strong>🚐 ' + (d.name || 'Furgone') + '</strong><br>' + (isEN ? 'Speed: ' : 'Velocità: ') + (d.speed || 0).toFixed(0) + ' km/h');
-                    }
-                    // ─── Populate info card ───
-                    updateInfoCard(d);
+                var hasLive = Object.keys(liveData).some(function(uid) {
+                    return liveData[uid] && liveData[uid].lat;
                 });
+
+                if (hasLive) {
+                    Object.keys(liveData).forEach(function(uid) {
+                        var d = liveData[uid];
+                        if (!d || !d.lat) return;
+                        if (!vanMarker) {
+                            vanMarker = L.marker([d.lat, d.lng], { icon: createVanIcon(d.heading || 0), zIndexOffset: 2000 })
+                                .bindPopup('<strong>🚐 ' + (d.name || 'Furgone') + '</strong><br>' + (isEN ? 'Speed: ' : 'Velocità: ') + (d.speed || 0).toFixed(0) + ' km/h')
+                                .addTo(map);
+                        } else {
+                            vanMarker.setLatLng([d.lat, d.lng]);
+                            vanMarker.setIcon(createVanIcon(d.heading || 0));
+                            vanMarker.setPopupContent('<strong>🚐 ' + (d.name || 'Furgone') + '</strong><br>' + (isEN ? 'Speed: ' : 'Velocità: ') + (d.speed || 0).toFixed(0) + ' km/h');
+                        }
+                        updateInfoCard(d);
+                    });
+                } else {
+                    // v2.64: No live tracking — show last known position from lastPosition/
+                    var lastPosRef = getFamilyRef('lastPosition');
+                    if (lastPosRef) {
+                        lastPosRef.once('value', function(lpSnap) {
+                            var lp = lpSnap.val();
+                            if (!lp || !lp.lat) return;
+                            var ageMin = Math.round((Date.now() - (lp.ts || 0)) / 60000);
+                            var ageStr = ageMin < 60
+                                ? ageMin + (isEN ? ' min ago' : ' min fa')
+                                : Math.round(ageMin/60) + (isEN ? 'h ago' : 'h fa');
+                            var icon = L.divIcon({
+                                className: '',
+                                html: '<div style="font-size:28px;filter:grayscale(60%);opacity:0.7;">🚐</div>',
+                                iconSize: [32,32], iconAnchor: [16,16]
+                            });
+                            if (!vanMarker) {
+                                vanMarker = L.marker([lp.lat, lp.lng], { icon: icon, zIndexOffset: 1500 })
+                                    .bindPopup('<strong>🚐 ' + (isEN ? 'Last position' : 'Ultima posizione') + '</strong><br>' + ageStr)
+                                    .addTo(map);
+                            } else {
+                                vanMarker.setLatLng([lp.lat, lp.lng]);
+                                vanMarker.setIcon(icon);
+                                vanMarker.setPopupContent('<strong>🚐 ' + (isEN ? 'Last position' : 'Ultima posizione') + '</strong><br>' + ageStr);
+                            }
+                            updateInfoCard(lp);
+                        });
+                    }
+                }
             });
         }
 
@@ -2849,6 +2885,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 var heading = pos.coords.heading || 0;
                 // v2.59: persist last known position globally for photo geotag
                 window._lastKnownLat = lat; window._lastKnownLng = lng;
+
+                // v2.64: persist last known position to Firebase for post-session display
+                var _lpRef = getFamilyRef('lastPosition');
+                if (_lpRef && firebaseUser) {
+                    _lpRef.set({ lat: lat, lng: lng, heading: heading, ts: Date.now(),
+                                 name: firebaseUser.displayName || 'Furgone' });
+                }
 
                 // v2.59: accumulate effective drive time (speed > 5 km/h for >3s)
                 var _now = Date.now();

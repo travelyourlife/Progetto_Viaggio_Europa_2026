@@ -30,6 +30,7 @@ const FAMILY_ID = 'viaggio-europa-2026';
 // ─────────────────────────────────────────────────────────────────────────────
 exports.processNotificationQueue = functions
   .region('europe-west1')
+  .runWith({ memory: '256MB', timeoutSeconds: 120 })
   .database.ref('trips/{familyId}/notifications/queue/{notifId}')
   .onCreate(async (snap, context) => {
     const payload = snap.val();
@@ -136,6 +137,7 @@ exports.processNotificationQueue = functions
 // ─────────────────────────────────────────────────────────────────────────────
 exports.publishScheduledPosts = functions
   .region('europe-west1')
+  .runWith({ memory: '256MB', timeoutSeconds: 120 })
   .pubsub.schedule('every 60 minutes')
   .timeZone('Europe/Rome')
   .onRun(async (context) => {
@@ -190,6 +192,7 @@ exports.publishScheduledPosts = functions
 // ─────────────────────────────────────────────────────────────────────────────
 exports.translatePost = functions
   .region('europe-west1')
+  .runWith({ memory: '256MB', timeoutSeconds: 60 })
   .https.onCall(async (data, context) => {
     if (!context.auth) {
       throw new functions.https.HttpsError('unauthenticated', 'Must be authenticated.');
@@ -233,6 +236,7 @@ exports.translatePost = functions
 // ─────────────────────────────────────────────────────────────────────────────
 exports.notifyNewPendingUser = functions
   .region('europe-west1')
+  .runWith({ memory: '256MB', timeoutSeconds: 60 })
   .database.ref('trips/{familyId}/pendingUsers/{uid}')
   .onCreate(async (snap, context) => {
     const pending   = snap.val();
