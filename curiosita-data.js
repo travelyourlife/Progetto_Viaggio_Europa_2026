@@ -18,7 +18,7 @@ var CURIOSITA_DATA = [
   // ═══════════════════════════════════════════════════════
 
   { day: -25, emoji: "🗺️", text: "Il vostro viaggio coprirà circa 12.000 km — la stessa distanza che separa Roma da Tokyo in linea d'aria!", source: "Calcolo itinerario" },
-  { day: -24, emoji: "🌍", text: "Attraverserete 13 paesi in 54 giorni — una media di un paese nuovo ogni 4 giorni! Quanti passaporti servirebbero senza l'UE?", source: "Calcolo itinerario" },
+  { day: -24, emoji: "🌍", text: "Attraverserete 13 paesi in 55 giorni — una media di un paese nuovo ogni 4 giorni! Quanti passaporti servirebbero senza l'UE?", source: "Calcolo itinerario" },
   { day: -23, emoji: "☀️", text: "A Tromsø, in Norvegia, il sole non tramonta dal 20 maggio al 22 luglio: 69 giorni consecutivi di luce!", source: "Institute of Marine Research, Norway" },
   { day: -22, emoji: "🌊", text: "I fiordi norvegesi possono raggiungere i 1.308 metri di profondità (Sognefjord) — più profondi del Grand Canyon!", source: "Norwegian Mapping Authority" },
   { day: -21, emoji: "🧱", text: "LEGOLAND Billund ha usato oltre 65 milioni di mattoncini LEGO solo per il Miniland — e ne aggiungono ogni anno.", source: "LEGOLAND Billund Resort" },
@@ -28,7 +28,7 @@ var CURIOSITA_DATA = [
   { day: -17, emoji: "🏛️", text: "Il Clos Lucé ad Amboise fu l'ultima dimora di Leonardo da Vinci. Nel parco ci sono 40 macchine costruite dai suoi disegni!", source: "Château du Clos Lucé" },
   { day: -16, emoji: "🎨", text: "Il Guggenheim di Bilbao è ricoperto da 33.000 lastre di titanio — ognuna spessa solo mezzo millimetro.", source: "Guggenheim Bilbao Museum" },
   { day: -15, emoji: "🇪🇪", text: "Tallinn ha il centro storico medievale meglio conservato del Nord Europa — Patrimonio UNESCO dal 1997.", source: "UNESCO World Heritage" },
-  { day: -14, emoji: "🚐", text: "Il vostro camper percorrerà una media di 222 km al giorno — come andare da Padova a Firenze ogni singolo giorno per 54 giorni!", source: "Calcolo itinerario" },
+  { day: -14, emoji: "🚐", text: "Il vostro camper percorrerà una media di 222 km al giorno — come andare da Padova a Firenze ogni singolo giorno per 55 giorni!", source: "Calcolo itinerario" },
   { day: -13, emoji: "🧖", text: "In Finlandia ci sono 3,3 milioni di saune per 5,5 milioni di abitanti — più saune che automobili! Ne proverete almeno una.", source: "Finnish Sauna Society" },
   { day: -12, emoji: "🏰", text: "La Valle della Loira ha oltre 300 castelli in 280 km — più castelli per km² di qualsiasi altra regione al mondo.", source: "Val de Loire UNESCO" },
   { day: -11, emoji: "🍽️", text: "San Sebastián ha la più alta concentrazione di stelle Michelin per metro quadrato al mondo — 19 stelle in una città di 180.000 abitanti.", source: "Michelin Guide" },
@@ -41,10 +41,10 @@ var CURIOSITA_DATA = [
   { day: -4, emoji: "🧗", text: "Il Preikestolen in Norvegia è una piattaforma rocciosa di 25×25m sospesa a 604 metri sopra il fiordo — senza ringhiere!", source: "Stavanger Turistforening" },
   { day: -3, emoji: "🌐", text: "L'Estonia è il paese più digitale del mondo: il 99% dei servizi pubblici è online. Puoi persino votare dal telefono!", source: "e-Estonia" },
   { day: -2, emoji: "🎈", text: "Vilnius ha una \"Repubblica di Užupis\" — un quartiere che si è autoproclamato stato indipendente nel 1997, con costituzione propria!", source: "Užupis Republic" },
-  { day: -1, emoji: "🚐", text: "Domani si parte! 54 giorni, 13 paesi, 12.000 km. L'avventura della vita inizia tra poche ore!", source: "Quo Vadis" },
+  { day: -1, emoji: "🚐", text: "Domani si parte! 55 giorni, 13 paesi, 12.000 km. L'avventura della vita inizia tra poche ore!", source: "Quo Vadis" },
 
   // ═══════════════════════════════════════════════════════
-  // DURANTE IL VIAGGIO (54 giorni × 3 curiosità = 162)
+  // DURANTE IL VIAGGIO (55 giorni × 3 curiosità = 165)
   // ═══════════════════════════════════════════════════════
 
   // G1 - Selvazzano → Leoben (Austria)
@@ -313,7 +313,16 @@ var CURIOSITA_DATA = [
   { day: 52, emoji: "🏘️", text: "I \"caruggi\" di Genova formano il centro storico medievale più grande d'Europa — un labirinto di 5 km² dove il sole non entra mai.", source: "Comune di Genova" },
 
   // G54 - Genova → Selvazzano (ritorno!)
-  { day: 53, emoji: "🏠", text: "Dopo 54 giorni, ~12.000 km e 13 paesi, il cerchio si chiude. La parola \"nostos\" (ritorno) + \"algos\" (dolore) dà \"nostalgia\" — ma voi tornate con 54 giorni di ricordi!", source: "Etimologia greca" },
-  { day: 53, emoji: "📊", text: "In 54 giorni avete attraversato 7 fusi orari (da UTC+1 a UTC+3 e ritorno), 4 mari (Adriatico, Baltico, Artico, Mediterraneo) e 2 oceani (Atlantico e Artico).", source: "Calcolo itinerario" },
+  { day: 54, emoji: "🏠", text: "Dopo 55 giorni, ~12.000 km e 13 paesi, il cerchio si chiude. La parola \"nostos\" (ritorno) + \"algos\" (dolore) dà \"nostalgia\" — ma voi tornate con 55 giorni di ricordi!", source: "Etimologia greca" },
+  { day: 53, emoji: "📊", text: "In 55 giorni avete attraversato 7 fusi orari (da UTC+1 a UTC+3 e ritorno), 4 mari (Adriatico, Baltico, Artico, Mediterraneo) e 2 oceani (Atlantico e Artico).", source: "Calcolo itinerario" },
   { day: 53, emoji: "🌍", text: "Il punto più a nord del viaggio (Andenes, 69°N) e il più a sud (Costa Brava, 42°N) distano 27 gradi di latitudine — 3.000 km in linea retta!", source: "Calcolo itinerario" }
+,
+  {
+    day: 54,
+    city: "Genova → Selvazzano",
+    cityEn: "Genoa → Selvazzano",
+    fact: "Genova ha dato i natali a Cristoforo Colombo e a Giuseppe Garibaldi. La città possiede il più grande centro storico medievale d'Europa — 4,5 km² di caruggi, più esteso di quello di Venezia.",
+    factEn: "Genoa is the birthplace of Christopher Columbus and Giuseppe Garibaldi. The city has the largest medieval historic center in Europe — 4.5 km² of narrow lanes, larger than Venice's.",
+    emoji: "🏠"
+  }
 ];

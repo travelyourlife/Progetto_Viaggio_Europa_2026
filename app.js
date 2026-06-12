@@ -130,7 +130,7 @@ var KEYS = {
 
 // Safety guard: if data.js failed to load, provide minimal fallbacks
 if (typeof TRIP_START === 'undefined') { var TRIP_START = new Date(2026, 5, 25, 0, 0, 0); }
-if (typeof TRIP_DAYS === 'undefined') { var TRIP_DAYS = 54; }
+if (typeof TRIP_DAYS === 'undefined') { var TRIP_DAYS = 55; }
 if (typeof itinerario === 'undefined') { var itinerario = []; }
 if (typeof regioni === 'undefined') { var regioni = []; }
 if (typeof firebaseConfig === 'undefined') { var firebaseConfig = {}; }
@@ -547,11 +547,18 @@ function updateProtectedTabsUI(user) {
   } catch(e) {}
 })();
 // Run on page load (before auth resolves, hide protected tabs)
+// v2.66 FIX: only hide tabs if user was NOT previously logged in
+// otherwise the optimistic show above gets immediately undone
 document.addEventListener('DOMContentLoaded', function() {
-  updateProtectedTabsUI(null);
-  // v2.60 FIX: show Admin link optimistically if qv-owner-hint is set
-  // This eliminates the "refresh required" UX for owners whose auth resolves async.
-  // The hint is cleared on logout and on non-owner auth, so it's safe.
+  var _wasLoggedIn = false;
+  try {
+    _wasLoggedIn = !!localStorage.getItem('qv-owner-hint') ||
+                   !!localStorage.getItem('firebase:authUser:AIzaSyCuUYGu_5PlIlDbxwYsFYL5y4OmoGehzzg:[DEFAULT]');
+  } catch(e) {}
+  if (!_wasLoggedIn) {
+    updateProtectedTabsUI(null);
+  }
+  // Show Admin link optimistically if qv-owner-hint is set
   try {
     if (localStorage.getItem('qv-owner-hint') === '1') {
       var _aml = document.getElementById('admin-menu-link');
@@ -736,18 +743,7 @@ function checkOwnerStatus() {
                   : '👥 ' + count + ' richiesta' + (count > 1 ? 'e' : '') + ' di accesso — apri Admin per approvare';
                 showToast(msg, 'info', 6000);
               }
-              // v2.60: push notification to owner device — works even when app is in background
-              if (window.queuePushNotification) {
-                queuePushNotification('pending_access', {
-                  title: isEN ? '🔔 New access request' : '🔔 Nuova richiesta di accesso',
-                  body: isEN
-                    ? lastName + ' wants to join the trip. Open Admin to approve.'
-                    : lastName + ' vuole unirsi al viaggio. Apri Admin per approvare.',
-                  target: 'owner',
-                  url: './#tab-admin',
-                  tag: 'pending_access'
-                });
-              }
+              // v2.68: push notification handled by Cloud Function notifyNewPendingUser (removed duplicate)
             }, 2000);
           }
           _lastPendingCount = count;
@@ -1556,10 +1552,11 @@ document.addEventListener('DOMContentLoaded', function() {
             seg.addEventListener('mouseenter', function(e) {
                 if (!tooltip) return;
                 tooltip.textContent = 'G' + idx + ' ' + d.date + ' · ' + d.title + (km ? ' · ' + km + 'km' : ' · sosta');
+                // v2.66 FIX: show first, then measure width to avoid overflow
                 tooltip.style.display = 'block';
-                // v2.64 FIX: prevent tooltip from overflowing right edge
+                tooltip.style.left = '-9999px'; // off-screen while measuring
+                var tipW = tooltip.offsetWidth;
                 var r = seg.getBoundingClientRect();
-                var tipW = tooltip.offsetWidth || 200;
                 var leftPos = r.left + window.scrollX;
                 var maxLeft = window.innerWidth - tipW - 8;
                 tooltip.style.left = Math.min(leftPos, maxLeft) + 'px';
@@ -2542,9 +2539,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 TRIP_COORDS.forEach(function(c) { routeCoords.push([c.lat, c.lng]); });
 
                 var now = new Date();
-                var tripStart = typeof TRIP_START !== 'undefined' ? TRIP_START : new Date(2026, 5, 26);
+                var tripStart = typeof TRIP_START !== 'undefined' ? TRIP_START : new Date(2026, 5, 25);
                 var currentDay = Math.floor((now - tripStart) / 86400000);
-                var totalDays = typeof TRIP_DAYS !== 'undefined' ? TRIP_DAYS : 54;
+                var totalDays = typeof TRIP_DAYS !== 'undefined' ? TRIP_DAYS : 55;
 
                 if (currentDay >= totalDays) {
                     // Trip completed: all solid green
@@ -11405,9 +11402,9 @@ if (document.readyState === 'loading') {
         // Call translatePost Cloud Function
         var functions = firebase.app().functions('europe-west1');
         var translateFn = functions.httpsCallable('translatePost');
-        translateFn({ text: originalText, from: 'it', to: 'en' }).then(function(result) {
-          if (result.data && result.data.translated) {
-            textEl.textContent = result.data.translated;
+        translateFn({ text: originalText, key: entryKey, familyId: (typeof FAMILY_ID !== 'undefined' ? FAMILY_ID : 'viaggio-europa-2026') }).then(function(result) {
+          if (result.data && result.data.textEn) {
+            textEl.textContent = result.data.textEn;
             btn.dataset.translated = '1';
             btn.textContent = '\uD83C\uDDEE\uD83C\uDDF9';
             btn.title = 'Show original';

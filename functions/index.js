@@ -185,3 +185,53 @@ exports.publishScheduledPosts = functions
 
 // translatePost: disabled — gen1 CPU conflict with project default
 // notifyNewPendingUser: disabled — handled client-side in v2.60+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 3. TRANSLATE DIARY POST (HTTPS Callable)
+// ─────────────────────────────────────────────────────────────────────────────
+exports.translatePost = functions
+  .region('europe-west1')
+  .runWith({ memory: '256MB', timeoutSeconds: 60 })
+  .https.onCall(async (data, context) => {
+    if (!context.auth) {
+      throw new functions.https.HttpsError('unauthenticated', 'Must be authenticated.');
+    }
+    const { text, key, familyId } = data;
+    if (!text || !key || !familyId) {
+      throw new functions.https.HttpsError('invalid-argument', 'text, key, and familyId required.');
+    }
+    // P1.3: prevent cost attacks — limit text length
+    if (text.length > 5000) {
+      throw new functions.https.HttpsError('invalid-argument', 'Text too long (max 5000 chars).');
+    }
+    try {
+      const { Translate } = require('@google-cloud/translate').v2;
+      const translate = new Translate();
+      const [translation] = await translate.translate(text, 'en');
+      await db.ref(`trips/${familyId}/diary/${key}`).update({ textEn: translation });
+      return { textEn: translation };
+    } catch (err) {
+      throw new functions.https.HttpsError('internal', 'Translation failed: ' + err.message);
+    }
+  });
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 4. NOTIFY NEW PENDING USER
+// ─────────────────────────────────────────────────────────────────────────────
+exports.notifyNewPendingUser = functions
+  .region('europe-west1')
+  .runWith({ memory: '256MB', timeoutSeconds: 60 })
+  .database.ref('trips/{familyId}/pendingUsers/{uid}')
+  .onCreate(async (snap, context) => {
+    const pending  = snap.val();
+    const familyId = context.params.familyId;
+    const name     = (pending && pending.displayName) || 'Qualcuno';
+    const notifRef = db.ref(`trips/${familyId}/notifications/queue`);
+    await notifRef.push({
+      type: 'pending_access', title: '🔔 Nuova richiesta di accesso',
+      body: `${name} vuole unirsi al viaggio. Apri Admin per approvare.`,
+      target: 'owner', url: './#tab-admin', tag: 'pending_access',
+      createdAt: Date.now(), sent: false,
+    });
+    return null;
+  });

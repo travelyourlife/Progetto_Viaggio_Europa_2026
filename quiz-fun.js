@@ -246,7 +246,7 @@
   }
 
   // v2.58: Clean up any lingering confetti containers on tab switch
-  // Prevents ghost DOM nodes accumulating during fast navigation over 54 days
+  // Prevents ghost DOM nodes accumulating during fast navigation over 55 days
   window.addEventListener('tabSwitched', function() {
     var orphans = document.querySelectorAll('.quiz-confetti');
     orphans.forEach(function(el) {

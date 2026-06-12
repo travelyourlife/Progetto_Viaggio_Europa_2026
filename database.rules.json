@@ -32,7 +32,7 @@
                 "notifications": {
                     "queue": {
                         ".read": "auth != null && (auth.uid === 'RxlVlsfeaEeSwFUVYbKQujEsbBo1' || auth.uid === 'Mh8BOeFPnFe7WObcsUoP6wyRgPw1' || root.child('trips/' + $familyId + '/ownerUsers/' + auth.uid).val() === true)",
-                        ".write": "auth != null"
+                        ".write": "auth != null && (auth.uid === 'RxlVlsfeaEeSwFUVYbKQujEsbBo1' || auth.uid === 'Mh8BOeFPnFe7WObcsUoP6wyRgPw1' || root.child('trips/' + $familyId + '/ownerUsers/' + auth.uid).val() === true || (root.child('trips/' + $familyId + '/approvedUsers/' + auth.uid).exists() && !root.child('trips/' + $familyId + '/bannedUsers/' + auth.uid).exists()))"
                     }
                 },
                 "diary": {
@@ -52,7 +52,7 @@
                 ".read": "auth != null && (auth.uid === 'RxlVlsfeaEeSwFUVYbKQujEsbBo1' || auth.uid === 'Mh8BOeFPnFe7WObcsUoP6wyRgPw1' || root.child('trips/' + $familyId + '/ownerUsers/' + auth.uid).val() === true || (root.child('trips/' + $familyId + '/approvedUsers/' + auth.uid).exists() && !root.child('trips/' + $familyId + '/bannedUsers/' + auth.uid).exists()))",
                 ".write": "auth != null && (auth.uid === 'RxlVlsfeaEeSwFUVYbKQujEsbBo1' || auth.uid === 'Mh8BOeFPnFe7WObcsUoP6wyRgPw1' || root.child('trips/' + $familyId + '/ownerUsers/' + auth.uid).val() === true || (root.child('trips/' + $familyId + '/approvedUsers/' + auth.uid).exists() && !root.child('trips/' + $familyId + '/bannedUsers/' + auth.uid).exists()))",
                 "$messageId": {
-                    ".validate": "newData.hasChildren(['uid', 'timestamp']) && (!newData.hasChild('text') || newData.child('text').val().length <= 5000)"
+                    ".validate": "newData.hasChildren(['uid', 'timestamp']) && newData.child('uid').val() === auth.uid && (!newData.hasChild('text') || newData.child('text').val().length <= 5000)"
                 },
                 ".indexOn": [
                     "timestamp",
