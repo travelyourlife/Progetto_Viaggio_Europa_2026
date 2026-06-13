@@ -86,7 +86,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = '2.73';
+  var EXPECTED_VERSION = '2.74';
   window.IS_PROD = true; // v2.71: disabilita debug overlay in produzione
     window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
@@ -393,14 +393,14 @@
     </span>
     <span id="minibar-pct" style="font-size:14px;font-weight:700;color:#3b82f6;display:none;white-space:nowrap;">0%</span>
   </div>
-  <!-- Minibar segmentata -->
-  <div id="minibar-segments" style="display:flex;gap:2px;align-items:flex-end;height:24px;width:100%;"></div>
+  <!-- Minibar segmentata (v2.73: area di tocco estesa + barre più alte) -->
+  <div id="minibar-segments" style="display:flex;gap:2px;align-items:flex-end;height:40px;width:100%;padding:6px 0;touch-action:manipulation;"></div>
   <!-- Legenda con soglie (critico ≥500 / pesante ≥300 / normale / sosta) -->
-  <div id="minibar-legend" style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:10px;color:var(--text-muted,#64748b);margin-top:8px;">
-    <span style="display:flex;align-items:center;gap:3px;"><span style="width:8px;height:8px;border-radius:1px;background:#d85a30;display:inline-block;"></span>critico ≥500km</span>
-    <span style="display:flex;align-items:center;gap:3px;"><span style="width:8px;height:8px;border-radius:1px;background:#ef9f27;display:inline-block;"></span>pesante ≥300km</span>
-    <span style="display:flex;align-items:center;gap:3px;"><span style="width:8px;height:8px;border-radius:1px;background:#97c459;display:inline-block;"></span>normale</span>
-    <span style="display:flex;align-items:center;gap:3px;"><span style="width:8px;height:8px;border-radius:1px;background:#85b7eb;display:inline-block;"></span>sosta</span>
+  <div id="minibar-legend" style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;font-size:12px;color:var(--text-muted,#64748b);margin-top:10px;">
+    <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:#d85a30;display:inline-block;"></span>critico ≥500km</span>
+    <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:#ef9f27;display:inline-block;"></span>pesante ≥300km</span>
+    <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:#97c459;display:inline-block;"></span>normale</span>
+    <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:#85b7eb;display:inline-block;"></span>sosta</span>
   </div>
   <div id="minibar-tooltip" style="display:none;position:fixed;background:rgba(0,0,0,0.82);color:#fff;font-size:11px;padding:5px 9px;border-radius:7px;white-space:nowrap;pointer-events:none;z-index:9999;"></div>
 </div>

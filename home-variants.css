@@ -92,10 +92,11 @@
 
 /* ─── Explore Chips ─── */
 .hv-explore-chips {
-    display: flex; gap: 8px; flex-wrap: wrap; padding: 0 4px;
+    display: flex; gap: 10px; flex-wrap: wrap; padding: 0 4px;
 }
 .hv-chip {
-    padding: 8px 14px; border-radius: 20px; font-size: 13px; font-weight: 600;
+    padding: 11px 18px; border-radius: 22px; font-size: 15px; font-weight: 600;
+    line-height: 1.2;
     background: var(--card-bg, #fff); border: 1px solid var(--border-color, #e2e8f0);
     color: var(--text-color, #1a1a2e); text-decoration: none;
     transition: background 0.15s;
@@ -105,10 +106,11 @@
 
 /* ─── Tools Row ─── */
 .hv-tools-row {
-    display: flex; gap: 8px; flex-wrap: wrap; padding: 0 4px; margin-top: 12px;
+    display: flex; gap: 10px; flex-wrap: wrap; padding: 0 4px; margin-top: 12px;
 }
 .hv-tool {
-    padding: 8px 14px; border-radius: 10px; font-size: 12px; font-weight: 600;
+    padding: 11px 18px; border-radius: 12px; font-size: 15px; font-weight: 600;
+    line-height: 1.2;
     background: var(--bg-main, #f8fafc); border: 1px solid var(--border-color, #e2e8f0);
     color: var(--text-muted, #64748b); text-decoration: none;
 }
@@ -740,8 +742,10 @@ a.hv-visitor-lock.hv-login-link { text-decoration: underline; cursor: pointer; d
     .hv-story-hero { height: 240px; }
     .hv-tl-quick-actions { gap: 4px; }
     .hv-tl-btn { padding: 6px 8px; font-size: 11px; }
-    .hv-explore-chips { gap: 6px; }
-    .hv-chip { padding: 6px 10px; font-size: 12px; }
+    .hv-explore-chips { gap: 8px; }
+    .hv-chip { padding: 9px 13px; font-size: 13px; }
+    .hv-tools-row { gap: 8px; }
+    .hv-tool { padding: 9px 13px; font-size: 13px; }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
@@ -751,15 +755,15 @@ a.hv-visitor-lock.hv-login-link { text-decoration: underline; cursor: pointer; d
 .hv-see-all-link {
     display: block;
     text-align: center;
-    padding: 12px 0 4px;
-    font-size: 14px;
-    font-weight: 600;
-    color: #3b82f6;
+    padding: 10px 0 2px;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--text-muted, #64748b);
     text-decoration: none;
     cursor: pointer;
-    transition: opacity 0.2s;
+    transition: opacity 0.2s, color 0.2s;
 }
-.hv-see-all-link:hover { opacity: 0.7; }
+.hv-see-all-link:hover { opacity: 1; color: #3b82f6; }
 
 /* App footer */
 .hv-app-footer {

@@ -176,6 +176,26 @@
     return [VISITOR_VARIANT];
   }
 
+  // v2.73: move the unified trip minibar back to its safe static home
+  // (inside #tab-home, just after #hv-container) so it is never destroyed
+  // by container.innerHTML = '' on a variant change.
+  function rescueMinibar() {
+    try {
+      var minibar = document.getElementById('home-trip-minibar');
+      var container = document.getElementById('hv-container');
+      var tabHome = document.getElementById('tab-home');
+      if (!minibar || !tabHome || !container) return;
+      // Only act if the minibar currently lives inside the container.
+      if (container.contains(minibar)) {
+        if (container.nextSibling) {
+          tabHome.insertBefore(minibar, container.nextSibling);
+        } else {
+          tabHome.appendChild(minibar);
+        }
+      }
+    } catch (e) { /* never break rendering because of the minibar */ }
+  }
+
   // ─── Render current variant ───
   function renderCurrentVariant() {
     var container = document.getElementById('hv-container');
@@ -188,6 +208,7 @@
 
     // If classic, hide container and show original
     if (variantId === 'classic') {
+      rescueMinibar();
       container.classList.remove('hv-active');
       container.innerHTML = '';
       var tabHome = document.getElementById('tab-home');
@@ -205,6 +226,7 @@
 
     // Clone and insert
     var clone = template.content.cloneNode(true);
+    rescueMinibar();
     container.innerHTML = '';
     container.appendChild(clone);
     container.classList.add('hv-active');
@@ -215,6 +237,30 @@
 
     // Populate data
     populateVariant(variantId);
+
+    // v2.73/2.74: reposition the unified trip minibar depending on the variant.
+    // - owner-a: between AZIONI RAPIDE and PREPARATIVI (#hv-owner-preparativi)
+    // - follower-a / follower-b: just ABOVE the diary section ([data-hv-diary-anchor])
+    // - follower-e (bento): before the explore chips (after the bento grid)
+    // Safe no-op if the expected anchors are missing.
+    try {
+      var minibar = document.getElementById('home-trip-minibar');
+      if (minibar) {
+        var target = null;
+        var preparativi = container.querySelector('#hv-owner-preparativi');
+        var diaryAnchor = container.querySelector('[data-hv-diary-anchor]');
+        if (preparativi) {
+          target = preparativi;                 // owner-a
+        } else if (diaryAnchor) {
+          target = diaryAnchor;                 // follower-a / follower-b
+        } else {
+          target = container.querySelector('.hv-explore-chips'); // follower-e fallback
+        }
+        if (target && target.parentNode) {
+          target.parentNode.insertBefore(minibar, target);
+        }
+      }
+    } catch (e) { /* keep minibar in its static position on error */ }
 
     // Setup action handlers
     setupActions(container);
@@ -931,56 +977,68 @@
     return d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
   }
 
+  // v2.74: render a single REAL diary post (shared by pre-trip and active trip).
+  function renderRealPost(post, lang) {
+    var html = '';
+    var CUSTOM_TYPE_MAP_HOME = {
+      'checkin': '\ud83d\udccd Check-in', 'tappa': '\ud83d\udea9 Tappa', 'highlight': '\u2b50 Highlight',
+      'photo': '\ud83d\udcf7 Foto', 'video': '\ud83c\udfac Video', 'audio': '\ud83c\udfa4 Audio',
+      'recap': '\ud83d\udcdd Riepilogo', 'message': '\ud83d\udcac Messaggio',
+      'cibo': '\ud83c\udf5d Cibo', 'cultura': '\ud83c\udfdb\ufe0f Cultura', 'attivita': '\ud83e\udd7e Attivit\u00e0'
+    };
+    var badge = post.customType ? (CUSTOM_TYPE_MAP_HOME[post.customType] || '') : '';
+    html += '<div class="hv-feed-item" data-hv-action="tab:diario" style="cursor:pointer;">';
+    html += '  <div class="hv-feed-header">';
+    html += '    <div class="hv-feed-time">' + formatHybridDate(post.date, lang) + '</div>';
+    if (badge) html += '    <span class="hv-feed-type hv-type-' + (post.customType || 'update') + '">' + badge + '</span>';
+    html += '  </div>';
+    if (post.customLabel) {
+      var feedTitle = (lang === 'en' && post.titleEn) ? post.titleEn : post.customLabel;
+      html += '  <div class="hv-feed-title" style="font-weight:600;margin:4px 0;">' + escHtml(feedTitle) + '</div>';
+    }
+    if (post.photos && Object.keys(post.photos).length > 0) {
+      var firstPhoto = post.photos[Object.keys(post.photos)[0]];
+      // SECURITY: only allow https:// photo URLs
+      var safeFeedPhotoUrl = (firstPhoto.url && /^https:\/\//.test(firstPhoto.url)) ? escHtml(firstPhoto.url) : '';
+      if (safeFeedPhotoUrl) {
+        html += '  <div class="hv-feed-photo" style="background-image:url(' + safeFeedPhotoUrl + ');background-size:cover;background-position:center;"></div>';
+      }
+    }
+    var bodyText = (lang === 'en' && post.textEn) ? post.textEn : (post.text || '');
+    html += '  <div class="hv-feed-body">' + escHtml(bodyText) + '</div>';
+    // v2.22: Auto-translation disclaimer in feed
+    if (lang === 'en' && post.textEn && post.text) {
+      html += '  <span class="diario-auto-tl">Translated automatically \u00b7 <a href="#" class="diario-see-original" data-original="' + escHtml(post.text).replace(/"/g, '&quot;') + '" data-translated="' + escHtml(post.textEn).replace(/"/g, '&quot;') + '">See original</a></span>';
+    }
+    // Translate button for EN followers (non-owner) — only if no auto-translation
+    if (lang === 'en' && post.text && !post.textEn && !(typeof isOwner !== 'undefined' && isOwner)) {
+      html += '  <button class="hv-feed-translate-btn" data-text="' + escHtml(post.text).replace(/"/g, '&quot;') + '" title="Translate to English">\uD83C\uDF10</button>';
+    }
+    html += '</div>';
+    return html;
+  }
+
   function buildFeed(dayData, tripData) {
     var html = '';
     var lang = (typeof isEN !== 'undefined' && isEN) ? 'en' : 'it';
 
-    // Pre-trip mode: show published diary entries (max 3)
+    // Pre-trip mode: show the latest 3 published diary entries.
     if (tripData.tripPreMode) {
-      var prePosts = getPreTripPosts();
-      // Max 3 most recent published entries
-      var feedPosts = prePosts.slice(0, 3);
-      feedPosts.forEach(function(post) {
-        var CUSTOM_TYPE_MAP_HOME = {
-          'checkin': '\ud83d\udccd Check-in', 'tappa': '\ud83d\udea9 Tappa', 'highlight': '\u2b50 Highlight',
-          'photo': '\ud83d\udcf7 Foto', 'video': '\ud83c\udfac Video', 'audio': '\ud83c\udfa4 Audio',
-          'recap': '\ud83d\udcdd Riepilogo', 'message': '\ud83d\udcac Messaggio',
-          'cibo': '\ud83c\udf5d Cibo', 'cultura': '\ud83c\udfdb\ufe0f Cultura', 'attivita': '\ud83e\udd7e Attivit\u00e0'
-        };
-        var badge = post.customType ? (CUSTOM_TYPE_MAP_HOME[post.customType] || '') : '';
-        html += '<div class="hv-feed-item" data-hv-action="tab:diario" style="cursor:pointer;">';
-        html += '  <div class="hv-feed-header">';
-        html += '    <div class="hv-feed-time">' + formatHybridDate(post.date, lang) + '</div>';
-        if (badge) html += '    <span class="hv-feed-type hv-type-' + (post.customType || 'update') + '">' + badge + '</span>';
-        html += '  </div>';
-        if (post.customLabel) {
-          var feedTitle = (lang === 'en' && post.titleEn) ? post.titleEn : post.customLabel;
-          html += '  <div class="hv-feed-title" style="font-weight:600;margin:4px 0;">' + escHtml(feedTitle) + '</div>';
-        }
-        if (post.photos && Object.keys(post.photos).length > 0) {
-          var firstPhoto = post.photos[Object.keys(post.photos)[0]];
-          // SECURITY: only allow https:// photo URLs
-          var safeFeedPhotoUrl = (firstPhoto.url && /^https:\/\//.test(firstPhoto.url)) ? escHtml(firstPhoto.url) : '';
-          if (safeFeedPhotoUrl) {
-            html += '  <div class="hv-feed-photo" style="background-image:url(' + safeFeedPhotoUrl + ');background-size:cover;background-position:center;"></div>';
-          }
-        }
-        var bodyText = (lang === 'en' && post.textEn) ? post.textEn : (post.text || '');
-        html += '  <div class="hv-feed-body">' + escHtml(bodyText) + '</div>';
-        // v2.22: Auto-translation disclaimer in feed
-        if (lang === 'en' && post.textEn && post.text) {
-          html += '  <span class="diario-auto-tl">Translated automatically \u00b7 <a href="#" class="diario-see-original" data-original="' + escHtml(post.text).replace(/"/g, '&quot;') + '" data-translated="' + escHtml(post.textEn).replace(/"/g, '&quot;') + '">See original</a></span>';
-        }
-        // Translate button for EN followers (non-owner) — only if no auto-translation
-        if (lang === 'en' && post.text && !post.textEn && !(typeof isOwner !== 'undefined' && isOwner)) {
-          html += '  <button class="hv-feed-translate-btn" data-text="' + escHtml(post.text).replace(/"/g, '&quot;') + '" title="Translate to English">\uD83C\uDF10</button>';
-        }
-        html += '</div>';
-      });
+      var prePosts = getPreTripPosts().slice(0, 3);
+      prePosts.forEach(function(post) { html += renderRealPost(post, lang); });
       return html;
     }
 
-    // Active trip: show real feed (standardized: no author, date, tag)
+    // v2.74: Active trip — show the latest 3 REAL diary posts (the rest are
+    // visible in the full Diary tab). Fall back to the demo blocks only when
+    // there are no real posts yet.
+    var realPosts = getPreTripPosts().slice(0, 3);
+    if (realPosts.length > 0) {
+      realPosts.forEach(function(post) { html += renderRealPost(post, lang); });
+      return html;
+    }
+
+    // Fallback (no real posts yet): show real feed (standardized: no author, date, tag)
     var todayStr = new Date().toLocaleDateString('it-IT', {day:'2-digit', month:'2-digit', year:'numeric'}).replace(/\//g, '/');
     // Check-in item
     html += '<div class="hv-feed-item" data-hv-action="tab:diario" style="cursor:pointer;">';

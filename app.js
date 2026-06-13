@@ -1521,8 +1521,43 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!segContainer || typeof DAYS_DATA === 'undefined') return;
 
         var MAX_KM   = 720;
-        var MIN_H    = 4;
-        var MAX_H    = 24;
+        var MIN_H    = 6;
+        var MAX_H    = 34;
+
+        // v2.73: helper to position the tooltip so it is ALWAYS fully visible.
+        // Clamps horizontally to the viewport and flips below the bar when there
+        // is not enough room above (e.g. card near the top of the screen).
+        function placeTooltip(seg) {
+            if (!tooltip) return;
+            tooltip.style.display = 'block';
+            tooltip.style.left = '-9999px';
+            tooltip.style.top  = '-9999px';
+            // Measure after content/display set
+            var tipW = tooltip.offsetWidth;
+            var tipH = tooltip.offsetHeight;
+            var r = seg.getBoundingClientRect();
+            var margin = 8;
+            // Horizontal: center over the bar, then clamp inside [margin, vw-tipW-margin]
+            var centerX = r.left + r.width / 2 - tipW / 2;
+            var minLeft = margin;
+            var maxLeft = window.innerWidth - tipW - margin;
+            if (maxLeft < minLeft) maxLeft = minLeft; // tip wider than viewport
+            var leftPos = Math.max(minLeft, Math.min(centerX, maxLeft));
+            // Vertical: prefer above the bar; if it would clip the top, place below
+            var topPos = r.top - tipH - 6;
+            if (topPos < margin) topPos = r.bottom + 6;
+            // Final clamp so it never leaves the bottom edge either
+            var maxTop = window.innerHeight - tipH - margin;
+            if (topPos > maxTop) topPos = Math.max(margin, maxTop);
+            tooltip.style.left = (leftPos + window.scrollX) + 'px';
+            tooltip.style.top  = (topPos + window.scrollY) + 'px';
+        }
+        function hideTooltip() { if (tooltip) tooltip.style.display = 'none'; }
+
+        // v2.73: track which segment is currently "revealed" by tap (mobile).
+        var _revealedIdx = -1;
+        var _hideTimer = null;
+        function clearHideTimer() { if (_hideTimer) { clearTimeout(_hideTimer); _hideTimer = null; } }
 
         // v2.69: bucket aggiornati — pesante ≥300km, critico ≥500km
         var BUCKET_CRITICO = 500;
@@ -1596,61 +1631,104 @@ document.addEventListener('DOMContentLoaded', function() {
 
             var h = isRest ? MIN_H : Math.max(MIN_H, Math.round((km / MAX_KM) * MAX_H));
 
+            // v2.73: each day is a full-height hit area (wraps the visible bar)
+            // so it is comfortably tappable even though the bar itself is thin.
             var seg = document.createElement('div');
-            // v2.70 Opzione 4: segmento corrente = accent blue + altezza extra
-            var segColor = isCurrent ? '#3b82f6' : color;
-            var segH     = isCurrent ? Math.max(h + 5, 16) : h;
             seg.style.cssText = [
                 'flex:1',
+                'min-width:0',
+                'height:100%',
+                'display:flex',
+                'align-items:flex-end',
+                'justify-content:center',
+                'cursor:pointer',
+                '-webkit-tap-highlight-color:transparent'
+            ].join(';');
+
+            // v2.70/2.73 Opzione 4: segmento corrente = accent blue + altezza extra
+            var segColor = isCurrent ? '#3b82f6' : color;
+            var segH     = isCurrent ? Math.max(h + 7, 22) : h;
+            var bar = document.createElement('div');
+            bar.style.cssText = [
+                'width:100%',
                 'height:' + segH + 'px',
                 'border-radius:2px',
                 'background:' + segColor,
-                'opacity:' + (isPast ? '0.28' : '1'),
-                'cursor:pointer',
+                'opacity:' + (isPast ? '0.30' : '1'),
                 'transition:opacity .15s,transform .1s',
-                'align-self:flex-end',
                 isCurrent ? 'animation:qv-pulse 2s ease-in-out infinite;' : ''
             ].join(';');
+            seg.appendChild(bar);
 
-            // Tooltip su hover
-            seg.addEventListener('mouseenter', function(e) {
+            var tipText = 'G' + idx + ' ' + d.date + ' · ' + d.title + (km ? ' · ' + km + 'km' : ' · sosta');
+            function showFor() {
                 if (!tooltip) return;
-                tooltip.textContent = 'G' + idx + ' ' + d.date + ' · ' + d.title + (km ? ' · ' + km + 'km' : ' · sosta');
-                tooltip.style.display = 'block';
-                tooltip.style.left = '-9999px';
-                var tipW = tooltip.offsetWidth;
-                var r = seg.getBoundingClientRect();
-                var leftPos = r.left + window.scrollX;
-                var maxLeft = window.innerWidth - tipW - 8;
-                tooltip.style.left = Math.min(leftPos, maxLeft) + 'px';
-                tooltip.style.top  = (r.top + window.scrollY - 34) + 'px';
-                seg.style.opacity = isPast ? '0.45' : '0.75';
-                if (isCurrent) seg.style.transform = 'scaleY(1.15)';
-            });
-            seg.addEventListener('mouseleave', function() {
-                if (tooltip) tooltip.style.display = 'none';
-                seg.style.opacity = isPast ? '0.28' : '1';
-                seg.style.transform = '';
-            });
-            seg.addEventListener('click', function() {
+                tooltip.textContent = tipText;
+                placeTooltip(seg);
+                bar.style.opacity = isPast ? '0.5' : '0.78';
+                if (isCurrent) bar.style.transform = 'scaleY(1.12)';
+            }
+            function resetVisual() {
+                bar.style.opacity = isPast ? '0.30' : '1';
+                bar.style.transform = '';
+            }
+            function navigate() {
                 if (window.switchTab) window.switchTab('giorni', d.id);
                 else if (window.switchTabFromHome) window.switchTabFromHome('giorni');
+            }
+
+            // Desktop: hover shows/hides tooltip, click navigates immediately.
+            seg.addEventListener('mouseenter', showFor);
+            seg.addEventListener('mouseleave', function() { hideTooltip(); resetVisual(); });
+
+            // Touch / tap: first tap reveals (and keeps) the tooltip; a second tap
+            // on the SAME day opens the itinerary. Tapping another day moves the
+            // reveal. Tooltip auto-hides after a few seconds.
+            seg.addEventListener('click', function(e) {
+                var isTouch = !e.detail || e.pointerType === 'touch' || ('ontouchstart' in window);
+                if (!isTouch) { navigate(); return; }
+                if (_revealedIdx === idx) {
+                    // Second tap on same bar → navigate
+                    clearHideTimer();
+                    hideTooltip();
+                    _revealedIdx = -1;
+                    navigate();
+                    return;
+                }
+                // Reveal this bar
+                if (_revealedIdx !== -1) {
+                    var prev = segContainer.children[_revealedIdx];
+                    if (prev && prev.firstChild) {
+                        var pPast = currentDay > _revealedIdx;
+                        prev.firstChild.style.opacity = pPast ? '0.30' : '1';
+                        prev.firstChild.style.transform = '';
+                    }
+                }
+                _revealedIdx = idx;
+                showFor();
+                clearHideTimer();
+                _hideTimer = setTimeout(function() {
+                    hideTooltip();
+                    resetVisual();
+                    _revealedIdx = -1;
+                }, 3500);
             });
 
             segContainer.appendChild(seg);
         });
 
-        // v2.70 Opzione 4: freccia sopra il segmento corrente
+        // v2.70/2.73 Opzione 4: freccia sopra il segmento corrente.
+        // Usa i figli diretti del container (ogni giorno è ora un wrapper).
         if (currentDay >= 0 && currentDay < days.length) {
             requestAnimationFrame(function() {
-                var segs = segContainer.querySelectorAll('div');
+                var segs = segContainer.children;
                 var todaySeg = segs[currentDay];
                 if (!todaySeg) return;
                 var r = todaySeg.getBoundingClientRect();
                 var barR = segContainer.getBoundingClientRect();
                 var cx = r.left - barR.left + r.width / 2;
                 var arrow = document.createElement('div');
-                arrow.style.cssText = 'position:absolute;bottom:100%;margin-bottom:3px;left:' + cx + 'px;transform:translateX(-50%);font-size:9px;font-weight:700;color:#3b82f6;pointer-events:none;white-space:nowrap;';
+                arrow.style.cssText = 'position:absolute;bottom:100%;margin-bottom:3px;left:' + cx + 'px;transform:translateX(-50%);font-size:11px;font-weight:700;color:#3b82f6;pointer-events:none;white-space:nowrap;';
                 arrow.textContent = '▼';
                 segContainer.style.position = 'relative';
                 segContainer.appendChild(arrow);
@@ -1856,12 +1934,29 @@ document.addEventListener('DOMContentLoaded', function() {
         history.pushState(null, '', '#tab-' + tabId);
     };
 
+    // v2.73: navigate tabs with a real history entry so the hardware/browser
+    // Back button can intercept it (popstate) and return to Home instead of
+    // exiting. We only push a new entry when the tab actually changes; switching
+    // to the same tab just replaces the current entry (no history growth).
+    function navigateToTab(tabId) {
+        var activeSection = document.querySelector('.tab-content.active');
+        var currentTabId = activeSection ? activeSection.id.replace('tab-', '') : '';
+        switchTab(tabId);
+        if (tabId === currentTabId) {
+            history.replaceState(null, '', '#tab-' + tabId);
+        } else if (tabId === 'home') {
+            // Home is the base state: collapse back to a single home entry.
+            history.replaceState(null, '', '#tab-home');
+        } else {
+            history.pushState(null, '', '#tab-' + tabId);
+        }
+    }
+
     // Menu item clicks
     menuItems.forEach(function(item) {
         item.addEventListener('click', function(e) {
             e.preventDefault();
-            switchTab(this.getAttribute('data-tab'));
-            history.replaceState(null, '', '#tab-' + this.getAttribute('data-tab'));
+            navigateToTab(this.getAttribute('data-tab'));
             closeMenu();
         });
     });
@@ -1871,8 +1966,7 @@ document.addEventListener('DOMContentLoaded', function() {
         bt.addEventListener('click', function() {
             var tabId = this.getAttribute('data-tab');
             // 'more' button removed in v3.6, Firebase added v3.7
-            switchTab(tabId);
-            history.replaceState(null, '', '#tab-' + tabId);
+            navigateToTab(tabId);
         });
     });
 
@@ -1896,16 +1990,32 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // v2.73: seed a base "home" history entry so that, no matter which tab the
+    // app opens on, the first Back press lands on Home (popstate Priority 2)
+    // before the "press again to exit" prompt. Without this base entry the
+    // browser/WebView would exit directly because there is nothing to pop.
+    try { history.replaceState(null, '', '#tab-home'); } catch(e) {}
+
     // Hash handling (with tab memory fallback)
     var hash = window.location.hash;
-    if (hash) {
-        if (hash.startsWith('#tab-')) { switchTab(hash.replace('#tab-', '')); }
-        else { var tid = hash.substring(1); var tt = anchorTabMap[tid]; if (tt) switchTab(tt, tid); }
+    if (hash && hash !== '#tab-home') {
+        if (hash.startsWith('#tab-')) {
+            var _bootTab = hash.replace('#tab-', '');
+            switchTab(_bootTab);
+            if (_bootTab !== 'home') { try { history.pushState(null, '', '#tab-' + _bootTab); } catch(e) {} }
+        }
+        else {
+            var tid = hash.substring(1); var tt = anchorTabMap[tid];
+            if (tt) { switchTab(tt, tid); if (tt !== 'home') { try { history.pushState(null, '', hash); } catch(e) {} } }
+        }
     } else {
         // Restore last visited tab if no hash
         try {
             var lastTab = localStorage.getItem('qv_lastTab');
-            if (lastTab && document.getElementById('tab-' + lastTab)) { switchTab(lastTab); }
+            if (lastTab && lastTab !== 'home' && document.getElementById('tab-' + lastTab)) {
+                switchTab(lastTab);
+                try { history.pushState(null, '', '#tab-' + lastTab); } catch(e) {}
+            }
         } catch(e) {}
     }
     window.addEventListener('popstate', function(e) {
@@ -10275,11 +10385,24 @@ if (document.readyState === 'loading') {
   altroItems.forEach(function(item) {
     item.addEventListener('click', function() {
       var tabId = this.getAttribute('data-tab');
+      var activeSection = document.querySelector('.tab-content.active');
+      var currentTabId = activeSection ? activeSection.id.replace('tab-', '') : '';
       closeAltro();
-      // Use replaceState — Altro already pushed its own state which gets consumed on close
+      // v2.73: route through switchTab and add a real history entry (unless we
+      // land back on Home or re-open the same tab) so the Back button returns
+      // to Home instead of exiting. On web, Altro had pushed its own state via
+      // openAltro(); replace that entry, then push the destination tab.
       if (window.switchTab) {
         window.switchTab(tabId);
-        history.replaceState(null, '', '#tab-' + tabId);
+        if (!_isCapacitor) {
+          // Consume the altroOpen entry pushed by openAltro()
+          history.replaceState(null, '', location.pathname + location.search);
+        }
+        if (tabId !== 'home' && tabId !== currentTabId) {
+          history.pushState(null, '', '#tab-' + tabId);
+        } else {
+          history.replaceState(null, '', '#tab-' + tabId);
+        }
       }
       if (window.haptic) window.haptic(15);
     });
