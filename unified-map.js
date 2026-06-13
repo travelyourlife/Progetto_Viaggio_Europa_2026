@@ -166,66 +166,138 @@
       }
     });
 
-    // Create layer groups (with clustering for dense categories)
-    var denseCats = ['kids', 'parking', 'cibo'];
+    // v2.78: ONE shared cluster group for ALL categories (the standard,
+    // user-friendly approach). Nearby markers — even of different categories —
+    // merge into a single numbered bubble; zooming splits them apart
+    // automatically; markers stacked on the exact same spot fan out (spiderfy)
+    // on click. Per-category toggles add/remove that category's markers from
+    // the shared cluster. The cluster icon is multi-colour when it mixes
+    // categories, single-colour when it holds just one.
+    var hasCluster = (typeof L.markerClusterGroup === 'function');
 
-    Object.keys(POI_CATEGORIES).forEach(function(cat) {
-      if (cat === 'star') return;
+    // Per-category marker arrays (NOT Leaflet layers anymore).
+    layerGroups.__markers = {};
+    Object.keys(POI_CATEGORIES).forEach(function(cat) { layerGroups.__markers[cat] = []; });
 
-      if (denseCats.indexOf(cat) >= 0 && typeof L.markerClusterGroup === 'function') {
-        layerGroups[cat] = L.markerClusterGroup({
-          maxClusterRadius: 50,
-          spiderfyOnMaxZoom: true,
-          showCoverageOnHover: false,
-          iconCreateFunction: function(cluster) {
-            var count = cluster.getChildCount();
-            var catColor = POI_CATEGORIES[cat].color;
-            return L.divIcon({
-              html: '<div class="umap-cluster" style="background:' + catColor + ';">' + count + '</div>',
-              className: 'umap-cluster-icon',
-              iconSize: [36, 36]
-            });
+    if (hasCluster) {
+      layerGroups.__shared = L.markerClusterGroup({
+        // Zoom-adaptive radius (in PIXELS): wide when far out so the map stays
+        // clean, tight when zoomed in so markers separate quickly.
+        maxClusterRadius: function(zoom) {
+          if (zoom <= 6)  return 80;
+          if (zoom <= 9)  return 65;
+          if (zoom <= 12) return 50;
+          if (zoom <= 15) return 38;
+          return 28;
+        },
+        spiderfyOnMaxZoom: true,         // fan out stacked markers at max zoom
+        spiderfyDistanceMultiplier: 1.7, // spread the spider legs further apart
+        zoomToBoundsOnClick: true,       // clicking a cluster zooms to its markers
+        showCoverageOnHover: false,
+        removeOutsideVisibleBounds: true,
+        chunkedLoading: true,            // smoother with hundreds of markers
+        disableClusteringAtZoom: 18,     // at street level show individual pins
+        iconCreateFunction: function(cluster) {
+          var children = cluster.getAllChildMarkers();
+          var count = cluster.getChildCount();
+          // Collect distinct category colours present in this cluster
+          var colors = [];
+          for (var i = 0; i < children.length; i++) {
+            var c = children[i]._catColor;
+            if (c && colors.indexOf(c) < 0) colors.push(c);
+            if (colors.length >= 4) break;
           }
-        });
-      } else {
-        layerGroups[cat] = L.layerGroup();
-      }
-    });
+          var bg;
+          if (colors.length <= 1) {
+            bg = colors[0] || '#2c5282';
+          } else {
+            // conic gradient = little pie chart of the categories inside
+            var seg = 360 / colors.length, stops = [];
+            for (var j = 0; j < colors.length; j++) {
+              stops.push(colors[j] + ' ' + (seg * j) + 'deg ' + (seg * (j + 1)) + 'deg');
+            }
+            bg = 'conic-gradient(' + stops.join(',') + ')';
+          }
+          return L.divIcon({
+            html: '<div class="umap-cluster" style="background:' + bg + ';">' + count + '</div>',
+            className: 'umap-cluster-icon',
+            iconSize: [36, 36]
+          });
+        }
+      });
+    } else {
+      layerGroups.__shared = L.layerGroup();
+    }
 
-    // Star layer
-    layerGroups['star'] = L.layerGroup();
+    // v2.77: anti-collision jitter. POIs that share (almost) identical coordinates
+    // would sit exactly on top of each other once clustering is disabled at max zoom.
+    // We nudge each duplicate by a tiny deterministic offset arranged on a ring so
+    // they fan out instead of overlapping. Deterministic = stable across reloads.
+    var seenCoords = {};
+    function jitteredLatLng(poi) {
+      var key = poi.lat.toFixed(5) + ',' + poi.lng.toFixed(5);
+      var n = seenCoords[key] || 0;
+      seenCoords[key] = n + 1;
+      if (n === 0) return [poi.lat, poi.lng]; // first one stays put
+      // ~2.2 m per step on a ring; grows slightly as more pile up
+      var step = 0.00002;
+      var ring = Math.ceil(n / 8);
+      var idx = (n - 1) % 8;
+      var ang = (idx / 8) * 2 * Math.PI;
+      return [poi.lat + Math.cos(ang) * step * ring,
+              poi.lng + Math.sin(ang) * step * ring];
+    }
 
-    // Populate layers with markers
+    // Build markers and bucket them per category (stored as plain arrays).
     MAP_POIS.forEach(function(poi) {
       var cat = poi.cat;
       var catConfig = POI_CATEGORIES[cat];
       if (!catConfig) return;
 
-      if (poi.star) {
-        var starMarker = L.marker([poi.lat, poi.lng], {
-          icon: createPoiIcon(poi, POI_CATEGORIES.star),
-          title: poi.name
-        }).bindPopup(createPopupContent(poi), { maxWidth: 250, closeButton: true });
-        layerGroups['star'].addLayer(starMarker);
-      }
+      var pos = jitteredLatLng(poi);
+      // 'star' markers are bucketed under the 'star' category so the
+      // "Imperdibili" toggle controls them too.
+      var bucket = poi.star ? 'star' : cat;
+      var iconCfg = poi.star ? POI_CATEGORIES.star : catConfig;
 
-      if (!poi.star) {
-        var marker = L.marker([poi.lat, poi.lng], {
-          icon: createPoiIcon(poi, catConfig),
-          title: poi.name
-        }).bindPopup(createPopupContent(poi), { maxWidth: 250, closeButton: true });
-        if (layerGroups[cat]) {
-          layerGroups[cat].addLayer(marker);
-        }
-      }
+      var marker = L.marker(pos, {
+        icon: createPoiIcon(poi, iconCfg),
+        title: poi.name
+      }).bindPopup(createPopupContent(poi), { maxWidth: 250, closeButton: true });
+      // Remember the category colour so the cluster icon can show a mix.
+      marker._catColor = (POI_CATEGORIES[bucket] || catConfig).color;
+      if (!layerGroups.__markers[bucket]) layerGroups.__markers[bucket] = [];
+      layerGroups.__markers[bucket].push(marker);
     });
 
-    // Add active layers to map
+    // Add the shared cluster to the map once, then load markers for the
+    // categories that are currently toggled on.
+    layerGroups.__shared.addTo(map);
+    var initial = [];
     Object.keys(tState).forEach(function(cat) {
-      if (tState[cat] && layerGroups[cat]) {
-        layerGroups[cat].addTo(map);
+      if (tState[cat] && layerGroups.__markers[cat]) {
+        initial = initial.concat(layerGroups.__markers[cat]);
       }
     });
+    if (layerGroups.__shared.addLayers) {
+      layerGroups.__shared.addLayers(initial); // bulk add (fast)
+    } else {
+      initial.forEach(function(m) { layerGroups.__shared.addLayer(m); });
+    }
+  }
+
+  // ─── Add / remove a whole category's markers from the shared cluster ───
+  function setCategoryVisible(layerGroups, cat, visible) {
+    if (!layerGroups || !layerGroups.__shared || !layerGroups.__markers) return;
+    var markers = layerGroups.__markers[cat] || [];
+    if (!markers.length) return;
+    if (visible) {
+      if (layerGroups.__shared.addLayers) layerGroups.__shared.addLayers(markers);
+      else markers.forEach(function(m) { layerGroups.__shared.addLayer(m); });
+    } else {
+      if (layerGroups.__shared.removeLayers) layerGroups.__shared.removeLayers(markers);
+      else markers.forEach(function(m) { layerGroups.__shared.removeLayer(m); });
+    }
   }
 
   // ─── Toggle a POI category ───
@@ -233,11 +305,7 @@
     toggleState[cat] = !toggleState[cat];
     localStorage.setItem('umap_poi_' + cat, toggleState[cat] ? '1' : '0');
 
-    if (toggleState[cat]) {
-      if (poiLayerGroups[cat]) poiLayerGroups[cat].addTo(map);
-    } else {
-      if (poiLayerGroups[cat]) map.removeLayer(poiLayerGroups[cat]);
-    }
+    setCategoryVisible(poiLayerGroups, cat, toggleState[cat]);
 
     updateFilterPanelUI();
   }
@@ -288,11 +356,7 @@
       checkbox.addEventListener('change', function() {
         tState[cat] = !tState[cat];
         localStorage.setItem('umap_poi_' + cat, tState[cat] ? '1' : '0');
-        if (tState[cat]) {
-          if (layerGroups[cat]) layerGroups[cat].addTo(map);
-        } else {
-          if (layerGroups[cat]) map.removeLayer(layerGroups[cat]);
-        }
+        setCategoryVisible(layerGroups, cat, tState[cat]);
         // Update all checkboxes in this panel
         panel.querySelectorAll('.umap-filter-checkbox').forEach(function(cb) {
           cb.checked = tState[cb.dataset.cat];

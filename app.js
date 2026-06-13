@@ -1535,7 +1535,10 @@ document.addEventListener('DOMContentLoaded', function() {
             // Measure after content/display set
             var tipW = tooltip.offsetWidth;
             var tipH = tooltip.offsetHeight;
-            var r = seg.getBoundingClientRect();
+            // v2.76: anchor to the VISIBLE coloured bar (seg.firstChild), not the
+            // 40px tall touch wrapper, so the tooltip sits right next to the bar.
+            var anchor = seg.firstChild || seg;
+            var r = anchor.getBoundingClientRect();
             var margin = 8;
             // Horizontal: center over the bar, then clamp inside [margin, vw-tipW-margin]
             var centerX = r.left + r.width / 2 - tipW / 2;
@@ -1543,7 +1546,8 @@ document.addEventListener('DOMContentLoaded', function() {
             var maxLeft = window.innerWidth - tipW - margin;
             if (maxLeft < minLeft) maxLeft = minLeft; // tip wider than viewport
             var leftPos = Math.max(minLeft, Math.min(centerX, maxLeft));
-            // Vertical: prefer above the bar; if it would clip the top, place below
+            // Vertical: prefer just ABOVE the bar; only flip BELOW if it would clip
+            // the top edge. Both branches stay adjacent to the bar (gap of 6px).
             var topPos = r.top - tipH - 6;
             if (topPos < margin) topPos = r.bottom + 6;
             // Final clamp so it never leaves the bottom edge either
@@ -12311,9 +12315,24 @@ if (document.readyState === 'loading') {
     var swEl = document.getElementById('admin-sw-status');
     if (swEl) {
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistration().then(function(reg) {
-          swEl.textContent = reg && reg.active ? '✅ Active (' + reg.active.scriptURL.split('/').pop() + ')' : reg ? '⏳ Installing...' : '❌ Not registered';
-          swEl.style.color = reg ? '#38a169' : '#e53e3e';
+        // v2.76: robust status — consider all registrations + active controller
+        navigator.serviceWorker.getRegistrations().then(function(regs) {
+          regs = regs || [];
+          var active = regs.filter(function(r){ return r && r.active; })[0] || null;
+          var anyReg = active || regs[0] || null;
+          if (active) {
+            swEl.textContent = '✅ Active (' + active.active.scriptURL.split('/').pop() + ')';
+            swEl.style.color = '#38a169';
+          } else if (navigator.serviceWorker.controller) {
+            swEl.textContent = '✅ Active (' + navigator.serviceWorker.controller.scriptURL.split('/').pop() + ')';
+            swEl.style.color = '#38a169';
+          } else if (anyReg) {
+            swEl.textContent = '⏳ Installing...';
+            swEl.style.color = '#38a169';
+          } else {
+            swEl.textContent = '❌ Not registered';
+            swEl.style.color = '#e53e3e';
+          }
         });
       } else {
         swEl.textContent = '❌ Not supported';
@@ -12404,11 +12423,24 @@ if (document.readyState === 'loading') {
         issues++;
         resolve();
       } else {
-        navigator.serviceWorker.getRegistration().then(function(reg) {
-          if (reg && reg.active) {
+        // v2.76 FIX: avoid false "non registrato" on GitHub Pages sub-path / right
+        // after a version update. Check ALL registrations and the active controller,
+        // not only getRegistration() for the current scope.
+        Promise.all([
+          navigator.serviceWorker.getRegistrations().catch(function(){ return []; }),
+          navigator.serviceWorker.getRegistration().catch(function(){ return null; })
+        ]).then(function(res) {
+          var regs = res[0] || [];
+          var reg = res[1] || (regs.length ? regs[0] : null);
+          var hasActive = (reg && reg.active) ||
+                          regs.some(function(r){ return r && r.active; }) ||
+                          !!navigator.serviceWorker.controller;
+          var installing = (reg && (reg.installing || reg.waiting)) ||
+                           regs.some(function(r){ return r && (r.installing || r.waiting); });
+          if (hasActive) {
             results.push('✅ Service Worker attivo');
             swOk = true;
-          } else if (reg) {
+          } else if (installing) {
             results.push('⚠️ Service Worker in installazione');
             warnings++;
           } else {
