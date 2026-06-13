@@ -27,7 +27,7 @@ var messaging = firebase.messaging();
 // ─── CACHING CONFIG ───
 // ═══════════════════════════════════════════════════════════════
 
-const CACHE_NAME = 'quo-vadis-v2.68';
+const CACHE_NAME = 'quo-vadis-v2.72';
 const IMAGE_CACHE_NAME = 'quo-vadis-images-v1';
 const IMAGE_CACHE_LIMIT = 80;
 const STATIC_ASSETS = [
@@ -62,12 +62,25 @@ const STATIC_ASSETS = [
   './curiosita-data.js',
   './curiosita-scheduler.js',
   './quiz-fun.js',
-  './debug-overlay.js'
+  // debug-overlay.js: rimosso — caricato on-demand solo da Admin
+  // v2.70: immagini placeholder per Home offline
+  './img/placeholder/bridge-coast.jpg',
+  './img/placeholder/fjord-camper.jpg',
+  './img/placeholder/road-fjord.jpg',
+  './img/placeholder/scandinavia-road.jpg',
+  './img/placeholder/tallinn-old-town.jpg',
+  './img/placeholder/van-view.jpg',
+  './icons/icon-posizione.png',
+  './icons/van-marker.svg'
 ];
 
 const CDN_ASSETS = [
   'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',
   'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js',
+  // v2.71: MarkerCluster aggiunto al precache — necessario per mappa offline
+  'https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js',
+  'https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css',
+  'https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css',
   'https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js',
   'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js',
   'https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js',

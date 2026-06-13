@@ -4,6 +4,16 @@
 // Logica applicativa unificata (IT + EN)
 // ═══════════════════════════════════════════════════════════════
 
+// ─── v2.71: Log wrapper — silenzia in produzione ────────────────────────────
+var _qvLog = (function() {
+  var isProd = window.IS_PROD === true;
+  return {
+    info:  function() { if (!isProd) console.info.apply(console, arguments); },
+    warn:  function() { console.warn.apply(console, arguments); }, // warn sempre visibile
+    error: function() { console.error.apply(console, arguments); } // error sempre visibile
+  };
+})();
+
 // ─── Language Detection ───
 const LANG = document.documentElement.lang || 'it';
 const isEN = LANG === 'en';
@@ -46,7 +56,7 @@ var KEYS = {
   var oldData = localStorage.getItem(OLD_ZAINO);
   if (oldData && !localStorage.getItem(KEYS.ZAINO)) {
     localStorage.setItem(KEYS.ZAINO, oldData);
-    console.info('[Migration] Zaino data migrated from old key');
+    _qvLog.info('[Migration] Zaino data migrated from old key');
   }
   if (oldData) localStorage.removeItem(OLD_ZAINO);
 })();
@@ -121,7 +131,7 @@ var KEYS = {
       });
       data.checks = newChecks;
       localStorage.setItem(key, JSON.stringify(data));
-      console.info('[Migration v2] Migrated numeric zaino keys to text in ' + key);
+      _qvLog.info('[Migration v2] Migrated numeric zaino keys to text in ' + key);
     } catch(e) {}
   }
   migrateStore(KEYS.PROGRESS);
@@ -241,7 +251,7 @@ var AuthManager = {
         this._user = user;
         this._isOwner = (ownerFlag === true);
         this._resolved = true;
-        console.log('[AuthManager] State updated:', user ? user.email : 'null', 'owner:', this._isOwner);
+        _qvLog.info('[AuthManager] State updated:', user ? user.email : 'null', 'owner:', this._isOwner);
         this._listeners.forEach(function(fn) {
             try { fn(user, ownerFlag === true); } catch(e) { console.error('[AuthManager] listener error:', e); }
         });
@@ -293,7 +303,7 @@ if (Platform.isCapacitor()) {
   // Monitor auth state changes
   if (typeof firebase !== 'undefined' && firebase.auth) {
     firebase.auth().onAuthStateChanged(function(user) {
-      console.log('[Auth State]', user ? '\u2705 ' + (user.email || user.uid) : '\u274c null');
+      _qvLog.info('[Auth State]', user ? '\u2705 ' + (user.email || user.uid) : '\u274c null');
     });
   }
   // Monitor failed network requests
@@ -337,10 +347,10 @@ function doGoogleSignIn(successCb) {
       if (window.showToast) showToast(isEN ? '❌ Login plugin not available. Please reinstall the app.' : '❌ Plugin login non disponibile. Reinstalla l\'app.', 'error');
       return;
     }
-    console.info('[Auth] Using Capacitor FirebaseAuthentication.signInWithGoogle()');
+    _qvLog.info('[Auth] Using Capacitor FirebaseAuthentication.signInWithGoogle()');
     if (window.showToast) showToast(isEN ? '⏳ Opening Google login...' : '⏳ Apertura login Google...', 'info');
     FirebaseAuth.signInWithGoogle().then(function(result) {
-      console.info('[Auth] Capacitor signInWithGoogle success:', result.user && result.user.email);
+      _qvLog.info('[Auth] Capacitor signInWithGoogle success:', result.user && result.user.email);
       // The plugin signs in on the native layer. We need to also sign in on the
       // web layer (Firebase JS SDK) using the idToken from the credential.
       if (result.credential && result.credential.idToken) {
@@ -354,7 +364,7 @@ function doGoogleSignIn(successCb) {
       }
     }).then(function(fbResult) {
       var user = fbResult.user || fbResult;
-      console.info('[Auth] Firebase web-layer sign-in success:', user.email);
+      _qvLog.info('[Auth] Firebase web-layer sign-in success:', user.email);
       // v2.49 FIX: Force-unlock all gates immediately after successful login
       // This is a safety net in case onAuthStateChanged doesn't re-fire
       var _isOw = (typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.indexOf(user.uid) !== -1);
@@ -434,7 +444,7 @@ function doGoogleSignIn(successCb) {
       callback: function(response) {
         var credential = firebase.auth.GoogleAuthProvider.credential(response.credential);
         firebase.auth().signInWithCredential(credential).then(function(result) {
-          console.info('[Auth] GIS login success:', result.user.email);
+          _qvLog.info('[Auth] GIS login success:', result.user.email);
           if (_gisSuccessCb) {
             _gisSuccessCb(result.user);
           } else {
@@ -465,7 +475,7 @@ function doGoogleSignIn(successCb) {
           }, 1000);
         }
       } else if (notification.isSkippedMoment()) {
-        console.info('[Auth] GIS prompt skipped:', notification.getSkippedReason());
+        _qvLog.info('[Auth] GIS prompt skipped:', notification.getSkippedReason());
         // User dismissed — no action needed, they can retry
       }
     });
@@ -544,7 +554,7 @@ function updateProtectedTabsUI(user) {
         document.querySelectorAll('.side-menu .menu-item[data-tab="' + tabId + '"]').forEach(function(l) { l.style.display = ''; });
       });
     }
-  } catch(e) {}
+  } catch(e) { console.warn('[QV]', e.message || e); }
 })();
 // Run on page load (before auth resolves, hide protected tabs)
 // v2.66 FIX: only hide tabs if user was NOT previously logged in
@@ -566,7 +576,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (_aml) _aml.style.display = '';
       if (_aal) _aal.style.display = '';
     }
-  } catch(e) {}
+  } catch(e) { console.warn('[QV]', e.message || e); }
   // v2.63: populate all [data-trip-meta] elements from TRIP_META (centralized dates)
   // Change TRIP_START/TRIP_DAYS in data.js — all UI text updates automatically
   if (typeof window.TRIP_META !== 'undefined') {
@@ -591,12 +601,12 @@ function checkOwnerStatus() {
       if (isHardcodedOwner) {
         isOwner = true;
         try { localStorage.setItem('qv-owner-hint', '1'); } catch(e) {}
-        console.info('[Auth] Owner mode (hardcoded): ' + user.displayName);
+        _qvLog.info('[Auth] Owner mode (hardcoded): ' + user.displayName);
         // v2.11 FIX: Auto-reset simulated role on Owner login
         try {
           var savedRole = localStorage.getItem('hv-role');
           if (savedRole && savedRole !== 'auto' && savedRole !== 'owner') {
-            console.info('[Auth] Resetting simulated role "' + savedRole + '" back to owner');
+            _qvLog.info('[Auth] Resetting simulated role "' + savedRole + '" back to owner');
             localStorage.setItem('hv-role', 'owner');
           }
         } catch(e) {}
@@ -610,7 +620,7 @@ function checkOwnerStatus() {
           if (ownerSnap.exists() && ownerSnap.val() === true) {
             isOwner = true;
             try { localStorage.setItem('qv-owner-hint', '1'); } catch(e) {}
-            console.info('[Auth] Owner mode (dynamic): ' + user.displayName);
+            _qvLog.info('[Auth] Owner mode (dynamic): ' + user.displayName);
             try {
               var savedRole2 = localStorage.getItem('hv-role');
               if (savedRole2 && savedRole2 !== 'auto' && savedRole2 !== 'owner') {
@@ -624,7 +634,7 @@ function checkOwnerStatus() {
           } else {
             isOwner = false;
             try { localStorage.removeItem('qv-owner-hint'); } catch(e) {}
-            console.info('[Auth] Authenticated but not owner: ' + user.email);
+            _qvLog.info('[Auth] Authenticated but not owner: ' + user.email);
             // v2.48: Notify AuthManager for non-owner authenticated user
             AuthManager._notify(user, false);
             window.dispatchEvent(new CustomEvent('authStateChanged', { detail: { user: user, isOwner: false } }));
@@ -663,7 +673,7 @@ function checkOwnerStatus() {
           photoURL: user.photoURL || '',
           approvedAt: firebase.database.ServerValue.TIMESTAMP
         }).then(function() {
-          console.info('[Auth] Owner profile saved to approvedUsers');
+          _qvLog.info('[Auth] Owner profile saved to approvedUsers');
         }).catch(function(e) {
           console.warn('[Auth] Could not save owner profile:', e.message);
         });
@@ -700,7 +710,7 @@ function checkOwnerStatus() {
                   photoURL: user.photoURL || '',
                   requestedAt: firebase.database.ServerValue.TIMESTAMP
                 }).then(function() {
-                  console.info('[Auth] Auto-submitted pending access request for ' + user.email);
+                  _qvLog.info('[Auth] Auto-submitted pending access request for ' + user.email);
                 }).catch(function(e) {
                   console.warn('[Auth] Could not submit pending request:', e.message);
                 });
@@ -925,7 +935,7 @@ const places = itinerario.map(function(t) {
 
 // ─── Global fullscreen map helper ───
 window.openMapFullscreen = function openMapFullscreen(mapInstance, title) {
-    console.info('[Map] openMapFullscreen called, mapInstance:', !!mapInstance, 'Leaflet:', typeof L);
+    _qvLog.info('[Map] openMapFullscreen called, mapInstance:', !!mapInstance, 'Leaflet:', typeof L);
     // v2.02: Auth gate — block unapproved users from fullscreen map
     if (!window.firebaseUser) {
       console.warn('[Map] openMapFullscreen blocked: user not authenticated');
@@ -1196,6 +1206,18 @@ function initRouteMap() {
 
     // Build/refresh map when Itinerario tab becomes visible
     window.addEventListener('tabSwitched', function(e) {
+    // v2.70: lazy load wiki-links.js on first open of cultura/attivita tab
+    var _lazyTabs = ['cultura', 'attivita'];
+    if (_lazyTabs.indexOf(e.detail && e.detail.tab) !== -1) {
+        if (typeof WIKI_LINKS === 'undefined' && !window._wikiLinksLoading) {
+            window._wikiLinksLoading = true;
+            var s = document.createElement('script');
+            s.src = './wiki-links.js';
+            s.defer = true;
+            s.onload = function() { _qvLog.info('[Lazy] wiki-links.js loaded'); };
+            document.head.appendChild(s);
+        }
+    }
         if (e.detail === 'giorni') {
             setTimeout(ensureMapBuilt, 150);
             setTimeout(function() { if (routeMapInstance) routeMapInstance.invalidateSize(); }, 500);
@@ -1489,41 +1511,67 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     })();
 
-    // ─── v2.61: Trip minibar segmentata ─────────────────────────────
+    // ─── v2.69: Trip minibar unificata (Opzione A) ───────────────────────
     (function() {
         var segContainer = document.getElementById('minibar-segments');
         var miniLabel    = document.getElementById('minibar-label');
+        var miniDetail   = document.getElementById('minibar-detail');
+        var miniPct      = document.getElementById('minibar-pct');
         var tooltip      = document.getElementById('minibar-tooltip');
         if (!segContainer || typeof DAYS_DATA === 'undefined') return;
 
         var MAX_KM   = 720;
-        var MIN_H    = 4;   // px altezza segmento a riposo
-        var MAX_H    = 22;  // px altezza massima
+        var MIN_H    = 4;
+        var MAX_H    = 24;
 
-        var days = DAYS_DATA; // from data.js
+        // v2.69: bucket aggiornati — pesante ≥300km, critico ≥500km
+        var BUCKET_CRITICO = 500;
+        var BUCKET_PESANTE = 300;
+
+        var days = DAYS_DATA;
         var today = new Date(); today.setHours(0,0,0,0);
         var tripStart = new Date(TRIP_START); tripStart.setHours(0,0,0,0);
-        var currentDay = Math.floor((today - tripStart) / 86400000); // -1 if pre-trip
+        var currentDay = Math.floor((today - tripStart) / 86400000);
+        var totalDays  = typeof TRIP_DAYS !== 'undefined' ? TRIP_DAYS : 55;
 
-        // Aggiorna label
+        // Aggiorna label principale
         if (miniLabel) {
             if (currentDay < 0) {
                 var dLeft = Math.ceil((tripStart - today) / 86400000);
-                miniLabel.textContent = isEN ? 'Departure in ' + dLeft + ' days' : 'Partenza tra ' + dLeft + ' giorni';
+                miniLabel.textContent = isEN ? 'Departure in ' + dLeft + (dLeft === 1 ? ' day' : ' days')
+                                              : 'Partenza tra ' + dLeft + (dLeft === 1 ? ' giorno' : ' giorni');
             } else if (currentDay < days.length) {
-                miniLabel.textContent = (isEN ? 'Day ' : 'Giorno ') + (currentDay + 1) + '/' + (typeof TRIP_DAYS !== 'undefined' ? TRIP_DAYS : 55) + ' — ' + days[currentDay].title;
+                miniLabel.textContent = (isEN ? 'Day ' : 'Giorno ') + (currentDay + 1) + '/' + totalDays + ' — ' + days[currentDay].title;
             } else {
-                miniLabel.textContent = isEN ? 'Trip completed!' : 'Viaggio completato!';
+                miniLabel.textContent = isEN ? '🏁 Trip completed!' : '🏁 Viaggio completato!';
             }
+        }
+
+        // Aggiorna percentuale (solo durante/dopo il viaggio)
+        if (miniPct) {
+            if (currentDay >= 0) {
+                var pct = Math.min(100, Math.round((currentDay / totalDays) * 100));
+                miniPct.textContent = pct + '%';
+                miniPct.style.display = '';
+            } else {
+                miniPct.style.display = 'none';
+            }
+        }
+
+        // Aggiorna dettaglio (durante il viaggio mostra km + paesi percorsi)
+        if (miniDetail && currentDay >= 0 && currentDay < days.length) {
+            miniDetail.setAttribute('data-trip-meta', ''); // disabilita TRIP_META
+            miniDetail.textContent = (isEN ? 'Day ' : 'G') + (currentDay + 1) + '/' + totalDays +
+                ' · ' + (typeof window._totalKmToday !== 'undefined' ? window._totalKmToday + ' km' : '—');
         }
 
         // Costruisci segmenti
         days.forEach(function(d, idx) {
             var km = d.km || 0;
-            var isRest = km === 0;
-            var isCrit = km >= 600;
-            var isHeavy = km >= 400 && km < 600;
-            var isPast = currentDay > idx;
+            var isRest   = km === 0;
+            var isCrit   = km >= BUCKET_CRITICO;
+            var isHeavy  = km >= BUCKET_PESANTE && km < BUCKET_CRITICO;
+            var isPast   = currentDay > idx;
             var isCurrent = currentDay === idx;
 
             var color = isRest  ? '#85b7eb' :
@@ -1533,28 +1581,27 @@ document.addEventListener('DOMContentLoaded', function() {
             var h = isRest ? MIN_H : Math.max(MIN_H, Math.round((km / MAX_KM) * MAX_H));
 
             var seg = document.createElement('div');
+            // v2.70 Opzione 4: segmento corrente = accent blue + altezza extra
+            var segColor = isCurrent ? '#3b82f6' : color;
+            var segH     = isCurrent ? Math.max(h + 5, 16) : h;
             seg.style.cssText = [
                 'flex:1',
-                'height:' + h + 'px',
+                'height:' + segH + 'px',
                 'border-radius:2px',
-                'background:' + color,
+                'background:' + segColor,
                 'opacity:' + (isPast ? '0.28' : '1'),
                 'cursor:pointer',
                 'transition:opacity .15s,transform .1s',
-                'position:relative',
                 'align-self:flex-end',
-                isCurrent ? 'outline:2px solid var(--accent,#3b82f6);outline-offset:1px;' : ''
+                isCurrent ? 'animation:qv-pulse 2s ease-in-out infinite;' : ''
             ].join(';');
-
-            seg.title = 'G' + idx + ' · ' + d.title + (km ? ' · ' + km + ' km' : ' · sosta');
 
             // Tooltip su hover
             seg.addEventListener('mouseenter', function(e) {
                 if (!tooltip) return;
                 tooltip.textContent = 'G' + idx + ' ' + d.date + ' · ' + d.title + (km ? ' · ' + km + 'km' : ' · sosta');
-                // v2.66 FIX: show first, then measure width to avoid overflow
                 tooltip.style.display = 'block';
-                tooltip.style.left = '-9999px'; // off-screen while measuring
+                tooltip.style.left = '-9999px';
                 var tipW = tooltip.offsetWidth;
                 var r = seg.getBoundingClientRect();
                 var leftPos = r.left + window.scrollX;
@@ -1569,8 +1616,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 seg.style.opacity = isPast ? '0.28' : '1';
                 seg.style.transform = '';
             });
-
-            // Click → vai al giorno nel tab Giorni
             seg.addEventListener('click', function() {
                 if (window.switchTab) window.switchTab('giorni', d.id);
                 else if (window.switchTabFromHome) window.switchTabFromHome('giorni');
@@ -1578,8 +1623,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
             segContainer.appendChild(seg);
         });
+
+        // v2.70 Opzione 4: freccia sopra il segmento corrente
+        if (currentDay >= 0 && currentDay < days.length) {
+            requestAnimationFrame(function() {
+                var segs = segContainer.querySelectorAll('div');
+                var todaySeg = segs[currentDay];
+                if (!todaySeg) return;
+                var r = todaySeg.getBoundingClientRect();
+                var barR = segContainer.getBoundingClientRect();
+                var cx = r.left - barR.left + r.width / 2;
+                var arrow = document.createElement('div');
+                arrow.style.cssText = 'position:absolute;bottom:100%;margin-bottom:3px;left:' + cx + 'px;transform:translateX(-50%);font-size:9px;font-weight:700;color:#3b82f6;pointer-events:none;white-space:nowrap;';
+                arrow.textContent = '▼';
+                segContainer.style.position = 'relative';
+                segContainer.appendChild(arrow);
+            });
+        }
     })();
     // ─── end minibar ─────────────────────────────────────────────
+
+
     var sideMenu = document.getElementById('sideMenu');
     var menuOverlay = document.getElementById('menuOverlay');
 
@@ -2061,8 +2125,9 @@ document.addEventListener('DOMContentLoaded', function() {
         var GEOFENCE_RADIUS = 0.5; // km — auto check-in radius
         var MIN_TRACK_DIST = 0.05; // km — minimum distance between track points
         var IDLE_TIMEOUT = 10 * 60 * 1000; // 10 minutes for auto-stop
-        var ECO_INTERVAL = 30000; // eco mode: 30s
-        var NORMAL_INTERVAL = 10000; // normal: 10s
+// v2.70 FIX: GPS interval constants at global scope (were inside IIFE, out-of-scope at L4141)
+var ECO_INTERVAL    = 30000;  // 30s — risparmio batteria
+var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
 
         var map = null, vanMarker = null, userMarker = null, checkinMarkers = [], trackLine = null;
         var liveWatchId = null, autoStartWatchId = null;
@@ -2114,7 +2179,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (routeKm > straightDist && routeKm < straightDist * 3) {
                         var gapKm = routeKm;
                         todayKm += gapKm;
-                        console.info('[GPS Gap] Estimated ' + gapKm.toFixed(1) + ' km via OSRM (straight: ' + straightDist.toFixed(1) + ' km, gap: ' + Math.round(timeDiff/60000) + ' min)');
+                        _qvLog.info('[GPS Gap] Estimated ' + gapKm.toFixed(1) + ' km via OSRM (straight: ' + straightDist.toFixed(1) + ' km, gap: ' + Math.round(timeDiff/60000) + ' min)');
                         // Add intermediate points from OSRM geometry to track
                         var coords = data.routes[0].geometry.coordinates;
                         var gapTime = lastPt.time || Date.now();
@@ -2126,12 +2191,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         var sessKmRef = getFamilyRef('liveSession/' + (firebaseUser ? firebaseUser.uid : 'driver') + '/todayKm');
                         if (sessKmRef) sessKmRef.set(todayKm);
                         var trackRef = getFamilyRef('tracks/' + todayStr() + '/points');
-                        if (trackRef) trackRef.set(todayPoints);
+                        if (trackRef) trackRef.set(todayPoints).catch(function(e) { console.warn("[Track] set failed:", e.message); });
                         showToast((isEN ? '🛣️ Estimated ' : '🛣️ Stimati ') + gapKm.toFixed(1) + ' km ' + (isEN ? 'for GPS gap' : 'per buco GPS'), 'info');
                     } else {
                         // Fallback: use straight-line distance
                         todayKm += straightDist;
-                        console.info('[GPS Gap] OSRM unreasonable, using straight-line: ' + straightDist.toFixed(1) + ' km');
+                        _qvLog.info('[GPS Gap] OSRM unreasonable, using straight-line: ' + straightDist.toFixed(1) + ' km');
                     }
                 } else {
                     // v2.62 FIX BUG-07: OSRM no route (ferry, remote area, no road) — use straight ×1.15
@@ -2919,7 +2984,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         if (sessKmRef) sessKmRef.set(todayKm);
                         // Save to Firebase (incremental push)
                         var trackRef = getFamilyRef('tracks/' + todayStr() + '/points');
-                        if (trackRef) trackRef.push(pt);
+                        if (trackRef) trackRef.push(pt).catch(function(e) { console.warn("[Track] push failed:", e.message); });
                         // v2.59 FIX: extend existing polyline instead of full redraw (O(1) vs O(n))
                         // Only do a full redraw on first point or after pushTrackPoint cap-drop
                         if (map) {
@@ -3002,7 +3067,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 };
                 var autoSaveRef = getFamilyRef('dailySummaries/' + todayStr());
                 if (autoSaveRef) autoSaveRef.set(summary);
-                console.info('[Tracking] Auto-saved dailySummary:', todayKm.toFixed(1), 'km');
+                _qvLog.info('[Tracking] Auto-saved dailySummary:', todayKm.toFixed(1), 'km');
             }, 5 * 60 * 1000); // every 5 minutes
 
             // Auto-stop check
@@ -3157,7 +3222,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Update live status to stopped
             var liveRef = getFamilyRef('live/' + (firebaseUser ? firebaseUser.uid : 'driver'));
-            if (liveRef) liveRef.update({ status: 'stopped', speed: 0 });
+            if (liveRef) liveRef.update({ status: 'stopped', speed: 0 }).catch(function(e) { console.warn('[Live] stop update failed:', e.message); });
 
             // Parking prompt (restored from v9.9)
             if (optParking && optParking.checked && todayKm > 1) {
@@ -3242,7 +3307,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         savedBy: firebaseUser ? firebaseUser.uid : 'unknown'
                     };
                     weatherRef.set(entry);
-                    console.info('[Weather] Saved weather log for', dateKey, entry.tempMax + '°/' + entry.tempMin + '°');
+                    _qvLog.info('[Weather] Saved weather log for', dateKey, entry.tempMax + '°/' + entry.tempMin + '°');
                 }).catch(function(err) {
                     console.warn('[Weather] Failed to save weather log:', err);
                 });
@@ -4067,7 +4132,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 var session = snap.val();
                 if (session && session.active === true) {
                     // Resume: restore state and restart GPS
-                    console.info('[Tracking] Resuming session from Firebase');
+                    _qvLog.info('[Tracking] Resuming session from Firebase');
                     liveStartTime = session.startTime || Date.now();
                     todayKm = session.todayKm || 0;
                     // Load today's track points from Firebase
@@ -4239,7 +4304,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // capgpsTrackingStopped: CapGPS plugin stopped → app.js cleans up timers.
         window.addEventListener('capgpsTrackingStarted', function(e) {
             if (liveActive) return; // already in sync
-            console.info('[Tracking] capgpsTrackingStarted received, syncing app.js state');
+            _qvLog.info('[Tracking] capgpsTrackingStarted received, syncing app.js state');
             var detail = e.detail || {};
             liveActive = true;
             liveStartTime = detail.startTime || Date.now();
@@ -4286,7 +4351,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         window.addEventListener('capgpsTrackingStopped', function(e) {
             if (!liveActive) return;
-            console.info('[Tracking] capgpsTrackingStopped received, cleaning up app.js state');
+            _qvLog.info('[Tracking] capgpsTrackingStopped received, cleaning up app.js state');
             var detail = e.detail || {};
             // Sync final km from CapGPS before stopping
             if (detail.km != null) todayKm = detail.km;
@@ -5204,10 +5269,29 @@ if ('serviceWorker' in navigator) {
   }
 
   // Fetch forecast including daylight (sunrise/sunset) and wind
-  async function fetchForecast(lat, lon, date) {
+  
+// ─── v2.70: fetchWithTimeout — wrapper fetch con AbortController ──────────
+// Previene fetch pending infinite in zone con rete lenta (Lapponia, fiordi)
+function fetchWithTimeout(url, opts, timeoutMs) {
+    timeoutMs = timeoutMs || 8000;
+    var controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    var timer = null;
+    if (controller) {
+        opts = Object.assign({}, opts || {}, { signal: controller.signal });
+        timer = setTimeout(function() {
+            controller.abort();
+            console.warn('[fetch] Timeout after ' + timeoutMs + 'ms:', url.substring(0, 80));
+        }, timeoutMs);
+    }
+    return fetch(url, opts || {}).finally(function() {
+        if (timer) clearTimeout(timer);
+    });
+}
+
+async function fetchForecast(lat, lon, date, _retry) {
     const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=temperature_2m_max,temperature_2m_min,weathercode,sunrise,sunset,precipitation_probability_max,windspeed_10m_max&start_date=${date}&end_date=${date}&timezone=auto`;
     try {
-      const resp = await fetch(url);
+      const resp = await fetchWithTimeout(url, {}, 8000);
       if (!resp.ok) return null;
       const data = await resp.json();
       if (data.daily && data.daily.temperature_2m_max) {
@@ -5236,7 +5320,15 @@ if ('serviceWorker' in navigator) {
           precipProb: data.daily.precipitation_probability_max ? data.daily.precipitation_probability_max[0] : null
         };
       }
-    } catch(e) {}
+    } catch(e) {
+      // v2.70: retry once after 3s on network/timeout error
+      if (!_retry) {
+        console.warn('[Meteo] fetchForecast failed, retrying in 3s:', e.message);
+        await new Promise(function(r) { setTimeout(r, 3000); });
+        return fetchForecast(lat, lon, date, true);
+      }
+      console.warn('[Meteo] fetchForecast failed after retry:', e.message);
+    }
     return null;
   }
 
@@ -5377,7 +5469,7 @@ if (document.readyState === 'loading') {
       var endStr = endDate.toISOString().split('T')[0];
       var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + s.lat + '&longitude=' + s.lon + '&daily=temperature_2m_max,temperature_2m_min,weathercode,sunrise,sunset,precipitation_probability_max,windspeed_10m_max&start_date=' + startStr + '&end_date=' + endStr + '&timezone=auto';
       try {
-        var resp = await fetch(url);
+        var resp = await fetchWithTimeout(url, {}, 8000);
         if (!resp.ok) continue;
         var data = await resp.json();
         if (!data.daily || !data.daily.temperature_2m_max) continue;
@@ -5431,7 +5523,7 @@ if (document.readyState === 'loading') {
           html += '</div>';
         }
         html += '</div>';
-      } catch(e) {}
+      } catch(e) { console.warn('[QV]', e.message || e); }
     }
     if (html) {
       weatherPanel.innerHTML = html;
@@ -5510,7 +5602,7 @@ if (document.readyState === 'loading') {
   });
 
   window.firebaseSyncCheckin = function(dayKey, done) {
-    if (!isOwner) { console.info('[Firebase] Write blocked (viewer mode)'); return; }
+    if (!isOwner) { _qvLog.info('[Firebase] Write blocked (viewer mode)'); return; }
     const update = {};
     update[dayKey] = { done: done, ts: Date.now() };
     dbRef.child('checkins').update(update).catch(function() {});
@@ -5535,14 +5627,14 @@ if (document.readyState === 'loading') {
   });
 
   window.firebaseSetCurrentDay = function(dayIndex) {
-    if (!isOwner) { console.info('[Firebase] Write blocked (viewer mode)'); return; }
+    if (!isOwner) { _qvLog.info('[Firebase] Write blocked (viewer mode)'); return; }
     dbRef.child('currentDay').set({ day: dayIndex, ts: Date.now() });
     showSyncStatus(isEN ? '📍 Day updated' : '📍 Giorno aggiornato', 'ok');
   };
 
   // ─── 3. FAMILY NOTES ───
   window.firebaseSaveNote = function(dayIndex, text) {
-    if (!isOwner) { console.info('[Firebase] Write blocked (viewer mode)'); return; }
+    if (!isOwner) { _qvLog.info('[Firebase] Write blocked (viewer mode)'); return; }
     dbRef.child('notes/G' + dayIndex).set({ text: text, ts: Date.now() });
   };
 
@@ -6478,7 +6570,7 @@ if (document.readyState === 'loading') {
                         etaText = Math.round(distToNext) + ' km';
                     }
                 }
-            } catch(e) {}
+            } catch(e) { console.warn('[QV]', e.message || e); }
             heroNextWhenBlock.textContent = etaText;
         }
         heroNextStop.style.display = '';
@@ -6501,7 +6593,7 @@ if (document.readyState === 'loading') {
     var heroCityLink = document.getElementById('hero-city-link');
     if (heroCityLink) {
         heroCityLink.addEventListener('click', function() {
-            console.info('[Hero] City clicked, switchTab available:', typeof window.switchTab);
+            _qvLog.info('[Hero] City clicked, switchTab available:', typeof window.switchTab);
             if (window.switchTab) window.switchTab('posizione');
             else if (window.switchTabFromHome) window.switchTabFromHome('posizione');
             else console.error('[Hero] No switchTab function available!');
@@ -6512,7 +6604,7 @@ if (document.readyState === 'loading') {
     var heroDateLink = document.getElementById('hero-trip-date');
     if (heroDateLink) {
         heroDateLink.addEventListener('click', function() {
-            console.info('[Hero] Date clicked, switchTab available:', typeof window.switchTab);
+            _qvLog.info('[Hero] Date clicked, switchTab available:', typeof window.switchTab);
             var dayIdx = getDayIndex();
             if (dayIdx < 0) dayIdx = 53; // trip ended → last day
             var scrollTarget = 'g' + dayIdx;
@@ -7471,7 +7563,7 @@ if (document.readyState === 'loading') {
 (function() {
   // Only register for push if Firebase Messaging is available
   if (typeof firebase === 'undefined' || !firebase.messaging) {
-    console.info('[FCM] Firebase Messaging not available');
+    _qvLog.info('[FCM] Firebase Messaging not available');
     return;
   }
 
@@ -7521,11 +7613,11 @@ if (document.readyState === 'loading') {
   // Request permission and get token
   function requestPushPermission() {
     if (!('Notification' in window)) {
-      console.info('[FCM] Notifications not supported');
+      _qvLog.info('[FCM] Notifications not supported');
       return;
     }
     if (Notification.permission === 'denied') {
-      console.info('[FCM] Notifications denied by user');
+      _qvLog.info('[FCM] Notifications denied by user');
       // Show help tip in notification drawer
       showNotifBlockedTip();
       return;
@@ -7553,7 +7645,7 @@ if (document.readyState === 'loading') {
       return messaging.getToken(vapidOpts);
     }).then(function(token) {
       if (token) {
-        console.info('[FCM] Token:', token.substring(0, 20) + '...');
+        _qvLog.info('[FCM] Token:', token.substring(0, 20) + '...');
         localStorage.setItem(FCM_TOKEN_KEY, token);
         // Save token to Firebase DB for the owner to send push notifications
         saveFcmToken(token);
@@ -7569,7 +7661,7 @@ if (document.readyState === 'loading') {
     if (!db) return;
     var user = firebaseUser || (typeof firebase !== 'undefined' && firebase.auth ? firebase.auth().currentUser : null);
     if (!user || !user.uid) {
-      console.info('[FCM] No authenticated user — will retry on auth state change');
+      _qvLog.info('[FCM] No authenticated user — will retry on auth state change');
       // Retry when auth becomes available
       if (typeof firebase !== 'undefined' && firebase.auth) {
         var unsubFcm = firebase.auth().onAuthStateChanged(function(u) {
@@ -7610,7 +7702,7 @@ if (document.readyState === 'loading') {
     // Save under uid/deviceId so one user can have multiple devices
     // Firebase rules: fcm_tokens/$uid writable by auth.uid === $uid
     db.ref('fcm_tokens/' + user.uid + '/' + deviceId).set(tokenData).then(function() {
-      console.info('[FCM] Token saved to Firebase (role: ' + role + ', uid: ' + user.uid.substring(0,8) + '...)');
+      _qvLog.info('[FCM] Token saved to Firebase (role: ' + role + ', uid: ' + user.uid.substring(0,8) + '...)');
     }).catch(function(err) {
       console.warn('[FCM] Token save failed:', err.message);
     });
@@ -7618,7 +7710,7 @@ if (document.readyState === 'loading') {
 
   // Handle foreground messages
   messaging.onMessage(function(payload) {
-    console.info('[FCM] Foreground message:', payload);
+    _qvLog.info('[FCM] Foreground message:', payload);
     var data = payload.notification || payload.data || {};
     var title = data.title || 'Quo Vadis';
     var body = data.body || '';
@@ -7944,7 +8036,7 @@ if (document.readyState === 'loading') {
     };
     if (data.senderUid) payload.senderUid = data.senderUid;
     notifQueueRef.push(payload).then(function() {
-      console.info('[Push] Notification queued:', type);
+      _qvLog.info('[Push] Notification queued:', type);
     }).catch(function(err) {
       console.warn('[Push] Queue failed:', err.message);
     });
@@ -8643,7 +8735,7 @@ if (document.readyState === 'loading') {
           }
           if (Object.keys(updates).length > 0) {
             updates.timelineImported = true;
-            diarioRef.child(dayKey).update(updates);
+            diarioRef.child(dayKey).update(updates).catch(function(e) { console.error('[Diario] save failed:', e); if (window.showToast) showToast(isEN ? '❌ Save failed — check connection' : '❌ Salvataggio fallito — controlla la connessione', 'error'); });
           }
         }
       });
@@ -9400,7 +9492,15 @@ if (document.readyState === 'loading') {
   }
 
   // ─── Send message ───
+  var _lastMsgSent = 0;
   function sendMessage(text, mediaUrl, mediaType, msgType) {
+    // v2.72: rate limit — max 1 messaggio ogni 2 secondi
+    var _now = Date.now();
+    if (_now - _lastMsgSent < 2000) {
+      if (window.showToast) showToast(isEN ? '⏳ Wait a moment...' : '⏳ Aspetta un momento...', 'info');
+      return;
+    }
+    _lastMsgSent = _now;
     // Fallback: if chatUser lost due to timing, re-read from Firebase Auth
     if (!chatUser && typeof firebase !== 'undefined' && firebase.auth) {
       chatUser = firebase.auth().currentUser;
@@ -10918,7 +11018,7 @@ if (document.readyState === 'loading') {
             firebase.database().ref('trips/' + _familyId + '/diary/' + key)
               .update({ draft: null, publishAt: null, publishedAt: _now })
               .then(function() {
-                console.info('[Diario] Auto-published scheduled post:', key, entry.title || '');
+                _qvLog.info('[Diario] Auto-published scheduled post:', key, entry.title || '');
                 if (window.showToast) showToast('📖 ' + (entry.title || 'Post') + ' — ' + (isEN ? 'published!' : 'pubblicato!'), 'success');
               });
           }
@@ -11402,7 +11502,9 @@ if (document.readyState === 'loading') {
         // Call translatePost Cloud Function
         var functions = firebase.app().functions('europe-west1');
         var translateFn = functions.httpsCallable('translatePost');
-        translateFn({ text: originalText, key: entryKey, familyId: (typeof FAMILY_ID !== 'undefined' ? FAMILY_ID : 'viaggio-europa-2026') }).then(function(result) {
+        // CONTRATTO translatePost: { text, key, familyId } → { textEn }
+            // Vedi functions/index.js per dettagli. Se cambi qui, aggiorna anche lì.
+            translateFn({ text: originalText, key: entryKey, familyId: (typeof FAMILY_ID !== 'undefined' ? FAMILY_ID : 'viaggio-europa-2026') }).then(function(result) {
           if (result.data && result.data.textEn) {
             textEl.textContent = result.data.textEn;
             btn.dataset.translated = '1';
@@ -12784,7 +12886,7 @@ if (document.readyState === 'loading') {
           showConfirm((isEN ? 'Remove ' + duplicateUIDs.length + ' duplicate UID(s)? Only the most recent per email will be kept.' : 'Rimuovere ' + duplicateUIDs.length + ' UID duplicati? Verr\u00e0 mantenuto solo il pi\u00f9 recente per email.'), function() {
             var updates = {};
             duplicateUIDs.forEach(function(duid) { updates[duid] = null; });
-            console.log('[Admin] Removing duplicate UIDs:', duplicateUIDs);
+            _qvLog.info('[Admin] Removing duplicate UIDs:', duplicateUIDs);
             usersRef.update(updates).then(function() {
               localStorage.setItem('admin-dupes-dismissed', '1');
               sessionStorage.setItem('admin-dupes-cleaned', '1');
@@ -13554,263 +13656,85 @@ if (document.readyState === 'loading') {
 })();
 
 
-// ─── Admin: Post Editor (REMOVED — diary drafts now managed via /diary/ entries) ───
+
+
+
+// ─── v2.68: Self-check integrità dati (visibile solo all'owner) ───────────
+(function _dataIntegrityCheck() {
+  window.addEventListener('load', function() {
+    try {
+      var issues = [];
+      var td = typeof TRIP_DAYS !== 'undefined' ? TRIP_DAYS : 0;
+      var it = typeof itinerario !== 'undefined' ? itinerario.length : 0;
+      var dd = typeof DAYS_DATA !== 'undefined' ? DAYS_DATA.length : 0;
+      var tc = typeof TRIP_COORDS !== 'undefined' ? TRIP_COORDS.length : 0;
+
+      if (it && it !== td) issues.push('itinerario: ' + it + ' vs TRIP_DAYS: ' + td);
+      if (dd && dd !== td) issues.push('DAYS_DATA: ' + dd + ' vs TRIP_DAYS: ' + td);
+      if (tc && tc !== td) issues.push('TRIP_COORDS: ' + tc + ' vs TRIP_DAYS: ' + td);
+
+      if (issues.length > 0 && localStorage.getItem('qv-owner-hint') === '1') {
+        var banner = document.createElement('div');
+        banner.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:#dc2626;color:#fff;font-size:13px;padding:8px 12px;font-family:monospace;';
+        banner.innerHTML = '⚠️ DATA INTEGRITY: ' + issues.join(' | ') + ' <button onclick="this.parentNode.remove()" style="margin-left:8px;background:rgba(255,255,255,0.3);border:none;color:#fff;cursor:pointer;padding:2px 6px;border-radius:4px;">✕</button>';
+        document.body.appendChild(banner);
+        console.error('[DataCheck]', issues);
+      }
+    } catch(e) { console.warn('[QV]', e.message || e); }
+  });
+})();
+
+// ─── v2.71: Pulsante "Oggi" — porta al giorno corrente ─────────────────────
 (function() {
-  // Legacy admin post editor removed in v1.89.
-  // All diary posts (including pre-trip) are now normal /diary/ entries with draft:true.
-  return;
-
-  var posts = [];
-
-  function getPostsRef() {
-    var ref = (typeof getFamilyRef === 'function') ? getFamilyRef('preTripPosts') : (window.getFamilyRef ? window.getFamilyRef('preTripPosts') : null);
-    return ref;
-  }
-
-  // Load posts from Firebase on admin tab open
-  function loadPosts() {
-    var ref = getPostsRef();
-    if (!ref) {
-      if (typeof window._preTripPostsOverride !== 'undefined' && window._preTripPostsOverride) {
-        posts = JSON.parse(JSON.stringify(window._preTripPostsOverride));
-      } else {
-        posts = [];
-      }
-      renderPosts();
-      return;
-    }
-    ref.once('value', function(snap) {
-      var val = snap.val();
-      if (val && Array.isArray(val)) {
-        posts = val;
-      } else {
-        posts = [];
-      }
-      renderPosts();
-    });
-  }
-
-  function renderPosts() {
-    var html = '';
-    posts.forEach(function(post, idx) {
-      var isDraft = (post.status === 'draft');
-      var statusColor = isDraft ? '#e53e3e' : '#38a169';
-      var statusLabel = isDraft ? '📝 Bozza' : '✅ Pubblicato';
-      html += '<div class="admin-post-item" style="border:1px solid ' + (isDraft ? '#e53e3e55' : 'var(--border)') + ';border-radius:8px;padding:10px;background:var(--bg-alt);' + (isDraft ? 'opacity:0.85;' : '') + '">';
-      // Row 1: date + status toggle + delete
-      html += '  <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;flex-wrap:wrap;">';
-      html += '    <input type="date" class="admin-post-date" data-idx="' + idx + '" value="' + (post.date || '') + '" style="padding:4px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;">';
-      html += '    <button class="admin-post-status pos-btn" data-idx="' + idx + '" style="font-size:11px;padding:4px 8px;background:' + statusColor + ';color:#fff;">' + statusLabel + '</button>';
-      html += '    <button class="admin-post-del pos-btn" data-idx="' + idx + '" style="font-size:11px;padding:4px 8px;background:#e53e3e;color:#fff;margin-left:auto;">🗑️</button>';
-      html += '  </div>';
-      // Row 2: title (optional) + badge
-      html += '  <div style="display:flex;gap:8px;margin-bottom:4px;">';
-      html += '    <input type="text" class="admin-post-title" data-idx="' + idx + '" value="' + escapeHtml(post.title || '') + '" placeholder="Titolo (opzionale)" style="flex:1;padding:4px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;">';
-      html += '    <input type="text" class="admin-post-badge" data-idx="' + idx + '" value="' + escapeHtml(post.badge || (post.typeLabel && post.typeLabel.it) || '') + '" placeholder="Badge es: \ud83d\ude80 Countdown" list="badge-presets" style="width:150px;padding:4px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;">';
-      html += '  </div>';
-      // Row 3: body IT
-      html += '  <textarea class="admin-post-body-it" data-idx="' + idx + '" placeholder="Testo IT (HTML ok)" rows="2" style="width:100%;padding:6px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;resize:vertical;">' + (post.body && post.body.it ? post.body.it : '') + '</textarea>';
-      // Row 4: body EN
-      html += '  <textarea class="admin-post-body-en" data-idx="' + idx + '" placeholder="Testo EN (HTML ok)" rows="2" style="width:100%;padding:6px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;resize:vertical;margin-top:4px;">' + (post.body && post.body.en ? post.body.en : '') + '</textarea>';
-      // Row 5: image URL
-      html += '  <input type="text" class="admin-post-image" data-idx="' + idx + '" value="' + (post.image || '') + '" placeholder="URL immagine (opzionale)" style="width:100%;padding:4px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;margin-top:4px;">';
-      html += '</div>';
-    });
-    // Badge presets datalist
-    html += '<datalist id="badge-presets">';
-    BADGE_PRESETS.forEach(function(b) { html += '<option value="' + b + '">'; });
-    html += '</datalist>';
-    listEl.innerHTML = html;
-
-    // Attach delete handlers
-    listEl.querySelectorAll('.admin-post-del').forEach(function(btn) {
-      btn.addEventListener('click', function() {
-        var idx = parseInt(this.getAttribute('data-idx'));
-        posts.splice(idx, 1);
-        renderPosts();
-      });
-    });
-    // Attach status toggle handlers
-    listEl.querySelectorAll('.admin-post-status').forEach(function(btn) {
-      btn.addEventListener('click', function() {
-        var idx = parseInt(this.getAttribute('data-idx'));
-        posts[idx].status = (posts[idx].status === 'draft') ? 'published' : 'draft';
-        renderPosts();
-      });
-    });
-  }
-
-  // Collect current form state into posts array
-  function collectPosts() {
-    listEl.querySelectorAll('.admin-post-date').forEach(function(el) {
-      var idx = parseInt(el.getAttribute('data-idx'));
-      posts[idx].date = el.value;
-    });
-    listEl.querySelectorAll('.admin-post-title').forEach(function(el) {
-      var idx = parseInt(el.getAttribute('data-idx'));
-      posts[idx].title = el.value || '';
-    });
-    listEl.querySelectorAll('.admin-post-badge').forEach(function(el) {
-      var idx = parseInt(el.getAttribute('data-idx'));
-      var badge = el.value || '';
-      posts[idx].badge = badge;
-      // Keep typeLabel for backward compat
-      posts[idx].typeLabel = {it: badge, en: badge};
-    });
-    listEl.querySelectorAll('.admin-post-body-it').forEach(function(el) {
-      var idx = parseInt(el.getAttribute('data-idx'));
-      if (!posts[idx].body) posts[idx].body = {};
-      posts[idx].body.it = el.value;
-    });
-    listEl.querySelectorAll('.admin-post-body-en').forEach(function(el) {
-      var idx = parseInt(el.getAttribute('data-idx'));
-      if (!posts[idx].body) posts[idx].body = {};
-      posts[idx].body.en = el.value;
-    });
-    listEl.querySelectorAll('.admin-post-image').forEach(function(el) {
-      var idx = parseInt(el.getAttribute('data-idx'));
-      posts[idx].image = el.value || null;
-    });
-  }
-
-  addBtn.addEventListener('click', function() {
-    collectPosts();
-    posts.unshift({
-      date: new Date().toISOString().split('T')[0],
-      status: 'draft',
-      title: '',
-      badge: '📝 Aggiornamento',
-      typeLabel: {it: '📝 Aggiornamento', en: '📝 Update'},
-      body: {it: '', en: ''},
-      image: null
-    });
-    renderPosts();
-  });
-
-  saveBtn.addEventListener('click', function() {
-    collectPosts();
-    var ref = getPostsRef();
-    if (!ref) {
-      statusEl.textContent = '❌ Firebase non connesso.';
-      return;
-    }
-    ref.set(posts).then(function() {
-      statusEl.textContent = '✅ Salvato su Firebase!';
-      window._preTripPostsOverride = posts;
-    }).catch(function(err) {
-      statusEl.textContent = '❌ Errore: ' + err.message;
-    });
-  });
-
-  // ─── Translate Button Handler ───
-  var translateBtn = document.getElementById('admin-posts-translate');
-  if (translateBtn) {
-    translateBtn.addEventListener('click', async function() {
-      collectPosts();
-      var postsToTranslate = posts.filter(function(p) { return p.body && p.body.it && !p.body.en; });
-      if (postsToTranslate.length === 0) {
-        postsToTranslate = posts.filter(function(p) { return p.body && p.body.it; });
-      }
-      if (postsToTranslate.length === 0) {
-        statusEl.textContent = '⚠️ Nessun testo IT da tradurre.';
-        return;
-      }
-      translateBtn.disabled = true;
-      translateBtn.textContent = '⏳ Traduzione in corso...';
-      statusEl.textContent = '';
-      try {
-        var functions = firebase.app().functions('europe-west1');
-        var translateFn = functions.httpsCallable('translatePost');
-        var count = 0;
-        for (var i = 0; i < posts.length; i++) {
-          if (posts[i].body && posts[i].body.it) {
-            var result = await translateFn({text: posts[i].body.it, from: 'it', to: 'en'});
-            if (result.data && result.data.translated) {
-              posts[i].body.en = result.data.translated;
-              count++;
-            }
-          }
+    var btn = document.getElementById('btn-oggi');
+    if (!btn) return;
+    function updateOggiBtn() {
+        var today = new Date(); today.setHours(0,0,0,0);
+        var tripStart = typeof TRIP_START !== 'undefined' ? new Date(TRIP_START) : new Date(2026,5,25);
+        tripStart.setHours(0,0,0,0);
+        var dayIdx = Math.floor((today - tripStart) / 86400000);
+        var totalDays = typeof TRIP_DAYS !== 'undefined' ? TRIP_DAYS : 55;
+        if (dayIdx < 0 || dayIdx >= totalDays) {
+            btn.style.display = 'none';
+            return;
         }
-        renderPosts();
-        statusEl.textContent = '✅ Tradotti ' + count + ' post! Ricorda di salvare.';
-      } catch(err) {
-        statusEl.textContent = '❌ Errore traduzione: ' + (err.message || err);
-      } finally {
-        translateBtn.disabled = false;
-        translateBtn.textContent = '🌐 Traduci auto IT→EN';
-      }
-    });
-  }
-
-  // Load on admin tab switch
-  window.addEventListener('tabSwitched', function(e) {
-    if (e.detail === 'admin') {
-      setTimeout(loadPosts, 200);
+        btn.style.display = '';
+        btn.textContent = isEN ? '📍 Today: G' + (dayIdx+1) : '📍 Oggi: G' + (dayIdx+1);
+        btn.onclick = function() {
+            if (window.switchTab) window.switchTab('giorni', 'g' + dayIdx);
+            else if (window.switchTabFromHome) window.switchTabFromHome('giorni');
+        };
     }
-  });
+    updateOggiBtn();
+    // Aggiorna a mezzanotte
+    var now = new Date();
+    var msToMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate()+1) - now;
+    setTimeout(function() { updateOggiBtn(); setInterval(updateOggiBtn, 86400000); }, msToMidnight);
+})();
 
-  // ─── Default draft posts (v1.86) — shown in admin editor until published ───
-  var DEFAULT_DRAFT_POSTS = [
-    {
-      date: '2026-06-04',
-      status: 'draft',
-      title: '',
-      badge: '\ud83d\ude80 Countdown',
-      typeLabel: {it: '\ud83d\ude80 Countdown', en: '\ud83d\ude80 Countdown'},
-      body: {
-        it: 'Mancano <strong>{{daysUntil}} giorni</strong> alla partenza! Il furgone \u00e8 quasi pronto, l\u2019avventura sta per iniziare. \ud83d\ude90\u2728',
-        en: '<strong>{{daysUntil}} days</strong> until departure! The van is almost ready, the adventure is about to begin. \ud83d\ude90\u2728'
-      },
-      image: null
-    },
-    {
-      date: '2026-06-02',
-      status: 'draft',
-      title: '',
-      badge: '\ud83d\udcf7 Foto',
-      typeLabel: {it: '\ud83d\udcf7 Foto', en: '\ud83d\udcf7 Photo'},
-      body: {
-        it: 'Preparativi in corso! Ecco cosa ci aspetta lungo la strada \u2014 fiordi, citt\u00e0 baltiche, e tanto altro.',
-        en: 'Preparations underway! Here\u2019s what awaits us on the road \u2014 fjords, Baltic cities, and so much more.'
-      },
-      image: './img/placeholder/van-view.jpg'
-    },
-    {
-      date: '2026-05-29',
-      status: 'draft',
-      title: 'Il percorso \u00e8 pronto!',
-      badge: '\ud83d\uddfa\ufe0f Piano',
-      typeLabel: {it: '\ud83d\uddfa\ufe0f Piano', en: '\ud83d\uddfa\ufe0f Route'},
-      body: {
-        it: '\ud83d\ude90 12.000 km &nbsp; \ud83c\uddf3\ud83c\uddf4\ud83c\uddec\ud83c\udde7\ud83c\uddf8\ud83c\uddea\ud83c\uddeb\ud83c\uddee\ud83c\uddea\ud83c\uddea\ud83c\uddf1\ud83c\uddfb\ud83c\uddf1\ud83c\uddf9\ud83c\uddf5\ud83c\uddf1\ud83c\udde6\ud83c\uddf9 13 paesi &nbsp; \ud83d\udcc5 55 giorni',
-        en: '\ud83d\ude90 12,000 km &nbsp; \ud83c\uddf3\ud83c\uddf4\ud83c\uddec\ud83c\udde7\ud83c\uddf8\ud83c\uddea\ud83c\uddeb\ud83c\uddee\ud83c\uddea\ud83c\uddea\ud83c\uddf1\ud83c\uddfb\ud83c\uddf1\ud83c\uddf9\ud83c\uddf5\ud83c\uddf1\ud83c\udde6\ud83c\uddf9 13 countries &nbsp; \ud83d\udcc5 55 days'
-      },
-      image: null
+// ─── v2.71: Badge stato rete migliorato ─────────────────────────────────────
+(function() {
+    var badge = document.getElementById('network-status-badge');
+    if (!badge) {
+        badge = document.createElement('div');
+        badge.id = 'network-status-badge';
+        badge.style.cssText = 'position:fixed;bottom:70px;left:50%;transform:translateX(-50%);' +
+            'background:#ef4444;color:#fff;font-size:12px;font-weight:600;padding:6px 14px;' +
+            'border-radius:20px;z-index:9998;display:none;box-shadow:0 2px 8px rgba(0,0,0,.3);' +
+            'pointer-events:none;transition:opacity .3s;';
+        badge.textContent = isEN ? '📵 Offline' : '📵 Offline';
+        document.body.appendChild(badge);
     }
-  ];
-
-  // Seed default drafts as initial value (Firebase will override when loaded)
-  if (!window._preTripPostsOverride || window._preTripPostsOverride.length === 0) {
-    window._preTripPostsOverride = DEFAULT_DRAFT_POSTS;
-  }
-
-  // Also load posts from Firebase for the home/diario feed (on app start)
-  setTimeout(function() {
-    var ref = getPostsRef();
-    if (!ref) return;
-    ref.on('value', function(snap) {
-      var val = snap.val();
-      if (val && Array.isArray(val)) {
-        window._preTripPostsOverride = val;
-      } else {
-        // Firebase empty: seed with defaults and save them
-        window._preTripPostsOverride = DEFAULT_DRAFT_POSTS;
-        if (isOwner) {
-          ref.set(DEFAULT_DRAFT_POSTS).then(function() {
-            console.info('[Posts] Default draft posts seeded to Firebase');
-          }).catch(function() {});
+    function updateBadge() {
+        if (!navigator.onLine) {
+            badge.style.display = 'block';
+            setTimeout(function() { badge.style.opacity = '1'; }, 10);
+        } else {
+            badge.style.opacity = '0';
+            setTimeout(function() { badge.style.display = 'none'; }, 300);
         }
-      }
-    });
-  }, 2000);
+    }
+    window.addEventListener('online',  updateBadge);
+    window.addEventListener('offline', updateBadge);
+    updateBadge(); // check on load
 })();

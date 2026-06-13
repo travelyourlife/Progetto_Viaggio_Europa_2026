@@ -233,3 +233,84 @@
   window._getTripDay = getTripDay;
 
 })();
+
+// ─── v2.72: Notifica Buongiorno giornaliera ─────────────────────────────────
+// Inviata dal client (ha accesso diretto all'itinerario locale)
+// alla prima apertura dell'app ogni mattina durante il viaggio
+(function() {
+  var BUONGIORNO_KEY = 'qv-buongiorno-sent';
+
+  function sendBuongiorno() {
+    try {
+      if (typeof TRIP_START === 'undefined' || typeof itinerario === 'undefined') return;
+      if (typeof firebase === 'undefined' || !firebase.database) return;
+
+      var user = (typeof AuthManager !== 'undefined' && AuthManager.isResolved())
+        ? AuthManager.getUser() : null;
+      if (!user) return;
+
+      var today = new Date(); today.setHours(0,0,0,0);
+      var tripStart = new Date(TRIP_START); tripStart.setHours(0,0,0,0);
+      var dayIdx = Math.floor((today - tripStart) / 86400000);
+      var totalDays = typeof TRIP_DAYS !== 'undefined' ? TRIP_DAYS : 55;
+
+      // Solo durante il viaggio
+      if (dayIdx < 0 || dayIdx >= totalDays) return;
+
+      // Controlla se già inviata oggi
+      var todayStr = today.toISOString().split('T')[0];
+      var lastSent = localStorage.getItem(BUONGIORNO_KEY);
+      if (lastSent === todayStr) return;
+
+      // Leggi i dati del giorno dall'itinerario locale
+      var dayData = itinerario[dayIdx];
+      var dest = dayData ? (dayData.tragitto || dayData.title || '') : '';
+      var km   = dayData ? (dayData.km || 0) : 0;
+
+      var title = '\uD83C\uDF05 Buongiorno! Giorno ' + (dayIdx + 1) + '/' + totalDays;
+      var body  = dest + (km > 0 ? ' \u00B7 ' + km + ' km' : ' \u00B7 Giorno di sosta');
+
+      // Aggiungi meteo se disponibile in weatherLog Firebase
+      var familyId = (typeof FAMILY_ID !== 'undefined') ? FAMILY_ID : 'viaggio-europa-2026';
+      firebase.database().ref('trips/' + familyId + '/weatherLog/' + todayStr).once('value', function(snap) {
+        var meteo = snap.val();
+        if (meteo && meteo.tempMax) {
+          body += ' \u00B7 ' + meteo.tempMax + '\u00B0/' + meteo.tempMin + '\u00B0C';
+        }
+
+        // Accoda la notifica
+        firebase.database().ref('trips/' + familyId + '/notifications/queue').push({
+          type: 'buongiorno', title: title, body: body,
+          target: 'family', url: './#tab-giorni',
+          tag: 'buongiorno', createdAt: Date.now(), sent: false
+        }).then(function() {
+          localStorage.setItem(BUONGIORNO_KEY, todayStr);
+          console.warn('[Buongiorno] Inviata per G' + dayIdx + ': ' + body);
+        }).catch(function(e) {
+          console.warn('[Buongiorno] Invio fallito:', e.message);
+        });
+      });
+    } catch(e) {
+      console.warn('[Buongiorno] Errore:', e.message);
+    }
+  }
+
+  // Invia alla prima apertura dopo le 07:30
+  function maybeSendBuongiorno() {
+    var now = new Date();
+    if (now.getHours() >= 7 && (now.getHours() > 7 || now.getMinutes() >= 30)) {
+      sendBuongiorno();
+    }
+  }
+
+  // Attendi che Auth sia pronta
+  if (typeof AuthManager !== 'undefined') {
+    AuthManager.subscribe(function(user) {
+      if (user) maybeSendBuongiorno();
+    });
+  } else {
+    window.addEventListener('authStateChanged', function(e) {
+      if (e.detail && e.detail.user) maybeSendBuongiorno();
+    });
+  }
+})();

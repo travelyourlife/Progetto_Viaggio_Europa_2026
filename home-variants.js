@@ -14,8 +14,6 @@
   var VARIANT_LABELS = {
     'classic': '🏠 Home Classica',
     'owner-a': '📋 Daily Briefing',
-    'owner-d': '⏱️ Timeline',
-    'owner-b': '📊 Dashboard',
     'follower-a': '📰 Live Feed',
     'follower-b': '📸 Story Card',
     'follower-e': '🧩 Widget Grid',
@@ -147,7 +145,7 @@
   function loadTemplates() {
     // Templates are already in the HTML (loaded via <link> or inline)
     // We just need to verify they exist
-    var templates = ['hv-owner-a', 'hv-owner-d', 'hv-owner-b', 'hv-follower-a', 'hv-follower-b', 'hv-follower-e', 'hv-visitor', 'hv-role-modal'];
+    var templates = ['hv-owner-a', 'hv-follower-a', 'hv-follower-b', 'hv-follower-e', 'hv-visitor', 'hv-role-modal'];
     templates.forEach(function(id) {
       if (!document.getElementById(id)) {
         console.warn('[HomeVariants] Template missing: ' + id);
@@ -588,7 +586,7 @@
       data.totalCheckins = '0';
       var countdownWord = data.daysUntil === 1 ? (_en ? 'day' : 'giorno') : (_en ? 'days' : 'giorni');
       var _tripDays = (typeof TRIP_DAYS !== 'undefined') ? TRIP_DAYS : (typeof window.TRIP_META !== 'undefined' ? window.TRIP_META.days : 55);
-      data.progressText = (_en ? 'Departure in ' : 'Partenza tra ') + data.daysUntil + ' ' + countdownWord + ' · ' + _tripDays + ' ' + (_en ? 'days' : 'giorni') + ' · 13 ' + (_en ? 'countries' : 'paesi');
+      data.progressText = (_en ? 'Departure in ' : 'Partenza tra ') + data.daysUntil + ' ' + countdownWord;
       data.kmBar = 0;
       data.lastUpdate = '';
       data.distanceFromHome = '';
@@ -1286,7 +1284,7 @@
       // v1.84: Use session-only override or real date
       var _dayIdx = 0;
       if (typeof window._dayOverride === 'number') { _dayIdx = window._dayOverride; }
-      else { var _ts = (typeof TRIP_START !== 'undefined') ? TRIP_START : new Date(2026, 5, 26); _dayIdx = Math.max(0, Math.floor((new Date() - _ts) / 86400000)); }
+      else { var _ts = (typeof TRIP_START !== 'undefined') ? TRIP_START : new Date(2026, 5, 25); _dayIdx = Math.max(0, Math.floor((new Date() - _ts) / 86400000)); }
       var _scrollId = 'g' + _dayIdx + '-header';
       if (typeof window.switchTab === 'function') { window.switchTab('giorni', _scrollId); }
       else if (typeof switchTabFromHome === 'function') { switchTabFromHome('giorni'); }
@@ -1341,7 +1339,7 @@
       // Navigate to Giorni tab and scroll to current day's accordion header
       var _dayIdx2 = 0;
       if (typeof window._dayOverride === 'number') { _dayIdx2 = window._dayOverride; }
-      else { var _ts2 = (typeof TRIP_START !== 'undefined') ? TRIP_START : new Date(2026, 5, 26); _dayIdx2 = Math.max(0, Math.floor((new Date() - _ts2) / 86400000)); }
+      else { var _ts2 = (typeof TRIP_START !== 'undefined') ? TRIP_START : new Date(2026, 5, 25); _dayIdx2 = Math.max(0, Math.floor((new Date() - _ts2) / 86400000)); }
       var _scrollId2 = 'g' + _dayIdx2 + '-header';
       if (typeof window.switchTab === 'function') { window.switchTab('giorni', _scrollId2); }
       else if (typeof switchTabFromHome === 'function') { switchTabFromHome('giorni'); }

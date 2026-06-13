@@ -4955,3 +4955,9 @@ html[lang="en"] .notif-drawer-list:empty::after {
 .admin-accordion[open] > .admin-accordion-title::after {
     transform: rotate(90deg);
 }
+
+/* v2.70: pulse animation for current day minibar segment */
+@keyframes qv-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.65; }
+}

@@ -20,7 +20,9 @@
       "**/node_modules/**",
       "functions/**",
       "storage.rules",
-      "database.rules.json"
+      "database.rules.json",
+      "screenshots/**",
+      "screenshots/*.png"
     ],
     "headers": [
       {

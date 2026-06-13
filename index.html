@@ -77,7 +77,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-installations-compat.js"></script>
+<!-- firebase-installations-compat: rimosso in v2.70 — 0 utilizzi nell'app -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-functions-compat.js"></script>
 <script src="https://accounts.google.com/gsi/client" async></script>
@@ -86,8 +86,9 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = '2.68';
-  window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
+  var EXPECTED_VERSION = '2.72';
+  window.IS_PROD = true; // v2.71: disabilita debug overlay in produzione
+    window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
   var r = false;
   var versionMismatch = false; // Only reload if version actually differs
@@ -146,11 +147,13 @@
 <script src="data.js" defer></script>
 <script src="days-data.js" defer></script>
 <script src="days-renderer.js" defer></script>
-<script src="wiki-links.js" defer></script>
+<!-- wiki-links.js: caricato lazy alla prima apertura tab Cultura/Attività (34KB) -->
 <script src="weather-coords.js" defer></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
 <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js" crossorigin="" defer></script>
 <script src="poi-data.js" defer></script>
+<!-- poi-data.js caricato sopra con defer — 161KB, usato da UnifiedMap e tab Luoghi -->
+<!-- wiki-links.js lazy: caricato solo alla prima apertura tab Cultura/Attività -->
 <script src="app.js" defer></script>
 <script src="curiosita-data.js" defer></script>
 <script src="curiosita-scheduler.js" defer></script>
@@ -381,18 +384,25 @@
     <span style="font-size:20px;color:var(--text-muted,#64748b);">⛶</span>
 </div>
 
-<!-- ─── v2.61: Minibar segmentata viaggio ─── -->
+<!-- ─── v2.69: Minibar unificata (Opzione A) ─── -->
 <div id="home-trip-minibar" style="margin:8px 0 4px;background:var(--card-bg,#fff);border-radius:12px;padding:10px 14px;box-shadow:var(--shadow-sm,0 1px 3px rgba(0,0,0,0.08));border:1px solid var(--border-color,#e2e8f0);">
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;">
-    <span id="minibar-label" style="font-size:12px;color:var(--text-muted,#64748b);">Partenza tra 15 giorni</span>
+  <!-- Riga testo: label sinistra + percentuale destra -->
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">
+    <span id="minibar-label" style="font-size:13px;color:var(--text-muted,#64748b);">Partenza tra 12 giorni</span>
+    <span id="minibar-pct" style="font-size:13px;font-weight:700;color:#3b82f6;display:none;">0%</span>
+  </div>
+  <!-- Riga info: testo dettaglio + legenda -->
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+    <span id="minibar-detail" style="font-size:12px;color:var(--text-muted,#94a3b8);" data-trip-meta="summaryIT">55 giorni · 13 paesi</span>
     <span id="minibar-legend" style="display:flex;gap:8px;align-items:center;font-size:10px;color:var(--text-muted,#64748b);">
       <span style="display:flex;align-items:center;gap:3px;"><span style="width:8px;height:8px;border-radius:1px;background:#d85a30;display:inline-block;"></span>critico</span>
       <span style="display:flex;align-items:center;gap:3px;"><span style="width:8px;height:8px;border-radius:1px;background:#ef9f27;display:inline-block;"></span>pesante</span>
       <span style="display:flex;align-items:center;gap:3px;"><span style="width:8px;height:8px;border-radius:1px;background:#85b7eb;display:inline-block;"></span>sosta</span>
     </span>
   </div>
-  <div id="minibar-segments" style="display:flex;gap:2px;align-items:flex-end;height:22px;width:100%;"></div>
-  <div id="minibar-tooltip" style="display:none;position:absolute;background:rgba(0,0,0,0.82);color:#fff;font-size:11px;padding:5px 9px;border-radius:7px;white-space:nowrap;pointer-events:none;z-index:9999;"></div>
+  <!-- Minibar segmentata -->
+  <div id="minibar-segments" style="display:flex;gap:2px;align-items:flex-end;height:24px;width:100%;"></div>
+  <div id="minibar-tooltip" style="display:none;position:fixed;background:rgba(0,0,0,0.82);color:#fff;font-size:11px;padding:5px 9px;border-radius:7px;white-space:nowrap;pointer-events:none;z-index:9999;"></div>
 </div>
 
 
@@ -651,6 +661,9 @@
 </section>
 
 <section id="tab-giorni" class="tab-content">
+  <div style="display:flex;justify-content:flex-end;padding:8px 16px 0;">
+    <button id="btn-oggi" style="display:none;font-size:12px;font-weight:600;color:#3b82f6;background:#eff6ff;border:1px solid #bfdbfe;border-radius:20px;padding:5px 12px;cursor:pointer;">📍 Oggi: G1</button>
+  </div>
 
 <h1 style="text-align:center; margin-top:16px;">📅 Itinerario — Giorno per Giorno</h1>
 

@@ -189,6 +189,12 @@ exports.publishScheduledPosts = functions
 // ─────────────────────────────────────────────────────────────────────────────
 // 3. TRANSLATE DIARY POST (HTTPS Callable)
 // ─────────────────────────────────────────────────────────────────────────────
+// ─── CONTRATTO translatePost ────────────────────────────────────────────────
+// CLIENT invia:  { text: string (max 5000), key: string, familyId: string }
+// SERVER risponde: { textEn: string }
+// ERRORI: unauthenticated | invalid-argument | internal
+// CHIAMATA in app.js: cerca "translateFn({ text:"
+// ────────────────────────────────────────────────────────────────────────────
 exports.translatePost = functions
   .region('europe-west1')
   .runWith({ memory: '256MB', timeoutSeconds: 60 })

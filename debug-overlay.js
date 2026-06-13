@@ -3,6 +3,11 @@
 // Injects a collapsible debug log panel into the Admin tab.
 // No floating button — accessible only from Admin > Debug Log.
 // ═══════════════════════════════════════════════════════════════
+// v2.71: Non caricare in produzione
+if (window.IS_PROD) {
+    console.info('[Debug] IS_PROD=true: debug-overlay disabilitato');
+    // no-op
+} else {
 (function() {
   'use strict';
 
@@ -287,3 +292,5 @@
   }, 2000);
 
 })();
+
+}

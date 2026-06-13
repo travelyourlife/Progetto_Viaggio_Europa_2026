@@ -44,6 +44,13 @@
                     ".indexOn": [
                         "date"
                     ]
+                },
+                "activities": {
+                    ".read": "auth != null && (auth.uid === 'RxlVlsfeaEeSwFUVYbKQujEsbBo1' || auth.uid === 'Mh8BOeFPnFe7WObcsUoP6wyRgPw1' || root.child('trips/' + $familyId + '/ownerUsers/' + auth.uid).val() === true || (root.child('trips/' + $familyId + '/approvedUsers/' + auth.uid).exists() && !root.child('trips/' + $familyId + '/bannedUsers/' + auth.uid).exists()))",
+                    ".write": "auth != null && (auth.uid === 'RxlVlsfeaEeSwFUVYbKQujEsbBo1' || auth.uid === 'Mh8BOeFPnFe7WObcsUoP6wyRgPw1' || root.child('trips/' + $familyId + '/ownerUsers/' + auth.uid).val() === true)",
+                    "$activityId": {
+                        ".validate": "newData.hasChildren(['category', 'distance', 'date']) || newData.val() === null"
+                    }
                 }
             }
         },

@@ -245,7 +245,7 @@
 
       // v2.45 FIX: Buffer & Flush strategy
       // Instead of writing to Firebase on every GPS update (~100/min at highway speed),
-      // buffer track points locally and flush every 30 seconds.
+      // buffer track points locally and flush every 60 seconds.
       // Only live position is written immediately (for real-time map display).
 
       // 1. Live position — write immediately (debounced at 5s minimum interval)
@@ -272,7 +272,7 @@
       if (!window._gpsTrackBuffer) window._gpsTrackBuffer = [];
       window._gpsTrackBuffer.push({ lat: lat, lng: lng, speed: speed, heading: heading, time: time });
 
-      // 3. Flush buffer every 30 seconds
+      // 3. Flush buffer every 60 seconds
       if (!window._gpsFlushInterval) {
         window._gpsFlushInterval = setInterval(function() {
           var buffer = window._gpsTrackBuffer;
@@ -286,9 +286,11 @@
             var key = flushRefs.db.ref(flushPath).push().key;
             updates[key] = buffer[i];
           }
-          flushRefs.db.ref(flushPath).update(updates);
+          flushRefs.db.ref(flushPath).update(updates)
+            .catch(function(e) { console.warn('[CapGPS] Flush track failed:', e.message); });
           // Update session km once per flush
-          flushRefs.db.ref('trips/' + flushRefs.familyId + '/liveSession/' + flushRefs.uid + '/todayKm').set(bgTodayKm);
+          flushRefs.db.ref('trips/' + flushRefs.familyId + '/liveSession/' + flushRefs.uid + '/todayKm').set(bgTodayKm)
+            .catch(function(e) { console.warn('[CapGPS] Flush km failed:', e.message); });
           window._gpsTrackBuffer = [];
           console.log('[CapGPS] Flushed ' + buffer.length + ' track points');
         }, 60000); // 60 seconds (v2.48: was 30s, reduced writes by 50%)
