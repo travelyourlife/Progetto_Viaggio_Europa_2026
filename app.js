@@ -1549,8 +1549,11 @@ document.addEventListener('DOMContentLoaded', function() {
             // Final clamp so it never leaves the bottom edge either
             var maxTop = window.innerHeight - tipH - margin;
             if (topPos > maxTop) topPos = Math.max(margin, maxTop);
-            tooltip.style.left = (leftPos + window.scrollX) + 'px';
-            tooltip.style.top  = (topPos + window.scrollY) + 'px';
+            // v2.75: #minibar-tooltip is position:fixed, so viewport coords are
+            // used directly (no scroll offset). max-width in CSS bounds tipW/tipH
+            // so the clamps above always keep the tooltip fully on-screen.
+            tooltip.style.left = leftPos + 'px';
+            tooltip.style.top  = topPos + 'px';
         }
         function hideTooltip() { if (tooltip) tooltip.style.display = 'none'; }
 
@@ -1660,7 +1663,7 @@ document.addEventListener('DOMContentLoaded', function() {
             ].join(';');
             seg.appendChild(bar);
 
-            var tipText = 'G' + idx + ' ' + d.date + ' · ' + d.title + (km ? ' · ' + km + 'km' : ' · sosta');
+            var tipText = (isEN ? 'D' : 'G') + idx + ' ' + d.date + ' · ' + d.title + (km ? ' · ' + km + 'km' : (isEN ? ' · rest' : ' · sosta'));
             function showFor() {
                 if (!tooltip) return;
                 tooltip.textContent = tipText;
@@ -4629,7 +4632,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
         if (tripDay >= 0 && tripDay <= TRIP_DAYS - 1) {
             // During trip: show "Vai a G[X] (oggi)"
             box.style.display = 'block';
-            btn.textContent = '\uD83D\uDCC5 ' + (isEN ? 'Go to G' : 'Vai a G') + tripDay + (isEN ? ' (today)' : ' (oggi)');
+            btn.textContent = '\uD83D\uDCC5 ' + (isEN ? 'Go to D' : 'Vai a G') + tripDay + (isEN ? ' (today)' : ' (oggi)');
             btn.addEventListener('click', function() {
                 function scrollToToday() {
                     var currentDay = getCurrentTripDay();
@@ -5969,7 +5972,7 @@ if (document.readyState === 'loading') {
     if (window.firebaseSetCurrentDay) {
       window.firebaseSetCurrentDay(currentDay);
     }
-    showToast('\u2601\ufe0f ' + (isEN ? 'Day synced to G' : 'Giorno sincronizzato a G') + currentDay, 'success');
+    showToast('\u2601\ufe0f ' + (isEN ? 'Day synced to D' : 'Giorno sincronizzato a G') + currentDay, 'success');
   });
   if (resetBtn) resetBtn.addEventListener('click', function() {
     window._dayOverride = undefined;
@@ -13838,7 +13841,7 @@ if (document.readyState === 'loading') {
             return;
         }
         btn.style.display = '';
-        btn.textContent = isEN ? '📍 Today: G' + (dayIdx+1) : '📍 Oggi: G' + (dayIdx+1);
+        btn.textContent = isEN ? '📍 Today: D' + (dayIdx+1) : '📍 Oggi: G' + (dayIdx+1);
         btn.onclick = function() {
             if (window.switchTab) window.switchTab('giorni', 'g' + dayIdx);
             else if (window.switchTabFromHome) window.switchTabFromHome('giorni');

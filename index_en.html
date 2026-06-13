@@ -86,7 +86,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = '2.74';
+  var EXPECTED_VERSION = '2.75';
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
   var r = false;
@@ -381,6 +381,28 @@
 </div>
 
 
+<!-- ─── v2.75: Unified card (single-line text + intensity minibar) — EN parity ─── -->
+<div id="home-trip-minibar" style="margin:8px 0 4px;background:var(--card-bg,#fff);border-radius:12px;padding:12px 16px;box-shadow:var(--shadow-sm,0 1px 3px rgba(0,0,0,0.08));border:1px solid var(--border-color,#e2e8f0);">
+  <!-- Single row: label + detail on the left · percentage on the right -->
+  <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:10px;">
+    <span style="font-size:14px;color:var(--text-color,#1a1a2e);min-width:0;">
+      <span id="minibar-label" style="font-weight:600;">Departure in 12 days</span><span id="minibar-sep" style="color:var(--text-muted,#64748b);"> · </span><span id="minibar-detail" style="color:var(--text-muted,#64748b);" data-trip-meta="summaryEN">55 days · 13 countries · 12,000 km</span>
+    </span>
+    <span id="minibar-pct" style="font-size:14px;font-weight:700;color:#3b82f6;display:none;white-space:nowrap;">0%</span>
+  </div>
+  <!-- Segmented minibar (extended touch area + taller bars) -->
+  <div id="minibar-segments" style="display:flex;gap:2px;align-items:flex-end;height:40px;width:100%;padding:6px 0;touch-action:manipulation;"></div>
+  <!-- Legend with thresholds (critical ≥500 / heavy ≥300 / normal / rest) -->
+  <div id="minibar-legend" style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;font-size:12px;color:var(--text-muted,#64748b);margin-top:10px;">
+    <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:#d85a30;display:inline-block;"></span>critical ≥500km</span>
+    <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:#ef9f27;display:inline-block;"></span>heavy ≥300km</span>
+    <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:#97c459;display:inline-block;"></span>normal</span>
+    <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:#85b7eb;display:inline-block;"></span>rest</span>
+  </div>
+  <div id="minibar-tooltip" style="display:none;position:fixed;background:rgba(0,0,0,0.82);color:#fff;font-size:11px;padding:5px 9px;border-radius:7px;white-space:normal;max-width:min(220px,90vw);line-height:1.35;text-align:center;pointer-events:none;z-index:9999;"></div>
+</div>
+
+
 <div class="home-grid">
     <!-- ⭐ Essentials -->
     <div class="hg-group hg-essential">
@@ -637,6 +659,9 @@
 </section>
 
 <section id="tab-giorni" class="tab-content">
+  <div style="display:flex;justify-content:flex-end;padding:8px 16px 0;">
+    <button id="btn-oggi" style="display:none;font-size:12px;font-weight:600;color:#3b82f6;background:#eff6ff;border:1px solid #bfdbfe;border-radius:20px;padding:5px 12px;cursor:pointer;">📍 Today: D1</button>
+  </div>
 
 <h1 style="text-align:center; margin-top:16px;">📅 Itinerary — Day by Day</h1>
 
@@ -4718,9 +4743,24 @@
 <!-- Content: visible only to approved users -->
 <div id="diario-content" style="display:none;">
 
+  <!-- v2.59: Gallery toggle -->
+  <div style="display:flex;gap:8px;margin-bottom:12px;padding:0 4px;">
+    <button id="diario-view-timeline" class="pos-btn pos-btn-gray" style="font-size:13px;padding:7px 14px;background:var(--accent);color:#fff;">📖 Journal</button>
+    <button id="diario-view-gallery" class="pos-btn pos-btn-gray" style="font-size:13px;padding:7px 14px;">🖼️ Gallery</button>
+  </div>
+
   <!-- Timeline container -->
   <div id="diario-timeline" class="diario-timeline">
     <p class="diario-empty">The journal is empty. Entries will appear automatically during the trip.</p>
+  </div>
+
+  <!-- v2.59: Global photo gallery (chronological) -->
+  <div id="diario-gallery" style="display:none;">
+    <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">All trip photos, in reverse chronological order.</p>
+    <div id="diario-gallery-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;"></div>
+    <div id="diario-gallery-empty" style="display:none;text-align:center;padding:40px;color:var(--text-muted);">
+      📷 No photos yet. Your journal photos will appear here.
+    </div>
   </div>
 </div>
 
@@ -7688,6 +7728,8 @@
     <div class="pos-btn-row" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
         <button id="pos-live-start" class="pos-btn pos-btn-green pos-btn-large">▶️ Start Trip</button>
         <button id="pos-live-stop" class="pos-btn pos-btn-red pos-btn-large" style="display:none;">⏹️ End Day</button>
+        <!-- v2.59: Drive mode -->
+        <button id="pos-drive-mode" class="pos-btn pos-btn-gray" style="font-size:13px;padding:8px 12px;" title="Drive mode — simplified screen">🚗 Drive</button>
     </div>
     <div class="pos-options-row" id="pos-live-options" style="display:flex;flex-direction:column;gap:6px;font-size:13px;">
         <label class="pos-toggle-label"><input type="checkbox" id="pos-opt-autostart"> Auto-start on movement</label>
@@ -7699,11 +7741,15 @@
         <div class="pos-live-stat"><span class="pos-live-stat-value" id="live-speed-now">0</span><span class="pos-live-stat-label">km/h current</span></div>
         <div class="pos-live-stat"><span class="pos-live-stat-value" id="live-speed-avg">0</span><span class="pos-live-stat-label">km/h average</span></div>
         <div class="pos-live-stat"><span class="pos-live-stat-value" id="live-km-today">0</span><span class="pos-live-stat-label">km today</span></div>
-        <div class="pos-live-stat"><span class="pos-live-stat-value" id="live-time-today">0:00</span><span class="pos-live-stat-label">drive time</span></div>
+        <div class="pos-live-stat"><span class="pos-live-stat-value" id="live-time-today">0:00</span><span class="pos-live-stat-label">total session</span></div>
+        <!-- v2.59: effective drive time (excludes stops >15min) -->
+        <div class="pos-live-stat"><span class="pos-live-stat-value" id="live-drive-effective">0:00</span><span class="pos-live-stat-label">effective drive</span></div>
     </div>
     <div style="margin-top:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
         <select id="pos-edit-km-day-select" style="padding:6px 10px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:var(--bg-card);color:var(--text);"></select>
         <button id="pos-edit-km-standalone" class="pos-btn pos-btn-gray" style="font-size:13px;padding:6px 12px;">✏️ Edit km</button>
+        <!-- v2.59: GPX export -->
+        <button id="pos-gpx-export" class="pos-btn pos-btn-gray" style="font-size:13px;padding:6px 12px;" title="Download the day's track in GPX format">⬇️ GPX</button>
     </div>
 </div>
 

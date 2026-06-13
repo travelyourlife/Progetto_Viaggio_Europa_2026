@@ -936,6 +936,8 @@ a.hv-visitor-lock.hv-login-link { text-decoration: underline; cursor: pointer; d
     display: flex; align-items: center; gap: 6px; padding: 10px 18px 14px;
     font-size: 13px; color: var(--text-secondary, #4a5568);
     border-top: 1px solid rgba(0,0,0,0.06);
+    flex-wrap: wrap; row-gap: 4px; /* v2.75: wrap so long daylight text is never clipped */
+    min-width: 0;
 }
 .hv-pretrip-weather .hv-sep { opacity: 0.4; }
 
@@ -1025,6 +1027,12 @@ a.hv-visitor-lock.hv-login-link { text-decoration: underline; cursor: pointer; d
 .hv-pretrip-weather .hero-info-block {
     display: inline-flex; align-items: center; gap: 3px;
     white-space: nowrap;
+    min-width: 0; /* v2.75: allow shrinking within the row */
+}
+/* v2.75: on narrow screens hide the inline separators so blocks wrap cleanly */
+@media (max-width: 380px) {
+    .hv-pretrip-weather { gap: 4px 10px; }
+    .hv-pretrip-weather .hv-sep { display: none; }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
@@ -1100,4 +1108,19 @@ a.hv-visitor-lock.hv-login-link { text-decoration: underline; cursor: pointer; d
     .hv-hero-separator-dashed { border-top-color: rgba(255,255,255,0.15); }
     .hv-hero-weather-row { color: #a0aec0; }
     .hv-hero-next-stop-row { color: #a0aec0; }
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   v2.74: dark-mode override for the "Oggi/Today" pill (btn-oggi)
+   The inline style hardcodes a light blue bg (#eff6ff) which would be an
+   out-of-place light island in dark mode. These rules use !important to
+   defeat the inline style only when the system is in dark mode.
+   ═══════════════════════════════════════════════════════════════════════ */
+@media (prefers-color-scheme: dark) {
+    #btn-oggi {
+        background: rgba(99, 179, 237, 0.15) !important;
+        color: #90cdf4 !important;
+        border-color: rgba(99, 179, 237, 0.4) !important;
+    }
 }

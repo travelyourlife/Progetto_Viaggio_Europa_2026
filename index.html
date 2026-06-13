@@ -86,7 +86,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = '2.74';
+  var EXPECTED_VERSION = '2.75';
   window.IS_PROD = true; // v2.71: disabilita debug overlay in produzione
     window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
@@ -402,7 +402,7 @@
     <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:#97c459;display:inline-block;"></span>normale</span>
     <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:#85b7eb;display:inline-block;"></span>sosta</span>
   </div>
-  <div id="minibar-tooltip" style="display:none;position:fixed;background:rgba(0,0,0,0.82);color:#fff;font-size:11px;padding:5px 9px;border-radius:7px;white-space:nowrap;pointer-events:none;z-index:9999;"></div>
+  <div id="minibar-tooltip" style="display:none;position:fixed;background:rgba(0,0,0,0.82);color:#fff;font-size:11px;padding:5px 9px;border-radius:7px;white-space:normal;max-width:min(220px,90vw);line-height:1.35;text-align:center;pointer-events:none;z-index:9999;"></div>
 </div>
 
 
@@ -8737,9 +8737,12 @@
 <span id="meteo"></span>
 <!-- v2.59: alias anchors for app.js ID compatibility with EN version -->
 <span id="pos-meteo-anchor"></span>
+<!-- v2.74: id parity aliases with EN (non-visual) -->
+<span id="giorni-meteo-storico"></span>
 <blockquote>
 <p>Medie climatiche storiche per le <strong>date esatte in cui sarete in ogni zona (25/06 → 18/08). Fonti: WeatherSpark, Climate-Data.org, VisitNorway, VisitFinland, AccuWeather.</p>
 </blockquote>
+<span id="pos-meteo-tabella"></span>
 <h4 id="meteo-tabella-riassuntiva" style="font-size:1.2em;margin-top:1.5em;">📊 Meteo — Tabella Riassuntiva</h4>
 <table>
 <thead>
