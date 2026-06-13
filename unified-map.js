@@ -105,14 +105,14 @@
     TRIP_COORDS.forEach(function(c) { routeCoords.push([c.lat, c.lng]); });
 
     var now = new Date();
-    var tripStart = typeof TRIP_START !== 'undefined' ? TRIP_START : new Date(2026, 5, 26);
+    var tripStart = typeof TRIP_START !== 'undefined' ? TRIP_START : new Date(2026, 5, 25);
     var currentDay;
     if (typeof window._dayOverride === 'number') {
       currentDay = window._dayOverride;
     } else {
       currentDay = Math.floor((now - tripStart) / 86400000);
     }
-    var totalDays = typeof TRIP_DAYS !== 'undefined' ? TRIP_DAYS : 54;
+    var totalDays = typeof TRIP_DAYS !== 'undefined' ? TRIP_DAYS : 55;
 
     if (routePlanLayer) {
       map.removeLayer(routePlanLayer);

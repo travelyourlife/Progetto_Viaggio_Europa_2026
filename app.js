@@ -1558,11 +1558,27 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-        // Aggiorna dettaglio (durante il viaggio mostra km + paesi percorsi)
+        // v2.73: dettaglio card unificata.
+        // Pre-partenza: lascia TRIP_META (summary "55 giorni · 13 paesi · 12.000 km").
+        // Durante il viaggio: la label già mostra "Giorno X/55 — Titolo", quindi il
+        // dettaglio mostra solo i km percorsi oggi (evita la ridondanza "G X/55").
+        var miniSep = document.getElementById('minibar-sep');
         if (miniDetail && currentDay >= 0 && currentDay < days.length) {
             miniDetail.setAttribute('data-trip-meta', ''); // disabilita TRIP_META
-            miniDetail.textContent = (isEN ? 'Day ' : 'G') + (currentDay + 1) + '/' + totalDays +
-                ' · ' + (typeof window._totalKmToday !== 'undefined' ? window._totalKmToday + ' km' : '—');
+            var kmToday = days[currentDay] && days[currentDay].km ? days[currentDay].km : 0;
+            if (kmToday > 0) {
+                miniDetail.textContent = isEN ? kmToday + ' km today' : kmToday + ' km oggi';
+                if (miniSep) miniSep.style.display = '';
+            } else {
+                // Giorno di sosta o senza km: nascondi dettaglio e separatore per non lasciare "·" appeso
+                miniDetail.textContent = isEN ? 'rest day' : 'giorno di sosta';
+                if (miniSep) miniSep.style.display = '';
+            }
+        } else if (miniDetail && currentDay >= days.length) {
+            // Viaggio completato: la label dice già tutto, azzera dettaglio e separatore
+            miniDetail.setAttribute('data-trip-meta', '');
+            miniDetail.textContent = '';
+            if (miniSep) miniSep.style.display = 'none';
         }
 
         // Costruisci segmenti

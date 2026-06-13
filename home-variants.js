@@ -412,7 +412,7 @@
     var now = new Date();
     var _en = (typeof isEN !== 'undefined' && isEN);
     var tripStart = (typeof TRIP_START !== 'undefined') ? TRIP_START : new Date(2026, 5, 25);
-    var tripDays = (typeof TRIP_DAYS !== 'undefined') ? TRIP_DAYS : 54;
+    var tripDays = (typeof TRIP_DAYS !== 'undefined') ? TRIP_DAYS : 55;
 
     // v1.84: Use session-only override (window._dayOverride) or real date
     var currentDay;
@@ -1527,7 +1527,7 @@
   function fetchHeroLiveWeather() {
     // Only fetch if trip is active or within 16 days
     var tripStart = (typeof TRIP_START !== 'undefined') ? TRIP_START : new Date(2026, 5, 25);
-    var tripDays = (typeof TRIP_DAYS !== 'undefined') ? TRIP_DAYS : 54;
+    var tripDays = (typeof TRIP_DAYS !== 'undefined') ? TRIP_DAYS : 55;
     var now = new Date();
     // v1.84: Use session-only override or real date
     var currentDay;
