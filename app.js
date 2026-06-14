@@ -1524,42 +1524,48 @@ document.addEventListener('DOMContentLoaded', function() {
         var MIN_H    = 6;
         var MAX_H    = 34;
 
-        // v2.73: helper to position the tooltip so it is ALWAYS fully visible.
-        // Clamps horizontally to the viewport and flips below the bar when there
-        // is not enough room above (e.g. card near the top of the screen).
+        // v2.81: the floating overlay tooltip used to cover neighbouring day
+        // segments on the bar. It is now replaced by a FIXED caption row placed
+        // BELOW the minibar (#minibar-caption), so the detail of the tapped day
+        // is shown without hiding any other day. placeTooltip simply reveals it.
+        var caption = document.getElementById('minibar-caption');
         function placeTooltip(seg) {
+            if (caption) {
+                caption.style.height = 'auto';
+                caption.style.padding = '7px 10px';
+                caption.style.marginTop = '8px';
+                caption.style.opacity = '1';
+                return;
+            }
+            // Fallback (no caption element): keep legacy overlay behaviour.
             if (!tooltip) return;
             tooltip.style.display = 'block';
             tooltip.style.left = '-9999px';
             tooltip.style.top  = '-9999px';
-            // Measure after content/display set
-            var tipW = tooltip.offsetWidth;
-            var tipH = tooltip.offsetHeight;
-            // v2.76: anchor to the VISIBLE coloured bar (seg.firstChild), not the
-            // 40px tall touch wrapper, so the tooltip sits right next to the bar.
+            var tipW = tooltip.offsetWidth, tipH = tooltip.offsetHeight;
             var anchor = seg.firstChild || seg;
             var r = anchor.getBoundingClientRect();
             var margin = 8;
-            // Horizontal: center over the bar, then clamp inside [margin, vw-tipW-margin]
             var centerX = r.left + r.width / 2 - tipW / 2;
-            var minLeft = margin;
             var maxLeft = window.innerWidth - tipW - margin;
-            if (maxLeft < minLeft) maxLeft = minLeft; // tip wider than viewport
-            var leftPos = Math.max(minLeft, Math.min(centerX, maxLeft));
-            // Vertical: prefer just ABOVE the bar; only flip BELOW if it would clip
-            // the top edge. Both branches stay adjacent to the bar (gap of 6px).
+            if (maxLeft < margin) maxLeft = margin;
+            var leftPos = Math.max(margin, Math.min(centerX, maxLeft));
             var topPos = r.top - tipH - 6;
             if (topPos < margin) topPos = r.bottom + 6;
-            // Final clamp so it never leaves the bottom edge either
             var maxTop = window.innerHeight - tipH - margin;
             if (topPos > maxTop) topPos = Math.max(margin, maxTop);
-            // v2.75: #minibar-tooltip is position:fixed, so viewport coords are
-            // used directly (no scroll offset). max-width in CSS bounds tipW/tipH
-            // so the clamps above always keep the tooltip fully on-screen.
             tooltip.style.left = leftPos + 'px';
             tooltip.style.top  = topPos + 'px';
         }
-        function hideTooltip() { if (tooltip) tooltip.style.display = 'none'; }
+        function hideTooltip() {
+            if (caption) {
+                caption.style.opacity = '0';
+                caption.style.height = '0';
+                caption.style.padding = '0 10px';
+                caption.style.marginTop = '0';
+            }
+            if (tooltip) tooltip.style.display = 'none';
+        }
 
         // v2.73: track which segment is currently "revealed" by tap (mobile).
         var _revealedIdx = -1;
@@ -1669,8 +1675,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
             var tipText = (isEN ? 'D' : 'G') + idx + ' ' + d.date + ' · ' + d.title + (km ? ' · ' + km + 'km' : (isEN ? ' · rest' : ' · sosta'));
             function showFor() {
-                if (!tooltip) return;
-                tooltip.textContent = tipText;
+                // v2.81: write the day detail into the fixed caption row (and the
+                // legacy overlay as a fallback) before revealing it.
+                if (caption) caption.textContent = tipText;
+                if (tooltip) tooltip.textContent = tipText;
                 placeTooltip(seg);
                 bar.style.opacity = isPast ? '0.5' : '0.78';
                 if (isCurrent) bar.style.transform = 'scaleY(1.12)';

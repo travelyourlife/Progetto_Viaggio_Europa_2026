@@ -75,17 +75,39 @@
   }
 
   // ─── Create popup content ───
+  // v2.82: language detection (IT default, EN on index_en / lang=en).
+  var UMAP_IS_EN = (document.documentElement.lang === 'en') ||
+                   (location.pathname.indexOf('_en') !== -1);
+
+  // v2.82: pick the localized variant of a field, falling back to the base
+  // (Italian) value when the EN string has not been provided.
+  function poiField(poi, base) {
+    if (UMAP_IS_EN) {
+      var en = poi[base + 'EN'];
+      if (en !== undefined && en !== null && String(en).trim() !== '') return en;
+    }
+    return poi[base];
+  }
+
   function createPopupContent(poi) {
-    var starBadge = poi.star ? ' <span style="color:#d69e2e;font-size:12px;">⭐ Imperdibile</span>' : '';
+    var L = UMAP_IS_EN
+      ? { star: '⭐ Must-see', maps: '🗺️ Google Maps', hours: 'Hours', price: 'Price' }
+      : { star: '⭐ Imperdibile', maps: '🗺️ Google Maps', hours: 'Orari', price: 'Prezzo' };
+    var starBadge = poi.star ? ' <span style="color:#d69e2e;font-size:12px;">' + L.star + '</span>' : '';
+    var desc  = poiField(poi, 'desc');
+    var hours = poiField(poi, 'hours');
+    var price = poiField(poi, 'price');
     var html = '<div class="umap-popup">' +
       '<div class="umap-popup-header">' +
         '<span class="umap-popup-icon">' + (poi.icon || '📍') + '</span>' +
         '<strong>' + escapeHtml(poi.name) + '</strong>' + starBadge +
       '</div>' +
       '<div class="umap-popup-city">📍 ' + escapeHtml(poi.city || '') + ' · ' + (poi.day || '').toUpperCase() + '</div>' +
-      (poi.desc ? '<div class="umap-popup-desc">' + escapeHtml(poi.desc) + '</div>' : '') +
+      (desc ? '<div class="umap-popup-desc">' + escapeHtml(desc) + '</div>' : '') +
+      (hours ? '<div class="umap-popup-meta"><span class="umap-popup-meta-ico">🕐</span><span class="umap-popup-meta-lbl">' + L.hours + ':</span> ' + escapeHtml(hours) + '</div>' : '') +
+      (price ? '<div class="umap-popup-meta"><span class="umap-popup-meta-ico">💶</span><span class="umap-popup-meta-lbl">' + L.price + ':</span> ' + escapeHtml(price) + '</div>' : '') +
       '<div class="umap-popup-actions">' +
-        '<a href="' + poi.maps + '" target="_blank" rel="noopener" class="umap-popup-link">🗺️ Google Maps</a>' +
+        '<a href="' + poi.maps + '" target="_blank" rel="noopener" class="umap-popup-link">' + L.maps + '</a>' +
       '</div>' +
     '</div>';
     return html;

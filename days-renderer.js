@@ -195,6 +195,37 @@ var DaysRenderer = (function() {
       html += '</div>';
     }
 
+    // 10b. CITY TOUR (walking itinerary + scooter alternative)
+    if (day.cityTour) {
+      var ct = day.cityTour;
+      var ctEN = (document.documentElement.lang === 'en') || (location.pathname.indexOf('_en') !== -1);
+      html += '<div class="dic dic-citytour">';
+      html += '<p>\uD83D\uDDFA\uFE0F <strong>' + (ctEN ? 'City tour' : 'Tour della citt\u00e0') + (ct.city ? ' \u2014 ' + ct.city : '') + ':</strong>';
+      if (ct.distance || ct.duration) {
+        var meta = [];
+        if (ct.distance) meta.push(ct.distance);
+        if (ct.duration) meta.push(ct.duration);
+        html += ' <span class="citytour-meta">(' + meta.join(' \u00b7 ') + ')</span>';
+      }
+      html += '</p>';
+      if (ct.walking && ct.walking.length) {
+        html += '<ol class="citytour-steps">';
+        ct.walking.forEach(function(s) {
+          html += '<li><strong>' + s.name + '</strong>';
+          if (s.text) html += ' \u2014 ' + s.text;
+          if (s.maps) html += mapsLink(s.maps);
+          html += '</li>';
+        });
+        html += '</ol>';
+      }
+      if (ct.scooter) {
+        html += '<p class="citytour-scooter">\uD83D\uDEF4 <strong>' + (ctEN ? 'By scooter:' : 'In monopattino:') + '</strong> ' + ct.scooter;
+        if (ct.scooterLink !== false) html += ' \u2192 <a href="#noleggi">' + (ctEN ? 'see rentals' : 'vedi noleggi') + '</a>';
+        html += '</p>';
+      }
+      html += '</div>';
+    }
+
     // 11. ALTERNATIVES
     if (day.alternatives && day.alternatives.length) {
       html += '<p>💡 <strong>Alternative:</strong></p><ul>';

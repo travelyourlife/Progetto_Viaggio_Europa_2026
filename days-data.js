@@ -112,7 +112,7 @@ var DAYS_DATA = [
       "cond": "Temporali pomeridiani possibili",
       "daylight": "16h di luce"
     },
-    "narrative": "",
+    "narrative": "Da Leoben si raggiunge <strong>Vienna</strong>: la capitale asburgica si gira a piedi tra il Duomo di Santo Stefano, l'Hofburg e la maestosa Ringstrasse.",
     "highlights": [
       {
         "icon": "🛣️",
@@ -216,6 +216,39 @@ var DAYS_DATA = [
         "notes": null
       },
       "budget": "~€130-160/giorno"
+    },
+    "cityTour": {
+      "city": "Vienna",
+      "distance": "~3 km centro storico (piano)",
+      "duration": "2,5–3h",
+      "walking": [
+        {
+          "name": "Duomo di Santo Stefano (Stephansdom)",
+          "text": "la cattedrale gotica simbolo di Vienna, con il tetto a tegole colorate; cuore del centro storico",
+          "maps": "Stephansdom Vienna"
+        },
+        {
+          "name": "Graben e Kärntner Straße",
+          "text": "le eleganti vie pedonali con la Colonna della Peste e i caffè storici",
+          "maps": "Graben Vienna"
+        },
+        {
+          "name": "Hofburg",
+          "text": "l'immenso palazzo imperiale degli Asburgo, con la Biblioteca Nazionale e la Scuola di Equitazione Spagnola",
+          "maps": "Hofburg Vienna"
+        },
+        {
+          "name": "Ringstrasse",
+          "text": "il grande viale che circonda il centro, fiancheggiato da Opera, Parlamento, Municipio (Rathaus) e i grandi musei",
+          "maps": "Ringstrasse Vienna"
+        },
+        {
+          "name": "Schönbrunn (opzionale)",
+          "text": "la reggia estiva imperiale con i giardini, poco fuori dal centro: merita mezza giornata a sé",
+          "maps": "Schloss Schonbrunn Vienna"
+        }
+      ],
+      "scooter": "Centro pianeggiante e ben servito da monopattini in sharing; la Ringstrasse ad anello è perfetta per un giro su due ruote."
     }
   },
   {
@@ -410,10 +443,21 @@ var DAYS_DATA = [
     "waterSports": null,
     "trekking": null,
     "fishing": null,
-    "events": [],
+    "events": [
+      {
+        "title": "Kristupas Summer Festival (Vilnius)",
+        "dates": "luglio–agosto 2026",
+        "text": "Oltre 40 concerti estivi (classica, jazz, musica sperimentale) in chiese e cortili di Vilnius. Programma esteso su tutta l'estate.",
+        "url": "https://www.kristupofestivaliai.lt/en/",
+        "price": "variabile"
+      }
+    ],
     "alternatives": [
       {
         "text": "➡️ Deviazioni Paesi Baltici → vedi <a href=\"#b2\">➕ Alternative</a>"
+      },
+      {
+        "text": "🏰 <strong>Trakai &amp; Lago Galvė</strong> (~28 km da Vilnius): castello su isola, noleggio kayak/SUP/barche da maggio a settembre. Deviazione di mezza giornata se si arriva presto."
       }
     ],
     "kids": [
@@ -461,6 +505,44 @@ var DAYS_DATA = [
         "notes": null
       },
       "budget": "~€120-150/giorno"
+    },
+    "cityTour": {
+      "city": "Vilnius (Città Vecchia UNESCO)",
+      "distance": "~2,5–3 km",
+      "duration": "2–3h",
+      "walking": [
+        {
+          "name": "Piazza della Cattedrale + Campanile",
+          "text": "cuore della città, Cattedrale neoclassica e campanile staccato; alla base la mattonella \"stebuklas\" (miracolo)",
+          "maps": "Vilnius Cathedral"
+        },
+        {
+          "name": "Torre di Gediminas",
+          "text": "salita breve al colle per la vista sui tetti della Città Vecchia (funicolare disponibile)",
+          "maps": "Gediminas Castle Tower Vilnius"
+        },
+        {
+          "name": "Università di Vilnius",
+          "text": "uno degli atenei più antichi del Nord Europa (1579), cortili e chiesa di San Giovanni",
+          "maps": "Vilnius University"
+        },
+        {
+          "name": "Chiesa di Sant'Anna",
+          "text": "capolavoro gotico in mattoni rossi che secondo la leggenda Napoleone volle \"portare a Parigi\"",
+          "maps": "Church of St Anne Vilnius"
+        },
+        {
+          "name": "Repubblica di Užupis",
+          "text": "quartiere bohémien autoproclamato \"repubblica\" degli artisti, con la sua costituzione affissa",
+          "maps": "Uzupis Vilnius"
+        },
+        {
+          "name": "Porta dell'Aurora (Aušros Vartai)",
+          "text": "ultima porta cittadina superstite con la cappella dell'icona della Madonna",
+          "maps": "Gate of Dawn Vilnius"
+        }
+      ],
+      "scooter": "Vilnius è servita da monopattini Bolt diffusi; comode le ciclabili lungo il fiume Neris. In Città Vecchia procedere a passo d'uomo sui sampietrini."
     }
   },
   {
@@ -482,7 +564,7 @@ var DAYS_DATA = [
       "cond": "Bel tempo",
       "daylight": "18h di luce"
     },
-    "narrative": "",
+    "narrative": "🛣️ Via <strong>A8/A12 + A2</strong> attraverso Šiauliai. Sosta consigliata alla <strong>Collina delle Croci</strong> (Kryžių kalnas), ~12 km a nord di Šiauliai, lungo il percorso.",
     "highlights": [
       {
         "icon": "🏛️",
@@ -713,11 +795,61 @@ var DAYS_DATA = [
       "lon": 24.1052
     },
     "scooter": "Riga centro compatto — ideale per monopattino o bici → <a href=\"#noleggi\">vedi noleggi</a>",
-    "trekking": null,
-    "waterSports": null,
+    "trekking": {
+      "title": "Parco Nazionale della Gauja (deviazione ~1h)",
+      "text": "Sigulda/Cēsis/Līgatne: trekking, mountain bike e canoa sulla Gauja (uno dei migliori percorsi in canoa d'Europa). Esempio canoa Cēsis→Sigulda. Noleggi presso Žagarkalns.",
+      "link": null
+    },
+    "waterSports": "🏄 <strong>SUP a Riga:</strong> noleggio sul canale cittadino e sulla Daugava. <em>SUP Guru</em> (Lucavsala) il più economico ~€8/h (€12/2h, €20/giorno, include pagaia e giubbotto); <em>Advaita Adventures</em> (Andrejosta) ~€15, possibile paddle notturno con luci LED. Stagione apr–set. Itinerario facile: canale cittadino ~6 km. Sulla Daugava restare vicino riva (traffico navi).",
     "fishing": null,
-    "events": [],
-    "alternatives": []
+    "events": [
+      {
+        "title": "Rīgas Ritmi 2026",
+        "dates": "01–04/07/2026",
+        "text": "Festival internazionale di jazz e world music in varie sedi di Riga. Date limitrofe al passaggio: verificare in base alla data effettiva.",
+        "url": "https://www.rigasritmi.lv/",
+        "price": "variabile (alcuni eventi gratuiti)"
+      }
+    ],
+    "alternatives": [],
+    "cityTour": {
+      "city": "Riga (Vecrīga, Città Vecchia UNESCO)",
+      "distance": "~3 km",
+      "duration": "2–3h",
+      "walking": [
+        {
+          "name": "Duomo di Riga (Doms)",
+          "text": "la più grande cattedrale medievale del Baltico, celebre organo; piazza con caffè",
+          "maps": "Riga Cathedral"
+        },
+        {
+          "name": "Casa delle Teste Nere",
+          "text": "facciata fiamminga riccamente decorata, simbolo di Riga (ricostruita)",
+          "maps": "House of the Black Heads Riga"
+        },
+        {
+          "name": "I Tre Fratelli",
+          "text": "le tre case più antiche della città, esempi di architettura abitativa medievale",
+          "maps": "Three Brothers Riga"
+        },
+        {
+          "name": "Castello di Riga",
+          "text": "residenza del presidente lettone, sulle rive della Daugava",
+          "maps": "Riga Castle"
+        },
+        {
+          "name": "Monumento della Libertà",
+          "text": "simbolo dell'indipendenza lettone con cambio della guardia",
+          "maps": "Freedom Monument Riga"
+        },
+        {
+          "name": "Quartiere Art Nouveau (Alberta iela)",
+          "text": "la più densa concentrazione di Jugendstil d'Europa, facciate di Eisenstein",
+          "maps": "Alberta iela Riga"
+        }
+      ],
+      "scooter": "Bolt molto diffuso a Riga; piacevole l'argine della Daugava e il canale cittadino (Bastejkalns). Ottimo per collegare Vecrīga al quartiere Art Nouveau."
+    }
   },
   {
     "id": "g6",
@@ -780,8 +912,12 @@ var DAYS_DATA = [
       }
     ],
     "scooter": "Tallinn Pirita promenade e centro storico → <a href=\"#noleggi\">vedi noleggi</a>",
-    "waterSports": null,
-    "trekking": null,
+    "waterSports": "🏄 <strong>SUP a Pirita beach</strong> (Tallinn): noleggio board ~€10/h. Acqua estiva ~17-18°C. Lunga promenade adatta anche a monopattino/bici.",
+    "trekking": {
+      "title": "Parco Nazionale di Lahemaa — Viru Bog (deviazione ~1h da Tallinn)",
+      "text": "Anello di 3,5 km su passerelle nella torbiera, con torre panoramica. Ingresso gratuito. D'estate è possibile il bagno nelle pozze (acqua limpidissima). Spesso abbinato alla cascata di Jägala, la più larga d'Estonia.",
+      "link": null
+    },
     "fishing": null,
     "events": [
       {
@@ -845,6 +981,44 @@ var DAYS_DATA = [
         "notes": "(Ravi 18, Tallinn) Attenzione alla fauna selvatica sulla Via Baltica."
       },
       "budget": "~€120-150/giorno"
+    },
+    "cityTour": {
+      "city": "Tallinn (Vanalinn, Città Vecchia UNESCO)",
+      "distance": "~2,5 km",
+      "duration": "2h",
+      "walking": [
+        {
+          "name": "Piazza del Municipio (Raekoja plats)",
+          "text": "cuore della città bassa, con il Municipio gotico (1404) tra i più antichi del Nord Europa",
+          "maps": "Tallinn Town Hall Square"
+        },
+        {
+          "name": "Vicolo di Santa Caterina (Katariina käik)",
+          "text": "passaggio medievale con botteghe artigiane",
+          "maps": "St Catherine Passage Tallinn"
+        },
+        {
+          "name": "Cattedrale di Toompea / Toomkirik",
+          "text": "salita alla collina di Toompea, città alta dei nobili",
+          "maps": "Toompea Tallinn"
+        },
+        {
+          "name": "Punti panoramici Kohtuotsa e Patkuli",
+          "text": "le due terrazze classiche sui tetti rossi e le guglie della Città Vecchia",
+          "maps": "Kohtuotsa viewing platform"
+        },
+        {
+          "name": "Cattedrale Alexander Nevsky",
+          "text": "imponente chiesa ortodossa russa a cipolle, di fronte al parlamento",
+          "maps": "Alexander Nevsky Cathedral Tallinn"
+        },
+        {
+          "name": "Camminata sulle mura",
+          "text": "tratti percorribili delle antiche mura e torri (es. Hellemann)",
+          "maps": "Hellemann Tower Tallinn"
+        }
+      ],
+      "scooter": "In Città Vecchia il fitto acciottolato rende il monopattino scomodo: meglio a piedi. Bolt/Tuul sono però ottimi sulla promenade di Pirita e nel parco di Kadriorg."
     }
   },
   {
@@ -1024,7 +1198,15 @@ var DAYS_DATA = [
       "link": null
     },
     "fishing": "<strong>Pesca:</strong> spinning da riva sul Lago Puruvesi (persico, luccio). Licenza: Fisheries Management Fee €6/giorno su <a href=\"https://www.eraluvat.fi/en\" target=\"_blank\" rel=\"noopener noreferrer\">eraluvat.fi</a>. Bambini &lt;18 gratis.",
-    "events": [],
+    "events": [
+      {
+        "title": "Savonlinna Opera Festival",
+        "dates": "03/07–01/08/2026",
+        "text": "Festival lirico nel castello medievale di Olavinlinna a Savonlinna. Stagione 2026 a tema Italia (Madama Butterfly, Nabucco, Nozze di Figaro, La Traviata, Norma). Verificare la data effettiva di passaggio rispetto al calendario.",
+        "url": "https://operafestival.fi/",
+        "price": "variabile (biglietti opera)"
+      }
+    ],
     "alternatives": [],
     "kids": [
       {
@@ -1156,12 +1338,20 @@ var DAYS_DATA = [
     "scooter": null,
     "waterSports": "Saimaa, lago calmo perfetto per famiglie (~€40-60/giorno) → <a href=\"#noleggi\">vedi noleggi</a>",
     "trekking": {
-      "title": "Punkaharju Ridge (se non fatto G6)",
-      "text": "Punkaharju Ridge (se non fatto G6) — passeggiata facile 1-2h → <a href=\"#trek-finlandia\">dettagli sentiero</a>",
+      "title": "Punkaharju Ridge (se non già percorso)",
+      "text": "Punkaharju Ridge (se non già percorso) — passeggiata facile 1-2h → <a href=\"#trek-finlandia\">dettagli sentiero</a>",
       "link": "#trek-finlandia"
     },
     "fishing": "giornata perfetta! Luccio, persico, coregone. Spinning o pesca a fondo da riva. Fee già attiva (vedi G7). Spot: qualsiasi molo o riva del Saimaa.",
-    "events": [],
+    "events": [
+      {
+        "title": "Savonlinna Opera Festival",
+        "dates": "03/07–01/08/2026",
+        "text": "Festival lirico nel castello medievale di Olavinlinna a Savonlinna. Stagione 2026 a tema Italia (Madama Butterfly, Nabucco, Nozze di Figaro, La Traviata, Norma). Verificare la data effettiva di passaggio rispetto al calendario.",
+        "url": "https://operafestival.fi/",
+        "price": "variabile (biglietti opera)"
+      }
+    ],
     "alternatives": [],
     "kids": [
       {
@@ -1272,6 +1462,14 @@ var DAYS_DATA = [
         "maps": null,
         "star": false,
         "familyFriendly": false
+      },
+      {
+        "icon": "🎭",
+        "title": "Oulu — Capitale Europea della Cultura 2026",
+        "text": "Per tutta l'estate 2026 Oulu ospita eventi diffusi del programma <em>Oulu2026</em> (mostre, musica, arte urbana). Verificare il calendario aggiornato in base alla data effettiva di passaggio.",
+        "maps": "https://maps.google.com/?q=Oulu+keskusta",
+        "star": false,
+        "familyFriendly": true
       }
     ],
     "food": [
@@ -1375,10 +1573,21 @@ var DAYS_DATA = [
         "familyFriendly": false
       }
     ],
-    "food": [],
+    "food": [
+      {
+        "type": "market",
+        "title": "Specialità lapponi al mercato",
+        "text": "Al mercato/market locale: <em>poronkäristys</em> (renna saltata) e renna affumicata, pane <em>rieska</em>, marmellata di <em>lakka</em> (camemoro). Mirtilli e camemoro raccoglibili liberamente nei boschi (diritto di accesso alla natura).",
+        "beer": null
+      }
+    ],
     "scooter": null,
     "waterSports": null,
-    "trekking": null,
+    "trekking": {
+      "title": "Cascata di Auttiköngäs (deviazione)",
+      "text": "Sentiero natura ad anello ~3,6 km (dislivello ~125 m, facile) su una delle cascate più spettacolari di Finlandia, con torre panoramica e passerella sopra la cascata. Caffè in loco. Lungo la via tra Rovaniemi e i dintorni.",
+      "link": null
+    },
     "fishing": null,
     "events": [],
     "alternatives": [],
@@ -1468,7 +1677,11 @@ var DAYS_DATA = [
     ],
     "scooter": "🚴 <strong>Noleggio bici/e-bike:</strong> piste asfaltate nel bosco (~€30-50/giorno) → <a href=\"#noleggi\">vedi noleggi</a>",
     "waterSports": null,
-    "trekking": null,
+    "trekking": {
+      "title": "Ounasvaara Nature Trail",
+      "text": "Sentiero natura a ~3 km dal centro di Rovaniemi sulla collina Ounasvaara (~204 m), facile e accessibile, ideale come mezza giornata; vista sul sole di mezzanotte. Disponibile mag-ott.",
+      "link": null
+    },
     "fishing": null,
     "events": [],
     "alternatives": [],
@@ -1571,10 +1784,21 @@ var DAYS_DATA = [
         "familyFriendly": false
       }
     ],
-    "food": [],
+    "food": [
+      {
+        "type": "restaurant",
+        "title": "Restaurant Nili — cucina lappone",
+        "text": "Ristorante nel centro (Valtakatu 20): renna (<em>poronkäristys</em>, controfiletto di renna), salmone artico, ingredienti lapponi. Da giugno aperto lun-sab 17-22. Fascia di prezzo medio-alta, prenotazione consigliata.",
+        "beer": null
+      }
+    ],
     "scooter": null,
     "waterSports": null,
-    "trekking": null,
+    "trekking": {
+      "title": "Ounasvaara Nature Trail",
+      "text": "A ~3 km dal centro di Rovaniemi: sentiero natura facile sulla collina Ounasvaara, ottimo per una mezza giornata a piedi o in e-bike.",
+      "link": null
+    },
     "fishing": "fiume Kemijoki a Rovaniemi (salmone in risalita a luglio!). Serve permesso locale oltre alla fee statale — chiedere all'ufficio turistico.",
     "events": [],
     "alternatives": [],
@@ -1640,6 +1864,39 @@ var DAYS_DATA = [
           "text": "Salmone in risalita a luglio — serve permesso locale speciale."
         }
       ]
+    },
+    "cityTour": {
+      "city": "Rovaniemi (capitale della Lapponia)",
+      "distance": "~3 km centro (+8 km Santa Claus Village)",
+      "duration": "2–3h",
+      "walking": [
+        {
+          "name": "Lordi's Square (Sampoaukio)",
+          "text": "piazza centrale dedicata ai Lordi, band di Rovaniemi vincitrice dell'Eurovision 2006; impronte e mercatini",
+          "maps": "Lordi Square Rovaniemi"
+        },
+        {
+          "name": "Arktikum",
+          "text": "museo e centro scientifico dell'Artico sotto una spettacolare galleria di vetro lungo il fiume Ounasjoki",
+          "maps": "Arktikum Rovaniemi"
+        },
+        {
+          "name": "Pilke Science Centre",
+          "text": "centro interattivo sulle foreste nordiche, accanto ad Arktikum (ottimo coi bambini)",
+          "maps": "Pilke Science Centre Rovaniemi"
+        },
+        {
+          "name": "Ponte Jätkänkynttilä",
+          "text": "la \"candela del taglialegna\", primo ponte strallato di Finlandia, simbolo della città sul fiume Kemijoki",
+          "maps": "Jatkankynttila Bridge Rovaniemi"
+        },
+        {
+          "name": "Villaggio di Babbo Natale (Santa Claus Village)",
+          "text": "a 8 km dal centro sul Circolo Polare Artico: ufficio di Babbo Natale, attraversamento del Circolo, renne (aperto anche d'estate)",
+          "maps": "Santa Claus Village Rovaniemi"
+        }
+      ],
+      "scooter": "In centro Rovaniemi monopattini condivisi disponibili (Bolt); il lungofiume verso Arktikum è pianeggiante e gradevole. Per il Santa Claus Village (8 km) meglio bus 8 o auto."
     }
   },
   {
@@ -1680,10 +1937,21 @@ var DAYS_DATA = [
         "familyFriendly": false
       }
     ],
-    "food": [],
+    "food": [
+      {
+        "type": "restaurant",
+        "title": "Sapori Sámi a Inari",
+        "text": "A Inari, cucina Sámi con renna, salmerino artico e pesce del Lago Inari. Al museo Siida si trova un caffè/ristorante con piatti locali.",
+        "beer": null
+      }
+    ],
     "scooter": null,
     "waterSports": null,
-    "trekking": null,
+    "trekking": {
+      "title": "Pielpajärvi Wilderness Church Trail",
+      "text": "Sentiero di 4,4 km (~8,8 km a/r, media difficoltà) dalla zona di Siida (parcheggio Sarviniementie 270) attraverso foresta vetusta fino alla chiesa nella natura di Pielpajärvi (1752-1760), importante sito culturale Sámi. Capanna diurna e focolare; portare acqua.",
+      "link": null
+    },
     "fishing": "<strong>Pesca:</strong> Lago Inari — uno dei migliori laghi di Finlandia per trota lacustre e salmerino. Fee statale + permesso locale Inari (acquistabile su <a href=\"https://www.eraluvat.fi/en\" target=\"_blank\" rel=\"noopener noreferrer\">eraluvat.fi</a>, ~€10/giorno).",
     "events": [],
     "alternatives": [],
@@ -1789,7 +2057,7 @@ var DAYS_DATA = [
       "cond": "Variabile",
       "daylight": "24h di luce · ⚠️ Zanzare"
     },
-    "narrative": "",
+    "narrative": "🏔️ A Kilpisjärvi domina il <strong>fell Saana</strong> (1029 m), simbolo della zona. Il villaggio è il punto di accesso al cippo dei tre confini (Treriksröset) tra Finlandia, Svezia e Norvegia.",
     "highlights": [
       {
         "icon": "🌲",
@@ -1803,7 +2071,11 @@ var DAYS_DATA = [
     "food": [],
     "scooter": null,
     "waterSports": null,
-    "trekking": null,
+    "trekking": {
+      "title": "Saana Fell — la scalinata di Saana",
+      "text": "Salita al fell con la celebre scalinata. ~4 km solo andata (8 km a/r), facile-media, ~4h. Partenza dal Kilpisjärven Retkeilykeskus o dal parcheggio della Malla Strict Nature Reserve. Viste spettacolari su laghi e fells.",
+      "link": null
+    },
     "fishing": "Lago Kilpisjärvi — salmerino artico. Permesso locale ~€8/giorno acquistabile al centro visitatori.",
     "events": [],
     "alternatives": [],
@@ -2023,6 +2295,44 @@ var DAYS_DATA = [
           "maps": "https://maps.google.com/?q=69.6540,18.9680"
         }
       ]
+    },
+    "cityTour": {
+      "city": "Tromsø — Capitale dell'Artico",
+      "distance": "~1,8 km centro (piano)",
+      "duration": "2–3h",
+      "walking": [
+        {
+          "name": "Storgata (centro pedonale)",
+          "text": "la via principale: la più alta concentrazione di case in legno del Nord Norvegia",
+          "maps": "Storgata Tromso"
+        },
+        {
+          "name": "Statua di Roald Amundsen + Museo d'Arte del Nord Norvegia",
+          "text": "piazza dedicata all'esploratore polare; museo gratuito",
+          "maps": "Roald Amundsen statue Tromso"
+        },
+        {
+          "name": "Museo Polare (Polarmuseet)",
+          "text": "nell'ex dogana del 1830: caccia ed esplorazione artica (40–60 min)",
+          "maps": "Polarmuseet Tromso"
+        },
+        {
+          "name": "Vecchi magazzini del porto + Kystens Hus",
+          "text": "mercato del pesce, stoccafisso; banchine storiche",
+          "maps": "Kystens Hus Tromso"
+        },
+        {
+          "name": "Cattedrale Artica (Ishavskatedralen)",
+          "text": "icona del 1965 con la grande vetrata est; sul lato continentale (bus 26, ~25 min a piedi via ponte)",
+          "maps": "Arctic Cathedral Tromso"
+        },
+        {
+          "name": "Funivia Fjellheisen → Storsteinen",
+          "text": "panorama su città e fiordi; in estate sole di mezzanotte",
+          "maps": "Fjellheisen Tromso"
+        }
+      ],
+      "scooter": "Monopattini condivisi (Bolt/Ryde) diffusi in centro: compatto e pianeggiante, ideale. Per Cattedrale Artica e Fjellheisen serve attraversare il ponte (fattibile o bus 26)."
     }
   },
   {
@@ -2330,7 +2640,7 @@ var DAYS_DATA = [
       "cond": "Variabile",
       "daylight": "24h di luce"
     },
-    "narrative": null,
+    "narrative": "Giornata su Andøya/Vesterålen: l'isola è celebre per il <strong>whale safari</strong> da Andenes (capodogli al largo della scarpata continentale) e per i paesaggi di torbiere e spiagge battute dal vento.",
     "highlights": [
       {
         "icon": "🌲",
@@ -2453,7 +2763,7 @@ var DAYS_DATA = [
       "cond": "Variabile",
       "daylight": "22h+ di luce"
     },
-    "narrative": null,
+    "narrative": "Discesa verso le Lofoten lungo la litoranea: ponti spettacolari tra le isole e i primi villaggi di pescatori con i <em>rorbuer</em> rossi.",
     "highlights": [
       {
         "icon": "🛣️",
@@ -2851,7 +3161,7 @@ var DAYS_DATA = [
       "cond": "Variabile",
       "daylight": "22h di luce"
     },
-    "narrative": "",
+    "narrative": "Cuore delle Lofoten attorno a <strong>Reine</strong>: una delle viste più fotografate di Norvegia, tra picchi a strapiombo sul mare e villaggi su palafitte.",
     "highlights": [
       {
         "icon": "🌲",
@@ -2973,7 +3283,7 @@ var DAYS_DATA = [
       "cond": "Variabile",
       "daylight": "22h di luce"
     },
-    "narrative": null,
+    "narrative": "Giornata più lenta tra <strong>Nusfjord</strong> (antico borgo di pescatori conservato) e relax: spiagge, caffè e ritmo nordico.",
     "highlights": [
       {
         "icon": "🌲",
@@ -3297,7 +3607,7 @@ var DAYS_DATA = [
       "cond": "Variabile",
       "daylight": "20h di luce"
     },
-    "narrative": null,
+    "narrative": "Giornata a <strong>Trondheim</strong>, città fondata nel 997: il centro compatto si gira a piedi tra la Cattedrale di Nidaros, il vecchio ponte e il quartiere di Bakklandet.",
     "highlights": [
       {
         "icon": "🏛️",
@@ -3341,9 +3651,19 @@ var DAYS_DATA = [
     ],
     "scooter": "Trondheim centro pedonale, Bakklandet, lungomare piatto → <a href=\"#noleggi\">vedi noleggi</a>\n🚴 <strong>Noleggio bici:</strong> Trondheim City Bike (app, 700 bici, NOK 175/30gg) → <a href=\"#noleggi\">vedi noleggi</a>",
     "waterSports": null,
-    "trekking": null,
+    "trekking": {
+      "title": "Ladestien / Kristiansten",
+      "text": "Passeggiata urbana facile: salita breve alla <strong>Fortezza di Kristiansten</strong> per il panorama, oppure il sentiero costiero <strong>Ladestien</strong> (~14 km, percorribile a tratti) lungo il fiordo. Adatto a famiglie nei tratti pianeggianti.",
+      "link": null
+    },
     "fishing": "dal molo del porto di Trondheim o alla foce del Nidelva — merluzzo, sgombro. GRATIS (mare).",
-    "events": [],
+    "events": [
+      {
+        "title": "Olavsfest",
+        "dates": "28 lug – 3 ago 2026",
+        "text": "Grande festival di S. Olav attorno alla Cattedrale di Nidaros (concerti, cultura, mercato medievale). <em>Cade poco dopo la tappa: verificare in base alla data effettiva del viaggio.</em>"
+      }
+    ],
     "alternatives": [],
     "kids": [
       {
@@ -3409,7 +3729,45 @@ var DAYS_DATA = [
         "title": "Noleggio bici — Trondheim",
         "text": "<a href=\"https://trondheimbysykkel.no/en\" target=\"_blank\" rel=\"noopener\">Trondheim City Bike</a> (app, 700 bici). NOK 175/30gg (~€15). 67 stazioni."
       }
-    ]
+    ],
+    "cityTour": {
+      "city": "Trondheim",
+      "distance": "~3 km (piano + breve salita a Kristiansten)",
+      "duration": "2–3h",
+      "walking": [
+        {
+          "name": "Cattedrale di Nidaros",
+          "text": "la chiesa medievale più importante della Scandinavia, sulla tomba di S. Olav; meta di pellegrinaggio millenario",
+          "maps": "Nidaros Cathedral Trondheim"
+        },
+        {
+          "name": "Palazzo dell'Arcivescovo (Erkebispegården)",
+          "text": "accanto al duomo, tra i più antichi edifici nordici",
+          "maps": "Erkebispegarden Trondheim"
+        },
+        {
+          "name": "Gamle Bybro (Vecchio Ponte)",
+          "text": "con la \"Porta della Fortuna\" e la vista classica sui magazzini sul fiume",
+          "maps": "Gamle Bybro Trondheim"
+        },
+        {
+          "name": "Bakklandet",
+          "text": "quartiere di case in legno colorate, caffè e botteghe lungo la Nidelva",
+          "maps": "Bakklandet Trondheim"
+        },
+        {
+          "name": "Bryggene (magazzini sul fiume)",
+          "text": "i moli colorati riflessi sull'acqua, cartolina di Trondheim",
+          "maps": "Bryggen Trondheim"
+        },
+        {
+          "name": "Fortezza di Kristiansten",
+          "text": "breve salita per il miglior panorama sulla città",
+          "maps": "Kristiansten Fortress Trondheim"
+        }
+      ],
+      "scooter": "Rete di monopattini diffusa; lungofiume e Bakklandet piacevoli (attenzione ai sampietrini nel quartiere vecchio)."
+    }
   },
   {
     "id": "g28",
@@ -3435,7 +3793,7 @@ var DAYS_DATA = [
       "cond": "Pioggia possibile",
       "daylight": "19h di luce"
     },
-    "narrative": "",
+    "narrative": "Trasferimento verso <strong>Molde</strong>, la \"città delle rose\", lungo la costa: panorami sui fiordi e, dal punto Varden, la celebre vista sulle 222 cime del Romsdal.",
     "highlights": [
       {
         "icon": "🛣️",
@@ -3541,7 +3899,7 @@ var DAYS_DATA = [
       "cond": "Nebbia possibile in quota",
       "daylight": "19h di luce"
     },
-    "narrative": "",
+    "narrative": "Avvicinamento a <strong>Geiranger</strong>: la spettacolare strada panoramica e, salendo, il punto <strong>Dalsnibba</strong> (1.500 m) con vista a picco sul fiordo UNESCO.",
     "highlights": [
       {
         "icon": "🛣️",
@@ -3858,9 +4216,19 @@ var DAYS_DATA = [
     ],
     "scooter": "<strong>Monopattini:</strong> Bryggen e lungomare (centro piano, evitare colline) → <a href=\"#noleggi\">vedi noleggi</a>",
     "waterSports": "<strong>Noleggi:</strong> bici, kayak (Ado Arena ~NOK 300/h) e SUP (Solheimsviken ~NOK 250/h) disponibili → <a href=\"#noleggi\">vedi noleggi</a>",
-    "trekking": null,
+    "trekking": {
+      "title": "Fløyen e Ulriken",
+      "text": "⭐ Da <strong>Fløyen</strong> (funicolare a 320 m) partono sentieri segnati verso laghetti e punti panoramici. Per esperti: traversata <strong>Vidden</strong> da <strong>Ulriken</strong> (643 m, funivia) a Fløyen, ~13–15 km su altopiano esposto (5–6h, solo con bel tempo).",
+      "link": null
+    },
     "fishing": "<strong>Pesca:</strong> dal molo di Bryggen o Sandviken — sgombro (luglio = picco!), merluzzo. GRATIS. Spot: molo dietro il mercato del pesce.",
-    "events": [],
+    "events": [
+      {
+        "title": "Beyond the Gates",
+        "dates": "29 lug – 1 ago 2026",
+        "text": "Festival metal in vari locali di Bergen. <em>Limitrofo alla tappa: verificare in base alla data effettiva.</em>"
+      }
+    ],
     "alternatives": [
       {
         "text": "<strong>KODE museums</strong> (4 gallerie collegate)"
@@ -3959,6 +4327,34 @@ var DAYS_DATA = [
           "maps": "https://maps.google.com/?q=60.3770,5.3890"
         }
       ]
+    },
+    "cityTour": {
+      "city": "Bergen",
+      "distance": "~2,5 km centro (saliscendi)",
+      "duration": "2–3h",
+      "walking": [
+        {
+          "name": "Bryggen (molo anseatico, UNESCO)",
+          "text": "file di case mercantili in legno, vicoli stretti e botteghe artigiane",
+          "maps": "Bryggen Bergen"
+        },
+        {
+          "name": "Mercato del pesce (Fisketorget)",
+          "text": "gamberetti, granchio, salmone da mangiare al volo",
+          "maps": "Fisketorget Bergen"
+        },
+        {
+          "name": "Bergenhus e Torre di Rosenkrantz",
+          "text": "fortezza medievale all'imbocco del porto",
+          "maps": "Bergenhus Fortress"
+        },
+        {
+          "name": "Funicolare Fløibanen → Fløyen",
+          "text": "in pochi minuti a 320 m: panorama sulla città e i fiordi, sentieri e laghetto in cima",
+          "maps": "Floibanen Bergen"
+        }
+      ],
+      "scooter": "Monopattini disponibili; il centro ha saliscendi e i ciottoli di Bryggen rendono alcuni tratti scomodi. Per Fløyen usare la funicolare."
     }
   },
   {
@@ -4067,7 +4463,35 @@ var DAYS_DATA = [
         "title": "Noleggio bici — Stavanger",
         "text": "<a href=\"https://norwaybikeexperience.no/\" target=\"_blank\" rel=\"noopener\">Norway Bike Experience</a>. ~NOK 400/giorno (~€35). Anche e-bike."
       }
-    ]
+    ],
+    "cityTour": {
+      "city": "Stavanger (sosta in transito)",
+      "distance": "~2 km centro (piano)",
+      "duration": "1,5–2h",
+      "walking": [
+        {
+          "name": "Gamle Stavanger",
+          "text": "~170 case bianche in legno del XVIII-XIX sec.: il più grande insieme di edilizia lignea del Nord Europa",
+          "maps": "Gamle Stavanger"
+        },
+        {
+          "name": "Cattedrale di Stavanger",
+          "text": "del 1125, la cattedrale più antica di Norvegia",
+          "maps": "Stavanger Cathedral"
+        },
+        {
+          "name": "Fargegata (Øvre Holmegate)",
+          "text": "la via delle case colorate, caffè e atmosfera",
+          "maps": "Fargegata Stavanger"
+        },
+        {
+          "name": "Punto panoramico di Ullandhaug",
+          "text": "vista sulla città e l'arcipelago",
+          "maps": "Ullandhaug Stavanger"
+        }
+      ],
+      "scooter": "Centro compatto e pianeggiante, monopattini diffusi: ottimo per collegare porto, Gamle Stavanger e Fargegata."
+    }
   },
   {
     "id": "g33",
@@ -4118,7 +4542,11 @@ var DAYS_DATA = [
     "food": [],
     "scooter": null,
     "waterSports": null,
-    "trekking": null,
+    "trekking": {
+      "title": "Preikestolen (Pulpit Rock)",
+      "text": "⭐ Il trek più famoso di Norvegia: <strong>8 km a/r, ~4h, +500 m</strong>, difficoltà media, dal Preikestolen Fjellstue. La roccia piatta a <strong>604 m</strong> sul Lysefjord. Stagione mag-ott. Partenza presto (o nel pomeriggio) per evitare la folla. Buone scarpe da trek e abbigliamento antivento. Emergenze montagna JRCC Sud +47 51 51 70 00.",
+      "link": null
+    },
     "fishing": null,
     "events": [],
     "alternatives": [
@@ -4458,7 +4886,45 @@ var DAYS_DATA = [
         "title": "Noleggio cargo bike — Copenhagen",
         "text": "<a href=\"https://www.familybike.dk/\" target=\"_blank\" rel=\"noopener\">Family Bike</a> cargo bike per 2 bambini ≤10 anni. ~DKK 400/giorno (~€54). Prenotare 2-3 giorni prima!"
       }
-    ]
+    ],
+    "cityTour": {
+      "city": "Copenhagen",
+      "distance": "~3,5 km centro (piano)",
+      "duration": "3–4h",
+      "walking": [
+        {
+          "name": "Nyhavn",
+          "text": "il canale con le case colorate del XVII sec. e le barche in legno: la cartolina di Copenhagen",
+          "maps": "Nyhavn Copenhagen"
+        },
+        {
+          "name": "Strøget",
+          "text": "una delle vie pedonali più lunghe d'Europa, tra negozi e piazze",
+          "maps": "Stroget Copenhagen"
+        },
+        {
+          "name": "Rundetårn (Torre Rotonda)",
+          "text": "osservatorio del 1642 con rampa elicoidale di 7,5 giri e panorama sui tetti",
+          "maps": "Rundetaarn Copenhagen"
+        },
+        {
+          "name": "Amalienborg",
+          "text": "residenza reale: cambio della guardia a mezzogiorno",
+          "maps": "Amalienborg Copenhagen"
+        },
+        {
+          "name": "Kastellet",
+          "text": "fortezza a stella ben conservata, tra le più belle del Nord Europa",
+          "maps": "Kastellet Copenhagen"
+        },
+        {
+          "name": "La Sirenetta (Den Lille Havfrue)",
+          "text": "la statua simbolo della città, sul lungomare di Langelinie",
+          "maps": "Little Mermaid Copenhagen"
+        }
+      ],
+      "scooter": "Copenhagen è una delle capitali più ciclabili al mondo: monopattini e bici diffusissimi, piste ovunque, centro pianeggiante. Modo ideale per coprire le distanze tra Nyhavn, Kastellet e la Sirenetta."
+    }
   },
   {
     "id": "g36",
@@ -4502,7 +4968,13 @@ var DAYS_DATA = [
     "waterSports": null,
     "trekking": null,
     "fishing": null,
-    "events": [],
+    "events": [
+      {
+        "title": "Copenhagen Pride Week",
+        "dates": "8–16 ago 2026",
+        "text": "Una delle settimane più vivaci dell'estate danese, con la grande parata nel centro città. <em>Cade poco dopo la tappa: verificare in base alla data effettiva del viaggio.</em>"
+      }
+    ],
     "alternatives": [
       {
         "text": "<strong>Amager Strandpark</strong> (spiaggia urbana)"
@@ -4817,7 +5289,7 @@ var DAYS_DATA = [
       "cond": "Variabile",
       "daylight": "16h 30m di luce"
     },
-    "narrative": null,
+    "narrative": "Giornata a <strong>Billund</strong> tra <strong>LEGO House</strong> (la \"casa del mattoncino\" con sei zone esperienziali) e <strong>Lalandia</strong> (grande parco acquatico al coperto): ideale per famiglie, al riparo dal meteo.",
     "highlights": [
       {
         "icon": "🏛️",
@@ -4909,7 +5381,7 @@ var DAYS_DATA = [
       "cond": "Variabile",
       "daylight": "16h di luce"
     },
-    "narrative": "",
+    "narrative": "Lasciata la Danimarca si scende verso la Germania e <strong>Brema</strong>, anseatica e ricca di storia: il centro medievale attorno al Marktplatz si visita comodamente a piedi.",
     "highlights": [
       {
         "icon": "🛣️",
@@ -4936,7 +5408,21 @@ var DAYS_DATA = [
         "familyFriendly": true
       }
     ],
-    "food": [],
+    "food": [
+      {
+        "type": "street",
+        "title": "Brema street food",
+        "text": "<em>Bremer Knipp</em> (specialità locale a base di carne e avena, servita con patate) nelle taverne del centro. <em>Currywurst</em> e <em>Fischbrötchen</em> (panino al pesce) dai chioschi attorno al Marktplatz ~€4-6.",
+        "beer": "<em>Beck's</em>, la celebre birra di Brema, prodotta in città dal 1873."
+      },
+      {
+        "type": "market",
+        "title": "Mercato/supermercato",
+        "text": "Supermercati Rewe/Aldi/Lidl in centro per la spesa; bancarelle di Fischbrötchen vicino al fiume Weser.",
+        "schedule": null,
+        "maps": null
+      }
+    ],
     "scooter": null,
     "waterSports": null,
     "trekking": null,
@@ -5005,7 +5491,40 @@ var DAYS_DATA = [
         "link": "https://msj.dk/en/gram-lergrav-palaeontology/",
         "linkLabel": "msj.dk"
       }
-    ]
+    ],
+    "cityTour": {
+      "city": "Brema (sosta in transito)",
+      "distance": "~1,5 km centro (piano)",
+      "duration": "1,5–2h",
+      "walking": [
+        {
+          "name": "Marktplatz",
+          "text": "la piazza centrale con il Municipio (UNESCO) e la statua di Rolando (UNESCO), simbolo delle libertà cittadine",
+          "maps": "Marktplatz Bremen"
+        },
+        {
+          "name": "Musicanti di Brema",
+          "text": "la celebre statua in bronzo (asino, cane, gatto, gallo) sul lato ovest del municipio: tradizione vuole si tocchino le zampe dell'asino",
+          "maps": "Bremen Town Musicians statue"
+        },
+        {
+          "name": "Cattedrale di San Pietro (St. Petri Dom)",
+          "text": "duomo gotico con due torri, accanto al municipio",
+          "maps": "St Petri Dom Bremen"
+        },
+        {
+          "name": "Quartiere Schnoor",
+          "text": "il rione più antico: vicoli stretti, casette di pescatori, botteghe artigiane e caffè",
+          "maps": "Schnoor Bremen"
+        },
+        {
+          "name": "Böttcherstraße",
+          "text": "via in mattoni rossi in stile espressionista, con il carillon di campane di Meissen",
+          "maps": "Bottcherstrasse Bremen"
+        }
+      ],
+      "scooter": "Centro storico compatto e pianeggiante; monopattini disponibili, ma a Schnoor e sul Marktplatz conviene andare a piedi per i ciottoli e i vicoli stretti."
+    }
   },
   {
     "id": "g41",
@@ -5026,7 +5545,7 @@ var DAYS_DATA = [
       "cond": "Piogge brevi",
       "daylight": "15h 30m di luce"
     },
-    "narrative": "",
+    "narrative": "Si entra in Francia con sosta ad <strong>Amiens</strong>, dominata dalla sua immensa cattedrale gotica: il centro e i canali del quartiere Saint-Leu si girano comodamente a piedi.",
     "highlights": [
       {
         "icon": "🏛️",
@@ -5124,6 +5643,34 @@ var DAYS_DATA = [
         "notes": "1 Rond-Point du Professeur Christian Cabrol, 80054 Amiens"
       },
       "budget": "~€130-160/giorno"
+    },
+    "cityTour": {
+      "city": "Amiens (sosta in transito)",
+      "distance": "~2 km centro (piano)",
+      "duration": "1,5–2h",
+      "walking": [
+        {
+          "name": "Cattedrale di Notre-Dame",
+          "text": "la più grande cattedrale gotica di Francia (UNESCO); in estate lo spettacolo \"Chroma\" ricolora la facciata al calar della sera",
+          "maps": "Amiens Cathedral"
+        },
+        {
+          "name": "Quartier Saint-Leu",
+          "text": "la \"piccola Venezia del Nord\": canali, casette colorate, caffè e ristoranti",
+          "maps": "Quartier Saint-Leu Amiens"
+        },
+        {
+          "name": "Les Hortillonnages",
+          "text": "giardini galleggianti su ~65 km di canali: giro in barca a fondo piatto (~45 min)",
+          "maps": "Hortillonnages Amiens"
+        },
+        {
+          "name": "Maison de Jules Verne",
+          "text": "la casa-museo dello scrittore, che visse ad Amiens",
+          "maps": "Maison Jules Verne Amiens"
+        }
+      ],
+      "scooter": "Centro pianeggiante e compatto; monopattini in sharing disponibili, comodi per collegare cattedrale, Saint-Leu e gli Hortillonnages."
     }
   },
   {
@@ -5250,7 +5797,7 @@ var DAYS_DATA = [
       "cond": "Bel tempo",
       "daylight": "15h di luce"
     },
-    "narrative": "",
+    "narrative": "Giornata tra i <strong>Castelli della Loira</strong>: dai più monumentali (Chambord) a quelli sospesi sul fiume (Chenonceau), nel cuore del \"Giardino di Francia\" patrimonio UNESCO.",
     "highlights": [
       {
         "icon": "🏛️",
@@ -5267,6 +5814,14 @@ var DAYS_DATA = [
         "maps": null,
         "star": true,
         "familyFriendly": false
+      },
+      {
+        "text": "<strong>Chambord</strong> — il castello più monumentale della Loira, con la celebre scala a doppia elica attribuita a Leonardo e un parco recintato vastissimo",
+        "star": true
+      },
+      {
+        "text": "<strong>Chenonceau</strong> — il \"castello delle dame\", con le arcate sospese sul fiume Cher e i giardini all'italiana e alla francese",
+        "star": true
       }
     ],
     "food": [
@@ -5380,7 +5935,7 @@ var DAYS_DATA = [
       "cond": "Umido, pioggia possibile",
       "daylight": "14h 30m di luce"
     },
-    "narrative": null,
+    "narrative": "Si entra in Spagna nei <strong>Paesi Baschi</strong>: <strong>San Sebastián</strong> accoglie con la baia de La Concha e la cultura dei pintxos, tra le migliori esperienze gastronomiche d'Europa.",
     "highlights": [
       {
         "icon": "🌲",
@@ -5510,6 +6065,34 @@ var DAYS_DATA = [
           "link": "https://www.fishinglicensespain.com"
         }
       ]
+    },
+    "cityTour": {
+      "city": "San Sebastián / Donostia",
+      "distance": "~3 km (piano + breve salita Urgull)",
+      "duration": "2,5–3h",
+      "walking": [
+        {
+          "name": "Parte Vieja",
+          "text": "il centro storico: vicoli, Plaza de la Constitución e i celebri bar di pintxos",
+          "maps": "Parte Vieja San Sebastian"
+        },
+        {
+          "name": "Spiaggia de La Concha",
+          "text": "una delle baie urbane più belle d'Europa, con la sua promenade e la ringhiera bianca simbolo della città",
+          "maps": "La Concha Beach San Sebastian"
+        },
+        {
+          "name": "Monte Urgull",
+          "text": "collina-fortezza sopra la città vecchia, con il Cristo del Sagrado Corazón e vista a 360°",
+          "maps": "Monte Urgull San Sebastian"
+        },
+        {
+          "name": "Peine del Viento",
+          "text": "le sculture in acciaio di Eduardo Chillida all'estremità ovest della baia, dove le onde sbuffano tra le rocce",
+          "maps": "Peine del Viento San Sebastian"
+        }
+      ],
+      "scooter": "Lungomare de La Concha pianeggiante e perfetto per monopattino/bici; nella Parte Vieja conviene comunque andare a piedi."
     }
   },
   {
@@ -5531,7 +6114,7 @@ var DAYS_DATA = [
       "cond": "Meno pioggia",
       "daylight": "14h 30m di luce"
     },
-    "narrative": null,
+    "narrative": "Da San Sebastián a <strong>Bilbao</strong>, trasformata dal <strong>Museo Guggenheim</strong>: arte contemporanea, Casco Viejo medievale e pintxos in Plaza Nueva.",
     "highlights": [
       {
         "icon": "🛣️",
@@ -5676,6 +6259,34 @@ var DAYS_DATA = [
           "text": "Spigola, sarago."
         }
       ]
+    },
+    "cityTour": {
+      "city": "Bilbao",
+      "distance": "~3,5 km (piano)",
+      "duration": "2,5–3h",
+      "walking": [
+        {
+          "name": "Museo Guggenheim",
+          "text": "l'iconico museo di Frank Gehry rivestito in titanio; fuori, il \"Puppy\" fiorito di Jeff Koons e il ragno \"Maman\"",
+          "maps": "Guggenheim Bilbao"
+        },
+        {
+          "name": "Casco Viejo / Siete Calles",
+          "text": "il nucleo medievale con le \"sette strade\", la Cattedrale di Santiago e la Plaza Nueva (pintxos)",
+          "maps": "Casco Viejo Bilbao"
+        },
+        {
+          "name": "Mercado de la Ribera",
+          "text": "grande mercato coperto sulle rive del Nervión",
+          "maps": "Mercado de la Ribera Bilbao"
+        },
+        {
+          "name": "Funicolare di Artxanda",
+          "text": "in pochi minuti sale al belvedere con vista su tutta la città",
+          "maps": "Funicular Artxanda Bilbao"
+        }
+      ],
+      "scooter": "Le rive del Nervión e la passeggiata verso il Guggenheim sono pianeggianti e ideali per il monopattino; il Casco Viejo è pedonale."
     }
   },
   {
@@ -5838,7 +6449,7 @@ var DAYS_DATA = [
       "cond": "Cielo sereno",
       "daylight": "14h di luce"
     },
-    "narrative": null,
+    "narrative": "Si lasciano i <strong>Picos de Europa</strong> scendendo verso la Meseta castigliana e <strong>Palencia</strong>, in posizione ideale per l'eclissi del giorno seguente.",
     "highlights": [
       {
         "icon": "🏛️",
@@ -6170,7 +6781,21 @@ var DAYS_DATA = [
         "familyFriendly": false
       }
     ],
-    "food": [],
+    "food": [
+      {
+        "type": "street",
+        "title": "Cucina catalana",
+        "text": "<em>Pa amb tomàquet</em> (pane con pomodoro e olio), <em>fideuà</em> (simile alla paella ma con pasta), <em>suquet de peix</em> (zuppa di pesce), <em>anxoves de l'Escala</em> (acciughe pregiate) e <em>crema catalana</em> per finire.",
+        "beer": "Vini DO Empordà, prodotti proprio nell'entroterra della Costa Brava."
+      },
+      {
+        "type": "market",
+        "title": "Mercati e spesa",
+        "text": "Mercati locali di pesce e prodotti freschi nei paesi costieri; supermercati Mercadona/Consum per la spesa.",
+        "schedule": null,
+        "maps": null
+      }
+    ],
     "scooter": null,
     "waterSports": "🏄 <strong>Noleggi:</strong> kayak guidato Costa Brava (~€30-40/persona) e SUP (~€15/h) → <a href=\"#noleggi\">vedi noleggi</a>\n🎢 <strong>Parco acquatico:</strong> <em>Water World Lloret de Mar</em> — il più grande parco acquatico della Costa Brava! Scivoli, piscine onde, area bambini. ~€35/adulto, ~€22/bambino (4-10 anni). Aperto giu-set 10:00-18:00. 45 min da Cadaqués — <a href=\"https://maps.google.com/?q=Water+World+Lloret+de+Mar\" target=\"_blank\" rel=\"noopener\">📍 Maps</a>",
     "trekking": null,
@@ -6271,9 +6896,23 @@ var DAYS_DATA = [
     },
     "narrative": "⚠️ <strong>FERRAGOSTO = BOLLINO NERO!</strong> Traffico intensissimo su autostrade francesi e spagnole. Partire alle 6:00 o considerare sosta intermedia in Provenza.\n🎯 Mare e relax",
     "highlights": [],
-    "food": [],
+    "food": [
+      {
+        "type": "street",
+        "title": "Cucina nizzarda/provenzale",
+        "text": "<em>Socca</em> (farinata di ceci, da mangiare calda nei chioschi del Vieux Nice ~€3-4), <em>pan-bagnat</em> (panino con tonno, uova, verdure ~€6-8), <em>pissaladière</em> (focaccia con cipolle e acciughe), <em>salade niçoise</em>, <em>ratatouille</em>, <em>tapenade</em> e <em>aïoli</em>.",
+        "beer": null
+      },
+      {
+        "type": "market",
+        "title": "Mercati provenzali",
+        "text": "Cours Saleya a Nizza (frutta, fiori, olive, formaggi) e i mercati dei paesi costieri: ottimi per la spesa e i prodotti locali.",
+        "schedule": null,
+        "maps": "Cours Saleya Nice"
+      }
+    ],
     "scooter": "🛴 <strong>Monopattini:</strong> lungomari e passeggiate a mare, ideale la sera → <a href=\"#noleggi\">vedi noleggi</a>",
-    "waterSports": null,
+    "waterSports": "Spiagge e calette lungo la Costa Azzurra: nuoto, snorkeling e SUP/kayak a noleggio nelle località balneari (Saint-Tropez, Sainte-Maxime, Cannes). Acque generalmente calme in estate → <a href=\"#noleggi\">vedi noleggi</a>",
     "trekking": null,
     "fishing": "🎣 <strong>Pesca:</strong> moli della Costa Azzurra (Antibes, Cannes, Menton) — orata, sarago, muggine. GRATIS in mare (Francia, pesca da riva in mare senza licenza).",
     "events": [],
@@ -6592,6 +7231,34 @@ var DAYS_DATA = [
           "text": "Occhiata, sarago, muggine."
         }
       ]
+    },
+    "cityTour": {
+      "city": "Genova",
+      "distance": "~3 km centro storico (saliscendi e caruggi)",
+      "duration": "3–4h",
+      "walking": [
+        {
+          "name": "Via Garibaldi e Palazzi dei Rolli",
+          "text": "la \"Strada Nuova\" con i palazzi nobiliari patrimonio UNESCO (Palazzo Rosso, Bianco, Tursi)",
+          "maps": "Via Garibaldi Genova"
+        },
+        {
+          "name": "Caruggi",
+          "text": "il dedalo di vicoli del più grande centro storico medievale d'Europa, tra botteghe e sacchetti di focaccia",
+          "maps": "Caruggi Genova"
+        },
+        {
+          "name": "Cattedrale di San Lorenzo",
+          "text": "il duomo a fasce bianche e nere, nel cuore della città vecchia",
+          "maps": "Cattedrale San Lorenzo Genova"
+        },
+        {
+          "name": "Porto Antico e Acquario",
+          "text": "l'area waterfront ridisegnata da Renzo Piano, con l'Acquario (il più grande d'Italia) e il Bigo panoramico",
+          "maps": "Porto Antico Genova"
+        }
+      ],
+      "scooter": "Il fronte mare del Porto Antico è piano e percorribile in monopattino; nei caruggi (stretti e in saliscendi) conviene andare a piedi."
     }
   },
   {
@@ -6614,8 +7281,22 @@ var DAYS_DATA = [
       "daylight": "14h di luce"
     },
     "narrative": "Rientro a casa. <strong>Fine del viaggio!</strong> Partenza dopo colazione, arrivo nel primo pomeriggio.",
-    "highlights": [],
-    "food": [],
+    "highlights": [
+      {
+        "text": "Ultimo tratto autostradale Genova → Selvazzano: rientro a casa dopo 55 giorni e ~12.000 km"
+      },
+      {
+        "text": "Sosta consigliata per una focaccia ligure prima di lasciare la costa"
+      }
+    ],
+    "food": [
+      {
+        "type": "street",
+        "title": "Specialità liguri da portar via",
+        "text": "<em>Focaccia genovese</em> e <em>focaccia di Recco</em> al formaggio per il viaggio; <em>pesto</em>, <em>trofie</em> e <em>farinata</em> di ceci come ultimo assaggio ligure prima del rientro.",
+        "beer": null
+      }
+    ],
     "scooter": null,
     "waterSports": null,
     "trekking": null,
