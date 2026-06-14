@@ -1529,6 +1529,15 @@ document.addEventListener('DOMContentLoaded', function() {
         // BELOW the minibar (#minibar-caption), so the detail of the tapped day
         // is shown without hiding any other day. placeTooltip simply reveals it.
         var caption = document.getElementById('minibar-caption');
+        // v2.85: the caption is tappable on mobile → opens the selected day.
+        var _captionNavigate = null;
+        if (caption && !caption._qvTapBound) {
+            caption._qvTapBound = true;
+            caption.style.cursor = 'pointer';
+            caption.addEventListener('click', function() {
+                if (typeof _captionNavigate === 'function') _captionNavigate();
+            });
+        }
         function placeTooltip(seg) {
             if (caption) {
                 caption.style.height = 'auto';
@@ -1674,18 +1683,25 @@ document.addEventListener('DOMContentLoaded', function() {
             seg.appendChild(bar);
 
             var tipText = (isEN ? 'D' : 'G') + idx + ' ' + d.date + ' · ' + d.title + (km ? ' · ' + km + 'km' : (isEN ? ' · rest' : ' · sosta'));
+            // v2.85: hint that the caption is tappable to open the day.
+            var tapHint = isEN ? '  → tap to open' : '  → tocca per aprire';
             function showFor() {
                 // v2.81: write the day detail into the fixed caption row (and the
                 // legacy overlay as a fallback) before revealing it.
                 if (caption) caption.textContent = tipText;
                 if (tooltip) tooltip.textContent = tipText;
+                // v2.85: the caption tap opens THIS day's itinerary.
+                _captionNavigate = navigate;
                 placeTooltip(seg);
                 bar.style.opacity = isPast ? '0.5' : '0.78';
                 if (isCurrent) bar.style.transform = 'scaleY(1.12)';
+                // v2.85: persistent selection ring so the tapped day stays visible.
+                bar.style.boxShadow = '0 0 0 2px #1e293b, 0 0 0 4px rgba(255,255,255,0.85)';
             }
             function resetVisual() {
                 bar.style.opacity = isPast ? '0.30' : '1';
                 bar.style.transform = '';
+                bar.style.boxShadow = '';
             }
             function navigate() {
                 if (window.switchTab) window.switchTab('giorni', d.id);
@@ -1717,10 +1733,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         var pPast = currentDay > _revealedIdx;
                         prev.firstChild.style.opacity = pPast ? '0.30' : '1';
                         prev.firstChild.style.transform = '';
+                        prev.firstChild.style.boxShadow = ''; // v2.85: clear old selection ring
                     }
                 }
                 _revealedIdx = idx;
                 showFor();
+                if (caption) caption.textContent = tipText + tapHint; // v2.85: tap hint on mobile
                 clearHideTimer();
                 _hideTimer = setTimeout(function() {
                     hideTooltip();
@@ -5877,34 +5895,50 @@ if (document.readyState === 'loading') {
   // ─── 6. CONNECTION STATE ───
   // v2.58: track Firebase connectivity globally (used by chat pending-UI and hero badge)
   window._firebaseConnected = null; // null = unknown, true = connected, false = disconnected
+  // v2.87: avoid a misleading "no connection" flash. The .info/connected
+  // socket is briefly false right after load (handshake) even when the device
+  // is perfectly online (e.g. 5G). We therefore only show the badge if the
+  // database stays disconnected for a few seconds, and we hide it instantly on
+  // reconnect. The label is also reworded to make clear it's the database
+  // sync (not the whole network) that is offline.
+  var _offlineBadgeTimer = null;
+  function _removeOfflineBadge() {
+    if (_offlineBadgeTimer) { clearTimeout(_offlineBadgeTimer); _offlineBadgeTimer = null; }
+    var badge = document.getElementById('hero-offline-badge');
+    if (badge) badge.remove();
+  }
+  function _showOfflineBadge() {
+    if (document.getElementById('hero-offline-badge')) return;
+    var heroCard = document.querySelector('.home-hero-card');
+    if (!heroCard) return;
+    var badge = document.createElement('div');
+    badge.id = 'hero-offline-badge';
+    badge.style.cssText = 'position:absolute;top:8px;left:8px;background:rgba(229,62,62,0.92);color:#fff;' +
+      'font-size:11px;font-weight:700;padding:3px 8px;border-radius:20px;z-index:10;' +
+      'backdrop-filter:blur(4px);pointer-events:none;';
+    badge.textContent = isEN ? '🔴 Database offline' : '🔴 Database offline';
+    // hero card needs position:relative for absolute child
+    if (getComputedStyle(heroCard).position === 'static') {
+      heroCard.style.position = 'relative';
+    }
+    heroCard.appendChild(badge);
+  }
   firebase.database().ref('.info/connected').on('value', function(snap) {
     var connected = snap.val() === true;
-    var wasConnected = window._firebaseConnected;
     window._firebaseConnected = connected;
 
     if (connected) {
       showSyncStatus(isEN ? '☁️ Online' : '☁️ Online', 'ok');
-      // Remove offline badge from hero card if present
-      var badge = document.getElementById('hero-offline-badge');
-      if (badge) badge.remove();
+      _removeOfflineBadge();
     } else {
-      // Show persistent offline badge on hero card
-      if (!document.getElementById('hero-offline-badge')) {
-        var heroCard = document.querySelector('.home-hero-card');
-        if (heroCard) {
-          var badge = document.createElement('div');
-          badge.id = 'hero-offline-badge';
-          badge.style.cssText = 'position:absolute;top:8px;left:8px;background:rgba(229,62,62,0.92);color:#fff;' +
-            'font-size:11px;font-weight:700;padding:3px 8px;border-radius:20px;z-index:10;' +
-            'backdrop-filter:blur(4px);pointer-events:none;';
-          badge.textContent = isEN ? '🔴 Firebase offline' : '🔴 Nessuna connessione';
-          // hero card needs position:relative for absolute child
-          if (getComputedStyle(heroCard).position === 'static') {
-            heroCard.style.position = 'relative';
-          }
-          heroCard.appendChild(badge);
-        }
-      }
+      // Only flag as offline if the disconnection persists (not a handshake
+      // blip). If the device itself is offline, show it sooner.
+      if (_offlineBadgeTimer) return;
+      var delay = (typeof navigator !== 'undefined' && navigator.onLine === false) ? 1500 : 5000;
+      _offlineBadgeTimer = setTimeout(function() {
+        _offlineBadgeTimer = null;
+        if (window._firebaseConnected !== true) _showOfflineBadge();
+      }, delay);
     }
   });
 

@@ -7,12 +7,12 @@
   'use strict';
 
   // ─── Configuration ───
-  var OWNER_VARIANTS = ['owner-a', 'classic'];
+  // v2.87: 'classic' (the old static home) removed so the modern home is fixed.
+  var OWNER_VARIANTS = ['owner-a'];
   var FOLLOWER_VARIANTS = ['follower-a', 'follower-b', 'follower-e'];
   var VISITOR_VARIANT = 'visitor';
 
   var VARIANT_LABELS = {
-    'classic': '🏠 Home Classica',
     'owner-a': '📋 Daily Briefing',
     'follower-a': '📰 Live Feed',
     'follower-b': '📸 Story Card',
@@ -38,6 +38,16 @@
     var savedVariant = localStorage.getItem('hv-variant-idx');
     if (savedRole) currentRole = savedRole;
     if (savedVariant !== null) currentVariantIdx = parseInt(savedVariant, 10) || 0;
+
+    // v2.87: migrate stale preference. The old static "Home Classica" was
+    // variant index 1 for owners; now that it is removed, any out-of-range or
+    // legacy index must fall back to the modern home (index 0).
+    if (isNaN(currentVariantIdx) || currentVariantIdx < 0) currentVariantIdx = 0;
+    if (localStorage.getItem('hv-variant') === 'classic') {
+      currentVariantIdx = 0;
+      localStorage.setItem('hv-variant-idx', 0);
+      localStorage.removeItem('hv-variant');
+    }
 
     // v2.13: Initialize _simRole on page load for persistent simulation
     if (savedRole && savedRole !== 'auto' && savedRole !== 'owner') {
@@ -206,14 +216,13 @@
     if (currentVariantIdx >= variants.length) currentVariantIdx = 0;
     var variantId = variants[currentVariantIdx];
 
-    // If classic, hide container and show original
+    // v2.87: 'classic' (old static home) has been removed. If a stale
+    // preference still points to it, normalise to the first (modern) variant
+    // instead of ever showing the legacy static home again.
     if (variantId === 'classic') {
-      rescueMinibar();
-      container.classList.remove('hv-active');
-      container.innerHTML = '';
-      var tabHome = document.getElementById('tab-home');
-      if (tabHome) tabHome.classList.remove('hv-variant-active');
-      return;
+      currentVariantIdx = 0;
+      localStorage.setItem('hv-variant-idx', 0);
+      variantId = variants[0];
     }
 
     // Get template

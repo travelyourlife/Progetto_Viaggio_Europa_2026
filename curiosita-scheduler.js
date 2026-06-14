@@ -1,11 +1,32 @@
 // ═══════════════════════════════════════════════════════════════
-// curiosita-scheduler.js — Rotazione automatica client-side v2.56
-// Invia una curiosità al giorno (dopo le 9:00) con round-robin
+// curiosita-scheduler.js — Rotazione automatica client-side v2.88
+// v2.88: invia 3 curiosità al giorno in 3 fasce orarie
+//        (mattino 09:00, pomeriggio 14:00, sera 19:00), incluso il
+//        pre-partenza, fino al 18 agosto 2026 incluso. Ogni fascia è
+//        tracciata separatamente per evitare duplicati, con rotazione
+//        round-robin tra le 3 curiosità disponibili per il giorno.
 // ═══════════════════════════════════════════════════════════════
 (function() {
   'use strict';
 
-  var NOTIFICATION_HOUR = 9;
+  // Fasce orarie (ora locale del dispositivo). Una curiosità per fascia.
+  // slot 0 = mattino, slot 1 = pomeriggio, slot 2 = sera.
+  var SLOT_HOURS = [9, 14, 19];
+  // Ultimo giorno (incluso) in cui inviare le curiosità: 18 agosto 2026.
+  var CURIOSITA_END_DATE = '2026-08-18';
+  // Compat: mantenuto per eventuali riferimenti esterni.
+  var NOTIFICATION_HOUR = SLOT_HOURS[0];
+
+  // Determina quale fascia è "attiva" in base all'ora corrente.
+  // Restituisce l'indice della fascia più avanzata già raggiunta, o -1.
+  function getCurrentSlot(now) {
+    var h = now.getHours();
+    var slot = -1;
+    for (var i = 0; i < SLOT_HOURS.length; i++) {
+      if (h >= SLOT_HOURS[i]) slot = i;
+    }
+    return slot;
+  }
 
   // Calcola il giorno di viaggio corrente (negativo = pre-partenza)
   function getTripDay() {
@@ -20,7 +41,11 @@
   // Filtra curiosità per il giorno corrente
   function getCuriositaForDay(day) {
     if (typeof CURIOSITA_DATA === 'undefined') return [];
-    return CURIOSITA_DATA.filter(function(c) { return c.day === day; });
+    // v2.88: considera solo le voci nel formato standard (con .text),
+    // escludendo eventuali voci legacy nel formato fact/factEn.
+    return CURIOSITA_DATA.filter(function(c) {
+      return c.day === day && typeof c.text === 'string' && c.text.length > 0;
+    });
   }
 
   // Seleziona la prossima curiosità con rotazione round-robin
@@ -31,6 +56,9 @@
   }
 
   // Controlla e invia (chiamato all'apertura dell'app)
+  // v2.88: invia fino a 3 curiosità al giorno, una per fascia oraria.
+  // Recupera le fasce già scadute oggi ma non ancora inviate (es. l'app
+  // viene aperta solo nel pomeriggio → invia mattino + pomeriggio).
   function checkAndSendCuriosita() {
     // Solo owner può inviare
     // v2.58: usa AuthManager.getUser() invece di firebase.auth().currentUser
@@ -42,14 +70,20 @@
     if (typeof OWNER_UIDS === 'undefined') return;
     if (OWNER_UIDS.indexOf(user.uid) === -1) return;
 
-    // Controlla l'ora (solo dopo le 9:00)
     var now = new Date();
-    if (now.getHours() < NOTIFICATION_HOUR) return;
+    var today = now.toISOString().split('T')[0];
+
+    // v2.88: non inviare più curiosità dopo il 18 agosto 2026 (incluso).
+    if (today > CURIOSITA_END_DATE) return;
+
+    // Quante fasce sono già scadute a quest'ora?
+    var currentSlot = getCurrentSlot(now);
+    if (currentSlot < 0) return; // prima delle 09:00, nulla da inviare
 
     // Determina il giorno
     var tripDay = getTripDay();
 
-    // Trova curiosità per oggi
+    // Trova curiosità per oggi (solo quelle nel formato standard con .text)
     var candidates = getCuriositaForDay(tripDay);
     if (candidates.length === 0) {
       // Fallback: prendi curiosità del giorno più vicino disponibile
@@ -72,39 +106,51 @@
       familyId = 'iadicicco';
     }
 
-    // Controlla se già inviata oggi
     var db = firebase.database();
     var metaRef = db.ref('trips/' + familyId + '/notifications/curiositaMeta');
     metaRef.once('value').then(function(snap) {
       var meta = snap.val() || {};
-      var today = now.toISOString().split('T')[0];
+      // Reset del tracking quando cambia giorno.
+      var sentSlots = (meta.lastSentDate === today && meta.sentSlots) ? meta.sentSlots : {};
 
-      if (meta.lastSentDate === today) {
-        console.log('[Curiosità] Già inviata oggi, skip.');
+      var queueRef = db.ref('trips/' + familyId + '/notifications/queue');
+      var sendChain = Promise.resolve();
+      var anySent = false;
+
+      // Invia tutte le fasce scadute (0..currentSlot) non ancora inviate oggi.
+      for (var slot = 0; slot <= currentSlot; slot++) {
+        (function(slotIdx) {
+          if (sentSlots[slotIdx]) return; // fascia già inviata oggi
+          // Ogni fascia mostra una curiosità diversa: slot 0→idx0, 1→idx1, 2→idx2
+          var curio = candidates[slotIdx % candidates.length];
+          if (!curio || !curio.text) return;
+          sentSlots[slotIdx] = true;
+          anySent = true;
+          sendChain = sendChain.then(function() {
+            return queueRef.push({
+              type: 'curiosity',
+              title: curio.emoji + ' Sapevi che...',
+              body: curio.text,
+              source: curio.source || '',
+              slot: slotIdx,
+              timestamp: firebase.database.ServerValue.TIMESTAMP,
+              read: false
+            }).then(function() {
+              console.log('[Curiosità] Inviata fascia', slotIdx, '-', curio.text.substring(0, 40) + '...');
+            });
+          });
+        })(slot);
+      }
+
+      if (!anySent) {
+        console.log('[Curiosità] Tutte le fasce di oggi già inviate, skip.');
         return;
       }
 
-      // Seleziona con rotazione
-      var result = selectCuriosita(candidates, meta.lastIndex || -1);
-      if (!result || !result.curiosita) return;
-
-      // Invia come notifica Firebase
-      var queueRef = db.ref('trips/' + familyId + '/notifications/queue');
-      var notification = {
-        type: 'curiosity',
-        title: result.curiosita.emoji + ' Sapevi che...',
-        body: result.curiosita.text,
-        source: result.curiosita.source || '',
-        timestamp: firebase.database.ServerValue.TIMESTAMP,
-        read: false
-      };
-
-      queueRef.push(notification).then(function() {
-        console.log('[Curiosità] Inviata:', result.curiosita.text.substring(0, 50) + '...');
-        // Salva il marker per oggi
+      sendChain.then(function() {
         metaRef.update({
           lastSentDate: today,
-          lastIndex: result.index,
+          sentSlots: sentSlots,
           lastDay: tripDay
         });
       }).catch(function(err) {
@@ -116,10 +162,19 @@
   }
 
   // Avvia il check dopo che l'auth è pronto
+  // v2.88: oltre al check all'apertura, ricontrolla periodicamente mentre
+  // l'app resta aperta, così le fasce delle 14:00 e 19:00 partono senza
+  // bisogno di riaprire l'app (l'invio resta idempotente per fascia).
+  var _curioInterval = null;
+  function startCurioWatcher() {
+    if (_curioInterval) return;
+    _curioInterval = setInterval(checkAndSendCuriosita, 30 * 60 * 1000); // ogni 30 min
+  }
   if (typeof AuthManager !== 'undefined') {
     AuthManager.subscribe(function(user) {
       if (user) {
         setTimeout(checkAndSendCuriosita, 5000);
+        startCurioWatcher();
         // v2.59: also schedule evening photo recap
         setTimeout(checkAndSendEveningRecap, 8000);
       }
@@ -128,6 +183,7 @@
     firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
         setTimeout(checkAndSendCuriosita, 5000);
+        startCurioWatcher();
         setTimeout(checkAndSendEveningRecap, 8000);
       }
     });

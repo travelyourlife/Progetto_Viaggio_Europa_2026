@@ -1,5 +1,13 @@
 # Quo Vadis — Changelog
 
+## v2.88 (14 giugno 2026)
+- Nuovo: 3 curiosità al giorno in 3 fasce orarie (mattino 09:00, pomeriggio 14:00, sera 19:00), incluso il pre-partenza, fino al 18 agosto 2026 incluso
+- Scheduler: tracciamento per-fascia (sentSlots) per evitare duplicati; recupero delle fasce già scadute quando l'app si apre più tardi; watcher ogni 30 min mentre l'app è aperta
+- Scheduler: stop automatico degli invii dopo il 18 agosto 2026
+- Dati: portate a 3/giorno tutte le giornate che ne avevano meno (pre-partenza e G53/G54): +53 curiosità, tutte verificate con fonte
+- Dati: rimossi 4 testi duplicati tra pre-partenza e tappa, sostituiti con curiosità uniche e verificate (240 curiosità totali, tutte diverse)
+- Fix: getCuriositaForDay ora ignora le voci legacy in formato fact/factEn
+
 ## v2.68 (12 giugno 2026)
 - Fix: translatePost API contract rotto (client mandava {text,from,to}, server vuole {text,key,familyId})
 - Fix: notifica pending_access duplicata rimossa dal client (gestita solo da CF)

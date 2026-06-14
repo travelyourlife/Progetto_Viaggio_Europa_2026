@@ -1,11 +1,46 @@
 // ═══════════════════════════════════════════════════════════════
-// quiz-fun.js — Kid-friendly quiz interactivity v2.57
+// quiz-fun.js — Kid-friendly quiz interactivity v2.86
 // Confetti, points, streaks, country badges
 // ═══════════════════════════════════════════════════════════════
 (function() {
   'use strict';
 
   var CONFETTI_COLORS = ['#ff6b6b', '#ffd93d', '#6bcb77', '#4d96ff', '#ff6eb4', '#a855f7', '#fb923c'];
+
+  // v2.86: bilingual labels. The quiz questions live in the HTML (already
+  // localized per page), but the generated chrome (title, button, badge,
+  // streak) used to be hard-coded in Italian and showed in Italian on the
+  // English page. Detect language and pick the right strings.
+  function isEnglish() {
+    try {
+      var p = (location.pathname || '').toLowerCase();
+      if (p.indexOf('index_en') !== -1 || p.indexOf('/en') !== -1) return true;
+      var lang = (document.documentElement.getAttribute('lang') || '').toLowerCase();
+      if (lang.indexOf('en') === 0) return true;
+    } catch (e) {}
+    return false;
+  }
+  var EN = isEnglish();
+  var T = {
+    title:   EN ? '\ud83c\udfaf Quiz for kids'      : '\ud83c\udfaf Quiz per i bambini',
+    reveal:  EN ? 'Reveal!'                          : 'Scopri!',
+    expert:  EN ? 'Expert of '                       : 'Esperto di ',
+    allDone: EN ? 'All answers revealed!'            : 'Tutte le risposte scoperte!',
+    streakInit: EN ? 'What a streak!'                : 'Che serie!',
+    streak: function(n) {
+      return EN ? [
+        '\ud83d\udd25 ' + n + ' in a row! You are a genius!',
+        '\ud83d\ude80 Unstoppable! ' + n + ' revealed!',
+        '\u26a1 So fast! ' + n + ' answers!',
+        '\ud83c\udf1f Super explorer! ' + n + '!'
+      ] : [
+        '\ud83d\udd25 ' + n + ' di fila! Sei un genio!',
+        '\ud83d\ude80 Inarrestabile! ' + n + ' scoperte!',
+        '\u26a1 Che velocit\u00e0! ' + n + ' risposte!',
+        '\ud83c\udf1f Super esploratore! ' + n + '!'
+      ];
+    }
+  };
   var COUNTRY_FLAGS = {
     'austria': '\ud83c\udde6\ud83c\uddf9', 'rep-ceca': '\ud83c\udde8\ud83c\uddff', 'polonia': '\ud83c\uddf5\ud83c\uddf1',
     'lituania': '\ud83c\uddf1\ud83c\uddf9', 'lettonia': '\ud83c\uddf1\ud83c\uddfb', 'estonia': '\ud83c\uddea\ud83c\uddea',
@@ -19,12 +54,27 @@
     setTimeout(initQuizSystem, 500);
   });
 
+  // v2.86: re-run when a tab is opened, so quiz sections injected later
+  // (e.g. the Activities tab) are also transformed and never left as the
+  // raw numbered list. The transform is idempotent (see guard below).
+  window.addEventListener('tabSwitched', function() {
+    setTimeout(initQuizSystem, 60);
+  });
+
   function initQuizSystem() {
     var quizSections = document.querySelectorAll('[id^="quiz-per-i-bambini"]');
     if (!quizSections.length) return;
 
     quizSections.forEach(function(h3) {
-      transformQuizSection(h3);
+      // v2.86: skip sections already transformed (idempotent).
+      if (h3.getAttribute('data-quiz-done') === '1') return;
+      try {
+        transformQuizSection(h3);
+      } catch (e) {
+        // If transform fails for any reason, never leave a half state:
+        // keep the original list visible so the quiz still works.
+        if (window.console) console.warn('[quiz] transform failed', e);
+      }
     });
   }
 
@@ -56,14 +106,14 @@
     // Header with title and score
     var header = document.createElement('div');
     header.className = 'quiz-header';
-    header.innerHTML = '<h3>\ud83c\udfaf Quiz per i bambini</h3>' +
+    header.innerHTML = '<h3>' + T.title + '</h3>' +
       '<div class="quiz-score-badge"><span class="star">\u2b50</span><span class="quiz-score-text">0/' + totalQuestions + '</span></div>';
     quizSection.appendChild(header);
 
     // Streak banner (hidden initially)
     var streak = document.createElement('div');
     streak.className = 'quiz-streak';
-    streak.innerHTML = '\ud83d\udd25 <span class="streak-text">Che serie!</span>';
+    streak.innerHTML = '\ud83d\udd25 <span class="streak-text">' + T.streakInit + '</span>';
     quizSection.appendChild(streak);
 
     // Transform each list item into a card
@@ -77,13 +127,18 @@
     var badge = document.createElement('div');
     badge.className = 'quiz-badge';
     badge.innerHTML = '<span class="badge-icon">\ud83c\udfc6</span>' +
-      '<span class="badge-text">Esperto di ' + flag + '!<br>Tutte le risposte scoperte!</span>';
+      '<span class="badge-text">' + T.expert + flag + '!<br>' + T.allDone + '</span>';
     quizSection.appendChild(badge);
 
     // Replace original elements
     h3El.parentNode.insertBefore(quizSection, h3El);
     h3El.style.display = 'none';
+    h3El.setAttribute('data-quiz-done', '1'); // v2.86: idempotency guard
+    // v2.86: hide the original list robustly (display + safety net) so the
+    // raw numbered list with the eyes button never coexists with the cards.
     listEl.style.display = 'none';
+    listEl.setAttribute('aria-hidden', 'true');
+    listEl.setAttribute('data-quiz-original', '1');
   }
 
   function createQuizCard(li, idx, section) {
@@ -117,7 +172,7 @@
         '<span class="quiz-card-num">' + (idx + 1) + '</span>' +
         '<div class="quiz-question-text">' +
           '<span>' + questionText + '</span>' +
-          '<br><button class="quiz-reveal-btn">\ud83d\udc40 Scopri!</button>' +
+          '<br><button class="quiz-reveal-btn" type="button"><span class="quiz-reveal-ic" aria-hidden="true">\ud83d\udc40</span> ' + T.reveal + '</button>' +
         '</div>' +
       '</div>' +
       '<div class="quiz-answer">' + answerHTML + '</div>';
@@ -214,12 +269,7 @@
     if (!streakEl) return;
 
     if (revealed >= 3 && revealed < parseInt(section.getAttribute('data-total'))) {
-      var messages = [
-        '\ud83d\udd25 ' + revealed + ' di fila! Sei un genio!',
-        '\ud83d\ude80 Inarrestabile! ' + revealed + ' scoperte!',
-        '\u26a1 Che velocit\u00e0! ' + revealed + ' risposte!',
-        '\ud83c\udf1f Super esploratore! ' + revealed + '!'
-      ];
+      var messages = T.streak(revealed);
       var streakText = streakEl.querySelector('.streak-text');
       if (streakText) {
         streakText.textContent = messages[Math.min(revealed - 3, messages.length - 1)];

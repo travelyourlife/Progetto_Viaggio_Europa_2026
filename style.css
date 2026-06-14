@@ -2232,6 +2232,14 @@ table { max-width: 100%; }
   flex: 1;
 }
 
+/* v2.86: safety net — original quiz list/heading stays hidden even if an
+   inline style gets restored by a re-render, preventing the raw numbered
+   list (with the eyes button) from coexisting with the generated cards. */
+ol[data-quiz-original="1"],
+ul[data-quiz-original="1"],
+h3[data-quiz-done="1"] {
+  display: none !important;
+}
 /* Reveal Button — Big and Fun */
 .quiz-reveal-btn {
   display: inline-flex;
