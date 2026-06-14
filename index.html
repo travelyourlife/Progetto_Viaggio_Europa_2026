@@ -86,7 +86,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = '2.82';
+  var EXPECTED_VERSION = '2.84';
   window.IS_PROD = true; // v2.71: disabilita debug overlay in produzione
     window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;

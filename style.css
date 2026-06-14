@@ -695,8 +695,24 @@ body.on-home .scroll-progress { display: none; }
 .auth-btn.logged-in::after { content: ''; position: absolute; bottom: 1px; right: 1px; width: 8px; height: 8px; background: var(--success); border-radius: 50%; border: 2px solid var(--primary); }
 .lang-btn { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 50%; text-decoration: none; font-size: 17px; background: rgba(255,255,255,0.1); transition: background 0.2s; }
 .lang-btn:hover { background: rgba(255,255,255,0.2); }
-.top-bar-title { font-weight: 700; font-size: 24px; font-family: 'Georgia', serif; display: flex; align-items: center; gap: 8px; cursor: pointer; flex: 1; min-width: 0; overflow: hidden; }
-@media (max-width: 359px) { .top-bar-title { font-size: 18px; } }
+.top-bar-title { font-weight: 700; font-size: 24px; font-family: 'Georgia', serif; display: flex; align-items: center; gap: 8px; cursor: pointer; flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+/* Mobile header fit (v2.84, Option A): keep title on one line, scale font, compact controls */
+@media (max-width: 480px) {
+    .top-bar { gap: 4px; padding-left: 8px; padding-right: 6px; }
+    .top-bar-title { font-size: 20px; gap: 6px; }
+    .top-bar .search-btn,
+    .auth-btn,
+    .lang-btn { width: 40px; height: 40px; font-size: 16px; }
+    .top-bar .menu-btn { font-size: 18px; padding: 5px; }
+}
+@media (max-width: 380px) {
+    .top-bar { gap: 2px; }
+    .top-bar-title { font-size: 18px; }
+    .top-bar .search-btn,
+    .auth-btn,
+    .lang-btn { width: 36px; height: 36px; font-size: 15px; }
+}
+@media (max-width: 340px) { .top-bar-title { font-size: 16px; } }
 
 /* ─── Search Overlay ─── */
 .search-overlay {

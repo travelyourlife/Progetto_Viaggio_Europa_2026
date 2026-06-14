@@ -14,8 +14,8 @@ var MAP_POIS = [
     "descEN": "A 2,400 m² family indoor playground in Styria featuring trampolines, giant slides, and a toddler area.",
     "hours": "Ven-Dom e vacanze scolastiche 11-19 (chiuso durante le vacanze estive)",
     "hoursEN": "Fri-Sun & school holidays 11am-7pm (closed during summer holidays)",
-    "price": "Bambini 1-3 €9.90, Bambini 3-17 €19.90, Sotto 1 anno Gratuito",
-    "priceEN": "Kids 1-3 €9.90, Kids 3-17 €19.90, Under 1 Free"
+    "price": "Bambini 1-3 €10, Bambini 3-17 €25, Adulti €5, Under 1 Gratuito",
+    "priceEN": "Kids 1-3 €10, Kids 3-17 €25, Adults €5, Under 1 Free"
   },
   {
     "id": "poi-k-1",
@@ -107,8 +107,8 @@ var MAP_POIS = [
     "descEN": "An interactive sound museum in Vienna featuring composer rooms, a virtual orchestra, and hands-on musical labs.",
     "hours": "Tutti i giorni 10-22",
     "hoursEN": "Daily 10am-10pm",
-    "price": "Adulti €19, Bambini sotto i 12 anni €8",
-    "priceEN": "Adults €19, Children under 12 €8"
+    "price": "Adulti €16, Ridotto (studenti/senior) €11, Bambini (3-12) €8 (Combo con Mozarthaus disponibile)",
+    "priceEN": "Adults €16, Reduced (students/seniors) €11, Children (3-12) €8 (Combo with Mozarthaus available)"
   },
   {
     "id": "poi-k-7",
@@ -261,24 +261,6 @@ var MAP_POIS = [
     "priceEN": "Mains PLN 49-76"
   },
   {
-    "id": "poi-k-17",
-    "cat": "kids",
-    "star": false,
-    "icon": "👶",
-    "name": "VIDA! Science Centre",
-    "desc": "Un centro scientifico interattivo con oltre 180 mostre su 6.200 metri quadrati, ideale per le famiglie.",
-    "lat": 52.2297,
-    "lng": 21.0122,
-    "day": "g2",
-    "city": "Varsavia",
-    "maps": "https://maps.google.com/?q=VIDA!+Science+Centre+Brno",
-    "descEN": "An interactive science center with over 180 exhibits across 6,200 square meters, perfect for family discovery.",
-    "hours": "Lun 9-14, Mar-Ven 9-18, Sab-Dom 10-18",
-    "hoursEN": "Mon 9am-2pm, Tue-Fri 9am-6pm, Sat-Sun 10am-6pm",
-    "price": "Adulti 250 CZK, Bambini/Studenti/Anziani 150 CZK",
-    "priceEN": "Adults 250 CZK, Children/Students/Seniors 150 CZK"
-  },
-  {
     "id": "poi-k-18",
     "cat": "kids",
     "star": false,
@@ -293,8 +275,8 @@ var MAP_POIS = [
     "descEN": "An interactive science museum featuring hands-on exhibits, a planetarium, and a rooftop garden.",
     "hours": "Estate (29 giu-31 ago): Lun-Gio 9-19, Ven 9-20, Sab-Dom 9-19",
     "hoursEN": "Summer (Jun 29-Aug 31): Mon-Thu 9am-7pm, Fri 9am-8pm, Sat-Sun 9am-7pm",
-    "price": "Adulti PLN 48-50, Ridotto PLN 34-36",
-    "priceEN": "Adults PLN 48-50, Reduced PLN 34-36"
+    "price": "Adulti PLN 31 (feriali) / PLN 33 (weekend), Ridotti PLN 21 / PLN 22, Under 2 Gratuito",
+    "priceEN": "Adults PLN 31 (weekdays) / PLN 33 (weekend), Reduced PLN 21 / PLN 22, Under 2 Free"
   },
   {
     "id": "poi-p-19",
@@ -506,10 +488,10 @@ var MAP_POIS = [
     "icon": "🏛️",
     "name": "Riga Motor Museum",
     "desc": "Il più grande e moderno museo di veicoli d'epoca dei Paesi Baltici, con mostre interattive e auto d'epoca.",
-    "lat": 56.0153,
-    "lng": 23.4161,
+    "lat": 56.9472,
+    "lng": 24.0876,
     "day": "g4",
-    "city": "Šiauliai",
+    "city": "Riga",
     "maps": "https://maps.google.com/?q=56.0153,23.4161",
     "descEN": "The largest and most modern antique vehicle museum in the Baltics, featuring interactive exhibits and classic cars.",
     "hours": "Mar-Dom 10-18",
@@ -524,10 +506,10 @@ var MAP_POIS = [
     "icon": "🏛️",
     "name": "Museo dell'Occupazione",
     "desc": "Un museo storico che documenta l'occupazione della Lettonia da parte dell'Unione Sovietica e della Germania nazista dal 1940 al 1991.",
-    "lat": 56.0153,
-    "lng": 23.4161,
+    "lat": 56.9508,
+    "lng": 24.1052,
     "day": "g4",
-    "city": "Šiauliai",
+    "city": "Riga",
     "maps": "https://maps.google.com/?q=56.0153,23.4161",
     "descEN": "A historical museum detailing Latvia's occupation by the Soviet Union and Nazi Germany from 1940 to 1991.",
     "hours": "Tutti i giorni 10:00-18:00",
@@ -542,10 +524,10 @@ var MAP_POIS = [
     "icon": "🏛️",
     "name": "Art Nouveau",
     "desc": "Situato nell'ex appartamento dell'architetto Konstantīns Pēkšēns, questo museo espone autentici interni Art Nouveau del 1903.",
-    "lat": 56.0153,
-    "lng": 23.4161,
+    "lat": 56.959,
+    "lng": 24.11,
     "day": "g4",
-    "city": "Šiauliai",
+    "city": "Riga",
     "maps": "https://maps.google.com/?q=56.0153,23.4161",
     "descEN": "Located in architect Konstantīns Pēkšēns' former apartment, this museum showcases authentic 1903 Art Nouveau interiors.",
     "hours": "Mar-Dom 10-18",
@@ -560,10 +542,10 @@ var MAP_POIS = [
     "icon": "👶",
     "name": "Līvu Akvaparks",
     "desc": "Uno dei più grandi parchi acquatici coperti del Nord Europa, con scivoli emozionanti, area spa e spiaggia estiva all'aperto.",
-    "lat": 56.0153,
-    "lng": 23.4161,
+    "lat": 56.9686,
+    "lng": 23.795,
     "day": "g4",
-    "city": "Šiauliai",
+    "city": "Jūrmala",
     "maps": "https://maps.google.com/?q=Līvu+Akvaparks+Jūrmala",
     "descEN": "One of the largest indoor water parks in Northern Europe, featuring thrilling slides, a spa complex, and an outdoor summer beach.",
     "hours": "Lun-Gio 12-21, Ven 12-22, Sab 11-22, Dom 11-21",
@@ -578,10 +560,10 @@ var MAP_POIS = [
     "icon": "👶",
     "name": "Riga Zoo",
     "desc": "Il più antico zoo dei Paesi Baltici, che ospita circa 400 specie animali e offre attività per famiglie.",
-    "lat": 56.0153,
-    "lng": 23.4161,
+    "lat": 56.956,
+    "lng": 24.148,
     "day": "g4",
-    "city": "Šiauliai",
+    "city": "Riga",
     "maps": "https://maps.google.com/?q=Riga+Zoo+Mežaparks",
     "descEN": "The oldest zoo in the Baltic States, featuring around 400 animal species and offering family-friendly activities.",
     "hours": "Tutti i giorni 10:00-18:00 (Stagione estiva)",
@@ -596,10 +578,10 @@ var MAP_POIS = [
     "icon": "👶",
     "name": "Esplanāde Park",
     "desc": "Un ampio e storico parco verde nel centro di Riga con sentieri ombreggiati, monumenti e luoghi culturali.",
-    "lat": 56.0153,
-    "lng": 23.4161,
+    "lat": 56.9512,
+    "lng": 24.1145,
     "day": "g4",
-    "city": "Šiauliai",
+    "city": "Riga",
     "maps": "https://maps.google.com/?q=Esplanāde+Park+Riga",
     "descEN": "A spacious, historic green park in central Riga featuring shaded paths, monuments, and cultural landmarks.",
     "hours": "Aperto 24 ore",
@@ -617,7 +599,7 @@ var MAP_POIS = [
     "lat": 56.955,
     "lng": 24.078,
     "day": "g4",
-    "city": "Šiauliai",
+    "city": "Riga",
     "maps": "https://maps.google.com/?q=56.955,24.078"
   },
   {
@@ -630,7 +612,7 @@ var MAP_POIS = [
     "lat": 56.951,
     "lng": 24.071,
     "day": "g4",
-    "city": "Šiauliai",
+    "city": "Riga",
     "maps": "https://maps.google.com/?q=56.951,24.071"
   },
   {
@@ -653,10 +635,10 @@ var MAP_POIS = [
     "icon": "🌭",
     "name": "Riga street food",
     "desc": "Piragi (panini al bacon) dai banchi del Mercato Centrale ~€1-2 l'uno. Lido (Krasta iela 76) — self-service enorme ~€8/pax, parco giochi per bambini!",
-    "lat": 56.0153,
-    "lng": 23.4161,
+    "lat": 56.945,
+    "lng": 24.115,
     "day": "g4",
-    "city": "Šiauliai",
+    "city": "Riga",
     "maps": "https://maps.google.com/?q=56.0153,23.4161"
   },
   {
@@ -666,10 +648,10 @@ var MAP_POIS = [
     "icon": "🍽️",
     "name": "Mercato",
     "desc": "Rīgas Centrāltirgus (Nēģu iela 7, hangar Zeppelin!) — 5 padiglioni: pesce, carne, latticini, pane nero, verdure.",
-    "lat": 56.0153,
-    "lng": 23.4161,
+    "lat": 56.9419,
+    "lng": 24.1156,
     "day": "g4",
-    "city": "Šiauliai",
+    "city": "Riga",
     "maps": "https://maps.google.com/?q=56.0153,23.4161"
   },
   {
@@ -679,10 +661,10 @@ var MAP_POIS = [
     "icon": "🍽️",
     "name": "Mercatino delle pulci",
     "desc": "Latgale Tirgus (Firsa Sadovņikova iela 9) — leggendario mercato dell'usato baltico! Memorabilia sovietica, vinili, monete, oggetti vintage.",
-    "lat": 56.0153,
-    "lng": 23.4161,
+    "lat": 56.9419,
+    "lng": 24.1156,
     "day": "g4",
-    "city": "Šiauliai",
+    "city": "Riga",
     "maps": "https://maps.google.com/?q=56.0153,23.4161"
   },
   {
@@ -700,8 +682,8 @@ var MAP_POIS = [
     "descEN": "A fascinating maritime museum housed in historic seaplane hangars, featuring a real submarine and historic ships.",
     "hours": "Mag-Set: Tutti i giorni 10-19",
     "hoursEN": "May-Sep: Daily 10am-7pm",
-    "price": "Adulti €22, bambini (9-18) €11",
-    "priceEN": "Adults €22, children (9-18) €11"
+    "price": "Adulti €20, Studenti €10, Famiglia €40, Under 8 Gratuito",
+    "priceEN": "Adults €20, Students €10, Family €40, Under 8 Free"
   },
   {
     "id": "poi-h-46",
@@ -1245,8 +1227,8 @@ var MAP_POIS = [
     "descEN": "Ranua Wildlife Park specializes in Arctic and northern animal species, including Finland's only polar bear.",
     "hours": "Tutti i giorni 10-18",
     "hoursEN": "Daily 10am-6pm",
-    "price": "Adulti €26,50, Bambini (4-14) €22,00",
-    "priceEN": "Adults €26.50, Children (4-14) €22.00"
+    "price": "Adulti €24.50 (online) / €26.50 (ingresso), Bambini (4-14) €20 / €22, Under 4 Gratuito",
+    "priceEN": "Adults €24.50 (online) / €26.50 (gate), Children (4-14) €20 / €22, Under 4 Free"
   },
   {
     "id": "poi-h-82",
@@ -1281,8 +1263,8 @@ var MAP_POIS = [
     "descEN": "Ranua Wildlife Park specializes in Arctic and northern animal species, set amidst pristine conifer forests.",
     "hours": "Tutti i giorni 10-18 (Estate)",
     "hoursEN": "Daily 10am-6pm (Summer)",
-    "price": "Adulti €26,50, Bambini (4-14) €22,00",
-    "priceEN": "Adults €26.50, Children (4-14) €22.00"
+    "price": "Adulti €24.50 (online) / €26.50 (ingresso), Bambini (4-14) €20 / €22, Under 4 Gratuito",
+    "priceEN": "Adults €24.50 (online) / €26.50 (gate), Children (4-14) €20 / €22, Under 4 Free"
   },
   {
     "id": "poi-k-84",
@@ -1513,10 +1495,10 @@ var MAP_POIS = [
     "icon": "🏛️",
     "name": "Museo Siida",
     "desc": "Il Museo Sámi Siida è un museo nazionale e centro naturale che illustra la cultura Sámi e la natura della Lapponia.",
-    "lat": 69.0714,
-    "lng": 27.0142,
+    "lat": 68.9054,
+    "lng": 27.0289,
     "day": "g13",
-    "city": "Utsjoki",
+    "city": "Inari",
     "maps": "https://maps.google.com/?q=69.0714,27.0142",
     "descEN": "The Sámi Museum Siida is a national museum and nature center showcasing Sámi culture and Northern Lapland nature.",
     "hours": "Tutti i giorni 9-18",
@@ -1563,10 +1545,10 @@ var MAP_POIS = [
     "icon": "👶",
     "name": "Siida - Museo Sami e Centro Natura a Inari",
     "desc": "Museo nazionale che offre un viaggio coinvolgente nella vibrante cultura e nel patrimonio del popolo Sámi.",
-    "lat": 69.0714,
-    "lng": 27.0142,
+    "lat": 68.9054,
+    "lng": 27.0289,
     "day": "g13",
-    "city": "Utsjoki",
+    "city": "Inari",
     "maps": "https://maps.google.com/?q=Siida+Inari",
     "descEN": "National museum offering an immersive journey into the vibrant culture and heritage of the Sámi people.",
     "hours": "Tutti i giorni 9-18",
@@ -1711,24 +1693,6 @@ var MAP_POIS = [
     "hoursEN": "Daily 9am-12am",
     "price": "Adulti NOK 495, Bambini (6-17) NOK 280",
     "priceEN": "Adults NOK 495, Children (6-17) NOK 280"
-  },
-  {
-    "id": "poi-h-111",
-    "cat": "cultura",
-    "star": false,
-    "icon": "🏛️",
-    "name": "Polaria",
-    "desc": "Polaria è un centro di esperienze artiche e acquario a Tromsø con foche barbate e mostre interattive.",
-    "lat": 69.6496,
-    "lng": 18.956,
-    "day": "g15",
-    "city": "Tromsø",
-    "maps": "https://maps.google.com/?q=69.6496,18.956",
-    "descEN": "Polaria is an Arctic experience center and aquarium in Tromsø featuring bearded seals and interactive exhibits.",
-    "hours": "Tutti i giorni 10-17",
-    "hoursEN": "Daily 10am-5pm",
-    "price": "Adulti NOK 395, Bambini NOK 220",
-    "priceEN": "Adults NOK 395, Children NOK 220"
   },
   {
     "id": "poi-k-112",
@@ -2762,10 +2726,10 @@ var MAP_POIS = [
     "city": "Trondheim",
     "maps": "https://maps.google.com/?q=Pirbadet+Trondheim",
     "descEN": "Norway's largest indoor water park offering pools, slides, saunas, and stunning fjord views for all ages.",
-    "hours": "Lun/Mer/Ven 6:30-21, Mar/Gio 10-21, Sab/Dom 9-19 (Estate)",
-    "hoursEN": "Mon/Wed/Fri 6:30am-9pm, Tue/Thu 10am-9pm, Sat/Sun 9am-7pm (Summer)",
-    "price": "Adulti NOK 215, Bambini (3-9) NOK 145",
-    "priceEN": "Adults NOK 215, Kids (3-9) NOK 145"
+    "hours": "Lun/Mer/Ven 6:30-21, Mar/Gio 10-21, Sab/Dom 9-19 (estate)",
+    "hoursEN": "Mon/Wed/Fri 6:30am-9pm, Tue/Thu 10am-9pm, Sat/Sun 9am-7pm (summer)",
+    "price": "Adulti NOK 215, Giovani/Studenti NOK 190, Bambini (3-9) NOK 145",
+    "priceEN": "Adults NOK 215, Youth/Students NOK 190, Children (3-9) NOK 145"
   },
   {
     "id": "poi-p-178",
@@ -2874,10 +2838,10 @@ var MAP_POIS = [
     "city": "Trondheim",
     "maps": "https://maps.google.com/?q=Pirbadet+Trondheim",
     "descEN": "Norway's largest indoor waterpark offering pools, slides, saunas, and stunning views of the Trondheim fjord.",
-    "hours": "Lun/Mer/Ven 6:30-21, Mar/Gio 12-21, Sab/Dom 9-19",
-    "hoursEN": "Mon/Wed/Fri 6:30am-9pm, Tue/Thu 12pm-9pm, Sat/Sun 9am-7pm",
-    "price": "Adulti NOK 215, Giovani/Studenti NOK 190, Bambini NOK 145",
-    "priceEN": "Adults NOK 215, Youth/Students NOK 190, Children NOK 145"
+    "hours": "Lun/Mer/Ven 6:30-21, Mar/Gio 10-21, Sab/Dom 9-19 (estate)",
+    "hoursEN": "Mon/Wed/Fri 6:30am-9pm, Tue/Thu 10am-9pm, Sat/Sun 9am-7pm (summer)",
+    "price": "Adulti NOK 215, Giovani/Studenti NOK 190, Bambini (3-9) NOK 145",
+    "priceEN": "Adults NOK 215, Youth/Students NOK 190, Children (3-9) NOK 145"
   },
   {
     "id": "poi-k-185",
@@ -3251,24 +3215,6 @@ var MAP_POIS = [
     "priceEN": "Free"
   },
   {
-    "id": "poi-h-209",
-    "cat": "cultura",
-    "star": false,
-    "icon": "🚡",
-    "name": "Funicolare Fløibanen",
-    "desc": "Prendi la funicolare per 6 minuti fino alla cima del Monte Fløyen per spettacolari viste panoramiche su Bergen.",
-    "lat": 60.3913,
-    "lng": 5.3221,
-    "day": "g30",
-    "city": "Bergen",
-    "maps": "https://maps.google.com/?q=Fløibanen+Bergen",
-    "descEN": "Take a 6-minute funicular ride to the top of Mount Fløyen for spectacular panoramic views of Bergen and the fjords.",
-    "hours": "Tutti i giorni 08:00-00:00",
-    "hoursEN": "Daily 08:00-00:00",
-    "price": "Adulti NOK 200, Bambini NOK 100 (A/R estivo)",
-    "priceEN": "Adults NOK 200, Children NOK 100 (Summer return)"
-  },
-  {
     "id": "poi-k-210",
     "cat": "kids",
     "star": false,
@@ -3303,24 +3249,6 @@ var MAP_POIS = [
     "hoursEN": "Daily 9am-6pm",
     "price": "Adulti NOK 415, Bambini NOK 265",
     "priceEN": "Adults NOK 415, Kids NOK 265"
-  },
-  {
-    "id": "poi-k-212",
-    "cat": "kids",
-    "star": false,
-    "icon": "👶",
-    "name": "Funicolare Fløibanen",
-    "desc": "Una storica funicolare che porta i visitatori in cima al Monte Fløyen per spettacolari viste panoramiche su Bergen.",
-    "lat": 60.3913,
-    "lng": 5.3221,
-    "day": "g30",
-    "city": "Bergen",
-    "maps": "https://maps.google.com/?q=Fl%C3%B8ibanen+Bergen",
-    "descEN": "A historic funicular railway taking visitors to the top of Mount Fløyen for spectacular panoramic views of Bergen.",
-    "hours": "Tutti i giorni 8-24",
-    "hoursEN": "Daily 8am-12am",
-    "price": "Adulti NOK 200, Bambini NOK 100 (A/R estivo)",
-    "priceEN": "Adults NOK 200, Kids NOK 100 (Summer return)"
   },
   {
     "id": "poi-p-213",
@@ -3524,8 +3452,8 @@ var MAP_POIS = [
     "descEN": "Norway's largest family attraction featuring a combined zoo with over 100 species and an amusement park.",
     "hours": "Tutti i giorni 10-19",
     "hoursEN": "Daily 10am-7pm",
-    "price": "Adulti NOK 689, Bambini (3-13) NOK 659",
-    "priceEN": "Adults NOK 689, Kids (3-13) NOK 659"
+    "price": "Da NOK 649 a persona (online, risparmio ~NOK 50 rispetto all’ingresso)",
+    "priceEN": "From NOK 649 per person (online, save ~NOK 50 vs gate)"
   },
   {
     "id": "poi-p-227",
@@ -3591,8 +3519,8 @@ var MAP_POIS = [
     "descEN": "Tivoli Gardens is a historic 19th-century amusement park in central Copenhagen featuring rides, gardens, and dining.",
     "hours": "Dom-Gio 11-22, Ven-Sab 11-24 (Stagione estiva)",
     "hoursEN": "Sun-Thu 11am-10pm, Fri-Sat 11am-12am (Summer season)",
-    "price": "Ingresso da DKK 150, Ride Pass da DKK 299",
-    "priceEN": "Entrance from DKK 150, Ride Pass from DKK 299"
+    "price": "Ingresso da DKK 150; Ride Pass illimitato DKK 299 (giostre singole a gettoni)",
+    "priceEN": "Entrance from DKK 150; Unlimited Ride Pass DKK 299 (single rides via tickets)"
   },
   {
     "id": "poi-k-231",
@@ -3697,8 +3625,8 @@ var MAP_POIS = [
     "descEN": "A historic 19th-century amusement park in central Copenhagen featuring classic rides, lush gardens, and dining.",
     "hours": "Tutti i giorni 11-22 (ven-sab fino alle 24) in estate",
     "hoursEN": "Daily 11am-10pm (Fri-Sat until 12am) in summer",
-    "price": "Ingresso da 150 DKK, Ride Pass da 199 DKK",
-    "priceEN": "Entrance from 150 DKK, Ride Pass from 199 DKK"
+    "price": "Ingresso da DKK 150; Ride Pass illimitato DKK 299 (giostre singole a gettoni)",
+    "priceEN": "Entrance from DKK 150; Unlimited Ride Pass DKK 299 (single rides via tickets)"
   },
   {
     "id": "poi-k-238",
@@ -3751,8 +3679,8 @@ var MAP_POIS = [
     "descEN": "A world-class science center offering interactive exhibits and playful science experiences for the entire family.",
     "hours": "Tutti i giorni 9:30-17:00",
     "hoursEN": "Daily 9:30am-5pm",
-    "price": "Adulti DKK 230, Bambini (2-11) DKK 143",
-    "priceEN": "Adults DKK 230, Children (2-11) DKK 143"
+    "price": "Adulti DKK 255, Bambini (3-11) DKK 159",
+    "priceEN": "Adults DKK 255, Children (3-11) DKK 159"
   },
   {
     "id": "poi-p-241",
@@ -4118,8 +4046,8 @@ var MAP_POIS = [
     "descEN": "A 12,000-square-meter experience center offering millions of LEGO bricks and interactive zones for all ages.",
     "hours": "Tutti i giorni 10-19 (estate)",
     "hoursEN": "Daily 10am-7pm (summer)",
-    "price": "Adulti/Bambini (3+) 289 DKK, Sotto i 3 anni Gratuito",
-    "priceEN": "Adults/Kids (3+) 289 DKK, Under 3 Free"
+    "price": "Adulti/Bambini (3+) da DKK 219, Sotto i 3 anni Gratuito",
+    "priceEN": "Adults/Kids (3+) from DKK 219, Under 3 Free"
   },
   {
     "id": "poi-k-265",
@@ -4785,8 +4713,8 @@ var MAP_POIS = [
     "descEN": "A historic oceanographic museum featuring a spectacular 360-degree underwater tunnel and over 7,000 marine animals.",
     "hours": "Tutti i giorni 10-20",
     "hoursEN": "Daily 10am-8pm",
-    "price": "Adulti €16, Bambini (5-12) €8, Sotto i 5 anni Gratuito",
-    "priceEN": "Adults €16, Children (5-12) €8, Under 5 Free"
+    "price": "Adulti €14.95, Bambini (4-12) €6.50, Senior €9",
+    "priceEN": "Adults €14.95, Children (4-12) €6.50, Seniors €9"
   },
   {
     "id": "poi-k-307",
@@ -4887,8 +4815,8 @@ var MAP_POIS = [
     "descEN": "A spectacular titanium-clad masterpiece of contemporary architecture housing world-class modern art collections.",
     "hours": "Mar-Dom 10-19 (Estate/Pasqua: aperto fino alle 20, aperto i lunedì)",
     "hoursEN": "Tue-Sun 10am-7pm (Summer/Easter: open until 8pm, open Mondays)",
-    "price": "Adulti €18, Studenti/Senior €9, Minori di 18 anni Gratuito",
-    "priceEN": "Adults €18, Students/Seniors €9, Under 18 Free"
+    "price": "Adulti €15, Ridotto (studenti/over 65) €7.50, Under 18 Gratuito (Mar 18-20 ingresso gratuito)",
+    "priceEN": "Adults €15, Reduced (students/over 65) €7.50, Under 18 Free (Tue 6-8pm free entry)"
   },
   {
     "id": "poi-k-314",
@@ -6238,8 +6166,8 @@ var MAP_POIS = [
     "descEN": "Ranua Wildlife Park specializes in Arctic and northern animal species, featuring spacious enclosures in pristine conifer forests.",
     "hours": "Tutti i giorni 10-18",
     "hoursEN": "Daily 10am-6pm",
-    "price": "Adulti €26,50, bambini (4-14) €22,00",
-    "priceEN": "Adults €26.50, kids (4-14) €22.00"
+    "price": "Adulti €24.50 (online) / €26.50 (ingresso), Bambini (4-14) €20 / €22, Under 4 Gratuito",
+    "priceEN": "Adults €24.50 (online) / €26.50 (gate), Children (4-14) €20 / €22, Under 4 Free"
   },
   {
     "id": "poi-a-423",
@@ -6256,24 +6184,6 @@ var MAP_POIS = [
     "descEN": "An underground Christmas theme park located beneath the Arctic Circle where visitors can meet Santa and his elves."
   },
   {
-    "id": "poi-a-424",
-    "cat": "attivita",
-    "star": false,
-    "icon": "🎢",
-    "name": "Polaria",
-    "desc": "Un centro di esperienze artiche e l'acquario più a nord del mondo con foche barbate e mostre interattive.",
-    "lat": 69.648,
-    "lng": 18.957,
-    "day": "g15",
-    "city": "Tromsø",
-    "maps": "https://maps.google.com/?q=Polaria+Tromsø",
-    "descEN": "An Arctic experience center and the world's northernmost aquarium featuring bearded seals and interactive exhibits.",
-    "hours": "Tutti i giorni 10-17",
-    "hoursEN": "Daily 10am-5pm",
-    "price": "Adulti NOK 395, Bambini (3-15) NOK 220",
-    "priceEN": "Adults NOK 395, Children (3-15) NOK 220"
-  },
-  {
     "id": "poi-a-425",
     "cat": "attivita",
     "star": false,
@@ -6288,8 +6198,8 @@ var MAP_POIS = [
     "descEN": "Norway's largest family attraction featuring a zoo with over 100 species, an amusement park, and a water park.",
     "hours": "Tutti i giorni 10-19 (Estate)",
     "hoursEN": "Daily 10am-7pm (Summer)",
-    "price": "Adulti NOK 649, Bambini (3-13) NOK 619 (Estate)",
-    "priceEN": "Adults NOK 649, Kids (3-13) NOK 619 (Summer)"
+    "price": "Da NOK 649 a persona (online, risparmio ~NOK 50 rispetto all’ingresso)",
+    "priceEN": "From NOK 649 per person (online, save ~NOK 50 vs gate)"
   },
   {
     "id": "poi-a-426",
@@ -6351,13 +6261,13 @@ var MAP_POIS = [
     "star": false,
     "icon": "🎢",
     "name": "Heide Park Resort",
-    "desc": "Il più grande parco divertimenti del nord della Germania con oltre 30 attrazioni e montagne russe per tutti.",
+    "desc": "Il più grande parco divertimenti del nord della Germania con oltre 30 attrazioni e montagne russe per tutti. Deviazione di ~72 km dall’itinerario (tappa di Brema).",
     "lat": 53.0244,
     "lng": 9.8781,
     "day": "g39",
     "city": "Soltau",
     "maps": "https://maps.google.com/?q=Heide+Park+Soltau",
-    "descEN": "Northern Germany's largest amusement park featuring over 30 attractions and rollercoasters for all ages.",
+    "descEN": "Northern Germany's largest amusement park featuring over 30 attractions and rollercoasters for all ages. About 72 km detour from the route (Bremen stop).",
     "hours": "Tutti i giorni 10-18",
     "hoursEN": "Daily 10am-6pm",
     "price": "Da €37",
@@ -6369,13 +6279,13 @@ var MAP_POIS = [
     "star": false,
     "icon": "🎢",
     "name": "Futuroscope",
-    "desc": "Un parco a tema futuristico che offre attrazioni multimediali immersive, giostre 3D/4D e spettacolari show serali.",
+    "desc": "Un parco a tema futuristico che offre attrazioni multimediali immersive, giostre 3D/4D e spettacolari show serali. Deviazione di ~95 km dall’itinerario (Valle della Loira).",
     "lat": 46.6683,
     "lng": 0.3678,
     "day": "g41",
     "city": "Poitiers",
     "maps": "https://maps.google.com/?q=Futuroscope+Poitiers",
-    "descEN": "A futuristic theme park offering immersive multimedia attractions, 3D/4D rides, and spectacular nighttime shows.",
+    "descEN": "A futuristic theme park offering immersive multimedia attractions, 3D/4D rides, and spectacular nighttime shows. About 95 km detour from the route (Loire Valley).",
     "hours": "Tutti i giorni 10:00-21:30 (fino alle 23:15 in alcune serate)",
     "hoursEN": "Daily 10am-9:30pm (extended to 11:15pm on certain evenings)",
     "price": "Adulti da €47, Bambini (5-12) da €39, Sotto i 5 anni Gratuito",
@@ -6617,13 +6527,13 @@ var MAP_POIS = [
     "star": false,
     "icon": "🌲",
     "name": "Parco Nazionale di Abisko",
-    "desc": "Un paesaggio montano dell'estremo nord con foreste di betulle, brughiere aperte e aspro terreno artico.",
+    "desc": "Un paesaggio montano dell'estremo nord con foreste di betulle, brughiere aperte e aspro terreno artico. Deviazione di ~145 km in Svezia dall’itinerario (tappa di Tromsø).",
     "lat": 68.35,
     "lng": 18.83,
     "day": "g15",
     "city": "Abisko",
     "maps": "https://maps.google.com/?q=Abisko+National+Park+Sweden",
-    "descEN": "A high-northern mountain landscape with birch forests, open heaths, and rugged Arctic terrain.",
+    "descEN": "A high-northern mountain landscape with birch forests, open heaths, and rugged Arctic terrain. About 145 km detour into Sweden from the route (Tromsø stop).",
     "hours": "Tutti i giorni 9-17 (estate)",
     "hoursEN": "Daily 9am-5pm (summer)",
     "price": "Gratuito",
