@@ -4492,10 +4492,13 @@ html[lang="en"] .notif-drawer-list:empty::after {
 @keyframes mapFsIn { from { opacity: 0; } to { opacity: 1; } }
 .map-fs-header {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 10px 16px; background: var(--bg-card); border-bottom: 1px solid var(--border);
+    /* v2.89: rispetta la safe-area di iOS (notch / Dynamic Island) così il titolo
+       e il pulsante di chiusura non finiscono sotto la status bar */
+    padding: calc(10px + env(safe-area-inset-top, 0px)) calc(16px + env(safe-area-inset-right, 0px)) 10px calc(16px + env(safe-area-inset-left, 0px));
+    background: var(--bg-card); border-bottom: 1px solid var(--border);
     flex-shrink: 0;
 }
-.map-fs-header h3 { margin: 0; font-size: 16px; font-weight: 700; }
+.map-fs-header h3 { margin: 0; font-size: 16px; font-weight: 700; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .map-fs-close {
     background: var(--bg-card, #fff); border: 2px solid var(--border, #333);
     font-size: 24px; cursor: pointer;

@@ -1,5 +1,9 @@
 # Quo Vadis — Changelog
 
+## v2.89 (14 giugno 2026)
+- Fix iOS: nella mappa a schermo intero il titolo e il pulsante di chiusura non finiscono più sotto la status bar / Dynamic Island (rispetto della safe-area in alto e ai lati)
+- Fix: il titolo della mappa fullscreen ora si tronca con i puntini su schermi stretti invece di sovrapporsi
+
 ## v2.88 (14 giugno 2026)
 - Nuovo: 3 curiosità al giorno in 3 fasce orarie (mattino 09:00, pomeriggio 14:00, sera 19:00), incluso il pre-partenza, fino al 18 agosto 2026 incluso
 - Scheduler: tracciamento per-fascia (sentSlots) per evitare duplicati; recupero delle fasce già scadute quando l'app si apre più tardi; watcher ogni 30 min mentre l'app è aperta
