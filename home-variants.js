@@ -1787,29 +1787,91 @@
     return km + ' km';
   }
 
-  // ─── Fetch live position from Firebase and update distance ───
+  // ─── Fetch live position from Firebase and update city, country, flag AND distance ───
+  // v3.91: Same logic as index.html hero (app.js) — tries /live, /position, /lastPosition
   function fetchLiveDistanceFromHome(homeLat, homeLng) {
     if (typeof firebase === 'undefined' || !firebase.database) return;
     var familyId = (typeof FAMILY_ID !== 'undefined') ? FAMILY_ID : 'main';
-    firebase.database().ref('trips/' + familyId + '/position').once('value').then(function(snap) {
-      var pos = snap.val();
-      if (!pos || !pos.lat || !pos.lng) return;
-      var distKm = haversineKm(homeLat, homeLng, pos.lat, pos.lng);
-      var distText = '\ud83d\udccd ' + formatKmDistance(distKm) + ' da \ud83c\udfe0';
+    var _en = (typeof isEN !== 'undefined' && isEN);
+    var basePath = 'trips/' + familyId;
 
-      // Update the progress text elements in the DOM
+    // Helper: once we have a real lat/lng, update distance + reverse geocode city
+    function _applyRealPosition(lat, lng) {
       var container = document.getElementById('hv-container');
       if (!container) return;
+
+      // 1) Update distance from home
+      var distKm = haversineKm(homeLat, homeLng, lat, lng);
+      var distText = formatKmDistance(distKm) + (_en ? ' from home \ud83c\udfe0' : ' da casa \ud83c\udfe0');
+      var distEls = container.querySelectorAll('[data-hv="distanceFromHome"]');
+      distEls.forEach(function(el) { el.textContent = distText; });
+      // Also update progressText
       var progressEls = container.querySelectorAll('[data-hv="progressText"]');
       progressEls.forEach(function(el) {
         var current = el.textContent || '';
-        // Replace existing distance or append
+        var pinDist = '\ud83d\udccd ' + formatKmDistance(distKm) + ' da \ud83c\udfe0';
         if (current.indexOf('\ud83d\udccd') >= 0) {
-          el.textContent = current.replace(/\ud83d\udccd[^·]+da \ud83c\udfe0/, distText);
-        } else if (current.indexOf('paesi') >= 0) {
-          el.textContent = current + ' \u00b7 ' + distText;
+          el.textContent = current.replace(/\ud83d\udccd[^·]+da \ud83c\udfe0/, pinDist);
+        } else if (current.indexOf('paesi') >= 0 || current.indexOf('countries') >= 0) {
+          el.textContent = current + ' \u00b7 ' + pinDist;
         }
       });
+
+      // 2) Reverse geocode to get real city/country/flag
+      if (typeof window._nominatimFetch !== 'function') return;
+      window._nominatimFetch('https://nominatim.openstreetmap.org/reverse?lat=' + lat + '&lon=' + lng + '&format=json&zoom=10&accept-language=' + (_en ? 'en' : 'it'))
+        .then(function(data) {
+          var addr = data.address || {};
+          var city = addr.city || addr.town || addr.village || addr.municipality || addr.county || '';
+          var country = addr.country || '';
+          var cc = (addr.country_code || '').toUpperCase();
+          var flag = cc.length === 2 ? String.fromCodePoint(0x1F1E6 + cc.charCodeAt(0) - 65) + String.fromCodePoint(0x1F1E6 + cc.charCodeAt(1) - 65) : '';
+
+          if (!container) return;
+          // Update city
+          var cityEls = container.querySelectorAll('[data-hv="city"]');
+          cityEls.forEach(function(el) { if (city) el.textContent = city; });
+          // Update country
+          var countryEls = container.querySelectorAll('[data-hv="country"]');
+          countryEls.forEach(function(el) { if (country) el.textContent = country; });
+          // Update flag
+          var flagEls = container.querySelectorAll('[data-hv="flag"]');
+          flagEls.forEach(function(el) { if (flag) el.textContent = flag; });
+        }).catch(function() { /* silent */ });
+    }
+
+    // Try /live first (most recent entry < 2h old)
+    firebase.database().ref(basePath + '/live').once('value').then(function(snap) {
+      var liveData = snap.val();
+      if (liveData) {
+        var latest = null;
+        Object.values(liveData).forEach(function(d) {
+          if (d && d.lat && d.lng && d.time) {
+            if (!latest || d.time > latest.time) latest = d;
+          }
+        });
+        if (latest && (Date.now() - latest.time) < 7200000) {
+          _applyRealPosition(latest.lat, latest.lng);
+          return;
+        }
+      }
+      // Try /position
+      return firebase.database().ref(basePath + '/position').once('value');
+    }).then(function(snap) {
+      if (!snap) return;
+      var pos = snap.val();
+      if (pos && pos.lat && pos.lng) {
+        _applyRealPosition(pos.lat, pos.lng);
+        return;
+      }
+      // Try /lastPosition
+      return firebase.database().ref(basePath + '/lastPosition').once('value');
+    }).then(function(snap) {
+      if (!snap) return;
+      var lp = snap.val();
+      if (lp && lp.lat && lp.lng) {
+        _applyRealPosition(lp.lat, lp.lng);
+      }
     }).catch(function() { /* silent */ });
   }
 

@@ -4415,18 +4415,20 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             parkingBtn.addEventListener('click', function() {
                 if (!isOwner) { showToast(isEN ? '🔒 Only organizers.' : '🔒 Solo organizzatori.', 'info'); return; }
                 var name = document.getElementById('pos-parking-name').value.trim();
-                if (!name) { showToast(isEN ? 'Enter a name.' : 'Inserisci un nome.', 'info'); return; }
                 var rating = parseInt(document.getElementById('pos-parking-rating').value) || 3;
-                // Get current position
+                // v3.91: Allow empty name — save with GPS coordinates
                 if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition(function(pos) {
-                        saveParkingSpot(name, pos.coords.latitude, pos.coords.longitude, rating);
+                        var finalName = name || ('📍 ' + pos.coords.latitude.toFixed(4) + ', ' + pos.coords.longitude.toFixed(4));
+                        saveParkingSpot(finalName, pos.coords.latitude, pos.coords.longitude, rating);
                         document.getElementById('pos-parking-name').value = '';
                     }, function() {
+                        if (!name) { showToast(isEN ? 'GPS unavailable, enter a name.' : 'GPS non disponibile, inserisci un nome.', 'info'); return; }
                         saveParkingSpot(name, null, null, rating);
                         document.getElementById('pos-parking-name').value = '';
                     }, { enableHighAccuracy: true, timeout: 10000 });
                 } else {
+                    if (!name) { showToast(isEN ? 'GPS unavailable, enter a name.' : 'GPS non disponibile, inserisci un nome.', 'info'); return; }
                     saveParkingSpot(name, null, null, rating);
                     document.getElementById('pos-parking-name').value = '';
                 }
@@ -4620,7 +4622,15 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                 results.forEach(function(r) {
                     var div = document.createElement('div');
                     div.style.cssText = 'padding:10px 14px;cursor:pointer;border-bottom:1px solid var(--border);font-size:13px;display:flex;align-items:center;gap:8px;';
-                    div.innerHTML = '<span>' + typeIcon(r.type) + '</span><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escapeHtml(r.name) + '</span>';
+                    // v3.91: show distance from user
+                    var distLabel = '';
+                    if (r.lat && _acUserLat) {
+                        var dKm = window._haversineKm ? window._haversineKm(_acUserLat, _acUserLng, parseFloat(r.lat), parseFloat(r.lng)) : 0;
+                        if (dKm > 0) {
+                            distLabel = dKm < 1 ? ' — ' + Math.round(dKm * 1000) + 'm' : ' — ' + dKm.toFixed(1) + 'km';
+                        }
+                    }
+                    div.innerHTML = '<span>' + typeIcon(r.type) + '</span><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escapeHtml(r.name) + '</span>' + (distLabel ? '<span style="color:var(--text-muted);font-size:11px;white-space:nowrap;">' + distLabel + '</span>' : '');
                     div.addEventListener('click', function() {
                         input.value = r.name;
                         input.dataset.lat = r.lat || '';
@@ -11565,23 +11575,29 @@ async function fetchForecast(lat, lon, date, _retry) {
     var menu = document.createElement('div');
     menu.className = 'chat-context-menu';
 
-    // v3.27b: Helper to bind both touchend and click (mobile needs touchend, desktop needs click)
+    // v3.91: Improved bindTap — reliable on Android (touchend + click + pointer fallback)
     function bindTap(el, handler) {
       var fired = false;
+      function doFire() {
+        if (fired) return false;
+        fired = true;
+        handler();
+        setTimeout(function() { fired = false; }, 400);
+        return true;
+      }
       el.addEventListener('touchend', function(e) {
         e.preventDefault();
         e.stopPropagation();
-        if (fired) return;
-        fired = true;
-        handler();
-        setTimeout(function() { fired = false; }, 300);
+        doFire();
       });
       el.addEventListener('click', function(e) {
         e.stopPropagation();
-        if (fired) return;
-        fired = true;
-        handler();
-        setTimeout(function() { fired = false; }, 300);
+        doFire();
+      });
+      // v3.91: pointerup fallback for Android WebView edge cases
+      el.addEventListener('pointerup', function(e) {
+        e.stopPropagation();
+        doFire();
       });
     }
 
@@ -11592,6 +11608,8 @@ async function fetchForecast(lat, lon, date, _retry) {
       var btn = document.createElement('button');
       btn.textContent = emoji;
       bindTap(btn, function() {
+        // v3.91: Close overlay FIRST (immediate visual feedback)
+        try { overlay.remove(); } catch(ex) {}
         // v3.33 WhatsApp-style toggle: tap same emoji again → remove
         var reactRef = CHAT_REF.child(key).child('reactions').child(chatUser.uid);
         reactRef.once('value').then(function(snap) {
@@ -11601,7 +11619,6 @@ async function fetchForecast(lat, lon, date, _retry) {
           }
           return reactRef.set(emoji).then(function() { _qvLog.info('[Chat] Reaction saved'); });
         }).catch(function(e) { console.error('[Chat] Reaction failed:', e); if (window.showToast) showToast('Reaction failed: ' + e.message, 'error'); });
-        overlay.remove();
       });
       reactRow.appendChild(btn);
     });

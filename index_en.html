@@ -64,7 +64,7 @@
     <link rel="apple-touch-icon" sizes="152x152" href="./icon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="./icon.png">
     <link rel="apple-touch-icon" sizes="167x167" href="./icon.png">
-    <title>Quo Vadis — V3.90</title>
+    <title>Quo Vadis — V3.91</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="home-variants.css">
@@ -86,7 +86,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = '3.90';
+  var EXPECTED_VERSION = '3.91';
   window.IS_PROD = true; // v2.96: parità con index.html — disabilita debug overlay in produzione
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
@@ -7657,7 +7657,7 @@
     <h4 style="font-size:14px;font-weight:600;margin-bottom:10px;">🅿️ Save Parking</h4>
     <div style="display:flex;gap:8px;flex-wrap:wrap;">
         <div style="flex:1;min-width:200px;position:relative;">
-            <input type="text" id="pos-parking-name" placeholder="Spot name (e.g. Reine Parking)..." autocomplete="off" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;">
+            <input type="text" id="pos-parking-name" placeholder="Name (optional — saves with GPS)..." autocomplete="off" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;">
             <div id="pos-parking-suggestions" style="display:none;position:absolute;top:100%;left:0;right:0;z-index:9999;background:var(--bg-card);border:1px solid var(--border);border-top:none;border-radius:0 0 8px 8px;max-height:200px;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,0.15);"></div>
         </div>
         <select id="pos-parking-rating" style="padding:8px;border:1px solid var(--border);border-radius:8px;">
