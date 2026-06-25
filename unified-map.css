@@ -1,0 +1,501 @@
+/* Quo Vadis — Unified Map Styles v1.70 */
+
+/* ═══ POI Marker Icons ═══ */
+.umap-poi-icon {
+  background: transparent !important;
+  border: none !important;
+}
+
+.umap-poi-marker {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.umap-poi-marker:hover {
+  transform: scale(1.2);
+}
+
+.umap-poi-star {
+  animation: umap-star-glow 2s ease-in-out infinite;
+}
+
+@keyframes umap-star-glow {
+  0%, 100% { box-shadow: 0 2px 8px rgba(214, 158, 46, 0.4); }
+  50% { box-shadow: 0 2px 12px rgba(214, 158, 46, 0.7); }
+}
+
+/* ═══ Cluster Icons ═══ */
+.umap-cluster-icon {
+  background: transparent !important;
+  border: none !important;
+}
+
+.umap-cluster {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.8);
+}
+
+/* ═══ Filter Button ═══ */
+.umap-filter-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1000;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: none;
+  background: var(--bg-card, #fff);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.umap-filter-btn:hover,
+.umap-filter-btn-active {
+  background: var(--accent, #3182ce);
+  box-shadow: 0 2px 8px rgba(49, 130, 206, 0.3);
+}
+
+.umap-filter-btn-active {
+  transform: scale(1.05);
+}
+
+/* ═══ Filter Panel ═══ */
+.umap-filter-panel {
+  position: absolute;
+  top: 52px;
+  right: 10px;
+  z-index: 1001;
+  background: var(--bg-card, #fff);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  padding: 12px 14px;
+  min-width: 200px;
+  max-width: 240px;
+  border: 1px solid var(--border, #e2e8f0);
+  animation: umap-panel-in 0.2s ease;
+}
+
+@keyframes umap-panel-in {
+  from { opacity: 0; transform: translateY(-8px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.umap-filter-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text, #1a202c);
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border, #e2e8f0);
+}
+
+.umap-filter-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 4px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.umap-filter-row:hover {
+  background: var(--bg-alt, #f7fafc);
+}
+
+.umap-filter-checkbox {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  accent-color: var(--accent, #3182ce);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.umap-filter-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.umap-filter-label {
+  font-size: 12.5px;
+  color: var(--text, #1a202c);
+  flex: 1;
+  white-space: nowrap;
+}
+
+.umap-filter-count {
+  font-size: 11px;
+  color: var(--text-muted, #718096);
+  flex-shrink: 0;
+}
+
+/* ═══ Popup Styles ═══ */
+.umap-popup {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  line-height: 1.4;
+}
+
+.umap-popup-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+  flex-wrap: wrap;
+}
+
+.umap-popup-icon {
+  font-size: 16px;
+}
+
+.umap-popup-header strong {
+  font-size: 13px;
+  color: var(--text, #1a202c);
+}
+
+.umap-popup-city {
+  font-size: 11px;
+  color: var(--text-muted, #718096);
+  margin-bottom: 6px;
+}
+
+.umap-popup-desc {
+  font-size: 12px;
+  color: var(--text, #2d3748);
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+/* v2.82: structured meta rows (hours / price) */
+.umap-popup-meta {
+  font-size: 12px;
+  color: var(--text, #2d3748);
+  line-height: 1.35;
+  margin-bottom: 4px;
+  display: flex;
+  gap: 5px;
+  align-items: baseline;
+}
+.umap-popup-meta:last-of-type { margin-bottom: 8px; }
+.umap-popup-meta-ico { flex: 0 0 auto; }
+.umap-popup-meta-lbl { font-weight: 700; color: var(--text-muted, #475569); }
+
+.umap-popup-actions {
+  padding-top: 6px;
+  border-top: 1px solid var(--border, #e2e8f0);
+}
+
+.umap-popup-link {
+  font-size: 12px;
+  color: var(--accent, #3182ce);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.umap-popup-link:hover {
+  text-decoration: none; color: var(--primary, #2b6cb0);
+}
+
+/* ═══ Live marker on Route Map ═══ */
+.umap-live-route-marker {
+  background: transparent !important;
+  border: none !important;
+}
+
+.umap-live-pulse {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.umap-live-pulse::before {
+  content: '';
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(49, 130, 206, 0.3);
+  animation: umap-pulse-ring 2s ease-out infinite;
+}
+
+.umap-live-dot {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid #3182ce;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  z-index: 1;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes umap-pulse-ring {
+  0% { transform: scale(0.8); opacity: 1; }
+  100% { transform: scale(2); opacity: 0; }
+}
+
+
+/* ═══ Mini Map Preview (Homepage) ═══ */
+.umap-mini-preview {
+  position: relative;
+  width: 100%;
+  height: 160px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #e8f4f8;
+  cursor: pointer;
+  border: 1px solid var(--border, #e2e8f0);
+  transition: transform 0.2s ease;
+}
+
+.umap-mini-preview:hover {
+  transform: scale(1.01);
+}
+
+.umap-mini-preview:active {
+  transform: scale(0.99);
+}
+
+.umap-mini-tile {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.85;
+}
+
+.umap-mini-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(0.5px);
+}
+
+.umap-mini-marker {
+  font-size: 28px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  animation: umap-mini-bounce 2s ease-in-out infinite;
+}
+
+@keyframes umap-mini-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.umap-mini-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: #38a169;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 0 2px 6px rgba(56, 161, 105, 0.4);
+}
+
+.umap-mini-badge::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #fff;
+  animation: umap-badge-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes umap-badge-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.umap-mini-expand {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: var(--bg-card, #fff);
+  border: 1px solid var(--border, #e2e8f0);
+  border-radius: 8px;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text, #1a202c);
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.umap-mini-hint {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 4px 12px;
+  border-radius: 12px;
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 0.5s ease;
+}
+
+.umap-mini-hint.hv-hint-hidden {
+  opacity: 0;
+}
+
+.umap-mini-photos {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 6px;
+  backdrop-filter: blur(4px);
+}
+
+/* ═══ Pre-trip Map Badge ═══ */
+.umap-mini-badge-pretrip {
+  background: #2563eb;
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.4);
+}
+.umap-mini-badge-pretrip::before {
+  animation: none;
+  background: #93c5fd;
+}
+
+/* ═══ Dark Mode Support ═══ */
+@media (prefers-color-scheme: dark) {
+  .umap-filter-panel {
+    background: var(--bg-card, #1a202c);
+    border-color: var(--border, #2d3748);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  }
+
+  .umap-filter-title {
+    color: var(--text, #e2e8f0);
+    border-bottom-color: var(--border, #2d3748);
+  }
+
+  .umap-filter-label {
+    color: var(--text, #e2e8f0);
+  }
+
+  .umap-filter-row:hover {
+    background: var(--bg-alt, #2d3748);
+  }
+
+  .umap-filter-btn {
+    background: var(--bg-card, #2d3748);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  }
+
+  .umap-popup-header strong {
+    color: #1a202c; /* popup is always light bg in Leaflet */
+  }
+
+  .umap-poi-marker {
+    background: #2d3748 !important;
+  }
+
+  .umap-poi-star {
+    background: #2d3748 !important;
+  }
+
+  .umap-mini-expand {
+    background: var(--bg-card, #2d3748);
+    color: var(--text, #e2e8f0);
+    border-color: var(--border, #4a5568);
+  }
+
+}
+
+[data-theme="dark"] .umap-filter-panel {
+  background: var(--bg-card, #1a202c);
+  border-color: var(--border, #2d3748);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .umap-filter-title {
+  color: var(--text, #e2e8f0);
+  border-bottom-color: var(--border, #2d3748);
+}
+
+[data-theme="dark"] .umap-filter-label {
+  color: var(--text, #e2e8f0);
+}
+
+[data-theme="dark"] .umap-filter-row:hover {
+  background: var(--bg-alt, #2d3748);
+}
+
+[data-theme="dark"] .umap-filter-btn {
+  background: var(--bg-card, #2d3748);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .umap-poi-marker {
+  background: #2d3748 !important;
+}
+
+[data-theme="dark"] .umap-mini-expand {
+  background: var(--bg-card, #2d3748);
+  color: var(--text, #e2e8f0);
+  border-color: var(--border, #4a5568);
+}
+
+/* ═══ Responsive adjustments ═══ */
+@media (max-width: 480px) {
+  .umap-filter-panel {
+    min-width: 180px;
+    max-width: 200px;
+    padding: 10px 12px;
+  }
+
+  .umap-filter-label {
+    font-size: 12px;
+  }
+
+  .umap-filter-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+  }
+
+  .umap-cluster {
+    width: 32px;
+    height: 32px;
+    font-size: 12px;
+  }
+}

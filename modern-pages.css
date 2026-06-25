@@ -1,0 +1,588 @@
+/* ═══════════════════════════════════════════════════════════════
+   Modern Pages Restyle — v1.78
+   Aligns all tab pages with the home-variants modern design
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── Shared: Modern Section Cards ─── */
+.tab-content {
+    padding: 0 12px 80px;
+}
+.tab-content h1 {
+    font-size: 1.4rem;
+    font-weight: 800;
+    margin: 20px 0 4px;
+    letter-spacing: -0.3px;
+}
+.tab-content h2 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin: 24px 0 12px;
+    letter-spacing: -0.2px;
+}
+.tab-content h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 16px 0 10px;
+}
+.tab-content hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 20px 0;
+}
+
+/* ─── Admin Page ─── */
+#tab-admin {
+    padding: 0 12px 80px;
+}
+#tab-admin h1 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 4px;
+}
+#tab-admin .admin-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    margin: 16px 0;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.2s;
+}
+#tab-admin .admin-card:hover {
+    box-shadow: var(--shadow-md);
+}
+#tab-admin .admin-card h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0 0 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+#tab-admin .pos-btn {
+    border-radius: 10px;
+    font-size: 13px;
+    padding: 10px 16px;
+    font-weight: 600;
+    transition: all 0.2s;
+    box-shadow: var(--shadow-sm);
+}
+#tab-admin .pos-btn:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+}
+#tab-admin .pos-btn-large {
+    padding: 14px 24px !important;
+    font-size: 15px !important;
+    border-radius: 12px !important;
+}
+
+/* Admin panel — remove old yellow border style */
+#tab-admin #pos-admin-panel {
+    border: 1px solid var(--border) !important;
+    border-radius: 16px !important;
+    background: var(--bg-card) !important;
+}
+#tab-admin .pos-admin-section {
+    padding: 0;
+    border-top: none;
+    margin-bottom: 16px;
+}
+#tab-admin .pos-admin-section:last-child {
+    margin-bottom: 0;
+}
+
+/* ─── Posizione Page ─── */
+#tab-posizione {
+    padding: 0 0 80px;
+}
+#tab-posizione .pos-section-title {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 20px 12px 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+#tab-posizione .pos-info-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin: 8px 12px 12px;
+    box-shadow: var(--shadow-sm);
+    font-size: 13px;
+}
+#tab-posizione .pos-nearest {
+    border-radius: 16px;
+    margin: 0 12px 12px;
+    padding: 16px;
+    box-shadow: var(--shadow-md);
+}
+#tab-posizione .pos-controls-box {
+    border-radius: 14px;
+    margin: 0 12px 12px;
+    padding: 14px 16px;
+    box-shadow: var(--shadow-sm);
+}
+#tab-posizione details.pos-accordion {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    margin: 12px 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+#tab-posizione details.pos-accordion:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--accent-light, rgba(44, 82, 130, 0.3));
+}
+#tab-posizione details.pos-accordion summary {
+    padding: 16px 18px;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    list-style: none;
+    transition: background 0.2s ease;
+}
+#tab-posizione details.pos-accordion summary::-webkit-details-marker {
+    display: none;
+}
+#tab-posizione details.pos-accordion summary::after {
+    content: '';
+    margin-left: auto;
+    width: 8px;
+    height: 8px;
+    border-right: 2px solid var(--text-muted);
+    border-bottom: 2px solid var(--text-muted);
+    transform: rotate(-45deg);
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+}
+#tab-posizione details.pos-accordion[open] summary::after {
+    transform: rotate(45deg);
+}
+#tab-posizione details.pos-accordion[open] summary {
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-alt);
+}
+#tab-posizione details.pos-accordion .pos-accordion-sub {
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: var(--text-muted);
+    margin-left: 4px;
+}
+#tab-posizione details.pos-accordion > div,
+#tab-posizione details.pos-accordion > p {
+    padding: 14px 18px;
+    font-size: 0.9rem;
+}
+/* Non-accordion details in posizione keep basic style */
+#tab-posizione details:not(.pos-accordion) {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    margin: 8px 12px 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+#tab-posizione details:not(.pos-accordion) summary {
+    padding: 14px 16px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    user-select: none;
+}
+#tab-posizione details:not(.pos-accordion)[open] summary {
+    border-bottom: 1px solid var(--border);
+}
+#tab-posizione details:not(.pos-accordion) > div,
+#tab-posizione details:not(.pos-accordion) > p {
+    padding: 12px 16px;
+}
+
+/* Weather cards in posizione */
+#tab-posizione .pos-weather-card {
+    border-radius: 14px;
+    box-shadow: var(--shadow-sm);
+}
+
+/* ─── Giorni Page ─── */
+#tab-giorni {
+    padding: 0 8px 80px;
+}
+#tab-giorni .accordion-header {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    margin: 6px 0;
+    padding: 14px 16px;
+    font-weight: 700;
+    font-size: 0.92rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+#tab-giorni .accordion-header:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--accent-light);
+}
+#tab-giorni .accordion-header.open {
+    border-radius: 14px 14px 0 0;
+    margin-bottom: 0;
+    border-bottom-color: transparent;
+    background: linear-gradient(135deg, var(--bg-card), var(--bg-alt));
+}
+#tab-giorni .accordion-body {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 14px 14px;
+    padding: 16px;
+    margin-bottom: 8px;
+    box-shadow: var(--shadow-sm);
+}
+#tab-giorni .accordion-body h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin: 16px 0 8px;
+}
+#tab-giorni .accordion-body table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    margin: 8px 0;
+}
+#tab-giorni .accordion-body table th {
+    background: var(--bg-alt);
+    padding: 8px 10px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    color: var(--text-muted);
+}
+#tab-giorni .accordion-body table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--border);
+}
+#tab-giorni .goto-today-box {
+    margin: 12px 4px;
+}
+#tab-giorni .goto-today-box button {
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 14px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    box-shadow: var(--shadow-sm);
+    cursor: pointer;
+}
+
+/* ─── Riepilogo Page ─── */
+#tab-riepilogo {
+    padding: 0 12px 80px;
+}
+#tab-riepilogo h1 {
+    font-size: 1.4rem;
+    font-weight: 800;
+}
+#tab-riepilogo h2 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 24px 0 12px;
+}
+#tab-riepilogo .tab-index-wrapper {
+    margin: 12px 0;
+}
+#tab-riepilogo .tab-index {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 12px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    box-shadow: var(--shadow-sm);
+}
+#tab-riepilogo .tab-index a {
+    padding: 6px 12px;
+    border-radius: 20px;
+    background: var(--bg-alt);
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 600;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+#tab-riepilogo .tab-index a:hover {
+    background: var(--accent);
+    color: white;
+}
+#tab-riepilogo table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 0.85rem;
+    background: var(--bg-card);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+}
+#tab-riepilogo table th {
+    background: var(--bg-alt);
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+#tab-riepilogo table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+}
+#tab-riepilogo table tr:last-child td {
+    border-bottom: none;
+}
+#tab-riepilogo #riepilogo-weather-stats,
+#tab-riepilogo #riepilogo-curiosita {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px;
+    box-shadow: var(--shadow-sm);
+}
+
+/* ─── Content Pages: Cibo, Cultura, Attività, Luoghi, Piano ─── */
+#tab-cibo,
+#tab-cultura,
+#tab-attivita,
+#tab-luoghi,
+#tab-piano {
+    padding: 0 12px 80px;
+}
+#tab-cibo h1,
+#tab-cultura h1,
+#tab-attivita h1,
+#tab-luoghi h1,
+#tab-piano h1 {
+    font-size: 1.4rem;
+    font-weight: 800;
+    margin: 20px 0 8px;
+}
+#tab-cibo h2,
+#tab-cultura h2,
+#tab-attivita h2,
+#tab-luoghi h2,
+#tab-piano h2 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 20px 0 10px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid var(--border);
+}
+#tab-cibo h3,
+#tab-cultura h3,
+#tab-attivita h3,
+#tab-luoghi h3,
+#tab-piano h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin: 14px 0 8px;
+}
+#tab-cibo table,
+#tab-cultura table,
+#tab-attivita table,
+#tab-luoghi table,
+#tab-piano table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 0.84rem;
+    background: var(--bg-card);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+}
+#tab-cibo table th,
+#tab-cultura table th,
+#tab-attivita table th,
+#tab-luoghi table th,
+#tab-piano table th {
+    background: var(--bg-alt);
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    color: var(--text-muted);
+}
+#tab-cibo table td,
+#tab-cultura table td,
+#tab-attivita table td,
+#tab-luoghi table td,
+#tab-piano table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    line-height: 1.4;
+}
+#tab-cibo table tr:last-child td,
+#tab-cultura table tr:last-child td,
+#tab-attivita table tr:last-child td,
+#tab-luoghi table tr:last-child td,
+#tab-piano table tr:last-child td {
+    border-bottom: none;
+}
+/* Blockquotes as callout cards */
+#tab-cibo blockquote,
+#tab-cultura blockquote,
+#tab-attivita blockquote,
+#tab-luoghi blockquote,
+#tab-piano blockquote,
+#tab-riepilogo blockquote {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--accent);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin: 12px 0;
+    font-size: 0.9rem;
+    box-shadow: var(--shadow-sm);
+    color: var(--text);
+}
+/* Lists */
+#tab-cibo ul, #tab-cibo ol,
+#tab-cultura ul, #tab-cultura ol,
+#tab-attivita ul, #tab-attivita ol,
+#tab-luoghi ul, #tab-luoghi ol,
+#tab-piano ul, #tab-piano ol {
+    padding-left: 20px;
+    margin: 8px 0;
+}
+#tab-cibo li, #tab-cultura li, #tab-attivita li, #tab-luoghi li, #tab-piano li {
+    margin-bottom: 6px;
+    line-height: 1.5;
+    font-size: 0.9rem;
+}
+/* Details/summary in content pages */
+#tab-cibo details,
+#tab-cultura details,
+#tab-attivita details,
+#tab-luoghi details,
+#tab-piano details {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    margin: 10px 0;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+#tab-cibo details summary,
+#tab-cultura details summary,
+#tab-attivita details summary,
+#tab-luoghi details summary,
+#tab-piano details summary {
+    padding: 12px 16px;
+    font-weight: 700;
+    font-size: 0.92rem;
+    cursor: pointer;
+}
+#tab-cibo details[open] summary,
+#tab-cultura details[open] summary,
+#tab-attivita details[open] summary,
+#tab-luoghi details[open] summary,
+#tab-piano details[open] summary {
+    border-bottom: 1px solid var(--border);
+}
+
+/* ─── Zaino Page ─── */
+#tab-zaino {
+    padding: 0 12px 80px;
+}
+#tab-zaino h1 {
+    font-size: 1.4rem;
+    font-weight: 800;
+    margin: 20px 0 8px;
+}
+#tab-zaino .task-category {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    margin: 10px 0;
+    padding: 14px 16px;
+    box-shadow: var(--shadow-sm);
+}
+#tab-zaino .task-category-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+#tab-zaino .task-item {
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.9rem;
+}
+#tab-zaino .task-item:last-child {
+    border-bottom: none;
+}
+#tab-zaino .task-item.checked {
+    opacity: 0.7;
+}
+
+/* ─── Compact tables (used in Riepilogo) ─── */
+.compact-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 0.84rem;
+    background: var(--bg-card);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+}
+.compact-table th {
+    background: var(--bg-alt);
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    color: var(--text-muted);
+}
+.compact-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+}
+.compact-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* ─── Responsive adjustments ─── */
+@media (max-width: 480px) {
+    .tab-content { padding: 0 8px 80px; }
+    #tab-admin .admin-card { padding: 14px; margin: 10px 0; }
+    #tab-giorni .accordion-header { padding: 12px 14px; font-size: 0.88rem; }
+    #tab-giorni .accordion-body { padding: 12px; }
+}
