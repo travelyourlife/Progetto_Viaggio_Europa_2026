@@ -5017,13 +5017,13 @@ html[lang="en"] .notif-drawer-list:empty::after {
 .cross-link-bar {
     margin: 0.3em 0 1em 0;
     padding: 0.4em 0.8em;
-    background: #edf2f7;
+    background: var(--bg-alt, #edf2f7);
     border-radius: 6px;
     font-size: 0.85em;
-    color: #4a5568;
+    color: var(--text-muted, #4a5568);
 }
 .cross-link-bar a {
-    color: #2b6cb0;
+    color: var(--accent, #2b6cb0);
     text-decoration: none;
     font-weight: 500;
     cursor: pointer;

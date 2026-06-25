@@ -1737,7 +1737,7 @@ document.addEventListener('DOMContentLoaded', function() {
             ].join(';');
             seg.appendChild(bar);
 
-            var tipText = (isEN ? 'D' : 'G') + idx + ' ' + d.date + ' · ' + d.title + (km ? ' · ' + km + 'km' : (isEN ? ' · rest' : ' · sosta'));
+            var tipText = (isEN ? 'D' : 'G') + (idx + 1) + ' ' + d.date + ' · ' + d.title + (km ? ' · ' + km + 'km' : (isEN ? ' · rest' : ' · sosta'));
             // v2.85: hint that the caption is tappable to open the day.
             var tapHint = isEN ? '  → tap to open' : '  → tocca per aprire';
             function showFor() {
@@ -3245,6 +3245,9 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                             _displayCountry(cc, name);
                             // Also save to Firebase for offline access
                             posRef.child('currentCountry').set({ code: cc, name: name });
+                            // v3.91: persist to countriesVisited for tracking
+                            var _cvRef2 = getFamilyRef('countriesVisited/' + cc);
+                            if (_cvRef2) _cvRef2.set({ name: name, firstSeen: firebase.database.ServerValue.TIMESTAMP });
                         } else {
                             _fallbackCheckinCountry();
                         }
@@ -3349,14 +3352,28 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             var completionEl = document.getElementById('stat-completion');
             if (completionEl) completionEl.textContent = ((visited / totalStops) * 100).toFixed(0) + '%';
 
-            // Countries
+            // Countries — v3.91: merge check-in flags + GPS-tracked countriesVisited
             var countries = new Set();
             Object.keys(checkins).forEach(function(idx) {
                 var title = places[parseInt(idx)] ? places[parseInt(idx)].title : '';
                 var flags = title.match(/[\u{1F1E6}-\u{1F1FF}]{2}/gu);
                 if (flags) flags.forEach(function(f) { countries.add(f); });
             });
-            var _el2 = document.getElementById('stat-countries'); if (_el2) _el2.textContent = countries.size;
+            var _el2 = document.getElementById('stat-countries');
+            // Also load from Firebase countriesVisited (GPS-based)
+            var _cvRef = getFamilyRef('countriesVisited');
+            if (_cvRef) {
+                _cvRef.once('value', function(cvSnap) {
+                    var cv = cvSnap.val() || {};
+                    Object.keys(cv).forEach(function(cc) {
+                        var flag = String.fromCodePoint(0x1F1E6 + cc.charCodeAt(0) - 65) + String.fromCodePoint(0x1F1E6 + cc.charCodeAt(1) - 65);
+                        countries.add(flag);
+                    });
+                    if (_el2) _el2.textContent = countries.size;
+                });
+            } else {
+                if (_el2) _el2.textContent = countries.size;
+            }
 
             // Last check-in
             var allTimes = Object.values(checkins).map(function(c) { return c.time; });
@@ -3394,7 +3411,8 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                 });
                 var avgMax = Math.round(sumMax / days.length);
                 var avgMin = Math.round(sumMin / days.length);
-                var html = '<div class="pos-weather-stats-grid">';
+                var html = '<h3 style="margin:0 0 12px 0;font-size:16px;font-weight:600;color:var(--text-color,#1a1a2e);">' + (isEN ? '\u2600\uFE0F Trip weather' : '\u2600\uFE0F Meteo del viaggio') + ' <span style="font-weight:400;font-size:13px;color:#64748b;">(' + days.length + (isEN ? ' days)' : ' giorni)') + '</span></h3>';
+                html += '<div class="pos-weather-stats-grid">';
                 html += '<div class="pos-ws-item"><span class="pos-ws-icon">\u{1F321}\uFE0F</span><span class="pos-ws-val">' + avgMax + '\u00b0/' + avgMin + '\u00b0</span><span class="pos-ws-label">' + (isEN ? 'Avg temp' : 'Media') + '</span></div>';
                 html += '<div class="pos-ws-item"><span class="pos-ws-icon">\u{1F525}</span><span class="pos-ws-val">' + hottest.tempMax + '\u00b0</span><span class="pos-ws-label">' + (isEN ? 'Hottest' : 'Pi\u00f9 caldo') + '</span></div>';
                 html += '<div class="pos-ws-item"><span class="pos-ws-icon">\u{2744}\uFE0F</span><span class="pos-ws-val">' + coldest.tempMin + '\u00b0</span><span class="pos-ws-label">' + (isEN ? 'Coldest' : 'Pi\u00f9 freddo') + '</span></div>';
@@ -3656,6 +3674,19 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                         var city = addr.city || addr.town || addr.village || addr.municipality || '';
                         var country = addr.country || '';
                         cityEl.textContent = city ? (city + ', ' + country) : country || '—';
+                        // v3.91: Sync Statistics "Current country" with the same GPS data
+                        var cc = (addr.country_code || '').toUpperCase();
+                        if (cc) {
+                            var _statCountryEl = document.getElementById('stat-current-country');
+                            var _statFlagEl = document.getElementById('stat-country-flag');
+                            var _ccNames = { 'IT':'Italia','AT':'Austria','DE':'Germania','CH':'Svizzera','FR':'Francia','ES':'Spagna','PT':'Portogallo','PL':'Polonia','LT':'Lituania','LV':'Lettonia','EE':'Estonia','FI':'Finlandia','SE':'Svezia','NO':'Norvegia','DK':'Danimarca','NL':'Paesi Bassi','BE':'Belgio','HR':'Croazia','SI':'Slovenia','HU':'Ungheria','CZ':'Rep. Ceca','SK':'Slovacchia' };
+                            var _ccFlag = String.fromCodePoint(0x1F1E6 + cc.charCodeAt(0) - 65) + String.fromCodePoint(0x1F1E6 + cc.charCodeAt(1) - 65);
+                            if (_statCountryEl) _statCountryEl.textContent = _ccNames[cc] || country || cc;
+                            if (_statFlagEl) _statFlagEl.textContent = _ccFlag;
+                            // v3.91: Also persist to Firebase for countries-visited tracking
+                            var _ccRef = getFamilyRef('countriesVisited/' + cc);
+                            if (_ccRef) _ccRef.set({ name: _ccNames[cc] || country, firstSeen: firebase.database.ServerValue.TIMESTAMP });
+                        }
                     }).catch(function() {});
             }
             // Live dot status
@@ -4555,38 +4586,21 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             }
 
             function fetchNearby(lat, lng, cb) {
-                // Reverse geocode + nearby POIs via Nominatim
-                // v2.58: all calls routed through _nominatimFetch (global 1 req/s queue)
+                // v3.91 FIX: single reverse geocode only (no invalid POI query)
+                // Extracts address components as suggestions — fast, 1 request only
                 var url = 'https://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat + '&lon=' + lng + '&zoom=18&addressdetails=1';
                 window._nominatimFetch(url, { headers: { 'Accept-Language': isEN ? 'en' : 'it' } }).then(function(data) {
                     var results = [];
                     if (data && data.display_name) {
-                        // Extract useful parts from address
                         var addr = data.address || {};
                         if (addr.tourism || addr.amenity || addr.building) results.push({ name: addr.tourism || addr.amenity || addr.building, type: 'poi', lat: data.lat, lng: data.lon });
                         if (addr.road) results.push({ name: addr.road + (addr.house_number ? ' ' + addr.house_number : ''), type: 'road', lat: data.lat, lng: data.lon });
                         if (addr.suburb || addr.neighbourhood) results.push({ name: addr.suburb || addr.neighbourhood, type: 'area', lat: data.lat, lng: data.lon });
                         if (addr.city || addr.town || addr.village) results.push({ name: addr.city || addr.town || addr.village, type: 'city', lat: data.lat, lng: data.lon });
+                        // Also add the full display name as last option
+                        if (results.length === 0) results.push({ name: data.display_name.split(',').slice(0, 2).join(','), type: 'place', lat: data.lat, lng: data.lon });
                     }
-                    // Also search nearby POIs
-                    var poiUrl = 'https://nominatim.openstreetmap.org/search?format=json&limit=6&viewbox=' +
-                        (lng - 0.01) + ',' + (lat + 0.01) + ',' + (lng + 0.01) + ',' + (lat - 0.01) +
-                        '&bounded=1&q=*&addressdetails=1';
-                    // Nominatim doesn't support wildcard, use category search instead
-                    var catUrl = 'https://nominatim.openstreetmap.org/search?format=json&limit=8' +
-                        '&lat=' + lat + '&lon=' + lng +
-                        '&viewbox=' + (lng - 0.005) + ',' + (lat + 0.005) + ',' + (lng + 0.005) + ',' + (lat - 0.005) +
-                        '&bounded=1&addressdetails=1&q=tourism OR monument OR church OR piazza OR park OR museum';
-                    window._nominatimFetch(catUrl, { headers: { 'Accept-Language': isEN ? 'en' : 'it' } }).then(function(pois) {
-                        if (pois && pois.length) {
-                            pois.forEach(function(p) {
-                                if (p.display_name && !results.find(function(r) { return r.name === p.name; })) {
-                                    results.push({ name: p.display_name.split(',')[0], type: p.type || p.class || 'place', lat: p.lat, lng: p.lon });
-                                }
-                            });
-                        }
-                        cb(results.slice(0, 8));
-                    }).catch(function() { cb(results.slice(0, 8)); });
+                    cb(results.slice(0, 6));
                 }).catch(function() { cb([]); });
             }
 
@@ -10329,6 +10343,10 @@ async function fetchForecast(lat, lon, date, _retry) {
   function importTimelineData(dayMap) {
     var dates = Object.keys(dayMap).sort();
     var imported = 0;
+    // v3.91 FIX: count only valid days (not skipped)
+    var validDates = dates.filter(function(d) { return getTripDayFromDate(d) >= 0; });
+    var total = validDates.length;
+    if (total === 0) { showToast(isEN ? '⚠️ No valid trip days found' : '⚠️ Nessun giorno valido trovato', 'info'); return; }
 
     dates.forEach(function(date) {
       var day = dayMap[date];
@@ -10352,6 +10370,11 @@ async function fetchForecast(lat, lon, date, _retry) {
         };
         if (driveTimeSec > 0) summary.elapsed = driveTimeSec;
         dailySummRef.child(date).update(summary);
+        // v3.91 FIX: count inside async callback
+        imported++;
+        if (imported === total) {
+          showToast((isEN ? '\u2705 Imported data for ' : '\u2705 Importati dati per ') + imported + (isEN ? ' days' : ' giorni'), 'success');
+        }
       });
 
       // Add visits as custom checkins (if not duplicates)
@@ -10398,10 +10421,8 @@ async function fetchForecast(lat, lon, date, _retry) {
         }
       });
 
-      imported++;
+      // v3.91 FIX: increment inside first async callback (dailySummRef)
     });
-
-    showToast((isEN ? '\u2705 Imported data for ' : '\u2705 Importati dati per ') + imported + (isEN ? ' days' : ' giorni'), 'success');
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -10519,6 +10540,7 @@ async function fetchForecast(lat, lon, date, _retry) {
     var tracksRef = db.ref('trips/' + FAMILY_ID + '/tracks');
     var dates = Object.keys(pointsByDate).sort();
     var imported = 0;
+    var total = dates.length;
     var DEDUP_THRESHOLD = 30000; // 30 seconds — merge window
 
     dates.forEach(function(date) {
@@ -10610,29 +10632,29 @@ async function fetchForecast(lat, lon, date, _retry) {
             summRef.update(updates);
           });
         }
+        // v3.91 FIX: increment inside async callback so count is accurate
+        imported++;
+        if (imported === total) {
+          // v3.89: Update /lastPosition with the most recent point from imported data
+          var allPoints = [];
+          dates.forEach(function(d2) {
+            pointsByDate[d2].forEach(function(pt) { if (pt.time) allPoints.push(pt); });
+          });
+          if (allPoints.length > 0) {
+            allPoints.sort(function(a, b) { return (a.time || 0) - (b.time || 0); });
+            var lastPt = allPoints[allPoints.length - 1];
+            var lastPosRef = db.ref('trips/' + FAMILY_ID + '/lastPosition');
+            lastPosRef.set({
+              lat: lastPt.lat,
+              lng: lastPt.lng,
+              time: lastPt.time,
+              source: 'gpx_import'
+            });
+          }
+          showToast((isEN ? '\u2705 GPS track imported for ' : '\u2705 Tracciato GPS importato per ') + imported + (isEN ? ' days' : ' giorni'), 'success');
+        }
       });
-
-      imported++;
     });
-
-    // v3.89: Update /lastPosition with the most recent point from imported data
-    var allPoints = [];
-    dates.forEach(function(date) {
-      pointsByDate[date].forEach(function(pt) { if (pt.time) allPoints.push(pt); });
-    });
-    if (allPoints.length > 0) {
-      allPoints.sort(function(a, b) { return (a.time || 0) - (b.time || 0); });
-      var lastPt = allPoints[allPoints.length - 1];
-      var lastPosRef = db.ref('trips/' + FAMILY_ID + '/lastPosition');
-      lastPosRef.set({
-        lat: lastPt.lat,
-        lng: lastPt.lng,
-        time: lastPt.time,
-        source: 'gpx_import'
-      });
-    }
-
-    showToast((isEN ? '\u2705 GPS track imported for ' : '\u2705 Tracciato GPS importato per ') + imported + (isEN ? ' days' : ' giorni'), 'success');
   }
 
   // Local haversine (km) — alias to shared haversineGlobal (consolidated v1.99)
