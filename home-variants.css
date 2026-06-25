@@ -1108,6 +1108,9 @@ a.hv-visitor-lock.hv-login-link { text-decoration: underline; cursor: pointer; d
     font-size: 12px; font-weight: 600; color: var(--text-muted, #64748b);
 }
 .hv-hero-distance-inline:empty { display: none; }
+.hv-hero-row1b {
+    display: flex; align-items: center; gap: 6px; margin-top: 2px;
+}
 .hv-hero-row2 {
     display: flex; align-items: center; justify-content: space-between;
     flex-wrap: nowrap; gap: 6px; margin-top: 0;

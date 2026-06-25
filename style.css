@@ -939,7 +939,7 @@ mark.search-hl.current { background: #f97316; color: white; }
 /* ─── Tab Content ─── */
 .tab-content { display: none; animation: fadeSlideIn 0.25s ease; will-change: opacity, transform; }
 .tab-content.active { display: block; }
-#tab-chat.active { display: flex; flex-direction: column; height: calc(100svh - var(--top-bar-height) - var(--bottom-bar-height) - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 24px); overflow: hidden; }
+#tab-chat.active { display: flex; flex-direction: column; height: calc(100svh - var(--top-bar-height) - var(--bottom-bar-height) - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 24px); overflow: hidden; padding-bottom: 0 !important; }
 #tab-home.active {
     display: flex; flex-direction: column;
     min-height: calc(100svh - env(safe-area-inset-top, 16px) - env(safe-area-inset-bottom, 16px) - 32px);
@@ -5260,6 +5260,12 @@ html[lang="en"] .notif-drawer-list:empty::after {
 @media all and (display-mode: browser) and (max-width: 480px) {
   #tab-chat.active {
     height: calc(100svh - var(--top-bar-height) - var(--bottom-bar-height) - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 40px) !important;
+    padding-bottom: 0 !important;
+  }
+}
+@media all and (display-mode: browser) {
+  #tab-chat.active {
+    padding-bottom: 0 !important;
   }
 }
 
