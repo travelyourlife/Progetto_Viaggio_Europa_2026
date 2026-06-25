@@ -3194,33 +3194,92 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             var totalStops = places.length + customCount;
             var _el = document.getElementById('stat-visited'); if (_el) _el.textContent = visited;
 
-            // Current country + flag icon
+            // Current country + flag icon — v3.89: use Nominatim reverse geocoding from last position
             var currentCountryEl = document.getElementById('stat-current-country');
             var countryFlagEl = document.getElementById('stat-country-flag');
             if (currentCountryEl) {
-                var lastCountry = '—';
-                var lastFlag = '\u{1F3F3}\uFE0F'; // default white flag
-                var countryFlagMap = {
-                    '\u{1F1EB}\u{1F1F7}': 'Francia', '\u{1F1EA}\u{1F1F8}': 'Spagna',
-                    '\u{1F1F5}\u{1F1F9}': 'Portogallo', '\u{1F1EE}\u{1F1F9}': 'Italia',
-                    '\u{1F1E9}\u{1F1EA}': 'Germania', '\u{1F1E6}\u{1F1F9}': 'Austria',
-                    '\u{1F1E8}\u{1F1ED}': 'Svizzera', '\u{1F1E7}\u{1F1EA}': 'Belgio',
-                    '\u{1F1F3}\u{1F1F1}': 'Paesi Bassi', '\u{1F1F1}\u{1F1FA}': 'Lussemburgo',
-                    '\u{1F1ED}\u{1F1F7}': 'Croazia', '\u{1F1F8}\u{1F1EE}': 'Slovenia',
-                    '\u{1F1F2}\u{1F1E8}': 'Monaco'
+                var countryCodeToFlag = function(cc) {
+                    if (!cc) return '\u{1F3F3}\uFE0F';
+                    cc = cc.toUpperCase();
+                    return String.fromCodePoint(0x1F1E6 + cc.charCodeAt(0) - 65) + String.fromCodePoint(0x1F1E6 + cc.charCodeAt(1) - 65);
                 };
-                var checkedIdxs = Object.keys(checkins).map(Number).sort(function(a,b){return a-b;});
-                for (var ci = checkedIdxs.length - 1; ci >= 0; ci--) {
-                    var t = places[checkedIdxs[ci]].title;
-                    var fl = t.match(/[\u{1F1E6}-\u{1F1FF}]{2}/gu);
-                    if (fl && fl.length > 0) {
-                        lastFlag = fl[fl.length-1];
-                        lastCountry = countryFlagMap[lastFlag] || lastFlag;
-                        break;
+                var countryCodeToName = {
+                    'IT': 'Italia', 'AT': 'Austria', 'DE': 'Germania', 'CH': 'Svizzera',
+                    'FR': 'Francia', 'ES': 'Spagna', 'PT': 'Portogallo', 'BE': 'Belgio',
+                    'NL': 'Paesi Bassi', 'LU': 'Lussemburgo', 'HR': 'Croazia', 'SI': 'Slovenia',
+                    'MC': 'Monaco', 'CZ': 'Rep. Ceca', 'PL': 'Polonia', 'HU': 'Ungheria',
+                    'SK': 'Slovacchia', 'DK': 'Danimarca', 'SE': 'Svezia', 'NO': 'Norvegia',
+                    'FI': 'Finlandia', 'EE': 'Estonia', 'LV': 'Lettonia', 'LT': 'Lituania'
+                };
+                // First try GPS-based country from /lastPosition or /position
+                var posRef = firebase.database().ref('trips/' + FAMILY_ID);
+                var _tryGeoCountry = function() {
+                    posRef.child('position').once('value').then(function(snap) {
+                        var pos = snap.val();
+                        if (pos && pos.lat && pos.lng) { _reverseGeoCountry(pos.lat, pos.lng); return; }
+                        return posRef.child('lastPosition').once('value');
+                    }).then(function(snap2) {
+                        if (!snap2) return;
+                        var lp = snap2.val();
+                        if (lp && lp.lat && lp.lng) { _reverseGeoCountry(lp.lat, lp.lng); return; }
+                        // No GPS position — fall back to check-in based country
+                        _fallbackCheckinCountry();
+                    }).catch(function() { _fallbackCheckinCountry(); });
+                };
+                var _reverseGeoCountry = function(lat, lng) {
+                    // Check cache in sessionStorage to avoid repeated calls
+                    var cacheKey = 'geo_country_' + lat.toFixed(2) + '_' + lng.toFixed(2);
+                    var cached = sessionStorage.getItem(cacheKey);
+                    if (cached) {
+                        var data = JSON.parse(cached);
+                        _displayCountry(data.cc, data.name);
+                        return;
                     }
-                }
-                currentCountryEl.textContent = lastCountry;
-                if (countryFlagEl) countryFlagEl.textContent = lastFlag;
+                    fetch('https://nominatim.openstreetmap.org/reverse?lat=' + lat + '&lon=' + lng + '&format=json&zoom=3&accept-language=' + (isEN ? 'en' : 'it'), {
+                        headers: { 'User-Agent': 'QuoVadis-TripApp/3.89' }
+                    }).then(function(r) { return r.json(); }).then(function(data) {
+                        if (data && data.address && data.address.country_code) {
+                            var cc = data.address.country_code.toUpperCase();
+                            var name = countryCodeToName[cc] || data.address.country || cc;
+                            sessionStorage.setItem(cacheKey, JSON.stringify({ cc: cc, name: name }));
+                            _displayCountry(cc, name);
+                            // Also save to Firebase for offline access
+                            posRef.child('currentCountry').set({ code: cc, name: name });
+                        } else {
+                            _fallbackCheckinCountry();
+                        }
+                    }).catch(function() { _fallbackCheckinCountry(); });
+                };
+                var _displayCountry = function(cc, name) {
+                    currentCountryEl.textContent = name;
+                    if (countryFlagEl) countryFlagEl.textContent = countryCodeToFlag(cc);
+                };
+                var _fallbackCheckinCountry = function() {
+                    var lastCountry = '—';
+                    var lastFlag = '\u{1F3F3}\uFE0F';
+                    var countryFlagMap = {
+                        '\u{1F1EB}\u{1F1F7}': 'Francia', '\u{1F1EA}\u{1F1F8}': 'Spagna',
+                        '\u{1F1F5}\u{1F1F9}': 'Portogallo', '\u{1F1EE}\u{1F1F9}': 'Italia',
+                        '\u{1F1E9}\u{1F1EA}': 'Germania', '\u{1F1E6}\u{1F1F9}': 'Austria',
+                        '\u{1F1E8}\u{1F1ED}': 'Svizzera', '\u{1F1E7}\u{1F1EA}': 'Belgio',
+                        '\u{1F1F3}\u{1F1F1}': 'Paesi Bassi', '\u{1F1F1}\u{1F1FA}': 'Lussemburgo',
+                        '\u{1F1ED}\u{1F1F7}': 'Croazia', '\u{1F1F8}\u{1F1EE}': 'Slovenia',
+                        '\u{1F1F2}\u{1F1E8}': 'Monaco'
+                    };
+                    var checkedIdxs = Object.keys(checkins).map(Number).sort(function(a,b){return a-b;});
+                    for (var ci = checkedIdxs.length - 1; ci >= 0; ci--) {
+                        var t = places[checkedIdxs[ci]].title;
+                        var fl = t.match(/[\u{1F1E6}-\u{1F1FF}]{2}/gu);
+                        if (fl && fl.length > 0) {
+                            lastFlag = fl[fl.length-1];
+                            lastCountry = countryFlagMap[lastFlag] || lastFlag;
+                            break;
+                        }
+                    }
+                    currentCountryEl.textContent = lastCountry;
+                    if (countryFlagEl) countryFlagEl.textContent = lastFlag;
+                };
+                _tryGeoCountry();
             }
 
             // Total km from Firebase daily summaries + live todayKm
@@ -10545,6 +10604,23 @@ async function fetchForecast(lat, lon, date, _retry) {
 
       imported++;
     });
+
+    // v3.89: Update /lastPosition with the most recent point from imported data
+    var allPoints = [];
+    dates.forEach(function(date) {
+      pointsByDate[date].forEach(function(pt) { if (pt.time) allPoints.push(pt); });
+    });
+    if (allPoints.length > 0) {
+      allPoints.sort(function(a, b) { return (a.time || 0) - (b.time || 0); });
+      var lastPt = allPoints[allPoints.length - 1];
+      var lastPosRef = db.ref('trips/' + FAMILY_ID + '/lastPosition');
+      lastPosRef.set({
+        lat: lastPt.lat,
+        lng: lastPt.lng,
+        time: lastPt.time,
+        source: 'gpx_import'
+      });
+    }
 
     showToast((isEN ? '\u2705 GPS track imported for ' : '\u2705 Tracciato GPS importato per ') + imported + (isEN ? ' days' : ' giorni'), 'success');
   }

@@ -273,6 +273,23 @@
         currentRefs.db.ref(basePath + '/lastPosition').set({
           lat: lat, lng: lng, heading: heading, ts: time, name: currentRefs.name
         }).catch(function(e) { console.warn('[CapGPS] lastPosition write failed:', e.message); });
+
+        // v3.89: Update current country via Nominatim (max once every 10 min)
+        if (!window._lastCountryCheck || (now - window._lastCountryCheck) >= 600000) {
+          window._lastCountryCheck = now;
+          (function(refPath, cLat, cLng) {
+            fetch('https://nominatim.openstreetmap.org/reverse?lat=' + cLat + '&lon=' + cLng + '&format=json&zoom=3', {
+              headers: { 'User-Agent': 'QuoVadis-TripApp/3.89' }
+            }).then(function(r) { return r.json(); }).then(function(data) {
+              if (data && data.address && data.address.country_code) {
+                var cc = data.address.country_code.toUpperCase();
+                var nameMap = { 'IT':'Italia','AT':'Austria','DE':'Germania','CH':'Svizzera','FR':'Francia','ES':'Spagna','PT':'Portogallo','BE':'Belgio','NL':'Paesi Bassi','LU':'Lussemburgo','HR':'Croazia','SI':'Slovenia','CZ':'Rep. Ceca','PL':'Polonia','HU':'Ungheria','SK':'Slovacchia','DK':'Danimarca','SE':'Svezia','NO':'Norvegia','FI':'Finlandia','EE':'Estonia','LV':'Lettonia','LT':'Lituania' };
+                var name = nameMap[cc] || data.address.country || cc;
+                currentRefs.db.ref(refPath + '/currentCountry').set({ code: cc, name: name });
+              }
+            }).catch(function() { /* silent */ });
+          })(basePath, lat, lng);
+        }
       }
 
       // 2. Buffer track point locally

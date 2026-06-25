@@ -939,7 +939,7 @@ mark.search-hl.current { background: #f97316; color: white; }
 /* ─── Tab Content ─── */
 .tab-content { display: none; animation: fadeSlideIn 0.25s ease; will-change: opacity, transform; }
 .tab-content.active { display: block; }
-#tab-chat.active { display: flex; flex-direction: column; }
+#tab-chat.active { display: flex; flex-direction: column; height: calc(100svh - var(--top-bar-height) - var(--bottom-bar-height) - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 24px); overflow: hidden; }
 #tab-home.active {
     display: flex; flex-direction: column;
     min-height: calc(100svh - env(safe-area-inset-top, 16px) - env(safe-area-inset-bottom, 16px) - 32px);
@@ -2843,9 +2843,8 @@ html[lang="en"] .notif-drawer-list:empty::after {
 .chat-container {
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 200px);
-    min-height: 300px;
-    max-height: 700px;
+    flex: 1;
+    min-height: 0;
     border: 1px solid var(--border);
     border-radius: var(--radius);
     overflow: hidden;

@@ -1101,7 +1101,8 @@ a.hv-visitor-lock.hv-login-link { text-decoration: underline; cursor: pointer; d
     margin-bottom: 0;
 }
 .hv-hero-row1-left {
-    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+    display: flex; align-items: center; gap: 6px; flex-wrap: nowrap;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .hv-hero-distance-inline {
     font-size: 12px; font-weight: 600; color: var(--text-muted, #64748b);
