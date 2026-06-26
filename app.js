@@ -255,6 +255,9 @@ try {
 // ═══════════════════════════════════════════════════════════════
 window.writeCurrentLocation = function(lat, lng, optCity) {
   if (!dbRef) return;
+  // v3.98 SECURITY: Only the owner can write to /currentLocation.
+  // Followers must NEVER overwrite the family's real position with their own GPS.
+  if (typeof isOwner !== 'undefined' && !isOwner) return;
   // Offline country detection (instant, no API)
   var countryObj = (typeof getCountryFromCoords === 'function') ? getCountryFromCoords(lat, lng) : null;
   var countryCode = countryObj ? countryObj.code : '';
@@ -3684,29 +3687,33 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             if (!map) return;
             // Security: don't load track data if user is not authenticated
             if (!firebaseUser) return;
-            // v3.68 FIX: when tracking is active, the watchPosition builds the polyline
-            // from todayPoints — don't draw a second one from Firebase
-            if (liveActive) return;
-            var ref = getFamilyRef('tracks/' + todayStr());
-            if (ref) {
-                // v3.66 FIX: use .once() instead of .on() to avoid redrawing on every push.
-                // The live watchPosition extends trackLine incrementally — no need for
-                // a realtime listener that redraws the full polyline on each new point.
-                ref.child('points').once('value', function(snap) {
-                    var raw = snap.val();
-                    // Handle both array (old format) and object (new push() format)
-                    var points = [];
-                    if (Array.isArray(raw)) {
-                        points = raw;
-                    } else if (raw && typeof raw === 'object') {
-                        points = Object.values(raw);
-                    }
-                    if (trackLine) map.removeLayer(trackLine);
-                    if (points.length > 1) {
-                        var latlngs = points.map(function(p) { return [p.lat, p.lng]; });
-                        trackLine = L.polyline(latlngs, { color: '#e53e3e', weight: 4, opacity: 0.8 }).addTo(map);
-                    }
-                });
+            // v3.98 FIX: When tracking is active, use in-memory todayPoints instead of
+            // loading from Firebase (avoids duplicate polyline). But still draw the track
+            // so fullscreen map clone can pick it up.
+            if (liveActive && todayPoints && todayPoints.length > 1) {
+                if (trackLine) map.removeLayer(trackLine);
+                var liveLatlngs = todayPoints.map(function(p) { return [p.lat, p.lng]; });
+                trackLine = L.polyline(liveLatlngs, { color: '#e53e3e', weight: 4, opacity: 0.8 }).addTo(map);
+            } else if (!liveActive) {
+                var ref = getFamilyRef('tracks/' + todayStr());
+                if (ref) {
+                    // v3.66 FIX: use .once() instead of .on() to avoid redrawing on every push.
+                    ref.child('points').once('value', function(snap) {
+                        var raw = snap.val();
+                        // Handle both array (old format) and object (new push() format)
+                        var points = [];
+                        if (Array.isArray(raw)) {
+                            points = raw;
+                        } else if (raw && typeof raw === 'object') {
+                            points = Object.values(raw);
+                        }
+                        if (trackLine) map.removeLayer(trackLine);
+                        if (points.length > 1) {
+                            var latlngs = points.map(function(p) { return [p.lat, p.lng]; });
+                            trackLine = L.polyline(latlngs, { color: '#e53e3e', weight: 4, opacity: 0.8 }).addTo(map);
+                        }
+                    });
+                }
             }
             // v3.98: Also load historical tracks from all previous days
             loadHistoricalTracks();
@@ -5472,6 +5479,11 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
         if (posFullscreenBtn) {
             posFullscreenBtn.addEventListener('click', function() {
                 initMap();
+                // v3.98 FIX: Ensure trackLine is on the map before fullscreen clone.
+                // During active tracking, trackLine may not exist yet if no points
+                // have been recorded. loadTrackLine() now handles liveActive by
+                // drawing from in-memory todayPoints.
+                loadTrackLine();
                 window.openMapFullscreen(map, isEN ? 'Live Map' : 'Mappa Live');
             });
         }
@@ -10060,7 +10072,10 @@ async function fetchForecast(lat, lon, date, _retry) {
       input.type = 'file';
       input.accept = 'image/*';
       input.multiple = true;
+      // v3.98 FIX: Append to DOM before .click() for Android/iOS compatibility
+      input.style.cssText = 'position:fixed;top:-100px;left:-100px;opacity:0;';
       input.addEventListener('change', function() {
+        document.body.removeChild(input);
         if (!input.files) return;
         Array.from(input.files).forEach(function(file) {
           var url = URL.createObjectURL(file);
@@ -10072,6 +10087,7 @@ async function fetchForecast(lat, lon, date, _retry) {
           preview.appendChild(img);
         });
       });
+      document.body.appendChild(input);
       input.click();
     });
 
@@ -10434,7 +10450,11 @@ async function fetchForecast(lat, lon, date, _retry) {
     var input = document.createElement('input');
     input.type = 'file';
     input.accept = '.json,.gpx,application/json,application/gpx+xml';
+    // v3.98 FIX: Append to DOM before .click() — Chrome Android 85+ and iOS
+    // silently ignore .click() on detached file inputs for security reasons.
+    input.style.cssText = 'position:fixed;top:-100px;left:-100px;opacity:0;';
     input.addEventListener('change', function() {
+      document.body.removeChild(input); // cleanup
       if (!input.files || input.files.length === 0) return;
       var file = input.files[0];
       var reader = new FileReader();
@@ -10456,6 +10476,7 @@ async function fetchForecast(lat, lon, date, _retry) {
       };
       reader.readAsText(file);
     });
+    document.body.appendChild(input);
     input.click();
   };
 
@@ -13539,10 +13560,13 @@ async function fetchForecast(lat, lon, date, _retry) {
       var sortedKeys = Object.keys(entries).sort(function(a, b) {
         var diff = (entries[b].dayNumber || 0) - (entries[a].dayNumber || 0);
         if (diff !== 0) return diff;
-        // Tiebreaker: sort by date descending when dayNumber is the same
+        // Tiebreaker 1: sort by date descending when dayNumber is the same
         var dateA = entries[a].date || '';
         var dateB = entries[b].date || '';
-        return dateB.localeCompare(dateA);
+        var dateDiff = dateB.localeCompare(dateA);
+        if (dateDiff !== 0) return dateDiff;
+        // Tiebreaker 2: sort by createdAt descending (newest post first)
+        return (entries[b].createdAt || 0) - (entries[a].createdAt || 0);
       });
 
       sortedKeys.forEach(function(key) {
@@ -13731,7 +13755,7 @@ async function fetchForecast(lat, lon, date, _retry) {
           if (wd.precip > 0) wHtml += ' \u00b7 \u{1F4A7} ' + wd.precip + 'mm';
           if (wd.wind > 15) wHtml += ' \u00b7 \u{1F4A8} ' + Math.round(wd.wind) + ' km/h';
           if (wd.sunrise && wd.sunset) wHtml += ' \u00b7 \u{1F305} ' + wd.sunrise + '\u2013' + wd.sunset;
-          html += '    <div class="diario-weather-row" style="font-size:12px;color:var(--text-muted);padding:4px 0;">' + wHtml + '</div>';
+          html += '    <div class="diario-weather-row" style="font-size:12px;color:var(--text-muted);padding:6px 0;text-align:center;">' + wHtml + '</div>';
         }
 
         // v2.99: Interactive reactions + comments (only for published posts)
@@ -14261,8 +14285,24 @@ async function fetchForecast(lat, lon, date, _retry) {
   }
 
   function showPhotoLightbox(src, entryKey, photoKey) {
-    // v3.48: build photo list for navigation
-    var photoList = _collectVisiblePhotos();
+    // v3.99: build photo list scoped to the SAME entry (post), not all posts.
+    // Gallery view still shows all photos; timeline view shows only photos from the clicked post.
+    var photoList = [];
+    var galleryGridEl = document.getElementById('diario-gallery-grid');
+    if (galleryGridEl && galleryGridEl.offsetParent !== null) {
+      // Gallery mode: show all photos (user is browsing the global gallery)
+      galleryGridEl.querySelectorAll('img').forEach(function(img) {
+        photoList.push({ url: img.src, entryKey: img.dataset.entryKey || '', photoKey: img.dataset.photoKey || '', caption: img.alt || '' });
+      });
+    } else if (timelineEl && timelineEl.offsetParent !== null && entryKey) {
+      // Timeline mode: only photos from THIS post
+      timelineEl.querySelectorAll('.diario-photo[data-entry-key="' + entryKey + '"]').forEach(function(img) {
+        photoList.push({ url: img.src, entryKey: img.dataset.entryKey || '', photoKey: img.dataset.photoKey || '', caption: img.alt || '' });
+      });
+    }
+    if (photoList.length === 0) {
+      photoList.push({ url: src, entryKey: entryKey, photoKey: photoKey, caption: '' });
+    }
     var currentIdx = -1;
     for (var pi = 0; pi < photoList.length; pi++) {
       if (photoList[pi].url === src || (photoList[pi].entryKey === entryKey && photoList[pi].photoKey === photoKey)) {
@@ -14422,7 +14462,10 @@ async function fetchForecast(lat, lon, date, _retry) {
     input.type = 'file';
     input.accept = 'image/*';
     input.multiple = true;
+    // v3.98 FIX: Append to DOM before .click() for Android/iOS compatibility
+    input.style.cssText = 'position:fixed;top:-100px;left:-100px;opacity:0;';
     input.addEventListener('change', function() {
+      document.body.removeChild(input);
       if (!input.files || input.files.length === 0) return;
       var files = Array.from(input.files); // unlimited photos
 
@@ -14452,6 +14495,7 @@ async function fetchForecast(lat, lon, date, _retry) {
         });
       });
     });
+    document.body.appendChild(input);
     input.click();
   }
 

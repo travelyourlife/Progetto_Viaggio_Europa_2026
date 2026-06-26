@@ -1810,11 +1810,14 @@
     var basePath = 'trips/' + familyId;
 
     // Helper: once we have a real lat/lng, update distance + reverse geocode city
+    // v3.98: _applyRealPosition only updates DISTANCE from home.
+    // City/country/flag come EXCLUSIVELY from /currentLocation (written by owner).
+    // No client-side Nominatim — avoids inconsistencies and wasted API calls.
     function _applyRealPosition(lat, lng) {
       var container = document.getElementById('hv-container');
       if (!container) return;
 
-      // 1) Update distance from home
+      // Update distance from home (pure math, no API)
       var distKm = haversineKm(homeLat, homeLng, lat, lng);
       var distText = formatKmDistance(distKm) + (_en ? ' from home \ud83c\udfe0' : ' da casa \ud83c\udfe0');
       var distEls = container.querySelectorAll('[data-hv="distanceFromHome"]');
@@ -1830,28 +1833,6 @@
           el.textContent = current + ' \u00b7 ' + pinDist;
         }
       });
-
-      // 2) Reverse geocode to get real city/country/flag
-      if (typeof window._nominatimFetch !== 'function') return;
-      window._nominatimFetch('https://nominatim.openstreetmap.org/reverse?lat=' + lat + '&lon=' + lng + '&format=json&zoom=10&accept-language=' + (_en ? 'en' : 'it'))
-        .then(function(data) {
-          var addr = data.address || {};
-          var city = addr.city || addr.town || addr.village || addr.municipality || addr.county || '';
-          var country = addr.country || '';
-          var cc = (addr.country_code || '').toUpperCase();
-          var flag = cc.length === 2 ? String.fromCodePoint(0x1F1E6 + cc.charCodeAt(0) - 65) + String.fromCodePoint(0x1F1E6 + cc.charCodeAt(1) - 65) : '';
-
-          if (!container) return;
-          // Update city
-          var cityEls = container.querySelectorAll('[data-hv="city"]');
-          cityEls.forEach(function(el) { if (city) el.textContent = city; });
-          // Update country
-          var countryEls = container.querySelectorAll('[data-hv="country"]');
-          countryEls.forEach(function(el) { if (country) el.textContent = country; });
-          // Update flag
-          var flagEls = container.querySelectorAll('[data-hv="flag"]');
-          flagEls.forEach(function(el) { if (flag) el.textContent = flag; });
-        }).catch(function() { /* silent */ });
     }
 
     // v3.98 FIX: LIVE listener on /currentLocation — updates Home hero in real-time.
@@ -1875,15 +1856,20 @@
 
     // v3.98: Proactive GPS refresh — if /currentLocation is stale (> 30 min),
     // grab a fresh GPS fix and call writeCurrentLocation to update city immediately.
-    firebase.database().ref(basePath + '/currentLocation').once('value', function(snap) {
-      var cl = snap.val();
-      var stale = !cl || !cl.updatedAt || (Date.now() - cl.updatedAt) > 1800000;
-      if (stale && navigator.geolocation && typeof window.writeCurrentLocation === 'function') {
-        navigator.geolocation.getCurrentPosition(function(pos) {
-          window.writeCurrentLocation(pos.coords.latitude, pos.coords.longitude);
-        }, function() { /* silent */ }, { enableHighAccuracy: false, timeout: 10000 });
-      }
-    });
+    // CRITICAL: Only the OWNER may write to /currentLocation! Followers must NEVER
+    // overwrite the family position with their own GPS.
+    var _isEffectiveOwner = (typeof isOwner !== 'undefined' && isOwner) && !window._simRole;
+    if (_isEffectiveOwner) {
+      firebase.database().ref(basePath + '/currentLocation').once('value', function(snap) {
+        var cl = snap.val();
+        var stale = !cl || !cl.updatedAt || (Date.now() - cl.updatedAt) > 1800000;
+        if (stale && navigator.geolocation && typeof window.writeCurrentLocation === 'function') {
+          navigator.geolocation.getCurrentPosition(function(pos) {
+            window.writeCurrentLocation(pos.coords.latitude, pos.coords.longitude);
+          }, function() { /* silent */ }, { enableHighAccuracy: false, timeout: 10000 });
+        }
+      });
+    }
   }
 
   // ─── Curiosity Panel ───
