@@ -278,9 +278,9 @@ window.writeCurrentLocation = function(lat, lng, optCity) {
       console.warn('[currentLocation] write failed:', e.message);
     });
   } else {
-    // Write immediately without city, then update city async via Nominatim
-    payload.city = '';
-    dbRef.child('currentLocation').set(payload).catch(function() {});
+    // v3.98 FIX Audit #3: Don't write city='' — preserve existing city until Nominatim responds.
+    // Use .update() instead of .set() so existing city/country fields are NOT wiped.
+    dbRef.child('currentLocation').update(payload).catch(function() {});
     // Async city lookup (throttled)
     window._nominatimFetch('https://nominatim.openstreetmap.org/reverse?lat=' + lat + '&lon=' + lng + '&format=json&zoom=10&accept-language=' + (isEN ? 'en' : 'it'))
       .then(function(data) {
@@ -3678,6 +3678,8 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
         }
 
         // ─── Track Line (from Firebase) ───
+        var _historicalTrackLines = []; // v3.98: store historical polylines for cleanup
+
         function loadTrackLine() {
             if (!map) return;
             // Security: don't load track data if user is not authenticated
@@ -3706,6 +3708,101 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                     }
                 });
             }
+            // v3.98: Also load historical tracks from all previous days
+            loadHistoricalTracks();
+        }
+
+        // v3.98: Load GPS tracks from ALL previous days and render as historical polyline
+        function loadHistoricalTracks() {
+            if (!map || !firebaseUser) return;
+            // Remove any existing historical polylines
+            _historicalTrackLines.forEach(function(line) { map.removeLayer(line); });
+            _historicalTrackLines = [];
+
+            var tripStart = typeof TRIP_START !== 'undefined' ? TRIP_START : new Date(2026, 5, 25);
+            var today = new Date(); today.setHours(0, 0, 0, 0);
+            var startDate = new Date(tripStart); startDate.setHours(0, 0, 0, 0);
+
+            // Collect all date strings from trip start to yesterday
+            var datesToLoad = [];
+            var cursor = new Date(startDate);
+            while (cursor < today) {
+                datesToLoad.push(window.localDateStr(cursor));
+                cursor.setDate(cursor.getDate() + 1);
+            }
+
+            if (datesToLoad.length === 0) return;
+
+            // Load all days in parallel using Promise.all
+            var promises = datesToLoad.map(function(dateStr) {
+                return new Promise(function(resolve) {
+                    var ref = getFamilyRef('tracks/' + dateStr + '/points');
+                    if (!ref) { resolve([]); return; }
+                    ref.once('value', function(snap) {
+                        var raw = snap.val();
+                        var points = [];
+                        if (Array.isArray(raw)) {
+                            points = raw;
+                        } else if (raw && typeof raw === 'object') {
+                            points = Object.values(raw);
+                        }
+                        resolve(points);
+                    }, function() { resolve([]); });
+                });
+            });
+
+            Promise.all(promises).then(function(allDaysPoints) {
+                // Merge all historical points into one polyline for performance
+                var allLatLngs = [];
+                allDaysPoints.forEach(function(dayPoints) {
+                    if (dayPoints.length > 1) {
+                        var dayLatLngs = dayPoints.map(function(p) { return [p.lat, p.lng]; });
+                        allLatLngs = allLatLngs.concat(dayLatLngs);
+                        // Add a break (null) between days to avoid connecting end of one day to start of next
+                        allLatLngs.push(null);
+                    }
+                });
+
+                if (allLatLngs.length === 0) return;
+
+                // Split by null breaks and draw separate polylines per day
+                var segment = [];
+                allLatLngs.forEach(function(pt) {
+                    if (pt === null) {
+                        if (segment.length > 1) {
+                            var line = L.polyline(segment, {
+                                color: '#e53e3e',
+                                weight: 3,
+                                opacity: 0.5,
+                                dashArray: '8, 4'
+                            }).addTo(map);
+                            _historicalTrackLines.push(line);
+                        }
+                        segment = [];
+                    } else {
+                        segment.push(pt);
+                    }
+                });
+                // Last segment (if no trailing null)
+                if (segment.length > 1) {
+                    var line = L.polyline(segment, {
+                        color: '#e53e3e',
+                        weight: 3,
+                        opacity: 0.5,
+                        dashArray: '8, 4'
+                    }).addTo(map);
+                    _historicalTrackLines.push(line);
+                }
+
+                // Fit map bounds to show all tracks if no van marker yet
+                if (!_mapCenteredOnVan && _historicalTrackLines.length > 0) {
+                    var group = L.featureGroup(_historicalTrackLines);
+                    if (trackLine) group.addLayer(trackLine);
+                    map.fitBounds(group.getBounds().pad(0.1));
+                }
+            }).catch(function(e) {
+                console.warn('[Historical tracks] load error:', e);
+            });
         }
 
         // ─── Listen to live positions of family members ───

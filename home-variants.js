@@ -1854,20 +1854,34 @@
         }).catch(function() { /* silent */ });
     }
 
-    // v3.96 FIX: LIVE listener on /currentLocation — updates Home hero in real-time.
+    // v3.98 FIX: LIVE listener on /currentLocation — updates Home hero in real-time.
     // Uses .on('value') so when tracking writes new position, Home updates immediately.
+    // Only overrides city/country/flag if data is FRESH (< 60 min) to avoid showing stale city.
     firebase.database().ref(basePath + '/currentLocation').on('value', function(snap) {
       var cl = snap.val();
       if (cl && cl.lat && cl.lng) {
-        // Apply city/country/flag directly from /currentLocation (already geocoded at write time)
+        var ageMs = Date.now() - (cl.updatedAt || 0);
+        var isFresh = ageMs < 3600000; // < 60 min
         var container = document.getElementById('hv-container');
-        if (container) {
-          if (cl.city) { container.querySelectorAll('[data-hv="city"]').forEach(function(el) { el.textContent = cl.city; }); }
+        if (container && isFresh && cl.city) {
+          container.querySelectorAll('[data-hv="city"]').forEach(function(el) { el.textContent = cl.city; });
           if (cl.country) { container.querySelectorAll('[data-hv="country"]').forEach(function(el) { el.textContent = cl.country; }); }
           if (cl.flag) { container.querySelectorAll('[data-hv="flag"]').forEach(function(el) { el.textContent = cl.flag; }); }
         }
-        // Update distance from home (uses haversine, no API call)
+        // Always update distance from home (uses haversine, no API call) — even if stale
         _applyRealPosition(cl.lat, cl.lng);
+      }
+    });
+
+    // v3.98: Proactive GPS refresh — if /currentLocation is stale (> 30 min),
+    // grab a fresh GPS fix and call writeCurrentLocation to update city immediately.
+    firebase.database().ref(basePath + '/currentLocation').once('value', function(snap) {
+      var cl = snap.val();
+      var stale = !cl || !cl.updatedAt || (Date.now() - cl.updatedAt) > 1800000;
+      if (stale && navigator.geolocation && typeof window.writeCurrentLocation === 'function') {
+        navigator.geolocation.getCurrentPosition(function(pos) {
+          window.writeCurrentLocation(pos.coords.latitude, pos.coords.longitude);
+        }, function() { /* silent */ }, { enableHighAccuracy: false, timeout: 10000 });
       }
     });
   }
