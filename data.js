@@ -7,6 +7,35 @@ var TRIP_START = new Date(2026, 5, 25, 0, 0, 0); // Month is 0-indexed: 5 = June
 var TRIP_END = new Date(2026, 7, 18, 23, 59, 59);   // Month is 0-indexed: 7 = August
 var TRIP_DAYS = 55;
 
+// v3.93: Country bounding boxes for offline GPS→country lookup
+// Ordered from smallest to largest to prefer more specific matches
+var COUNTRY_BOUNDS = [
+  {code:'EE', name:'Estonia', nameIt:'Estonia', latMin:57.5, latMax:59.7, lngMin:21.8, lngMax:28.2},
+  {code:'LV', name:'Latvia', nameIt:'Lettonia', latMin:55.7, latMax:58.1, lngMin:20.9, lngMax:28.2},
+  {code:'LT', name:'Lithuania', nameIt:'Lituania', latMin:53.9, latMax:56.5, lngMin:20.9, lngMax:26.8},
+  {code:'DK', name:'Denmark', nameIt:'Danimarca', latMin:54.5, latMax:57.8, lngMin:8.0, lngMax:15.2},
+  {code:'NL', name:'Netherlands', nameIt:'Paesi Bassi', latMin:50.7, latMax:53.6, lngMin:3.3, lngMax:7.2},
+  {code:'AT', name:'Austria', nameIt:'Austria', latMin:46.37, latMax:49.02, lngMin:9.53, lngMax:17.16},
+  {code:'CZ', name:'Czechia', nameIt:'Cechia', latMin:48.55, latMax:51.06, lngMin:12.09, lngMax:18.86},
+  {code:'IT', name:'Italy', nameIt:'Italia', latMin:35.5, latMax:47.1, lngMin:6.6, lngMax:18.5},
+  {code:'PL', name:'Poland', nameIt:'Polonia', latMin:49.0, latMax:54.8, lngMin:14.1, lngMax:24.2},
+  {code:'FI', name:'Finland', nameIt:'Finlandia', latMin:59.8, latMax:70.1, lngMin:20.5, lngMax:31.6},
+  {code:'SE', name:'Sweden', nameIt:'Svezia', latMin:55.3, latMax:69.1, lngMin:11.1, lngMax:24.2},
+  {code:'NO', name:'Norway', nameIt:'Norvegia', latMin:57.9, latMax:71.2, lngMin:4.6, lngMax:31.1},
+  {code:'DE', name:'Germany', nameIt:'Germania', latMin:47.3, latMax:55.1, lngMin:5.9, lngMax:15.0}
+];
+
+// v3.93: Offline country detection from GPS coordinates
+function getCountryFromCoords(lat, lng) {
+  for (var i = 0; i < COUNTRY_BOUNDS.length; i++) {
+    var c = COUNTRY_BOUNDS[i];
+    if (lat >= c.latMin && lat <= c.latMax && lng >= c.lngMin && lng <= c.lngMax) {
+      return c;
+    }
+  }
+  return null; // not found — use Nominatim fallback
+}
+
 // Tab order for swipe navigation (shared between app.js sections)
 var TAB_ORDER = ['home', 'riepilogo', 'giorni', 'posizione', 'diario', 'cibo', 'cultura', 'attivita', 'piano', 'zaino', 'chat'];
 

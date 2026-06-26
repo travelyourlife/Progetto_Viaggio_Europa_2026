@@ -274,6 +274,23 @@
           lat: lat, lng: lng, heading: heading, ts: time, name: currentRefs.name
         }).catch(function(e) { console.warn('[CapGPS] lastPosition write failed:', e.message); });
 
+        // v3.93: Update unified /currentLocation (throttled: every 5 min or >500m moved)
+        if (window.writeCurrentLocation) {
+          var _doLocWrite = false;
+          if (!window._lastLocWriteTime) _doLocWrite = true;
+          else if ((now - window._lastLocWriteTime) >= 300000) _doLocWrite = true;
+          else if (window._lastLocWriteLat != null) {
+            var _locDist = haversineKm(window._lastLocWriteLat, window._lastLocWriteLng, lat, lng);
+            if (_locDist > 0.5) _doLocWrite = true;
+          }
+          if (_doLocWrite) {
+            window._lastLocWriteTime = now;
+            window._lastLocWriteLat = lat;
+            window._lastLocWriteLng = lng;
+            window.writeCurrentLocation(lat, lng);
+          }
+        }
+
         // v3.89: Update current country via Nominatim (max once every 10 min)
         if (!window._lastCountryCheck || (now - window._lastCountryCheck) >= 600000) {
           window._lastCountryCheck = now;
@@ -397,6 +414,8 @@
         refs.db.ref('trips/' + refs.familyId + '/lastPosition').set({
           lat: bgLastLat, lng: bgLastLng, heading: 0, ts: Date.now(), name: refs.name
         }).catch(function(e) { console.warn('[CapGPS] Stop lastPosition failed:', e.message); });
+        // v3.93: Write unified /currentLocation on stop
+        if (window.writeCurrentLocation) window.writeCurrentLocation(bgLastLat, bgLastLng);
       }
     }
 

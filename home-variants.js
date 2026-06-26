@@ -1840,8 +1840,26 @@
         }).catch(function() { /* silent */ });
     }
 
-    // Try /live first (most recent entry < 2h old)
-    firebase.database().ref(basePath + '/live').once('value').then(function(snap) {
+    // v3.93: Unified fallback chain — /currentLocation → /live → /lastPosition → /position
+    firebase.database().ref(basePath + '/currentLocation').once('value').then(function(snap) {
+      var cl = snap.val();
+      if (cl && cl.lat && cl.lng) {
+        _applyRealPosition(cl.lat, cl.lng);
+        // Also apply city/country/flag immediately if available (avoid extra Nominatim call)
+        if (cl.city || cl.country) {
+          var container = document.getElementById('hv-container');
+          if (container) {
+            if (cl.city) { container.querySelectorAll('[data-hv="city"]').forEach(function(el) { el.textContent = cl.city; }); }
+            if (cl.country) { container.querySelectorAll('[data-hv="country"]').forEach(function(el) { el.textContent = cl.country; }); }
+            if (cl.flag) { container.querySelectorAll('[data-hv="flag"]').forEach(function(el) { el.textContent = cl.flag; }); }
+          }
+        }
+        return;
+      }
+      // Fallback: Try /live (most recent entry < 2h old)
+      return firebase.database().ref(basePath + '/live').once('value');
+    }).then(function(snap) {
+      if (!snap) return;
       var liveData = snap.val();
       if (liveData) {
         var latest = null;
@@ -1855,15 +1873,6 @@
           return;
         }
       }
-      // Try /position
-      return firebase.database().ref(basePath + '/position').once('value');
-    }).then(function(snap) {
-      if (!snap) return;
-      var pos = snap.val();
-      if (pos && pos.lat && pos.lng) {
-        _applyRealPosition(pos.lat, pos.lng);
-        return;
-      }
       // Try /lastPosition
       return firebase.database().ref(basePath + '/lastPosition').once('value');
     }).then(function(snap) {
@@ -1871,6 +1880,15 @@
       var lp = snap.val();
       if (lp && lp.lat && lp.lng) {
         _applyRealPosition(lp.lat, lp.lng);
+        return;
+      }
+      // Try /position
+      return firebase.database().ref(basePath + '/position').once('value');
+    }).then(function(snap) {
+      if (!snap) return;
+      var pos = snap.val();
+      if (pos && pos.lat && pos.lng) {
+        _applyRealPosition(pos.lat, pos.lng);
       }
     }).catch(function() { /* silent */ });
   }

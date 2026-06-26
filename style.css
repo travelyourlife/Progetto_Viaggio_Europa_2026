@@ -848,6 +848,9 @@ mark.search-hl.current { background: #f97316; color: white; }
 @media (prefers-color-scheme: dark) {
     .search-suggestions { background: #1a202c; }
     .ss-item:hover, .ss-item.focused { background: #2d3748; }
+    /* v3.94 FIX Audit #15: dark mode overrides for search highlights */
+    mark.search-hl { background: #854d0e; color: #fef9c3; }
+    mark.search-hl.current { background: #ea580c; color: white; }
 }
 
 /* ─── Bottom Tab Bar ─── */
@@ -5512,4 +5515,12 @@ html[lang="en"] .notif-drawer-list:empty::after {
 @keyframes qv-pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.65; }
+}
+
+
+/* v3.94 FIX Audit #15: Dark mode overrides for remaining hardcoded colors */
+@media (prefers-color-scheme: dark) {
+    .install-banner .install-btn { background: #1e293b; color: #93c5fd; }
+    .diario-draft-badge { background: #92400e; color: #fef3c7; }
+    .admin-card label[style*="width:40px"] span::before { background: #cbd5e1; }
 }

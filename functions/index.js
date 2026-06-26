@@ -1062,7 +1062,26 @@ exports.morningWeatherPush = onSchedule(
       return null;
     }
 
-    const coords = TRIP_COORDS[tripDay];
+    // v3.94 FIX: Use /currentLocation (real GPS) as primary source for city + coords,
+    // fallback to static TRIP_COORDS if no recent GPS data (>24h old or missing)
+    let coords = TRIP_COORDS[tripDay];
+    let cityName = coords ? coords.city : '';
+    try {
+      const clSnap = await db.ref(`trips/${FAMILY_ID}/currentLocation`).once('value');
+      const cl = clSnap.val();
+      if (cl && cl.lat && cl.lng) {
+        const ageMs = Date.now() - (cl.updatedAt || 0);
+        if (ageMs < 24 * 3600000) {
+          // Recent GPS position — use it
+          coords = { lat: cl.lat, lng: cl.lng, city: cl.city || cityName };
+          if (cl.city) cityName = cl.city;
+          logger.log('[MorningWeather] Using /currentLocation:', cl.city, cl.lat, cl.lng);
+        }
+      }
+    } catch (e) {
+      logger.warn('[MorningWeather] Could not read /currentLocation:', e.message);
+    }
+
     if (!coords) {
       logger.log('[MorningWeather] No coords for day ' + tripDay);
       return null;
@@ -1075,7 +1094,7 @@ exports.morningWeatherPush = onSchedule(
     }
 
     const wLabel = weatherCodeToLabel(weather.code);
-    const title = `${wLabel.icon} Buongiorno da ${coords.city}!`;
+    const title = `${wLabel.icon} Buongiorno da ${cityName || 'qui'}!`;
     let body = `${weather.high}\u00b0/${weather.low}\u00b0C \u00b7 ${wLabel.label}`;
     body += ` \u00b7 \ud83c\udf05 ${weather.sunrise}\u2013${weather.sunset} (${weather.daylight})`;
     if (weather.precipProb > 20) {
@@ -1123,7 +1142,24 @@ exports.dailyWeatherArchiver = onSchedule(
       return null;
     }
 
-    const coords = TRIP_COORDS[tripDay];
+    // v3.94 FIX: Use /currentLocation (real GPS) as primary, fallback to TRIP_COORDS
+    let coords = TRIP_COORDS[tripDay];
+    let cityName = coords ? coords.city : '';
+    try {
+      const clSnap = await db.ref(`trips/${FAMILY_ID}/currentLocation`).once('value');
+      const cl = clSnap.val();
+      if (cl && cl.lat && cl.lng) {
+        const ageMs = Date.now() - (cl.updatedAt || 0);
+        if (ageMs < 24 * 3600000) {
+          coords = { lat: cl.lat, lng: cl.lng, city: cl.city || cityName };
+          if (cl.city) cityName = cl.city;
+          logger.log('[WeatherArchiver] Using /currentLocation:', cl.city, cl.lat, cl.lng);
+        }
+      }
+    } catch (e) {
+      logger.warn('[WeatherArchiver] Could not read /currentLocation:', e.message);
+    }
+
     if (!coords) {
       logger.log('[WeatherArchiver] No coords for day ' + tripDay);
       return null;
@@ -1140,7 +1176,7 @@ exports.dailyWeatherArchiver = onSchedule(
     await db.ref(`trips/${FAMILY_ID}/weatherArchive/${tripDay}`).set({
       day: tripDay,
       date: todayStr,
-      city: coords.city,
+      city: cityName,
       lat: coords.lat,
       lng: coords.lng,
       high: weather.high,

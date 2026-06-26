@@ -6777,8 +6777,8 @@ var DAYS_DATA = [
     "tolls": null,
     "tollLinks": [],
     "meteo": {
-      "lat": null,  // Intentional: eclipse day — exact location TBD (Palencia/León/Valladolid depending on weather)
-      "lon": null,
+      "lat": 42.01,  // v3.94 FIX Audit #16: Palencia as default (on totality line); adjust on eclipse day
+      "lon": -4.53,
       "high": 31,
       "low": 14,
       "cond": "Cielo sereno (prob. 80-85%)",

@@ -14,9 +14,10 @@ var _qvLog = (function() {
   };
 })();
 
-// ─── Language Detection ───
-const LANG = document.documentElement.lang || 'it';
-const isEN = LANG === 'en';
+// ─── Language Detection (v3.94: single global definition) ───
+var LANG = document.documentElement.lang || 'it';
+var isEN = LANG === 'en' || location.pathname.indexOf('_en') !== -1;
+window.isEN = isEN;
 
 // ─── v2.96: LOCAL date key (YYYY-MM-DD in LOCAL time) ───
 // BUG FIX: toISOString().slice(0,10) returns the UTC date. In Italy (UTC+1/+2),
@@ -64,6 +65,17 @@ var KEYS = {
   FCM_TOKEN: 'viaggio2026_fcm_token',
   // v2.59: all keys centralised here — use KEYS.X everywhere instead of hardcoded strings
 };
+
+// v3.94 FIX Audit #7: Audio MIME type detection (iOS Safari doesn't support webm)
+function getSupportedAudioMime() {
+  if (typeof MediaRecorder === 'undefined') return '';
+  var types = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4', 'audio/ogg;codecs=opus'];
+  for (var i = 0; i < types.length; i++) {
+    if (MediaRecorder.isTypeSupported(types[i])) return types[i];
+  }
+  return '';
+}
+window._audioMimeType = ''; // resolved lazily on first use
 
 // Migration: old zaino key → new key (one-time)
 (function() {
@@ -211,11 +223,16 @@ try {
   var _queue = [];
   var _busy = false;
 
+  // v3.94 FIX Audit #8: Always include User-Agent header (Nominatim ToS requirement)
+  var _defaultHeaders = { 'User-Agent': 'QuoVadis-TripApp/3.94 (family-trip-pwa)' };
+
   function _drain() {
     if (_busy || _queue.length === 0) return;
     _busy = true;
     var item = _queue.shift();
-    fetch(item.url, item.opts || {})
+    var fetchOpts = item.opts || {};
+    fetchOpts.headers = Object.assign({}, _defaultHeaders, fetchOpts.headers || {});
+    fetch(item.url, fetchOpts)
       .then(function(r) { return r.json(); })
       .then(function(data) { item.resolve(data); })
       .catch(function(err) { item.reject(err); })
@@ -231,6 +248,60 @@ try {
     });
   };
 })();
+
+// ═══════════════════════════════════════════════════════════════
+// v3.93: UNIFIED LOCATION — Single source of truth
+// All writers call writeCurrentLocation(lat, lng). All readers listen to /currentLocation.
+// ═══════════════════════════════════════════════════════════════
+window.writeCurrentLocation = function(lat, lng, optCity) {
+  if (!dbRef) return;
+  // Offline country detection (instant, no API)
+  var countryObj = (typeof getCountryFromCoords === 'function') ? getCountryFromCoords(lat, lng) : null;
+  var countryCode = countryObj ? countryObj.code : '';
+  var countryName = countryObj ? (isEN ? countryObj.name : countryObj.nameIt) : '';
+  var flag = '';
+  if (countryCode && countryCode.length === 2) {
+    flag = String.fromCodePoint(0x1F1E6 + countryCode.charCodeAt(0) - 65) + String.fromCodePoint(0x1F1E6 + countryCode.charCodeAt(1) - 65);
+  }
+  var payload = {
+    lat: lat,
+    lng: lng,
+    country: countryName,
+    countryCode: countryCode,
+    flag: flag,
+    updatedAt: Date.now()
+  };
+  // If city provided (from Nominatim), include it; otherwise try async
+  if (optCity) {
+    payload.city = optCity;
+    dbRef.child('currentLocation').set(payload).catch(function(e) {
+      console.warn('[currentLocation] write failed:', e.message);
+    });
+  } else {
+    // Write immediately without city, then update city async via Nominatim
+    payload.city = '';
+    dbRef.child('currentLocation').set(payload).catch(function() {});
+    // Async city lookup (throttled)
+    window._nominatimFetch('https://nominatim.openstreetmap.org/reverse?lat=' + lat + '&lon=' + lng + '&format=json&zoom=10&accept-language=' + (isEN ? 'en' : 'it'))
+      .then(function(data) {
+        var addr = data.address || {};
+        var city = addr.city || addr.town || addr.village || addr.municipality || addr.county || '';
+        var nominCountry = addr.country || countryName;
+        var nominCC = (addr.country_code || '').toUpperCase() || countryCode;
+        var nominFlag = '';
+        if (nominCC && nominCC.length === 2) {
+          nominFlag = String.fromCodePoint(0x1F1E6 + nominCC.charCodeAt(0) - 65) + String.fromCodePoint(0x1F1E6 + nominCC.charCodeAt(1) - 65);
+        }
+        dbRef.child('currentLocation').update({
+          city: city,
+          country: nominCountry,
+          countryCode: nominCC,
+          flag: nominFlag
+        }).catch(function() {});
+      })
+      .catch(function() { /* silent — offline country is enough */ });
+  }
+};
 
 // ============================================================
 // AUTH MANAGER — Persistent Auth State (v2.48 FIX per Capacitor)
@@ -627,6 +698,28 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 });
+
+// v3.94 FIX Audit #1: getRedirectResult() — must be called before onAuthStateChanged
+// to complete sign-in after signInWithRedirect returns from Google.
+(function() {
+  if (typeof firebase === 'undefined' || !firebase.auth) return;
+  try {
+    firebase.auth().getRedirectResult()
+      .then(function(result) {
+        if (result && result.user) {
+          _qvLog.info('[Auth] getRedirectResult: user', result.user.email);
+          try { localStorage.removeItem('firebase_redirect_pending'); } catch(e) {}
+        }
+      })
+      .catch(function(err) {
+        _qvLog.warn('[Auth] getRedirectResult error', err.code || err.message);
+        try { localStorage.removeItem('firebase_redirect_pending'); } catch(e) {}
+        if (err.code === 'auth/web-storage-unsupported') {
+          if (window.showToast) showToast(isEN ? 'Enable cookies to sign in' : 'Abilita i cookie per accedere', 'error');
+        }
+      });
+  } catch(e) { console.warn('[Auth] getRedirectResult exception:', e); }
+})();
 
 // ─── Owner/Viewer Auth State (V4.8) ───
 // Viewers see everything read-only without login. Owners (Google Auth) can write.
@@ -1441,7 +1534,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (localStorage.getItem(HINT_KEY)) return;
         var timeline = document.querySelector('.mobile-timeline');
         if (!timeline) return;
-        var isEN = LANG === 'en';
+        // v3.94: uses global isEN
         var hint = document.createElement('div');
         hint.className = 'timeline-hint';
         hint.innerHTML = '<span class="hint-icon">\uD83D\uDC46</span> ' +
@@ -2923,6 +3016,8 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
 
         // v2.58: delegates to window._haversineKm (data.js) — single canonical implementation
         function haversine(lat1, lon1, lat2, lon2) {
+          // v3.94 FIX Audit #14: NaN guard
+          if (!isFinite(lat1) || !isFinite(lon1) || !isFinite(lat2) || !isFinite(lon2)) return 0;
           if (window._haversineKm) return window._haversineKm(lat1, lon1, lat2, lon2);
             var R = 6371; var dLat = (lat2-lat1)*Math.PI/180; var dLon = (lon2-lon1)*Math.PI/180;
             var a = Math.sin(dLat/2)*Math.sin(dLat/2) + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)*Math.sin(dLon/2);
@@ -3211,18 +3306,29 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                     'SK': 'Slovacchia', 'DK': 'Danimarca', 'SE': 'Svezia', 'NO': 'Norvegia',
                     'FI': 'Finlandia', 'EE': 'Estonia', 'LV': 'Lettonia', 'LT': 'Lituania'
                 };
-                // First try GPS-based country from /lastPosition or /position
+                // v3.93: Try /currentLocation first (unified source of truth), then fallback chain
                 var posRef = firebase.database().ref('trips/' + FAMILY_ID);
                 var _tryGeoCountry = function() {
-                    posRef.child('position').once('value').then(function(snap) {
-                        var pos = snap.val();
-                        if (pos && pos.lat && pos.lng) { _reverseGeoCountry(pos.lat, pos.lng); return; }
+                    posRef.child('currentLocation').once('value').then(function(snap) {
+                        var cl = snap.val();
+                        if (cl && cl.lat && cl.lng) {
+                            // If currentLocation already has country info, use it directly
+                            if (cl.countryCode && cl.country) {
+                                _displayCountry(cl.countryCode, cl.country);
+                                return;
+                            }
+                            _reverseGeoCountry(cl.lat, cl.lng); return;
+                        }
                         return posRef.child('lastPosition').once('value');
                     }).then(function(snap2) {
                         if (!snap2) return;
                         var lp = snap2.val();
                         if (lp && lp.lat && lp.lng) { _reverseGeoCountry(lp.lat, lp.lng); return; }
-                        // No GPS position — fall back to check-in based country
+                        return posRef.child('position').once('value');
+                    }).then(function(snap3) {
+                        if (!snap3) return;
+                        var pos = snap3.val();
+                        if (pos && pos.lat && pos.lng) { _reverseGeoCountry(pos.lat, pos.lng); return; }
                         _fallbackCheckinCountry();
                     }).catch(function() { _fallbackCheckinCountry(); });
                 };
@@ -3360,20 +3466,43 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                 if (flags) flags.forEach(function(f) { countries.add(f); });
             });
             var _el2 = document.getElementById('stat-countries');
-            // Also load from Firebase countriesVisited (GPS-based)
+
+            // v3.93: Read countries from dailySummaries (most reliable source)
+            var _dsRef = getFamilyRef('dailySummaries');
             var _cvRef = getFamilyRef('countriesVisited');
+            var _pendingReads = 0;
+            var _checkDone = function() {
+                _pendingReads--;
+                if (_pendingReads <= 0 && _el2) _el2.textContent = countries.size;
+            };
+
+            if (_dsRef) {
+                _pendingReads++;
+                _dsRef.once('value', function(dsSnap) {
+                    var ds = dsSnap.val() || {};
+                    Object.keys(ds).forEach(function(dateKey) {
+                        var entry = ds[dateKey];
+                        if (entry && entry.countryCode) {
+                            var cc = entry.countryCode;
+                            var flag = String.fromCodePoint(0x1F1E6 + cc.charCodeAt(0) - 65) + String.fromCodePoint(0x1F1E6 + cc.charCodeAt(1) - 65);
+                            countries.add(flag);
+                        }
+                    });
+                    _checkDone();
+                });
+            }
             if (_cvRef) {
+                _pendingReads++;
                 _cvRef.once('value', function(cvSnap) {
                     var cv = cvSnap.val() || {};
                     Object.keys(cv).forEach(function(cc) {
                         var flag = String.fromCodePoint(0x1F1E6 + cc.charCodeAt(0) - 65) + String.fromCodePoint(0x1F1E6 + cc.charCodeAt(1) - 65);
                         countries.add(flag);
                     });
-                    if (_el2) _el2.textContent = countries.size;
+                    _checkDone();
                 });
-            } else {
-                if (_el2) _el2.textContent = countries.size;
             }
+            if (_pendingReads === 0 && _el2) _el2.textContent = countries.size;
 
             // Last check-in
             var allTimes = Object.values(checkins).map(function(c) { return c.time; });
@@ -3595,7 +3724,25 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                         updateInfoCard(d);
                     }
                 } else {
-                    // v2.64: No live tracking — show last known position from lastPosition/
+                    // v3.93: No live tracking — try /currentLocation first, then /lastPosition
+                    var _clRef = getFamilyRef('currentLocation');
+                    if (_clRef) {
+                        _clRef.once('value', function(clSnap) {
+                            var cl = clSnap.val();
+                            if (cl && cl.lat && cl.lng) {
+                                updateInfoCard({ lat: cl.lat, lng: cl.lng, time: cl.ts || cl.updatedAt || Date.now(), status: 'stopped' });
+                                return;
+                            }
+                            // Fallback: /lastPosition
+                            var lastPosRef = getFamilyRef('lastPosition');
+                            if (lastPosRef) {
+                                lastPosRef.once('value', function(lpSnap) {
+                                    var lp = lpSnap.val();
+                                    if (lp && lp.lat) updateInfoCard(lp);
+                                });
+                            }
+                        });
+                    } else {
                     var lastPosRef = getFamilyRef('lastPosition');
                     if (lastPosRef) {
                         lastPosRef.once('value', function(lpSnap) {
@@ -3621,6 +3768,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                             }
                             updateInfoCard(lp);
                         });
+                    }
                     }
                 }
             });
@@ -4267,15 +4415,50 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             if (todayKm > 0 || todayPoints.length > 0) {
                 var sessionElapsed = Date.now() - (liveStartTime || Date.now());
                 var totalElapsed = _prevElapsed + sessionElapsed;
+                // v3.92 FIX Bug 3: cap totalElapsed to max 24h to prevent absurd values
+                var MAX_ELAPSED = 24 * 3600000;
+                if (totalElapsed > MAX_ELAPSED) totalElapsed = MAX_ELAPSED;
+                if (totalElapsed < 0) totalElapsed = 0;
+                var calcAvg = totalElapsed > 0 ? (todayKm / (totalElapsed / 3600000)) : 0;
+                // v3.92: if avgSpeed < 10 km/h, time data is suspect — use km/60 estimate
+                if (calcAvg < 10 && todayKm > 5) {
+                    totalElapsed = (todayKm / 60) * 3600000;
+                    calcAvg = 60;
+                }
                 var summary = {
                     km: todayKm,
                     time: totalElapsed,
-                    avgSpeed: totalElapsed > 0 ? (todayKm / (totalElapsed / 3600000)) : 0,
+                    avgSpeed: calcAvg,
                     points: todayPoints.length,
                     date: todayStr()
                 };
                 var sumRef = getFamilyRef('dailySummaries/' + todayStr());
                 if (sumRef) sumRef.set(summary);
+
+                // v3.93: Save country in dailySummary using offline lookup (+ Nominatim fallback)
+                if (todayPoints.length > 0) {
+                    var _lastPtGeo = todayPoints[todayPoints.length - 1];
+                    var _offlineCountry = getCountryFromCoords(_lastPtGeo.lat, _lastPtGeo.lng);
+                    if (_offlineCountry) {
+                        sumRef.update({ country: isEN ? _offlineCountry.name : _offlineCountry.nameIt, countryCode: _offlineCountry.code });
+                    } else {
+                        // Fallback: Nominatim for countries not in lookup table
+                        var _geoUrl = 'https://nominatim.openstreetmap.org/reverse?format=json&lat=' + _lastPtGeo.lat + '&lon=' + _lastPtGeo.lng + '&zoom=5&accept-language=' + (isEN ? 'en' : 'it');
+                        fetch(_geoUrl).then(function(r) { return r.json(); }).then(function(data) {
+                            if (data && data.address) {
+                                var cc = (data.address.country_code || '').toUpperCase();
+                                var cn = data.address.country || '';
+                                if (cc && sumRef) sumRef.update({ country: cn, countryCode: cc });
+                            }
+                        }).catch(function() {});
+                    }
+                }
+            }
+
+            // v3.93: Write unified /currentLocation from last tracking point
+            if (todayPoints.length > 0) {
+                var _lastPtLoc = todayPoints[todayPoints.length - 1];
+                if (window.writeCurrentLocation) window.writeCurrentLocation(_lastPtLoc.lat, _lastPtLoc.lng);
             }
 
             // v2.18: Save weather log using last known position
@@ -4436,6 +4619,8 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             var spot = { name: name, lat: lat, lng: lng, rating: rating, time: new Date().toLocaleString('it-IT'), date: todayStr() };
             var ref = getFamilyRef('parking/' + Date.now());
             if (ref) ref.set(spot);
+            // v3.93: Update unified /currentLocation when parking is saved
+            if (lat && lng && window.writeCurrentLocation) window.writeCurrentLocation(lat, lng);
             showToast('🅿️ ' + (isEN ? 'Parking saved!' : 'Parcheggio salvato!'), 'success');
             renderParkingList();
             updateMapMarkers();
@@ -5654,7 +5839,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
         var box = document.getElementById('goto-today-box');
         var btn = document.getElementById('goto-today-btn');
         if (!box || !btn) return;
-        var isEN = document.documentElement.lang === 'en';
+        // v3.94: uses global isEN
 
         // Check if day override is active (testing mode) — v1.84: session-only
         var isOverride = typeof window._dayOverride === 'number';
@@ -6495,7 +6680,17 @@ function fetchWithTimeout(url, opts, timeoutMs) {
   // Fetch forecast including daylight (sunrise/sunset) and wind
   // (fetchWithTimeout moved to global scope in v3.62)
 
+// v3.94 FIX Audit #10: In-memory cache with 30-min TTL to avoid redundant Open-Meteo calls
+var _weatherCache = {};
+var _WEATHER_CACHE_TTL = 30 * 60 * 1000; // 30 minutes
+
 async function fetchForecast(lat, lon, date, _retry) {
+    // Check cache first
+    var cacheKey = (lat ? lat.toFixed(2) : '0') + ',' + (lon ? lon.toFixed(2) : '0') + '/' + date;
+    var cached = _weatherCache[cacheKey];
+    if (cached && Date.now() - cached.ts < _WEATHER_CACHE_TTL) {
+      return cached.data;
+    }
     const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=temperature_2m_max,temperature_2m_min,weathercode,sunrise,sunset,precipitation_probability_max,windspeed_10m_max&start_date=${date}&end_date=${date}&timezone=auto`;
     try {
       const resp = await fetchWithTimeout(url, {}, 8000);
@@ -6516,7 +6711,7 @@ async function fetchForecast(lat, lon, date, _retry) {
           sunriseFmt = rise.getHours().toString().padStart(2,'0') + ':' + rise.getMinutes().toString().padStart(2,'0');
           sunsetFmt = set.getHours().toString().padStart(2,'0') + ':' + set.getMinutes().toString().padStart(2,'0');
         }
-        return {
+        var result = {
           high: Math.round(data.daily.temperature_2m_max[0]),
           low: Math.round(data.daily.temperature_2m_min[0]),
           code: data.daily.weathercode[0],
@@ -6526,6 +6721,8 @@ async function fetchForecast(lat, lon, date, _retry) {
           wind: data.daily.windspeed_10m_max ? Math.round(data.daily.windspeed_10m_max[0]) : null,
           precipProb: data.daily.precipitation_probability_max ? data.daily.precipitation_probability_max[0] : null
         };
+        _weatherCache[cacheKey] = { data: result, ts: Date.now() };
+        return result;
       }
     } catch(e) {
       // v2.70: retry once after 3s on network/timeout error
@@ -7241,7 +7438,7 @@ async function fetchForecast(lat, lon, date, _retry) {
     var isEdge = /Edg/i.test(ua);
     var isSamsung = /SamsungBrowser/i.test(ua);
     var isAndroid = /Android/.test(ua);
-    var isEN = document.documentElement.lang === 'en' || location.pathname.indexOf('_en') !== -1;
+    // v3.94: uses global isEN
 
     // ─── Decision: Modal (first visit only) vs Banner (every 2 visits after that) ───
     var shouldShowModal = !modalShown; // only first visit
@@ -7958,13 +8155,17 @@ async function fetchForecast(lat, lon, date, _retry) {
     }
 
     // --- Reverse geocode helper (Nominatim) ---
+    // v3.94 FIX Audit #9: AbortController prevents stale geocode responses from overwriting newer ones
     var _geoCache = {};
+    var _geocodeSeq = 0; // monotonic sequence to discard stale responses
     function _reverseGeocode(lat, lng, cb) {
         var key = lat.toFixed(3) + ',' + lng.toFixed(3);
         if (_geoCache[key]) { cb(_geoCache[key].city, _geoCache[key].country, _geoCache[key].flag); return; }
+        var mySeq = ++_geocodeSeq;
         // v2.58: routed through global throttle (1 req/s Nominatim limit)
         window._nominatimFetch('https://nominatim.openstreetmap.org/reverse?lat=' + lat + '&lon=' + lng + '&format=json&zoom=10&accept-language=' + (isEN ? 'en' : 'it'))
             .then(function(data) {
+                if (mySeq !== _geocodeSeq) return; // stale response — discard
                 var addr = data.address || {};
                 var city = addr.city || addr.town || addr.village || addr.municipality || addr.county || '';
                 var country = addr.country || '';
@@ -7973,7 +8174,7 @@ async function fetchForecast(lat, lon, date, _retry) {
                 _geoCache[key] = { city: city, country: country, flag: flag };
                 cb(city, country, flag);
             })
-            .catch(function() { cb(null, null, null); });
+            .catch(function() { if (mySeq === _geocodeSeq) cb(null, null, null); });
     }
 
     function _ccToFlag(cc) {
@@ -8125,6 +8326,8 @@ async function fetchForecast(lat, lon, date, _retry) {
     // ─── v1.99: Distance from home (haversine) ───
     // v2.58: delegates to window._haversineKm (data.js)
     function _haversineKm(lat1, lng1, lat2, lng2) {
+      // v3.94 FIX Audit #14: NaN guard
+      if (!isFinite(lat1) || !isFinite(lng1) || !isFinite(lat2) || !isFinite(lng2)) return 0;
       if (window._haversineKm) return window._haversineKm(lat1, lng1, lat2, lng2);
         var R = 6371;
         var dLat = (lat2 - lat1) * Math.PI / 180;
@@ -8343,7 +8546,7 @@ async function fetchForecast(lat, lon, date, _retry) {
 // ═══════════════════════════════════════════════════════════════
 (function() {
     if (typeof WIKI_COUNTRIES === 'undefined' && typeof WIKI_TREKS === 'undefined') return;
-    var isEN = document.documentElement.lang === 'en' || location.pathname.indexOf('_en') !== -1;
+    // v3.94: uses global isEN
 
     function makeWikiIcon(url, title) {
         return ' <a href="' + escapeHtml(url) + '" target="_blank" rel="noopener noreferrer" class="wiki-link" title="Wikipedia: ' + escapeHtml(title) + '">\ud83d\udcd6</a>';
@@ -8459,7 +8662,7 @@ async function fetchForecast(lat, lon, date, _retry) {
   if (!authBtn) return;
   var showConfirm = function(msg, onOk, onCancel) { return window.showConfirm ? window.showConfirm(msg, onOk, onCancel) : (confirm(msg) ? (onOk && onOk()) : (onCancel && onCancel())); };
   var showToast = function(msg, type, dur) { if (window.showToast) window.showToast(msg, type, dur); };
-  var isEN = document.documentElement.lang === 'en';
+  // v3.94: uses global isEN
 
   function updateAuthUI(user, ownerFlag) {
     if (user && ownerFlag) {
@@ -9817,13 +10020,14 @@ async function fetchForecast(lat, lon, date, _retry) {
       }
       navigator.mediaDevices.getUserMedia({ audio: true }).then(function(stream) {
         _audioChunks = [];
-        _mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm;codecs=opus' });
+        if (!window._audioMimeType) window._audioMimeType = getSupportedAudioMime();
+        _mediaRecorder = new MediaRecorder(stream, window._audioMimeType ? { mimeType: window._audioMimeType } : {});
         _mediaRecorder.ondataavailable = function(e) {
           if (e.data.size > 0) _audioChunks.push(e.data);
         };
         _mediaRecorder.onstop = function() {
           stream.getTracks().forEach(function(t) { t.stop(); });
-          _recapAudioBlob = new Blob(_audioChunks, { type: 'audio/webm' });
+          _recapAudioBlob = new Blob(_audioChunks, { type: window._audioMimeType || 'audio/webm' });
           var audioUrl = URL.createObjectURL(_recapAudioBlob);
           var container = document.getElementById('recap-audio-container');
           container.style.display = '';
@@ -10079,6 +10283,8 @@ async function fetchForecast(lat, lon, date, _retry) {
 
   // v2.58: delegates to window._haversineKm (data.js)
   function haversineGlobal(lat1, lon1, lat2, lon2) {
+    // v3.94 FIX Audit #14: NaN guard
+    if (!isFinite(lat1) || !isFinite(lon1) || !isFinite(lat2) || !isFinite(lon2)) return 0;
     if (window._haversineKm) return window._haversineKm(lat1, lon1, lat2, lon2);
     var R = 6371; var dLat = (lat2-lat1)*Math.PI/180; var dLon = (lon2-lon1)*Math.PI/180;
     var a = Math.sin(dLat/2)*Math.sin(dLat/2) + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)*Math.sin(dLon/2);
@@ -10490,6 +10696,13 @@ async function fetchForecast(lat, lon, date, _retry) {
     var dates = Object.keys(pointsByDate).sort();
     var totalPoints = 0;
     dates.forEach(function(d) { totalPoints += pointsByDate[d].length; });
+    // v3.92 FIX Bug 1: count valid vs out-of-range days
+    var validDays = 0;
+    var outOfRangeDays = 0;
+    dates.forEach(function(d) {
+      if (getTripDayFromDate(d) >= 0) validDays++;
+      else outOfRangeDays++;
+    });
 
     var overlay = document.createElement('div');
     overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;padding:16px;';
@@ -10498,6 +10711,12 @@ async function fetchForecast(lat, lon, date, _retry) {
     html += '<h3 style="margin:0 0 12px;">' + (isEN ? '\ud83d\udccd Records.json Import' : '\ud83d\udccd Import Records.json') + '</h3>';
     html += '<p style="font-size:13px;color:var(--text-muted);margin-bottom:8px;">' + (isEN ? 'Raw GPS points for map polyline' : 'Punti GPS grezzi per tracciato mappa') + '</p>';
     html += '<p style="font-size:13px;margin-bottom:12px;"><strong>' + totalPoints + '</strong> ' + (isEN ? 'points across' : 'punti in') + ' <strong>' + dates.length + '</strong> ' + (isEN ? 'days' : 'giorni') + '</p>';
+    if (outOfRangeDays > 0) {
+      html += '<p style="font-size:13px;color:#e53e3e;margin-bottom:8px;font-weight:600;">\u26a0\ufe0f ' + (isEN ? outOfRangeDays + ' day(s) outside trip range — will be skipped' : outOfRangeDays + ' giorno/i fuori dal range del viaggio — verranno saltati') + '</p>';
+    }
+    if (validDays === 0) {
+      html += '<p style="font-size:13px;color:#e53e3e;margin-bottom:8px;font-weight:600;">\u274c ' + (isEN ? 'No days within trip range! Import will have no effect.' : 'Nessun giorno nel range del viaggio! L\'import non avr\u00e0 effetto.') + '</p>';
+    }
     if (skipped > 0) {
       html += '<p style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">' + (isEN ? 'Skipped ' + skipped + ' points (low accuracy or outside trip)' : 'Scartati ' + skipped + ' punti (bassa precisione o fuori viaggio)') + '</p>';
     }
@@ -10507,16 +10726,19 @@ async function fetchForecast(lat, lon, date, _retry) {
       var pts = pointsByDate[date];
       var tripDay = getTripDayFromDate(date);
       var dayLabel = tripDay >= 0 ? ((isEN ? 'Day ' : 'G') + (tripDay + 1)) : date;
+      var isOutOfRange = tripDay < 0;
       // Calculate km from points
       var km = 0;
       for (var i = 1; i < pts.length; i++) {
         var d = _haversine(pts[i-1].lat, pts[i-1].lng, pts[i].lat, pts[i].lng);
         if (d < 5) km += d; // skip jumps > 5km (GPS glitch)
       }
-      html += '<div style="padding:5px 0;border-bottom:1px solid var(--border);font-size:13px;">';
+      var rowStyle = isOutOfRange ? 'padding:5px 0;border-bottom:1px solid var(--border);font-size:13px;opacity:0.5;text-decoration:line-through;' : 'padding:5px 0;border-bottom:1px solid var(--border);font-size:13px;';
+      html += '<div style="' + rowStyle + '">';
       html += '<strong>' + dayLabel + '</strong> (' + date + '): ';
       html += '\ud83d\udccd ' + pts.length + ' pts';
       html += ' \u2022 \ud83d\ude90 ' + km.toFixed(1) + ' km';
+      if (isOutOfRange) html += ' <span style="color:#e53e3e;font-size:11px;">\u2014 ' + (isEN ? 'skipped' : 'saltato') + '</span>';
       html += '</div>';
     });
     html += '</div>';
@@ -10613,23 +10835,83 @@ async function fetchForecast(lat, lon, date, _retry) {
         if (driveTimeMs === 0 && km > 0) {
           driveTimeMs = (km / 60) * 3600000;
         }
+        // v3.92 FIX Bug 3: cap driveTime to max 24h per day
+        var MAX_DRIVE_MS = 24 * 3600000;
+        if (driveTimeMs > MAX_DRIVE_MS) {
+          driveTimeMs = (km / 60) * 3600000; // fallback to estimate
+          if (driveTimeMs > MAX_DRIVE_MS) driveTimeMs = MAX_DRIVE_MS;
+        }
+        // v3.94 FIX Audit #5: avgSpeed sanity check — must be 8-180 km/h
+        var _calcAvg = driveTimeMs > 0 ? (km / (driveTimeMs / 3600000)) : 0;
+        if (_calcAvg > 0 && (_calcAvg < 8 || _calcAvg > 180)) {
+          // Data unreliable — re-estimate at 70 km/h
+          driveTimeMs = (km / 70) * 3600000;
+        }
+        // v3.93: Save country from last point of this day using offline lookup
+        if (cleaned.length > 0) {
+          var _lastPtDay = cleaned[cleaned.length - 1];
+          var _dayCountry = getCountryFromCoords(_lastPtDay.lat, _lastPtDay.lng);
+          if (_dayCountry) {
+            var _cRef = db.ref('trips/' + FAMILY_ID + '/dailySummaries/' + date);
+            _cRef.update({ country: isEN ? _dayCountry.name : _dayCountry.nameIt, countryCode: _dayCountry.code });
+          } else {
+            // Nominatim fallback for unknown countries
+            var _cRefFb = db.ref('trips/' + FAMILY_ID + '/dailySummaries/' + date);
+            var _fbUrl = 'https://nominatim.openstreetmap.org/reverse?format=json&lat=' + _lastPtDay.lat + '&lon=' + _lastPtDay.lng + '&zoom=5&accept-language=' + (isEN ? 'en' : 'it');
+            fetch(_fbUrl).then(function(r){return r.json();}).then(function(d){
+              if(d&&d.address){var cc=(d.address.country_code||'').toUpperCase();var cn=d.address.country||'';if(cc)_cRefFb.update({country:cn,countryCode:cc});}
+            }).catch(function(){});
+          }
+        }
+
         if (km > 0) {
+          // v3.92 FIX Bug 3: sanity check — skip saving time/speed if avgSpeed < 10 km/h (suspect data)
+          var calcAvgSpeed = driveTimeMs > 0 ? (km / (driveTimeMs / 3600000)) : 0;
           var summRef = db.ref('trips/' + FAMILY_ID + '/dailySummaries/' + date);
+          var _gpxKm = km;
+          var _gpxTime = driveTimeMs;
+          var _gpxAvg = calcAvgSpeed;
           summRef.once('value', function(sSnap) {
             var existing = sSnap.val();
             var existingKm = existing ? (existing.odometerKm || existing.km || 0) : 0;
             var updates = { points: cleaned.length, source: 'gpx_import' };
-            // Update km if GPS track gives more (or no existing data)
-            if (km > existingKm) {
-              updates.km = Math.round(km * 10) / 10;
+
+            // v3.92: 3-tier GPX vs Live km logic
+            // GPSLogger is the source of truth for km
+            if (_gpxKm >= existingKm) {
+              // Case 1: GPX >= live → always overwrite
+              updates.km = Math.round(_gpxKm * 10) / 10;
+              if (_gpxTime > 0 && _gpxAvg >= 10) {
+                updates.time = _gpxTime;
+                updates.avgSpeed = _gpxKm / (_gpxTime / 3600000);
+              }
+              summRef.update(updates);
+            } else {
+              var diff = (existingKm - _gpxKm) / existingKm;
+              if (diff <= 0.10) {
+                // Case 2: GPX < live but within 10% → overwrite silently (live likely overestimated)
+                updates.km = Math.round(_gpxKm * 10) / 10;
+                if (_gpxTime > 0 && _gpxAvg >= 10) {
+                  updates.time = _gpxTime;
+                  updates.avgSpeed = _gpxKm / (_gpxTime / 3600000);
+                }
+                summRef.update(updates);
+              } else {
+                // Case 3: GPX < live by >10% → ask user
+                if (!window._gpxConflicts) window._gpxConflicts = [];
+                window._gpxConflicts.push({
+                  date: date,
+                  gpxKm: _gpxKm,
+                  liveKm: existingKm,
+                  gpxTime: _gpxTime,
+                  gpxAvg: _gpxAvg,
+                  summRef: summRef,
+                  updates: updates
+                });
+                // Don't update km/time yet — will prompt user after import completes
+                summRef.update(updates); // still save points count
+              }
             }
-            // v3.74: ALWAYS update time and avgSpeed from GPX (corrects corrupted values)
-            if (driveTimeMs > 0) {
-              updates.time = driveTimeMs;
-              var effectiveKm = updates.km || existingKm;
-              updates.avgSpeed = driveTimeMs > 0 ? (effectiveKm / (driveTimeMs / 3600000)) : 0;
-            }
-            summRef.update(updates);
           });
         }
         // v3.91 FIX: increment inside async callback so count is accurate
@@ -10650,10 +10932,63 @@ async function fetchForecast(lat, lon, date, _retry) {
               time: lastPt.time,
               source: 'gpx_import'
             });
+            // v3.93: Update unified /currentLocation with most recent imported point
+            if (window.writeCurrentLocation) window.writeCurrentLocation(lastPt.lat, lastPt.lng);
           }
           showToast((isEN ? '\u2705 GPS track imported for ' : '\u2705 Tracciato GPS importato per ') + imported + (isEN ? ' days' : ' giorni'), 'success');
+          // v3.92: Show conflict resolution prompt if GPX < live by >10%
+          if (window._gpxConflicts && window._gpxConflicts.length > 0) {
+            setTimeout(function() { _showGpxConflictPrompt(); }, 800);
+          }
         }
       });
+    });
+  }
+
+  // v3.92: Prompt user when GPX km < live km by >10%
+  function _showGpxConflictPrompt() {
+    var conflicts = window._gpxConflicts || [];
+    if (conflicts.length === 0) return;
+    window._gpxConflicts = [];
+
+    var overlay = document.createElement('div');
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;padding:16px;';
+    var html = '<div style="background:var(--bg-card);border-radius:16px;max-width:450px;width:100%;max-height:80vh;overflow-y:auto;padding:24px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">';
+    html += '<h3 style="margin:0 0 12px;">\u26a0\ufe0f ' + (isEN ? 'GPX vs Live mismatch' : 'GPX vs Live: differenza km') + '</h3>';
+    html += '<p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">' + (isEN ? 'GPSLogger recorded fewer km than live tracking (>10% difference). GPSLogger is generally more accurate.' : 'GPSLogger ha registrato meno km del live tracking (differenza >10%). GPSLogger \u00e8 generalmente pi\u00f9 preciso.') + '</p>';
+
+    conflicts.forEach(function(c, i) {
+      var pct = Math.round(((c.liveKm - c.gpxKm) / c.liveKm) * 100);
+      html += '<div style="padding:8px;margin-bottom:8px;background:var(--bg-alt);border-radius:8px;font-size:13px;">';
+      html += '<strong>' + c.date + '</strong>: ';
+      html += 'GPX <strong>' + c.gpxKm.toFixed(1) + ' km</strong> vs Live <strong>' + c.liveKm.toFixed(1) + ' km</strong> (';
+      html += '\u2212' + pct + '%)';
+      html += '</div>';
+    });
+
+    html += '<div style="display:flex;gap:10px;margin-top:16px;">';
+    html += '<button id="gpx-conflict-keep" style="flex:1;padding:12px;border:1px solid var(--border);border-radius:8px;background:var(--bg-alt);cursor:pointer;font-size:13px;">' + (isEN ? 'Keep Live' : 'Tieni Live') + '</button>';
+    html += '<button id="gpx-conflict-use-gpx" style="flex:2;padding:12px;border:none;border-radius:8px;background:var(--accent);color:#fff;cursor:pointer;font-weight:600;font-size:13px;">' + (isEN ? '\u2705 Use GPX (more accurate)' : '\u2705 Usa GPX (pi\u00f9 preciso)') + '</button>';
+    html += '</div></div>';
+
+    overlay.innerHTML = html;
+    document.body.appendChild(overlay);
+
+    overlay.querySelector('#gpx-conflict-keep').addEventListener('click', function() {
+      overlay.remove();
+      showToast(isEN ? 'Kept live tracking km' : 'Mantenuti km del live tracking', 'info');
+    });
+    overlay.querySelector('#gpx-conflict-use-gpx').addEventListener('click', function() {
+      conflicts.forEach(function(c) {
+        var upd = { km: Math.round(c.gpxKm * 10) / 10, source: 'gpx_import' };
+        if (c.gpxTime > 0 && c.gpxAvg >= 10) {
+          upd.time = c.gpxTime;
+          upd.avgSpeed = c.gpxKm / (c.gpxTime / 3600000);
+        }
+        c.summRef.update(upd);
+      });
+      overlay.remove();
+      showToast(isEN ? '\u2705 Updated with GPX data' : '\u2705 Aggiornato con dati GPX', 'success');
     });
   }
 
@@ -11472,7 +11807,8 @@ async function fetchForecast(lat, lon, date, _retry) {
       isRecording = true;
       audioChunks = [];
       _chatRecStream = stream; // v2.63 FIX: save stream ref (v3.32: moved var to module scope)
-      mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm;codecs=opus' });
+      if (!window._audioMimeType) window._audioMimeType = getSupportedAudioMime();
+      mediaRecorder = new MediaRecorder(stream, window._audioMimeType ? { mimeType: window._audioMimeType } : {});
       mediaRecorder.ondataavailable = function(e) {
         if (e.data.size > 0) audioChunks.push(e.data);
       };
@@ -11507,7 +11843,7 @@ async function fetchForecast(lat, lon, date, _retry) {
     if (send) {
       mediaRecorder.onstop = function() {
         _chatRecStream.getTracks().forEach(function(t) { t.stop(); });
-        var blob = new Blob(audioChunks, { type: 'audio/webm' });
+        var blob = new Blob(audioChunks, { type: window._audioMimeType || 'audio/webm' });
         if (blob.size < 1000) {
           if (window.showToast) showToast(isEN ? 'Recording too short' : 'Registrazione troppo breve', 'info');
           return;
@@ -11521,7 +11857,7 @@ async function fetchForecast(lat, lon, date, _retry) {
           fileRef.put(blob).then(function(snapshot) {
             return snapshot.ref.getDownloadURL();
           }).then(function(url) {
-            sendMessage('', url, 'audio/webm');
+            sendMessage('', url, window._audioMimeType || 'audio/webm');
             if (window.showToast) showToast(isEN ? 'Audio sent!' : 'Audio inviato!', 'success');
           }).catch(function(err) {
             console.error('[Chat] Audio upload failed:', err);
@@ -12816,7 +13152,7 @@ async function fetchForecast(lat, lon, date, _retry) {
       if (!isOwner) return;
       var key = btn.getAttribute('data-key');
       if (!key) return;
-      var isEN = document.documentElement.lang === 'en';
+      // v3.94: uses global isEN
       var familyId = (typeof FAMILY_ID !== 'undefined') ? FAMILY_ID : 'viaggio-europa-2026';
       var entryRef = firebase.database().ref('trips/' + familyId + '/diary/' + key);
       entryRef.once('value').then(function(snap) {
@@ -12848,7 +13184,7 @@ async function fetchForecast(lat, lon, date, _retry) {
       if (!isOwner) return;
       var key = btn.getAttribute('data-key');
       if (!key) return;
-      var isEN = document.documentElement.lang === 'en';
+      // v3.94: uses global isEN
       var familyId = (typeof FAMILY_ID !== 'undefined') ? FAMILY_ID : 'viaggio-europa-2026';
       showConfirm(isEN ? 'Delete this journal entry?' : 'Eliminare questa voce del diario?', function() {
         firebase.database().ref('trips/' + familyId + '/diary/' + key).remove().then(function() {
@@ -13445,7 +13781,7 @@ async function fetchForecast(lat, lon, date, _retry) {
     if (!ts) return '';
     try {
       var d = new Date(ts);
-      var isEN = document.documentElement.lang === 'en';
+      // v3.94: uses global isEN
       return d.toLocaleDateString(isEN ? 'en-GB' : 'it-IT', { day: '2-digit', month: 'short' }) + ' ' +
              d.toLocaleTimeString(isEN ? 'en-GB' : 'it-IT', { hour: '2-digit', minute: '2-digit' });
     } catch (e) { return ''; }
@@ -13453,7 +13789,7 @@ async function fetchForecast(lat, lon, date, _retry) {
 
   // Build the interactive reactions + comments block for a published entry
   function renderSocialBlock(key, entry) {
-    var isEN = document.documentElement.lang === 'en';
+    // v3.94: uses global isEN
     var user = _socialUser();
     var myUid = user ? user.uid : null;
 
@@ -13510,7 +13846,7 @@ async function fetchForecast(lat, lon, date, _retry) {
   }
 
   function renderCommentsList(key, comments) {
-    var isEN = document.documentElement.lang === 'en';
+    // v3.94: uses global isEN
     var keys = Object.keys(comments || {});
     if (keys.length === 0) {
       return '<div class="diario-comments-empty">' + (isEN ? 'No comments yet. Be the first!' : 'Ancora nessun commento. Scrivi tu il primo!') + '</div>';
@@ -13553,7 +13889,7 @@ async function fetchForecast(lat, lon, date, _retry) {
       return ref.set(emoji).then(function() {
         // Notify owner of a new reaction (skip if the reactor is owner)
         if (!isOwner && window.queuePushNotification) {
-          var isEN = document.documentElement.lang === 'en';
+          // v3.94: uses global isEN
           queuePushNotification('diary_reaction', {
             title: emoji + ' ' + (isEN ? 'New reaction' : 'Nuova reazione'),
             body: (user.displayName || (isEN ? 'Someone' : 'Qualcuno')) + (isEN ? ' reacted to a diary post' : ' ha reagito a un post del diario'),
@@ -13572,7 +13908,7 @@ async function fetchForecast(lat, lon, date, _retry) {
 
   function sendComment(key, text) {
     var user = _socialUser();
-    var isEN = document.documentElement.lang === 'en';
+    // v3.94: uses global isEN
     if (!user || !user.uid) {
       if (window.showToast) showToast(isEN ? 'Sign in to comment' : 'Accedi per commentare', 'info');
       return Promise.resolve();
@@ -13605,7 +13941,7 @@ async function fetchForecast(lat, lon, date, _retry) {
   }
 
   function deleteComment(key, cid) {
-    var isEN = document.documentElement.lang === 'en';
+    // v3.94: uses global isEN
     firebase.database().ref('trips/' + FAMILY_ID + '/diary/' + key + '/comments/' + cid).remove().catch(function(err) {
       console.warn('[Diario] Comment delete failed:', err.message);
       if (window.showToast) showToast(isEN ? 'Could not delete' : 'Impossibile eliminare', 'danger');
@@ -13646,7 +13982,7 @@ async function fetchForecast(lat, lon, date, _retry) {
       // Delete comment
       var db = e.target.closest('.diario-comment-del');
       if (db) {
-        var isEN = document.documentElement.lang === 'en';
+        // v3.94: uses global isEN
         showConfirm(isEN ? 'Delete this comment?' : 'Eliminare questo commento?', function() {
           deleteComment(db.getAttribute('data-key'), db.getAttribute('data-cid'));
         });
@@ -14128,11 +14464,12 @@ async function fetchForecast(lat, lon, date, _retry) {
         navigator.mediaDevices.getUserMedia({ audio: true }).then(function(stream) {
           _chunks = [];
           _seconds = 0;
-          _recorder = new MediaRecorder(stream, { mimeType: 'audio/webm;codecs=opus' });
+          if (!window._audioMimeType) window._audioMimeType = getSupportedAudioMime();
+          _recorder = new MediaRecorder(stream, window._audioMimeType ? { mimeType: window._audioMimeType } : {});
           _recorder.ondataavailable = function(e) { if (e.data.size > 0) _chunks.push(e.data); };
           _recorder.onstop = function() {
             stream.getTracks().forEach(function(t) { t.stop(); });
-            _blob = new Blob(_chunks, { type: 'audio/webm' });
+            _blob = new Blob(_chunks, { type: window._audioMimeType || 'audio/webm' });
             var url = URL.createObjectURL(_blob);
             playerEl.style.display = '';
             playerEl.innerHTML = '<audio controls src="' + url + '" style="width:100%;"></audio>';
@@ -16095,7 +16432,7 @@ async function fetchForecast(lat, lon, date, _retry) {
       return;
     }
     var familyId = (typeof FAMILY_ID !== 'undefined') ? FAMILY_ID : 'viaggio-europa-2026';
-    var isEN = (typeof window.isEN !== 'undefined') ? window.isEN : false;
+    // v3.94: uses global isEN
 
     firebase.database().ref('trips/' + familyId + '/weatherArchive').once('value', function(snap) {
       if (!snap.exists()) {
