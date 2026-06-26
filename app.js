@@ -303,6 +303,56 @@ window.writeCurrentLocation = function(lat, lng, optCity) {
   }
 };
 
+// ═════════════════════════════════════════════════════════════
+// v3.95: UNIFIED KM CALCULATION — Single source of truth
+// Both Statistics tab and Home hero call this one function.
+// Logic: sum(dailySummaries) + max(todaySummary, live.todayKm) for today.
+// ═════════════════════════════════════════════════════════════
+window.computeTotalKm = function(callback) {
+  if (typeof firebase === 'undefined' || !firebase.database || !FAMILY_ID) {
+    // Offline fallback
+    var kmDriven = 0;
+    try {
+      var trackData = JSON.parse(localStorage.getItem('qv_track') || '{}');
+      if (trackData && trackData.totalKm) kmDriven = Math.round(trackData.totalKm);
+    } catch(e) {}
+    callback(kmDriven);
+    return;
+  }
+  var db = firebase.database();
+  db.ref('trips/' + FAMILY_ID + '/dailySummaries').once('value', function(snap) {
+    var summaries = snap.val() || {};
+    var today = window.localDateStr ? window.localDateStr() : new Date().toISOString().slice(0,10);
+    var totalKm = 0;
+    var todaySummaryKm = 0;
+    Object.entries(summaries).forEach(function(entry) {
+      var dateKey = entry[0], s = entry[1];
+      var km = s.odometerKm != null ? s.odometerKm : (s.km || 0);
+      if (dateKey === today) {
+        todaySummaryKm = km;
+      } else {
+        totalKm += km;
+      }
+    });
+    // Get live todayKm — use max(summary, live) for today
+    db.ref('trips/' + FAMILY_ID + '/live').once('value', function(liveSnap) {
+      var liveData = liveSnap.val() || {};
+      var liveTodayKm = 0;
+      Object.values(liveData).forEach(function(d) {
+        if (d && d.todayKm && d.time) {
+          var liveDate = new Date(d.time);
+          var liveDateStr = liveDate.getFullYear() + '-' + String(liveDate.getMonth() + 1).padStart(2, '0') + '-' + String(liveDate.getDate()).padStart(2, '0');
+          if (liveDateStr === today) {
+            liveTodayKm = Math.max(liveTodayKm, d.todayKm);
+          }
+        }
+      });
+      totalKm += Math.max(todaySummaryKm, liveTodayKm);
+      callback(totalKm);
+    });
+  });
+};
+
 // ============================================================
 // AUTH MANAGER — Persistent Auth State (v2.48 FIX per Capacitor)
 // Replaces one-shot authReadyPromise with a persistent subscribe model.
@@ -383,6 +433,28 @@ var Platform = {
   isWeb: function() { return !Platform.isCapacitor(); }
 };
 window.Platform = Platform;
+
+// v3.95 FIX: getRedirectResult() MUST be called before any onAuthStateChanged
+// to complete sign-in after signInWithRedirect returns from Google.
+(function() {
+  if (typeof firebase === 'undefined' || !firebase.auth) return;
+  try {
+    firebase.auth().getRedirectResult()
+      .then(function(result) {
+        if (result && result.user) {
+          _qvLog.info('[Auth] getRedirectResult: user', result.user.email);
+          try { localStorage.removeItem('firebase_redirect_pending'); } catch(e) {}
+        }
+      })
+      .catch(function(err) {
+        _qvLog.warn('[Auth] getRedirectResult error', err.code || err.message);
+        try { localStorage.removeItem('firebase_redirect_pending'); } catch(e) {}
+        if (err.code === 'auth/web-storage-unsupported') {
+          if (window.showToast) showToast(isEN ? 'Enable cookies to sign in' : 'Abilita i cookie per accedere', 'error');
+        }
+      });
+  } catch(e) { console.warn('[Auth] getRedirectResult exception:', e); }
+})();
 
 // v2.34: Debug logging for Capacitor (monitors auth state and failed fetches)
 if (Platform.isCapacitor()) {
@@ -698,28 +770,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 });
-
-// v3.94 FIX Audit #1: getRedirectResult() — must be called before onAuthStateChanged
-// to complete sign-in after signInWithRedirect returns from Google.
-(function() {
-  if (typeof firebase === 'undefined' || !firebase.auth) return;
-  try {
-    firebase.auth().getRedirectResult()
-      .then(function(result) {
-        if (result && result.user) {
-          _qvLog.info('[Auth] getRedirectResult: user', result.user.email);
-          try { localStorage.removeItem('firebase_redirect_pending'); } catch(e) {}
-        }
-      })
-      .catch(function(err) {
-        _qvLog.warn('[Auth] getRedirectResult error', err.code || err.message);
-        try { localStorage.removeItem('firebase_redirect_pending'); } catch(e) {}
-        if (err.code === 'auth/web-storage-unsupported') {
-          if (window.showToast) showToast(isEN ? 'Enable cookies to sign in' : 'Abilita i cookie per accedere', 'error');
-        }
-      });
-  } catch(e) { console.warn('[Auth] getRedirectResult exception:', e); }
-})();
 
 // ─── Owner/Viewer Auth State (V4.8) ───
 // Viewers see everything read-only without login. Owners (Google Auth) can write.
@@ -3015,13 +3065,10 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
         function saveLocal(key, data) { localStorage.setItem(key, JSON.stringify(data)); }
 
         // v2.58: delegates to window._haversineKm (data.js) — single canonical implementation
+        // v3.95 FIX: Single haversine — delegates to window._haversineKm (data.js)
         function haversine(lat1, lon1, lat2, lon2) {
-          // v3.94 FIX Audit #14: NaN guard
           if (!isFinite(lat1) || !isFinite(lon1) || !isFinite(lat2) || !isFinite(lon2)) return 0;
-          if (window._haversineKm) return window._haversineKm(lat1, lon1, lat2, lon2);
-            var R = 6371; var dLat = (lat2-lat1)*Math.PI/180; var dLon = (lon2-lon1)*Math.PI/180;
-            var a = Math.sin(dLat/2)*Math.sin(dLat/2) + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)*Math.sin(dLon/2);
-            return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+          return window._haversineKm(lat1, lon1, lat2, lon2);
         }
 
         // ─── OSRM Gap Estimation ───
@@ -3151,6 +3198,10 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             if (data) checkins[idx] = data;
             else delete checkins[idx];
             saveLocal(CI_KEY, checkins);
+            // v3.95 FIX: Update /currentLocation when checking in with coordinates
+            if (data && data.lat && data.lng && window.writeCurrentLocation) {
+                window.writeCurrentLocation(data.lat, data.lng);
+            }
         }
 
         // ─── Places List ───
@@ -3308,6 +3359,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                 };
                 // v3.93: Try /currentLocation first (unified source of truth), then fallback chain
                 var posRef = firebase.database().ref('trips/' + FAMILY_ID);
+                // v3.94 FIX: Single source of truth — /currentLocation only, no more multi-node chain
                 var _tryGeoCountry = function() {
                     posRef.child('currentLocation').once('value').then(function(snap) {
                         var cl = snap.val();
@@ -3317,18 +3369,10 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                                 _displayCountry(cl.countryCode, cl.country);
                                 return;
                             }
-                            _reverseGeoCountry(cl.lat, cl.lng); return;
+                            _reverseGeoCountry(cl.lat, cl.lng);
+                            return;
                         }
-                        return posRef.child('lastPosition').once('value');
-                    }).then(function(snap2) {
-                        if (!snap2) return;
-                        var lp = snap2.val();
-                        if (lp && lp.lat && lp.lng) { _reverseGeoCountry(lp.lat, lp.lng); return; }
-                        return posRef.child('position').once('value');
-                    }).then(function(snap3) {
-                        if (!snap3) return;
-                        var pos = snap3.val();
-                        if (pos && pos.lat && pos.lng) { _reverseGeoCountry(pos.lat, pos.lng); return; }
+                        // No /currentLocation — nothing to show
                         _fallbackCheckinCountry();
                     }).catch(function() { _fallbackCheckinCountry(); });
                 };
@@ -3391,58 +3435,11 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                 _tryGeoCountry();
             }
 
-            // Total km from Firebase daily summaries + live todayKm
+            // v3.95 FIX: Use shared computeTotalKm() — single source of truth for km calculation
             var totalKmEl = document.getElementById('stat-total-km');
-            var ref = getFamilyRef('dailySummaries');
-            if (ref) {
-                ref.once('value', function(snap) {
-                    var summaries = snap.val() || {};
-                    var today = todayStr();
-                    var totalKm = 0; var days = 0;
-                    var todaySummaryKm = 0;
-                    Object.entries(summaries).forEach(function(entry) {
-                        var dateKey = entry[0], s = entry[1];
-                        var km = s.odometerKm != null ? s.odometerKm : (s.km || 0);
-                        if (dateKey === today) {
-                            todaySummaryKm = km; // Don't add yet — compare with live
-                        } else {
-                            totalKm += km;
-                        }
-                        days++;
-                    });
-                    // Get live todayKm from Firebase — use max(summary, live) for today
-                    // v3.06 FIX: only count live km if the data is from today (prevents stale km display)
-                    var liveRef = getFamilyRef('live');
-                    if (liveRef) {
-                        liveRef.once('value', function(liveSnap) {
-                            var liveData = liveSnap.val() || {};
-                            var liveTodayKm = 0;
-                            Object.values(liveData).forEach(function(d) {
-                                if (d && d.todayKm && d.time) {
-                                    var liveDate = new Date(d.time);
-                                    var liveDateStr = liveDate.getFullYear() + '-' + String(liveDate.getMonth() + 1).padStart(2, '0') + '-' + String(liveDate.getDate()).padStart(2, '0');
-                                    if (liveDateStr === today) {
-                                        liveTodayKm = Math.max(liveTodayKm, d.todayKm);
-                                    }
-                                }
-                            });
-                            totalKm += Math.max(todaySummaryKm, liveTodayKm);
-                            if (totalKmEl) totalKmEl.textContent = totalKm.toFixed(0);
-                            // Sync home banner km
-                            var _hsKm = document.getElementById('hs-km');
-                            if (_hsKm) _hsKm.textContent = Math.round(totalKm).toLocaleString('it-IT');
-                        });
-                    } else {
-                        totalKm += Math.max(todaySummaryKm, todayKm);
-                        if (totalKmEl) totalKmEl.textContent = totalKm.toFixed(0);
-                        // Sync home banner km
-                        var _hsKm2 = document.getElementById('hs-km');
-                        if (_hsKm2) _hsKm2.textContent = Math.round(totalKm).toLocaleString('it-IT');
-                    }
-                });
-            } else {
-                if (totalKmEl) totalKmEl.textContent = todayKm.toFixed(0);
-            }
+            window.computeTotalKm(function(totalKm) {
+                if (totalKmEl) totalKmEl.textContent = totalKm.toFixed(0);
+            });
 
             // Update total stops counters
             var totalStopsEl = document.getElementById('stat-total-stops');
@@ -3724,51 +3721,35 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                         updateInfoCard(d);
                     }
                 } else {
-                    // v3.93: No live tracking — try /currentLocation first, then /lastPosition
+                    // v3.94 FIX: No live tracking — read /currentLocation only (single source of truth)
                     var _clRef = getFamilyRef('currentLocation');
                     if (_clRef) {
                         _clRef.once('value', function(clSnap) {
                             var cl = clSnap.val();
                             if (cl && cl.lat && cl.lng) {
-                                updateInfoCard({ lat: cl.lat, lng: cl.lng, time: cl.ts || cl.updatedAt || Date.now(), status: 'stopped' });
-                                return;
-                            }
-                            // Fallback: /lastPosition
-                            var lastPosRef = getFamilyRef('lastPosition');
-                            if (lastPosRef) {
-                                lastPosRef.once('value', function(lpSnap) {
-                                    var lp = lpSnap.val();
-                                    if (lp && lp.lat) updateInfoCard(lp);
+                                var ageMs = Date.now() - (cl.updatedAt || cl.ts || 0);
+                                var ageMin = Math.round(ageMs / 60000);
+                                var ageStr = ageMin < 60
+                                    ? ageMin + (isEN ? ' min ago' : ' min fa')
+                                    : Math.round(ageMin/60) + (isEN ? 'h ago' : 'h fa');
+                                // Show van marker on map
+                                var icon = L.divIcon({
+                                    className: '',
+                                    html: '<div style="font-size:28px;filter:grayscale(60%);opacity:0.7;">🚐</div>',
+                                    iconSize: [32,32], iconAnchor: [16,16]
                                 });
+                                if (!vanMarker) {
+                                    vanMarker = L.marker([cl.lat, cl.lng], { icon: icon, zIndexOffset: 1500 })
+                                        .bindPopup('<strong>🚐 ' + (isEN ? 'Last position' : 'Ultima posizione') + '</strong><br>' + ageStr)
+                                        .addTo(map);
+                                } else {
+                                    vanMarker.setLatLng([cl.lat, cl.lng]);
+                                    vanMarker.setIcon(icon);
+                                    vanMarker.setPopupContent('<strong>🚐 ' + (isEN ? 'Last position' : 'Ultima posizione') + '</strong><br>' + ageStr);
+                                }
+                                updateInfoCard({ lat: cl.lat, lng: cl.lng, time: cl.updatedAt || cl.ts || Date.now(), status: 'stopped' });
                             }
                         });
-                    } else {
-                    var lastPosRef = getFamilyRef('lastPosition');
-                    if (lastPosRef) {
-                        lastPosRef.once('value', function(lpSnap) {
-                            var lp = lpSnap.val();
-                            if (!lp || !lp.lat) return;
-                            var ageMin = Math.round((Date.now() - (lp.ts || 0)) / 60000);
-                            var ageStr = ageMin < 60
-                                ? ageMin + (isEN ? ' min ago' : ' min fa')
-                                : Math.round(ageMin/60) + (isEN ? 'h ago' : 'h fa');
-                            var icon = L.divIcon({
-                                className: '',
-                                html: '<div style="font-size:28px;filter:grayscale(60%);opacity:0.7;">🚐</div>',
-                                iconSize: [32,32], iconAnchor: [16,16]
-                            });
-                            if (!vanMarker) {
-                                vanMarker = L.marker([lp.lat, lp.lng], { icon: icon, zIndexOffset: 1500 })
-                                    .bindPopup('<strong>🚐 ' + (isEN ? 'Last position' : 'Ultima posizione') + '</strong><br>' + ageStr)
-                                    .addTo(map);
-                            } else {
-                                vanMarker.setLatLng([lp.lat, lp.lng]);
-                                vanMarker.setIcon(icon);
-                                vanMarker.setPopupContent('<strong>🚐 ' + (isEN ? 'Last position' : 'Ultima posizione') + '</strong><br>' + ageStr);
-                            }
-                            updateInfoCard(lp);
-                        });
-                    }
                     }
                 }
             });
@@ -7985,51 +7966,10 @@ async function fetchForecast(lat, lon, date, _retry) {
         // Calendar icon is now a static emoji 📅 (no dynamic JS needed)
 
 
-        // km from Firebase (dailySummaries + live todayKm)
-        if (typeof db !== 'undefined' && db && FAMILY_ID) {
-            var kmRef = db.ref('trips/' + FAMILY_ID + '/dailySummaries');
-            kmRef.once('value', function(snap) {
-                var summaries = snap.val() || {};
-                var today = window.localDateStr(); // v2.96: LOCAL
-                var totalKm = 0;
-                var todaySummaryKm = 0;
-                Object.entries(summaries).forEach(function(entry) {
-                    var dateKey = entry[0], s = entry[1];
-                    var km = s.odometerKm != null ? s.odometerKm : (s.km || 0);
-                    if (dateKey === today) {
-                        todaySummaryKm = km;
-                    } else {
-                        totalKm += km;
-                    }
-                });
-                // Use max(summary, live) for today to avoid double-counting
-                // v3.06 FIX: only count live km if the data is from today
-                var liveRef = db.ref('trips/' + FAMILY_ID + '/live');
-                liveRef.once('value', function(liveSnap) {
-                    var liveData = liveSnap.val() || {};
-                    var liveTodayKm = 0;
-                    Object.values(liveData).forEach(function(d) {
-                        if (d && d.todayKm && d.time) {
-                            var liveDate = new Date(d.time);
-                            var liveDateStr = liveDate.getFullYear() + '-' + String(liveDate.getMonth() + 1).padStart(2, '0') + '-' + String(liveDate.getDate()).padStart(2, '0');
-                            if (liveDateStr === today) {
-                                liveTodayKm = Math.max(liveTodayKm, d.todayKm);
-                            }
-                        }
-                    });
-                    totalKm += Math.max(todaySummaryKm, liveTodayKm);
-                    hsKm.textContent = Math.round(totalKm).toLocaleString('it-IT');
-                });
-            });
-        } else {
-            // Fallback to localStorage
-            var kmDriven = 0;
-            try {
-                var trackData = JSON.parse(localStorage.getItem(KEYS.TRACK) || '{}');
-                if (trackData && trackData.totalKm) kmDriven = Math.round(trackData.totalKm);
-            } catch(e) {}
-            hsKm.textContent = kmDriven.toLocaleString('it-IT');
-        }
+        // v3.95 FIX: Use shared computeTotalKm() — single source of truth for km calculation
+        window.computeTotalKm(function(totalKm) {
+            hsKm.textContent = Math.round(totalKm).toLocaleString('it-IT');
+        });
 
         // Countries visited + check-ins from Firebase
         if (typeof db !== 'undefined' && db && FAMILY_ID) {
@@ -8218,30 +8158,30 @@ async function fetchForecast(lat, lon, date, _retry) {
             _updateDistanceFromHome(coord.lat, coord.lng);
 
             // --- Live van position (hero big) from Firebase ---
-            // Try to read last known position from Firebase 'live' node
-            var _liveApplied = false;
+            // v3.94 FIX: Read /currentLocation FIRST (single source of truth for "where are we now")
+            // If it has city/country → use directly (zero reverse geocode). Fallback to planned city.
             if (typeof firebase !== 'undefined' && firebase.database && FAMILY_ID) {
-                firebase.database().ref('trips/' + FAMILY_ID + '/live').once('value', function(snap) {
-                    var liveData = snap.val();
-                    if (!liveData) { _setPlannedCity(); return; }
-                    // Find the most recent live entry
-                    var latest = null;
-                    Object.values(liveData).forEach(function(d) {
-                        if (d && d.lat && d.lng && d.time) {
-                            if (!latest || d.time > latest.time) latest = d;
+                firebase.database().ref('trips/' + FAMILY_ID + '/currentLocation').once('value', function(clSnap) {
+                    var cl = clSnap.val();
+                    if (cl && cl.lat && cl.lng) {
+                        var ageMs = Date.now() - (cl.updatedAt || 0);
+                        if (ageMs < 24 * 3600000) {
+                            // Use city from /currentLocation directly (already reverse-geocoded at write time)
+                            if (cl.city) {
+                                if (heroTripCity) heroTripCity.textContent = '📍 ' + cl.city;
+                                if (heroTripCountry) heroTripCountry.textContent = (cl.country || '') + ' ' + (cl.flag || '');
+                            } else {
+                                // Has coords but no city yet — reverse geocode
+                                _reverseGeocode(cl.lat, cl.lng, function(city, country, flag) {
+                                    if (heroTripCity) heroTripCity.textContent = '📍 ' + (city || (isEN ? 'On the road' : 'In viaggio'));
+                                    if (heroTripCountry) heroTripCountry.textContent = (country || '') + ' ' + (flag || '');
+                                });
+                            }
+                            return;
                         }
-                    });
-                    // Only use if less than 2 hours old
-                    if (latest && (Date.now() - latest.time) < 7200000) {
-                        _liveApplied = true;
-                        // Reverse geocode to get city name
-                        _reverseGeocode(latest.lat, latest.lng, function(city, country, flag) {
-                            if (heroTripCity) heroTripCity.textContent = '📍 ' + (city || (isEN ? 'On the road' : 'In viaggio'));
-                            if (heroTripCountry) heroTripCountry.textContent = (country || '') + ' ' + (flag || '');
-                        });
-                    } else {
-                        _setPlannedCity();
                     }
+                    // No recent /currentLocation — use planned city
+                    _setPlannedCity();
                 });
             } else {
                 _setPlannedCity();
@@ -8324,46 +8264,24 @@ async function fetchForecast(lat, lon, date, _retry) {
     }
 
     // ─── v1.99: Distance from home (haversine) ───
-    // v2.58: delegates to window._haversineKm (data.js)
+    // v3.95 FIX: Single haversine — delegates to window._haversineKm (data.js)
     function _haversineKm(lat1, lng1, lat2, lng2) {
-      // v3.94 FIX Audit #14: NaN guard
       if (!isFinite(lat1) || !isFinite(lng1) || !isFinite(lat2) || !isFinite(lng2)) return 0;
-      if (window._haversineKm) return window._haversineKm(lat1, lng1, lat2, lng2);
-        var R = 6371;
-        var dLat = (lat2 - lat1) * Math.PI / 180;
-        var dLng = (lng2 - lng1) * Math.PI / 180;
-        var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-            Math.sin(dLng / 2) * Math.sin(dLng / 2);
-        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return Math.round(R * c);
+      return window._haversineKm(lat1, lng1, lat2, lng2);
     }
 
     function _updateDistanceFromHome(fallbackLat, fallbackLng) {
         if (!heroTripDistance || !heroTripDistanceText) return;
-        // v3.86 FIX: Only show distance from home when a REAL position exists
-        // (from /position, /lastPosition, or /live). Don't use planned coords as fallback.
+        // v3.94 FIX: Single source of truth — read /currentLocation only.
+        // No more /position → /lastPosition chain. Simple and consistent.
         if (typeof firebase !== 'undefined' && firebase.database && typeof FAMILY_ID !== 'undefined') {
-            var basePath = 'trips/' + FAMILY_ID;
-            firebase.database().ref(basePath + '/position').once('value').then(function(snap) {
-                var pos = snap.val();
-                if (pos && pos.lat && pos.lng) {
-                    var km = _haversineKm(HOME_LAT, HOME_LNG, pos.lat, pos.lng);
-                    heroTripDistanceText.textContent = km.toLocaleString(isEN ? 'en-US' : 'it-IT') + ' km ' + (isEN ? 'from home' : 'da casa') + ' \uD83C\uDFE0';
-                    heroTripDistance.style.display = '';
-                    return;
-                }
-                // Try lastPosition (persisted after tracking stops)
-                return firebase.database().ref(basePath + '/lastPosition').once('value');
-            }).then(function(snap2) {
-                if (!snap2) return; // Already handled above
-                var lp = snap2.val();
-                if (lp && lp.lat && lp.lng) {
-                    var km = _haversineKm(HOME_LAT, HOME_LNG, lp.lat, lp.lng);
+            firebase.database().ref('trips/' + FAMILY_ID + '/currentLocation').once('value').then(function(snap) {
+                var cl = snap.val();
+                if (cl && cl.lat && cl.lng) {
+                    var km = _haversineKm(HOME_LAT, HOME_LNG, cl.lat, cl.lng);
                     heroTripDistanceText.textContent = km.toLocaleString(isEN ? 'en-US' : 'it-IT') + ' km ' + (isEN ? 'from home' : 'da casa') + ' \uD83C\uDFE0';
                     heroTripDistance.style.display = '';
                 } else {
-                    // No real position available — hide badge
                     heroTripDistance.style.display = 'none';
                 }
             }).catch(function() {
@@ -10281,14 +10199,10 @@ async function fetchForecast(lat, lon, date, _retry) {
     }
   };
 
-  // v2.58: delegates to window._haversineKm (data.js)
+  // v3.95 FIX: Single haversine — delegates to window._haversineKm (data.js)
   function haversineGlobal(lat1, lon1, lat2, lon2) {
-    // v3.94 FIX Audit #14: NaN guard
     if (!isFinite(lat1) || !isFinite(lon1) || !isFinite(lat2) || !isFinite(lon2)) return 0;
-    if (window._haversineKm) return window._haversineKm(lat1, lon1, lat2, lon2);
-    var R = 6371; var dLat = (lat2-lat1)*Math.PI/180; var dLon = (lon2-lon1)*Math.PI/180;
-    var a = Math.sin(dLat/2)*Math.sin(dLat/2) + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)*Math.sin(dLon/2);
-    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return window._haversineKm(lat1, lon1, lat2, lon2);
   }
 
   function reverseGeocode(lat, lng, callback) {
@@ -10807,8 +10721,8 @@ async function fetchForecast(lat, lon, date, _retry) {
           return { lat: pt.lat, lng: pt.lng, speed: pt.speed || 0, heading: pt.heading || 0, time: pt.time };
         });
 
-        // Save merged track
-        dateRef.set(cleaned);
+        // Save merged track (wait for completion before counting as imported)
+        var _writePromise = dateRef.set(cleaned);
 
         // Also update dailySummaries km + time + avgSpeed from track points
         var km = 0;
@@ -10914,33 +10828,42 @@ async function fetchForecast(lat, lon, date, _retry) {
             }
           });
         }
-        // v3.91 FIX: increment inside async callback so count is accurate
-        imported++;
-        if (imported === total) {
-          // v3.89: Update /lastPosition with the most recent point from imported data
-          var allPoints = [];
-          dates.forEach(function(d2) {
-            pointsByDate[d2].forEach(function(pt) { if (pt.time) allPoints.push(pt); });
-          });
-          if (allPoints.length > 0) {
-            allPoints.sort(function(a, b) { return (a.time || 0) - (b.time || 0); });
-            var lastPt = allPoints[allPoints.length - 1];
-            var lastPosRef = db.ref('trips/' + FAMILY_ID + '/lastPosition');
-            lastPosRef.set({
-              lat: lastPt.lat,
-              lng: lastPt.lng,
-              time: lastPt.time,
-              source: 'gpx_import'
+        // v3.95 FIX: Wait for the main write to complete before counting as imported.
+        // This ensures the toast only fires after data is actually persisted.
+        (_writePromise || Promise.resolve()).then(function() {
+          imported++;
+          if (imported === total) {
+            // v3.89: Update /lastPosition with the most recent point from imported data
+            var allPoints = [];
+            dates.forEach(function(d2) {
+              pointsByDate[d2].forEach(function(pt) { if (pt.time) allPoints.push(pt); });
             });
-            // v3.93: Update unified /currentLocation with most recent imported point
-            if (window.writeCurrentLocation) window.writeCurrentLocation(lastPt.lat, lastPt.lng);
+            if (allPoints.length > 0) {
+              allPoints.sort(function(a, b) { return (a.time || 0) - (b.time || 0); });
+              var lastPt = allPoints[allPoints.length - 1];
+              var lastPosRef = db.ref('trips/' + FAMILY_ID + '/lastPosition');
+              lastPosRef.set({
+                lat: lastPt.lat,
+                lng: lastPt.lng,
+                time: lastPt.time,
+                source: 'gpx_import'
+              });
+              // v3.93: Update unified /currentLocation with most recent imported point
+              if (window.writeCurrentLocation) window.writeCurrentLocation(lastPt.lat, lastPt.lng);
+            }
+            showToast((isEN ? '\u2705 GPS track imported for ' : '\u2705 Tracciato GPS importato per ') + imported + (isEN ? ' days' : ' giorni'), 'success');
+            // v3.92: Show conflict resolution prompt if GPX < live by >10%
+            if (window._gpxConflicts && window._gpxConflicts.length > 0) {
+              setTimeout(function() { _showGpxConflictPrompt(); }, 800);
+            }
           }
-          showToast((isEN ? '\u2705 GPS track imported for ' : '\u2705 Tracciato GPS importato per ') + imported + (isEN ? ' days' : ' giorni'), 'success');
-          // v3.92: Show conflict resolution prompt if GPX < live by >10%
-          if (window._gpxConflicts && window._gpxConflicts.length > 0) {
-            setTimeout(function() { _showGpxConflictPrompt(); }, 800);
+        }).catch(function(err) {
+          console.error('[GPX Import] Write failed for a day:', err);
+          imported++;
+          if (imported === total) {
+            showToast((isEN ? '\u26a0\ufe0f Import completed with errors' : '\u26a0\ufe0f Importazione completata con errori'), 'error');
           }
-        }
+        });
       });
     });
   }

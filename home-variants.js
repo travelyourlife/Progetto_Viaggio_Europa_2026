@@ -675,8 +675,8 @@
 
       // Distance from home (Selvazzano: 45.3833, 11.9833)
       var HOME_LAT = 45.3833, HOME_LNG = 11.9833;
+      // v3.95 FIX: Use /currentLocation as primary (async). TRIP_COORDS only as instant placeholder.
       var posLat = null, posLng = null;
-      // Use TRIP_COORDS for current day as fallback
       if (typeof TRIP_COORDS !== 'undefined' && tripActive && TRIP_COORDS[currentDay]) {
         posLat = TRIP_COORDS[currentDay].lat;
         posLng = TRIP_COORDS[currentDay].lng;
@@ -684,12 +684,12 @@
       if (posLat !== null && posLng !== null) {
         var distKm = haversineKm(HOME_LAT, HOME_LNG, posLat, posLng);
         data.distanceFromHome = formatKmDistance(distKm) + (_en ? ' from home \ud83c\udfe0' : ' da casa \ud83c\udfe0');
-        data.progressText += ' · ' + data.distanceFromHome;
+        data.progressText += ' \u00b7 ' + data.distanceFromHome;
       } else {
         data.distanceFromHome = '';
       }
 
-      // Also try live position from Firebase (async update)
+      // Async: overwrite with real GPS from /currentLocation
       fetchLiveDistanceFromHome(HOME_LAT, HOME_LNG);
     }
 
@@ -740,12 +740,26 @@
     loadDiaryPhotos(data);
 
     // Mini map tile — generate OSM tile URL centered on current position
-    // Pre-trip: show home location (Selvazzano Dentro); during trip: show current day
+    // v3.95 FIX: Use TRIP_COORDS as instant placeholder, then async-update from /currentLocation
     var homeLat = 45.39, homeLng = 11.85; // Selvazzano Dentro (home)
     var mapLat = homeLat, mapLng = homeLng;
     if (tripActive && typeof TRIP_COORDS !== 'undefined' && TRIP_COORDS[currentDay]) {
       mapLat = TRIP_COORDS[currentDay].lat;
       mapLng = TRIP_COORDS[currentDay].lng;
+    }
+    // Async override with real GPS position
+    if (tripActive && typeof firebase !== 'undefined' && firebase.database && typeof FAMILY_ID !== 'undefined') {
+      firebase.database().ref('trips/' + FAMILY_ID + '/currentLocation').once('value', function(snap) {
+        var cl = snap.val();
+        if (cl && cl.lat && cl.lng && cl.updatedAt && (Date.now() - cl.updatedAt < 24 * 3600000)) {
+          var tZ = 6;
+          var tX = Math.floor((cl.lng + 180) / 360 * Math.pow(2, tZ));
+          var tY = Math.floor((1 - Math.log(Math.tan(cl.lat * Math.PI / 180) + 1 / Math.cos(cl.lat * Math.PI / 180)) / Math.PI) / 2 * Math.pow(2, tZ));
+          var tileUrl = 'https://tile.openstreetmap.org/' + tZ + '/' + tX + '/' + tY + '.png';
+          var mapImg = document.querySelector('.home-mini-map img, [data-minimap]');
+          if (mapImg) mapImg.src = tileUrl;
+        }
+      });
     }
     var tileZ = data.tripPreMode ? 7 : 6; // higher zoom for home in pre-trip
     var tileX = Math.floor((mapLng + 180) / 360 * Math.pow(2, tileZ));
@@ -1788,7 +1802,7 @@
   }
 
   // ─── Fetch live position from Firebase and update city, country, flag AND distance ───
-  // v3.91: Same logic as index.html hero (app.js) — tries /live, /position, /lastPosition
+  // v3.94: Reads /currentLocation only (single source of truth)
   function fetchLiveDistanceFromHome(homeLat, homeLng) {
     if (typeof firebase === 'undefined' || !firebase.database) return;
     var familyId = (typeof FAMILY_ID !== 'undefined') ? FAMILY_ID : 'main';
@@ -1840,55 +1854,19 @@
         }).catch(function() { /* silent */ });
     }
 
-    // v3.93: Unified fallback chain — /currentLocation → /live → /lastPosition → /position
+    // v3.94 FIX: Single source of truth — /currentLocation ONLY. No more multi-node fallback chain.
     firebase.database().ref(basePath + '/currentLocation').once('value').then(function(snap) {
       var cl = snap.val();
       if (cl && cl.lat && cl.lng) {
+        // Apply city/country/flag directly from /currentLocation (already geocoded at write time)
+        var container = document.getElementById('hv-container');
+        if (container) {
+          if (cl.city) { container.querySelectorAll('[data-hv="city"]').forEach(function(el) { el.textContent = cl.city; }); }
+          if (cl.country) { container.querySelectorAll('[data-hv="country"]').forEach(function(el) { el.textContent = cl.country; }); }
+          if (cl.flag) { container.querySelectorAll('[data-hv="flag"]').forEach(function(el) { el.textContent = cl.flag; }); }
+        }
+        // Update distance from home (uses haversine, no API call)
         _applyRealPosition(cl.lat, cl.lng);
-        // Also apply city/country/flag immediately if available (avoid extra Nominatim call)
-        if (cl.city || cl.country) {
-          var container = document.getElementById('hv-container');
-          if (container) {
-            if (cl.city) { container.querySelectorAll('[data-hv="city"]').forEach(function(el) { el.textContent = cl.city; }); }
-            if (cl.country) { container.querySelectorAll('[data-hv="country"]').forEach(function(el) { el.textContent = cl.country; }); }
-            if (cl.flag) { container.querySelectorAll('[data-hv="flag"]').forEach(function(el) { el.textContent = cl.flag; }); }
-          }
-        }
-        return;
-      }
-      // Fallback: Try /live (most recent entry < 2h old)
-      return firebase.database().ref(basePath + '/live').once('value');
-    }).then(function(snap) {
-      if (!snap) return;
-      var liveData = snap.val();
-      if (liveData) {
-        var latest = null;
-        Object.values(liveData).forEach(function(d) {
-          if (d && d.lat && d.lng && d.time) {
-            if (!latest || d.time > latest.time) latest = d;
-          }
-        });
-        if (latest && (Date.now() - latest.time) < 7200000) {
-          _applyRealPosition(latest.lat, latest.lng);
-          return;
-        }
-      }
-      // Try /lastPosition
-      return firebase.database().ref(basePath + '/lastPosition').once('value');
-    }).then(function(snap) {
-      if (!snap) return;
-      var lp = snap.val();
-      if (lp && lp.lat && lp.lng) {
-        _applyRealPosition(lp.lat, lp.lng);
-        return;
-      }
-      // Try /position
-      return firebase.database().ref(basePath + '/position').once('value');
-    }).then(function(snap) {
-      if (!snap) return;
-      var pos = snap.val();
-      if (pos && pos.lat && pos.lng) {
-        _applyRealPosition(pos.lat, pos.lng);
       }
     }).catch(function() { /* silent */ });
   }

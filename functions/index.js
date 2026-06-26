@@ -935,64 +935,12 @@ exports.eveningNextStage = onSchedule(
 // 9. MORNING WEATHER PUSH (Cloud Scheduler — 7:30 AM Rome)
 // ═══════════════════════════════════════════════════════════════════════════════
 
-// Trip coordinates for each day (index 0 = G0, ..., index 54 = G54)
-const TRIP_COORDS = [
-  { lat: 47.3765, lng: 15.0914, city: 'Leoben' },       // G0
-  { lat: 48.2082, lng: 16.3738, city: 'Vienna' },       // G1
-  { lat: 52.2297, lng: 21.0122, city: 'Varsavia' },     // G2
-  { lat: 54.6872, lng: 25.2797, city: 'Vilnius' },      // G3
-  { lat: 56.0153, lng: 23.4161, city: '\u0160iauliai' }, // G4
-  { lat: 59.4370, lng: 24.7536, city: 'Tallinn' },      // G5
-  { lat: 60.1699, lng: 24.9384, city: 'Helsinki' },     // G6
-  { lat: 61.7667, lng: 29.3833, city: 'Punkaharju' },   // G7
-  { lat: 61.5000, lng: 28.5000, city: 'Lago Saimaa' },  // G8
-  { lat: 65.0121, lng: 25.4651, city: 'Oulu' },         // G9
-  { lat: 65.9300, lng: 26.5100, city: 'Ranua' },        // G10
-  { lat: 66.5436, lng: 25.8473, city: 'Rovaniemi' },    // G11
-  { lat: 66.5000, lng: 25.7500, city: 'Rovaniemi' },    // G12
-  { lat: 69.0714, lng: 27.0142, city: 'Utsjoki' },      // G13
-  { lat: 69.0485, lng: 20.7890, city: 'Kilpisj\u00e4rvi' }, // G14
-  { lat: 69.6496, lng: 18.9560, city: 'Troms\u00f8' },  // G15
-  { lat: 69.2950, lng: 17.0500, city: 'Senja' },        // G16
-  { lat: 69.3267, lng: 16.1317, city: 'And\u00f8ya' },  // G17
-  { lat: 69.3250, lng: 16.1300, city: 'And\u00f8ya' },  // G18
-  { lat: 68.2344, lng: 14.5686, city: 'Svolv\u00e6r' }, // G19
-  { lat: 68.1483, lng: 14.2017, city: 'Henningsv\u00e6r' }, // G20
-  { lat: 68.2500, lng: 13.5833, city: 'Lofoten' },      // G21
-  { lat: 67.9333, lng: 13.0833, city: 'Reine' },        // G22
-  { lat: 68.0333, lng: 13.3500, city: 'Lofoten Sud' },  // G23
-  { lat: 66.5633, lng: 15.3117, city: 'Saltstraumen' }, // G24
-  { lat: 63.4305, lng: 10.3951, city: 'Trondheim' },    // G25
-  { lat: 63.4305, lng: 10.3951, city: 'Trondheim' },    // G26
-  { lat: 63.0167, lng: 7.3500, city: 'Atlanterhavsveien' }, // G27
-  { lat: 62.4567, lng: 7.6700, city: 'Trollstigen' },   // G28
-  { lat: 60.3913, lng: 5.3221, city: 'Bergen' },        // G29
-  { lat: 60.3913, lng: 5.3221, city: 'Bergen' },        // G30
-  { lat: 58.9700, lng: 5.7331, city: 'Stavanger' },     // G31
-  { lat: 58.9863, lng: 6.1885, city: 'Preikestolen' },  // G32
-  { lat: 55.6761, lng: 12.5683, city: 'Copenhagen' },   // G33
-  { lat: 55.6761, lng: 12.5683, city: 'Copenhagen' },   // G34
-  { lat: 55.6761, lng: 12.5683, city: 'Copenhagen' },   // G35
-  { lat: 55.7308, lng: 9.1153, city: 'Billund' },       // G36
-  { lat: 55.7308, lng: 9.1153, city: 'Legoland' },      // G37
-  { lat: 55.7308, lng: 9.1153, city: 'LEGO House' },    // G38
-  { lat: 53.0793, lng: 8.8017, city: 'Brema' },         // G39
-  { lat: 49.8942, lng: 2.3022, city: 'Amiens' },        // G40
-  { lat: 47.4133, lng: 0.9900, city: 'Loira' },         // G41
-  { lat: 47.4133, lng: 0.9900, city: 'Loira' },         // G42
-  { lat: 43.3183, lng: -1.9812, city: 'San Sebasti\u00e1n' }, // G43
-  { lat: 43.2630, lng: -2.9350, city: 'Bilbao' },       // G44
-  { lat: 43.1500, lng: -4.8000, city: 'Picos de Europa' }, // G45
-  { lat: 42.0096, lng: -4.5288, city: 'Palencia' },     // G46
-  { lat: 42.0096, lng: -4.5288, city: 'Palencia' },     // G47
-  { lat: 41.8800, lng: 3.1200, city: 'Costa Brava' },   // G48
-  { lat: 42.2886, lng: 3.2743, city: 'Cadaqu\u00e9s' }, // G49
-  { lat: 43.5528, lng: 7.0174, city: 'Costa Azzurra' }, // G50
-  { lat: 44.4056, lng: 8.9463, city: 'Genova' },        // G51
-  { lat: 44.4056, lng: 8.9463, city: 'Genova' },        // G52
-  { lat: 45.3900, lng: 11.8500, city: 'Casa' },         // G53
-  { lat: 45.3900, lng: 11.8500, city: 'Casa' },         // G54
-];
+// v3.95 FIX: Single source of truth — shared trip-coords.json (generated from weather-coords.js)
+const TRIP_COORDS = require('./trip-coords.json');
+
+// REMOVED: 55-entry hardcoded array that was out of sync with client.
+// Old array started here — now replaced by the require above.
+// Original inline array (kept as comment for reference):
 
 // WMO weather code to emoji + Italian label
 function weatherCodeToLabel(code) {

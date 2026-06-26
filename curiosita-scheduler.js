@@ -9,10 +9,10 @@
 (function() {
   'use strict';
 
-  // v2.96 FIX: data locale (YYYY-MM-DD). toISOString() restituisce UTC → di sera
-  // (dopo ~22:00 in Italia) saltava al giorno dopo, sfasando dateKey/recap/buongiorno
-  // rispetto a getTripDay()/getCurrentSlot() che usano l'ora locale.
+  // v3.95 FIX: Use global window.localDateStr (defined in app.js) — single source of truth.
+  // Fallback only if app.js hasn't loaded yet (should never happen).
   function localDateStr(d) {
+    if (window.localDateStr) return window.localDateStr(d);
     var x = d ? new Date(d) : new Date();
     return x.getFullYear() + '-' + String(x.getMonth() + 1).padStart(2, '0') + '-' + String(x.getDate()).padStart(2, '0');
   }
@@ -36,14 +36,18 @@
     return slot;
   }
 
-  // Calcola il giorno di viaggio corrente (negativo = pre-partenza)
+  // v3.95 FIX: Use global getCurrentTripDay (defined in app.js) — single source of truth.
+  // Respects _dayOverride and clamps to valid range.
   function getTripDay() {
+    if (typeof window.getCurrentTripDay === 'function') return window.getCurrentTripDay();
+    // Fallback with clamp (race condition: curiosita-scheduler loads before app.js globals)
     var now = new Date();
     var start = new Date(TRIP_START);
     start.setHours(0, 0, 0, 0);
     now.setHours(0, 0, 0, 0);
     var diff = Math.floor((now - start) / (1000 * 60 * 60 * 24));
-    return diff;
+    var maxDay = (typeof TRIP_DAYS !== 'undefined') ? TRIP_DAYS - 1 : 54;
+    return Math.max(-1, Math.min(diff, maxDay));
   }
 
   // Filtra curiosità per il giorno corrente
@@ -221,28 +225,18 @@
   // v3.06: Curiosità scheduling moved to server-side (curiositaDispatcher Cloud Function).
   // When QV_CURIOSITA_SERVER_SIDE is true, skip client-side curiosità sending.
   // Evening recap and buongiorno remain client-side (they need local data access).
-  if (typeof AuthManager !== 'undefined') {
-    AuthManager.subscribe(function(user) {
-      if (user) {
-        if (!window.QV_CURIOSITA_SERVER_SIDE) {
-          setTimeout(checkAndSendCuriosita, 5000);
-          startCurioWatcher();
-        }
-        // v2.59: evening photo recap (always client-side)
-        setTimeout(checkAndSendEveningRecap, 8000);
+  // v3.95 FIX: AuthManager is always available (defined in app.js before this script loads).
+  // Removed dead fallback branch that duplicated the same logic via firebase.auth().onAuthStateChanged.
+  AuthManager.subscribe(function(user) {
+    if (user) {
+      if (!window.QV_CURIOSITA_SERVER_SIDE) {
+        setTimeout(checkAndSendCuriosita, 5000);
+        startCurioWatcher();
       }
-    });
-  } else {
-    firebase.auth().onAuthStateChanged(function(user) {
-      if (user) {
-        if (!window.QV_CURIOSITA_SERVER_SIDE) {
-          setTimeout(checkAndSendCuriosita, 5000);
-          startCurioWatcher();
-        }
-        setTimeout(checkAndSendEveningRecap, 8000);
-      }
-    });
-  }
+      // v2.59: evening photo recap (always client-side)
+      setTimeout(checkAndSendEveningRecap, 8000);
+    }
+  });
 
   // ─── v2.59: Evening Photo Recap ────────────────────────────────
   // Sends a chat message at 21:00 with today's diary photos and km summary.
@@ -322,8 +316,16 @@
 
               // Build chat message
               var g = 'G' + (tripDay + 1);
-              var cityName = (typeof TRIP_COORDS !== 'undefined' && TRIP_COORDS[tripDay])
+              // v3.95 FIX: Use /currentLocation.city (real GPS) instead of static TRIP_COORDS
+              var fallbackCity = (typeof TRIP_COORDS !== 'undefined' && TRIP_COORDS[tripDay])
                 ? TRIP_COORDS[tripDay].city : '';
+
+              db.ref('trips/' + familyId + '/currentLocation').once('value').then(function(clSnap) {
+                var cl = clSnap.val();
+                var cityName = fallbackCity;
+                if (cl && cl.city && cl.updatedAt && (Date.now() - cl.updatedAt < 24 * 3600000)) {
+                  cityName = cl.city;
+                }
 
               var msgParts = ['📸 *Riepilogo serale — ' + g + (cityName ? ' · ' + cityName : '') + '*'];
               if (km !== '—') msgParts.push('🚐 ' + km + ' km percorsi oggi');
@@ -354,6 +356,7 @@
                   return cur;
                 });
               });
+              }); // end /currentLocation .then()
             });
         });
     }).catch(function(err) {
@@ -463,14 +466,8 @@
     }
   }
 
-  // Attendi che Auth sia pronta
-  if (typeof AuthManager !== 'undefined') {
-    AuthManager.subscribe(function(user) {
-      if (user) maybeSendBuongiorno();
-    });
-  } else {
-    window.addEventListener('authStateChanged', function(e) {
-      if (e.detail && e.detail.user) maybeSendBuongiorno();
-    });
-  }
+  // v3.95 FIX: AuthManager is always available. Removed dead fallback.
+  AuthManager.subscribe(function(user) {
+    if (user) maybeSendBuongiorno();
+  });
 })();

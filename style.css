@@ -5518,9 +5518,10 @@ html[lang="en"] .notif-drawer-list:empty::after {
 }
 
 
-/* v3.94 FIX Audit #15: Dark mode overrides for remaining hardcoded colors */
+/* v3.95 FIX: Dark mode overrides for remaining hardcoded colors */
 @media (prefers-color-scheme: dark) {
-    .install-banner .install-btn { background: #1e293b; color: #93c5fd; }
-    .diario-draft-badge { background: #92400e; color: #fef3c7; }
+    .install-banner .install-btn { background: var(--accent, #3b82f6); color: #fff; }
+    .diario-draft-badge { background: #b45309; color: #fff; }
+    .admin-card { background: var(--bg-card, #1e293b); border-color: var(--border, #334155); }
     .admin-card label[style*="width:40px"] span::before { background: #cbd5e1; }
 }
