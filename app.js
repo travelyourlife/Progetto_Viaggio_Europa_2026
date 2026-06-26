@@ -955,6 +955,34 @@ function checkOwnerStatus() {
 checkOwnerStatus();
 
 // ═══════════════════════════════════════════════════════════════
+// v3.96: BOOT-TIME /currentLocation sync
+// If /currentLocation is stale (>30 min) or missing, seed it from /lastPosition.
+// This ensures the Home hero shows the correct city even without starting tracking.
+// ═══════════════════════════════════════════════════════════════
+(function _bootSyncCurrentLocation() {
+  AuthManager.subscribe(function(user, ownerFlag) {
+    if (!user || !ownerFlag) return; // Only owners write
+    if (!dbRef) return;
+    dbRef.child('currentLocation').once('value').then(function(snap) {
+      var cl = snap.val();
+      var now = Date.now();
+      // If /currentLocation is fresh (<30 min), skip
+      if (cl && cl.updatedAt && (now - cl.updatedAt) < 1800000) return;
+      // Otherwise, try to seed from /lastPosition
+      dbRef.child('lastPosition').once('value').then(function(lpSnap) {
+        var lp = lpSnap.val();
+        if (lp && lp.lat && lp.lng) {
+          // Only write if lastPosition is newer than currentLocation
+          if (!cl || !cl.updatedAt || (lp.ts && lp.ts > cl.updatedAt)) {
+            if (window.writeCurrentLocation) window.writeCurrentLocation(lp.lat, lp.lng);
+          }
+        }
+      });
+    });
+  });
+})();
+
+// ═══════════════════════════════════════════════════════════════
 // ─── DATA-DRIVEN RENDERING ───
 // ═══════════════════════════════════════════════════════════════
 
@@ -4068,6 +4096,23 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                     });
                 }
 
+                // v3.96: Update /currentLocation (throttled: every 5 min or >500m)
+                if (window.writeCurrentLocation) {
+                    var _doLocW = false;
+                    if (!window._lastLocWriteTime) _doLocW = true;
+                    else if ((Date.now() - window._lastLocWriteTime) >= 300000) _doLocW = true;
+                    else if (window._lastLocWriteLat != null) {
+                        var _dLoc = window._haversineKm ? window._haversineKm(window._lastLocWriteLat, window._lastLocWriteLng, lat, lng) : 999;
+                        if (_dLoc > 0.5) _doLocW = true;
+                    }
+                    if (_doLocW) {
+                        window._lastLocWriteTime = Date.now();
+                        window._lastLocWriteLat = lat;
+                        window._lastLocWriteLng = lng;
+                        window.writeCurrentLocation(lat, lng);
+                    }
+                }
+
                 // Update van marker locally
                 if (map) {
                     if (!vanMarker) {
@@ -5535,6 +5580,23 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                 if (_lpRef && firebaseUser) {
                     _lpRef.set({ lat: lat, lng: lng, heading: heading, ts: Date.now(),
                                  name: firebaseUser.displayName || 'Furgone' });
+                }
+
+                // v3.96: Update /currentLocation (throttled: every 5 min or >500m)
+                if (window.writeCurrentLocation) {
+                    var _doLocW2 = false;
+                    if (!window._lastLocWriteTime) _doLocW2 = true;
+                    else if ((Date.now() - window._lastLocWriteTime) >= 300000) _doLocW2 = true;
+                    else if (window._lastLocWriteLat != null) {
+                        var _dLoc2 = window._haversineKm ? window._haversineKm(window._lastLocWriteLat, window._lastLocWriteLng, lat, lng) : 999;
+                        if (_dLoc2 > 0.5) _doLocW2 = true;
+                    }
+                    if (_doLocW2) {
+                        window._lastLocWriteTime = Date.now();
+                        window._lastLocWriteLat = lat;
+                        window._lastLocWriteLng = lng;
+                        window.writeCurrentLocation(lat, lng);
+                    }
                 }
 
                 if (map) {

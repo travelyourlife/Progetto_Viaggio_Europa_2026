@@ -1854,8 +1854,9 @@
         }).catch(function() { /* silent */ });
     }
 
-    // v3.94 FIX: Single source of truth — /currentLocation ONLY. No more multi-node fallback chain.
-    firebase.database().ref(basePath + '/currentLocation').once('value').then(function(snap) {
+    // v3.96 FIX: LIVE listener on /currentLocation — updates Home hero in real-time.
+    // Uses .on('value') so when tracking writes new position, Home updates immediately.
+    firebase.database().ref(basePath + '/currentLocation').on('value', function(snap) {
       var cl = snap.val();
       if (cl && cl.lat && cl.lng) {
         // Apply city/country/flag directly from /currentLocation (already geocoded at write time)
@@ -1868,7 +1869,7 @@
         // Update distance from home (uses haversine, no API call)
         _applyRealPosition(cl.lat, cl.lng);
       }
-    }).catch(function() { /* silent */ });
+    });
   }
 
   // ─── Curiosity Panel ───
