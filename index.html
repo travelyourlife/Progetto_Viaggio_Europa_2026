@@ -64,7 +64,7 @@
     <link rel="apple-touch-icon" sizes="152x152" href="./icon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="./icon.png">
     <link rel="apple-touch-icon" sizes="167x167" href="./icon.png">
-    <title>Quo Vadis — V4.02</title>
+    <title>Quo Vadis — V4.06</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="home-variants.css">
@@ -86,7 +86,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = '4.02';
+  var EXPECTED_VERSION = '4.06';
   window.IS_PROD = true; // v2.71: disabilita debug overlay in produzione
     window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
@@ -9019,21 +9019,15 @@
 </div><!-- end pos-stats-wrapper -->
 <!-- progress bar removed v3.53 -->
 
-<!-- ─── ATTIVITÀ SPORTIVE (chip colorati) ─── -->
+<!-- ─── ATTIVITÀ A PIEDI (Garmin / manuale) ─── -->
 <div class="pos-garmin-card" id="pos-garmin-card">
-    <h3 class="pos-section-title">🏃 Attività sportive</h3>
-    <div class="pos-garmin-sub-label" style="font-size:12px;color:var(--text-muted);margin-bottom:4px;">Oggi</div>
+    <h3 class="pos-section-title">🚶 A piedi</h3>
+    <div class="pos-garmin-sub-label" style="font-size:12px;color:var(--text-muted);margin-bottom:4px;">Totale viaggio</div>
     <div class="pos-garmin-chips">
-        <span class="pos-garmin-chip pos-chip-green">🥾 <strong id="pos-garmin-walk-day">0</strong> km a piedi</span>
-        <span class="pos-garmin-chip pos-chip-blue">🚴 <strong id="pos-garmin-bike-day">0</strong> km in bici</span>
-        <span class="pos-garmin-chip pos-chip-orange">⛰️ <strong id="pos-garmin-elev-day">0</strong>m dislivello</span>
+        <span class="pos-garmin-chip pos-chip-green">🧥 <strong id="pos-garmin-walk">0</strong> km</span>
+        <span class="pos-garmin-chip pos-chip-purple">👣 <strong id="pos-garmin-steps">0</strong> passi</span>
     </div>
-    <div class="pos-garmin-sub-label" style="font-size:12px;color:var(--text-muted);margin:8px 0 4px;">Totale viaggio</div>
-    <div class="pos-garmin-chips">
-        <span class="pos-garmin-chip pos-chip-green">🥾 <strong id="pos-garmin-walk">0</strong> km a piedi</span>
-        <span class="pos-garmin-chip pos-chip-blue">🚴 <strong id="pos-garmin-bike">0</strong> km in bici</span>
-        <span class="pos-garmin-chip pos-chip-orange">⛰️ <strong id="pos-garmin-elev">0</strong>m dislivello</span>
-    </div>
+    <button type="button" class="add-km-btn" id="garmin-add-day-btn" style="margin-top:10px;">+ Aggiungi giorno</button>
 </div>
 
 <!-- ─── METEO PROSSIME TAPPE ─── -->
@@ -9577,8 +9571,7 @@
         <div class="chat-input-actions-left">
           <button type="button" class="chat-action-btn" id="chat-attach-btn" aria-label="Allega file" title="Allega foto/audio">📎</button>
           <button type="button" class="chat-action-btn" id="chat-location-btn" aria-label="Invia posizione" title="Invia posizione">📍</button>
-          <button type="button" class="chat-action-btn" id="chat-quick-voice-btn" aria-label="Reazione vocale 5s" title="Reazione vocale rapida (5 sec)" style="position:relative;">🎙️<span style="position:absolute;top:-2px;right:-2px;font-size:8px;background:#ef4444;color:#fff;border-radius:50%;width:14px;height:14px;display:flex;align-items:center;justify-content:center;">5</span></button>
-          <button type="button" class="chat-action-btn" id="chat-postcard-btn" aria-label="Invia cartolina" title="Invia cartolina virtuale">✉️</button>
+
         </div>
         <div class="chat-input-actions-right">
           <button type="button" class="chat-action-btn" id="chat-voice-btn" aria-label="Registra audio" title="Tieni premuto per registrare">🎤</button>

@@ -1901,6 +1901,32 @@
           if (cl.country) { container.querySelectorAll('[data-hv="country"]').forEach(function(el) { el.textContent = cl.country; }); }
           if (cl.flag) { container.querySelectorAll('[data-hv="flag"]').forEach(function(el) { el.textContent = cl.flag; }); }
         }
+        // v4.04: restMode — show overnight status + next day preview
+        var _enRest = (typeof isEN !== 'undefined' && isEN);
+        if (container && cl.restMode) {
+          // Update status badge to show rest mode
+          container.querySelectorAll('[data-hv="statusBadge"]').forEach(function(el) {
+            el.textContent = _enRest ? '\uD83C\uDF19 Resting' : '\uD83C\uDF19 In sosta';
+            el.classList.remove('hv-badge-green');
+            el.classList.add('hv-badge-amber');
+          });
+          // Show next-stop row with tomorrow's info
+          var nextStopRows = container.querySelectorAll('[data-hv="nextStopRow"]');
+          nextStopRows.forEach(function(el) { el.style.display = ''; });
+          var nextStopSeps = container.querySelectorAll('[data-hv="nextStopSep"]');
+          nextStopSeps.forEach(function(el) { el.style.display = ''; });
+          var nextStopLabels = container.querySelectorAll('[data-hv="nextStopLabel"]');
+          nextStopLabels.forEach(function(el) { el.textContent = _enRest ? 'Tomorrow:' : 'Domani:'; });
+        } else if (container) {
+          // Clear rest mode badge if restMode was removed
+          container.querySelectorAll('[data-hv="statusBadge"]').forEach(function(el) {
+            if (el.textContent.indexOf('\uD83C\uDF19') !== -1) {
+              el.textContent = _enRest ? '\uD83D\udfe2 ON THE ROAD' : '\uD83D\udfe2 IN VIAGGIO';
+              el.classList.remove('hv-badge-amber');
+              el.classList.add('hv-badge-green');
+            }
+          });
+        }
         // Always update distance from home (uses haversine, no API call) — even if stale
         _applyRealPosition(cl.lat, cl.lng);
       }

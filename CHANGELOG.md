@@ -5,6 +5,25 @@
 
 # Quo Vadis — Changelog
 
+## v4.06 — 2026-06-27
+- **Sezione "A piedi" rinnovata**: rimossa riga "Oggi" (3 chip giornalieri), rimossi chip bici e dislivello. Totale viaggio ora mostra solo 🧥 km + 👣 passi.
+- **Input Garmin/manuale**: pulsante "+ Aggiungi giorno" (owner only) apre modal con campi Data, Passi (da Garmin), Km a piedi, Nota. Se km vuoto, stima automatica da passi (×0.0007).
+- **Nuovo campo `steps`** nel nodo Firebase `/activities` — i passi si sommano nel totale viaggio.
+- **CSS `pos-chip-purple`**: aggiunta classe per chip passi (light + dark mode).
+- **Rimossi dalla chat**: pulsante 🎙️ 5s (quick voice) e ✉️ cartolina (postcard) + relativi handler JS e modal `_showPostcardModal`.
+
+## v4.04 — 2026-06-27
+- **Zero prompt() residui**: sostituiti gli ultimi 2 `prompt()` (edit nome sosta + edit displayName admin) con modal custom `_showPromptModal`. L'app è ora 100% compatibile iOS PWA.
+- **Listener singleton guards**: aggiunti guard `_listenerAttached_*` ai 6 listener globali del sync block (checkins, currentDay, notes, zaino, livePosition, quizScores) per prevenire doppio attach.
+- **restMode**: salvataggio parcheggio notte scrive `restMode: true` su `/currentLocation`. Home mostra badge ambra "🌙 Sosta notturna" + riepilogo G[N] + anteprima G[N+1]. Avvio tracking mattina rimuove il flag.
+- **Dark mode 4 classi**: aggiunti override per `.diario-draft-badge`, `.admin-card`, `.chat-postcard/.chat-postcard-card`, `.playlist-section`.
+- **importRecordsData date range**: warning esplicito se tutte le date sono fuori range viaggio; skip automatico date fuori range con toast informativo.
+- **hv-badge-amber CSS**: aggiunta classe per badge ambra (light + dark mode) in home-variants.css.
+
+## v4.03 — 2026-06-27
+- **Rimossa feature "Ci siamo stati!"**: rimosso pulsante, render, click handler e regole database.
+- **Reazioni aggiornate**: rimossa 🔥 (fuoco), aggiunte 🍻 (birre) e 🥳 (party) sia ai post che ai commenti.
+
 ## v4.02 — 2026-06-27
 - **P0 Firebase Listener Cleanup**: aggiunto `.off()` prima di `.on()` su tutti i listener ripetibili (loadCheckins, renderParkingList, renderCustomCheckins, renderDailySummaries, notification drawer, playlist, home-variants /currentLocation). Rimosso listener `currentDay` duplicato. Previene memory leak dopo ore di uso.
 - **P1 Rate Limiting Cloud Functions**: aggiunta funzione `checkRateLimit()` con contatore giornaliero per-utente. Limiti: `translatePost` 50/giorno, `parseExpenseScreenshot` 20/giorno, `parseExpensePdf` 10/giorno. Previene abuso e costi imprevisti.

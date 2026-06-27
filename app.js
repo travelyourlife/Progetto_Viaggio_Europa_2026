@@ -4221,6 +4221,8 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                 todayPoints = prevPoints;
                 liveActive = true;
                 liveStartTime = Date.now();
+                // v4.04: Clear restMode when tracking starts
+                if (dbRef) dbRef.child('currentLocation/restMode').remove().catch(function() {});
                 // Store previous elapsed time so stopLive can add session time to it
                 _prevElapsed = prevTime;
 
@@ -4904,6 +4906,10 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             if (ref) ref.set(spot);
             // v3.93: Update unified /currentLocation when parking is saved
             if (lat && lng && window.writeCurrentLocation) window.writeCurrentLocation(lat, lng);
+            // v4.04: Set restMode flag on /currentLocation for overnight parking
+            if (lat && lng && dbRef) {
+              dbRef.child('currentLocation/restMode').set(true).catch(function() {});
+            }
             showToast('🅿️ ' + (isEN ? 'Parking saved!' : 'Parcheggio salvato!'), 'success');
             renderParkingList();
             updateMapMarkers();
@@ -5772,6 +5778,8 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
         function startLive_resume(prevElapsedFromSession) {
             liveActive = true;
             lastMovementTime = Date.now();
+            // v4.04: Clear restMode when tracking resumes
+            if (dbRef) dbRef.child('currentLocation/restMode').remove().catch(function() {});
             // v3.74 FIX: Use prevElapsed from session node directly.
             // Previously read from dailySummaries which already includes current session time,
             // causing double-counting when combined with (now - session.startTime).
@@ -5964,6 +5972,8 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             _qvLog.info('[Tracking] capgpsTrackingStarted received, syncing app.js state');
             var detail = e.detail || {};
             liveActive = true;
+            // v4.04: Clear restMode when tracking starts via CapGPS
+            if (dbRef) dbRef.child('currentLocation/restMode').remove().catch(function() {});
             liveStartTime = detail.startTime || Date.now();
             todayKm = detail.km || 0;
             lastMovementTime = Date.now();
@@ -7362,7 +7372,10 @@ async function fetchForecast(lat, lon, date, _retry) {
   // ─── 1. CHECK-IN SYNC ───
   const CI_KEY = KEYS.CHECKINS;
 
-  dbRef.child('checkins').on('value', function(snapshot) {
+  // v4.04: singleton guards for global listeners
+  var _checkinsRef = dbRef.child('checkins');
+  _checkinsRef.off('value');
+  _checkinsRef.on('value', function(snapshot) {
     const remoteData = snapshot.val();
     if (!remoteData) return;
     const localData = JSON.parse(localStorage.getItem(CI_KEY) || '{}');
@@ -7398,7 +7411,9 @@ async function fetchForecast(lat, lon, date, _retry) {
 
   // ─── 2. CURRENT DAY OVERRIDE ───
   // Remote listener handled by unified Day Override Controls block
-  dbRef.child('currentDay').on('value', function(snapshot) {
+  var _currentDayRef = dbRef.child('currentDay');
+  _currentDayRef.off('value');
+  _currentDayRef.on('value', function(snapshot) {
     var val = snapshot.val();
     if (val !== null && val !== undefined) {
       // v1.84: Session-only override (no localStorage)
@@ -7426,8 +7441,11 @@ async function fetchForecast(lat, lon, date, _retry) {
     dbRef.child('notes/G' + dayIndex).set({ text: text, ts: Date.now() });
   };
 
+  var _notesListenerRef = null;
   window.firebaseListenNotes = function(callback) {
-    dbRef.child('notes').on('value', function(snapshot) {
+    if (_notesListenerRef) _notesListenerRef.off('value');
+    _notesListenerRef = dbRef.child('notes');
+    _notesListenerRef.on('value', function(snapshot) {
       callback(snapshot.val() || {});
     });
   };
@@ -7436,7 +7454,9 @@ async function fetchForecast(lat, lon, date, _retry) {
   const ZAINO_KEY = KEYS.ZAINO;
 
   var _zainoFirstSync = true; // First sync does merge; subsequent syncs accept remote
-  dbRef.child('zaino').on('value', function(snapshot) {
+  var _zainoRef = dbRef.child('zaino');
+  _zainoRef.off('value');
+  _zainoRef.on('value', function(snapshot) {
     var remoteZaino = snapshot.val();
     if (!remoteZaino) return;
     var localZaino = JSON.parse(localStorage.getItem(ZAINO_KEY) || '{}');
@@ -7508,7 +7528,9 @@ async function fetchForecast(lat, lon, date, _retry) {
   };
 
   // ─── 5. LIVE POSITION ───
-  dbRef.child('livePosition').on('value', function(snapshot) {
+  var _livePosRef = dbRef.child('livePosition');
+  _livePosRef.off('value');
+  _livePosRef.on('value', function(snapshot) {
     const pos = snapshot.val();
     if (pos && pos.ts > Date.now() - 300000) {
       window.dispatchEvent(new CustomEvent('livePositionUpdate', { detail: pos }));
@@ -9066,8 +9088,11 @@ async function fetchForecast(lat, lon, date, _retry) {
   }
 
   // Firebase listener — keeps _quizCache always fresh
+  var _quizScoresRef = null;
   if (dbRef) {
-    dbRef.child('quizScores').on('value', function(snap) {
+    _quizScoresRef = dbRef.child('quizScores');
+    _quizScoresRef.off('value');
+    _quizScoresRef.on('value', function(snap) {
       var data = snap.val() || {};
       _quizCache = data;
       try { localStorage.setItem(QUIZ_KEY, JSON.stringify(data)); } catch(e) {}
@@ -11045,6 +11070,36 @@ async function fetchForecast(lat, lon, date, _retry) {
     var total = dates.length;
     var DEDUP_THRESHOLD = 30000; // 30 seconds — merge window
 
+    // v4.04: Early warning if file contains no usable dates
+    if (total === 0) {
+      showToast(isEN ? '⚠️ No GPS points found in file' : '⚠️ Nessun punto GPS trovato nel file', 'warn');
+      return;
+    }
+
+    // v4.04: Check if dates are within trip range and warn
+    var TRIP_START_DATE = window.TRIP_START ? new Date(window.TRIP_START).toISOString().slice(0,10) : null;
+    var TRIP_END_DATE = window.TRIP_END ? new Date(window.TRIP_END).toISOString().slice(0,10) : null;
+    if (TRIP_START_DATE && TRIP_END_DATE) {
+      var outOfRange = dates.filter(function(d) { return d < TRIP_START_DATE || d > TRIP_END_DATE; });
+      if (outOfRange.length === dates.length) {
+        showToast(
+          isEN ? '⚠️ All dates are outside the trip range (' + TRIP_START_DATE + ' – ' + TRIP_END_DATE + ')'
+               : '⚠️ Tutte le date sono fuori dal range del viaggio (' + TRIP_START_DATE + ' – ' + TRIP_END_DATE + ')',
+          'warn'
+        );
+        return;
+      } else if (outOfRange.length > 0) {
+        showToast(
+          isEN ? '⚠️ ' + outOfRange.length + ' dates outside trip range will be skipped'
+               : '⚠️ ' + outOfRange.length + ' date fuori range verranno saltate',
+          'warn'
+        );
+        // Filter to only in-range dates
+        dates = dates.filter(function(d) { return d >= TRIP_START_DATE && d <= TRIP_END_DATE; });
+        total = dates.length;
+      }
+    }
+
     dates.forEach(function(date) {
       // v3.87: No date filter — allow importing any date (pre-trip testing, etc.)
       var newPoints = pointsByDate[date];
@@ -12030,98 +12085,45 @@ async function fetchForecast(lat, lon, date, _retry) {
     }
   });
 
-  // ─── v4.01 FIX: Custom modal for postcard text (replaces prompt() blocked on iOS PWA) ───
-  function _showPostcardModal(callback) {
+  // ─── v4.04 FIX: Generic prompt modal (replaces prompt() blocked on iOS PWA) ───
+  function _showPromptModal(title, defaultValue, callback) {
     var overlay = document.createElement('div');
     overlay.style.cssText = 'position:fixed;inset:0;z-index:100000;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:20px;';
     var card = document.createElement('div');
     card.style.cssText = 'background:var(--card-bg,#fff);border-radius:16px;padding:24px;width:100%;max-width:340px;box-shadow:0 20px 60px rgba(0,0,0,0.3);';
-    var title = document.createElement('div');
-    title.style.cssText = 'font-size:16px;font-weight:700;margin-bottom:12px;color:var(--text-color,#1a1a2e);';
-    title.textContent = isEN ? '\u2709\uFE0F Write your postcard' : '\u2709\uFE0F Scrivi la cartolina';
-    var input = document.createElement('textarea');
-    input.style.cssText = 'width:100%;min-height:80px;border:1px solid var(--border-color,#e2e8f0);border-radius:10px;padding:12px;font-size:14px;resize:vertical;font-family:inherit;box-sizing:border-box;background:var(--bg-color,#fff);color:var(--text-color,#1a1a2e);';
-    input.placeholder = isEN ? 'Your message...' : 'Il tuo messaggio...';
-    input.maxLength = 500;
+    var titleEl = document.createElement('div');
+    titleEl.style.cssText = 'font-size:16px;font-weight:700;margin-bottom:12px;color:var(--text-color,#1a1a2e);';
+    titleEl.textContent = title;
+    var input = document.createElement('input');
+    input.type = 'text';
+    input.value = defaultValue || '';
+    input.style.cssText = 'width:100%;border:1px solid var(--border-color,#e2e8f0);border-radius:10px;padding:12px;font-size:14px;font-family:inherit;box-sizing:border-box;background:var(--bg-color,#fff);color:var(--text-color,#1a1a2e);';
     var btnRow = document.createElement('div');
     btnRow.style.cssText = 'display:flex;gap:10px;margin-top:14px;';
     var cancelBtn = document.createElement('button');
     cancelBtn.type = 'button';
     cancelBtn.style.cssText = 'flex:1;padding:12px;border-radius:10px;border:none;background:var(--border-color,#e2e8f0);font-size:14px;font-weight:600;cursor:pointer;color:var(--text-color,#1a1a2e);';
     cancelBtn.textContent = isEN ? 'Cancel' : 'Annulla';
-    var sendBtn = document.createElement('button');
-    sendBtn.type = 'button';
-    sendBtn.style.cssText = 'flex:1;padding:12px;border-radius:10px;border:none;background:#3b82f6;color:#fff;font-size:14px;font-weight:600;cursor:pointer;';
-    sendBtn.textContent = isEN ? 'Send' : 'Invia';
+    var okBtn = document.createElement('button');
+    okBtn.type = 'button';
+    okBtn.style.cssText = 'flex:1;padding:12px;border-radius:10px;border:none;background:#3b82f6;color:#fff;font-size:14px;font-weight:600;cursor:pointer;';
+    okBtn.textContent = 'OK';
     btnRow.appendChild(cancelBtn);
-    btnRow.appendChild(sendBtn);
-    card.appendChild(title);
+    btnRow.appendChild(okBtn);
+    card.appendChild(titleEl);
     card.appendChild(input);
     card.appendChild(btnRow);
     overlay.appendChild(card);
     document.body.appendChild(overlay);
-    setTimeout(function() { input.focus(); }, 100);
+    setTimeout(function() { input.focus(); input.select(); }, 100);
     function close() { if (overlay.parentNode) document.body.removeChild(overlay); }
     cancelBtn.addEventListener('click', function() { close(); callback(null); });
     overlay.addEventListener('click', function(e) { if (e.target === overlay) { close(); callback(null); } });
-    sendBtn.addEventListener('click', function() { var val = input.value; close(); callback(val); });
+    okBtn.addEventListener('click', function() { close(); callback(input.value); });
+    input.addEventListener('keydown', function(e) { if (e.key === 'Enter') { close(); callback(input.value); } });
   }
 
-  // ─── v4.00 Feature #18: Virtual Postcard ───
-  var postcardBtn = document.getElementById('chat-postcard-btn');
-  if (postcardBtn) {
-    postcardBtn.addEventListener('click', function() {
-      if (!chatUser) {
-        if (window.showToast) showToast(isEN ? 'Sign in first' : 'Accedi prima', 'info');
-        return;
-      }
-      // Step 1: Pick a photo
-      var fileInput = document.createElement('input');
-      fileInput.type = 'file';
-      fileInput.accept = 'image/*';
-      fileInput.style.cssText = 'position:fixed;top:-100px;left:-100px;opacity:0;';
-      fileInput.addEventListener('change', function() {
-        document.body.removeChild(fileInput);
-        if (!fileInput.files || !fileInput.files[0]) return;
-        var file = fileInput.files[0];
-        if (file.size > 5 * 1024 * 1024) {
-          if (window.showToast) showToast(isEN ? 'Photo too large (max 5MB)' : 'Foto troppo grande (max 5MB)', 'error');
-          return;
-        }
-        // Step 2: Ask for message via custom modal (prompt() is blocked on iOS PWA)
-        _showPostcardModal(function(text) {
-          if (!text || !text.trim()) return;
-          // Step 3: Upload and send
-          if (window.showToast) showToast(isEN ? '\u2709\uFE0F Sending postcard...' : '\u2709\uFE0F Invio cartolina...', 'info');
-          if (firebase.storage) {
-            var ref = firebase.storage().ref('chat/viaggio-europa-2026/postcards/pc_' + Date.now() + '.jpg');
-            ref.put(file).then(function(snap) { return snap.ref.getDownloadURL(); }).then(function(url) {
-              // Send as postcard message type
-              var msg = {
-                uid: chatUser.uid,
-                displayName: chatUser.displayName || chatUser.email || 'User',
-                photoURL: chatUser.photoURL || '',
-                text: text.trim(),
-                mediaUrl: url,
-                mediaType: 'image/jpeg',
-                msgType: 'postcard',
-                postcardFrom: chatUser.displayName || chatUser.email || '',
-                timestamp: firebase.database.ServerValue.TIMESTAMP,
-                lang: LANG
-              };
-              CHAT_REF.push(msg);
-              if (window.showToast) showToast(isEN ? '\u2709\uFE0F Postcard sent!' : '\u2709\uFE0F Cartolina inviata!', 'success');
-            }).catch(function(err) {
-              console.error('[Chat] Postcard upload failed:', err);
-              if (window.showToast) showToast(isEN ? 'Upload failed' : 'Invio fallito', 'error');
-            });
-          }
-        });
-      });
-      document.body.appendChild(fileInput);
-      fileInput.click();
-    });
-  }
+  // ─── v4.01 _showPostcardModal + v4.00 Feature #18: Virtual Postcard — REMOVED in v4.06 ───
 
   // ─── File attachment ───
   chatAttachBtn.addEventListener('click', function() {
@@ -12307,78 +12309,7 @@ async function fetchForecast(lat, lon, date, _retry) {
     recSend.addEventListener('click', function() { stopRecording(true); });
   }
 
-  // ─── v4.00 Feature #7: Quick 5-sec voice reaction ───
-  var quickVoiceBtn = document.getElementById('chat-quick-voice-btn');
-  if (quickVoiceBtn) {
-    var _qvRecording = false;
-    var _qvRecorder = null;
-    var _qvChunks = [];
-    var _qvStream = null;
-    var _qvTimeout = null;
-    quickVoiceBtn.addEventListener('click', function() {
-      if (_qvRecording) return; // already recording
-      if (!chatUser) {
-        if (window.showToast) showToast(isEN ? 'Sign in first' : 'Accedi prima', 'info');
-        return;
-      }
-      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        if (window.showToast) showToast(isEN ? 'Microphone not supported' : 'Microfono non supportato', 'error');
-        return;
-      }
-      navigator.mediaDevices.getUserMedia({ audio: true }).then(function(stream) {
-        _qvRecording = true;
-        _qvChunks = [];
-        _qvStream = stream;
-        if (!window._audioMimeType) window._audioMimeType = getSupportedAudioMime();
-        _qvRecorder = new MediaRecorder(stream, window._audioMimeType ? { mimeType: window._audioMimeType } : {});
-        _qvRecorder.ondataavailable = function(e) { if (e.data.size > 0) _qvChunks.push(e.data); };
-        _qvRecorder.onstop = function() {
-          _qvStream.getTracks().forEach(function(t) { t.stop(); });
-          var blob = new Blob(_qvChunks, { type: window._audioMimeType || 'audio/webm' });
-          if (blob.size < 500) { _qvRecording = false; quickVoiceBtn.style.background = ''; return; }
-          // Upload
-          if (firebase.storage) {
-            var ref = firebase.storage().ref('chat/viaggio-europa-2026/audio/quick_' + Date.now() + '.webm');
-            ref.put(blob).then(function(snap) { return snap.ref.getDownloadURL(); }).then(function(url) {
-              sendMessage('', url, window._audioMimeType || 'audio/webm');
-              if (window.showToast) showToast(isEN ? '5s reaction sent!' : 'Reazione 5s inviata!', 'success');
-            }).catch(function(err) {
-              console.error('[Chat] Quick voice upload failed:', err);
-              if (window.showToast) showToast(isEN ? 'Upload failed' : 'Invio fallito', 'error');
-            });
-          }
-          _qvRecording = false;
-          quickVoiceBtn.style.background = '';
-        };
-        _qvRecorder.start();
-        quickVoiceBtn.style.background = 'rgba(239,68,68,0.2)';
-        // v4.01: Visual countdown 5→0
-        var _qvCountdown = 5;
-        var _qvOrigText = quickVoiceBtn.textContent;
-        quickVoiceBtn.textContent = '5';
-        quickVoiceBtn.style.cssText += ';font-weight:700;font-size:16px;min-width:38px;';
-        var _qvCountdownTimer = setInterval(function() {
-          _qvCountdown--;
-          if (_qvCountdown > 0) {
-            quickVoiceBtn.textContent = String(_qvCountdown);
-          } else {
-            quickVoiceBtn.textContent = '\u2714';
-            clearInterval(_qvCountdownTimer);
-          }
-        }, 1000);
-        // Auto-stop after 5 seconds
-        _qvTimeout = setTimeout(function() {
-          clearInterval(_qvCountdownTimer);
-          quickVoiceBtn.textContent = _qvOrigText;
-          quickVoiceBtn.style.cssText = quickVoiceBtn.style.cssText.replace(/;font-weight:700;font-size:16px;min-width:38px;/, '');
-          if (_qvRecorder && _qvRecorder.state === 'recording') _qvRecorder.stop();
-        }, 5000);
-      }).catch(function(err) {
-        console.error('[Chat] Quick voice mic denied:', err);
-        if (window.showToast) showToast(isEN ? 'Microphone access denied' : 'Accesso microfono negato', 'error');
-      });
-    });
-  }
+  // ─── v4.00 Feature #7: Quick 5-sec voice reaction — REMOVED in v4.06 ───
 
   // ─── Reply to message ───
   var replyingTo = null; // { key, text, displayName }
@@ -12399,7 +12330,7 @@ async function fetchForecast(lat, lon, date, _retry) {
   }
 
   // ─── v3.27: Unified context menu (WhatsApp-style) ───
-  var REACTIONS = ['👍', '❤️', '😂', '😮', '😢', '🙏'];
+  var REACTIONS = ['👍', '❤️', '😂', '😮', '🍻', '🥳', '🙏'];
   function showContextMenu(msgEl) {
     var key = msgEl.getAttribute('data-key');
     if (!key || !chatUser) return;
@@ -13141,103 +13072,50 @@ async function fetchForecast(lat, lon, date, _retry) {
 // ═══════════════════════════════════════════════════════════════
 
 // ═══════════════════════════════════════════════════════════════
-// ─── v8.2: STRAVA/GARMIN ACTIVITY STATS (Firebase → Home Bar) ───
+// ─── v4.06: WALKING STATS (km + passi) — Garmin / manuale ───
 // ═══════════════════════════════════════════════════════════════
 (function() {
   if (typeof firebase === 'undefined' || !firebase.database) return;
   if (!FAMILY_ID) return;
   var showConfirm = function(msg, onOk, onCancel) { return window.showConfirm ? window.showConfirm(msg, onOk, onCancel) : (confirm(msg) ? (onOk && onOk()) : (onCancel && onCancel())); };
-  var statsBar = document.getElementById('activityStatsBar');
-  var kmFootEl = document.getElementById('as-km-foot');
-  var kmBikeEl = document.getElementById('as-km-bike');
-  var elevEl = document.getElementById('as-elevation');
-  if (!statsBar || !kmFootEl) return;
 
   var activitiesRef = firebase.database().ref('trips/' + FAMILY_ID + '/activities');
 
-    // v2.45 FIX: Use registerFirebaseListener for proper cleanup on tab switch
+  // ─── Update totals in Posizione tab (km + steps) ───
   var _actStatsCb = function(snapshot) {
     var activities = snapshot.val();
-    if (!activities) {
-      statsBar.classList.add('hidden');
-      return;
-    }
-    var kmFoot = 0, kmBike = 0, kmWater = 0, elevation = 0;
-
-    Object.values(activities).forEach(function(act) {
-      if (!act) return;
-      var dist = parseFloat(act.distance) || 0;
-      var elev = parseInt(act.elevationGain) || 0;
-
-      if (act.category === 'foot') {
-        kmFoot += dist;
-      } else if (act.category === 'bike') {
-        kmBike += dist;
-      } else if (act.category === 'water') {
-        kmWater += dist;
-      }
-      elevation += elev;
-    });
-
-    // Update UI
-    var kmWaterEl = document.getElementById('as-km-water');
-    if (kmFoot > 0 || kmBike > 0 || kmWater > 0 || elevation > 0) {
-      statsBar.classList.remove('hidden');
-      kmFootEl.textContent = kmFoot.toFixed(1);
-      kmBikeEl.textContent = kmBike.toFixed(1);
-      if (kmWaterEl) {
-        kmWaterEl.textContent = kmWater.toFixed(1);
-        kmWaterEl.closest('.as-chip').classList.toggle('hidden', kmWater === 0);
-      }
-      elevEl.textContent = elevation.toLocaleString('it-IT');
-      // Hide chips with 0 value
-      kmFootEl.closest('.as-chip').classList.toggle('hidden', kmFoot === 0);
-      kmBikeEl.closest('.as-chip').classList.toggle('hidden', kmBike === 0);
-      elevEl.closest('.as-chip').classList.toggle('hidden', elevation === 0);
-    } else {
-      statsBar.classList.add('hidden');
-    }
-    // Update totals in Posizione tab
     var posGarminWalk = document.getElementById('pos-garmin-walk');
-    var posGarminBike = document.getElementById('pos-garmin-bike');
-    var posGarminElev = document.getElementById('pos-garmin-elev');
-    if (posGarminWalk) posGarminWalk.textContent = kmFoot.toFixed(1);
-    if (posGarminBike) posGarminBike.textContent = kmBike.toFixed(1);
-    if (posGarminElev) posGarminElev.textContent = elevation.toLocaleString('it-IT');
+    var posGarminSteps = document.getElementById('pos-garmin-steps');
+    if (!posGarminWalk) return;
 
-    // Update stat card "Km a piedi" (total)
+    var kmFoot = 0, totalSteps = 0;
+    if (activities) {
+      Object.values(activities).forEach(function(act) {
+        if (!act) return;
+        if (act.category === 'foot') {
+          kmFoot += (parseFloat(act.distance) || 0);
+          totalSteps += (parseInt(act.steps) || 0);
+        }
+      });
+    }
+
+    posGarminWalk.textContent = kmFoot.toFixed(1);
+    if (posGarminSteps) posGarminSteps.textContent = totalSteps.toLocaleString('it-IT');
+
+    // Update stat card if exists
     var statKmFootTotal = document.getElementById('stat-km-foot-total');
     if (statKmFootTotal) statKmFootTotal.textContent = kmFoot.toFixed(1);
-
-    // Update daily stats in Posizione tab
-    var today = window.localDateStr(); // v2.96: LOCAL
-    var kmFootDay = 0, kmBikeDay = 0, elevDay = 0;
-    Object.values(activities).forEach(function(act) {
-      if (!act || act.date !== today) return;
-      var dist = parseFloat(act.distance) || 0;
-      var elev = parseInt(act.elevationGain) || 0;
-      if (act.category === 'foot') kmFootDay += dist;
-      else if (act.category === 'bike') kmBikeDay += dist;
-      elevDay += elev;
-    });
-    var posGarminWalkDay = document.getElementById('pos-garmin-walk-day');
-    var posGarminBikeDay = document.getElementById('pos-garmin-bike-day');
-    var posGarminElevDay = document.getElementById('pos-garmin-elev-day');
-    if (posGarminWalkDay) posGarminWalkDay.textContent = kmFootDay.toFixed(1);
-    if (posGarminBikeDay) posGarminBikeDay.textContent = kmBikeDay.toFixed(1);
-    if (posGarminElevDay) posGarminElevDay.textContent = elevDay.toLocaleString('it-IT');
   };
   window.registerFirebaseListener('posizione', activitiesRef, 'value', _actStatsCb);
 
-  // ─── Activity Cards in Posizione tab ───
+  // ─── Activity list (today's entries) ───
   var posSection = document.getElementById('posizione-content') || document.getElementById('tab-posizione');
   if (!posSection) return;
 
-  // v3.54: Insert activity cards BEFORE the accordions (after Garmin card)
   var actDaySection = document.createElement('div');
   actDaySection.className = 'activity-day-section';
   actDaySection.id = 'pos-activity-cards';
-  actDaySection.innerHTML = '<div class="activity-day-title">' + (isEN ? "Today's Activities" : 'Attività di oggi') + '</div><div id="pos-activity-list"></div>';
+  actDaySection.innerHTML = '<div class="activity-day-title">' + (isEN ? "Today's Walking" : 'Camminata di oggi') + '</div><div id="pos-activity-list"></div>';
   var garminCard = document.getElementById('pos-garmin-card');
   if (garminCard && garminCard.nextSibling) {
     garminCard.parentNode.insertBefore(actDaySection, garminCard.nextSibling);
@@ -13247,16 +13125,13 @@ async function fetchForecast(lat, lon, date, _retry) {
 
   var actList = document.getElementById('pos-activity-list');
 
-    // Listen for activities and filter by current day
-  // v2.45 FIX: Use registerFirebaseListener for proper cleanup on tab switch
   (function() { var _actDayCb = function(snapshot) {
     var activities = snapshot.val();
     if (!activities || !actList) return;
-    // Get today's date string (YYYY-MM-DD)
-    var today = window.localDateStr(); // v2.96: LOCAL
+    var today = window.localDateStr();
 
     var todayEntries = Object.entries(activities).filter(function(entry) {
-      return entry[1] && entry[1].date === today;
+      return entry[1] && entry[1].date === today && entry[1].category === 'foot';
     });
 
     if (todayEntries.length === 0) {
@@ -13266,88 +13141,63 @@ async function fetchForecast(lat, lon, date, _retry) {
 
     actDaySection.style.display = '';
     var html = '';
-
     todayEntries.forEach(function(entry) {
       var actKey = entry[0]; var act = entry[1];
-      var icon = '🥾';
-      var cssClass = 'foot';
-      if (act.category === 'bike') { icon = '🚴'; cssClass = 'bike'; }
-      else if (act.category === 'water') { icon = '🚣'; cssClass = 'water'; }
-      else if (act.category === 'other') { icon = '⚡'; cssClass = 'other'; }
-
-      var duration = '';
-      if (act.duration) {
-        var h = Math.floor(act.duration / 3600);
-        var m = Math.floor((act.duration % 3600) / 60);
-        duration = h > 0 ? (h + 'h ' + m + 'min') : (m + ' min');
-      }
-
-      html += '<div class="activity-card ' + cssClass + '">';
+      html += '<div class="activity-card foot">';
       html += '  <div class="activity-card-left">';
-      html += '    <span class="activity-card-icon">' + icon + '</span>';
-      html += '    <span class="activity-card-name">' + (act.name || act.type) + '</span>';
+      html += '    <span class="activity-card-icon">🧥</span>';
+      html += '    <span class="activity-card-name">' + escapeHtml(act.name || 'Camminata') + '</span>';
       html += '  </div>';
       html += '  <div class="activity-card-right">';
       html += '    ' + (act.distance || 0) + ' km';
-      if (act.elevationGain) html += ' · ⛰️ ' + act.elevationGain + 'm';
-      if (duration) html += '<br>' + duration;
+      if (act.steps) html += ' \u00b7 👣 ' + parseInt(act.steps).toLocaleString('it-IT') + ' passi';
       if (isOwner) html += '<br><button class="pos-del-btn act-del" data-actkey="' + actKey + '" title="' + (isEN ? 'Delete' : 'Elimina') + '">🗑️</button>';
       html += '  </div>';
       html += '</div>';
     });
 
     actList.innerHTML = html;
-    // Delete handler for activities
     actList.querySelectorAll('.act-del[data-actkey]').forEach(function(btn) {
       btn.addEventListener('click', function() {
         var actkey = btn.getAttribute('data-actkey');
-        showConfirm(isEN ? 'Delete this activity?' : 'Eliminare questa attivit\u00e0?', function() {
+        showConfirm(isEN ? 'Delete this entry?' : 'Eliminare questa voce?', function() {
           activitiesRef.child(actkey).remove();
         });
-            });
+      });
     });
   };
   window.registerFirebaseListener('posizione', activitiesRef, 'value', _actDayCb);
   })();
-  // ─── Manual activity input button (owner only) ───
-  var addKmBtn = document.createElement('button');
-  addKmBtn.className = 'add-km-btn';
-  addKmBtn.style.display = 'none';
-  addKmBtn.innerHTML = '+ ' + (isEN ? 'Add activity' : 'Aggiungi attività');
-  actDaySection.appendChild(addKmBtn);
 
-  function _showAddKmIfOwner() {
-    addKmBtn.style.display = window.isOwner ? '' : 'none';
+  // ─── "Aggiungi giorno" button (owner only) ───
+  var addDayBtn = document.getElementById('garmin-add-day-btn');
+  if (!addDayBtn) return;
+
+  function _showAddBtnIfOwner() {
+    addDayBtn.style.display = window.isOwner ? '' : 'none';
   }
-  _showAddKmIfOwner();
-  window.addEventListener('authStateChanged', _showAddKmIfOwner);
-  window.addEventListener('simRoleChanged', _showAddKmIfOwner);
-  setTimeout(_showAddKmIfOwner, 2000);
+  _showAddBtnIfOwner();
+  window.addEventListener('authStateChanged', _showAddBtnIfOwner);
+  window.addEventListener('simRoleChanged', _showAddBtnIfOwner);
+  setTimeout(_showAddBtnIfOwner, 2000);
 
-  addKmBtn.addEventListener('click', function() {
-    showManualKmModal();
+  addDayBtn.addEventListener('click', function() {
+    _showWalkingInputModal();
   });
 
-  function showManualKmModal() {
-    var today = window.localDateStr(); // v2.96: LOCAL
+  function _showWalkingInputModal() {
+    var today = window.localDateStr();
     var overlay = document.createElement('div');
     overlay.className = 'manual-km-overlay';
     overlay.innerHTML = '<div class="manual-km-modal">' +
-      '<h3>' + (isEN ? 'Add activity' : 'Aggiungi attività') + '</h3>' +
-      '<label>' + (isEN ? 'Type' : 'Tipo') + '</label>' +
-      '<div class="manual-km-types" id="manual-km-types">' +
-      '  <button class="manual-km-type active" data-cat="foot" data-type="daily_walk">🥾 ' + (isEN ? 'Walk' : 'A piedi') + '</button>' +
-      '  <button class="manual-km-type" data-cat="bike" data-type="ride">🚴 ' + (isEN ? 'Bike' : 'Bici') + '</button>' +
-      '  <button class="manual-km-type" data-cat="water" data-type="kayak">🚣 ' + (isEN ? 'Water' : 'Acqua') + '</button>' +
-      '</div>' +
+      '<h3>' + (isEN ? '🚶 Add walking day' : '🚶 Aggiungi giorno a piedi') + '</h3>' +
       '<label>' + (isEN ? 'Date' : 'Data') + '</label>' +
       '<input type="date" id="manual-km-date" value="' + today + '">' +
-      '<label>Km</label>' +
+      '<label>' + (isEN ? 'Steps (from Garmin)' : 'Passi (da Garmin)') + '</label>' +
+      '<input type="number" id="manual-km-steps" step="1" min="0" max="99999" placeholder="es. 12500">' +
+      '<label>' + (isEN ? 'Km walked' : 'Km a piedi') + '</label>' +
       '<input type="number" id="manual-km-value" step="0.1" min="0" max="999" placeholder="es. 8.5">' +
-      '<label>' + (isEN ? 'Elevation gain (m, optional)' : 'Dislivello (m, opzionale)') + '</label>' +
-      '<input type="number" id="manual-km-elev" step="1" min="0" max="9999" placeholder="es. 350">' +
-      '<label>' + (isEN ? 'Duration (minutes, optional)' : 'Durata (minuti, opzionale)') + '</label>' +
-      '<input type="number" id="manual-km-dur" step="1" min="0" max="1440" placeholder="es. 90">' +
+      '<p style="font-size:11px;color:var(--text-muted);margin:4px 0 0;">' + (isEN ? 'Leave km empty to auto-estimate from steps (×0.0007)' : 'Lascia km vuoto per stima automatica dai passi (×0,0007)') + '</p>' +
       '<label>' + (isEN ? 'Note (optional)' : 'Nota (opzionale)') + '</label>' +
       '<input type="text" id="manual-km-note" placeholder="' + (isEN ? 'e.g. Walking in Oslo' : 'es. Passeggiata a Oslo') + '" maxlength="60">' +
       '<div class="manual-km-actions">' +
@@ -13357,61 +13207,43 @@ async function fetchForecast(lat, lon, date, _retry) {
       '</div>';
     document.body.appendChild(overlay);
 
-    // Type selector
-    var selectedCat = 'foot', selectedType = 'daily_walk';
-    overlay.querySelectorAll('.manual-km-type').forEach(function(btn) {
-      btn.addEventListener('click', function() {
-        overlay.querySelectorAll('.manual-km-type').forEach(function(b) { b.classList.remove('active'); });
-        btn.classList.add('active');
-        selectedCat = btn.getAttribute('data-cat');
-        selectedType = btn.getAttribute('data-type');
-      });
-    });
-
-    overlay.querySelector('.manual-km-cancel').addEventListener('click', function() {
-      overlay.remove();
-    });
-    overlay.addEventListener('click', function(e) {
-      if (e.target === overlay) overlay.remove();
-    });
+    overlay.querySelector('.manual-km-cancel').addEventListener('click', function() { overlay.remove(); });
+    overlay.addEventListener('click', function(e) { if (e.target === overlay) overlay.remove(); });
 
     overlay.querySelector('.manual-km-save').addEventListener('click', function() {
       var date = document.getElementById('manual-km-date').value;
-      var km = parseFloat(document.getElementById('manual-km-value').value);
-      var elev = parseInt(document.getElementById('manual-km-elev').value) || 0;
-      var dur = parseInt(document.getElementById('manual-km-dur').value) || 0;
+      var steps = parseInt(document.getElementById('manual-km-steps').value) || 0;
+      var km = parseFloat(document.getElementById('manual-km-value').value) || 0;
       var note = document.getElementById('manual-km-note').value.trim();
 
-      if (!km || km <= 0) {
-        if (window.showToast) showToast(isEN ? 'Enter a valid km value' : 'Inserisci un valore km valido', 'error');
+      if (!steps && !km) {
+        if (window.showToast) showToast(isEN ? 'Enter steps or km' : 'Inserisci passi o km', 'error');
         return;
       }
 
-      var defaultNames = {
-        foot: isEN ? 'Daily walking' : 'Camminata giornaliera',
-        bike: isEN ? 'Bike ride' : 'Giro in bici',
-        water: isEN ? 'Water activity' : 'Attività acquatica'
-      };
+      // Auto-estimate km from steps if not provided
+      if (!km && steps > 0) {
+        km = Math.round(steps * 0.0007 * 10) / 10; // ~70cm per step
+      }
 
-      var manualActivity = {
-        stravaId: 'manual_' + Date.now(),
-        type: selectedType,
-        category: selectedCat,
-        name: note || defaultNames[selectedCat] || 'Activity',
+      var entry = {
+        stravaId: 'garmin_' + Date.now(),
+        type: 'daily_walk',
+        category: 'foot',
+        name: note || (isEN ? 'Daily walking' : 'Camminata giornaliera'),
         date: date,
         distance: Math.round(km * 100) / 100,
-        duration: dur * 60,
-        elevationGain: elev,
+        steps: steps,
         manual: true,
         ts: firebase.database.ServerValue.TIMESTAMP
       };
 
-      var newKey = 'manual_' + date.replace(/-/g, '') + '_' + Date.now();
-      activitiesRef.child(newKey).set(manualActivity).then(function() {
-        if (window.showToast) showToast(isEN ? 'Activity saved!' : 'Attività salvata!', 'success');
+      var newKey = 'garmin_' + date.replace(/-/g, '') + '_' + Date.now();
+      activitiesRef.child(newKey).set(entry).then(function() {
+        if (window.showToast) showToast(isEN ? '👣 Saved!' : '👣 Salvato!', 'success');
         overlay.remove();
       }).catch(function(err) {
-        console.error('Manual activity save error:', err);
+        console.error('Walking entry save error:', err);
         if (window.showToast) showToast(isEN ? 'Save failed' : 'Salvataggio fallito', 'error');
       });
     });
@@ -14364,7 +14196,7 @@ async function fetchForecast(lat, lon, date, _retry) {
   }
 
   // ─── v2.99: Diary reactions + comments ───
-  var REACTION_EMOJIS = ['\uD83D\uDC4D', '\u2764\uFE0F', '\uD83D\uDE0D', '\uD83D\uDD25', '\uD83D\uDE2E'];
+  var REACTION_EMOJIS = ['\uD83D\uDC4D', '\u2764\uFE0F', '\uD83D\uDE02', '\uD83D\uDE2E', '\uD83C\uDF7B', '\uD83E\uDD73', '\uD83D\uDE4F'];
 
   // v3.27: Name cache for showing who reacted
   var _diarioNameCache = {};
@@ -14426,25 +14258,7 @@ async function fetchForecast(lat, lon, date, _retry) {
     h += '<button type="button" class="diario-comments-toggle" data-key="' + key + '">\uD83D\uDCAC ' +
          (commentCount > 0 ? commentCount + ' ' : '') + (isEN ? 'Comments' : 'Commenti') + '</button>';
     h += '</div>';
-    // v4.00 Feature #2: "Ci siamo stati!" toggle
-    var beenThere = (entry && entry.wasThere && typeof entry.wasThere === 'object') ? entry.wasThere : {};
-    var beenThereCount = Object.keys(beenThere).length;
-    var iBeenThere = myUid && beenThere[myUid] ? true : false;
-    h += '<div class="diario-been-there" style="padding:4px 8px;">';
-    h += '<button type="button" class="diario-been-there-btn' + (iBeenThere ? ' active' : '') + '" data-key="' + key + '" style="font-size:13px;border:1px solid ' + (iBeenThere ? 'var(--accent,#3b82f6)' : 'var(--border,#e2e8f0)') + ';border-radius:20px;padding:4px 12px;background:' + (iBeenThere ? 'var(--accent-light,#eff6ff)' : 'transparent') + ';cursor:pointer;transition:all 0.2s;">';
-    h += '\uD83D\uDCCD ' + (isEN ? 'Been there!' : 'Ci siamo stati!') + (beenThereCount > 0 ? ' <span style="font-weight:600;">' + beenThereCount + '</span>' : '');
-    h += '</button>';
-    if (beenThereCount > 0) {
-      var beenNames = [];
-      Object.keys(beenThere).forEach(function(uid) {
-        var n = _diarioNameCache[uid] || beenThere[uid].name;
-        if (n) beenNames.push(n);
-      });
-      if (beenNames.length > 0) {
-        h += '<span style="font-size:11px;color:var(--text-muted,#6b7280);margin-left:8px;">' + escapeHtml(beenNames.join(', ')) + '</span>';
-      }
-    }
-    h += '</div>';
+
     // v3.27: Show who reacted (names below reaction bar)
     var reactorNames = [];
     Object.keys(reactions).forEach(function(uid) {
@@ -14659,25 +14473,7 @@ async function fetchForecast(lat, lon, date, _retry) {
     _socialBound = true;
 
     timelineEl.addEventListener('click', function(e) {
-      // v4.00 Feature #2: "Ci siamo stati!" toggle
-      var btb = e.target.closest('.diario-been-there-btn');
-      if (btb) {
-        var k = btb.getAttribute('data-key');
-        var user = _socialUser();
-        if (!user || !user.uid) {
-          if (window.showToast) showToast(isEN ? 'Sign in first' : 'Accedi prima', 'info');
-          return;
-        }
-        var ref = firebase.database().ref('trips/' + FAMILY_ID + '/diary/' + k + '/wasThere/' + user.uid);
-        if (btb.classList.contains('active')) {
-          ref.remove();
-          btb.classList.remove('active');
-        } else {
-          ref.set(true);
-          btb.classList.add('active');
-        }
-        return;
-      }
+
       // Reaction button
       var rb = e.target.closest('.diario-react-btn');
       if (rb) {
@@ -14811,12 +14607,13 @@ async function fetchForecast(lat, lon, date, _retry) {
         var _entryKey2 = _chip.getAttribute('data-entry-key');
         var _stopIdx2 = parseInt(_chip.getAttribute('data-stop-idx'));
         var currentName = stopName.textContent.trim();
-        var newName = prompt(_isEN2 ? 'Edit location name:' : 'Modifica nome luogo:', currentName);
-        if (newName !== null && newName.trim() !== '' && newName.trim() !== currentName) {
-          diarioRef.child(_entryKey2 + '/customStops/' + _stopIdx2 + '/name').set(newName.trim()).then(function() {
-            if (window.showToast) showToast(_isEN2 ? 'Tag updated' : 'Tag aggiornato', 'success');
-          });
-        }
+        _showPromptModal(_isEN2 ? 'Edit location name:' : 'Modifica nome luogo:', currentName, function(newName) {
+          if (newName !== null && newName.trim() !== '' && newName.trim() !== currentName) {
+            diarioRef.child(_entryKey2 + '/customStops/' + _stopIdx2 + '/name').set(newName.trim()).then(function() {
+              if (window.showToast) showToast(_isEN2 ? 'Tag updated' : 'Tag aggiornato', 'success');
+            });
+          }
+        });
         return;
       }
     });
@@ -16822,17 +16619,18 @@ async function fetchForecast(lat, lon, date, _retry) {
         btn.addEventListener('click', function() {
           var uid = btn.dataset.uid;
           var currentName = btn.dataset.name || '';
-          var newName = prompt(isEN ? 'New display name for this user:' : 'Nuovo nome visualizzato per questo utente:', currentName);
-          if (newName === null || newName.trim() === '' || newName.trim() === currentName) return;
-          var updateFn = firebase.app().functions('europe-west1').httpsCallable('updateUserDisplayName');
-          updateFn({ uid: uid, displayName: newName.trim() }).then(function(result) {
-            if (window.showToast) showToast(isEN ? 'Display name updated to: ' + result.data.displayName : 'Nome aggiornato a: ' + result.data.displayName, 'success');
-            // Also update local DB
-            usersRef.child(uid).child('name').set(newName.trim());
-            renderAdminUsers();
-          }).catch(function(err) {
-            console.error('[Admin] Edit name error:', err);
-            if (window.showToast) showToast(isEN ? 'Error: ' + err.message : 'Errore: ' + err.message, 'error');
+          _showPromptModal(isEN ? 'New display name for this user:' : 'Nuovo nome visualizzato per questo utente:', currentName, function(newName) {
+            if (newName === null || newName.trim() === '' || newName.trim() === currentName) return;
+            var updateFn = firebase.app().functions('europe-west1').httpsCallable('updateUserDisplayName');
+            updateFn({ uid: uid, displayName: newName.trim() }).then(function(result) {
+              if (window.showToast) showToast(isEN ? 'Display name updated to: ' + result.data.displayName : 'Nome aggiornato a: ' + result.data.displayName, 'success');
+              // Also update local DB
+              usersRef.child(uid).child('name').set(newName.trim());
+              renderAdminUsers();
+            }).catch(function(err) {
+              console.error('[Admin] Edit name error:', err);
+              if (window.showToast) showToast(isEN ? 'Error: ' + err.message : 'Errore: ' + err.message, 'error');
+            });
           });
         });
       });

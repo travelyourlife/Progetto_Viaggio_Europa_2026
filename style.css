@@ -216,6 +216,8 @@
     .pos-chip-blue strong { color: #90cdf4 !important; }
     .pos-chip-orange { background: rgba(221,107,32,0.15) !important; border-color: #f6ad55 !important; }
     .pos-chip-orange strong { color: #fbd38d !important; }
+    .pos-chip-purple { background: rgba(128,90,213,0.15) !important; border-color: #b794f4 !important; }
+    .pos-chip-purple strong { color: #d6bcfa !important; }
 
     /* ─── Home language switch ─── */
     .home-lang-switch { background: #2d3748; border-color: #4a5568; }
@@ -666,6 +668,25 @@
     /* ─── v3.82: accordion dot glow increased opacity for dark (#4c) ─── */
     #tab-giorni .itinerary-timeline .accordion-header[data-region]::before {
         box-shadow: 0 0 6px 2px rgba(99,102,241,0.4);
+    }
+
+    /* v4.04: dark mode overrides for 4 new classes */
+    .diario-draft-badge {
+        background: #b45309;
+        color: #fff;
+    }
+    .admin-card {
+        background: var(--bg-card);
+        border-color: var(--border);
+    }
+    .chat-postcard,
+    .chat-postcard-card {
+        background: var(--bg-card);
+        border-color: var(--border);
+    }
+    .playlist-section {
+        background: var(--bg-alt);
+        border-color: var(--border);
     }
 }
 
@@ -1144,6 +1165,8 @@ mark.search-hl.current { background: #f97316; color: white; }
 .pos-chip-blue strong { color: #1a365d; }
 .pos-chip-orange { background: #fef3e2; border-color: #dd6b20; }
 .pos-chip-orange strong { color: #7b341e; }
+.pos-chip-purple { background: #f3e8ff; border-color: #805ad5; }
+.pos-chip-purple strong { color: #44337a; }
 
 @media (max-width: 480px) {
     .pos-stats-grid-v2 { grid-template-columns: repeat(3, 1fr); gap: 8px; }
@@ -5543,4 +5566,9 @@ html[lang="en"] .notif-drawer-list:empty::after {
     .diario-draft-badge { background: #b45309; color: #fff; }
     .admin-card { background: var(--bg-card, #1e293b); border-color: var(--border, #334155); }
     .admin-card label[style*="width:40px"] span::before { background: #cbd5e1; }
+    /* v4.04: Dark mode for postcard and playlist in chat */
+    .chat-postcard,
+    .chat-postcard-card { background: var(--bg-card, #1e293b); border-color: var(--border, #334155); }
+    .chat-playlist-section,
+    .playlist-section { background: var(--bg-alt, #0f172a); border-color: var(--border, #334155); }
 }
