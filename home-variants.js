@@ -1887,7 +1887,10 @@
     // The old 60-min threshold caused Aurora (and all followers) to see "Varsavia"
     // (the planned destination) instead of the real current city when the owner
     // hadn't refreshed GPS in the last hour.
-    firebase.database().ref(basePath + '/currentLocation').on('value', function(snap) {
+    // v4.02 FIX: Singleton guard — detach previous listener before re-attaching
+    if (window._hvCurrentLocRef) { window._hvCurrentLocRef.off('value'); }
+    window._hvCurrentLocRef = firebase.database().ref(basePath + '/currentLocation');
+    window._hvCurrentLocRef.on('value', function(snap) {
       var cl = snap.val();
       if (cl && cl.lat && cl.lng) {
         var ageMs = Date.now() - (cl.updatedAt || 0);

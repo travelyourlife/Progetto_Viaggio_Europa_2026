@@ -61,6 +61,21 @@ const OWNER_UIDS = [
 
 // ═══════════════════════════════════════════════════════════
 // SHARED: Trip start date (CORRECTED: June 25, not June 26)
+// v4.02: Rate limiting helper — per-user daily call counter
+// Uses date-keyed path: rateLimits/{uid}/{functionName}/{YYYY-MM-DD}
+// No external cron needed — old date keys are naturally ignored.
+async function checkRateLimit(uid, functionName, maxPerDay) {
+  const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+  const ref = db.ref(`rateLimits/${uid}/${functionName}/${today}`);
+  const snap = await ref.once('value');
+  const count = snap.val() || 0;
+  if (count >= maxPerDay) {
+    throw new HttpsError('resource-exhausted',
+      `Daily limit reached (${maxPerDay} calls/day). Try again tomorrow.`);
+  }
+  await ref.set(count + 1);
+}
+
 // ═══════════════════════════════════════════════════════════
 const TRIP_START_STR = '2026-06-25T00:00:00+02:00';
 const TRIP_DAYS = 55;
@@ -263,6 +278,8 @@ exports.translatePost = onCall(
     if (!request.auth) {
       throw new HttpsError('unauthenticated', 'Must be authenticated.');
     }
+    // v4.02: Rate limit — max 50 translations per user per day
+    await checkRateLimit(request.auth.uid, 'translatePost', 50);
     const { text, key, familyId } = request.data || {};
     if (!text || !key || !familyId) {
       throw new HttpsError('invalid-argument', 'text, key, and familyId required.');
@@ -1291,6 +1308,9 @@ exports.parseExpenseScreenshot = onCall(
       }
     }
 
+    // v4.02: Rate limit — max 20 screenshot parses per user per day
+    await checkRateLimit(uid, 'parseExpenseScreenshot', 20);
+
     const { imageUrl } = request.data || {};
     if (!imageUrl) {
       throw new HttpsError('invalid-argument', 'imageUrl is required.');
@@ -1493,6 +1513,9 @@ exports.parseExpensePdf = onCall(
         throw new HttpsError('permission-denied', 'Only trip owners can parse expenses.');
       }
     }
+
+    // v4.02: Rate limit — max 10 PDF parses per user per day
+    await checkRateLimit(uid, 'parseExpensePdf', 10);
 
     const { pdfText } = request.data || {};
     if (!pdfText || pdfText.trim().length < 10) {

@@ -224,7 +224,7 @@ try {
   var _busy = false;
 
   // v3.94 FIX Audit #8: Always include User-Agent header (Nominatim ToS requirement)
-  var _defaultHeaders = { 'User-Agent': 'QuoVadis-TripApp/3.94 (family-trip-pwa)' };
+  var _defaultHeaders = { 'User-Agent': 'QuoVadis-TripApp/4.02 (family-trip-pwa)' };
 
   function _drain() {
     if (_busy || _queue.length === 0) return;
@@ -3205,9 +3205,12 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
         }
 
         // ─── Load checkins from Firebase ───
+        var _checkinsRef = null;
         function loadCheckins() {
             var ref = getFamilyRef('checkins');
             if (ref) {
+                if (_checkinsRef) _checkinsRef.off('value'); // v4.02: cleanup previous listener
+                _checkinsRef = ref;
                 ref.on('value', function(snap) {
                     checkins = snap.val() || {};
                     renderPlaces(document.getElementById('pos-search') ? document.getElementById('pos-search').value : '');
@@ -3416,9 +3419,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                         _displayCountry(data.cc, data.name);
                         return;
                     }
-                    fetch('https://nominatim.openstreetmap.org/reverse?lat=' + lat + '&lon=' + lng + '&format=json&zoom=3&accept-language=' + (isEN ? 'en' : 'it'), {
-                        headers: { 'User-Agent': 'QuoVadis-TripApp/3.89' }
-                    }).then(function(r) { return r.json(); }).then(function(data) {
+                    window._nominatimFetch('https://nominatim.openstreetmap.org/reverse?lat=' + lat + '&lon=' + lng + '&format=json&zoom=3&accept-language=' + (isEN ? 'en' : 'it')).then(function(data) {
                         if (data && data.address && data.address.country_code) {
                             var cc = data.address.country_code.toUpperCase();
                             var name = countryCodeToName[cc] || data.address.country || cc;
@@ -3701,9 +3702,12 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
         // ─── v4.00 Feature #11: Map Tips (follower pins) ───
         var _mapTipMarkers = [];
         var _mapTipsVisible = true;
+        var _mapTipsRef = null;
         function loadMapTips() {
             if (!map || !FAMILY_ID) return;
             var ref = firebase.database().ref('trips/' + FAMILY_ID + '/mapTips');
+            if (_mapTipsRef) _mapTipsRef.off('value'); // v4.02: cleanup previous listener
+            _mapTipsRef = ref;
             ref.on('value', function(snap) {
                 // Clear old markers
                 _mapTipMarkers.forEach(function(m) { map.removeLayer(m); });
@@ -3787,7 +3791,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             var input = document.createElement('input');
             input.type = 'text';
             input.maxLength = 120;
-            input.style.cssText = 'width:100%;border:1px solid var(--border-color,#e2e8f0);border-radius:10px;padding:12px;font-size:14px;font-family:inherit;box-sizing:border-box;';
+            input.style.cssText = 'width:100%;border:1px solid var(--border-color,#e2e8f0);border-radius:10px;padding:12px;font-size:14px;font-family:inherit;box-sizing:border-box;background:var(--bg-color,#fff);color:var(--text-color,#1a1a2e);';
             input.placeholder = isEN ? 'e.g. Great pizza here! (max 120 chars)' : 'es. Ottima pizza qui! (max 120 caratteri)';
             var counter = document.createElement('div');
             counter.style.cssText = 'font-size:11px;color:var(--text-muted,#6b7280);text-align:right;margin-top:4px;';
@@ -3959,11 +3963,14 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
         }
 
         // ─── Listen to live positions of family members ───
+        var _livePositionsRef = null;
         function listenLivePositions() {
             // Security: don't load live position data if user is not authenticated
             if (!firebaseUser) return;
             var ref = getFamilyRef('live');
             if (!ref) return;
+            if (_livePositionsRef) _livePositionsRef.off('value'); // v4.02: cleanup previous listener
+            _livePositionsRef = ref;
             ref.on('value', function(snap) {
                 var liveData = snap.val() || {};
                 var hasLive = Object.keys(liveData).some(function(uid) {
@@ -4927,11 +4934,14 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             });
         }
 
+        var _parkingRef = null;
         function renderParkingList() {
             var container = document.getElementById('pos-parking-list');
             if (!container) return;
             var ref = getFamilyRef('parking');
             if (!ref) { container.innerHTML = '<p style="color:var(--text-muted);font-size:13px;">' + (isEN ? 'Configure Family ID to sync.' : 'Configura ID Famiglia per sincronizzare.') + '</p>'; return; }
+            if (_parkingRef) _parkingRef.off('value'); // v4.02: cleanup previous listener
+            _parkingRef = ref;
             ref.on('value', function(snap) {
                 var spots = snap.val() || {};
                 var arr = Object.entries(spots).sort(function(a,b) { return b[0] - a[0]; });
@@ -4942,7 +4952,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                     var key = entry[0]; var s = entry[1];
                     var card = document.createElement('div');
                     card.className = 'pos-card pos-done';
-                    var html = '<div class="pos-card-header"><strong>🅿️ ' + (s.name || '—') + '</strong> · ' + '⭐'.repeat(s.rating || 3);
+                    var html = '<div class="pos-card-header"><strong>🅿️ ' + escapeHtml(s.name || '—') + '</strong> · ' + '⭐'.repeat(s.rating || 3);
                     if (isOwner) html += ' <button class="pos-del-btn" data-pkey="' + key + '" title="' + (isEN ? 'Delete' : 'Elimina') + '">🗑️</button>';
                     html += '</div>';
                     html += '<div class="pos-card-info">' + (s.time || s.date || '');
@@ -5166,6 +5176,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             setupAutocomplete('pos-parking-name', 'pos-parking-suggestions');
         })();
 
+        var _customCheckinsRef = null;
         function renderCustomCheckins() {
             var container = document.getElementById('pos-custom-list');
             if (!container) return;
@@ -5177,6 +5188,8 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                 renderCustomList(container, local);
                 return;
             }
+            if (_customCheckinsRef) _customCheckinsRef.off('value'); // v4.02: cleanup previous listener
+            _customCheckinsRef = ref;
             ref.on('value', function(snap) {
                 var data = snap.val() || {};
                 customCheckins = data;
@@ -5225,11 +5238,14 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
         renderCustomCheckins();
 
         // ─── Daily Summary List ───
+        var _dailySummariesRef = null;
         function renderDailySummaries() {
             var container = document.getElementById('pos-daily-list');
             if (!container) return;
             var ref = getFamilyRef('dailySummaries');
             if (!ref) return;
+            if (_dailySummariesRef) _dailySummariesRef.off('value'); // v4.02: cleanup previous listener
+            _dailySummariesRef = ref;
             ref.on('value', function(snap) {
                 var summaries = snap.val() || {};
                 var arr = Object.entries(summaries).sort(function(a,b) { return b[0].localeCompare(a[0]); });
@@ -7222,7 +7238,7 @@ async function fetchForecast(lat, lon, date, _retry) {
         var precip = data.daily.precipitation_probability_max ? data.daily.precipitation_probability_max[0] : 0;
         var dayLabel = s.date.toLocaleDateString(isEN ? 'en-US' : 'it-IT', {weekday:'short', day:'numeric', month:'short'});
         html += '<div class="pos-weather-card">';
-        html += '<div class="pos-weather-card-header">' + wInfo.icon + ' <strong>' + s.name + '</strong></div>';
+        html += '<div class="pos-weather-card-header">' + wInfo.icon + ' <strong>' + escapeHtml(s.name) + '</strong></div>';
         html += '<div class="pos-weather-card-date">' + dayLabel + '</div>';
         html += '<div class="pos-weather-card-temp">' + high + '° / ' + low + '°C</div>';
         html += '<div class="pos-weather-card-detail">' + label + '</div>';
@@ -7656,30 +7672,10 @@ async function fetchForecast(lat, lon, date, _retry) {
     }
   });
 
-  // Listen for remote Firebase currentDay changes (read-only, sets session override)
-  if (typeof getFamilyRef === 'function') {
-    var dayRef = getFamilyRef('currentDay');
-    if (dayRef) {
-      dayRef.on('value', function(snap) {
-        var val = snap.val();
-        if (val !== null && typeof val === 'object' && typeof val.day === 'number') {
-          if (val.day !== currentDay) {
-            currentDay = val.day;
-            window._dayOverride = currentDay;
-            sessionStorage.setItem('qv_day_override', String(currentDay));
-            updateLabel();
-          }
-        } else if (val === null) {
-          // Remote override removed (Auto pressed) — revert to real date
-          window._dayOverride = undefined;
-          sessionStorage.removeItem('qv_day_override');
-          currentDay = Math.max(-1, Math.min(Math.floor((Date.now() - TRIP_START.getTime()) / 86400000), TRIP_DAYS - 1));
-          updateLabel();
-          window.dispatchEvent(new CustomEvent('dayOverrideChanged', {detail: null}));
-        }
-      });
-    }
-  }
+  // v4.02: REMOVED duplicate currentDay listener (was here at 7659-7682).
+  // The global sync block (line ~7385) already listens to dbRef.child('currentDay')
+  // and dispatches 'dayOverrideChanged' which the handler above (line ~7652) catches.
+  // Having two .on('value') on the same ref caused double-processing and was a leak.
 })();
 
 
@@ -9561,6 +9557,9 @@ async function fetchForecast(lat, lon, date, _retry) {
     if (typeof firebase === 'undefined' || !firebase.database) return;
 
     _notifListenerActive = true;
+    // v4.02: cleanup previous listeners before re-attaching
+    if (readStateRef) readStateRef.off('value');
+    if (historyRef) historyRef.off('value');
     historyRef = getHistoryRef();
     readStateRef = getReadStateRef(user.uid);
 
@@ -11139,7 +11138,8 @@ async function fetchForecast(lat, lon, date, _retry) {
             // Nominatim fallback for unknown countries
             var _cRefFb = db.ref('trips/' + FAMILY_ID + '/dailySummaries/' + date);
             var _fbUrl = 'https://nominatim.openstreetmap.org/reverse?format=json&lat=' + _lastPtDay.lat + '&lon=' + _lastPtDay.lng + '&zoom=5&accept-language=' + (isEN ? 'en' : 'it');
-            fetch(_fbUrl).then(function(r){return r.json();}).then(function(d){
+            // v4.02: route through _nominatimFetch for rate limiting + User-Agent
+            window._nominatimFetch(_fbUrl).then(function(d){
               if(d&&d.address){var cc=(d.address.country_code||'').toUpperCase();var cn=d.address.country||'';if(cc)_cRefFb.update({country:cn,countryCode:cc});}
             }).catch(function(){});
           }
@@ -12040,7 +12040,7 @@ async function fetchForecast(lat, lon, date, _retry) {
     title.style.cssText = 'font-size:16px;font-weight:700;margin-bottom:12px;color:var(--text-color,#1a1a2e);';
     title.textContent = isEN ? '\u2709\uFE0F Write your postcard' : '\u2709\uFE0F Scrivi la cartolina';
     var input = document.createElement('textarea');
-    input.style.cssText = 'width:100%;min-height:80px;border:1px solid var(--border-color,#e2e8f0);border-radius:10px;padding:12px;font-size:14px;resize:vertical;font-family:inherit;box-sizing:border-box;';
+    input.style.cssText = 'width:100%;min-height:80px;border:1px solid var(--border-color,#e2e8f0);border-radius:10px;padding:12px;font-size:14px;resize:vertical;font-family:inherit;box-sizing:border-box;background:var(--bg-color,#fff);color:var(--text-color,#1a1a2e);';
     input.placeholder = isEN ? 'Your message...' : 'Il tuo messaggio...';
     input.maxLength = 500;
     var btnRow = document.createElement('div');
@@ -12943,8 +12943,8 @@ async function fetchForecast(lat, lon, date, _retry) {
     // Firebase ref
     var plRef = firebase.database().ref('trips/' + FAMILY_ID + '/playlist/' + _dayKey);
 
-    // Listen for changes
-    plRef.on('value', function(snap) {
+    // Listen for changes — v4.02: register with tab cleanup system
+    var _plCb = function(snap) {
       var data = snap.val() || {};
       var approvedHtml = '';
       var listHtml = '';
@@ -12992,7 +12992,13 @@ async function fetchForecast(lat, lon, date, _retry) {
           });
         });
       }
-    });
+    };
+    // v4.02: register with tab cleanup system
+    if (window.registerFirebaseListener) {
+      window.registerFirebaseListener('chat', plRef, 'value', _plCb);
+    } else {
+      plRef.on('value', _plCb);
+    }
 
     // Submit suggestion
     if (plSubmitBtn) plSubmitBtn.addEventListener('click', function() {
@@ -17414,9 +17420,9 @@ async function fetchForecast(lat, lon, date, _retry) {
             if (slotLabel) {
               html += '<div class="curiosita-slot" style="font-size:0.72rem;color:#888;font-weight:600;margin-bottom:4px;">' + slotLabel + '</div>';
             }
-            html += '<div style="font-size:0.92rem;line-height:1.4;color:inherit;">' + (item.body || item.title) + '</div>';
+            html += '<div style="font-size:0.92rem;line-height:1.4;color:inherit;">' + escapeHtml(item.body || item.title || '') + '</div>';
             if (item.source) {
-              html += '<div class="curiosita-source" style="font-size:0.68rem;color:#aaa;margin-top:6px;">Fonte: ' + item.source + '</div>';
+              html += '<div class="curiosita-source" style="font-size:0.68rem;color:#aaa;margin-top:6px;">Fonte: ' + escapeHtml(item.source) + '</div>';
             }
             html += '</div>';
           });

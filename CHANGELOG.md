@@ -5,6 +5,16 @@
 
 # Quo Vadis — Changelog
 
+## v4.02 — 2026-06-27
+- **P0 Firebase Listener Cleanup**: aggiunto `.off()` prima di `.on()` su tutti i listener ripetibili (loadCheckins, renderParkingList, renderCustomCheckins, renderDailySummaries, notification drawer, playlist, home-variants /currentLocation). Rimosso listener `currentDay` duplicato. Previene memory leak dopo ore di uso.
+- **P1 Rate Limiting Cloud Functions**: aggiunta funzione `checkRateLimit()` con contatore giornaliero per-utente. Limiti: `translatePost` 50/giorno, `parseExpenseScreenshot` 20/giorno, `parseExpensePdf` 10/giorno. Previene abuso e costi imprevisti.
+- **P1 XSS Fix**: aggiunto `escapeHtml()` su tutti i dati utente in `innerHTML` (parking name, weather card name, curiosità body/source)
+- **P1 Database Rules — String Limits**: aggiunti limiti lunghezza a `pendingUsers` (displayName ≤100, email ≤200), `playlist` (song ≤200, artist ≤200, displayName ≤100), `chat/users` (name ≤100, email ≤200)
+- **P1 Storage Rules — Postcards**: aggiunta regola per `postcards/{familyId}/{filename}` (immagini max 5MB, utenti autenticati)
+- **P2 Dark Mode**: aggiunto `background` e `color` con CSS variables ai textarea/input dei modal cartolina e map tips
+- **P2 Nominatim**: User-Agent aggiornato a `QuoVadis-TripApp/4.02`; chiamata country detection ora usa `_nominatimFetch` (rate limiting + UA) invece di `fetch` diretto
+- **P2 importRecordsData Nominatim**: fallback country lookup ora usa `_nominatimFetch` invece di `fetch` diretto
+
 ## v4.01 — 2026-06-27
 - **Firebase Rules**: aggiunte regole per `mapTips`, `playlist`, `wasThere`, `comments/reactions` — i follower ora possono scrivere
 - **#18 Cartolina — fix iOS PWA**: sostituito `prompt()` (bloccato su iOS standalone) con modal custom

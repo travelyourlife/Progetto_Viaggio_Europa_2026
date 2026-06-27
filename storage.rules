@@ -51,6 +51,13 @@ service firebase.storage {
       allow write: if isAuthenticated() && (isImage() || isAudio()) && maxSize(10);
     }
 
+    // v4.02: Postcard photos: postcards/{familyId}/{filename}
+    // Any authenticated user can send postcard photos (max 5MB, images only)
+    match /postcards/{familyId}/{filename} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && isImage() && maxSize(5);
+    }
+
     // Default: deny all other paths
     match /{allPaths=**} {
       allow read, write: if false;

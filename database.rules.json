@@ -22,7 +22,7 @@
                     "$uid": {
                         ".read": "auth != null && auth.uid === $uid",
                         ".write": "auth != null && (auth.uid === $uid || auth.uid === 'RxlVlsfeaEeSwFUVYbKQujEsbBo1' || auth.uid === 'Mh8BOeFPnFe7WObcsUoP6wyRgPw1' || root.child('trips/' + $familyId + '/ownerUsers/' + auth.uid).val() === true) && !root.child('trips/' + $familyId + '/bannedUsers/' + auth.uid).exists()",
-                        ".validate": "newData.hasChildren(['email', 'displayName'])"
+                        ".validate": "newData.hasChildren(['email', 'displayName']) && newData.child('email').val().length <= 200 && newData.child('displayName').val().length <= 100"
                     }
                 },
                 "bannedUsers": {
@@ -94,7 +94,7 @@
                     "$dayKey": {
                         "$uid": {
                             ".write": "auth != null && (auth.uid === $uid || root.child('trips/' + $familyId + '/ownerUsers/' + auth.uid).val() === true) && (root.child('trips/' + $familyId + '/approvedUsers/' + auth.uid).exists() || root.child('trips/' + $familyId + '/ownerUsers/' + auth.uid).val() === true)",
-                            ".validate": "newData.val() === null || (newData.hasChildren(['displayName','song','artist','timestamp']))"
+                            ".validate": "newData.val() === null || (newData.hasChildren(['displayName','song','artist','timestamp']) && newData.child('displayName').val().length <= 100 && newData.child('song').val().length <= 200 && newData.child('artist').val().length <= 200)"
                         }
                     }
                 },
@@ -150,7 +150,7 @@
                 "$uid": {
                     ".read": "auth != null && auth.uid === $uid",
                     ".write": "auth != null && (auth.uid === $uid || auth.uid === 'RxlVlsfeaEeSwFUVYbKQujEsbBo1' || auth.uid === 'Mh8BOeFPnFe7WObcsUoP6wyRgPw1' || root.child('trips/viaggio-europa-2026/ownerUsers/' + auth.uid).val() === true)",
-                    ".validate": "newData.hasChildren(['name', 'email']) || newData.val() === null"
+                    ".validate": "newData.val() === null || (newData.hasChildren(['name', 'email']) && newData.child('name').val().length <= 100 && newData.child('email').val().length <= 200)"
                 }
             },
             "banned": {
