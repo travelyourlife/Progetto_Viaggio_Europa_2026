@@ -32,9 +32,17 @@ service firebase.storage {
     }
 
     // Diary uploads: diary/{familyId}/{dayKey}/{filename}
-    match /diary/{familyId}/{allPaths=**} {
+    // Owner can upload diary post media (images, audio)
+    match /diary/{familyId}/{dayKey}/{filename} {
       allow read: if isAuthenticated();
       allow write: if isOwner() && (isImage() || isAudio()) && maxSize(10);
+    }
+
+    // v4.01: Comment photos: diary/{familyId}/{postKey}/comments/{filename}
+    // Any authenticated user can upload comment photos (max 5MB)
+    match /diary/{familyId}/{postKey}/comments/{filename} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && isImage() && maxSize(5);
     }
 
     // Chat uploads: chat/{filename}

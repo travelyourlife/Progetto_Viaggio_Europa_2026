@@ -579,7 +579,8 @@ a.hv-visitor-lock.hv-login-link { text-decoration: underline; cursor: pointer; d
 .hv-role-modal-backdrop.hv-modal-open { opacity: 1; pointer-events: auto; }
 .hv-role-modal {
     background: var(--card-bg, #fff); border-radius: 18px; padding: 24px;
-    width: 280px; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    width: 280px; max-height: calc(100vh - 40px); overflow-y: auto;
+    -webkit-overflow-scrolling: touch; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
 }
 .hv-role-modal-title {
     font-size: 16px; font-weight: 700; margin-bottom: 16px;

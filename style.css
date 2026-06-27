@@ -1782,6 +1782,9 @@ span[id^="admin-sec"] {
     background:var(--bg-card); border-radius:20px 20px 0 0;
     padding:28px 24px calc(28px + env(safe-area-inset-bottom, 0));
     max-width:500px; margin:0 auto;
+    max-height: 85vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
     animation: ios-slide-up 0.4s ease;
 }
 @keyframes ios-slide-up { from { transform:translateY(100%); } to { transform:translateY(0); } }
@@ -1909,6 +1912,9 @@ span[id^="admin-sec"] {
     padding: 36px 28px;
     max-width: 380px;
     width: 100%;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
     text-align: center;
     box-shadow: 0 20px 60px rgba(0,0,0,0.4);
     animation: fm-pop 0.3s ease;
@@ -2084,6 +2090,9 @@ span[id^="admin-sec"] {
     padding: 28px 24px;
     max-width: 360px;
     width: 100%;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
     box-shadow: 0 24px 80px rgba(0,0,0,0.35);
     transform: scale(0.9) translateY(20px);
     transition: transform 0.3s ease;
@@ -4115,6 +4124,9 @@ html[lang="en"] .notif-drawer-list:empty::after {
   padding: 24px;
   width: 100%;
   max-width: 320px;
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   box-shadow: 0 10px 40px rgba(0,0,0,0.2);
 }
 .manual-km-modal h3 {
@@ -4789,6 +4801,10 @@ html[lang="en"] .notif-drawer-list:empty::after {
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 16px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 .diario-edit-modal {
   background: var(--bg-card);
@@ -4796,6 +4812,9 @@ html[lang="en"] .notif-drawer-list:empty::after {
   padding: 24px;
   width: 90%;
   max-width: 400px;
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   color: var(--text);
 }
 .diario-edit-modal label {

@@ -3645,6 +3645,24 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             updateMapMarkers();
             loadTrackLine();
             listenLivePositions();
+            loadMapTips();
+            enableMapTipOnClick();
+
+            // v4.01: Wire up map tip buttons
+            var addTipBtn = document.getElementById('pos-add-tip-btn');
+            if (addTipBtn) {
+                addTipBtn.addEventListener('click', function() {
+                    if (!map) return;
+                    var center = map.getCenter();
+                    addMapTipAtLocation(center.lat, center.lng);
+                });
+            }
+            var toggleTipsBtn = document.getElementById('pos-toggle-tips-btn');
+            if (toggleTipsBtn) {
+                toggleTipsBtn.addEventListener('click', function() {
+                    toggleMapTips();
+                });
+            }
         }
 
         function updateMapMarkers() {
@@ -3678,6 +3696,134 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                     });
                 });
             }
+        }
+
+        // ─── v4.00 Feature #11: Map Tips (follower pins) ───
+        var _mapTipMarkers = [];
+        var _mapTipsVisible = true;
+        function loadMapTips() {
+            if (!map || !FAMILY_ID) return;
+            var ref = firebase.database().ref('trips/' + FAMILY_ID + '/mapTips');
+            ref.on('value', function(snap) {
+                // Clear old markers
+                _mapTipMarkers.forEach(function(m) { map.removeLayer(m); });
+                _mapTipMarkers = [];
+                var tips = snap.val();
+                if (!tips || typeof tips !== 'object') return;
+                var tipIcon = L.divIcon({ className: '', html: '<div style="background:#f59e0b;width:14px;height:14px;border-radius:50%;border:2px solid white;box-shadow:0 1px 3px rgba(0,0,0,0.3);font-size:9px;text-align:center;line-height:14px;">\uD83D\uDCA1</div>', iconSize: [18,18], iconAnchor: [9,9] });
+                Object.keys(tips).forEach(function(k) {
+                    var t = tips[k];
+                    if (!t.lat || !t.lng) return;
+                    var popup = '<strong>' + escapeHtml(t.text || t.title || '') + '</strong>';
+                    popup += '<br><small style="color:#6b7280;">da ' + escapeHtml(t.authorName || 'Follower') + '</small>';
+                    // v4.01: Owner or author can delete
+                    var canDelete = (firebaseUser && (t.uid === firebaseUser.uid || t.authorUid === firebaseUser.uid || isOwner));
+                    if (canDelete) {
+                        popup += '<br><a href="#" class="map-tip-delete" data-tip-key="' + k + '" style="color:#dc2626;font-size:11px;">' + (isEN ? 'Delete' : 'Elimina') + '</a>';
+                    }
+                    var m = L.marker([t.lat, t.lng], {icon: tipIcon}).bindPopup(popup);
+                    m.on('popupopen', function() {
+                        var delLink = document.querySelector('.map-tip-delete[data-tip-key="' + k + '"]');
+                        if (delLink) {
+                            delLink.addEventListener('click', function(ev) {
+                                ev.preventDefault();
+                                firebase.database().ref('trips/' + FAMILY_ID + '/mapTips/' + k).remove();
+                                map.closePopup();
+                                if (window.showToast) showToast(isEN ? 'Tip deleted' : 'Tip eliminato', 'info');
+                            });
+                        }
+                    });
+                    if (_mapTipsVisible) m.addTo(map);
+                    _mapTipMarkers.push(m);
+                });
+            });
+        }
+
+        // v4.01: Toggle map tips visibility
+        function toggleMapTips() {
+            _mapTipsVisible = !_mapTipsVisible;
+            _mapTipMarkers.forEach(function(m) {
+                if (_mapTipsVisible) m.addTo(map);
+                else map.removeLayer(m);
+            });
+            var toggleBtn = document.getElementById('pos-toggle-tips-btn');
+            if (toggleBtn) {
+                toggleBtn.classList.toggle('active', _mapTipsVisible);
+                toggleBtn.textContent = _mapTipsVisible ? (isEN ? '\uD83D\uDCA1 Tips ON' : '\uD83D\uDCA1 Tips ON') : (isEN ? '\uD83D\uDCA1 Tips OFF' : '\uD83D\uDCA1 Tips OFF');
+            }
+        }
+
+        // Map tip submission (button or long-press)
+        function addMapTipAtLocation(lat, lng) {
+            if (!firebaseUser) {
+                if (window.showToast) showToast(isEN ? 'Sign in first' : 'Accedi prima', 'info');
+                return;
+            }
+            // v4.01: Use custom modal instead of prompt() for iOS PWA compatibility
+            _showMapTipModal(function(text) {
+                if (!text || !text.trim()) return;
+                var trimmed = text.trim().substring(0, 120);
+                var ref = firebase.database().ref('trips/' + FAMILY_ID + '/mapTips').push();
+                ref.set({
+                    uid: firebaseUser.uid,
+                    lat: lat, lng: lng,
+                    text: trimmed,
+                    timestamp: firebase.database.ServerValue.TIMESTAMP,
+                    authorName: firebaseUser.displayName || firebaseUser.email || ''
+                });
+                if (window.showToast) showToast(isEN ? 'Tip added!' : 'Tip aggiunto!', 'success');
+            });
+        }
+
+        // v4.01: Custom modal for map tip text (replaces prompt())
+        function _showMapTipModal(callback) {
+            var overlay = document.createElement('div');
+            overlay.style.cssText = 'position:fixed;inset:0;z-index:100000;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:20px;';
+            var card = document.createElement('div');
+            card.style.cssText = 'background:var(--card-bg,#fff);border-radius:16px;padding:24px;width:100%;max-width:320px;box-shadow:0 20px 60px rgba(0,0,0,0.3);';
+            var title = document.createElement('div');
+            title.style.cssText = 'font-size:16px;font-weight:700;margin-bottom:12px;color:var(--text-color,#1a1a2e);';
+            title.textContent = isEN ? '\uD83D\uDCA1 Add a tip' : '\uD83D\uDCA1 Aggiungi consiglio';
+            var input = document.createElement('input');
+            input.type = 'text';
+            input.maxLength = 120;
+            input.style.cssText = 'width:100%;border:1px solid var(--border-color,#e2e8f0);border-radius:10px;padding:12px;font-size:14px;font-family:inherit;box-sizing:border-box;';
+            input.placeholder = isEN ? 'e.g. Great pizza here! (max 120 chars)' : 'es. Ottima pizza qui! (max 120 caratteri)';
+            var counter = document.createElement('div');
+            counter.style.cssText = 'font-size:11px;color:var(--text-muted,#6b7280);text-align:right;margin-top:4px;';
+            counter.textContent = '0/120';
+            input.addEventListener('input', function() { counter.textContent = input.value.length + '/120'; });
+            var btnRow = document.createElement('div');
+            btnRow.style.cssText = 'display:flex;gap:10px;margin-top:14px;';
+            var cancelBtn = document.createElement('button');
+            cancelBtn.type = 'button';
+            cancelBtn.style.cssText = 'flex:1;padding:12px;border-radius:10px;border:none;background:var(--border-color,#e2e8f0);font-size:14px;font-weight:600;cursor:pointer;color:var(--text-color,#1a1a2e);';
+            cancelBtn.textContent = isEN ? 'Cancel' : 'Annulla';
+            var addBtn = document.createElement('button');
+            addBtn.type = 'button';
+            addBtn.style.cssText = 'flex:1;padding:12px;border-radius:10px;border:none;background:#f59e0b;color:#fff;font-size:14px;font-weight:600;cursor:pointer;';
+            addBtn.textContent = isEN ? 'Add' : 'Aggiungi';
+            btnRow.appendChild(cancelBtn);
+            btnRow.appendChild(addBtn);
+            card.appendChild(title);
+            card.appendChild(input);
+            card.appendChild(counter);
+            card.appendChild(btnRow);
+            overlay.appendChild(card);
+            document.body.appendChild(overlay);
+            setTimeout(function() { input.focus(); }, 100);
+            function close() { if (overlay.parentNode) document.body.removeChild(overlay); }
+            cancelBtn.addEventListener('click', function() { close(); callback(null); });
+            overlay.addEventListener('click', function(e) { if (e.target === overlay) { close(); callback(null); } });
+            addBtn.addEventListener('click', function() { var val = input.value; close(); callback(val); });
+            input.addEventListener('keydown', function(e) { if (e.key === 'Enter') { var val = input.value; close(); callback(val); } });
+        }
+
+        function enableMapTipOnClick() {
+            if (!map) return;
+            map.on('contextmenu', function(e) {
+                addMapTipAtLocation(e.latlng.lat, e.latlng.lng);
+            });
         }
 
         // ─── Track Line (from Firebase) ───
@@ -7032,7 +7178,7 @@ async function fetchForecast(lat, lon, date, _retry) {
   }
 
   async function loadPosWeather() {
-    var stops = getNextStops(3);
+    var stops = getNextStops(4);
     if (!stops.length) {
       weatherPanel.innerHTML = '<p style="color:var(--text-muted);font-size:13px;">' + (isEN ? 'No upcoming stops within forecast range.' : 'Nessuna tappa nelle prossime previsioni.') + '</p>';
       return;
@@ -8441,17 +8587,17 @@ async function fetchForecast(lat, lon, date, _retry) {
       return window._haversineKm(lat1, lng1, lat2, lng2);
     }
 
+    // v4.00: OSRM road distance with Haversine×1.3 fallback
+    var _appOsrmCache = { lat: null, lng: null, distKm: null };
+    var _appOsrmPending = false;
+
     function _updateDistanceFromHome(fallbackLat, fallbackLng) {
         if (!heroTripDistance || !heroTripDistanceText) return;
-        // v3.94 FIX: Single source of truth — read /currentLocation only.
-        // No more /position → /lastPosition chain. Simple and consistent.
         if (typeof firebase !== 'undefined' && firebase.database && typeof FAMILY_ID !== 'undefined') {
             firebase.database().ref('trips/' + FAMILY_ID + '/currentLocation').once('value').then(function(snap) {
                 var cl = snap.val();
                 if (cl && cl.lat && cl.lng) {
-                    var km = _haversineKm(HOME_LAT, HOME_LNG, cl.lat, cl.lng);
-                    heroTripDistanceText.textContent = km.toLocaleString(isEN ? 'en-US' : 'it-IT') + ' km ' + (isEN ? 'from home' : 'da casa') + ' \uD83C\uDFE0';
-                    heroTripDistance.style.display = '';
+                    _fetchRoadDistance(cl.lat, cl.lng);
                 } else {
                     heroTripDistance.style.display = 'none';
                 }
@@ -8461,6 +8607,47 @@ async function fetchForecast(lat, lon, date, _retry) {
         } else {
             heroTripDistance.style.display = 'none';
         }
+    }
+
+    function _fetchRoadDistance(lat, lng) {
+        // Check cache — if position moved < 10 km, reuse
+        if (_appOsrmCache.lat !== null && _appOsrmCache.distKm !== null) {
+            var moved = _haversineKm(_appOsrmCache.lat, _appOsrmCache.lng, lat, lng);
+            if (moved < 10) {
+                _showRoadDistance(_appOsrmCache.distKm);
+                return;
+            }
+        }
+        // Immediate fallback: Haversine × 1.3
+        var fallbackKm = Math.round(_haversineKm(HOME_LAT, HOME_LNG, lat, lng) * 1.3);
+        _showRoadDistance(fallbackKm);
+
+        if (_appOsrmPending) return;
+        _appOsrmPending = true;
+
+        var osrmUrl = 'https://router.project-osrm.org/route/v1/driving/' +
+            HOME_LNG + ',' + HOME_LAT + ';' + lng + ',' + lat + '?overview=false';
+        fetch(osrmUrl, { signal: AbortSignal.timeout(8000) })
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                _appOsrmPending = false;
+                if (data && data.routes && data.routes[0] && data.routes[0].distance) {
+                    var roadKm = Math.round(data.routes[0].distance / 1000);
+                    _appOsrmCache = { lat: lat, lng: lng, distKm: roadKm };
+                    _showRoadDistance(roadKm);
+                } else {
+                    _appOsrmCache = { lat: lat, lng: lng, distKm: fallbackKm };
+                }
+            })
+            .catch(function() {
+                _appOsrmPending = false;
+                _appOsrmCache = { lat: lat, lng: lng, distKm: fallbackKm };
+            });
+    }
+
+    function _showRoadDistance(km) {
+        heroTripDistanceText.textContent = '~' + km.toLocaleString(isEN ? 'en-US' : 'it-IT') + ' km ' + (isEN ? 'from home' : 'da casa') + ' \uD83C\uDFE0';
+        heroTripDistance.style.display = '';
     }
 
     // ─── v1.99: Next stop row ───
@@ -11523,6 +11710,35 @@ async function fetchForecast(lat, lon, date, _retry) {
     var bubble = document.createElement('div');
     bubble.className = 'chat-bubble';
 
+    // v4.00 Feature #18: Virtual postcard rendering
+    if (msg.msgType === 'postcard') {
+      bubble.className = 'chat-bubble chat-postcard';
+      bubble.style.cssText = 'padding:0;border-radius:12px;overflow:hidden;max-width:300px;box-shadow:0 2px 8px rgba(0,0,0,0.15);';
+      if (msg.mediaUrl) {
+        var pcImg = document.createElement('img');
+        pcImg.src = msg.mediaUrl;
+        pcImg.style.cssText = 'width:100%;height:180px;object-fit:cover;display:block;';
+        pcImg.loading = 'lazy';
+        bubble.appendChild(pcImg);
+      }
+      var pcBody = document.createElement('div');
+      pcBody.style.cssText = 'padding:12px;background:linear-gradient(135deg,#fef3c7,#fde68a);';
+      pcBody.innerHTML = '<div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#92400e;margin-bottom:4px;">\u2709\uFE0F ' + (isEN ? 'Postcard' : 'Cartolina') + '</div>' +
+        '<div style="font-size:14px;color:#1e293b;">' + escapeHtml(msg.text || '').replace(/\n/g, '<br>') + '</div>' +
+        (msg.postcardFrom ? '<div style="font-size:11px;color:#6b7280;margin-top:6px;text-align:right;">\u2014 ' + escapeHtml(msg.postcardFrom) + '</div>' : '');
+      bubble.appendChild(pcBody);
+      div.appendChild(bubble);
+      // Time for own messages
+      if (isMine) {
+        var mytime = document.createElement('div');
+        mytime.className = 'chat-msg-time-mine';
+        mytime.textContent = msgDate.toLocaleTimeString(LANG === 'en' ? 'en-GB' : 'it-IT', { hour: '2-digit', minute: '2-digit' });
+        div.appendChild(mytime);
+      }
+      chatMessages.appendChild(div);
+      return;
+    }
+
     // Media content
     if (msg.mediaUrl) {
       if (msg.mediaType && msg.mediaType.startsWith('image/')) {
@@ -11814,6 +12030,99 @@ async function fetchForecast(lat, lon, date, _retry) {
     }
   });
 
+  // ─── v4.01 FIX: Custom modal for postcard text (replaces prompt() blocked on iOS PWA) ───
+  function _showPostcardModal(callback) {
+    var overlay = document.createElement('div');
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:100000;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:20px;';
+    var card = document.createElement('div');
+    card.style.cssText = 'background:var(--card-bg,#fff);border-radius:16px;padding:24px;width:100%;max-width:340px;box-shadow:0 20px 60px rgba(0,0,0,0.3);';
+    var title = document.createElement('div');
+    title.style.cssText = 'font-size:16px;font-weight:700;margin-bottom:12px;color:var(--text-color,#1a1a2e);';
+    title.textContent = isEN ? '\u2709\uFE0F Write your postcard' : '\u2709\uFE0F Scrivi la cartolina';
+    var input = document.createElement('textarea');
+    input.style.cssText = 'width:100%;min-height:80px;border:1px solid var(--border-color,#e2e8f0);border-radius:10px;padding:12px;font-size:14px;resize:vertical;font-family:inherit;box-sizing:border-box;';
+    input.placeholder = isEN ? 'Your message...' : 'Il tuo messaggio...';
+    input.maxLength = 500;
+    var btnRow = document.createElement('div');
+    btnRow.style.cssText = 'display:flex;gap:10px;margin-top:14px;';
+    var cancelBtn = document.createElement('button');
+    cancelBtn.type = 'button';
+    cancelBtn.style.cssText = 'flex:1;padding:12px;border-radius:10px;border:none;background:var(--border-color,#e2e8f0);font-size:14px;font-weight:600;cursor:pointer;color:var(--text-color,#1a1a2e);';
+    cancelBtn.textContent = isEN ? 'Cancel' : 'Annulla';
+    var sendBtn = document.createElement('button');
+    sendBtn.type = 'button';
+    sendBtn.style.cssText = 'flex:1;padding:12px;border-radius:10px;border:none;background:#3b82f6;color:#fff;font-size:14px;font-weight:600;cursor:pointer;';
+    sendBtn.textContent = isEN ? 'Send' : 'Invia';
+    btnRow.appendChild(cancelBtn);
+    btnRow.appendChild(sendBtn);
+    card.appendChild(title);
+    card.appendChild(input);
+    card.appendChild(btnRow);
+    overlay.appendChild(card);
+    document.body.appendChild(overlay);
+    setTimeout(function() { input.focus(); }, 100);
+    function close() { if (overlay.parentNode) document.body.removeChild(overlay); }
+    cancelBtn.addEventListener('click', function() { close(); callback(null); });
+    overlay.addEventListener('click', function(e) { if (e.target === overlay) { close(); callback(null); } });
+    sendBtn.addEventListener('click', function() { var val = input.value; close(); callback(val); });
+  }
+
+  // ─── v4.00 Feature #18: Virtual Postcard ───
+  var postcardBtn = document.getElementById('chat-postcard-btn');
+  if (postcardBtn) {
+    postcardBtn.addEventListener('click', function() {
+      if (!chatUser) {
+        if (window.showToast) showToast(isEN ? 'Sign in first' : 'Accedi prima', 'info');
+        return;
+      }
+      // Step 1: Pick a photo
+      var fileInput = document.createElement('input');
+      fileInput.type = 'file';
+      fileInput.accept = 'image/*';
+      fileInput.style.cssText = 'position:fixed;top:-100px;left:-100px;opacity:0;';
+      fileInput.addEventListener('change', function() {
+        document.body.removeChild(fileInput);
+        if (!fileInput.files || !fileInput.files[0]) return;
+        var file = fileInput.files[0];
+        if (file.size > 5 * 1024 * 1024) {
+          if (window.showToast) showToast(isEN ? 'Photo too large (max 5MB)' : 'Foto troppo grande (max 5MB)', 'error');
+          return;
+        }
+        // Step 2: Ask for message via custom modal (prompt() is blocked on iOS PWA)
+        _showPostcardModal(function(text) {
+          if (!text || !text.trim()) return;
+          // Step 3: Upload and send
+          if (window.showToast) showToast(isEN ? '\u2709\uFE0F Sending postcard...' : '\u2709\uFE0F Invio cartolina...', 'info');
+          if (firebase.storage) {
+            var ref = firebase.storage().ref('chat/viaggio-europa-2026/postcards/pc_' + Date.now() + '.jpg');
+            ref.put(file).then(function(snap) { return snap.ref.getDownloadURL(); }).then(function(url) {
+              // Send as postcard message type
+              var msg = {
+                uid: chatUser.uid,
+                displayName: chatUser.displayName || chatUser.email || 'User',
+                photoURL: chatUser.photoURL || '',
+                text: text.trim(),
+                mediaUrl: url,
+                mediaType: 'image/jpeg',
+                msgType: 'postcard',
+                postcardFrom: chatUser.displayName || chatUser.email || '',
+                timestamp: firebase.database.ServerValue.TIMESTAMP,
+                lang: LANG
+              };
+              CHAT_REF.push(msg);
+              if (window.showToast) showToast(isEN ? '\u2709\uFE0F Postcard sent!' : '\u2709\uFE0F Cartolina inviata!', 'success');
+            }).catch(function(err) {
+              console.error('[Chat] Postcard upload failed:', err);
+              if (window.showToast) showToast(isEN ? 'Upload failed' : 'Invio fallito', 'error');
+            });
+          }
+        });
+      });
+      document.body.appendChild(fileInput);
+      fileInput.click();
+    });
+  }
+
   // ─── File attachment ───
   chatAttachBtn.addEventListener('click', function() {
     if (!chatUser) {
@@ -11996,6 +12305,79 @@ async function fetchForecast(lat, lon, date, _retry) {
   }
   if (recSend) {
     recSend.addEventListener('click', function() { stopRecording(true); });
+  }
+
+  // ─── v4.00 Feature #7: Quick 5-sec voice reaction ───
+  var quickVoiceBtn = document.getElementById('chat-quick-voice-btn');
+  if (quickVoiceBtn) {
+    var _qvRecording = false;
+    var _qvRecorder = null;
+    var _qvChunks = [];
+    var _qvStream = null;
+    var _qvTimeout = null;
+    quickVoiceBtn.addEventListener('click', function() {
+      if (_qvRecording) return; // already recording
+      if (!chatUser) {
+        if (window.showToast) showToast(isEN ? 'Sign in first' : 'Accedi prima', 'info');
+        return;
+      }
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        if (window.showToast) showToast(isEN ? 'Microphone not supported' : 'Microfono non supportato', 'error');
+        return;
+      }
+      navigator.mediaDevices.getUserMedia({ audio: true }).then(function(stream) {
+        _qvRecording = true;
+        _qvChunks = [];
+        _qvStream = stream;
+        if (!window._audioMimeType) window._audioMimeType = getSupportedAudioMime();
+        _qvRecorder = new MediaRecorder(stream, window._audioMimeType ? { mimeType: window._audioMimeType } : {});
+        _qvRecorder.ondataavailable = function(e) { if (e.data.size > 0) _qvChunks.push(e.data); };
+        _qvRecorder.onstop = function() {
+          _qvStream.getTracks().forEach(function(t) { t.stop(); });
+          var blob = new Blob(_qvChunks, { type: window._audioMimeType || 'audio/webm' });
+          if (blob.size < 500) { _qvRecording = false; quickVoiceBtn.style.background = ''; return; }
+          // Upload
+          if (firebase.storage) {
+            var ref = firebase.storage().ref('chat/viaggio-europa-2026/audio/quick_' + Date.now() + '.webm');
+            ref.put(blob).then(function(snap) { return snap.ref.getDownloadURL(); }).then(function(url) {
+              sendMessage('', url, window._audioMimeType || 'audio/webm');
+              if (window.showToast) showToast(isEN ? '5s reaction sent!' : 'Reazione 5s inviata!', 'success');
+            }).catch(function(err) {
+              console.error('[Chat] Quick voice upload failed:', err);
+              if (window.showToast) showToast(isEN ? 'Upload failed' : 'Invio fallito', 'error');
+            });
+          }
+          _qvRecording = false;
+          quickVoiceBtn.style.background = '';
+        };
+        _qvRecorder.start();
+        quickVoiceBtn.style.background = 'rgba(239,68,68,0.2)';
+        // v4.01: Visual countdown 5→0
+        var _qvCountdown = 5;
+        var _qvOrigText = quickVoiceBtn.textContent;
+        quickVoiceBtn.textContent = '5';
+        quickVoiceBtn.style.cssText += ';font-weight:700;font-size:16px;min-width:38px;';
+        var _qvCountdownTimer = setInterval(function() {
+          _qvCountdown--;
+          if (_qvCountdown > 0) {
+            quickVoiceBtn.textContent = String(_qvCountdown);
+          } else {
+            quickVoiceBtn.textContent = '\u2714';
+            clearInterval(_qvCountdownTimer);
+          }
+        }, 1000);
+        // Auto-stop after 5 seconds
+        _qvTimeout = setTimeout(function() {
+          clearInterval(_qvCountdownTimer);
+          quickVoiceBtn.textContent = _qvOrigText;
+          quickVoiceBtn.style.cssText = quickVoiceBtn.style.cssText.replace(/;font-weight:700;font-size:16px;min-width:38px;/, '');
+          if (_qvRecorder && _qvRecorder.state === 'recording') _qvRecorder.stop();
+        }, 5000);
+      }).catch(function(err) {
+        console.error('[Chat] Quick voice mic denied:', err);
+        if (window.showToast) showToast(isEN ? 'Microphone access denied' : 'Accesso microfono negato', 'error');
+      });
+    });
   }
 
   // ─── Reply to message ───
@@ -12525,6 +12907,119 @@ async function fetchForecast(lat, lon, date, _retry) {
   }
   AuthManager.subscribe(chatHandleAuthInit);
   // === END CHAT AUTH-AWARE INITIALIZATION ===
+
+  // ─── v4.00 Feature #19: Collaborative Playlist ───
+  (function initPlaylist() {
+    var plSection = document.getElementById('chat-playlist-section');
+    var plToggle = document.getElementById('chat-playlist-toggle');
+    var plBody = document.getElementById('chat-playlist-body');
+    var plArrow = document.getElementById('chat-playlist-arrow');
+    var plTitle = document.getElementById('chat-playlist-title');
+    var plApproved = document.getElementById('chat-playlist-approved');
+    var plList = document.getElementById('chat-playlist-list');
+    var plSongInput = document.getElementById('chat-playlist-song');
+    var plArtistInput = document.getElementById('chat-playlist-artist');
+    var plSubmitBtn = document.getElementById('chat-playlist-submit');
+    if (!plSection || !FAMILY_ID) return;
+
+    // Determine current day key
+    var _tripStart = window.TRIP_START || new Date(2026, 5, 25);
+    var _today = new Date();
+    var _dayNum = Math.max(1, Math.floor((_today - _tripStart) / 86400000) + 1);
+    var _dayKey = 'G' + _dayNum;
+    if (plTitle) plTitle.textContent = (window.isEN ? 'Soundtrack — ' : 'Colonna sonora — ') + _dayKey;
+
+    // Show section
+    plSection.style.display = '';
+
+    // Toggle collapse
+    var _expanded = false;
+    if (plToggle) plToggle.addEventListener('click', function() {
+      _expanded = !_expanded;
+      plBody.style.display = _expanded ? '' : 'none';
+      plArrow.textContent = _expanded ? '\u25B2' : '\u25BC';
+    });
+
+    // Firebase ref
+    var plRef = firebase.database().ref('trips/' + FAMILY_ID + '/playlist/' + _dayKey);
+
+    // Listen for changes
+    plRef.on('value', function(snap) {
+      var data = snap.val() || {};
+      var approvedHtml = '';
+      var listHtml = '';
+      var _currentUser = firebase.auth().currentUser;
+      var _isOwner = _currentUser && window.isOwner;
+      var _alreadySuggested = _currentUser && data[_currentUser.uid];
+
+      Object.keys(data).forEach(function(uid) {
+        var item = data[uid];
+        if (!item || !item.song) return;
+        var line = '<div style="padding:4px 0;font-size:13px;display:flex;align-items:center;gap:6px;">';
+        if (item.approved) {
+          line += '<span style="font-size:16px;">\u2B50</span>';
+          line += '<strong>' + escapeHtml(item.song) + '</strong>';
+          if (item.artist) line += ' \u2014 ' + escapeHtml(item.artist);
+          line += ' <span style="color:#6b7280;font-size:11px;">(' + escapeHtml(item.displayName || '') + ')</span>';
+          line += '</div>';
+          approvedHtml += line;
+        } else {
+          line += '<span style="color:#64748b;">\u266A</span> ';
+          line += escapeHtml(item.song);
+          if (item.artist) line += ' \u2014 ' + escapeHtml(item.artist);
+          line += ' <span style="color:#6b7280;font-size:11px;">(' + escapeHtml(item.displayName || '') + ')</span>';
+          if (_isOwner) {
+            line += ' <button data-pl-approve="' + uid + '" style="background:#10b981;color:#fff;border:none;border-radius:4px;padding:2px 6px;font-size:11px;cursor:pointer;">\u2705</button>';
+          }
+          line += '</div>';
+          listHtml += line;
+        }
+      });
+
+      plApproved.innerHTML = approvedHtml;
+      plList.innerHTML = listHtml || '<div style="font-size:12px;color:#94a3b8;">' + (window.isEN ? 'No suggestions yet' : 'Nessun suggerimento ancora') + '</div>';
+
+      // Hide form if already suggested
+      var plForm = document.getElementById('chat-playlist-form');
+      if (plForm) plForm.style.display = _alreadySuggested ? 'none' : 'flex';
+
+      // Approve buttons (owner only)
+      if (_isOwner) {
+        plList.querySelectorAll('[data-pl-approve]').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            var uid = btn.getAttribute('data-pl-approve');
+            plRef.child(uid).update({ approved: true });
+          });
+        });
+      }
+    });
+
+    // Submit suggestion
+    if (plSubmitBtn) plSubmitBtn.addEventListener('click', function() {
+      var _user = firebase.auth().currentUser;
+      if (!_user) {
+        if (window.showToast) showToast(window.isEN ? 'Sign in first' : 'Accedi prima', 'info');
+        return;
+      }
+      var song = (plSongInput.value || '').trim();
+      var artist = (plArtistInput.value || '').trim();
+      if (!song) {
+        if (window.showToast) showToast(window.isEN ? 'Enter a song title' : 'Inserisci il titolo', 'info');
+        return;
+      }
+      plRef.child(_user.uid).set({
+        displayName: _user.displayName || _user.email || 'User',
+        song: song,
+        artist: artist,
+        approved: false,
+        timestamp: firebase.database.ServerValue.TIMESTAMP
+      }).then(function() {
+        plSongInput.value = '';
+        plArtistInput.value = '';
+        if (window.showToast) showToast(window.isEN ? '\u266A Song suggested!' : '\u266A Canzone suggerita!', 'success');
+      });
+    });
+  })();
 
 })();
 
@@ -13925,6 +14420,25 @@ async function fetchForecast(lat, lon, date, _retry) {
     h += '<button type="button" class="diario-comments-toggle" data-key="' + key + '">\uD83D\uDCAC ' +
          (commentCount > 0 ? commentCount + ' ' : '') + (isEN ? 'Comments' : 'Commenti') + '</button>';
     h += '</div>';
+    // v4.00 Feature #2: "Ci siamo stati!" toggle
+    var beenThere = (entry && entry.wasThere && typeof entry.wasThere === 'object') ? entry.wasThere : {};
+    var beenThereCount = Object.keys(beenThere).length;
+    var iBeenThere = myUid && beenThere[myUid] ? true : false;
+    h += '<div class="diario-been-there" style="padding:4px 8px;">';
+    h += '<button type="button" class="diario-been-there-btn' + (iBeenThere ? ' active' : '') + '" data-key="' + key + '" style="font-size:13px;border:1px solid ' + (iBeenThere ? 'var(--accent,#3b82f6)' : 'var(--border,#e2e8f0)') + ';border-radius:20px;padding:4px 12px;background:' + (iBeenThere ? 'var(--accent-light,#eff6ff)' : 'transparent') + ';cursor:pointer;transition:all 0.2s;">';
+    h += '\uD83D\uDCCD ' + (isEN ? 'Been there!' : 'Ci siamo stati!') + (beenThereCount > 0 ? ' <span style="font-weight:600;">' + beenThereCount + '</span>' : '');
+    h += '</button>';
+    if (beenThereCount > 0) {
+      var beenNames = [];
+      Object.keys(beenThere).forEach(function(uid) {
+        var n = _diarioNameCache[uid] || beenThere[uid].name;
+        if (n) beenNames.push(n);
+      });
+      if (beenNames.length > 0) {
+        h += '<span style="font-size:11px;color:var(--text-muted,#6b7280);margin-left:8px;">' + escapeHtml(beenNames.join(', ')) + '</span>';
+      }
+    }
+    h += '</div>';
     // v3.27: Show who reacted (names below reaction bar)
     var reactorNames = [];
     Object.keys(reactions).forEach(function(uid) {
@@ -13940,10 +14454,11 @@ async function fetchForecast(lat, lon, date, _retry) {
     // Comments container (collapsed by default)
     h += '<div class="diario-comments" data-key="' + key + '">';
     h += renderCommentsList(key, comments);
-    // Comment form
+    // Comment form (v4.00: added photo button)
     h += '<div class="diario-comment-form">' +
          '<input type="text" class="diario-comment-input" data-key="' + key + '" maxlength="2000" placeholder="' +
          (isEN ? 'Write a comment…' : 'Scrivi un commento…') + '">' +
+         '<button type="button" class="diario-comment-photo" data-key="' + key + '" title="' + (isEN ? 'Attach photo' : 'Allega foto') + '">\uD83D\uDCF7</button>' +
          '<button type="button" class="diario-comment-send" data-key="' + key + '">' + (isEN ? 'Send' : 'Invia') + '</button>' +
          '</div>';
     h += '</div>';
@@ -13969,14 +14484,57 @@ async function fetchForecast(lat, lon, date, _retry) {
       out += '<div class="diario-comment-body">';
       out += '<span class="diario-comment-author">' + escapeHtml(c.name || (isEN ? 'Guest' : 'Ospite')) + '</span>';
       out += '<span class="diario-comment-time">' + escapeHtml(_formatCommentTime(c.ts)) + '</span>';
-      out += '<span class="diario-comment-text">' + escapeHtml(c.text || '') + '</span>';
+      if (c.photoUrl) {
+        out += '<img src="' + escapeHtml(c.photoUrl) + '" class="diario-comment-photo-img" loading="lazy" onclick="window.open(this.src,\'_blank\')" alt="">';
+      }
+      if (c.text) {
+        out += '<span class="diario-comment-text">' + escapeHtml(c.text) + '</span>';
+      }
       out += '</div>';
       if (canDelete) {
         out += '<button type="button" class="diario-comment-del" data-key="' + key + '" data-cid="' + cid + '" title="' + (isEN ? 'Delete' : 'Elimina') + '">\uD83D\uDDD1\uFE0F</button>';
       }
+      // v4.00 Feature #Extra: Comment reactions
+      var cReactions = c.reactions || {};
+      var cReactCounts = {};
+      var myCReact = (myUid && cReactions[myUid]) ? (cReactions[myUid].emoji || cReactions[myUid]) : null;
+      Object.keys(cReactions).forEach(function(uid) {
+        var em = typeof cReactions[uid] === 'object' ? cReactions[uid].emoji : cReactions[uid];
+        if (em) cReactCounts[em] = (cReactCounts[em] || 0) + 1;
+      });
+      out += '<div class="diario-comment-reactions" style="display:flex;align-items:center;gap:4px;margin-top:3px;padding-left:4px;">';
+      var COMMENT_EMOJIS = ['\uD83D\uDC4D', '\u2764\uFE0F', '\uD83D\uDE0D', '\uD83D\uDD25', '\uD83D\uDE2E'];
+      if (Object.keys(cReactCounts).length > 0) {
+        Object.keys(cReactCounts).forEach(function(em) {
+          var isMyR = (em === myCReact);
+          out += '<span class="comment-react-badge' + (isMyR ? ' mine' : '') + '" data-comment-react="' + key + '|' + cid + '|' + em + '" style="font-size:12px;padding:1px 4px;border-radius:8px;cursor:pointer;background:' + (isMyR ? '#dbeafe' : '#f1f5f9') + ';">' + em + (cReactCounts[em] > 1 ? ' ' + cReactCounts[em] : '') + '</span>';
+        });
+      }
+      out += '<span class="comment-react-add" data-comment-react-add="' + key + '|' + cid + '" style="font-size:11px;cursor:pointer;color:#94a3b8;padding:1px 4px;">+</span>';
+      out += '</div>';
       out += '</div>';
     });
     return out;
+  }
+
+  // v4.00 Feature #Extra: Toggle reaction on a comment
+  function toggleCommentReaction(postKey, commentId, emoji) {
+    var user = _socialUser();
+    if (!user || !user.uid) {
+      if (window.showToast) showToast(isEN ? 'Sign in to react' : 'Accedi per reagire', 'info');
+      return;
+    }
+    var ref = firebase.database().ref('trips/' + FAMILY_ID + '/diary/' + postKey + '/comments/' + commentId + '/reactions/' + user.uid);
+    ref.once('value').then(function(snap) {
+      var current = snap.val();
+      var currentEmoji = typeof current === 'object' ? (current && current.emoji) : current;
+      if (currentEmoji === emoji) {
+        return ref.remove();
+      }
+      return ref.set({ emoji: emoji, timestamp: firebase.database.ServerValue.TIMESTAMP });
+    }).catch(function(err) {
+      console.warn('[Diario] Comment reaction failed:', err.message);
+    });
   }
 
   // Toggle a reaction (one per user); remove if tapping the same emoji again
@@ -14012,15 +14570,14 @@ async function fetchForecast(lat, lon, date, _retry) {
     });
   }
 
-  function sendComment(key, text) {
+  function sendComment(key, text, photoUrl) {
     var user = _socialUser();
-    // v3.94: uses global isEN
     if (!user || !user.uid) {
       if (window.showToast) showToast(isEN ? 'Sign in to comment' : 'Accedi per commentare', 'info');
       return Promise.resolve();
     }
     text = (text || '').trim();
-    if (!text) return Promise.resolve();
+    if (!text && !photoUrl) return Promise.resolve();
     if (text.length > 2000) text = text.substring(0, 2000);
     var commentsRef = firebase.database().ref('trips/' + FAMILY_ID + '/diary/' + key + '/comments');
     var payload = {
@@ -14029,11 +14586,12 @@ async function fetchForecast(lat, lon, date, _retry) {
       text: text,
       ts: Date.now()
     };
+    if (photoUrl) payload.photoUrl = photoUrl;
     return commentsRef.push(payload).then(function() {
       if (!isOwner && window.queuePushNotification) {
         queuePushNotification('diary_comment', {
           title: '\uD83D\uDCAC ' + (isEN ? 'New comment' : 'Nuovo commento'),
-          body: (user.displayName || (isEN ? 'Someone' : 'Qualcuno')) + ': ' + (text.length > 80 ? text.substring(0, 80) + '\u2026' : text),
+          body: (user.displayName || (isEN ? 'Someone' : 'Qualcuno')) + ': ' + (photoUrl ? '\uD83D\uDCF7 ' : '') + (text.length > 80 ? text.substring(0, 80) + '\u2026' : text || (isEN ? 'Photo' : 'Foto')),
           target: 'owner',
           url: './#diario',
           tag: 'diary_comment_' + key,
@@ -14043,6 +14601,40 @@ async function fetchForecast(lat, lon, date, _retry) {
     }).catch(function(err) {
       console.warn('[Diario] Comment failed:', err.message);
       if (window.showToast) showToast(isEN ? 'Could not send comment' : 'Impossibile inviare il commento', 'danger');
+    });
+  }
+
+  // v4.00 Feature #1: Upload comment photo to Firebase Storage
+  function uploadCommentPhoto(key, file) {
+    var user = _socialUser();
+    if (!user || !user.uid) {
+      if (window.showToast) showToast(isEN ? 'Sign in first' : 'Accedi prima', 'info');
+      return;
+    }
+    if (!firebase.storage) {
+      if (window.showToast) showToast(isEN ? 'Storage not available' : 'Storage non disponibile', 'error');
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      if (window.showToast) showToast(isEN ? 'Photo too large (max 5 MB)' : 'Foto troppo grande (max 5 MB)', 'error');
+      return;
+    }
+    var commentId = Date.now() + '_' + user.uid.substring(0, 6);
+    var storagePath = 'diary/' + FAMILY_ID + '/' + key + '/comments/' + commentId + '.jpg';
+    var fileRef = firebase.storage().ref(storagePath);
+    if (window.showToast) showToast(isEN ? 'Uploading photo...' : 'Caricamento foto...', 'info');
+    fileRef.put(file, { contentType: file.type || 'image/jpeg' }).then(function(snapshot) {
+      return snapshot.ref.getDownloadURL();
+    }).then(function(url) {
+      var input = timelineEl.querySelector('.diario-comment-input[data-key="' + key + '"]');
+      var text = input ? input.value.trim() : '';
+      sendComment(key, text, url).then(function() {
+        if (input) input.value = '';
+        if (window.showToast) showToast(isEN ? 'Photo comment sent!' : 'Commento con foto inviato!', 'success');
+      });
+    }).catch(function(err) {
+      console.error('[Diario] Comment photo upload failed:', err);
+      if (window.showToast) showToast(isEN ? 'Upload failed' : 'Caricamento fallito', 'error');
     });
   }
 
@@ -14061,6 +14653,25 @@ async function fetchForecast(lat, lon, date, _retry) {
     _socialBound = true;
 
     timelineEl.addEventListener('click', function(e) {
+      // v4.00 Feature #2: "Ci siamo stati!" toggle
+      var btb = e.target.closest('.diario-been-there-btn');
+      if (btb) {
+        var k = btb.getAttribute('data-key');
+        var user = _socialUser();
+        if (!user || !user.uid) {
+          if (window.showToast) showToast(isEN ? 'Sign in first' : 'Accedi prima', 'info');
+          return;
+        }
+        var ref = firebase.database().ref('trips/' + FAMILY_ID + '/diary/' + k + '/wasThere/' + user.uid);
+        if (btb.classList.contains('active')) {
+          ref.remove();
+          btb.classList.remove('active');
+        } else {
+          ref.set(true);
+          btb.classList.add('active');
+        }
+        return;
+      }
       // Reaction button
       var rb = e.target.closest('.diario-react-btn');
       if (rb) {
@@ -14085,6 +14696,23 @@ async function fetchForecast(lat, lon, date, _retry) {
         }
         return;
       }
+      // v4.00 Feature #1: Comment photo button
+      var cpb = e.target.closest('.diario-comment-photo');
+      if (cpb) {
+        var k = cpb.getAttribute('data-key');
+        var fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.accept = 'image/*';
+        fileInput.style.cssText = 'position:fixed;top:-100px;left:-100px;opacity:0;';
+        fileInput.addEventListener('change', function() {
+          document.body.removeChild(fileInput);
+          if (!fileInput.files || !fileInput.files[0]) return;
+          uploadCommentPhoto(k, fileInput.files[0]);
+        });
+        document.body.appendChild(fileInput);
+        fileInput.click();
+        return;
+      }
       // Delete comment
       var db = e.target.closest('.diario-comment-del');
       if (db) {
@@ -14092,6 +14720,40 @@ async function fetchForecast(lat, lon, date, _retry) {
         showConfirm(isEN ? 'Delete this comment?' : 'Eliminare questo commento?', function() {
           deleteComment(db.getAttribute('data-key'), db.getAttribute('data-cid'));
         });
+        return;
+      }
+      // v4.00 Feature #Extra: Comment reaction badge click (toggle off)
+      var cReactBadge = e.target.closest('[data-comment-react]');
+      if (cReactBadge) {
+        var parts = cReactBadge.getAttribute('data-comment-react').split('|');
+        if (parts.length === 3) toggleCommentReaction(parts[0], parts[1], parts[2]);
+        return;
+      }
+      // v4.00 Feature #Extra: Comment reaction add button (show picker)
+      var cReactAdd = e.target.closest('[data-comment-react-add]');
+      if (cReactAdd) {
+        var addParts = cReactAdd.getAttribute('data-comment-react-add').split('|');
+        if (addParts.length === 2) {
+          var CEMOJIS = ['\uD83D\uDC4D', '\u2764\uFE0F', '\uD83D\uDE0D', '\uD83D\uDD25', '\uD83D\uDE2E'];
+          // Show mini picker inline
+          var existing = cReactAdd.parentElement.querySelector('.comment-react-picker');
+          if (existing) { existing.remove(); return; }
+          var picker = document.createElement('span');
+          picker.className = 'comment-react-picker';
+          picker.style.cssText = 'display:inline-flex;gap:2px;background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:2px 4px;margin-left:4px;';
+          CEMOJIS.forEach(function(em) {
+            var btn = document.createElement('span');
+            btn.textContent = em;
+            btn.style.cssText = 'cursor:pointer;font-size:14px;padding:2px;';
+            btn.addEventListener('click', function(ev) {
+              ev.stopPropagation();
+              toggleCommentReaction(addParts[0], addParts[1], em);
+              picker.remove();
+            });
+            picker.appendChild(btn);
+          });
+          cReactAdd.parentElement.appendChild(picker);
+        }
         return;
       }
       // v3.27: Delete audio

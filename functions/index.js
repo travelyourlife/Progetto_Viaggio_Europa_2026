@@ -1636,3 +1636,38 @@ exports.updateUserDisplayName = onCall({ memory: '256MiB' }, async (request) => 
     throw new HttpsError('internal', 'Failed to update display name: ' + error.message);
   }
 });
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 15. NOTIFY NEW POSTCARD (v4.01)
+// Triggered when a new chat message is created; if msgType === 'postcard',
+// sends a push notification to all followers.
+// ─────────────────────────────────────────────────────────────────────────────
+exports.notifyNewPostcard = onValueCreated(
+  {
+    ref: 'chat/{familyId}/{msgId}',
+    timeoutSeconds: 60,
+  },
+  async (event) => {
+    const msg = event.data.val();
+    if (!msg || msg.msgType !== 'postcard') return null;
+
+    const familyId = event.params.familyId;
+    const senderName = msg.postcardFrom || msg.displayName || 'Qualcuno';
+
+    const notifRef = db.ref(`trips/${familyId}/notifications/queue`);
+    await notifRef.push({
+      type:      'postcard',
+      title:     `📮 Cartolina da ${senderName}`,
+      body:      msg.text ? msg.text.substring(0, 100) : 'Hai ricevuto una cartolina!',
+      target:    'chat',
+      url:       './#tab-chat',
+      tag:       'postcard_' + event.params.msgId,
+      senderUid: msg.uid || null,
+      createdAt: Date.now(),
+      sent:      false,
+    });
+
+    logger.log(`[Postcard] Push queued for postcard from ${senderName} in ${familyId}`);
+    return null;
+  });

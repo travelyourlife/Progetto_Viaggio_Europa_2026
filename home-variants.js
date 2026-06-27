@@ -682,8 +682,9 @@
         posLng = TRIP_COORDS[currentDay].lng;
       }
       if (posLat !== null && posLng !== null) {
-        var distKm = haversineKm(HOME_LAT, HOME_LNG, posLat, posLng);
-        data.distanceFromHome = formatKmDistance(distKm) + (_en ? ' from home \ud83c\udfe0' : ' da casa \ud83c\udfe0');
+        // v4.00: Use Haversine×1.3 as instant placeholder (OSRM will overwrite async)
+        var distKm = Math.round(haversineKm(HOME_LAT, HOME_LNG, posLat, posLng) * 1.3);
+        data.distanceFromHome = '~' + formatKmDistance(distKm) + (_en ? ' from home \ud83c\udfe0' : ' da casa \ud83c\udfe0');
         data.progressText += ' \u00b7 ' + data.distanceFromHome;
       } else {
         data.distanceFromHome = '';
@@ -1809,24 +1810,23 @@
     var _en = (typeof isEN !== 'undefined' && isEN);
     var basePath = 'trips/' + familyId;
 
-    // Helper: once we have a real lat/lng, update distance + reverse geocode city
-    // v3.98: _applyRealPosition only updates DISTANCE from home.
+    // Helper: once we have a real lat/lng, update distance from home.
+    // v4.00: Uses OSRM (road distance) with fallback to Haversine×1.3.
     // City/country/flag come EXCLUSIVELY from /currentLocation (written by owner).
-    // No client-side Nominatim — avoids inconsistencies and wasted API calls.
-    function _applyRealPosition(lat, lng) {
+    var _osrmCache = { lat: null, lng: null, distKm: null }; // cache to avoid repeated calls
+    var _osrmPending = false;
+
+    function _updateDistanceUI(distKm) {
       var container = document.getElementById('hv-container');
       if (!container) return;
-
-      // Update distance from home (pure math, no API)
-      var distKm = haversineKm(homeLat, homeLng, lat, lng);
-      var distText = formatKmDistance(distKm) + (_en ? ' from home \ud83c\udfe0' : ' da casa \ud83c\udfe0');
+      var distText = '~' + formatKmDistance(distKm) + (_en ? ' from home \ud83c\udfe0' : ' da casa \ud83c\udfe0');
       var distEls = container.querySelectorAll('[data-hv="distanceFromHome"]');
       distEls.forEach(function(el) { el.textContent = distText; });
       // Also update progressText
       var progressEls = container.querySelectorAll('[data-hv="progressText"]');
       progressEls.forEach(function(el) {
         var current = el.textContent || '';
-        var pinDist = '\ud83d\udccd ' + formatKmDistance(distKm) + ' da \ud83c\udfe0';
+        var pinDist = '\ud83d\udccd ~' + formatKmDistance(distKm) + ' da \ud83c\udfe0';
         if (current.indexOf('\ud83d\udccd') >= 0) {
           el.textContent = current.replace(/\ud83d\udccd[^·]+da \ud83c\udfe0/, pinDist);
         } else if (current.indexOf('paesi') >= 0 || current.indexOf('countries') >= 0) {
@@ -1835,14 +1835,63 @@
       });
     }
 
+    function _applyRealPosition(lat, lng) {
+      if (!lat || !lng) return;
+
+      // Check if position changed significantly (>10 km) from cached OSRM result
+      if (_osrmCache.lat !== null && _osrmCache.distKm !== null) {
+        var moved = haversineKm(_osrmCache.lat, _osrmCache.lng, lat, lng);
+        if (moved < 10) {
+          // Position hasn't changed much — reuse cached road distance
+          _updateDistanceUI(_osrmCache.distKm);
+          return;
+        }
+      }
+
+      // Immediate fallback: show Haversine × 1.3 while OSRM loads
+      var fallbackKm = Math.round(haversineKm(homeLat, homeLng, lat, lng) * 1.3);
+      _updateDistanceUI(fallbackKm);
+
+      // Avoid concurrent OSRM requests
+      if (_osrmPending) return;
+      _osrmPending = true;
+
+      // Call OSRM for real road distance
+      var osrmUrl = 'https://router.project-osrm.org/route/v1/driving/' +
+        homeLng + ',' + homeLat + ';' + lng + ',' + lat + '?overview=false';
+
+      fetch(osrmUrl, { signal: AbortSignal.timeout(8000) })
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+          _osrmPending = false;
+          if (data && data.routes && data.routes[0] && data.routes[0].distance) {
+            var roadKm = Math.round(data.routes[0].distance / 1000);
+            _osrmCache = { lat: lat, lng: lng, distKm: roadKm };
+            _updateDistanceUI(roadKm);
+          } else {
+            // OSRM returned no route — keep fallback
+            _osrmCache = { lat: lat, lng: lng, distKm: fallbackKm };
+          }
+        })
+        .catch(function() {
+          _osrmPending = false;
+          // OSRM failed — keep Haversine×1.3 fallback
+          _osrmCache = { lat: lat, lng: lng, distKm: fallbackKm };
+        });
+    }
+
     // v3.98 FIX: LIVE listener on /currentLocation — updates Home hero in real-time.
     // Uses .on('value') so when tracking writes new position, Home updates immediately.
-    // Only overrides city/country/flag if data is FRESH (< 60 min) to avoid showing stale city.
+    // v4.01 FIX: Relaxed freshness from 60 min to 24h. During an active trip, even a
+    // few-hours-old GPS city is far better than the static DAYS_DATA destination.
+    // The old 60-min threshold caused Aurora (and all followers) to see "Varsavia"
+    // (the planned destination) instead of the real current city when the owner
+    // hadn't refreshed GPS in the last hour.
     firebase.database().ref(basePath + '/currentLocation').on('value', function(snap) {
       var cl = snap.val();
       if (cl && cl.lat && cl.lng) {
         var ageMs = Date.now() - (cl.updatedAt || 0);
-        var isFresh = ageMs < 3600000; // < 60 min
+        var isFresh = ageMs < 86400000; // < 24 hours (v4.01: was 60 min, too strict)
         var container = document.getElementById('hv-container');
         if (container && isFresh && cl.city) {
           container.querySelectorAll('[data-hv="city"]').forEach(function(el) { el.textContent = cl.city; });

@@ -64,7 +64,7 @@
     <link rel="apple-touch-icon" sizes="152x152" href="./icon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="./icon.png">
     <link rel="apple-touch-icon" sizes="167x167" href="./icon.png">
-    <title>Quo Vadis — V4.00</title>
+    <title>Quo Vadis — V4.01</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="home-variants.css">
@@ -86,7 +86,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = '4.00';
+  var EXPECTED_VERSION = '4.01';
   window.IS_PROD = true; // v2.71: disabilita debug overlay in produzione
     window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
@@ -8972,6 +8972,12 @@
 
 </div>
 
+<!-- v4.01: Map Tips buttons -->
+<div id="pos-map-tips-bar" style="display:flex;gap:8px;margin:-10px 0 12px;padding:0 4px;">
+    <button type="button" id="pos-add-tip-btn" class="pos-btn pos-btn-blue" style="font-size:13px;padding:7px 14px;">💡 Aggiungi consiglio</button>
+    <button type="button" id="pos-toggle-tips-btn" class="pos-btn pos-btn-gray active" style="font-size:13px;padding:7px 14px;">💡 Tips ON</button>
+</div>
+
 <!-- v3.54: REORDERED — Stats first (quick glance), then weather -->
 <!-- ─── STATISTICHE VIAGGIO — griglia 3 colonne con icone ─── -->
 <div id="pos-stats-wrapper" class="pos-section-card">
@@ -9548,6 +9554,22 @@
   </div>
   <button type="button" class="chat-scroll-bottom" id="chat-scroll-bottom" style="display:none;" aria-label="Scorri in basso">↓</button>
   <div class="chat-typing" id="chat-typing" style="display:none;"></div>
+  <!-- v4.00 Feature #19: Collaborative Playlist -->
+  <div id="chat-playlist-section" class="chat-playlist-section" style="display:none;border-top:1px solid #e2e8f0;padding:10px 12px;background:#f8fafc;">
+    <div style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;" id="chat-playlist-toggle">
+      <span style="font-size:14px;font-weight:600;color:#334155;">🎵 <span id="chat-playlist-title">Colonna sonora — G1</span></span>
+      <span id="chat-playlist-arrow" style="font-size:12px;color:#64748b;">▼</span>
+    </div>
+    <div id="chat-playlist-body" style="display:none;margin-top:8px;">
+      <div id="chat-playlist-approved" style="margin-bottom:8px;"></div>
+      <div id="chat-playlist-list" style="margin-bottom:8px;"></div>
+      <div id="chat-playlist-form" style="display:flex;gap:6px;">
+        <input type="text" id="chat-playlist-song" placeholder="Canzone" style="flex:1;padding:6px 8px;border:1px solid #cbd5e1;border-radius:6px;font-size:13px;">
+        <input type="text" id="chat-playlist-artist" placeholder="Artista" style="flex:1;padding:6px 8px;border:1px solid #cbd5e1;border-radius:6px;font-size:13px;">
+        <button type="button" id="chat-playlist-submit" style="padding:6px 10px;background:#3b82f6;color:#fff;border:none;border-radius:6px;font-size:13px;cursor:pointer;">➕</button>
+      </div>
+    </div>
+  </div>
   <div class="chat-input-bar" id="chat-input-bar">
     <div class="chat-input-group">
       <textarea id="chat-input" class="chat-input" placeholder="Scrivi un messaggio..." maxlength="5000" autocomplete="off" rows="1"></textarea>
@@ -9555,6 +9577,8 @@
         <div class="chat-input-actions-left">
           <button type="button" class="chat-action-btn" id="chat-attach-btn" aria-label="Allega file" title="Allega foto/audio">📎</button>
           <button type="button" class="chat-action-btn" id="chat-location-btn" aria-label="Invia posizione" title="Invia posizione">📍</button>
+          <button type="button" class="chat-action-btn" id="chat-quick-voice-btn" aria-label="Reazione vocale 5s" title="Reazione vocale rapida (5 sec)" style="position:relative;">🎙️<span style="position:absolute;top:-2px;right:-2px;font-size:8px;background:#ef4444;color:#fff;border-radius:50%;width:14px;height:14px;display:flex;align-items:center;justify-content:center;">5</span></button>
+          <button type="button" class="chat-action-btn" id="chat-postcard-btn" aria-label="Invia cartolina" title="Invia cartolina virtuale">✉️</button>
         </div>
         <div class="chat-input-actions-right">
           <button type="button" class="chat-action-btn" id="chat-voice-btn" aria-label="Registra audio" title="Tieni premuto per registrare">🎤</button>

@@ -5,6 +5,18 @@
 
 # Quo Vadis — Changelog
 
+## v4.01 — 2026-06-27
+- **Firebase Rules**: aggiunte regole per `mapTips`, `playlist`, `wasThere`, `comments/reactions` — i follower ora possono scrivere
+- **#18 Cartolina — fix iOS PWA**: sostituito `prompt()` (bloccato su iOS standalone) con modal custom
+- **#18 Cartolina — push notification**: aggiunta Cloud Function `notifyNewPostcard` per notifica ai follower
+- **#2 "Ci siamo stati!"**: corretto path Firebase da `beenThere` a `wasThere` (coerente con le rules); toggle ora scrive `true` (boolean)
+- **#11 Map Tips**: aggiunto pulsante "Aggiungi consiglio" e "Tips ON/OFF" in HTML (IT + EN); owner può eliminare qualsiasi pin; limite 120 caratteri con contatore; modal custom al posto di `prompt()`
+- **#7 Voce rapida — countdown visivo**: il pulsante ora mostra 5→4→3→2→1→✔ durante la registrazione
+- **#Extra Reazioni commenti**: confermato già implementato (render + click handler presenti)
+- **Storage Rules**: aggiunta regola per foto commenti (`diary/{fid}/{postKey}/comments/{file}`) — qualsiasi utente autenticato può caricare immagini max 5MB
+- **Fix città follower**: soglia freshness `/currentLocation` portata da 60 min a 24h (fix Aurora vede Varsavia)
+- **Fix scroll modali**: `diario-edit-modal`, `manual-km-modal`, `install-modal`, `family-modal-card`, `ios-install-card`, `hv-role-modal` ora scrollabili su schermi piccoli
+
 ## v3.22 — 2026-06-19
 - **Fix suggerimenti ricerca non funzionanti**: `buildDayIndex()` nell'IIFE dei suggerimenti lanciava un errore silenzioso (`day.trekking.forEach is not a function`) perché alcuni giorni hanno `trekking` come oggetto/stringa anziché array. L'errore bloccava l'intera IIFE prima che l'`addEventListener` venisse raggiunto, rendendo il dropdown completamente inerte. Aggiunto `Array.isArray()` per tutti i campi iterati (`highlights`, `food`, `kids`, `trekking`, `fishing`, `alternatives`, `events`).
 - **Nessuno spazio vuoto in alto**: confermato fix dal v3.21 (wrapper interno non tocca il parent overlay).
