@@ -13755,7 +13755,7 @@ async function fetchForecast(lat, lon, date, _retry) {
           if (wd.precip > 0) wHtml += ' \u00b7 \u{1F4A7} ' + wd.precip + 'mm';
           if (wd.wind > 15) wHtml += ' \u00b7 \u{1F4A8} ' + Math.round(wd.wind) + ' km/h';
           if (wd.sunrise && wd.sunset) wHtml += ' \u00b7 \u{1F305} ' + wd.sunrise + '\u2013' + wd.sunset;
-          html += '    <div class="diario-weather-row" style="font-size:12px;color:var(--text-muted);padding:6px 0;text-align:center;">' + wHtml + '</div>';
+          html += '    <div class="diario-weather-row" style="font-size:12px;color:var(--text-muted);padding:6px 0;">' + wHtml + '</div>';
         }
 
         // v2.99: Interactive reactions + comments (only for published posts)
