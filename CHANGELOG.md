@@ -5,6 +5,46 @@
 
 # Quo Vadis — Changelog
 
+## v4.20 — 2026-06-28
+Popup mappa più compatto negli **Itinerari città**.
+
+- **Popup marker compatto**: toccando un numero sulla mini-mappa il popup mostra ora solo **titolo + breve teaser + i 3 pulsanti indicazioni** (🚶 A piedi / 🛴 Monopattino / 🚍 Mezzi). Rimossi la descrizione lunga e il link "Leggi tutto" dal popup, che occupavano quasi tutta la piccola mappa. La descrizione completa resta disponibile nella lista delle tappe sotto la mappa.
+- **Cache-busting** aggiornato (`?v=4.20`) e precache del service worker allineato.
+
+## v4.19 — 2026-06-28
+Nuova città negli **Itinerari città** e rimozione di una funzione del Diario.
+
+- **Aggiunta León (Spagna)** agli Itinerari città: 12 tappe a piedi nel centro storico (Cattedrale gotica "Casa della Luce", Casa Botines di Gaudí, Basílica de San Isidoro, Palacio de los Guzmanes, Parador de San Marcos, Plaza Mayor, Barrio Húmedo, Plaza del Grano, mura romane, ecc.), con descrizioni bilingui IT+EN, coordinate reali e fonti.
+- **Ordine geografico**: i chip della Spagna seguono ora il flusso del viaggio → San Sebastián → Bilbao → **León** → Palencia → Genova. Totale **22 città / 359 tappe**.
+- **Rimosso il pulsante "Ci sono stato!" / "I was there!"** dai post del Diario (markup, contatore, elenco nomi, handler di click e regole CSS associate). Restano invariati reazioni e commenti.
+- **Cache-busting** aggiornato (`?v=4.19`) e precache del service worker allineato.
+
+## v4.18 — 2026-06-28
+Fix dei tre pulsanti indicazioni (🚶 A piedi / 🛴 Monopattino / 🚍 Mezzi) negli **Itinerari città**.
+
+- **Risolto: i tre pulsanti sembravano identici** sul telefono. Quando l'app non aveva ancora la posizione GPS (caso tipico su mobile prima di aprire la mappa), il fallback introdotto in v4.14 apriva per tutti e tre lo stesso link di "ricerca destinazione", ignorando il mezzo di trasporto.
+- Ora **ogni pulsante genera sempre un percorso con il proprio `travelmode`** (`walking` / `bicycling` per il monopattino / `transit`), anche senza GPS: il link omette l'origine e Google Maps usa automaticamente la posizione attuale del telefono.
+- Quando la posizione live è nota, l'origine viene comunque fissata su "qui" (href ricalcolato al tocco).
+- **Cache-busting** aggiornato (`?v=4.18`) e precache del service worker allineato.
+
+## v4.17 — 2026-06-28
+Forte espansione dei contenuti della sezione **Itinerari città**: molti più luoghi da visitare per ogni città.
+
+- **Da 100 a 347 tappe** complessive sulle 20 città: ora ogni città include tutti i luoghi rilevanti da percorrere a piedi (non più solo 5).
+- Esempi di copertura: **Vienna 23**, **Vilnius 23**, **Varsavia / Copenaghen 21**, **San Sebastián / Bilbao 20**, **Riga 19**, **Amiens / Tallinn 18**, **Tromsø / Genova 17**, **Brema / Palencia / Leoben 16**, **Rovaniemi / Bergen 15**, **Oulu / Trondheim 14**, **Stavanger / Kristiansand 12**.
+- Ogni nuova tappa ha **descrizioni estese bilingui IT+EN** da fonti reali (lunghezza media ~460 caratteri), teaser, info pratiche, **fonti citate**, **coordinate reali verificate** dentro i confini città e link mappa.
+- **Deduplica** automatica per nome e per vicinanza (~70 m) rispetto alle tappe esistenti; ID tappa rigenerati in sequenza per città.
+- Mappa Leaflet verificata con il maggior numero di marker (es. Vienna con 23 marker numerati e tracciato a piedi).
+- Piccola pulizia qualità: rimosse 2 voci non turistiche da Leoben.
+- **Cache-busting** aggiornato (`?v=4.17`) e precache del service worker allineato.
+
+## v4.16 — 2026-06-28
+Fix del caricamento nella funzione **Importa da Screenshot** (Admin → spese).
+
+- **Risolto l'errore `storage/unauthorized`**: l'upload dello screenshot su Firebase Storage nel percorso `expenses/{familyId}/...` veniva rifiutato perché in `storage.rules` non esisteva alcuna regola per quel percorso (cadeva nel blocco finale che nega tutto).
+- Aggiunta una regola dedicata: lettura per gli utenti autenticati, **scrittura riservata agli owner** per file immagine fino a 10 MB (coerente con le altre regole di Storage).
+- **Nota deployment**: questo fix richiede il deploy delle regole di Storage (`firebase deploy --only storage`), non incluso nel deploy di hosting/functions/database.
+
 ## v4.15 — 2026-06-28
 Espansione della sezione **Itinerari città** da 11 a **20 città**, coprendo tutte le tappe urbane del viaggio.
 

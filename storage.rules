@@ -53,6 +53,14 @@ service firebase.storage {
 
     // v4.08: Postcard storage rule removed (feature deprecated in v4.06)
 
+    // v4.16: Expense screenshot uploads: expenses/{familyId}/{filename}
+    // Admin-only feature (Importa da Screenshot) — owner uploads bank-app
+    // screenshots for AI OCR. Read for authenticated users, write for owners only.
+    match /expenses/{familyId}/{filename} {
+      allow read: if isAuthenticated();
+      allow write: if isOwner() && isImage() && maxSize(10);
+    }
+
     // Default: deny all other paths
     match /{allPaths=**} {
       allow read, write: if false;

@@ -14332,25 +14332,7 @@ async function fetchForecast(lat, lon, date, _retry) {
          (commentCount > 0 ? commentCount + ' ' : '') + (isEN ? 'Comments' : 'Commenti') + '</button>';
     h += '</div>';
 
-    // v4.08 Feature #8: "Ci siamo stati!" / "We were there!" toggle
-    var wasThere = (entry && entry.wasThere && typeof entry.wasThere === 'object') ? entry.wasThere : {};
-    var wasThereCount = Object.keys(wasThere).length;
-    var iWasThere = myUid && wasThere[myUid] ? true : false;
-    h += '<div class="diario-was-there">';
-    h += '<button type="button" class="diario-was-there-btn' + (iWasThere ? ' active' : '') + '" data-key="' + key + '">\uD83D\uDCCD ' +
-         (isEN ? 'I was there!' : 'Ci sono stato!') +
-         (wasThereCount > 0 ? ' <span class="was-there-count">' + wasThereCount + '</span>' : '') + '</button>';
-    if (wasThereCount > 0) {
-      var wtNames = [];
-      Object.keys(wasThere).forEach(function(uid) {
-        var name = _diarioNameCache[uid] || null;
-        if (name) wtNames.push(name);
-      });
-      if (wtNames.length > 0) {
-        h += '<span class="was-there-names">' + escapeHtml(wtNames.join(', ')) + '</span>';
-      }
-    }
-    h += '</div>';
+    // v4.18: "Ci sono stato!" / "I was there!" toggle removed per user request
 
     // v3.27: Show who reacted (names below reaction bar)
     var reactorNames = [];
@@ -14483,34 +14465,7 @@ async function fetchForecast(lat, lon, date, _retry) {
     });
   }
 
-  // v4.08 Feature #8: Toggle "Ci siamo stati!" / "We were there!"
-  function toggleWasThere(key) {
-    var user = _socialUser();
-    if (!user || !user.uid) {
-      if (window.showToast) showToast(isEN ? 'Sign in to mark' : 'Accedi per segnare', 'info');
-      return;
-    }
-    var ref = firebase.database().ref('trips/' + FAMILY_ID + '/diary/' + key + '/wasThere/' + user.uid);
-    ref.once('value').then(function(snap) {
-      if (snap.val()) {
-        return ref.remove();
-      }
-      return ref.set({ name: user.displayName || 'User', time: Date.now() }).then(function() {
-        if (!isOwner && window.queuePushNotification) {
-          queuePushNotification('diary_was_there', {
-            title: '\uD83D\uDCCD ' + (isEN ? 'Was there!' : 'C\'era anche!'),
-            body: (user.displayName || (isEN ? 'Someone' : 'Qualcuno')) + (isEN ? ' was at the same place' : ' era nello stesso posto'),
-            target: 'owner',
-            url: './#diario',
-            tag: 'diary_was_there_' + key,
-            senderUid: user.uid
-          });
-        }
-      });
-    }).catch(function(err) {
-      console.warn('[Diario] wasThere toggle failed:', err.message);
-    });
-  }
+  // v4.18: toggleWasThere() removed ("Ci sono stato!" feature removed per user request)
 
   function sendComment(key, text, photoUrl) {
     var user = _socialUser();
@@ -14646,12 +14601,7 @@ async function fetchForecast(lat, lon, date, _retry) {
         });
         return;
       }
-      // v4.08 Feature #8: "Was there" toggle
-      var wtBtn = e.target.closest('.diario-was-there-btn');
-      if (wtBtn) {
-        toggleWasThere(wtBtn.getAttribute('data-key'));
-        return;
-      }
+      // v4.18: "Was there" toggle handler removed per user request
       // v4.00 Feature #Extra: Comment reaction badge click (toggle off)
       var cReactBadge = e.target.closest('[data-comment-react]');
       if (cReactBadge) {

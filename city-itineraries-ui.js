@@ -86,19 +86,18 @@
   function directionsUrl(stop, mode) {
     // travelmode: walking | bicycling (used for scooter) | transit
     var dest = stop.lat + ',' + stop.lng;
-    // When we KNOW the user's position, build a full directions link from "here"
-    // to the stop with the chosen travel mode.
+    // Always build a real DIRECTIONS link with the chosen travel mode, so the
+    // three buttons (walk / scooter / transit) always behave differently.
+    var url = 'https://www.google.com/maps/dir/?api=1' +
+              '&destination=' + encodeURIComponent(dest) +
+              '&travelmode=' + mode;
+    // When we KNOW the user's position, pin the origin to "here". Otherwise we
+    // omit origin: Google Maps then uses the device's current location
+    // (works well on mobile) while still honouring the travel mode.
     if (lastFix) {
-      return 'https://www.google.com/maps/dir/?api=1' +
-             '&origin=' + encodeURIComponent(lastFix.lat + ',' + lastFix.lng) +
-             '&destination=' + encodeURIComponent(dest) +
-             '&travelmode=' + mode;
+      url += '&origin=' + encodeURIComponent(lastFix.lat + ',' + lastFix.lng);
     }
-    // FALLBACK (no GPS yet, common on mobile before the map is opened): a plain
-    // directions link with an empty origin can fail on phones, so instead open
-    // the DESTINATION place on Google Maps. The user can then start navigation
-    // themselves. This guarantees the button always opens something useful.
-    return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(dest);
+    return url;
   }
 
   // Resolve the link lazily at click time so that, if the live position became
@@ -286,27 +285,16 @@
     var en = isEN();
     var nm = en ? (stop.nameEN || stop.name) : stop.name;
     var shortTxt = en ? (stop.shortEN || stop.short || '') : (stop.short || '');
-    var longTxt  = en ? (stop.descEN || stop.desc || '') : (stop.desc || '');
     var pid = 'cipop-' + stop.id;
+    // Compact popup for the small map: title + short teaser + directions only.
+    // The full description lives in the stop list (with its own Read more).
     var html = '<div class="ci-popup" id="' + esc(pid) + '">';
     html += '<div class="ci-popup-title"><strong>' + (idx + 1) + '. ' + esc(nm) + '</strong></div>';
     html += '<div class="ci-popup-short">' + esc(shortTxt) + '</div>';
-    html += '<div class="ci-popup-long" hidden>' + esc(longTxt) + '</div>';
-    html += '<button type="button" class="ci-popup-more" onclick="window.__ciPopupToggle(\'' + esc(pid) + '\', this)">' + esc(t('readMore')) + '</button>';
     html += directionsHtml(stop);
     html += '</div>';
     return html;
   }
-
-  // Global toggle used inside Leaflet popups (they are detached from our scope)
-  window.__ciPopupToggle = function (pid, btn) {
-    var box = document.getElementById(pid);
-    if (!box) return;
-    var long = box.querySelector('.ci-popup-long');
-    if (!long) return;
-    if (long.hasAttribute('hidden')) { long.removeAttribute('hidden'); btn.textContent = t('readLess'); }
-    else { long.setAttribute('hidden', ''); btn.textContent = t('readMore'); }
-  };
 
   // ---- Build the Leaflet map ---------------------------------------------
   function buildMap(city) {
