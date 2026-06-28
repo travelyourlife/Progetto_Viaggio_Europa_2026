@@ -86,20 +86,51 @@
   function directionsUrl(stop, mode) {
     // travelmode: walking | bicycling (used for scooter) | transit
     var dest = stop.lat + ',' + stop.lng;
-    var base = 'https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(dest) +
-               '&travelmode=' + mode;
-    // If we know the user's position, set it as origin so it routes from "here"
-    if (lastFix) base += '&origin=' + encodeURIComponent(lastFix.lat + ',' + lastFix.lng);
-    return base;
+    // When we KNOW the user's position, build a full directions link from "here"
+    // to the stop with the chosen travel mode.
+    if (lastFix) {
+      return 'https://www.google.com/maps/dir/?api=1' +
+             '&origin=' + encodeURIComponent(lastFix.lat + ',' + lastFix.lng) +
+             '&destination=' + encodeURIComponent(dest) +
+             '&travelmode=' + mode;
+    }
+    // FALLBACK (no GPS yet, common on mobile before the map is opened): a plain
+    // directions link with an empty origin can fail on phones, so instead open
+    // the DESTINATION place on Google Maps. The user can then start navigation
+    // themselves. This guarantees the button always opens something useful.
+    return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(dest);
+  }
+
+  // Resolve the link lazily at click time so that, if the live position became
+  // available after render, the button routes from the user's current location.
+  function onDirClick(ev) {
+    var a = ev.currentTarget;
+    var lat = a.getAttribute('data-lat');
+    var lng = a.getAttribute('data-lng');
+    var mode = a.getAttribute('data-mode');
+    a.setAttribute('href', directionsUrl({ lat: lat, lng: lng }, mode));
+  }
+
+  function dirBtn(stop, mode, label) {
+    return '<a class="ci-dir-btn" target="_blank" rel="noopener"' +
+           ' data-dir="1" data-lat="' + esc(stop.lat) + '" data-lng="' + esc(stop.lng) + '" data-mode="' + esc(mode) + '"' +
+           ' href="' + esc(directionsUrl(stop, mode)) + '">' + esc(label) + '</a>';
   }
 
   function directionsHtml(stop) {
     return '<div class="ci-dir">' +
-      '<a class="ci-dir-btn" target="_blank" rel="noopener" href="' + esc(directionsUrl(stop, 'walking')) + '">' + esc(t('walk')) + '</a>' +
-      '<a class="ci-dir-btn" target="_blank" rel="noopener" href="' + esc(directionsUrl(stop, 'bicycling')) + '">' + esc(t('scooter')) + '</a>' +
-      '<a class="ci-dir-btn" target="_blank" rel="noopener" href="' + esc(directionsUrl(stop, 'transit')) + '">' + esc(t('transit')) + '</a>' +
+      dirBtn(stop, 'walking', t('walk')) +
+      dirBtn(stop, 'bicycling', t('scooter')) +
+      dirBtn(stop, 'transit', t('transit')) +
     '</div>';
   }
+
+  // Delegate clicks on any directions button so the href is refreshed with the
+  // latest known position right before the browser opens the new tab.
+  document.addEventListener('click', function (ev) {
+    var a = ev.target && ev.target.closest ? ev.target.closest('a.ci-dir-btn[data-dir="1"]') : null;
+    if (a) onDirClick({ currentTarget: a });
+  }, true);
 
   // ---- Build the section shell -------------------------------------------
   function ensureShell() {

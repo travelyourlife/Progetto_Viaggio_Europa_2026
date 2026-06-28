@@ -5,6 +5,22 @@
 
 # Quo Vadis — Changelog
 
+## v4.15 — 2026-06-28
+Espansione della sezione **Itinerari città** da 11 a **20 città**, coprendo tutte le tappe urbane del viaggio.
+
+- **9 nuove città** aggiunte: **Leoben** (AT), **Rovaniemi** e **Oulu** (FI), **Tromsø**, **Stavanger** e **Kristiansand** (NO), **Brema** (DE), **Amiens** (FR) e **Palencia** (ES).
+- Ogni nuova città ha un itinerario a piedi di **5 tappe** (45 nuove tappe, **100 in totale**) con descrizioni bilingui IT+EN basate su fonti reali (Wikipedia, siti ufficiali di musei/turismo), teaser, info pratiche e fonti citate per ogni tappa.
+- Le città sono ora ordinate secondo la **sequenza reale del viaggio** (Leoben → Vienna → … → Palencia → Genova).
+- Coordinate reali verificate per tutte le 45 nuove tappe (dentro i confini delle rispettive città); categorie allineate alle icone dell'app. Mappe Leaflet con marker numerati e tracciato a piedi verificate (es. Tromsø attraversa il fiordo fino alla Cattedrale dell'Artico).
+
+## v4.14 — 2026-06-28
+Fix dei pulsanti indicazioni (🚶/🛴/🚍) nella sezione **Itinerari città**, soprattutto su telefono.
+
+- **Fix link indicazioni su mobile**: i pulsanti percorso usavano un link Google Maps con origine vuota, che sul telefono poteva non aprire nulla finché l'app non aveva la posizione GPS. Ora, quando la posizione non è ancora disponibile, il pulsante apre comunque **il luogo di destinazione** su Google Maps (`maps/search`), garantendo che apra sempre qualcosa di utile.
+- **Percorso completo quando c'è il GPS**: se la posizione live è disponibile, il pulsante calcola il percorso reale **dalla tua posizione** alla tappa con il mezzo scelto (a piedi / monopattino / mezzi).
+- **Href aggiornato al click**: il link viene ricalcolato al momento del tocco, così se la posizione arriva dopo l'apertura della pagina il percorso parte comunque da dove ti trovi.
+- **Cache-busting** sugli script della sezione (`?v=4.14`) e allineamento del precache del service worker, per garantire che il fix arrivi subito ai dispositivi.
+
 ## v4.13 — 2026-06-28
 Estensione della sezione **Itinerari città** a **tutte le città principali del viaggio**: ora 11 città con itinerario a piedi completo.
 

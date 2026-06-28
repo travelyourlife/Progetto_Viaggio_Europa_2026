@@ -8,8 +8,9 @@
  * The same description is shown in the itinerary card AND in the map popup
  * (expandable). Coordinates are real place coordinates.
  *
- * Cities (trip order): Vienna, Varsavia, Vilnius, Riga, Tallinn, Trondheim,
- * Bergen, Copenhagen, San Sebastián, Bilbao, Genova.
+ * Cities (trip order): Leoben, Vienna, Varsavia, Vilnius, Riga, Tallinn,
+ * Rovaniemi, Oulu, Tromso, Trondheim, Stavanger, Kristiansand, Bergen,
+ * Copenhagen, Bremen, Amiens, San Sebastian, Bilbao, Palencia, Genova.
  *
  * NOTE: This file is data-only. Rendering + map live in city-itineraries-ui.js.
  * ===================================================================== */
@@ -17,6 +18,117 @@
   'use strict';
 
   var CITY_ITINERARIES = {
+  "leoben": {
+    "city": "Leoben",
+    "cityEN": "Leoben",
+    "country": "Austria",
+    "countryEN": "Austria",
+    "flag": "🇦🇹",
+    "intro": "Scopri Leoben, il cuore industriale e storico della Stiria, situato lungo le rive del fiume Mur. Questo itinerario a piedi ti porterà attraverso piazze affascinanti, antiche abbazie e la ricca tradizione birraria della città.",
+    "introEN": "Discover Leoben, the industrial and historic heart of Styria, situated along the banks of the Mur River. This walking itinerary will take you through charming squares, ancient abbeys, and the city's rich brewing tradition.",
+    "center": [
+      47.3767,
+      15.0931
+    ],
+    "zoom": 14,
+    "stops": [
+      {
+        "id": "leo-1",
+        "name": "Hauptplatz",
+        "nameEN": "Hauptplatz",
+        "cat": "cultura",
+        "lat": 47.38046,
+        "lng": 15.09476,
+        "short": "La piazza principale di Leoben, circondata da edifici storici e monumenti.",
+        "shortEN": "Leoben's main square, surrounded by historic buildings and monuments.",
+        "desc": "L'Hauptplatz è il cuore pulsante di Leoben, risalente al Medioevo. Questa spaziosa piazza pedonale è fiancheggiata da eleganti edifici storici, tra cui il Vecchio Municipio e la Colonna della Trinità (Pestsäule). È il luogo ideale per iniziare l'esplorazione della città, godendosi l'atmosfera locale nei numerosi caffè all'aperto.",
+        "descEN": "Hauptplatz is the beating heart of Leoben, dating back to the Middle Ages. This spacious pedestrian square is lined with elegant historic buildings, including the Old Town Hall and the Trinity Column (Pestsäule). It is the ideal place to start exploring the city, enjoying the local atmosphere in the numerous outdoor cafes.",
+        "tips": "",
+        "tipsEN": "",
+        "src": [
+          "Wikipedia: Hauptplatz (Leoben)",
+          "TripAdvisor: Hauptplatz"
+        ],
+        "maps": "https://maps.google.com/?q=47.38046,15.09476"
+      },
+      {
+        "id": "leo-2",
+        "name": "Schwammerlturm",
+        "nameEN": "Schwammerlturm",
+        "cat": "cultura",
+        "lat": 47.37999,
+        "lng": 15.09258,
+        "short": "Una torre medievale iconica con un caratteristico tetto a forma di fungo.",
+        "shortEN": "An iconic medieval tower with a distinctive mushroom-shaped roof.",
+        "desc": "Lo Schwammerlturm, o 'Torre del Fungo', è il simbolo più famoso di Leoben. Alta circa 30 metri, questa torre medievale faceva parte delle antiche fortificazioni cittadine. Il suo nome deriva dal tetto a cupola aggiunto nel XVII secolo, che ricorda un fungo. I visitatori possono salire in cima per godere di una vista panoramica sulla città e sul fiume Mur.",
+        "descEN": "The Schwammerlturm, or 'Mushroom Tower', is Leoben's most famous landmark. Standing about 30 meters tall, this medieval tower was part of the ancient city fortifications. Its name comes from the dome roof added in the 17th century, which resembles a mushroom. Visitors can climb to the top to enjoy a panoramic view of the city and the Mur River.",
+        "tips": "",
+        "tipsEN": "",
+        "src": [
+          "Wikipedia: Schwammerlturm",
+          "Leoben Tourism: Schwammerlturm"
+        ],
+        "maps": "https://maps.google.com/?q=47.37999,15.09258"
+      },
+      {
+        "id": "leo-3",
+        "name": "MuseumsCenter Leoben",
+        "nameEN": "MuseumsCenter Leoben",
+        "cat": "cultura",
+        "lat": 47.3807,
+        "lng": 15.09167,
+        "short": "Un museo che esplora la ricca storia e la cultura industriale della regione.",
+        "shortEN": "A museum exploring the rich history and industrial culture of the region.",
+        "desc": "Situato nel KulturQuartier, il MuseumsCenter Leoben offre un affascinante viaggio attraverso 1100 anni di storia della città. Le esposizioni si concentrano in particolare sull'industria mineraria e metallurgica che ha plasmato la regione. Il complesso ospita anche la Kunsthalle, che presenta mostre d'arte contemporanea. L'ingresso costa circa 3,50 euro.",
+        "descEN": "Located in the KulturQuartier, the MuseumsCenter Leoben offers a fascinating journey through 1100 years of city history. The exhibitions focus particularly on the mining and metallurgical industry that shaped the region. The complex also houses the Kunsthalle, which features contemporary art exhibitions. Admission is approximately 3.50 euros.",
+        "tips": "",
+        "tipsEN": "",
+        "src": [
+          "Wikipedia: MuseumsCenter Leoben",
+          "KulturQuartier Leoben Official Site"
+        ],
+        "maps": "https://maps.google.com/?q=47.3807,15.09167"
+      },
+      {
+        "id": "leo-4",
+        "name": "Pfarrkirche Leoben-St. Xaver",
+        "nameEN": "St. Xaver Parish Church",
+        "cat": "cultura",
+        "lat": 47.38079,
+        "lng": 15.09251,
+        "short": "Una magnifica chiesa ex-gesuita con un imponente interno barocco.",
+        "shortEN": "A magnificent former Jesuit church with an impressive Baroque interior.",
+        "desc": "La chiesa parrocchiale di San Francesco Saverio è un capolavoro dell'architettura barocca, costruita tra il 1660 e il 1665. Originariamente una chiesa gesuita, domina il centro storico con la sua facciata a due torri. L'interno è riccamente decorato e si è conservato quasi intatto dal XVII secolo, offrendo un'atmosfera di grandiosa spiritualità.",
+        "descEN": "The Parish Church of St. Francis Xavier is a masterpiece of Baroque architecture, built between 1660 and 1665. Originally a Jesuit church, it dominates the historic center with its twin-tower facade. The interior is richly decorated and has been preserved almost intact since the 17th century, offering an atmosphere of grandiose spirituality.",
+        "tips": "",
+        "tipsEN": "",
+        "src": [
+          "Wikipedia: Pfarrkirche Leoben-St. Xaver",
+          "Visit A City: Parish Church Leoben-St. Xaver"
+        ],
+        "maps": "https://maps.google.com/?q=47.38079,15.09251"
+      },
+      {
+        "id": "leo-5",
+        "name": "Gösser Braumuseum",
+        "nameEN": "Gösser Brewery Museum",
+        "cat": "cibo",
+        "lat": 47.36138,
+        "lng": 15.09388,
+        "short": "Scopri la storia della birra austriaca più famosa in questo museo interattivo.",
+        "shortEN": "Discover the history of Austria's most famous beer in this interactive museum.",
+        "desc": "Il Gösser Braumuseum, situato nel quartiere di Göss, celebra la lunga tradizione birraria di Leoben, che risale al 1010. Il museo offre un'esperienza interattiva sulla produzione della birra Gösser, una delle più amate in Austria. Le visite guidate, che costano circa 10 euro, includono spesso una degustazione finale. Si consiglia di prenotare in anticipo.",
+        "descEN": "The Gösser Braumuseum, located in the Göss district, celebrates Leoben's long brewing tradition, which dates back to 1010. The museum offers an interactive experience on the production of Gösser beer, one of the most beloved in Austria. Guided tours, which cost around 10 euros, often include a final tasting. It is recommended to book in advance.",
+        "tips": "",
+        "tipsEN": "",
+        "src": [
+          "TripAdvisor: Gösser Braumuseum",
+          "Gösser Official Site"
+        ],
+        "maps": "https://maps.google.com/?q=47.36138,15.09388"
+      }
+    ]
+  },
   "vienna": {
     "city": "Vienna",
     "cityEN": "Vienna",
@@ -573,6 +685,335 @@
       }
     ]
   },
+  "rovaniemi": {
+    "city": "Rovaniemi",
+    "cityEN": "Rovaniemi",
+    "country": "Finlandia",
+    "countryEN": "Finland",
+    "flag": "🇫🇮",
+    "intro": "Esplora il cuore di Rovaniemi con questo itinerario a piedi che unisce cultura, storia e natura artica. Scopri i luoghi più iconici della capitale della Lapponia in mezza giornata.",
+    "introEN": "Explore the heart of Rovaniemi with this walking itinerary that combines culture, history, and Arctic nature. Discover the most iconic spots of the capital of Lapland in half a day.",
+    "center": [
+      66.5013,
+      25.7272
+    ],
+    "zoom": 14,
+    "stops": [
+      {
+        "id": "rov-1",
+        "name": "Piazza Lordi",
+        "nameEN": "Lordi's Square",
+        "cat": "cultura",
+        "lat": 66.5012,
+        "lng": 25.7305,
+        "short": "La piazza centrale di Rovaniemi, dedicata ai vincitori dell'Eurovision 2006.",
+        "shortEN": "The central square of Rovaniemi, dedicated to the 2006 Eurovision winners.",
+        "desc": "Piazza Lordi (Lordin aukio) è il cuore pulsante di Rovaniemi, rinominata nel 2006 in onore della band hard rock Lordi, vincitrice dell'Eurovision Song Contest. Qui puoi trovare le impronte delle mani e le firme dei membri della band. La piazza è un vivace punto di ritrovo circondato da negozi e ristoranti, e ospita eventi durante tutto l'anno. Non perdere l'occasione di scattare una foto con il famoso termometro della piazza.",
+        "descEN": "Lordi's Square (Lordin aukio) is the beating heart of Rovaniemi, renamed in 2006 in honor of the hard rock band Lordi, winners of the Eurovision Song Contest. Here you can find the handprints and signatures of the band members. The square is a lively gathering place surrounded by shops and restaurants, and hosts events throughout the year. Don't miss the chance to take a picture with the famous thermometer in the square.",
+        "tips": "",
+        "tipsEN": "",
+        "src": [
+          "Wikipedia: Lordi's Square",
+          "Tripadvisor: Lordi's Square"
+        ],
+        "maps": "https://maps.google.com/?q=66.5012,25.7305"
+      },
+      {
+        "id": "rov-2",
+        "name": "Korundi Casa della Cultura",
+        "nameEN": "Korundi House of Culture",
+        "cat": "cultura",
+        "lat": 66.5008,
+        "lng": 25.71797,
+        "short": "Un centro d'arte e cultura ospitato in un ex deposito di autobus postali.",
+        "shortEN": "An art and culture center housed in a former post bus depot.",
+        "desc": "La Casa della Cultura Korundi è uno dei pochi edifici sopravvissuti alla Seconda Guerra Mondiale a Rovaniemi. Oggi ospita il Museo d'Arte di Rovaniemi e l'Orchestra da Camera della Lapponia. Le mostre esplorano il mondo da una prospettiva nordica, offrendo un'immersione profonda nell'arte contemporanea finlandese. Si trova in Lapinkävijäntie 4, a breve distanza dal centro città.",
+        "descEN": "The Korundi House of Culture is one of the few buildings in Rovaniemi to survive the Second World War. Today it houses the Rovaniemi Art Museum and the Lapland Chamber Orchestra. The exhibitions explore the world from a northern perspective, offering a deep dive into contemporary Finnish art. It is located at Lapinkävijäntie 4, a short walk from the city center.",
+        "tips": "",
+        "tipsEN": "",
+        "src": [
+          "Official site korundi.fi",
+          "Visit Rovaniemi: Korundi House of Culture"
+        ],
+        "maps": "https://maps.google.com/?q=66.5008,25.71797"
+      },
+      {
+        "id": "rov-3",
+        "name": "Arktikum",
+        "nameEN": "Arktikum",
+        "cat": "cultura",
+        "lat": 66.50756,
+        "lng": 25.7263,
+        "short": "Un museo e centro scientifico che racconta la natura, la cultura e la storia dell'Artico.",
+        "shortEN": "A museum and science center that tells the story of Arctic nature, culture, and history.",
+        "desc": "L'Arktikum è uno dei punti di riferimento più noti di Rovaniemi, situato sulle rive del fiume Ounasjoki. Questo museo e centro scientifico offre mostre interattive sulla vita nell'Artico, la storia della Lapponia e il fenomeno dell'aurora boreale. L'edificio stesso è un capolavoro architettonico, con un suggestivo corridoio di vetro lungo 172 metri. I biglietti d'ingresso variano, ma offrono un'esperienza educativa imperdibile per tutte le età.",
+        "descEN": "Arktikum is one of Rovaniemi's most famous landmarks, located on the banks of the Ounasjoki river. This museum and science center offers interactive exhibitions on life in the Arctic, the history of Lapland, and the phenomenon of the Northern Lights. The building itself is an architectural masterpiece, featuring a striking 172-meter-long glass corridor. Entrance fees vary, but it offers an unmissable educational experience for all ages.",
+        "tips": "",
+        "tipsEN": "",
+        "src": [
+          "Official site arktikum.fi",
+          "Wikipedia: Arktikum"
+        ],
+        "maps": "https://maps.google.com/?q=66.50756,25.7263"
+      },
+      {
+        "id": "rov-4",
+        "name": "Chiesa di Rovaniemi",
+        "nameEN": "Rovaniemi Church",
+        "cat": "cultura",
+        "lat": 66.49463,
+        "lng": 25.72925,
+        "short": "Un'iconica chiesa luterana che domina lo skyline della città.",
+        "shortEN": "An iconic Lutheran church dominating the city skyline.",
+        "desc": "La Chiesa di Rovaniemi, completata nel 1950, è un punto di riferimento spirituale e architettonico della città. Progettata dall'architetto Bertel Liljequist, presenta un imponente affresco sull'altare intitolato 'La sorgente della vita', opera del professor Lennart Segerstråle. La chiesa può ospitare fino a 680 persone e vanta un organo a 45 registri. Si trova in Yliopistonkatu 2 ed è aperta ai visitatori durante il giorno.",
+        "descEN": "The Rovaniemi Church, completed in 1950, is a spiritual and architectural landmark of the city. Designed by architect Bertel Liljequist, it features an impressive altar fresco titled 'The Fountain of Life', painted by Professor Lennart Segerstråle. The church can seat up to 680 people and boasts a 45-stop organ. It is located at Yliopistonkatu 2 and is open to visitors during the day.",
+        "tips": "",
+        "tipsEN": "",
+        "src": [
+          "Official site rovaniemenseurakunta.fi",
+          "Visit Rovaniemi: Rovaniemi Church"
+        ],
+        "maps": "https://maps.google.com/?q=66.49463,25.72925"
+      },
+      {
+        "id": "rov-5",
+        "name": "Ponte della Candela del Boscaiolo",
+        "nameEN": "Lumberjack's Candle Bridge",
+        "cat": "cultura",
+        "lat": 66.50218,
+        "lng": 25.73186,
+        "short": "Il primo ponte stradale strallato della Finlandia, un omaggio alla storia dei boscaioli.",
+        "shortEN": "Finland's first cable-stayed road bridge, a tribute to the history of lumberjacks.",
+        "desc": "Il Ponte della Candela del Boscaiolo (Jätkänkynttilä) attraversa il fiume Kemijoki per 320 metri, collegando il centro città con la collina di Ounasvaara. Completato nel 1989, è il primo ponte sospeso costruito in Lapponia in epoca moderna. Le due torri del ponte sono illuminate per simboleggiare le torce usate dai boscaioli, rendendo omaggio al patrimonio del disboscamento di Rovaniemi. Offre viste spettacolari, specialmente di notte o durante l'aurora boreale.",
+        "descEN": "The Lumberjack's Candle Bridge (Jätkänkynttilä) stretches 320 meters across the Kemijoki River, connecting the city center with the Ounasvaara hill. Completed in 1989, it is the first suspension bridge built in Lapland in modern times. The twin towers of the bridge are illuminated to symbolize the torches used by lumberjacks, paying homage to Rovaniemi's logging heritage. It offers spectacular views, especially at night or during the Northern Lights.",
+        "tips": "",
+        "tipsEN": "",
+        "src": [
+          "Tripadvisor: Lumberjack's Candle Bridge",
+          "VoiceMap: The Lumberjack's Candle Bridge"
+        ],
+        "maps": "https://maps.google.com/?q=66.50218,25.73186"
+      }
+    ]
+  },
+  "oulu": {
+    "city": "Oulu",
+    "cityEN": "Oulu",
+    "country": "Finlandia",
+    "countryEN": "Finland",
+    "flag": "🇫🇮",
+    "intro": "Scopri Oulu, la capitale del nord della Finlandia, con un itinerario a piedi che unisce storia, natura e cultura. Dalla vivace piazza del mercato ai tranquilli parchi sulle isole, esplora il cuore di questa affascinante città costiera.",
+    "introEN": "Discover Oulu, the capital of northern Finland, with a walking itinerary that blends history, nature, and culture. From the lively market square to tranquil island parks, explore the heart of this charming coastal city.",
+    "center": [
+      65.0164,
+      25.4736
+    ],
+    "zoom": 14,
+    "stops": [
+      {
+        "id": "oul-1",
+        "name": "Piazza del Mercato di Oulu",
+        "nameEN": "Oulu Market Square",
+        "cat": "cibo",
+        "lat": 65.01349,
+        "lng": 25.46451,
+        "short": "Il cuore pulsante di Oulu, famoso per i suoi vivaci mercati e l'iconica statua del Toripolliisi.",
+        "shortEN": "The beating heart of Oulu, famous for its lively markets and the iconic Toripolliisi statue.",
+        "desc": "La Piazza del Mercato di Oulu (Kauppatori) è il centro storico e commerciale della città, situato vicino al lungomare. Ospita il pittoresco Mercato Coperto (Kauppahalli), un edificio neogotico dove è possibile assaggiare specialità locali. L'attrazione più fotografata è il Toripolliisi, una simpatica statua in bronzo di un poliziotto del mercato. La piazza è circondata da antichi magazzini in legno rossi, ora trasformati in caffè e ristoranti.",
+        "descEN": "Oulu Market Square (Kauppatori) is the historical and commercial center of the city, located near the waterfront. It hosts the picturesque Market Hall (Kauppahalli), a neo-Gothic building where you can taste local specialties. The most photographed attraction is the Toripolliisi, a friendly bronze statue of a market policeman. The square is surrounded by old red wooden storehouses, now transformed into cafes and restaurants.",
+        "tips": "",
+        "tipsEN": "",
+        "src": [
+          "Wikipedia: Oulu",
+          "Wikipedia: Toripolliisi"
+        ],
+        "maps": "https://maps.google.com/?q=65.01349,25.46451"
+      },
+      {
+        "id": "oul-2",
+        "name": "Cattedrale di Oulu",
+        "nameEN": "Oulu Cathedral",
+        "cat": "cultura",
+        "lat": 65.01472,
+        "lng": 25.47583,
+        "short": "Una maestosa cattedrale neoclassica che domina il centro della città.",
+        "shortEN": "A majestic neoclassical cathedral dominating the city center.",
+        "desc": "La Cattedrale di Oulu (Oulun tuomiokirkko) è una chiesa evangelica luterana costruita originariamente nel 1777. Dopo essere stata distrutta da un incendio nel 1822, fu ricostruita in stile neoclassico su progetto del famoso architetto Carl Ludvig Engel e completata nel 1832. L'interno è noto per il suo bellissimo organo e il modello di una nave appeso al soffitto, tipico delle chiese marittime nordiche. È aperta ai visitatori tutti i giorni e l'ingresso è gratuito.",
+        "descEN": "Oulu Cathedral (Oulun tuomiokirkko) is an Evangelical Lutheran church originally built in 1777. After being destroyed by a fire in 1822, it was rebuilt in a neoclassical style designed by the famous architect Carl Ludvig Engel and completed in 1832. The interior is known for its beautiful organ and a model ship hanging from the ceiling, typical of Nordic maritime churches. It is open to visitors daily and admission is free.",
+        "tips": "",
+        "tipsEN": "",
+        "src": [
+          "Wikipedia: Oulu Cathedral"
+        ],
+        "maps": "https://maps.google.com/?q=65.01472,25.47583"
+      },
+      {
+        "id": "oul-3",
+        "name": "Isole Hupisaaret",
+        "nameEN": "Hupisaaret Islands",
+        "cat": "natura",
+        "lat": 65.01833,
+        "lng": 25.4775,
+        "short": "Un'oasi verde di pace formata da piccole isole collegate da ponti pittoreschi.",
+        "shortEN": "A green oasis of peace formed by small islands connected by picturesque bridges.",
+        "desc": "Il parco delle Isole Hupisaaret è un'area verde situata nell'estuario del fiume Oulu, a pochi passi dal centro città. È composto da decine di piccole isole collegate da graziosi ponti pedonali bianchi, creando un paesaggio idilliaco. Il parco ospita splendidi giardini, ruscelli e percorsi pedonali perfetti per una passeggiata rilassante. Al suo interno si trovano anche un roseto e un teatro estivo.",
+        "descEN": "The Hupisaaret Islands park is a green area located in the estuary of the Oulu River, just a short walk from the city center. It consists of dozens of small islands connected by charming white pedestrian bridges, creating an idyllic landscape. The park features beautiful gardens, streams, and walking paths perfect for a relaxing stroll. Inside, you can also find a rose garden and a summer theater.",
+        "tips": "",
+        "tipsEN": "",
+        "src": [
+          "Wikipedia: Hupisaaret Islands"
+        ],
+        "maps": "https://maps.google.com/?q=65.01833,25.4775"
+      },
+      {
+        "id": "oul-4",
+        "name": "Museo d'Arte di Oulu",
+        "nameEN": "Oulu Museum of Art",
+        "cat": "cultura",
+        "lat": 65.01833,
+        "lng": 25.48194,
+        "short": "Un museo d'arte contemporanea situato ai margini del parco Hupisaaret.",
+        "shortEN": "A contemporary art museum located on the edge of the Hupisaaret park.",
+        "desc": "Il Museo d'Arte di Oulu (OMA) si trova nel quartiere di Myllytulli, vicino al parco delle Isole Hupisaaret. Il museo è ospitato in un ex edificio industriale, una fabbrica di colla e pelle, che è stato magnificamente ristrutturato. Le sue collezioni si concentrano principalmente sull'arte contemporanea finlandese e regionale, offrendo uno spaccato della cultura visiva del nord. Il museo organizza regolarmente mostre temporanee ed eventi culturali.",
+        "descEN": "The Oulu Museum of Art (OMA) is located in the Myllytulli neighborhood, near the Hupisaaret Islands park. The museum is housed in a former industrial building, a glue and leather factory, which has been beautifully renovated. Its collections focus primarily on Finnish and regional contemporary art, offering an insight into northern visual culture. The museum regularly hosts temporary exhibitions and cultural events.",
+        "tips": "",
+        "tipsEN": "",
+        "src": [
+          "Wikipedia: Oulu Museum of Art"
+        ],
+        "maps": "https://maps.google.com/?q=65.01833,25.48194"
+      },
+      {
+        "id": "oul-5",
+        "name": "Castello di Oulu",
+        "nameEN": "Oulu Castle",
+        "cat": "cultura",
+        "lat": 65.017,
+        "lng": 25.468,
+        "short": "Le rovine storiche di un castello del XVI secolo su un'isola nel delta del fiume.",
+        "shortEN": "The historic ruins of a 16th-century castle on an island in the river delta.",
+        "desc": "Il Castello di Oulu (Oulun linna) fu costruito nel 1590 sull'isola di Linnansaari per difendere la città. Sebbene l'originale struttura in legno sia stata distrutta, oggi è possibile visitare le rovine in pietra e le cantine restaurate. Sulle fondamenta del castello è stato costruito un osservatorio nel 1875, che ora ospita una caffetteria estiva. L'isola offre anche splendide viste sul fiume e sulla città circostante.",
+        "descEN": "Oulu Castle (Oulun linna) was built in 1590 on the island of Linnansaari to defend the city. Although the original wooden structure was destroyed, today you can visit the stone ruins and restored cellars. An observatory was built on the castle's foundations in 1875, which now houses a summer cafe. The island also offers beautiful views of the river and the surrounding city.",
+        "tips": "",
+        "tipsEN": "",
+        "src": [
+          "Wikipedia: Oulu Castle"
+        ],
+        "maps": "https://maps.google.com/?q=65.017,25.468"
+      }
+    ]
+  },
+  "tromso": {
+    "city": "Tromsø",
+    "cityEN": "Tromsø",
+    "country": "Norvegia",
+    "countryEN": "Norway",
+    "flag": "🇳🇴",
+    "intro": "Scopri il fascino artico di Tromsø con questo tour a piedi compatto attraverso il suo centro storico e attraverso il fiordo. Dalle cattedrali in legno e la storia polare fino all'iconica Cattedrale dell'Artico, questo percorso mette in risalto il meglio della \"Parigi del Nord\".",
+    "introEN": "Discover the Arctic charm of Tromsø with this compact walking tour through its historic center and across the fjord. From wooden cathedrals and polar history to the iconic Arctic Cathedral, this route highlights the best of the \"Paris of the North\".",
+    "center": [
+      69.65,
+      18.9678
+    ],
+    "zoom": 14,
+    "stops": [
+      {
+        "id": "tro-1",
+        "name": "Cattedrale di Tromsø",
+        "nameEN": "Tromsø Cathedral",
+        "cat": "cultura",
+        "lat": 69.6489,
+        "lng": 18.9569,
+        "short": "Una delle più grandi cattedrali in legno della Norvegia, situata nel cuore della città.",
+        "shortEN": "One of the largest wooden cathedrals in Norway, located in the heart of the city.",
+        "desc": "Costruita nel 1861, questa bellissima chiesa in legno giallo è l'unica cattedrale norvegese realizzata in legno. È situata nel centro della città, circondata da un parco verde. La chiesa è progettata in stile neogotico e presenta interni mozzafiato. L'ingresso costa solitamente circa 50 NOK durante gli orari di visita turistica.",
+        "descEN": "Built in 1861, this beautiful yellow wooden church is the only Norwegian cathedral made of wood. It is situated in the middle of the city surrounded by a green park. The church is designed in the Gothic Revival style and features a stunning interior. Admission is usually around 50 NOK during tourist hours.",
+        "tips": "",
+        "tipsEN": "",
+        "src": [
+          "Wikipedia: Tromsø Cathedral",
+          "Visit Tromsø official site"
+        ],
+        "maps": "https://maps.google.com/?q=69.6489,18.9569"
+      },
+      {
+        "id": "tro-2",
+        "name": "Raketten Bar & Pølse",
+        "nameEN": "Raketten Bar & Pølse",
+        "cat": "cibo",
+        "lat": 69.6495,
+        "lng": 18.9563,
+        "short": "Un minuscolo e storico chiosco che serve tradizionali hot dog norvegesi nella piazza principale.",
+        "shortEN": "A historic, tiny kiosk serving traditional Norwegian hot dogs in the main square.",
+        "desc": "Conosciuto come il bar più piccolo della Norvegia, questo affascinante chiosco risale al 1911. Situato su Storgata, la principale via pedonale, è famoso per servire hot dog di renna e birra locale. È una sosta veloce perfetta per sperimentare la cultura del cibo di strada locale. Aperto tutti i giorni, i prezzi per un hot dog si aggirano intorno alle 100 NOK.",
+        "descEN": "Known as the smallest bar in Norway, this charming kiosk dates back to 1911. Located on Storgata, the main pedestrian street, it is famous for serving reindeer hot dogs and local beer. It's a perfect quick stop to experience local street food culture. Open daily, prices for a hot dog are around 100 NOK.",
+        "tips": "",
+        "tipsEN": "",
+        "src": [
+          "Official site raketten.no",
+          "Visit Tromsø: Food and Drink"
+        ],
+        "maps": "https://maps.google.com/?q=69.6495,18.9563"
+      },
+      {
+        "id": "tro-3",
+        "name": "Museo Polare",
+        "nameEN": "The Polar Museum",
+        "cat": "cultura",
+        "lat": 69.6521,
+        "lng": 18.9635,
+        "short": "Un affascinante museo che illustra la storia di Tromsø come porta d'accesso all'Artico.",
+        "shortEN": "A fascinating museum detailing Tromsø's history as the gateway to the Arctic.",
+        "desc": "Ospitato in una tradizionale dogana degli anni '30 dell'Ottocento sul lungomare, questo museo espone la storia della caccia artica, della caccia alle foche e di famosi esploratori come Roald Amundsen. Offre approfondimenti sulle dure realtà delle spedizioni polari. I biglietti per adulti costano circa 110 NOK. È aperto tutti i giorni, solitamente dalle 11:00 alle 17:00.",
+        "descEN": "Housed in a traditional 1830s customs house on the waterfront, this museum exhibits the history of Arctic trapping, sealing, and famous explorers like Roald Amundsen. It provides deep insights into the harsh realities of polar expeditions. Adult tickets are approximately 110 NOK. It is open daily, usually from 11:00 to 17:00.",
+        "tips": "",
+        "tipsEN": "",
+        "src": [
+          "UiT The Arctic University of Norway: Polar Museum",
+          "Wikipedia: Polar Museum"
+        ],
+        "maps": "https://maps.google.com/?q=69.6521,18.9635"
+      },
+      {
+        "id": "tro-4",
+        "name": "Ponte di Tromsø",
+        "nameEN": "Tromsø Bridge",
+        "cat": "panorama",
+        "lat": 69.6514,
+        "lng": 18.975,
+        "short": "Un ponte stradale a sbalzo che offre viste panoramiche sulla città, sulle montagne e sui fiordi.",
+        "shortEN": "A cantilever road bridge offering panoramic views of the city, mountains, and fjords.",
+        "desc": "Inaugurato nel 1960, questo ponte lungo 1.036 metri collega l'isola di Tromsøya con la terraferma. Camminare lungo il percorso pedonale offre punti panoramici spettacolari sulla Cattedrale dell'Artico e sul circostante stretto di Tromsøysundet. La passeggiata dura circa 15-20 minuti ed è completamente gratuita. Può essere ventoso, quindi vestitevi pesanti.",
+        "descEN": "Opened in 1960, this 1,036-meter-long bridge connects the island of Tromsøya with the mainland. Walking across the pedestrian path provides spectacular viewpoints of the Arctic Cathedral and the surrounding Tromsøysundet strait. The walk takes about 15-20 minutes and is completely free. It can be windy, so dress warmly.",
+        "tips": "",
+        "tipsEN": "",
+        "src": [
+          "Wikipedia: Tromsø Bridge",
+          "Visit Norway: Tromsø"
+        ],
+        "maps": "https://maps.google.com/?q=69.6514,18.975"
+      },
+      {
+        "id": "tro-5",
+        "name": "Cattedrale dell'Artico",
+        "nameEN": "Arctic Cathedral",
+        "cat": "cultura",
+        "lat": 69.6481,
+        "lng": 18.9875,
+        "short": "Una suggestiva chiesa modernista diventata il simbolo più iconico di Tromsø.",
+        "shortEN": "A striking modernist church that has become the most iconic symbol of Tromsø.",
+        "desc": "Progettata da Jan Inge Hovig e completata nel 1965, la sua audace architettura triangolare è ispirata alla natura artica e agli iceberg. La parete orientale presenta un enorme e bellissimo mosaico di vetro che brilla in modo sbalorditivo al buio. È una chiesa parrocchiale attiva e un popolare luogo di concerti. Il biglietto d'ingresso per i visitatori è di circa 80 NOK.",
+        "descEN": "Designed by Jan Inge Hovig and completed in 1965, its bold triangular architecture is inspired by Arctic nature and icebergs. The eastern wall features a massive, beautiful glass mosaic that glows stunningly in the dark. It is an active parish church and a popular concert venue. Entrance fee for visitors is about 80 NOK.",
+        "tips": "",
+        "tipsEN": "",
+        "src": [
+          "Official site ishavskatedralen.no",
+          "Wikipedia: Arctic Cathedral"
+        ],
+        "maps": "https://maps.google.com/?q=69.6481,18.9875"
+      }
+    ]
+  },
   "trondheim": {
     "city": "Trondheim",
     "cityEN": "Trondheim",
@@ -681,6 +1122,228 @@
           "forsvarsbygg.no"
         ],
         "maps": "https://maps.google.com/?q=63.42694,10.41056"
+      }
+    ]
+  },
+  "stavanger": {
+    "city": "Stavanger",
+    "cityEN": "Stavanger",
+    "country": "Norvegia",
+    "countryEN": "Norway",
+    "flag": "🇳🇴",
+    "intro": "Scopri il fascino di Stavanger con questo itinerario a piedi di mezza giornata. Dalle storiche case in legno di Gamle Stavanger al moderno Museo del Petrolio, esplorerai il cuore vibrante della città.",
+    "introEN": "Discover the charm of Stavanger with this half-day walking itinerary. From the historic wooden houses of Gamle Stavanger to the modern Petroleum Museum, you will explore the vibrant heart of the city.",
+    "center": [
+      58.9708,
+      5.7316
+    ],
+    "zoom": 14,
+    "stops": [
+      {
+        "id": "sta-1",
+        "name": "Gamle Stavanger",
+        "nameEN": "Old Stavanger",
+        "cat": "cultura",
+        "lat": 58.97033,
+        "lng": 5.72583,
+        "short": "Passeggia tra le storiche case in legno bianco del XVIII secolo.",
+        "shortEN": "Stroll among the historic white wooden houses from the 18th century.",
+        "desc": "Gamle Stavanger, o Vecchia Stavanger, è un'area storica situata sul lato ovest del porto di Vågen. Comprende 173 case in legno bianco costruite tra la fine del XVIII e l'inizio del XIX secolo. È considerata l'insediamento di case in legno meglio conservato d'Europa. L'area è in gran parte residenziale, ma ospita anche alcune gallerie e musei. L'ingresso è gratuito e l'area è sempre accessibile.",
+        "descEN": "Gamle Stavanger, or Old Stavanger, is a historic area located on the west side of the Vågen harbor. It comprises 173 white wooden houses built in the late 18th and early 19th centuries. It is considered Europe's best-preserved wooden house settlement. The area is largely residential but also hosts a few galleries and museums. Entry is free and the area is always accessible.",
+        "tips": "",
+        "tipsEN": "",
+        "src": [
+          "Wikipedia: Stavanger",
+          "Visit Norway: Old Stavanger"
+        ],
+        "maps": "https://maps.google.com/?q=58.97033,5.72583"
+      },
+      {
+        "id": "sta-2",
+        "name": "Cattedrale di Stavanger",
+        "nameEN": "Stavanger Cathedral",
+        "cat": "cultura",
+        "lat": 58.96978,
+        "lng": 5.73316,
+        "short": "Ammira la cattedrale più antica della Norvegia, risalente al 1125.",
+        "shortEN": "Admire Norway's oldest cathedral, dating back to 1125.",
+        "desc": "La Cattedrale di Stavanger è la cattedrale più antica della Norvegia, costruita intorno al 1125. Si trova nel centro della città, vicino al porto e al lago Breiavatnet. L'architettura originale era in stile romanico, ma in seguito furono aggiunti elementi gotici. È l'unica cattedrale norvegese ad aver mantenuto la sua architettura originale dal Medioevo. L'ingresso è generalmente a pagamento per i turisti, con orari che variano a seconda della stagione.",
+        "descEN": "Stavanger Cathedral is Norway's oldest cathedral, built around 1125. It is located in the city center, near the harbor and the Breiavatnet lake. The original architecture was Romanesque, but Gothic elements were added later. It is the only Norwegian cathedral to have retained its original architecture since the Middle Ages. Entry is generally subject to a fee for tourists, with hours varying by season.",
+        "tips": "",
+        "tipsEN": "",
+        "src": [
+          "Wikipedia: Stavanger Cathedral",
+          "Visit Norway: Stavanger Cathedral"
+        ],
+        "maps": "https://maps.google.com/?q=58.96978,5.73316"
+      },
+      {
+        "id": "sta-3",
+        "name": "Breiavatnet",
+        "nameEN": "Breiavatnet",
+        "cat": "natura",
+        "lat": 58.96806,
+        "lng": 5.733,
+        "short": "Rilassati in questo pittoresco lago situato nel cuore della città.",
+        "shortEN": "Relax by this picturesque lake located in the heart of the city.",
+        "desc": "Breiavatnet è un piccolo lago naturale situato proprio nel centro di Stavanger, adiacente alla Cattedrale e alla stazione ferroviaria. È un luogo popolare per passeggiate rilassanti e per osservare i cigni e le anatre che lo popolano. Il parco circostante offre panchine e aree verdi ideali per una breve pausa. È un'oasi di tranquillità in mezzo al trambusto cittadino. L'accesso è libero e aperto 24 ore su 24.",
+        "descEN": "Breiavatnet is a small natural lake located right in the center of Stavanger, adjacent to the Cathedral and the railway station. It is a popular spot for relaxing walks and observing the swans and ducks that inhabit it. The surrounding park offers benches and green areas ideal for a short break. It is an oasis of tranquility amidst the city bustle. Access is free and open 24 hours a day.",
+        "tips": "",
+        "tipsEN": "",
+        "src": [
+          "Wikipedia: Breiavatnet",
+          "TripAdvisor: Breiavatnet"
+        ],
+        "maps": "https://maps.google.com/?q=58.96806,5.733"
+      },
+      {
+        "id": "sta-4",
+        "name": "Øvre Holmegate",
+        "nameEN": "Øvre Holmegate",
+        "cat": "cultura",
+        "lat": 58.97271,
+        "lng": 5.73125,
+        "short": "Esplora la strada più colorata di Stavanger, ricca di caffè e boutique.",
+        "shortEN": "Explore Stavanger's most colorful street, full of cafes and boutiques.",
+        "desc": "Øvre Holmegate, conosciuta anche come Fargegata (la strada dei colori), è una delle strade più vivaci e fotografate di Stavanger. Tutti gli edifici lungo la strada sono dipinti con colori vivaci e accesi, creando un'atmosfera unica e allegra. La strada è pedonale e ospita numerosi caffè, bar, boutique e negozi di artigianato. È il luogo perfetto per fare shopping o gustare un caffè all'aperto. L'accesso alla strada è libero in qualsiasi momento.",
+        "descEN": "Øvre Holmegate, also known as Fargegata (the street of colors), is one of the most vibrant and photographed streets in Stavanger. All the buildings along the street are painted in bright, vivid colors, creating a unique and cheerful atmosphere. The street is pedestrianized and hosts numerous cafes, bars, boutiques, and craft shops. It is the perfect place for shopping or enjoying an outdoor coffee. Access to the street is free at any time.",
+        "tips": "",
+        "tipsEN": "",
+        "src": [
+          "Wikidata: Øvre Holmegate",
+          "Locationscout: Øvre Holmegate"
+        ],
+        "maps": "https://maps.google.com/?q=58.97271,5.73125"
+      },
+      {
+        "id": "sta-5",
+        "name": "Museo Norvegese del Petrolio",
+        "nameEN": "Norwegian Petroleum Museum",
+        "cat": "cultura",
+        "lat": 58.97333,
+        "lng": 5.73472,
+        "short": "Scopri la storia dell'industria petrolifera norvegese in questo museo interattivo.",
+        "shortEN": "Discover the history of the Norwegian oil industry in this interactive museum.",
+        "desc": "Il Museo Norvegese del Petrolio (Norsk Oljemuseum) documenta la storia delle attività petrolifere e del gas in Norvegia. L'edificio stesso è un punto di riferimento architettonico, progettato per assomigliare a una piccola piattaforma petrolifera vista dal mare. Le mostre interattive spiegano come si formano petrolio e gas, come vengono estratti e il loro impatto sulla società norvegese. Il museo è aperto tutti i giorni in estate (10-19) e dal lunedì al sabato (10-16) con domenica (10-18) in inverno. I biglietti costano circa 150 NOK per gli adulti.",
+        "descEN": "The Norwegian Petroleum Museum (Norsk Oljemuseum) documents the history of oil and gas activities in Norway. The building itself is an architectural landmark, designed to look like a small oil platform when seen from the sea. Interactive exhibits explain how oil and gas are formed, how they are extracted, and their impact on Norwegian society. The museum is open daily in summer (10-19) and Monday to Saturday (10-16) with Sunday (10-18) in winter. Tickets cost around 150 NOK for adults.",
+        "tips": "",
+        "tipsEN": "",
+        "src": [
+          "Wikipedia: Norwegian Petroleum Museum",
+          "Official site: norskolje.museum.no"
+        ],
+        "maps": "https://maps.google.com/?q=58.97333,5.73472"
+      }
+    ]
+  },
+  "kristiansand": {
+    "city": "Kristiansand",
+    "cityEN": "Kristiansand",
+    "country": "Norvegia",
+    "countryEN": "Norway",
+    "flag": "🇳🇴",
+    "intro": "Scopri il fascino costiero di Kristiansand con questo itinerario a piedi. Dalle storiche case in legno alle moderne architetture sul mare, esplora il cuore del sud della Norvegia.",
+    "introEN": "Discover the coastal charm of Kristiansand with this walking itinerary. From historic wooden houses to modern seaside architecture, explore the heart of southern Norway.",
+    "center": [
+      58.1443,
+      7.9974
+    ],
+    "zoom": 14,
+    "stops": [
+      {
+        "id": "kri-1",
+        "name": "Kilden teater og konserthus",
+        "nameEN": "Kilden Performing Arts Centre",
+        "cat": "cultura",
+        "lat": 58.14083,
+        "lng": 7.99583,
+        "short": "Un capolavoro di architettura moderna sul lungomare.",
+        "shortEN": "A masterpiece of modern architecture on the waterfront.",
+        "desc": "Il Kilden Performing Arts Centre è un punto di riferimento culturale inaugurato nel 2012. La sua iconica facciata in legno ondulato si affaccia sul mare, ospitando teatri e sale da concerto. È il secondo edificio culturale più grande della Norvegia. L'ingresso alle aree pubbliche è gratuito, mentre i biglietti per gli spettacoli variano.",
+        "descEN": "The Kilden Performing Arts Centre is a cultural landmark opened in 2012. Its iconic undulating wooden facade overlooks the sea, housing theaters and concert halls. It is the second largest cultural building in Norway. Entrance to public areas is free, while show tickets vary.",
+        "tips": "",
+        "tipsEN": "",
+        "src": [
+          "Wikipedia: Kilden Performing Arts Centre",
+          "Official site kilden.com"
+        ],
+        "maps": "https://maps.google.com/?q=58.14083,7.99583"
+      },
+      {
+        "id": "kri-2",
+        "name": "Fiskebrygga",
+        "nameEN": "Fiskebrygga",
+        "cat": "cibo",
+        "lat": 58.14188,
+        "lng": 7.99524,
+        "short": "Il vivace mercato del pesce e zona di ristorazione.",
+        "shortEN": "The lively fish market and dining area.",
+        "desc": "Fiskebrygga, l'antico molo del pesce, è stato riqualificato in una vivace area con ristoranti e gelaterie. Qui puoi vedere pesci e crostacei vivi nelle vasche del mercato del pesce. È il luogo ideale per assaggiare specialità di mare locali. I ristoranti sono aperti tutti i giorni, con orari prolungati in estate.",
+        "descEN": "Fiskebrygga, the former fish wharf, has been redeveloped into a vibrant area with restaurants and ice cream parlors. Here you can see live fish and shellfish in the fish market tanks. It is the ideal place to taste local seafood specialties. Restaurants are open daily, with extended hours in summer.",
+        "tips": "",
+        "tipsEN": "",
+        "src": [
+          "Wikipedia: Fiskebrygga, Kristiansand",
+          "Visit Norway: Fiskebrygga"
+        ],
+        "maps": "https://maps.google.com/?q=58.14188,7.99524"
+      },
+      {
+        "id": "kri-3",
+        "name": "Christiansholm Festning",
+        "nameEN": "Christiansholm Fortress",
+        "cat": "cultura",
+        "lat": 58.14422,
+        "lng": 8.00291,
+        "short": "Una fortezza del XVII secolo che proteggeva il porto.",
+        "shortEN": "A 17th-century fortress that protected the harbor.",
+        "desc": "Costruita nel 1672 per ordine del re Federico III, questa fortezza costiera difendeva la città. Passeggia lungo i bastioni per ammirare i vecchi cannoni e la vista sul mare. Si trova lungo la passeggiata costiera, vicino alla spiaggia cittadina. L'accesso ai giardini e ai bastioni è gratuito e aperto al pubblico.",
+        "descEN": "Built in 1672 by order of King Frederick III, this coastal fortress defended the city. Walk along the ramparts to admire the old cannons and sea views. It is located along the coastal promenade, near the city beach. Access to the grounds and ramparts is free and open to the public.",
+        "tips": "",
+        "tipsEN": "",
+        "src": [
+          "Wikipedia: Christiansholm Fortress",
+          "Visit Norway: Christiansholm Fortress"
+        ],
+        "maps": "https://maps.google.com/?q=58.14422,8.00291"
+      },
+      {
+        "id": "kri-4",
+        "name": "Kristiansand Domkirke",
+        "nameEN": "Kristiansand Cathedral",
+        "cat": "cultura",
+        "lat": 58.14611,
+        "lng": 7.99462,
+        "short": "Una delle cattedrali neogotiche più grandi della Norvegia.",
+        "shortEN": "One of the largest neo-Gothic cathedrals in Norway.",
+        "desc": "Completata nel 1885, la Cattedrale di Kristiansand domina il centro della città. È un imponente edificio neogotico con una torre alta 70 metri. La chiesa può ospitare circa 1.000 persone ed è la chiesa principale della diocesi. L'ingresso è gratuito, con orari di apertura regolari durante il giorno.",
+        "descEN": "Completed in 1885, Kristiansand Cathedral dominates the city center. It is an impressive neo-Gothic building with a 70-meter high tower. The church can seat about 1,000 people and is the main church of the diocese. Entrance is free, with regular opening hours during the day.",
+        "tips": "",
+        "tipsEN": "",
+        "src": [
+          "Wikipedia: Kristiansand Cathedral",
+          "Visit Norway: Kristiansand Cathedral"
+        ],
+        "maps": "https://maps.google.com/?q=58.14611,7.99462"
+      },
+      {
+        "id": "kri-5",
+        "name": "Posebyen",
+        "nameEN": "Posebyen",
+        "cat": "cultura",
+        "lat": 58.14833,
+        "lng": 7.99833,
+        "short": "L'affascinante centro storico con case in legno bianco.",
+        "shortEN": "The charming old town with white wooden houses.",
+        "desc": "Posebyen è il quartiere più antico di Kristiansand e l'unica parte sopravvissuta al grande incendio del 1892. Ospita una delle più grandi collezioni di vecchie case in legno bianco del Nord Europa. Passeggiare per queste strade idilliache offre un tuffo nel passato. L'area è residenziale e liberamente esplorabile a piedi.",
+        "descEN": "Posebyen is the oldest neighborhood in Kristiansand and the only part that survived the great city fire of 1892. It houses one of Northern Europe's largest collections of old white wooden houses. Strolling through these idyllic streets offers a glimpse into the past. The area is residential and freely explorable on foot.",
+        "tips": "",
+        "tipsEN": "",
+        "src": [
+          "Visit Norway: Posebyen",
+          "Wikipedia: Kristiansand"
+        ],
+        "maps": "https://maps.google.com/?q=58.14833,7.99833"
       }
     ]
   },
@@ -906,6 +1569,228 @@
       }
     ]
   },
+  "bremen": {
+    "city": "Brema",
+    "cityEN": "Bremen",
+    "country": "Germania",
+    "countryEN": "Germany",
+    "flag": "🇩🇪",
+    "intro": "Scopri il fascino storico di Brema con questo itinerario a piedi nel cuore della città. Dalla magnifica Piazza del Mercato ai vicoli medievali dello Schnoor, esplorerai secoli di storia, arte e leggende fiabesche.",
+    "introEN": "Discover the historic charm of Bremen with this walking itinerary through the heart of the city. From the magnificent Market Square to the medieval alleys of the Schnoor, you will explore centuries of history, art, and fairytale legends.",
+    "center": [
+      53.075,
+      8.8077
+    ],
+    "zoom": 14,
+    "stops": [
+      {
+        "id": "bre-1",
+        "name": "Piazza del Mercato e Municipio",
+        "nameEN": "Market Square & Town Hall",
+        "cat": "cultura",
+        "lat": 53.0758,
+        "lng": 8.8073,
+        "short": "Il cuore storico di Brema, con il Municipio e la statua di Rolando, patrimonio UNESCO.",
+        "shortEN": "The historic heart of Bremen, featuring the UNESCO-listed Town Hall and the Roland statue.",
+        "desc": "La Piazza del Mercato di Brema è una delle piazze pubbliche più antiche della città, circondata da magnifici edifici storici. Il fulcro è il Municipio in stile Rinascimento del Weser, costruito all'inizio del XV secolo, e la statua di Rolando del 1404, entrambi siti Patrimonio dell'Umanità UNESCO. I visitatori possono ammirare l'intricata facciata ed esplorare il Ratskeller sottostante. È aperto al pubblico, con visite guidate del Municipio disponibili a circa 8 €.",
+        "descEN": "The Bremen Market Square is one of the oldest public squares in the city, surrounded by magnificent historic buildings. The centerpiece is the Weser Renaissance-style Town Hall, built in the early 15th century, and the 1404 Roland statue, both UNESCO World Heritage sites. Visitors can admire the intricate facade and explore the Ratskeller below. It is open to the public, with guided tours of the Town Hall available for around €8.",
+        "tips": "",
+        "tipsEN": "",
+        "src": [
+          "Wikipedia: Bremen Market Square",
+          "UNESCO: Town Hall and Roland on the Marketplace of Bremen"
+        ],
+        "maps": "https://maps.google.com/?q=53.0758,8.8073"
+      },
+      {
+        "id": "bre-2",
+        "name": "I Musicanti di Brema",
+        "nameEN": "Town Musicians of Bremen",
+        "cat": "cultura",
+        "lat": 53.0761,
+        "lng": 8.8075,
+        "short": "Una famosa statua in bronzo che raffigura gli animali dell'amata fiaba dei fratelli Grimm.",
+        "shortEN": "A famous bronze statue depicting the animals from the beloved Brothers Grimm fairy tale.",
+        "desc": "Situata proprio accanto al Municipio, questa iconica scultura in bronzo del 1953 di Gerhard Marcks dà vita alla fiaba dei fratelli Grimm. Raffigura un asino, un cane, un gatto e un gallo in piedi l'uno sulla schiena dell'altro. La tradizione dice che strofinare le zampe anteriori dell'asino porti fortuna, motivo per cui sono lucide e levigate. La statua è visitabile gratuitamente e accessibile 24 ore su 24, rendendola un punto fotografico imperdibile.",
+        "descEN": "Located just beside the Town Hall, this iconic 1953 bronze sculpture by Gerhard Marcks brings the Brothers Grimm fairy tale to life. It features a donkey, dog, cat, and rooster standing on each other's backs. Tradition says that rubbing the donkey's front legs brings good luck, which is why they are shiny and polished. The statue is free to visit and accessible 24/7, making it a must-see photo spot.",
+        "tips": "",
+        "tipsEN": "",
+        "src": [
+          "Wikipedia: Town Musicians of Bremen",
+          "visitbremen.de: Town Musicians"
+        ],
+        "maps": "https://maps.google.com/?q=53.0761,8.8075"
+      },
+      {
+        "id": "bre-3",
+        "name": "Cattedrale di San Pietro",
+        "nameEN": "St. Peter's Cathedral",
+        "cat": "cultura",
+        "lat": 53.0755,
+        "lng": 8.8088,
+        "short": "Un'imponente chiesa dell'XI secolo con due guglie gemelle che dominano lo skyline della città.",
+        "shortEN": "An imposing 11th-century church with twin spires dominating the city skyline.",
+        "desc": "La Cattedrale di San Pietro è uno splendido esempio di architettura romanica e gotica, con una storia che abbraccia oltre 1.200 anni. All'interno, i visitatori possono esplorare le cripte, vedere le mummie nel Bleikeller (Cantina di piombo) e ammirare le bellissime vetrate. Salire sulla torre sud offre una vista panoramica di Brema per una piccola quota di circa 2 €. L'ingresso alla cattedrale è gratuito e generalmente aperto tutti i giorni dalle 10:00 alle 16:30.",
+        "descEN": "St. Peter's Cathedral is a stunning example of Romanesque and Gothic architecture, with a history spanning over 1,200 years. Inside, visitors can explore the crypts, view the mummies in the Bleikeller (Lead Cellar), and admire the beautiful stained glass windows. Climbing the south tower offers a panoramic view of Bremen for a small fee of around €2. The cathedral itself is free to enter and generally open daily from 10:00 AM to 4:30 PM.",
+        "tips": "",
+        "tipsEN": "",
+        "src": [
+          "Wikipedia: Bremen Cathedral",
+          "stpetridom.de"
+        ],
+        "maps": "https://maps.google.com/?q=53.0755,8.8088"
+      },
+      {
+        "id": "bre-4",
+        "name": "Böttcherstraße",
+        "nameEN": "Böttcherstraße",
+        "cat": "cultura",
+        "lat": 53.075,
+        "lng": 8.8055,
+        "short": "Una stretta strada lunga 100 metri famosa per la sua insolita architettura espressionista in mattoni.",
+        "shortEN": "A narrow, 100-meter-long street famous for its unusual Brick Expressionist architecture.",
+        "desc": "Costruita negli anni '20 dal mercante di caffè Ludwig Roselius, la Böttcherstraße è un singolare complesso architettonico di espressionismo in mattoni. La strada ospita musei d'arte, laboratori artigianali e un famoso carillon fatto di campane di porcellana di Meissen che suona regolarmente. Collega la Piazza del Mercato al fiume Weser ed è interamente pedonale. Passeggiare per la strada è gratuito, sebbene i musei (come il Museo Paula Modersohn-Becker) prevedano un biglietto d'ingresso di circa 8 €.",
+        "descEN": "Built in the 1920s by coffee merchant Ludwig Roselius, Böttcherstraße is a unique architectural ensemble of Brick Expressionism. The street houses art museums, craft workshops, and a famous glockenspiel made of Meissen porcelain bells that chimes regularly. It connects the Market Square to the Weser River and is entirely pedestrianized. Walking through the street is free, though the museums (like the Paula Modersohn-Becker Museum) charge an entrance fee of around €8.",
+        "tips": "",
+        "tipsEN": "",
+        "src": [
+          "Wikipedia: Böttcherstraße",
+          "boettcherstrasse.de"
+        ],
+        "maps": "https://maps.google.com/?q=53.075,8.8055"
+      },
+      {
+        "id": "bre-5",
+        "name": "Quartiere Schnoor",
+        "nameEN": "Schnoor Quarter",
+        "cat": "cultura",
+        "lat": 53.0728,
+        "lng": 8.8094,
+        "short": "Il quartiere più antico di Brema, caratterizzato da un labirinto di stradine e affascinanti case del XV secolo.",
+        "shortEN": "Bremen's oldest neighborhood, featuring a maze of narrow lanes and charming 15th-century houses.",
+        "desc": "Lo Schnoor è l'unica parte di Brema che ha conservato un carattere medievale, con vicoli tortuosi così stretti da poter toccare entrambi i lati contemporaneamente. Il nome deriva dall'antica parola tedesca per \"corda\", poiché le minuscole case a graticcio si allineano come perle su un filo. Oggi è ricco di boutique artigianali, caffè accoglienti e ristoranti tradizionali che servono specialità locali. È liberamente accessibile e perfetto per una piacevole passeggiata e per lo shopping di souvenir.",
+        "descEN": "The Schnoor is the only part of Bremen that has preserved a medieval character, with winding alleys so narrow you can touch both sides at once. The name comes from the old German word for \"string,\" as the tiny half-timbered houses line up like pearls on a string. Today, it is packed with artisan boutiques, cozy cafes, and traditional restaurants serving local specialties. It is freely accessible and perfect for a leisurely stroll and souvenir shopping.",
+        "tips": "",
+        "tipsEN": "",
+        "src": [
+          "Wikipedia: Schnoor",
+          "bremen.eu: The Schnoor quarter"
+        ],
+        "maps": "https://maps.google.com/?q=53.0728,8.8094"
+      }
+    ]
+  },
+  "amiens": {
+    "city": "Amiens",
+    "cityEN": "Amiens",
+    "country": "Francia",
+    "countryEN": "France",
+    "flag": "🇫🇷",
+    "intro": "Scopri il cuore storico di Amiens con questo itinerario a piedi perfetto per le famiglie. Dalla maestosa cattedrale gotica ai pittoreschi canali, esplora il meglio della città in mezza giornata.",
+    "introEN": "Discover the historic heart of Amiens with this family-friendly walking itinerary. From the majestic Gothic cathedral to the picturesque canals, explore the best of the city in a half-day.",
+    "center": [
+      49.8939,
+      2.2999
+    ],
+    "zoom": 14,
+    "stops": [
+      {
+        "id": "ami-1",
+        "name": "Cattedrale di Notre-Dame",
+        "nameEN": "Amiens Cathedral",
+        "cat": "cultura",
+        "lat": 49.89449,
+        "lng": 2.29587,
+        "short": "La più grande cattedrale gotica di Francia, un capolavoro architettonico mozzafiato.",
+        "shortEN": "The largest Gothic cathedral in France, a breathtaking architectural masterpiece.",
+        "desc": "La Cattedrale di Notre-Dame di Amiens è un sito Patrimonio dell'Umanità UNESCO e la più grande cattedrale gotica classica del XIII secolo in Francia. I visitatori possono ammirare le sue magnifiche statue, i dipinti e le vetrate colorate. L'ingresso è gratuito e la cattedrale è aperta tutto l'anno, generalmente dalle 8:30 alle 17:30 o 18:30 a seconda della stagione. Si trova nel cuore della città, rendendola il punto di partenza ideale per la nostra passeggiata.",
+        "descEN": "The Notre-Dame Cathedral of Amiens is a UNESCO World Heritage site and the largest classic Gothic cathedral of the 13th century in France. Visitors can admire its magnificent statues, paintings, and stained-glass windows. Admission is free and the cathedral is open all year round, generally from 8:30 AM to 5:30 PM or 6:30 PM depending on the season. It is located in the heart of the city, making it the ideal starting point for our walk.",
+        "tips": "",
+        "tipsEN": "",
+        "src": [
+          "UNESCO: Amiens Cathedral",
+          "Official site cathedrale-amiens.fr"
+        ],
+        "maps": "https://maps.google.com/?q=49.89449,2.29587"
+      },
+      {
+        "id": "ami-2",
+        "name": "Quartiere Saint-Leu",
+        "nameEN": "Quartier Saint-Leu",
+        "cat": "cultura",
+        "lat": 49.89698,
+        "lng": 2.30381,
+        "short": "Un affascinante quartiere medievale con strade acciottolate e case colorate lungo i canali.",
+        "shortEN": "A charming medieval district with cobblestone streets and colorful houses along the canals.",
+        "desc": "Il Quartiere Saint-Leu è il cuore storico e pittoresco di Amiens, spesso chiamato la 'Piccola Venezia del Nord'. Questo affascinante quartiere medievale è caratterizzato da strette strade acciottolate fiancheggiate da case colorate con persiane, situate lungo una rete di canali. È il luogo perfetto per passeggiare, con numerosi caffè, ristoranti e negozi di artigianato locale. L'area è sempre accessibile e offre un'atmosfera vivace sia di giorno che di sera.",
+        "descEN": "The Quartier Saint-Leu is the historic and picturesque heart of Amiens, often called the 'Little Venice of the North'. This charming medieval district features narrow cobblestone streets lined with colorful shuttered houses situated along a network of canals. It is the perfect place to stroll, with numerous cafes, restaurants, and local craft shops. The area is always accessible and offers a lively atmosphere both day and night.",
+        "tips": "",
+        "tipsEN": "",
+        "src": [
+          "Amiens Tourisme: Le quartier Saint-Leu",
+          "Wikipedia: Saint-Leu (Amiens)"
+        ],
+        "maps": "https://maps.google.com/?q=49.89698,2.30381"
+      },
+      {
+        "id": "ami-3",
+        "name": "Parco Saint-Pierre",
+        "nameEN": "Parc Saint-Pierre",
+        "cat": "natura",
+        "lat": 49.89898,
+        "lng": 2.30795,
+        "short": "Un vasto parco verde nel cuore della città, ideale per il relax e le attività in famiglia.",
+        "shortEN": "A vast green park in the heart of the city, ideal for relaxation and family activities.",
+        "desc": "Il Parco Saint-Pierre è uno spazio verde di 22 ettari situato tra il quartiere Saint-Leu e gli hortillonnages. Questo parco pluripremiato offre un ambiente tranquillo con laghetti, percorsi pedonali e aree gioco per bambini, rendendolo perfetto per una pausa rilassante. L'ingresso è gratuito e il parco è aperto tutti i giorni, offrendo un facile accesso alla natura a pochi passi dal centro città. È un luogo molto amato sia dai residenti che dai turisti.",
+        "descEN": "Parc Saint-Pierre is a 22-hectare green space located between the Saint-Leu neighborhood and the hortillonnages. This award-winning park offers a peaceful environment with ponds, walking paths, and children's play areas, making it perfect for a relaxing break. Admission is free and the park is open every day, providing easy access to nature just a short walk from the city center. It is a beloved spot for both locals and tourists.",
+        "tips": "",
+        "tipsEN": "",
+        "src": [
+          "Wikipedia: Amiens",
+          "Amiens Tourisme: Parks and gardens"
+        ],
+        "maps": "https://maps.google.com/?q=49.89898,2.30795"
+      },
+      {
+        "id": "ami-4",
+        "name": "Museo della Piccardia",
+        "nameEN": "Musée de Picardie",
+        "cat": "cultura",
+        "lat": 49.89046,
+        "lng": 2.29457,
+        "short": "Spesso chiamato il 'Piccolo Louvre', ospita una ricca collezione di arte e archeologia.",
+        "shortEN": "Often called the 'Little Louvre', it houses a rich collection of art and archaeology.",
+        "desc": "Il Museo della Piccardia è uno dei più bei musei di provincia in Francia, costruito tra il 1855 e il 1867. L'edificio stesso è un capolavoro architettonico che ospita vaste collezioni che spaziano dall'archeologia alle belle arti. Il museo è aperto dal martedì alla domenica (chiuso il lunedì), generalmente dalle 9:30 alle 18:00, con orari ridotti nel fine settimana. I biglietti d'ingresso sono a pagamento, ma offrono l'accesso a un vero e proprio viaggio attraverso il tempo e le arti.",
+        "descEN": "The Musée de Picardie is one of the finest provincial museums in France, built between 1855 and 1867. The building itself is an architectural masterpiece that houses vast collections ranging from archaeology to fine arts. The museum is open from Tuesday to Sunday (closed on Mondays), generally from 9:30 AM to 6:00 PM, with adjusted hours on weekends. Admission tickets are required, but they offer access to a true journey through time and the arts.",
+        "tips": "",
+        "tipsEN": "",
+        "src": [
+          "Structurae: Musée de Picardie",
+          "Amiens Métropole: Infos pratiques"
+        ],
+        "maps": "https://maps.google.com/?q=49.89046,2.29457"
+      },
+      {
+        "id": "ami-5",
+        "name": "Casa di Jules Verne",
+        "nameEN": "Maison de Jules Verne",
+        "cat": "cultura",
+        "lat": 49.8885,
+        "lng": 2.2975,
+        "short": "La casa storica dove il celebre scrittore visse e scrisse molte delle sue opere.",
+        "shortEN": "The historic house where the famous writer lived and wrote many of his works.",
+        "desc": "La Casa di Jules Verne, situata in 2 rue Charles Dubois, è la residenza dove il famoso autore visse dal 1882 al 1900. Oggi è una casa-museo che permette ai visitatori di esplorare l'universo dello scrittore attraverso le stanze in cui ha vissuto e lavorato. Il museo è aperto tutti i giorni tranne il martedì, solitamente dalle 10:00 alle 12:30 e dalle 14:00 alle 18:30. È un'attrazione imperdibile per gli amanti della letteratura e offre un'esperienza immersiva nella vita di Verne.",
+        "descEN": "The Maison de Jules Verne, located at 2 rue Charles Dubois, is the residence where the famous author lived from 1882 to 1900. Today it is a house museum that allows visitors to explore the writer's universe through the rooms where he lived and worked. The museum is open every day except Tuesday, usually from 10:00 AM to 12:30 PM and from 2:00 PM to 6:30 PM. It is a must-visit attraction for literature lovers and offers an immersive experience into Verne's life.",
+        "tips": "",
+        "tipsEN": "",
+        "src": [
+          "Somme Tourisme: Jules Verne in Amiens",
+          "Amiens Tourisme: Maison de Jules Verne"
+        ],
+        "maps": "https://maps.google.com/?q=49.8885,2.2975"
+      }
+    ]
+  },
   "sansebastian": {
     "city": "San Sebastián",
     "cityEN": "San Sebastián",
@@ -1127,6 +2012,117 @@
       }
     ]
   },
+  "palencia": {
+    "city": "Palencia",
+    "cityEN": "Palencia",
+    "country": "Spagna",
+    "countryEN": "Spain",
+    "flag": "🇪🇸",
+    "intro": "Scopri Palencia, una gemma nascosta della Spagna, con questo itinerario a piedi. Esplora la sua maestosa cattedrale, le piazze storiche e i parchi incantevoli in mezza giornata.",
+    "introEN": "Discover Palencia, a hidden gem of Spain, with this walking itinerary. Explore its majestic cathedral, historic squares, and charming parks in a half-day.",
+    "center": [
+      42.0133,
+      -4.5313
+    ],
+    "zoom": 14,
+    "stops": [
+      {
+        "id": "pal-1",
+        "name": "Cristo del Otero",
+        "nameEN": "Christ of the Knoll",
+        "cat": "cultura",
+        "lat": 42.02833,
+        "lng": -4.52944,
+        "short": "Ammira una delle statue di Cristo più alte del mondo che domina la città.",
+        "shortEN": "Admire one of the tallest Christ statues in the world overlooking the city.",
+        "desc": "Il Cristo del Otero è un'imponente scultura alta 20 metri, simbolo della città di Palencia. Realizzata dallo scultore Victorio Macho, è una delle statue di Cristo più grandi al mondo. Si trova su una collina a circa 3 km dal centro, offrendo viste panoramiche spettacolari. È possibile raggiungere quasi la cima in auto o a piedi.",
+        "descEN": "The Cristo del Otero is an impressive 20-meter-high sculpture and a symbol of the city of Palencia. Created by the sculptor Victorio Macho, it is one of the largest Christ statues in the world. It is located on a hill about 3 km from the center, offering spectacular panoramic views. You can reach almost the top by car or on foot.",
+        "tips": "",
+        "tipsEN": "",
+        "src": [
+          "Wikipedia: Cristo del Otero",
+          "Tripadvisor: Cristo del Otero"
+        ],
+        "maps": "https://maps.google.com/?q=42.02833,-4.52944"
+      },
+      {
+        "id": "pal-2",
+        "name": "Cattedrale di Palencia",
+        "nameEN": "Palencia Cathedral",
+        "cat": "cultura",
+        "lat": 42.01087,
+        "lng": -4.53444,
+        "short": "Visita la terza cattedrale più grande della Spagna, un capolavoro gotico.",
+        "shortEN": "Visit the third largest cathedral in Spain, a Gothic masterpiece.",
+        "desc": "La Cattedrale di San Antolín è un imponente edificio in stile gotico, la terza cattedrale più grande della Spagna per superficie. Dedicata a Sant'Antonino di Pamiers, vanta la navata centrale più lunga del paese. L'ingresso costa circa 7 euro e permette di esplorare la magnifica architettura interna ed esterna. Si trova in Plaza de la Inmaculada.",
+        "descEN": "The Cathedral of San Antolín is an imposing Gothic-style building, the third largest cathedral in Spain by area. Dedicated to Saint Antoninus of Pamiers, it boasts the longest central nave in the country. Admission is around €7 and allows you to explore the magnificent interior and exterior architecture. It is located in Plaza de la Inmaculada.",
+        "tips": "",
+        "tipsEN": "",
+        "src": [
+          "Wikipedia: Palencia Cathedral",
+          "Spain.info: Palencia Cathedral"
+        ],
+        "maps": "https://maps.google.com/?q=42.01087,-4.53444"
+      },
+      {
+        "id": "pal-3",
+        "name": "Plaza Mayor",
+        "nameEN": "Plaza Mayor",
+        "cat": "cultura",
+        "lat": 42.01071,
+        "lng": -4.53273,
+        "short": "Rilassati nella piazza principale della città, circondata da edifici storici.",
+        "shortEN": "Relax in the city's main square, surrounded by historic buildings.",
+        "desc": "La Plaza Mayor di Palencia è il cuore pulsante della città, facilmente raggiungibile da Calle Mayor. Qui si trovano il Municipio e il monumento a Berruguete. La piazza è circondata da vari ristoranti e caffè, rendendola il luogo ideale per una pausa. È un tipico esempio di piazza spagnola, perfetta per osservare la vita locale.",
+        "descEN": "The Plaza Mayor of Palencia is the beating heart of the city, easily accessible from Calle Mayor. Here you will find the Town Hall and the monument to Berruguete. The square is surrounded by various restaurants and cafes, making it the ideal place for a break. It is a typical example of a Spanish square, perfect for people-watching.",
+        "tips": "",
+        "tipsEN": "",
+        "src": [
+          "Tripadvisor: Plaza Mayor de Palencia",
+          "Mapcarta: Plaza Mayor of Palencia"
+        ],
+        "maps": "https://maps.google.com/?q=42.01071,-4.53273"
+      },
+      {
+        "id": "pal-4",
+        "name": "Mercado de Abastos",
+        "nameEN": "Mercado de Abastos",
+        "cat": "cibo",
+        "lat": 42.01048,
+        "lng": -4.53133,
+        "short": "Esplora il mercato tradizionale per scoprire i prodotti locali.",
+        "shortEN": "Explore the traditional market to discover local products.",
+        "desc": "Il Mercado de Abastos è il mercato tradizionale di Palencia, situato in Calle Felipe Prieto, a soli 100 metri a est di Plaza Mayor. Progettato nel 1895 dall'architetto Juan Agapito y Revilla, è un luogo vivace dove acquistare prodotti freschi e locali. È un'ottima tappa per immergersi nella cultura culinaria della regione. Il mercato è aperto dal 1895 e continua a servire la comunità.",
+        "descEN": "The Mercado de Abastos is the traditional market of Palencia, located on Calle Felipe Prieto, just 100 meters east of Plaza Mayor. Designed in 1895 by the architect Juan Agapito y Revilla, it is a lively place to buy fresh, local products. It is a great stop to immerse yourself in the culinary culture of the region. The market has been open since 1895 and continues to serve the community.",
+        "tips": "",
+        "tipsEN": "",
+        "src": [
+          "Mapcarta: Mercado de Abastos, Palencia",
+          "Turismo de Palencia: Food Market"
+        ],
+        "maps": "https://maps.google.com/?q=42.01048,-4.53133"
+      },
+      {
+        "id": "pal-5",
+        "name": "Parque del Salón de Isabel II",
+        "nameEN": "Isabel II Hall Park",
+        "cat": "natura",
+        "lat": 42.00631,
+        "lng": -4.52838,
+        "short": "Passeggia in questo parco romantico del XIX secolo nel centro della città.",
+        "shortEN": "Stroll through this 19th-century romantic park in the city center.",
+        "desc": "Il Parque del Salón de Isabel II è un parco romantico di 30.000 metri quadrati situato nel centro di Palencia. Creato a metà del XIX secolo sul sito di un antico convento, presenta un chiosco della musica in ghisa del 1911, parterre formali e lunghi viali alberati. È il luogo perfetto per una passeggiata rilassante dopo aver esplorato la città. Si trova a pochi passi dalla piazza principale.",
+        "descEN": "The Parque del Salón de Isabel II is a 30,000-square-meter romantic park located in the center of Palencia. Created in the mid-19th century on the site of a former convent, it features a 1911 cast-iron bandstand, formal parterres, and long alleys of plane trees. It is the perfect place for a relaxing stroll after exploring the city. It is located just a few steps from the main square.",
+        "tips": "",
+        "tipsEN": "",
+        "src": [
+          "Wikipedia: Salón de Isabel II",
+          "Turismo de Palencia: Isabel II Hall Park"
+        ],
+        "maps": "https://maps.google.com/?q=42.00631,-4.52838"
+      }
+    ]
+  },
   "genova": {
     "city": "Genova",
     "cityEN": "Genoa",
@@ -1239,7 +2235,6 @@
     ]
   }
 };
-
   // Expose globally (consistent with the app's other data modules)
   window.CITY_ITINERARIES = CITY_ITINERARIES;
 })();
