@@ -1,31 +1,31 @@
-/* days-renderer.js â€” Multi-view renderer for DAYS_DATA (Option 4 architecture)
+/* days-renderer.js — Multi-view renderer for DAYS_DATA (Option 4 architecture)
  * Generates HTML for: Itinerario (per-day), Cibo (per-country), Cultura, Luoghi
  * Depends on: days-data.js (DAYS_DATA global)
- * v1.46 â€” Semantic color classes + redesigned section order
+ * v1.46 — Semantic color classes + redesigned section order
  */
 /* eslint-disable */
 
 var DaysRenderer = (function() {
   'use strict';
 
-  // â”€â”€â”€ COUNTRY / REGION LABELS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ─── COUNTRY / REGION LABELS ───────────────────────────────────────
   var COUNTRY_LABELS_IT = {
-    AT: "Austria ðŸ‡¦ðŸ‡¹", PL: "Polonia ðŸ‡µðŸ‡±", LT: "Lituania ðŸ‡±ðŸ‡¹", LV: "Lettonia ðŸ‡±ðŸ‡»",
-    EE: "Estonia ðŸ‡ªðŸ‡ª", FI: "Finlandia ðŸ‡«ðŸ‡®", SE: "Svezia ðŸ‡¸ðŸ‡ª", NO: "Norvegia ðŸ‡³ðŸ‡´",
-    DK: "Danimarca ðŸ‡©ðŸ‡°", DE: "Germania ðŸ‡©ðŸ‡ª", NL: "Paesi Bassi ðŸ‡³ðŸ‡±", BE: "Belgio ðŸ‡§ðŸ‡ª",
-    FR: "Francia ðŸ‡«ðŸ‡·", ES: "Spagna ðŸ‡ªðŸ‡¸", IT: "Italia ðŸ‡®ðŸ‡¹", CZ: "Rep. Ceca ðŸ‡¨ðŸ‡ÿ"
+    AT: "Austria 🇦🇹", PL: "Polonia 🇵🇱", LT: "Lituania 🇱🇹", LV: "Lettonia 🇱🇻",
+    EE: "Estonia 🇪🇪", FI: "Finlandia 🇫🇮", SE: "Svezia 🇸🇪", NO: "Norvegia 🇳🇴",
+    DK: "Danimarca 🇩🇰", DE: "Germania 🇩🇪", NL: "Paesi Bassi 🇳🇱", BE: "Belgio 🇧🇪",
+    FR: "Francia 🇫🇷", ES: "Spagna 🇪🇸", IT: "Italia 🇮🇹", CZ: "Rep. Ceca 🇨🇿"
   };
   var COUNTRY_LABELS_EN = {
-    AT: "Austria ðŸ‡¦ðŸ‡¹", PL: "Poland ðŸ‡µðŸ‡±", LT: "Lithuania ðŸ‡±ðŸ‡¹", LV: "Latvia ðŸ‡±ðŸ‡»",
-    EE: "Estonia ðŸ‡ªðŸ‡ª", FI: "Finland ðŸ‡«ðŸ‡®", SE: "Sweden ðŸ‡¸ðŸ‡ª", NO: "Norway ðŸ‡³ðŸ‡´",
-    DK: "Denmark ðŸ‡©ðŸ‡°", DE: "Germany ðŸ‡©ðŸ‡ª", NL: "Netherlands ðŸ‡³ðŸ‡±", BE: "Belgium ðŸ‡§ðŸ‡ª",
-    FR: "France ðŸ‡«ðŸ‡·", ES: "Spain ðŸ‡ªðŸ‡¸", IT: "Italy ðŸ‡®ðŸ‡¹", CZ: "Czechia ðŸ‡¨ðŸ‡ÿ"
+    AT: "Austria 🇦🇹", PL: "Poland 🇵🇱", LT: "Lithuania 🇱🇹", LV: "Latvia 🇱🇻",
+    EE: "Estonia 🇪🇪", FI: "Finland 🇫🇮", SE: "Sweden 🇸🇪", NO: "Norway 🇳🇴",
+    DK: "Denmark 🇩🇰", DE: "Germany 🇩🇪", NL: "Netherlands 🇳🇱", BE: "Belgium 🇧🇪",
+    FR: "France 🇫🇷", ES: "Spain 🇪🇸", IT: "Italy 🇮🇹", CZ: "Czechia 🇨🇿"
   };
   // v4.08 FIX: _isEN must be defined BEFORE COUNTRY_LABELS (was hoisted as undefined)
   var _isEN = (document.documentElement.lang === 'en' || window.location.pathname.indexOf('_en') !== -1);
   var COUNTRY_LABELS = _isEN ? COUNTRY_LABELS_EN : COUNTRY_LABELS_IT;
 
-  // âââ HELPERS ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+  // ——— HELPERS ——————————————————————————————————————————————————————————
   // v2.11 FIX: Proper HTML escaping to prevent XSS if data ever comes from user input
   function esc(s) {
     if (!s) return '';
@@ -34,7 +34,7 @@ var DaysRenderer = (function() {
 
   function mapsLink(url, label) {
     if (!url) return '';
-    return ' <a href="' + url + '" target="_blank" rel="noopener">ðŸ" ' + (label || 'Maps') + '</a>';
+    return ' <a href="' + url + '" target="_blank" rel="noopener">🔗 ' + (label || 'Maps') + '</a>';
   }
 
   // v3.74: Use D prefix in English, G in Italian
@@ -43,9 +43,9 @@ var DaysRenderer = (function() {
     return id.toUpperCase();
   }
 
-  // â”€â”€â”€ ITINERARIO VIEW (per-day, full content) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-  // Section order: route â†’ meteo â†’ narrative â†’ highlights â†’ kids â†’
-  //               trekking â†’ fishing â†’ sport â†’ food â†’ events â†’ alternatives â†’ practical
+  // ─── ITINERARIO VIEW (per-day, full content) ──────────────────────
+  // Section order: route → meteo → narrative → highlights → kids →
+  //               trekking → fishing → sport → food → events → alternatives → practical
 
   function renderDayFull(day) {
     var _title = (_isEN && day.titleEN) ? day.titleEN : day.title;
@@ -83,7 +83,7 @@ var DaysRenderer = (function() {
       html += '<div class="dic dic-poi">';
       day.highlights.forEach(function(h) {
         html += '<p>' + h.icon + ' <strong>' + ((_isEN && h.titleEN) ? h.titleEN : h.title) + '</strong>';
-        if (h.text) html += ' â€” ' + h.text;
+        if (h.text) html += ' — ' + h.text;
         if (h.maps) html += mapsLink(h.maps);
         html += '</p>';
       });
@@ -93,11 +93,11 @@ var DaysRenderer = (function() {
     // 5. KIDS
     if (day.kids && day.kids.length) {
       html += '<div class="dic dic-kids">';
-      html += '<p>ðŸ‘¶ <strong>' + (_isEN ? 'Kids:' : 'Bambini:') + '</strong> ';
+      html += '<p>👶 <strong>' + (_isEN ? 'Kids:' : 'Bambini:') + '</strong> ';
       var kidParts = [];
       day.kids.forEach(function(k) {
         var part = k.name;
-        if (k.desc) part += ' â€” ' + k.desc;
+        if (k.desc) part += ' — ' + k.desc;
         if (k.maps) part += mapsLink(k.maps);
         kidParts.push(part);
       });
@@ -106,8 +106,8 @@ var DaysRenderer = (function() {
 
     // 6. TREKKING (summary + detail)
     if (day.trekking) {
-      html += '<div class="dic dic-trek"><p>ðŸ¥¾ <strong>Trekking:</strong> ' + day.trekking.text;
-      if (day.trekking.link) html += ' â†’ <a href="' + day.trekking.link + '">dettagli sentieri</a>';
+      html += '<div class="dic dic-trek"><p>🥾 <strong>Trekking:</strong> ' + day.trekking.text;
+      if (day.trekking.link) html += ' → <a href="' + day.trekking.link + '">dettagli sentieri</a>';
       html += '</p>';
       // Detailed treks for this day
       if (day.trekkingDetail && day.trekkingDetail.treks) {
@@ -115,7 +115,7 @@ var DaysRenderer = (function() {
         day.trekkingDetail.treks.forEach(function(t) {
           html += '<tr><td><strong>' + t.name + '</strong>';
           if (t.maps) html += mapsLink(t.maps);
-          html += '</td><td>' + (t.type === 'family' ? 'ðŸ‘¨â€ðŸ‘©â€ðŸ‘§â€ðŸ‘¦' : 'ðŸƒ') + '</td>';
+          html += '</td><td>' + (t.type === 'family' ? '👨‍👩‍👧‍👦' : '🏃') + '</td>';
           html += '<td>' + t.duration + '</td>';
           html += '<td>' + (t.note || '') + '</td></tr>';
         });
@@ -125,12 +125,12 @@ var DaysRenderer = (function() {
     } else if (day.trekkingDetail && day.trekkingDetail.treks) {
       // Day has detail but no summary trekking field
       html += '<div class="dic dic-trek">';
-      html += '<p>ðŸ¥¾ <strong>' + (_isEN ? 'Trekking â€” ' : 'Trekking â€” ') + '' + day.trekkingDetail.zone + ':</strong></p>';
+      html += '<p>🥾 <strong>' + (_isEN ? 'Trekking — ' : 'Trekking — ') + '' + day.trekkingDetail.zone + ':</strong></p>';
       html += '<table class="trek-detail-table"><thead><tr><th>' + (_isEN ? 'Trail' : 'Sentiero') + '</th><th>' + (_isEN ? 'Type' : 'Tipo') + '</th><th>' + (_isEN ? 'Duration' : 'Durata') + '</th><th>' + (_isEN ? 'Notes' : 'Note') + '</th></tr></thead><tbody>';
       day.trekkingDetail.treks.forEach(function(t) {
         html += '<tr><td><strong>' + t.name + '</strong>';
         if (t.maps) html += mapsLink(t.maps);
-        html += '</td><td>' + (t.type === 'family' ? 'ðŸ‘¨â€ðŸ‘©â€ðŸ‘§â€ðŸ‘¦' : 'ðŸƒ') + '</td>';
+        html += '</td><td>' + (t.type === 'family' ? '👨‍👩‍👧‍👦' : '🏃') + '</td>';
         html += '<td>' + t.duration + '</td>';
         html += '<td>' + (t.note || '') + '</td></tr>';
       });
@@ -141,14 +141,14 @@ var DaysRenderer = (function() {
     if (day.fishing || day.fishingDetail) {
       html += '<div class="dic dic-fish">';
       if (day.fishing) {
-        html += '<p>ðŸŽ£ <strong>' + (_isEN ? 'Fishing:' : 'Pesca:') + '</strong> ' + day.fishing + '</p>';
+        html += '<p>🎣 <strong>' + (_isEN ? 'Fishing:' : 'Pesca:') + '</strong> ' + day.fishing + '</p>';
       }
       if (day.fishingDetail) {
-        if (!day.fishing) html += '<p>ðŸŽ£ <strong>' + (_isEN ? 'Fishing â€” ' : 'Pesca â€” ') + '' + day.fishingDetail.zone + '</strong></p>';
+        if (!day.fishing) html += '<p>🎣 <strong>' + (_isEN ? 'Fishing — ' : 'Pesca — ') + '' + day.fishingDetail.zone + '</strong></p>';
         html += '<p><em>Licenza:</em> ' + day.fishingDetail.license + '</p>';
         day.fishingDetail.spots.forEach(function(s) {
-          html += '<p>ðŸŽ£ <strong>' + s.name + ':</strong> ' + s.text;
-          if (s.link) html += ' â†’ <a href="' + s.link + '" target="_blank" rel="noopener">' + (s.linkLabel || 'info') + '</a>';
+          html += '<p>🎣 <strong>' + s.name + ':</strong> ' + s.text;
+          if (s.link) html += ' → <a href="' + s.link + '" target="_blank" rel="noopener">' + (s.linkLabel || 'info') + '</a>';
           html += '</p>';
         });
       }
@@ -158,8 +158,8 @@ var DaysRenderer = (function() {
     // 8. SPORT / SCOOTER / WATER + RENTALS
     if (day.scooter || day.waterSports || (day.rentals && day.rentals.length)) {
       html += '<div class="dic dic-sport">';
-      if (day.scooter) html += '<p>ðŸ›´ <strong>' + (_isEN ? 'Scooters:' : 'Monopattini:') + '</strong> ' + day.scooter + '</p>';
-      if (day.waterSports) html += '<p>ðŸš£ <strong>' + (_isEN ? 'Water Sports:' : 'Sport acquatici:') + '</strong> ' + day.waterSports + '</p>';
+      if (day.scooter) html += '<p>🛴 <strong>' + (_isEN ? 'Scooters:' : 'Monopattini:') + '</strong> ' + day.scooter + '</p>';
+      if (day.waterSports) html += '<p>🚣 <strong>' + (_isEN ? 'Water Sports:' : 'Sport acquatici:') + '</strong> ' + day.waterSports + '</p>';
       if (day.rentals && day.rentals.length) {
         day.rentals.forEach(function(r) {
           html += '<p>' + r.icon + ' <strong>' + ((_isEN && r.titleEN) ? r.titleEN : r.title) + ':</strong> ' + r.text + '</p>';
@@ -174,7 +174,7 @@ var DaysRenderer = (function() {
       day.minerals.forEach(function(m) {
         html += '<p>' + m.icon + ' <strong>' + m.title + ':</strong> ' + m.text;
         if (m.info) html += '<br><em>' + m.info + '</em>';
-        if (m.link) html += ' â†’ <a href="' + m.link + '" target="_blank" rel="noopener">' + (m.linkLabel || 'info') + '</a>';
+        if (m.link) html += ' → <a href="' + m.link + '" target="_blank" rel="noopener">' + (m.linkLabel || 'info') + '</a>';
         if (m.maps) html += mapsLink(m.maps);
         html += '</p>';
       });
@@ -186,19 +186,19 @@ var DaysRenderer = (function() {
       html += '<div class="dic dic-food">';
       day.food.forEach(function(f) {
         if (f.type === 'street') {
-          html += '<p>ðŸŒ­ <strong>' + ((_isEN && f.titleEN) ? f.titleEN : f.title) + ':</strong> ' + f.text + '</p>';
+          html += '<p>🌭 <strong>' + ((_isEN && f.titleEN) ? f.titleEN : f.title) + ':</strong> ' + f.text + '</p>';
         } else if (f.type === 'market') {
-          html += '<p>ðŸ›’ <strong>' + ((_isEN && f.titleEN) ? f.titleEN : f.title) + ':</strong> ' + f.text;
+          html += '<p>🛒 <strong>' + ((_isEN && f.titleEN) ? f.titleEN : f.title) + ':</strong> ' + f.text;
           if (f.schedule) html += ' (' + f.schedule + ')';
           if (f.maps) html += mapsLink(f.maps);
           html += '</p>';
         } else if (f.type === 'flea') {
-          html += '<p>ðŸ§³ <strong>' + ((_isEN && f.titleEN) ? f.titleEN : f.title) + ':</strong> ' + f.text;
+          html += '<p>🧳 <strong>' + ((_isEN && f.titleEN) ? f.titleEN : f.title) + ':</strong> ' + f.text;
           if (f.schedule) html += ' (' + f.schedule + ')';
           if (f.maps) html += mapsLink(f.maps);
           html += '</p>';
         } else {
-          html += '<p>ðŸ½ï¸ <strong>' + ((_isEN && f.titleEN) ? f.titleEN : f.title) + ':</strong> ' + f.text + '</p>';
+          html += '<p>🍽️ <strong>' + ((_isEN && f.titleEN) ? f.titleEN : f.title) + ':</strong> ' + f.text + '</p>';
         }
       });
       html += '</div>';
@@ -208,8 +208,8 @@ var DaysRenderer = (function() {
     if (day.events && day.events.length) {
       html += '<div class="dic dic-event">';
       day.events.forEach(function(e) {
-        html += '<p>ðŸŽ‰ <strong>' + ((_isEN && e.titleEN) ? e.titleEN : e.title) + '</strong>';
-        if (e.text) html += ' â€” ' + e.text;
+        html += '<p>🎉 <strong>' + ((_isEN && e.titleEN) ? e.titleEN : e.title) + '</strong>';
+        if (e.text) html += ' — ' + e.text;
         if (e.maps) html += mapsLink(e.maps);
         html += '</p>';
       });
@@ -249,7 +249,7 @@ var DaysRenderer = (function() {
 
     // 11. ALTERNATIVES
     if (day.alternatives && day.alternatives.length) {
-      html += '<p>ðŸ’¡ <strong>' + (_isEN ? 'Alternatives:' : 'Alternative:') + '</strong></p><ul>';
+      html += '<p>💡 <strong>' + (_isEN ? 'Alternatives:' : 'Alternative:') + '</strong></p><ul>';
       day.alternatives.forEach(function(a) {
         html += '<li>' + a.text + '</li>';
       });
@@ -266,11 +266,11 @@ var DaysRenderer = (function() {
 
   function renderPractical(p) {
     var html = '<div class="dic dic-practical">';
-    html += '<p class="dic-practical-header">ðŸ“‹ <strong>' + (_isEN ? 'Practical Info' : 'Info Pratiche') + '</strong></p>';
+    html += '<p class="dic-practical-header">📋 <strong>' + (_isEN ? 'Practical Info' : 'Info Pratiche') + '</strong></p>';
 
     // Parking / overnight
     if (p.parking && p.parking.length) {
-      html += '<p>ðŸ…¿ï¸ <strong>' + (_isEN ? 'Overnight:' : 'Pernottamento:') + '</strong> ';
+      html += '<p>🅿️ <strong>' + (_isEN ? 'Overnight:' : 'Pernottamento:') + '</strong> ';
       var parts = [];
       p.parking.forEach(function(pk) {
         var s = pk.name;
@@ -285,12 +285,12 @@ var DaysRenderer = (function() {
 
     // Fuel
     if (p.fuel) {
-      html += '<p>â›½ <strong>' + (_isEN ? 'Fuel:' : 'Carburante:') + '</strong> ' + p.fuel + '</p>';
+      html += '<p>⛽ <strong>' + (_isEN ? 'Fuel:' : 'Carburante:') + '</strong> ' + p.fuel + '</p>';
     }
 
     // Grocery
     if (p.grocery && p.grocery.length) {
-      html += '<p>ðŸ›’ <strong>' + (_isEN ? 'Groceries:' : 'Spesa:') + '</strong> ';
+      html += '<p>🛒 <strong>' + (_isEN ? 'Groceries:' : 'Spesa:') + '</strong> ';
       var gParts = [];
       p.grocery.forEach(function(g) {
         var s = g.name;
@@ -303,21 +303,21 @@ var DaysRenderer = (function() {
 
     // Laundry
     if (p.laundry) {
-      html += '<p>ðŸ§º <strong>' + (_isEN ? 'Laundry:' : 'Lavanderia:') + '</strong> ' + p.laundry.text;
+      html += '<p>🧺 <strong>' + (_isEN ? 'Laundry:' : 'Lavanderia:') + '</strong> ' + p.laundry.text;
       if (p.laundry.maps) html += mapsLink(p.laundry.maps);
       html += '</p>';
     }
 
     // Camper services
     if (p.camper) {
-      html += '<p>ðŸ’§ <strong>' + (_isEN ? 'Camper services:' : 'Servizi camper:') + '</strong> ' + p.camper.text;
+      html += '<p>💧 <strong>' + (_isEN ? 'Camper services:' : 'Servizi camper:') + '</strong> ' + p.camper.text;
       if (p.camper.maps) html += mapsLink(p.camper.maps);
       html += '</p>';
     }
 
     // Emergency
     if (p.emergency) {
-      html += '<p>ðŸ¥ <strong>' + (_isEN ? 'Emergencies:' : 'Emergenze:') + '</strong> ' + p.emergency.name;
+      html += '<p>🚑 <strong>' + (_isEN ? 'Emergencies:' : 'Emergenze:') + '</strong> ' + p.emergency.name;
       if (p.emergency.maps) html += mapsLink(p.emergency.maps);
       if (p.emergency.phones) html += ' · Tel: ' + p.emergency.phones;
       html += '</p>';
@@ -325,14 +325,14 @@ var DaysRenderer = (function() {
 
     // Budget
     if (p.budget) {
-      html += '<p>ðŸ’° <strong>Budget:</strong> ' + p.budget + '</p>';
+      html += '<p>💰 <strong>Budget:</strong> ' + p.budget + '</p>';
     }
 
     html += '</div>';
     return html;
   }
 
-  // â”€â”€â”€ CIBO VIEW (per-country) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ─── CIBO VIEW (per-country) ──────────────────────────────────────
   function renderFoodByCountry() {
     var byCountry = {};
     DAYS_DATA.forEach(function(day) {
@@ -344,7 +344,7 @@ var DaysRenderer = (function() {
       });
     });
 
-    var html = '<h2>' + (_isEN ? 'ðŸ Food Guide â€” by Country' : 'ðŸ Guida Gastronomica â€” per Paese') + '</h2>';
+    var html = '<h2>' + (_isEN ? '🍽️ Food Guide — by Country' : '🍽️ Guida Gastronomica — per Paese') + '</h2>';
     Object.keys(byCountry).forEach(function(country) {
       html += '<h3>' + (COUNTRY_LABELS[country] || country) + '</h3>';
       var items = byCountry[country];
@@ -356,13 +356,13 @@ var DaysRenderer = (function() {
       var others = items.filter(function(i) { return !i.food.type || (i.food.type !== 'street' && i.food.type !== 'market' && i.food.type !== 'flea'); });
 
       if (streets.length) {
-        html += '<h4>' + (_isEN ? 'ðŸŒ­ Street Food' : 'ðŸŒ­ Street Food') + '</h4>';
+        html += '<h4>' + (_isEN ? '🌭 Street Food' : '🌭 Street Food') + '</h4>';
         streets.forEach(function(i) {
           html += '<div class="dic dic-food"><p><strong>' + ((_isEN && i.food.titleEN) ? i.food.titleEN : i.food.title) + '</strong> <span class="day-badge">' + dayLabel(i.day.id) + '</span><br>' + i.food.text + '</p></div>';
         });
       }
       if (markets.length) {
-        html += '<h4>' + (_isEN ? 'ðŸ›’ Markets' : 'ðŸ›’ Mercati') + '</h4>';
+        html += '<h4>' + (_isEN ? '🛒 Markets' : '🛒 Mercati') + '</h4>';
         markets.forEach(function(i) {
           html += '<div class="dic dic-food"><p><strong>' + ((_isEN && i.food.titleEN) ? i.food.titleEN : i.food.title) + '</strong> <span class="day-badge">' + dayLabel(i.day.id) + '</span><br>' + i.food.text;
           if (i.food.schedule) html += ' <em>(' + i.food.schedule + ')</em>';
@@ -371,7 +371,7 @@ var DaysRenderer = (function() {
         });
       }
       if (fleas.length) {
-        html += '<h4>' + (_isEN ? 'ðŸ§³ Flea Markets' : 'ðŸ§³ Mercatini delle Pulci') + '</h4>';
+        html += '<h4>' + (_isEN ? '🧳 Flea Markets' : '🧳 Mercatini delle Pulci') + '</h4>';
         fleas.forEach(function(i) {
           html += '<div class="dic dic-food"><p><strong>' + ((_isEN && i.food.titleEN) ? i.food.titleEN : i.food.title) + '</strong> <span class="day-badge">' + dayLabel(i.day.id) + '</span><br>' + i.food.text;
           if (i.food.schedule) html += ' <em>(' + i.food.schedule + ')</em>';
@@ -380,7 +380,7 @@ var DaysRenderer = (function() {
         });
       }
       if (others.length) {
-        html += '<h4>' + (_isEN ? 'ðŸ½ï¸ Restaurants & More' : 'ðŸ½ï¸ Ristoranti & Altro') + '</h4>';
+        html += '<h4>' + (_isEN ? '🍽️ Restaurants & More' : '🍽️ Ristoranti & Altro') + '</h4>';
         others.forEach(function(i) {
           html += '<div class="dic dic-food"><p><strong>' + ((_isEN && i.food.titleEN) ? i.food.titleEN : i.food.title) + '</strong> <span class="day-badge">' + dayLabel(i.day.id) + '</span><br>' + i.food.text + '</p></div>';
         });
@@ -389,7 +389,7 @@ var DaysRenderer = (function() {
     return html;
   }
 
-  // â”€â”€â”€ KIDS VIEW (per-country) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ─── KIDS VIEW (per-country) ──────────────────────────────────────
   function renderKidsByCountry() {
     var byCountry = {};
     DAYS_DATA.forEach(function(day) {
@@ -401,13 +401,13 @@ var DaysRenderer = (function() {
       });
     });
 
-    var html = '<h2>' + (_isEN ? 'ðŸ‘¶ Kids Activities â€” by Country' : 'ðŸ‘¶ AttivitÀ  Bambini â€” per Paese') + '</h2>';
+    var html = '<h2>' + (_isEN ? '👶 Kids Activities — by Country' : '👶 AttivitÀ  Bambini — per Paese') + '</h2>';
     Object.keys(byCountry).forEach(function(country) {
       html += '<h3>' + (COUNTRY_LABELS[country] || country) + '</h3>';
       html += '<ul>';
       byCountry[country].forEach(function(i) {
         html += '<li><strong>' + i.kid.name + '</strong>';
-        if (i.kid.desc) html += ' â€” ' + i.kid.desc;
+        if (i.kid.desc) html += ' — ' + i.kid.desc;
         html += ' <span class="day-badge">' + dayLabel(i.day.id) + '</span>';
         if (i.kid.maps) html += mapsLink(i.kid.maps);
         html += '</li>';
@@ -417,23 +417,23 @@ var DaysRenderer = (function() {
     return html;
   }
 
-  // â”€â”€â”€ TREKKING VIEW (all hikes) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ─── TREKKING VIEW (all hikes) ────────────────────────────────────
   function renderTrekking() {
-    var html = '<h2>' + (_isEN ? 'ðŸ¥¾ Trekking & Trails' : 'ðŸ¥¾ Trekking & Sentieri') + '</h2>';
+    var html = '<h2>' + (_isEN ? '🥾 Trekking & Trails' : '🥾 Trekking & Sentieri') + '</h2>';
     html += '<ul>';
     DAYS_DATA.forEach(function(day) {
       if (!day.trekking) return;
       html += '<li><strong>' + ((_isEN && day.trekking.titleEN) ? day.trekking.titleEN : day.trekking.title) + '</strong> <span class="day-badge">' + dayLabel(day.id) + ' · ' + day.title + '</span><br>' + day.trekking.text;
-      if (day.trekking.link) html += ' â†’ <a href="' + day.trekking.link + '">dettagli</a>';
+      if (day.trekking.link) html += ' → <a href="' + day.trekking.link + '">dettagli</a>';
       html += '</li>';
     });
     html += '</ul>';
     return html;
   }
 
-  // â”€â”€â”€ FISHING VIEW â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ─── FISHING VIEW ─────────────────────────────────────────────────
   function renderFishing() {
-    var html = '<h2>' + (_isEN ? 'ðŸŽ£ Fishing â€” Spots by Day' : 'ðŸŽ£ Pesca â€” Spot per Giorno') + '</h2>';
+    var html = '<h2>' + (_isEN ? '🎣 Fishing — Spots by Day' : '🎣 Pesca — Spot per Giorno') + '</h2>';
     html += '<ul>';
     DAYS_DATA.forEach(function(day) {
       if (!day.fishing) return;
@@ -443,9 +443,9 @@ var DaysRenderer = (function() {
     return html;
   }
 
-  // â”€â”€â”€ PRACTICAL VIEW (overnight summary) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ─── PRACTICAL VIEW (overnight summary) ───────────────────────────
   function renderOvernightSummary() {
-    var html = '<h2>' + (_isEN ? 'ðŸ…¿ï¸ Overnights â€” Summary' : 'ðŸ…¿ï¸ Pernottamenti â€” Riepilogo') + '</h2>';
+    var html = '<h2>' + (_isEN ? '🅿️ Overnights — Summary' : '🅿️ Pernottamenti — Riepilogo') + '</h2>';
     html += '<table class="overnight-table"><thead><tr><th>' + (_isEN ? 'Day' : 'Giorno') + '</th><th>' + (_isEN ? 'Place' : 'Luogo') + '</th><th>' + (_isEN ? 'Price' : 'Prezzo') + '</th><th>' + (_isEN ? 'Notes' : 'Note') + '</th></tr></thead><tbody>';
     DAYS_DATA.forEach(function(day) {
       if (!day.practical || !day.practical.parking || !day.practical.parking.length) return;
@@ -462,7 +462,7 @@ var DaysRenderer = (function() {
     return html;
   }
 
-  // â”€â”€â”€ PUBLIC API â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ─── PUBLIC API ────────────────────────────────────────────────────
   return {
     renderDay: renderDayFull,
     renderAllDays: function() {

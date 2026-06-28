@@ -5,6 +5,13 @@
 
 # Quo Vadis — Changelog
 
+## v4.11 — 2026-06-28
+Fix di codifica caratteri (mojibake) nei contenuti delle tappe.
+
+- **FIX mojibake in `days-renderer.js`**: il file conteneva testo UTF-8 interpretato erroneamente come CP1252 (es. `ðŸ"‹` invece di 📋, `â›½` invece di ⛽, bandiere e simboli corrotti) visibile nei blocchi "Info Pratiche / Practical Info", "Pernottamento", "Carburante", "Emergenze", nella guida gastronomica e nelle etichette dei paesi. Ripristinati correttamente tutti i 114 caratteri emoji e i 61 simboli/box-drawing corrotti.
+- Riparazione effettuata con decodifica inversa CP1252→UTF-8 più correzione mirata dei pochi token con byte irrecuperabili (bandiera 🇨🇿, famiglia 👨‍👩‍👧‍👦, 🍽️, 🅿️, 🚑, 🔗); verificato che lo scheletro di codice resti invariato (nessuna modifica logica) e che la sintassi JS sia valida.
+- Scansione dell'intero progetto: nessun altro file conteneva mojibake.
+
 ## v4.10 — 2026-06-28
 Interventi derivati dall'audit tecnico (priorità P0→P4). Verificate riga per riga sul codice reale; gli item già risolti in build precedenti (es. `escapeHtml` apice singolo, pulsante `wasThere` sempre visibile) sono stati confermati e non ritoccati.
 
