@@ -26,7 +26,7 @@ var messaging = firebase.messaging();
 // ─── CACHING CONFIG ───
 // ═══════════════════════════════════════════════════════════════
 
-const CACHE_NAME = 'quo-vadis-v4.11';
+const CACHE_NAME = 'quo-vadis-v4.13';
 const IMAGE_CACHE_NAME = 'quo-vadis-images-v1';
 const IMAGE_CACHE_LIMIT = 80;
 const STATIC_ASSETS = [
@@ -61,6 +61,8 @@ const STATIC_ASSETS = [
   './curiosita-data.js',
   './curiosita-scheduler.js',
   './quiz-fun.js',
+  './city-itineraries.js',
+  './city-itineraries-ui.js',
   // debug-overlay.js: rimosso — caricato on-demand solo da Admin
   // v2.70: immagini placeholder per Home offline
   './img/placeholder/bridge-coast.jpg',

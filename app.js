@@ -2321,7 +2321,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // ─── Top Bar: contextual title + back button (v3.52) ───
     var topBarTitle = document.getElementById('topBarTitle');
     var topBarBack = document.getElementById('topBarBack');
-    var _altroSubTabs = ['cibo', 'cultura', 'attivita', 'luoghi', 'riepilogo', 'piano', 'zaino', 'admin'];
+    var _altroSubTabs = ['cibo', 'cultura', 'attivita', 'luoghi', 'itinerari', 'riepilogo', 'piano', 'zaino', 'admin'];
     var _tabTitles = isEN ? {
         home: 'Quo Vadis',
         giorni: 'Itinerary',
@@ -2333,6 +2333,7 @@ document.addEventListener('DOMContentLoaded', function() {
         cultura: 'Culture',
         attivita: 'Activities',
         luoghi: 'Places',
+        itinerari: 'City itineraries',
         riepilogo: 'Summary',
         piano: 'Plan',
         zaino: 'Packing',
@@ -2348,6 +2349,7 @@ document.addEventListener('DOMContentLoaded', function() {
         cultura: 'Cultura',
         attivita: 'Attivit\u00e0',
         luoghi: 'Luoghi',
+        itinerari: 'Itinerari città',
         riepilogo: 'Riepilogo',
         piano: 'Piano',
         zaino: 'Zaino',

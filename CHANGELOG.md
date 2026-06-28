@@ -5,6 +5,26 @@
 
 # Quo Vadis — Changelog
 
+## v4.13 — 2026-06-28
+Estensione della sezione **Itinerari città** a **tutte le città principali del viaggio**: ora 11 città con itinerario a piedi completo.
+
+- **10 nuove città** aggiunte alla sezione (oltre a Vilnius): **Vienna, Varsavia, Riga, Tallinn, Trondheim, Bergen, Copenaghen, San Sebastián, Bilbao, Genova**, ordinate secondo la sequenza del viaggio.
+- Ogni città ha un itinerario a piedi di **5 tappe** (55 tappe totali) con descrizioni estese bilingui IT+EN basate solo su fonti reali (Wikipedia, UNESCO, siti ufficiali di musei/turismo), teaser, note pratiche (orari/prezzi/indirizzi) e fonti citate per ogni tappa.
+- I **chip città** in cima alla sezione permettono di passare da una città all'altra; ogni città mantiene mappa Leaflet con marker numerati, tracciato a piedi tratteggiato, popup espandibili e indicazioni multimodali (🚶/🛴/🚍).
+- Coordinate reali verificate per tutte le 55 tappe; categorie allineate alle icone dell'app.
+- Nessuna modifica al codice UI necessaria: il modulo era già multi-città; verificato il rendering in entrambe le lingue (IT/EN).
+
+## v4.12 — 2026-06-28
+Nuova sezione **Itinerari città** (Altro → Itinerari città) con la prima città completa: **Vilnius**.
+
+- **Nuova sezione "Itinerari città"**: percorsi a piedi nelle città principali del viaggio, con schede tappa espandibili (accordion "Leggi tutto / Read more") e descrizioni estese bilingui IT+EN basate solo su fonti reali (Wikipedia, UNESCO, siti ufficiali musei/turismo). Ogni tappa riporta le fonti consultate.
+- **Mappa itinerario interattiva** (Leaflet/OpenStreetMap) dedicata a ciascuna città: marker numerati in ordine di visita e **tracciato a piedi tratteggiato** che collega le tappe (guida indicativa, non navigazione stradale).
+- **Puntino blu "posizione live"**: la mappa mostra in tempo reale la posizione dell'utente (`watchPosition`), attivata all'apertura della mappa e fermata all'uscita dalla sezione.
+- **Indicazioni multimodali**: per ogni tappa tre pulsanti — 🚶 A piedi, 🛴 Monopattino, 🚍 Mezzi — che aprono Google Maps con `travelmode` walking/bicycling/transit a partire dalla posizione corrente.
+- **Popup mappa espandibili**: cliccando un marker si apre un popup con descrizione breve, "Leggi tutto" per il testo esteso e gli stessi pulsanti indicazioni.
+- **Vilnius**: itinerario completo a piedi nel centro storico UNESCO con 8 tappe (Torre di Gediminas, Giardino Bernardino, Museo dei Giocattoli, Užupis, Halės Turgus, Piazza della Cattedrale, Via Pilies, Caffè di Užupis).
+- Integrazione in entrambe le lingue (`index.html` e `index_en.html`) e nuova tile nel menu "Altro".
+
 ## v4.11 — 2026-06-28
 Fix di codifica caratteri (mojibake) nei contenuti delle tappe.
 
