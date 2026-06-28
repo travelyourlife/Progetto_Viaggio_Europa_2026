@@ -366,6 +366,10 @@
     .activity-card-name { color: #e2e8f0; }
     .activity-card-right { color: #a0aec0; }
     .activity-day-title { color: #e2e8f0; }
+    .walking-daily-toggle { background: #2d3748; border-color: #4a5568; color: #e2e8f0; }
+    .walking-daily-row { border-color: #4a5568; }
+    .walking-daily-date { color: #90cdf4; }
+    .walking-daily-info { color: #a0aec0; }
 
     /* ─── Custom checkin cards ─── */
     .custom-checkin-card { background: #2d3748; border-color: #4a5568; }
@@ -676,11 +680,6 @@
         color: #fff;
     }
     .admin-card {
-        background: var(--bg-card);
-        border-color: var(--border);
-    }
-    .chat-postcard,
-    .chat-postcard-card {
         background: var(--bg-card);
         border-color: var(--border);
     }
@@ -4135,6 +4134,49 @@ html[lang="en"] .notif-drawer-list:empty::after {
 }
 .add-km-btn:hover { background: rgba(66, 133, 244, 0.05); }
 
+/* ─── Walking daily accordion ─── */
+.walking-daily-accordion {
+  margin-top: 10px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.walking-daily-toggle {
+  display: block;
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--card-bg, #fff);
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.2s;
+}
+.walking-daily-toggle:hover { background: rgba(66, 133, 244, 0.05); }
+.walking-daily-body {
+  padding: 6px 0;
+}
+.walking-daily-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  font-size: 13px;
+  border-bottom: 1px solid var(--border);
+}
+.walking-daily-row:last-child { border-bottom: none; }
+.walking-daily-date {
+  font-weight: 700;
+  min-width: 42px;
+  color: var(--primary);
+}
+.walking-daily-info {
+  flex: 1;
+  color: var(--text-muted);
+}
+
 .manual-km-overlay {
   position: fixed; inset: 0; z-index: 2000;
   background: rgba(0,0,0,0.5);
@@ -4492,6 +4534,8 @@ html[lang="en"] .notif-drawer-list:empty::after {
   color: var(--text);
   margin: 0;
   padding: 12px 16px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
 /* Translate button per-entry */
 .diario-translate-btn {
@@ -4716,6 +4760,53 @@ html[lang="en"] .notif-drawer-list:empty::after {
   padding: 4px 0;
 }
 
+/* v4.08: "Ci siamo stati" / "We were there" */
+.diario-was-there {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+}
+.diario-was-there-btn {
+  background: var(--bg-secondary, #f1f5f9);
+  border: 1.5px solid var(--border-light, #e2e8f0);
+  border-radius: 16px;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--text-primary, #1e293b);
+}
+.diario-was-there-btn:hover {
+  background: #dbeafe;
+  border-color: #93c5fd;
+}
+.diario-was-there-btn.active {
+  background: #dbeafe;
+  border-color: #3b82f6;
+  color: #1d4ed8;
+  font-weight: 600;
+}
+.was-there-count {
+  display: inline-block;
+  background: #3b82f6;
+  color: #fff;
+  border-radius: 50%;
+  min-width: 16px;
+  height: 16px;
+  line-height: 16px;
+  text-align: center;
+  font-size: 10px;
+  font-weight: 700;
+  margin-left: 4px;
+}
+.was-there-names {
+  font-size: 11px;
+  color: var(--text-muted, #6b7280);
+}
+
 /* Entry type badge */
 .diario-entry-type {
   margin-left: auto;
@@ -4859,9 +4950,20 @@ html[lang="en"] .notif-drawer-list:empty::after {
 }
 .diario-edit-actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   margin-top: 16px;
   justify-content: flex-end;
+}
+/* v4.09: explicit publish action */
+.diario-edit-publish {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  background: var(--success, #16a34a);
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
 }
 .diario-edit-cancel {
   padding: 10px 16px;
@@ -4873,10 +4975,11 @@ html[lang="en"] .notif-drawer-list:empty::after {
 }
 .diario-edit-save {
   padding: 10px 16px;
-  border: none;
+  /* v4.09: "Salva bozza" is now the secondary action; publish is primary */
+  border: 1px solid var(--border);
   border-radius: 8px;
-  background: var(--accent);
-  color: #fff;
+  background: var(--bg-alt);
+  color: var(--text);
   font-weight: 600;
   cursor: pointer;
 }
@@ -5563,12 +5666,28 @@ html[lang="en"] .notif-drawer-list:empty::after {
 /* v3.95 FIX: Dark mode overrides for remaining hardcoded colors */
 @media (prefers-color-scheme: dark) {
     .install-banner .install-btn { background: var(--accent, #3b82f6); color: #fff; }
+    .diario-was-there-btn { background: #1e293b; border-color: #334155; color: #e2e8f0; }
+    .diario-was-there-btn.active { background: #1e3a5f; border-color: #2563eb; color: #93c5fd; }
     .diario-draft-badge { background: #b45309; color: #fff; }
     .admin-card { background: var(--bg-card, #1e293b); border-color: var(--border, #334155); }
     .admin-card label[style*="width:40px"] span::before { background: #cbd5e1; }
-    /* v4.04: Dark mode for postcard and playlist in chat */
-    .chat-postcard,
-    .chat-postcard-card { background: var(--bg-card, #1e293b); border-color: var(--border, #334155); }
+    /* v4.04: Dark mode for playlist in chat */
     .chat-playlist-section,
     .playlist-section { background: var(--bg-alt, #0f172a); border-color: var(--border, #334155); }
+    /* v4.10 FIX (P2 #6/#7): dark mode for comment reaction picker and Leaflet popups */
+    .comment-react-picker { background: #1e293b; border-color: #334155; }
+    .leaflet-popup-content-wrapper,
+    .leaflet-popup-tip { background: var(--bg-card, #1e293b); color: var(--text, #e2e8f0); }
+    .leaflet-popup-content small { color: #94a3b8 !important; }
+}
+
+/* v4.10 FIX (P2 #7): comment reaction picker moved from inline style to a class */
+.comment-react-picker {
+  display: inline-flex;
+  gap: 2px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 2px 4px;
+  margin-left: 4px;
 }

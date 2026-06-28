@@ -21,9 +21,11 @@ var DaysRenderer = (function() {
     DK: "Denmark ðŸ‡©ðŸ‡°", DE: "Germany ðŸ‡©ðŸ‡ª", NL: "Netherlands ðŸ‡³ðŸ‡±", BE: "Belgium ðŸ‡§ðŸ‡ª",
     FR: "France ðŸ‡«ðŸ‡·", ES: "Spain ðŸ‡ªðŸ‡¸", IT: "Italy ðŸ‡®ðŸ‡¹", CZ: "Czechia ðŸ‡¨ðŸ‡ÿ"
   };
+  // v4.08 FIX: _isEN must be defined BEFORE COUNTRY_LABELS (was hoisted as undefined)
+  var _isEN = (document.documentElement.lang === 'en' || window.location.pathname.indexOf('_en') !== -1);
   var COUNTRY_LABELS = _isEN ? COUNTRY_LABELS_EN : COUNTRY_LABELS_IT;
 
-  // â”€â”€â”€ HELPERS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // âââ HELPERS ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
   // v2.11 FIX: Proper HTML escaping to prevent XSS if data ever comes from user input
   function esc(s) {
     if (!s) return '';
@@ -32,11 +34,10 @@ var DaysRenderer = (function() {
 
   function mapsLink(url, label) {
     if (!url) return '';
-    return ' <a href="' + url + '" target="_blank" rel="noopener">ðŸ“ ' + (label || 'Maps') + '</a>';
+    return ' <a href="' + url + '" target="_blank" rel="noopener">ðŸ" ' + (label || 'Maps') + '</a>';
   }
 
   // v3.74: Use D prefix in English, G in Italian
-  var _isEN = (document.documentElement.lang === 'en' || window.location.pathname.indexOf('_en') !== -1);
   function dayLabel(id) {
     if (_isEN) return id.toUpperCase().replace('G', 'D');
     return id.toUpperCase();

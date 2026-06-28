@@ -238,10 +238,28 @@
     }
   });
 
-  // ─── v2.59: Evening Photo Recap ────────────────────────────────
-  // Sends a chat message at 21:00 with today's diary photos and km summary.
-  // Only owner can send. Runs once per day.
-  var RECAP_HOUR = 21;
+  // ─── v4.08: Enhanced Evening Photo Recap ────────────────────────────────
+  // Sends a rich chat message at 23:00 with today's diary posts, weather,
+  // drive time, steps, and photos. Only owner can send. Runs once per day.
+  var RECAP_HOUR = 23;
+
+  // WMO weather code to emoji (client-side helper)
+  function _recapWmoEmoji(code) {
+    if (code === 0) return '☀️';
+    if (code <= 3) return '⛅';
+    if (code <= 48) return '🌫️';
+    if (code <= 57) return '🌦️';
+    if (code <= 67) return '🌧️';
+    if (code <= 77) return '❄️';
+    if (code <= 82) return '🌧️';
+    return '⛈️';
+  }
+
+  function _recapFormatTime(ms) {
+    var s = Math.floor(ms / 1000);
+    var h = Math.floor(s / 3600); var m = Math.floor((s % 3600) / 60);
+    return h + 'h ' + (m < 10 ? '0' : '') + m + 'min';
+  }
 
   function checkAndSendEveningRecap() {
     var user = (typeof AuthManager !== 'undefined' && AuthManager.isResolved())
@@ -257,16 +275,14 @@
     if (tripDay < 0) return; // pre-trip
 
     var familyId = (typeof FAMILY_ID !== 'undefined') ? FAMILY_ID : 'iadicicco';
-    var today = localDateStr(now); // v2.96: LOCAL (era UTC)
+    var today = localDateStr(now);
     var db = firebase.database();
 
-    // v2.97 FIX: claim atomico del giorno PRIMA di inviare, per evitare due recap
-    // da esecuzioni concorrenti (avvio app + setInterval). Solo chi vince la
-    // transaction procede; gli altri abortiscono.
+    // Atomic claim to prevent duplicate recaps
     var recapMetaRef = db.ref('trips/' + familyId + '/notifications/eveningRecapMeta');
     recapMetaRef.transaction(function(current) {
       current = current || {};
-      if (current.lastSentDate === today) return; // già inviato oggi → abort
+      if (current.lastSentDate === today) return; // already sent → abort
       current.lastSentDate = today;
       current.tripDay = tripDay;
       return current;
@@ -276,89 +292,180 @@
         return;
       }
 
-      // Load today's diary entry
-      // v2.96 FIX: le chiavi sono 'day-<tripDay>-<timestamp>'. Un semplice
-      // startAt('day-5') prendeva anche 'day-50','day-51'… (ordine lessicografico)
-      // mescolando foto/testi di altri giorni. Usiamo un range start/end preciso
-      // sul prefisso 'day-<tripDay>-' e filtriamo comunque lato client.
+      // Load today's diary entries
       var dayKey = 'day-' + tripDay + '-';
-      db.ref('trips/' + familyId + '/diary').orderByKey()
-        .startAt(dayKey).endAt(dayKey + '\uf8ff').limitToFirst(10)
-        .once('value').then(function(diarySnap) {
+      var diaryPromise = db.ref('trips/' + familyId + '/diary').orderByKey()
+        .startAt(dayKey).endAt(dayKey + '\uf8ff').limitToFirst(20)
+        .once('value');
+
+      // Load dailySummaries (km, time)
+      var summaryPromise = db.ref('trips/' + familyId + '/dailySummaries/' + today).once('value');
+
+      // Load currentLocation (city, country, flag)
+      var locationPromise = db.ref('trips/' + familyId + '/currentLocation').once('value');
+
+      // Load weather for today
+      var weatherPromise = db.ref('trips/' + familyId + '/weatherLog/' + today).once('value');
+
+      // Load activities (steps for today)
+      var activitiesPromise = db.ref('trips/' + familyId + '/activities').once('value');
+
+      Promise.all([diaryPromise, summaryPromise, locationPromise, weatherPromise, activitiesPromise])
+        .then(function(results) {
+          var diarySnap = results[0];
+          var sumSnap = results[1];
+          var clSnap = results[2];
+          var weatherSnap = results[3];
+          var actSnap = results[4];
+
+          // ─── Parse diary entries ───
           var entriesRaw = diarySnap.val() || {};
-          // Difesa extra: tieni solo le chiavi che iniziano davvero col prefisso esatto.
           var entries = {};
           Object.keys(entriesRaw).forEach(function(k) {
             if (k.indexOf(dayKey) === 0) entries[k] = entriesRaw[k];
           });
           var photos = [];
-          var textSnippet = '';
+          var textPosts = []; // all text posts
+          var highlight = '';
 
           Object.values(entries).forEach(function(entry) {
             if (!entry) return;
-            // Collect up to 3 photos
+            // Collect photos (max 5)
             if (entry.photos) {
               Object.values(entry.photos).forEach(function(p) {
-                if (p && p.url && photos.length < 3) photos.push(p.url);
+                if (p && p.url && photos.length < 5) photos.push(p.url);
               });
             }
-            // Get first text entry
-            if (!textSnippet && entry.text) {
-              textSnippet = entry.text.substring(0, 120) + (entry.text.length > 120 ? '...' : '');
+            // Collect all text posts
+            if (entry.text) {
+              var snippet = entry.text.substring(0, 120) + (entry.text.length > 120 ? '…' : '');
+              textPosts.push(snippet);
+            }
+            // Get highlight
+            if (!highlight && entry.highlight) {
+              highlight = entry.highlight;
             }
           });
 
-          // Load today's km from dailySummaries
-          db.ref('trips/' + familyId + '/dailySummaries/' + today)
-            .once('value').then(function(sumSnap) {
-              var summary = sumSnap.val() || {};
-              var km = summary.km ? summary.km.toFixed(0) : '—';
+          // ─── Parse summary (km + drive time) ───
+          var summary = sumSnap.val() || {};
+          var km = summary.km ? summary.km.toFixed(0) : '';
+          var driveTime = summary.time ? _recapFormatTime(summary.time) : '';
 
-              // Build chat message
-              var g = 'G' + (tripDay + 1);
-              // v3.95 FIX: Use /currentLocation.city (real GPS) instead of static TRIP_COORDS
-              var fallbackCity = (typeof TRIP_COORDS !== 'undefined' && TRIP_COORDS[tripDay])
-                ? TRIP_COORDS[tripDay].city : '';
+          // ─── Parse location ───
+          var cl = clSnap.val();
+          var cityName = '';
+          var flag = '';
+          if (cl && cl.updatedAt && (Date.now() - cl.updatedAt < 24 * 3600000)) {
+            cityName = cl.city || '';
+            flag = cl.flag || '';
+          }
+          if (!cityName && typeof TRIP_COORDS !== 'undefined' && TRIP_COORDS[tripDay]) {
+            cityName = TRIP_COORDS[tripDay].city || '';
+          }
 
-              db.ref('trips/' + familyId + '/currentLocation').once('value').then(function(clSnap) {
-                var cl = clSnap.val();
-                var cityName = fallbackCity;
-                if (cl && cl.city && cl.updatedAt && (Date.now() - cl.updatedAt < 24 * 3600000)) {
-                  cityName = cl.city;
-                }
+          // ─── Parse weather ───
+          var weather = weatherSnap.val();
+          var weatherStr = '';
+          if (weather && weather.tempMax !== undefined) {
+            weatherStr = _recapWmoEmoji(weather.weatherCode) + ' ' + weather.tempMax + '°/' + weather.tempMin + '°';
+          }
 
-              var msgParts = ['📸 *Riepilogo serale — ' + g + (cityName ? ' · ' + cityName : '') + '*'];
-              if (km !== '—') msgParts.push('🚐 ' + km + ' km percorsi oggi');
-              if (textSnippet) msgParts.push('📝 ' + textSnippet);
-              if (photos.length > 0) msgParts.push('🖼️ ' + photos.length + ' foto nel diario');
+          // ─── Parse steps (today only) ───
+          var todaySteps = 0;
+          var todayWalkKm = 0;
+          var activities = actSnap.val() || {};
+          Object.values(activities).forEach(function(act) {
+            if (!act || act.type !== 'daily_walk') return;
+            if (act.date === today) {
+              todaySteps += (parseInt(act.steps) || 0);
+              todayWalkKm += (parseFloat(act.distance) || 0);
+            }
+          });
 
-              var msgText = msgParts.join('\n');
+          // ─── Build chat message ───
+          var g = 'G' + (tripDay + 1);
+          var appUrl = 'https://viaggio-europa-2026.web.app/';
+          var msgParts = [];
 
-              // Push to chat
-              var chatRef = db.ref('chat/' + familyId);
-              var chatMsg = {
-                uid: user.uid,
-                displayName: user.displayName || 'Owner',
-                text: msgText,
-                timestamp: firebase.database.ServerValue.TIMESTAMP,
-                type: 'evening_recap',
-                photos: photos.length > 0 ? photos : null
-              };
+          // Header: 📸 *Riepilogo serale — G3 · Marki* 🇵🇱
+          var header = '📸 *Riepilogo serale — ' + g;
+          if (cityName) header += ' · ' + cityName;
+          header += '*';
+          if (flag) header += ' ' + flag;
+          msgParts.push(header);
+          msgParts.push(''); // blank line
 
-              // v2.97: il claim è già stato fatto atomicamente sopra (transaction).
-              chatRef.push(chatMsg).then(function() {
-                console.log('[EveningRecap] Sent for day', tripDay);
-              }).catch(function(err) {
-                console.error('[EveningRecap] Send error:', err);
-                // Rollback del claim così un retry successivo può reinviare.
-                recapMetaRef.transaction(function(cur) {
-                  if (cur && cur.lastSentDate === today) { cur.lastSentDate = null; return cur; }
-                  return cur;
-                });
-              });
-              }); // end /currentLocation .then()
+          // Driving stats: 🚐 874 km · ⏱️ 8h 12min
+          if (km) {
+            var driveLine = '🚐 ' + km + ' km percorsi';
+            if (driveTime) driveLine += ' · ⏱️ ' + driveTime;
+            msgParts.push(driveLine);
+          }
+
+          // Weather: ☀️ 24°/16°
+          if (weatherStr) {
+            msgParts.push(weatherStr);
+          }
+
+          // Steps: 👣 12.500 passi (8.7 km)
+          if (todaySteps > 0) {
+            var stepsLine = '👣 ' + todaySteps.toLocaleString('it-IT') + ' passi';
+            if (todayWalkKm > 0) stepsLine += ' (' + todayWalkKm.toFixed(1) + ' km)';
+            msgParts.push(stepsLine);
+          }
+
+          // Separator before posts
+          if (textPosts.length > 0 || highlight) {
+            msgParts.push(''); // blank line
+          }
+
+          // All diary posts (each with snippet + link)
+          textPosts.forEach(function(snippet, idx) {
+            msgParts.push('📝 ' + snippet);
+          });
+
+          // Deep link to diary
+          if (textPosts.length > 0) {
+            msgParts.push('→ ' + appUrl + '#tab-diario');
+          }
+
+          // Highlight: ⭐ momento top
+          if (highlight) {
+            msgParts.push('');
+            msgParts.push('⭐ ' + highlight);
+          }
+
+          // Photos count
+          if (photos.length > 0) {
+            msgParts.push('');
+            msgParts.push('🖼️ ' + photos.length + ' foto nel diario');
+          }
+
+          var msgText = msgParts.join('\n');
+
+          // Push to chat
+          var chatRef = db.ref('chat/' + familyId);
+          var chatMsg = {
+            uid: user.uid,
+            displayName: user.displayName || 'Owner',
+            text: msgText,
+            timestamp: firebase.database.ServerValue.TIMESTAMP,
+            type: 'evening_recap',
+            photos: photos.length > 0 ? photos.slice(0, 3) : null
+          };
+
+          chatRef.push(chatMsg).then(function() {
+            console.log('[EveningRecap] Sent for day', tripDay);
+          }).catch(function(err) {
+            console.error('[EveningRecap] Send error:', err);
+            // Rollback claim so a retry can re-send
+            recapMetaRef.transaction(function(cur) {
+              if (cur && cur.lastSentDate === today) { cur.lastSentDate = null; return cur; }
+              return cur;
             });
-        });
+          });
+        }); // end Promise.all .then()
     }).catch(function(err) {
       console.error('[EveningRecap] Meta read error:', err);
     });

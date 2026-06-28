@@ -224,7 +224,9 @@ try {
   var _busy = false;
 
   // v3.94 FIX Audit #8: Always include User-Agent header (Nominatim ToS requirement)
-  var _defaultHeaders = { 'User-Agent': 'QuoVadis-TripApp/4.02 (family-trip-pwa)' };
+  // v4.08 FIX: Use runtime version from EXPECTED_VERSION instead of hardcoded
+  var _appVer = (typeof EXPECTED_VERSION !== 'undefined') ? EXPECTED_VERSION : '4.08';
+  var _defaultHeaders = { 'User-Agent': 'QuoVadis-TripApp/' + _appVer + ' (family-trip-pwa)' };
 
   function _drain() {
     if (_busy || _queue.length === 0) return;
@@ -2424,10 +2426,16 @@ document.addEventListener('DOMContentLoaded', function() {
     // Prevents memory leaks by detaching .on() listeners when leaving a tab
     var _fbListeners = {}; // { tabName: [{ ref, event, callback }] }
     window._fbListeners = _fbListeners; // Expose for cross-scope re-attach checks
-    window.registerFirebaseListener = function(tab, ref, event, callback) {
+    window.registerFirebaseListener = function(tab, ref, event, callback, errorCallback) {
         if (!_fbListeners[tab]) _fbListeners[tab] = [];
         _fbListeners[tab].push({ ref: ref, event: event, callback: callback });
-        ref.on(event, callback);
+        // v4.10 FIX (P3): every registered listener now gets an error callback.
+        // A custom one can be passed; otherwise a default logs + warns the user so
+        // a permission/network failure is never silently swallowed.
+        var _onError = errorCallback || function(err) {
+            console.error('[Firebase] listener error (tab=' + tab + '):', err && err.message);
+        };
+        ref.on(event, callback, _onError);
     };
     window.detachFirebaseListeners = function(tab) {
         if (!_fbListeners[tab]) return;
@@ -3693,7 +3701,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                 parkRef.once('value', function(snap) {
                     var spots = snap.val() || {};
                     Object.values(spots).forEach(function(s) {
-                        if (s.lat) checkinMarkers.push(L.marker([s.lat, s.lng], {icon: parkIcon}).bindPopup('<strong>🅿️ ' + (s.name || '') + '</strong><br>' + '⭐'.repeat(s.rating || 3)).addTo(map));
+                        if (s.lat) checkinMarkers.push(L.marker([s.lat, s.lng], {icon: parkIcon}).bindPopup('<strong>🅿️ ' + escapeHtml(s.name || '') + '</strong><br>' + '⭐'.repeat(s.rating || 3)).addTo(map));
                     });
                 });
             }
@@ -4400,8 +4408,11 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             }, function(err) {
                 console.warn('[GPS] Error:', err.message);
                 // v3.50 Patch 3: make GPS errors visible to user
+                // v4.08 FIX: Auto-stop tracking on permission denied to prevent phantom sessions
                 if (err.code === 1) {
-                    showToast(isEN ? '\u26a0\ufe0f Location permission denied. Tracking will NOT record.' : '\u26a0\ufe0f Permesso posizione negato. Il tracking NON registrer\u00e0.', 'error', 8000);
+                    showToast(isEN ? '\u26a0\ufe0f Location permission denied. Tracking stopped.' : '\u26a0\ufe0f Permesso posizione negato. Tracking fermato.', 'error', 8000);
+                    // Auto-stop to prevent user thinking tracking is active
+                    if (typeof stopLive === 'function') stopLive();
                 } else if (err.code === 2) {
                     showToast(isEN ? '\u26a0\ufe0f GPS unavailable: ' + err.message : '\u26a0\ufe0f GPS non disponibile: ' + err.message, 'error', 5000);
                 } else if (err.code === 3) {
@@ -4577,6 +4588,14 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                         }
                     }, function(err) {
                         console.warn('[GPS Resume] watchPosition error:', err.message);
+                        // v4.10 FIX (P1 #4): mirror the primary handler — auto-stop on
+                        // permission denied so the resume path can't leave a phantom session.
+                        if (err.code === 1) {
+                            showToast(isEN ? '⚠️ Location permission denied. Tracking stopped.' : '⚠️ Permesso posizione negato. Tracking fermato.', 'error', 8000);
+                            if (typeof stopLive === 'function') stopLive();
+                        } else if (err.code === 2) {
+                            showToast(isEN ? '⚠️ GPS unavailable: ' + err.message : '⚠️ GPS non disponibile: ' + err.message, 'error', 5000);
+                        }
                     }, _reOpts);
                     showToast(isEN ? '\ud83d\udd04 GPS resumed after background' : '\ud83d\udd04 GPS ripreso dopo background', 'info', 3000);
                 }
@@ -10286,7 +10305,7 @@ async function fetchForecast(lat, lon, date, _retry) {
       // v3.98 FIX: Append to DOM before .click() for Android/iOS compatibility
       input.style.cssText = 'position:fixed;top:-100px;left:-100px;opacity:0;';
       input.addEventListener('change', function() {
-        document.body.removeChild(input);
+        if (document.body.contains(input)) document.body.removeChild(input);
         if (!input.files) return;
         Array.from(input.files).forEach(function(file) {
           var url = URL.createObjectURL(file);
@@ -10665,7 +10684,7 @@ async function fetchForecast(lat, lon, date, _retry) {
     // silently ignore .click() on detached file inputs for security reasons.
     input.style.cssText = 'position:fixed;top:-100px;left:-100px;opacity:0;';
     input.addEventListener('change', function() {
-      document.body.removeChild(input); // cleanup
+      if (document.body.contains(input)) document.body.removeChild(input); // cleanup
       if (!input.files || input.files.length === 0) return;
       var file = input.files[0];
       var reader = new FileReader();
@@ -11143,7 +11162,11 @@ async function fetchForecast(lat, lon, date, _retry) {
         });
 
         // Save merged track (wait for completion before counting as imported)
+        // v4.10 FIX (P2 #8): collect every write for this day so completion only
+        // fires once the track AND its summary are persisted (avoids premature toast).
+        var _dayWrites = [];
         var _writePromise = dateRef.set(cleaned);
+        _dayWrites.push(_writePromise);
 
         // Also update dailySummaries km + time + avgSpeed from track points
         var km = 0;
@@ -11207,7 +11230,8 @@ async function fetchForecast(lat, lon, date, _retry) {
           var _gpxKm = km;
           var _gpxTime = driveTimeMs;
           var _gpxAvg = calcAvgSpeed;
-          summRef.once('value', function(sSnap) {
+          // v4.10 (P2 #8): await the summary read+write chain as part of this day's work
+          var _summaryWrite = summRef.once('value', function(sSnap) {
             var existing = sSnap.val();
             var existingKm = existing ? (existing.odometerKm || existing.km || 0) : 0;
             var updates = { points: cleaned.length, source: 'gpx_import' };
@@ -11249,10 +11273,12 @@ async function fetchForecast(lat, lon, date, _retry) {
               }
             }
           });
+          _dayWrites.push(_summaryWrite);
         }
         // v3.95 FIX: Wait for the main write to complete before counting as imported.
         // This ensures the toast only fires after data is actually persisted.
-        (_writePromise || Promise.resolve()).then(function() {
+        // v4.10: Promise.all over all writes queued for this day.
+        Promise.all(_dayWrites).then(function() {
           imported++;
           if (imported === total) {
             // v3.89: Update /lastPosition with the most recent point from imported data
@@ -11765,34 +11791,7 @@ async function fetchForecast(lat, lon, date, _retry) {
     var bubble = document.createElement('div');
     bubble.className = 'chat-bubble';
 
-    // v4.00 Feature #18: Virtual postcard rendering
-    if (msg.msgType === 'postcard') {
-      bubble.className = 'chat-bubble chat-postcard';
-      bubble.style.cssText = 'padding:0;border-radius:12px;overflow:hidden;max-width:300px;box-shadow:0 2px 8px rgba(0,0,0,0.15);';
-      if (msg.mediaUrl) {
-        var pcImg = document.createElement('img');
-        pcImg.src = msg.mediaUrl;
-        pcImg.style.cssText = 'width:100%;height:180px;object-fit:cover;display:block;';
-        pcImg.loading = 'lazy';
-        bubble.appendChild(pcImg);
-      }
-      var pcBody = document.createElement('div');
-      pcBody.style.cssText = 'padding:12px;background:linear-gradient(135deg,#fef3c7,#fde68a);';
-      pcBody.innerHTML = '<div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#92400e;margin-bottom:4px;">\u2709\uFE0F ' + (isEN ? 'Postcard' : 'Cartolina') + '</div>' +
-        '<div style="font-size:14px;color:#1e293b;">' + escapeHtml(msg.text || '').replace(/\n/g, '<br>') + '</div>' +
-        (msg.postcardFrom ? '<div style="font-size:11px;color:#6b7280;margin-top:6px;text-align:right;">\u2014 ' + escapeHtml(msg.postcardFrom) + '</div>' : '');
-      bubble.appendChild(pcBody);
-      div.appendChild(bubble);
-      // Time for own messages
-      if (isMine) {
-        var mytime = document.createElement('div');
-        mytime.className = 'chat-msg-time-mine';
-        mytime.textContent = msgDate.toLocaleTimeString(LANG === 'en' ? 'en-GB' : 'it-IT', { hour: '2-digit', minute: '2-digit' });
-        div.appendChild(mytime);
-      }
-      chatMessages.appendChild(div);
-      return;
-    }
+    // v4.08: Postcard feature removed (v4.06). Old postcard messages render as normal text.
 
     // Media content
     if (msg.mediaUrl) {
@@ -12525,11 +12524,17 @@ async function fetchForecast(lat, lon, date, _retry) {
 
   // ─── Link preview (simple URL detection) ───
   function linkify(text) {
-    var urlRegex = /(https?:\/\/[^\s<"']+)/g;
+    // v4.10 FIX (P1 #5): case-insensitive match (catches HTTPS://...) plus an
+    // explicit protocol allow-list so only http/https URLs ever become links.
+    var urlRegex = /(https?:\/\/[^\s<"']+)/gi;
     return text.replace(urlRegex, function(url) {
       // v1.99: Strip trailing punctuation that's likely not part of the URL
       var cleaned = url.replace(/[.,;:!?)\]]+$/, '');
       var trailing = url.slice(cleaned.length);
+      // Explicit protocol validation (defense in depth against javascript:/data: etc.)
+      if (!/^https?:\/\//i.test(cleaned)) {
+        return escapeHtml(url); // not a safe link → render as plain text
+      }
       // Extra sanitization: ensure no unescaped quotes in URL that could break href attribute
       var safeUrl = cleaned.replace(/"/g, '%22').replace(/'/g, '%27');
       // v2.63 FIX: escape link text to prevent XSS via crafted URLs
@@ -13072,7 +13077,7 @@ async function fetchForecast(lat, lon, date, _retry) {
 // ═══════════════════════════════════════════════════════════════
 
 // ═══════════════════════════════════════════════════════════════
-// ─── v4.06: WALKING STATS (km + passi) — Garmin / manuale ───
+// ─── v4.07: WALKING STATS (km + passi) — Garmin / manuale ───
 // ═══════════════════════════════════════════════════════════════
 (function() {
   if (typeof firebase === 'undefined' || !firebase.database) return;
@@ -13081,83 +13086,141 @@ async function fetchForecast(lat, lon, date, _retry) {
 
   var activitiesRef = firebase.database().ref('trips/' + FAMILY_ID + '/activities');
 
-  // ─── Update totals in Posizione tab (km + steps) ───
+  // ─── Update totals in Posizione tab (Garmin daily + Strava hiking) ───
   var _actStatsCb = function(snapshot) {
     var activities = snapshot.val();
     var posGarminWalk = document.getElementById('pos-garmin-walk');
-    var posGarminSteps = document.getElementById('pos-garmin-steps');
     if (!posGarminWalk) return;
 
-    var kmFoot = 0, totalSteps = 0;
+    var kmDaily = 0, totalSteps = 0; // Garmin manual entries (type=daily_walk)
+    var kmHike = 0; // Strava hiking (type=hike or type=walk but NOT daily_walk)
+
     if (activities) {
       Object.values(activities).forEach(function(act) {
         if (!act) return;
-        if (act.category === 'foot') {
-          kmFoot += (parseFloat(act.distance) || 0);
+        if (act.category !== 'foot') return;
+        var dist = parseFloat(act.distance) || 0;
+        if (act.type === 'daily_walk') {
+          // Garmin manual daily steps/km
+          kmDaily += dist;
           totalSteps += (parseInt(act.steps) || 0);
+        } else {
+          // Strava hiking (Hike, Walk, etc.)
+          kmHike += dist;
         }
       });
     }
 
-    posGarminWalk.textContent = kmFoot.toFixed(1);
-    if (posGarminSteps) posGarminSteps.textContent = totalSteps.toLocaleString('it-IT');
+    var kmTotal = kmDaily + kmHike;
+
+    // Garmin daily row
+    var elSteps = document.getElementById('pos-garmin-steps');
+    var elDailyKm = document.getElementById('pos-garmin-walk-daily');
+    if (elSteps) elSteps.textContent = totalSteps.toLocaleString('it-IT');
+    if (elDailyKm) elDailyKm.textContent = kmDaily.toFixed(1);
+
+    // Strava hiking row
+    var elHikeKm = document.getElementById('pos-garmin-hike-km');
+    if (elHikeKm) elHikeKm.textContent = kmHike.toFixed(1);
+
+    // Totale viaggio
+    posGarminWalk.textContent = kmTotal.toFixed(1);
+    var elStepsTotal = document.getElementById('pos-garmin-steps-total');
+    if (elStepsTotal) elStepsTotal.textContent = totalSteps.toLocaleString('it-IT');
 
     // Update stat card if exists
     var statKmFootTotal = document.getElementById('stat-km-foot-total');
-    if (statKmFootTotal) statKmFootTotal.textContent = kmFoot.toFixed(1);
+    if (statKmFootTotal) statKmFootTotal.textContent = kmTotal.toFixed(1);
   };
   window.registerFirebaseListener('posizione', activitiesRef, 'value', _actStatsCb);
 
-  // ─── Activity list (today's entries) ───
+  // ─── Daily breakdown accordion ───
   var posSection = document.getElementById('posizione-content') || document.getElementById('tab-posizione');
   if (!posSection) return;
 
-  var actDaySection = document.createElement('div');
-  actDaySection.className = 'activity-day-section';
-  actDaySection.id = 'pos-activity-cards';
-  actDaySection.innerHTML = '<div class="activity-day-title">' + (isEN ? "Today's Walking" : 'Camminata di oggi') + '</div><div id="pos-activity-list"></div>';
+  var accordionSection = document.createElement('div');
+  accordionSection.className = 'walking-daily-accordion';
+  accordionSection.id = 'pos-walking-daily';
+  accordionSection.innerHTML = '<button type="button" class="walking-daily-toggle" id="walking-daily-toggle">' +
+    '<span>' + (isEN ? '▶ Daily details' : '▶ Dettagli per giorno') + '</span></button>' +
+    '<div class="walking-daily-body" id="walking-daily-body" style="display:none;"></div>';
   var garminCard = document.getElementById('pos-garmin-card');
   if (garminCard && garminCard.nextSibling) {
-    garminCard.parentNode.insertBefore(actDaySection, garminCard.nextSibling);
+    garminCard.parentNode.insertBefore(accordionSection, garminCard.nextSibling);
   } else {
-    posSection.appendChild(actDaySection);
+    posSection.appendChild(accordionSection);
   }
 
-  var actList = document.getElementById('pos-activity-list');
+  var toggleBtn = document.getElementById('walking-daily-toggle');
+  var bodyEl = document.getElementById('walking-daily-body');
+  var isOpen = false;
+  toggleBtn.addEventListener('click', function() {
+    isOpen = !isOpen;
+    bodyEl.style.display = isOpen ? '' : 'none';
+    toggleBtn.querySelector('span').textContent = (isOpen ? '▼ ' : '▶ ') + (isEN ? 'Daily details' : 'Dettagli per giorno');
+  });
 
-  (function() { var _actDayCb = function(snapshot) {
+  (function() { var _actDailyCb = function(snapshot) {
     var activities = snapshot.val();
-    if (!activities || !actList) return;
-    var today = window.localDateStr();
-
-    var todayEntries = Object.entries(activities).filter(function(entry) {
-      return entry[1] && entry[1].date === today && entry[1].category === 'foot';
-    });
-
-    if (todayEntries.length === 0) {
-      actDaySection.style.display = 'none';
+    if (!activities || !bodyEl) {
+      accordionSection.style.display = 'none';
       return;
     }
 
-    actDaySection.style.display = '';
-    var html = '';
-    todayEntries.forEach(function(entry) {
+    // Group by date
+    var byDate = {};
+    Object.entries(activities).forEach(function(entry) {
       var actKey = entry[0]; var act = entry[1];
-      html += '<div class="activity-card foot">';
-      html += '  <div class="activity-card-left">';
-      html += '    <span class="activity-card-icon">🧥</span>';
-      html += '    <span class="activity-card-name">' + escapeHtml(act.name || 'Camminata') + '</span>';
-      html += '  </div>';
-      html += '  <div class="activity-card-right">';
-      html += '    ' + (act.distance || 0) + ' km';
-      if (act.steps) html += ' \u00b7 👣 ' + parseInt(act.steps).toLocaleString('it-IT') + ' passi';
-      if (isOwner) html += '<br><button class="pos-del-btn act-del" data-actkey="' + actKey + '" title="' + (isEN ? 'Delete' : 'Elimina') + '">🗑️</button>';
-      html += '  </div>';
+      if (!act || act.category !== 'foot') return;
+      var d = act.date || 'unknown';
+      if (!byDate[d]) byDate[d] = [];
+      byDate[d].push({ key: actKey, act: act });
+    });
+
+    var dates = Object.keys(byDate).sort().reverse(); // newest first
+    if (dates.length === 0) {
+      accordionSection.style.display = 'none';
+      return;
+    }
+
+    accordionSection.style.display = '';
+    var html = '';
+    dates.forEach(function(date) {
+      var entries = byDate[date];
+      var daySteps = 0, dayKmDaily = 0, dayKmHike = 0;
+      var hikeNames = [];
+
+      entries.forEach(function(e) {
+        if (e.act.type === 'daily_walk') {
+          daySteps += (parseInt(e.act.steps) || 0);
+          dayKmDaily += (parseFloat(e.act.distance) || 0);
+        } else {
+          dayKmHike += (parseFloat(e.act.distance) || 0);
+          hikeNames.push(e.act.name || 'Hiking');
+        }
+      });
+
+      // Format date as DD/MM
+      var parts = date.split('-');
+      var dateLabel = parts.length === 3 ? (parts[2] + '/' + parts[1]) : date;
+
+      html += '<div class="walking-daily-row">';
+      html += '  <span class="walking-daily-date">' + dateLabel + '</span>';
+      html += '  <span class="walking-daily-info">';
+      if (daySteps > 0) html += '👣 ' + daySteps.toLocaleString('it-IT') + ' ';
+      if (dayKmDaily > 0) html += '🚶 ' + dayKmDaily.toFixed(1) + ' km ';
+      if (dayKmHike > 0) html += '🧥 ' + hikeNames[0] + ' ' + dayKmHike.toFixed(1) + ' km';
+      html += '  </span>';
+      if (isOwner) {
+        entries.forEach(function(e) {
+          html += '<button class="pos-del-btn act-del" data-actkey="' + e.key + '" title="' + (isEN ? 'Delete' : 'Elimina') + '" style="font-size:11px;margin-left:4px;">🗑️</button>';
+        });
+      }
       html += '</div>';
     });
 
-    actList.innerHTML = html;
-    actList.querySelectorAll('.act-del[data-actkey]').forEach(function(btn) {
+    bodyEl.innerHTML = html;
+    bodyEl.querySelectorAll('.act-del[data-actkey]').forEach(function(btn) {
       btn.addEventListener('click', function() {
         var actkey = btn.getAttribute('data-actkey');
         showConfirm(isEN ? 'Delete this entry?' : 'Eliminare questa voce?', function() {
@@ -13166,7 +13229,7 @@ async function fetchForecast(lat, lon, date, _retry) {
       });
     });
   };
-  window.registerFirebaseListener('posizione', activitiesRef, 'value', _actDayCb);
+  window.registerFirebaseListener('posizione', activitiesRef, 'value', _actDailyCb);
   })();
 
   // ─── "Aggiungi giorno" button (owner only) ───
@@ -13890,15 +13953,18 @@ async function fetchForecast(lat, lon, date, _retry) {
       }
 
       var html = '';
+      // v4.09 FIX: sort PRIMARILY by real date (descending) so the chronological order
+      // is always correct even if a post's dayNumber is stale/inconsistent. dayNumber
+      // and createdAt remain as tiebreakers for multiple posts on the same date.
       var sortedKeys = Object.keys(entries).sort(function(a, b) {
-        var diff = (entries[b].dayNumber || 0) - (entries[a].dayNumber || 0);
-        if (diff !== 0) return diff;
-        // Tiebreaker 1: sort by date descending when dayNumber is the same
         var dateA = entries[a].date || '';
         var dateB = entries[b].date || '';
         var dateDiff = dateB.localeCompare(dateA);
         if (dateDiff !== 0) return dateDiff;
-        // Tiebreaker 2: sort by createdAt descending (newest post first)
+        // Tiebreaker 1: dayNumber descending when dates are equal/missing
+        var diff = (entries[b].dayNumber || 0) - (entries[a].dayNumber || 0);
+        if (diff !== 0) return diff;
+        // Tiebreaker 2: createdAt descending (newest post first)
         return (entries[b].createdAt || 0) - (entries[a].createdAt || 0);
       });
 
@@ -14122,7 +14188,12 @@ async function fetchForecast(lat, lon, date, _retry) {
     if (window.registerFirebaseListener) {
       window.registerFirebaseListener('diario', _diarioQuery, 'value', _diarioCb);
     } else {
-      _diarioQuery.on('value', _diarioCb);
+      // v4.10 FIX (P3): error callback so a permission/network failure surfaces
+      // instead of leaving the diary silently empty.
+      _diarioQuery.on('value', _diarioCb, function(err) {
+        console.error('[Diario] listener error:', err && err.message);
+        if (window.showToast) showToast(isEN ? '⚠️ Could not load the diary' : '⚠️ Impossibile caricare il diario', 'error');
+      });
     }
   }
 
@@ -14259,6 +14330,26 @@ async function fetchForecast(lat, lon, date, _retry) {
          (commentCount > 0 ? commentCount + ' ' : '') + (isEN ? 'Comments' : 'Commenti') + '</button>';
     h += '</div>';
 
+    // v4.08 Feature #8: "Ci siamo stati!" / "We were there!" toggle
+    var wasThere = (entry && entry.wasThere && typeof entry.wasThere === 'object') ? entry.wasThere : {};
+    var wasThereCount = Object.keys(wasThere).length;
+    var iWasThere = myUid && wasThere[myUid] ? true : false;
+    h += '<div class="diario-was-there">';
+    h += '<button type="button" class="diario-was-there-btn' + (iWasThere ? ' active' : '') + '" data-key="' + key + '">\uD83D\uDCCD ' +
+         (isEN ? 'I was there!' : 'Ci sono stato!') +
+         (wasThereCount > 0 ? ' <span class="was-there-count">' + wasThereCount + '</span>' : '') + '</button>';
+    if (wasThereCount > 0) {
+      var wtNames = [];
+      Object.keys(wasThere).forEach(function(uid) {
+        var name = _diarioNameCache[uid] || null;
+        if (name) wtNames.push(name);
+      });
+      if (wtNames.length > 0) {
+        h += '<span class="was-there-names">' + escapeHtml(wtNames.join(', ')) + '</span>';
+      }
+    }
+    h += '</div>';
+
     // v3.27: Show who reacted (names below reaction bar)
     var reactorNames = [];
     Object.keys(reactions).forEach(function(uid) {
@@ -14390,6 +14481,35 @@ async function fetchForecast(lat, lon, date, _retry) {
     });
   }
 
+  // v4.08 Feature #8: Toggle "Ci siamo stati!" / "We were there!"
+  function toggleWasThere(key) {
+    var user = _socialUser();
+    if (!user || !user.uid) {
+      if (window.showToast) showToast(isEN ? 'Sign in to mark' : 'Accedi per segnare', 'info');
+      return;
+    }
+    var ref = firebase.database().ref('trips/' + FAMILY_ID + '/diary/' + key + '/wasThere/' + user.uid);
+    ref.once('value').then(function(snap) {
+      if (snap.val()) {
+        return ref.remove();
+      }
+      return ref.set({ name: user.displayName || 'User', time: Date.now() }).then(function() {
+        if (!isOwner && window.queuePushNotification) {
+          queuePushNotification('diary_was_there', {
+            title: '\uD83D\uDCCD ' + (isEN ? 'Was there!' : 'C\'era anche!'),
+            body: (user.displayName || (isEN ? 'Someone' : 'Qualcuno')) + (isEN ? ' was at the same place' : ' era nello stesso posto'),
+            target: 'owner',
+            url: './#diario',
+            tag: 'diary_was_there_' + key,
+            senderUid: user.uid
+          });
+        }
+      });
+    }).catch(function(err) {
+      console.warn('[Diario] wasThere toggle failed:', err.message);
+    });
+  }
+
   function sendComment(key, text, photoUrl) {
     var user = _socialUser();
     if (!user || !user.uid) {
@@ -14507,7 +14627,7 @@ async function fetchForecast(lat, lon, date, _retry) {
         fileInput.accept = 'image/*';
         fileInput.style.cssText = 'position:fixed;top:-100px;left:-100px;opacity:0;';
         fileInput.addEventListener('change', function() {
-          document.body.removeChild(fileInput);
+          if (document.body.contains(fileInput)) document.body.removeChild(fileInput);
           if (!fileInput.files || !fileInput.files[0]) return;
           uploadCommentPhoto(k, fileInput.files[0]);
         });
@@ -14516,12 +14636,18 @@ async function fetchForecast(lat, lon, date, _retry) {
         return;
       }
       // Delete comment
-      var db = e.target.closest('.diario-comment-del');
-      if (db) {
-        // v3.94: uses global isEN
+      // v4.08 FIX: renamed from 'db' to 'delBtn' to avoid shadowing Firebase db reference
+      var delBtn = e.target.closest('.diario-comment-del');
+      if (delBtn) {
         showConfirm(isEN ? 'Delete this comment?' : 'Eliminare questo commento?', function() {
-          deleteComment(db.getAttribute('data-key'), db.getAttribute('data-cid'));
+          deleteComment(delBtn.getAttribute('data-key'), delBtn.getAttribute('data-cid'));
         });
+        return;
+      }
+      // v4.08 Feature #8: "Was there" toggle
+      var wtBtn = e.target.closest('.diario-was-there-btn');
+      if (wtBtn) {
+        toggleWasThere(wtBtn.getAttribute('data-key'));
         return;
       }
       // v4.00 Feature #Extra: Comment reaction badge click (toggle off)
@@ -14542,7 +14668,7 @@ async function fetchForecast(lat, lon, date, _retry) {
           if (existing) { existing.remove(); return; }
           var picker = document.createElement('span');
           picker.className = 'comment-react-picker';
-          picker.style.cssText = 'display:inline-flex;gap:2px;background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:2px 4px;margin-left:4px;';
+          // v4.10 FIX (P2 #7): styling moved to .comment-react-picker CSS class (dark-mode aware)
           CEMOJIS.forEach(function(em) {
             var btn = document.createElement('span');
             btn.textContent = em;
@@ -14561,11 +14687,10 @@ async function fetchForecast(lat, lon, date, _retry) {
       // v3.27: Delete audio
       var audioDelBtn = e.target.closest('.diario-audio-delete');
       if (audioDelBtn) {
-        var _isEN = document.documentElement.lang === 'en';
         var _entryKey = audioDelBtn.getAttribute('data-entry-key');
         var _audioKey = audioDelBtn.getAttribute('data-audio-key');
         var _audioType = audioDelBtn.getAttribute('data-audio-type');
-        showConfirm(_isEN ? 'Delete this audio?' : 'Eliminare questo audio?', function() {
+        showConfirm(isEN ? 'Delete this audio?' : 'Eliminare questo audio?', function() {
           var ref;
           if (_audioType === 'audios' && _audioKey) {
             ref = diarioRef.child(_entryKey + '/audios/' + _audioKey);
@@ -14573,10 +14698,10 @@ async function fetchForecast(lat, lon, date, _retry) {
             ref = diarioRef.child(_entryKey + '/audio');
           }
           ref.remove().then(function() {
-            if (window.showToast) showToast(_isEN ? 'Audio deleted' : 'Audio eliminato', 'success');
+            if (window.showToast) showToast(isEN ? 'Audio deleted' : 'Audio eliminato', 'success');
           }).catch(function(err) {
             console.error('[Diario] audio delete failed:', err);
-            if (window.showToast) showToast(_isEN ? 'Delete failed' : 'Eliminazione fallita', 'error');
+            if (window.showToast) showToast(isEN ? 'Delete failed' : 'Eliminazione fallita', 'error');
           });
         });
         return;
@@ -14584,15 +14709,14 @@ async function fetchForecast(lat, lon, date, _retry) {
       // v3.47: Remove custom stop tag
       var stopRemBtn = e.target.closest('.diario-stop-remove');
       if (stopRemBtn) {
-        var _isEN = document.documentElement.lang === 'en';
         var _entryKey = stopRemBtn.getAttribute('data-entry-key');
         var _stopIdx = parseInt(stopRemBtn.getAttribute('data-stop-idx'));
-        showConfirm(_isEN ? 'Remove this location tag?' : 'Rimuovere questo tag luogo?', function() {
+        showConfirm(isEN ? 'Remove this location tag?' : 'Rimuovere questo tag luogo?', function() {
           diarioRef.child(_entryKey + '/customStops').once('value', function(snap) {
             var stops = snap.val() || [];
             stops.splice(_stopIdx, 1);
             diarioRef.child(_entryKey + '/customStops').set(stops).then(function() {
-              if (window.showToast) showToast(_isEN ? 'Tag removed' : 'Tag rimosso', 'success');
+              if (window.showToast) showToast(isEN ? 'Tag removed' : 'Tag rimosso', 'success');
             });
           });
         });
@@ -14603,14 +14727,13 @@ async function fetchForecast(lat, lon, date, _retry) {
       if (stopName && isOwner && !window._simRole) {
         var _chip = stopName.closest('.diario-custom-stop');
         if (!_chip) return;
-        var _isEN2 = document.documentElement.lang === 'en';
         var _entryKey2 = _chip.getAttribute('data-entry-key');
         var _stopIdx2 = parseInt(_chip.getAttribute('data-stop-idx'));
         var currentName = stopName.textContent.trim();
-        _showPromptModal(_isEN2 ? 'Edit location name:' : 'Modifica nome luogo:', currentName, function(newName) {
+        _showPromptModal(isEN ? 'Edit location name:' : 'Modifica nome luogo:', currentName, function(newName) {
           if (newName !== null && newName.trim() !== '' && newName.trim() !== currentName) {
             diarioRef.child(_entryKey2 + '/customStops/' + _stopIdx2 + '/name').set(newName.trim()).then(function() {
-              if (window.showToast) showToast(_isEN2 ? 'Tag updated' : 'Tag aggiornato', 'success');
+              if (window.showToast) showToast(isEN ? 'Tag updated' : 'Tag aggiornato', 'success');
             });
           }
         });
@@ -14930,7 +15053,7 @@ async function fetchForecast(lat, lon, date, _retry) {
     // v3.98 FIX: Append to DOM before .click() for Android/iOS compatibility
     input.style.cssText = 'position:fixed;top:-100px;left:-100px;opacity:0;';
     input.addEventListener('change', function() {
-      document.body.removeChild(input);
+      if (document.body.contains(input)) document.body.removeChild(input);
       if (!input.files || input.files.length === 0) return;
       var files = Array.from(input.files); // unlimited photos
 
@@ -15172,7 +15295,7 @@ async function fetchForecast(lat, lon, date, _retry) {
         '<label>' + (isEN ? 'Day name (optional)' : 'Nome giorno (opzionale)') + '</label>' +
         '<input type="text" id="diario-edit-label" maxlength="40" placeholder="' + (isEN ? 'e.g. Departure, Rest day...' : 'es. Partenza, Giorno di riposo...') + '">' +
         '<label>' + (isEN ? 'Text / Story' : 'Testo / Racconto') + '</label>' +
-        '<textarea id="diario-edit-text" rows="4" maxlength="500"></textarea>' +
+        '<textarea id="diario-edit-text" rows="6" maxlength="2000"></textarea>' +
         '<label>' + (isEN ? 'Km driven (0 to remove)' : 'Km guidati (0 per rimuovere)') + '</label>' +
         '<input type="number" id="diario-edit-km" min="0" max="9999" step="1">' +
         '<label>' + (isEN ? 'Drive time (empty to remove)' : 'Tempo guida (vuoto per rimuovere)') + '</label>' +
@@ -15190,7 +15313,8 @@ async function fetchForecast(lat, lon, date, _retry) {
         '<button type="button" id="diario-edit-weather-btn" style="margin-top:6px;padding:6px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg-alt);font-size:13px;cursor:pointer;">' + (isEN ? '\u{1F4CD} Add current weather' : '\u{1F4CD} Aggiungi meteo attuale') + '</button>' +
         '<div class="diario-edit-actions">' +
         '  <button class="diario-edit-cancel">' + (isEN ? 'Cancel' : 'Annulla') + '</button>' +
-        '  <button class="diario-edit-save">' + (isEN ? 'Save' : 'Salva') + '</button>' +
+        '  <button class="diario-edit-save">' + (isEN ? 'Save draft' : 'Salva bozza') + '</button>' +
+        '  <button class="diario-edit-publish" style="background:var(--success,#16a34a);color:#fff;">' + (isEN ? 'Save & publish' : 'Salva e pubblica') + '</button>' +
         '</div>' +
         '</div>';
       document.body.appendChild(overlay);
@@ -15321,7 +15445,9 @@ async function fetchForecast(lat, lon, date, _retry) {
       overlay.querySelector('.diario-edit-cancel').addEventListener('click', function() { overlay.remove(); });
       overlay.addEventListener('click', function(e) { if (e.target === overlay) overlay.remove(); });
 
-      overlay.querySelector('.diario-edit-save').addEventListener('click', function() {
+      // v4.09: shared save routine. publishNow=true => publish immediately;
+      // publishNow=false => keep/leave as draft (unless a future date schedules it).
+      function _doDiarioSave(publishNow) {
         // v3.35 FIX: Read values from THIS overlay (not document.getElementById which
         // could hit a stale/duplicate element). Use overlay.querySelector for safety.
         var dateEl = overlay.querySelector('#diario-edit-date');
@@ -15343,7 +15469,23 @@ async function fetchForecast(lat, lon, date, _retry) {
         // Now proceed with save (no setTimeout needed since values are already captured)
         (function() {
         var updates = {};
-        if (dateVal) updates['date'] = dateVal;
+        if (dateVal) {
+          updates['date'] = dateVal;
+          // v4.09 FIX (Option A): keep dayNumber in sync with the chosen date so the
+          // timeline ordering and the "Day N" label stay consistent. dayNumber is the
+          // number of days since TRIP_START (0 = first day); negative => pre-trip.
+          try {
+            var _ts = (typeof TRIP_START !== 'undefined') ? TRIP_START : (window.TRIP_START ? new Date(window.TRIP_START) : null);
+            if (_ts) {
+              var _startMidnight = new Date(_ts.getFullYear(), _ts.getMonth(), _ts.getDate());
+              var _dParts = dateVal.split('-');
+              var _entryMidnight = new Date(parseInt(_dParts[0], 10), parseInt(_dParts[1], 10) - 1, parseInt(_dParts[2], 10));
+              var _dn = Math.round((_entryMidnight - _startMidnight) / 86400000);
+              if (_dn < 0) _dn = -1; // clamp pre-trip to -1 (matches getCurrentTripDay)
+              updates['dayNumber'] = _dn;
+            }
+          } catch (_e) { /* leave dayNumber unchanged on parse error */ }
+        }
         updates['customType'] = customType || null;
         updates['customLabel'] = customLabel || null;
         updates['text'] = text || null;
@@ -15354,28 +15496,41 @@ async function fetchForecast(lat, lon, date, _retry) {
         updates['customStops'] = _editStops.length > 0 ? _editStops : null;
         // v3.67: Save weatherData from weather chip
         updates['weatherData'] = _editWeather || null;
-        // v3.35 FIX: Always resolve draft status on save.
-        // Old logic left draft=true forever if dateVal was empty.
+        // v4.09 FIX: draft status now depends on the explicit action chosen by the
+        // owner, not only on the date.
+        //  - Future date  => always scheduled draft (auto-publishes on that date).
+        //  - "Salva e pubblica" on today/past => publish immediately.
+        //  - "Salva bozza" on today/past => keep as draft (not visible to followers).
         var today = window.localDateStr(); // v2.96: LOCAL
         if (dateVal && dateVal > today) {
-          // Future date: schedule as draft
+          // Future date: schedule as draft regardless of the button pressed
           updates['draft'] = true;
           updates['publishAt'] = new Date(dateVal + 'T09:00:00').getTime();
-        } else {
-          // Date is today, past, OR empty → publish immediately (remove draft/schedule)
+        } else if (publishNow) {
+          // Explicit publish: remove draft/schedule
           updates['draft'] = null;
+          updates['publishAt'] = null;
+        } else {
+          // Save as draft: keep it hidden from followers, clear any stale schedule
+          updates['draft'] = true;
           updates['publishAt'] = null;
         }
 
         diarioRef.child(dayKey).update(updates).then(function() {
           if (dateVal && dateVal > today) {
             if (window.showToast) showToast(isEN ? '\ud83d\udd52 Scheduled for ' + dateVal : '\ud83d\udd52 Programmato per ' + dateVal, 'success');
+          } else if (publishNow) {
+            if (window.showToast) showToast(isEN ? '\u2705 Published!' : '\u2705 Pubblicato!', 'success');
           } else {
-            if (window.showToast) showToast(isEN ? 'Saved!' : 'Salvato!', 'success');
+            if (window.showToast) showToast(isEN ? '\ud83d\udcdd Draft saved' : '\ud83d\udcdd Bozza salvata', 'success');
           }
         }).catch(function(e) { console.error('[Diario] save failed:', e); if (window.showToast) showToast(isEN ? '\u274c Save failed' : '\u274c Salvataggio fallito', 'error'); });
         })(); // end IIFE
-      });
+      }
+
+      overlay.querySelector('.diario-edit-save').addEventListener('click', function() { _doDiarioSave(false); });
+      var _pubBtn = overlay.querySelector('.diario-edit-publish');
+      if (_pubBtn) _pubBtn.addEventListener('click', function() { _doDiarioSave(true); });
     });
   }
 
@@ -15416,8 +15571,9 @@ async function fetchForecast(lat, lon, date, _retry) {
           activities: { walk_km: 0, bike_km: 0, elevation: 0 },
           text: '',
           highlight: '',
-          // v3.35 FIX: Don't set draft:true — new posts are published immediately.
-          // User can schedule for future via edit modal if needed.
+          // v4.09 FIX: New posts start as DRAFT by default. The owner must explicitly
+          // publish them (via the "Pubblica" button) before followers can see them.
+          draft: true,
           autoGenerated: true,
           createdAt: firebase.database.ServerValue.TIMESTAMP
         };
@@ -17421,9 +17577,22 @@ async function fetchForecast(lat, lon, date, _retry) {
   var chartCategory = null;
   var chartDaily = null;
 
+  // v4.10 FIX (P0 #1): unknown currencies must NOT be treated 1:1 as EUR.
+  // toEur returns null when the currency is not in FX_RATES so callers can
+  // detect the problem; toEurSafe is a display helper that falls back to the
+  // raw amount only for rendering (never for stored amountEur).
   function toEur(amount, currency) {
-    var rate = FX_RATES[currency] || 1;
-    return amount / rate;
+    if (currency == null || currency === '') return amount; // assume already EUR
+    if (!Object.prototype.hasOwnProperty.call(FX_RATES, currency)) {
+      if (window._qvLog && _qvLog.warn) _qvLog.warn('[Spese] Valuta non riconosciuta:', currency);
+      return null; // signal: cannot convert
+    }
+    return amount / FX_RATES[currency];
+  }
+  // Display-only conversion: never returns null (falls back to raw amount).
+  function toEurDisplay(amount, currency) {
+    var v = toEur(amount, currency);
+    return (v == null) ? amount : v;
   }
 
   function formatEur(val) {
@@ -17436,6 +17605,20 @@ async function fetchForecast(lat, lon, date, _retry) {
     if (typeof firebase === 'undefined' || !firebase.database) { _qvLog.warn('[Expense] Firebase not available'); return; }
     var familyId = (typeof FAMILY_ID !== 'undefined') ? FAMILY_ID : 'viaggio-europa-2026';
     expenseRef = firebase.database().ref('trips/' + familyId + '/expenses');
+
+    // v4.10 FIX (P4): optional FX rate overrides from config, so rates can be
+    // updated without redeploying the app. Falls back to hardcoded FX_RATES.
+    firebase.database().ref('trips/' + familyId + '/fxRates').once('value').then(function(s) {
+      var remote = s.val();
+      if (remote && typeof remote === 'object') {
+        Object.keys(remote).forEach(function(cur) {
+          var r = parseFloat(remote[cur]);
+          if (isFinite(r) && r > 0) FX_RATES[cur] = r;
+        });
+        _qvLog.info('[Spese] FX rates overridden from config:', Object.keys(remote).join(', '));
+        if (expensesCache.length) { renderExpenseStats(); renderExpenseList(); renderExpenseCharts(); }
+      }
+    }).catch(function(err) { _qvLog.warn('[Spese] FX override load failed:', err && err.message); });
 
     // Set today's date as default
     var dateInput = document.getElementById('expense-date');
@@ -17507,7 +17690,11 @@ async function fetchForecast(lat, lon, date, _retry) {
     if (window.registerFirebaseListener) {
       window.registerFirebaseListener('piano', expenseRef, 'value', _expenseCb);
     } else {
-      expenseRef.on('value', _expenseCb);
+      // v4.10 FIX (P3): error callback for the expenses listener.
+      expenseRef.on('value', _expenseCb, function(err) {
+        console.error('[Spese] listener error:', err && err.message);
+        if (window.showToast) showToast(isEN ? '⚠️ Could not load expenses' : '⚠️ Impossibile caricare le spese', 'error');
+      });
     }
   }
 
@@ -17530,15 +17717,22 @@ async function fetchForecast(lat, lon, date, _retry) {
       return;
     }
 
+    var _curManual = document.getElementById('expense-currency').value;
+    // v4.10 FIX (P0 #1): block save if the currency cannot be converted.
+    var _eurManual = toEur(amount, _curManual);
+    if (_eurManual == null) {
+      showExpenseStatus((isEN ? '⚠️ Unsupported currency: ' : '⚠️ Valuta non supportata: ') + _curManual, 'red');
+      return;
+    }
     var expense = {
       amount: amount,
-      currency: document.getElementById('expense-currency').value,
+      currency: _curManual,
       category: document.getElementById('expense-category').value,
       subcategory: document.getElementById('expense-subcategory').value || '',
       date: document.getElementById('expense-date').value,
       note: document.getElementById('expense-note').value.trim(),
       country: (document.getElementById('expense-country') || {}).value || '',
-      amountEur: toEur(amount, document.getElementById('expense-currency').value),
+      amountEur: _eurManual,
       createdAt: Date.now(),
       source: 'manual'
     };
@@ -17625,7 +17819,7 @@ async function fetchForecast(lat, lon, date, _retry) {
         '</div>' +
         '<div style="text-align:right;">' +
         '<div style="font-size:16px;font-weight:700;">' + exp.amount.toFixed(2) + ' ' + exp.currency + '</div>' +
-        '<div style="font-size:11px;color:var(--text-muted);">≈ ' + formatEur(toEur(exp.amount, exp.currency)) + '</div>' +
+        '<div style="font-size:11px;color:var(--text-muted);">≈ ' + formatEur(toEurDisplay(exp.amount, exp.currency)) + '</div>' +
         '</div></div>' +
         '<label style="font-size:11px;margin-top:4px;display:block;"><input type="checkbox" class="ocr-confirm-check" data-idx="' + idx + '" checked> ' + (isEN ? 'Import this expense' : 'Importa questa spesa') + '</label>';
       container.appendChild(div);
@@ -17658,7 +17852,7 @@ async function fetchForecast(lat, lon, date, _retry) {
           date: exp.date || (window.localDateStr ? window.localDateStr() : new Date().toISOString().slice(0, 10)),
           note: exp.note || exp.merchant || '',
           merchant: exp.merchant || '',
-          amountEur: toEur(exp.amount, exp.currency),
+          amountEur: toEurDisplay(exp.amount, exp.currency),
           createdAt: Date.now(),
           source: 'ocr'
         };
@@ -17735,7 +17929,7 @@ async function fetchForecast(lat, lon, date, _retry) {
               date: exp.date || (window.localDateStr ? window.localDateStr() : new Date().toISOString().slice(0, 10)),
               note: exp.note || exp.merchant || '',
               merchant: exp.merchant || '',
-              amountEur: toEur(exp.amount, exp.currency),
+              amountEur: toEurDisplay(exp.amount, exp.currency),
               createdAt: Date.now(),
               source: 'csv'
             };
@@ -17989,7 +18183,7 @@ async function fetchForecast(lat, lon, date, _retry) {
                 date: exp.date || (window.localDateStr ? window.localDateStr() : new Date().toISOString().slice(0, 10)),
                 note: exp.note || exp.merchant || '',
                 merchant: exp.merchant || '',
-                amountEur: toEur(exp.amount, exp.currency),
+                amountEur: toEurDisplay(exp.amount, exp.currency),
                 createdAt: Date.now(),
                 source: 'pdf'
               };
@@ -18015,7 +18209,7 @@ async function fetchForecast(lat, lon, date, _retry) {
     var dates = {};
 
     expensesCache.forEach(function(e) {
-      var eur = e.amountEur || toEur(e.amount, e.currency);
+      var eur = e.amountEur || toEurDisplay(e.amount, e.currency);
       totalEur += eur;
       catTotals[e.category] = (catTotals[e.category] || 0) + eur;
       if (e.date) dates[e.date] = true;
@@ -18061,7 +18255,7 @@ async function fetchForecast(lat, lon, date, _retry) {
     var html = '';
     filtered.forEach(function(e) {
       var icon = CATEGORY_ICONS[e.category] || '📦';
-      var eurStr = formatEur(e.amountEur || toEur(e.amount, e.currency));
+      var eurStr = formatEur(e.amountEur || toEurDisplay(e.amount, e.currency));
       var amtStr = e.amount.toFixed(2) + ' ' + e.currency;
       var countryStr = e.country ? (COUNTRY_FLAG_MAP[e.country] || '') + ' ' + e.country : '';
       html += '<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);">' +
@@ -18154,7 +18348,12 @@ async function fetchForecast(lat, lon, date, _retry) {
         category: document.getElementById('exp-edit-category').value.trim() || exp.category,
         subcategory: document.getElementById('exp-edit-subcategory').value.trim()
       };
-      updates.amountEur = toEur(updates.amount, updates.currency);
+      var _eurEdit = toEur(updates.amount, updates.currency);
+      if (_eurEdit == null) {
+        if (window.showToast) showToast((isEN ? '⚠️ Unsupported currency: ' : '⚠️ Valuta non supportata: ') + updates.currency, 'warn');
+        return;
+      }
+      updates.amountEur = _eurEdit;
       expenseRef.child(exp._key).update(updates).then(function() {
         modal.remove();
       }).catch(function(err) {
@@ -18188,7 +18387,7 @@ async function fetchForecast(lat, lon, date, _retry) {
 
     var catTotals = {};
     expensesCache.forEach(function(e) {
-      var eur = e.amountEur || toEur(e.amount, e.currency);
+      var eur = e.amountEur || toEurDisplay(e.amount, e.currency);
       catTotals[e.category] = (catTotals[e.category] || 0) + eur;
     });
 
@@ -18231,7 +18430,7 @@ async function fetchForecast(lat, lon, date, _retry) {
     var dailyTotals = {};
     expensesCache.forEach(function(e) {
       if (!e.date) return;
-      var eur = e.amountEur || toEur(e.amount, e.currency);
+      var eur = e.amountEur || toEurDisplay(e.amount, e.currency);
       dailyTotals[e.date] = (dailyTotals[e.date] || 0) + eur;
     });
 
@@ -18282,7 +18481,7 @@ async function fetchForecast(lat, lon, date, _retry) {
         e.date || '',
         e.amount.toFixed(2),
         e.currency,
-        (e.amountEur || toEur(e.amount, e.currency)).toFixed(2),
+        (e.amountEur || toEurDisplay(e.amount, e.currency)).toFixed(2),
         e.category,
         e.subcategory || '',
         '"' + (e.note || e.merchant || '').replace(/"/g, '""') + '"',

@@ -59,6 +59,23 @@ const OWNER_UIDS = [
   'Mh8BOeFPnFe7WObcsUoP6wyRgPw1',  // Secondary owner
 ];
 
+
+// ═══════════════════════════════════════════════════════════
+// SHARED: Expense categories (v4.08 — deduplicated from parseExpenseScreenshot + parseExpensePdf)
+const EXPENSE_CATEGORIES = [
+  'carburante', 'pedaggi_traghetti', 'cibo', 'campeggio',
+  'attivita', 'shopping', 'veicolo', 'altro'
+];
+const EXPENSE_SUBCATEGORIES = {
+  carburante: ['diesel', 'adblue', 'gpl', 'benzina'],
+  pedaggi_traghetti: ['autostrada', 'traghetto', 'tunnel', 'parcheggio'],
+  cibo: ['supermercato', 'ristorante', 'bar', 'fast_food'],
+  campeggio: ['campeggio', 'area_sosta', 'parcheggio_notte'],
+  attivita: ['biglietti', 'escursioni', 'musei', 'parchi'],
+  shopping: ['souvenir', 'abbigliamento', 'elettronica', 'altro'],
+  veicolo: ['manutenzione', 'lavaggio', 'assicurazione'],
+  altro: ['farmacia', 'sim', 'lavanderia', 'altro'],
+};
 // ═══════════════════════════════════════════════════════════
 // SHARED: Trip start date (CORRECTED: June 25, not June 26)
 // v4.02: Rate limiting helper — per-user daily call counter
@@ -67,13 +84,17 @@ const OWNER_UIDS = [
 async function checkRateLimit(uid, functionName, maxPerDay) {
   const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
   const ref = db.ref(`rateLimits/${uid}/${functionName}/${today}`);
-  const snap = await ref.once('value');
-  const count = snap.val() || 0;
-  if (count >= maxPerDay) {
+  // v4.10 FIX (P0 #2): atomic increment via transaction to remove the
+  // read-then-write race condition (two rapid calls could both read 0 and
+  // bypass the limit). Returning undefined from the updater aborts the commit.
+  const result = await ref.transaction((current) => {
+    if ((current || 0) >= maxPerDay) return; // abort
+    return (current || 0) + 1;
+  });
+  if (!result.committed) {
     throw new HttpsError('resource-exhausted',
       `Daily limit reached (${maxPerDay} calls/day). Try again tomorrow.`);
   }
-  await ref.set(count + 1);
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -976,6 +997,15 @@ function weatherCodeToLabel(code) {
 
 // Fetch weather from Open-Meteo
 async function fetchWeatherForDay(lat, lng, dateStr) {
+  // v4.08 Fix #13: Server-side weather cache (6h TTL) to avoid duplicate API calls
+  const cacheRef = db.ref(`trips/${FAMILY_ID}/weatherCache/${dateStr}`);
+  const cacheSnap = await cacheRef.once('value');
+  const cached = cacheSnap.val();
+  if (cached && cached.fetchedAt && (Date.now() - cached.fetchedAt < 6 * 3600000)) {
+    logger.log(`[Weather] Cache hit for ${dateStr}`);
+    return cached.data;
+  }
+
   const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&daily=temperature_2m_max,temperature_2m_min,weathercode,sunrise,sunset,precipitation_probability_max,windspeed_10m_max&start_date=${dateStr}&end_date=${dateStr}&timezone=auto`;
   try {
     // A2.4 FIX: 15s timeout on weather API
@@ -993,7 +1023,7 @@ async function fetchWeatherForDay(lat, lng, dateStr) {
     const hours = Math.floor(diffMs / 3600000);
     const mins = Math.round((diffMs % 3600000) / 60000);
 
-    return {
+    const result = {
       high: Math.round(data.daily.temperature_2m_max[0]),
       low: Math.round(data.daily.temperature_2m_min[0]),
       code: data.daily.weathercode[0],
@@ -1003,6 +1033,10 @@ async function fetchWeatherForDay(lat, lng, dateStr) {
       wind: data.daily.windspeed_10m_max ? Math.round(data.daily.windspeed_10m_max[0]) : 0,
       precipProb: data.daily.precipitation_probability_max ? data.daily.precipitation_probability_max[0] : 0,
     };
+
+    // v4.08: Write to cache
+    await cacheRef.set({ data: result, fetchedAt: Date.now() });
+    return result;
   } catch (e) {
     logger.error('[Weather] Fetch error:', e.message);
     return null;
@@ -1168,34 +1202,66 @@ exports.dailyWeatherArchiver = onSchedule(
 
 const openaiKey = defineSecret('OPENAI_API_KEY');
 
+// v4.10 FIX (P2 #10): retry helper for OpenAI calls. Retries transient
+// failures (HTTP 429/500/502/503/504) with exponential backoff. The caller
+// keeps full control of the request body and its own AbortController/timeout;
+// we just re-issue the same request factory up to `maxRetries` times.
+async function fetchOpenAIWithRetry(requestFactory, maxRetries = 2) {
+  const RETRYABLE = [429, 500, 502, 503, 504];
+  let lastErr = null;
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      const response = await requestFactory();
+      if (response.ok || !RETRYABLE.includes(response.status) || attempt === maxRetries) {
+        return response;
+      }
+      logger.warn(`[OpenAI] Transient ${response.status}, retry ${attempt + 1}/${maxRetries}`);
+    } catch (err) {
+      lastErr = err;
+      // AbortError (timeout) is not worth retrying — rethrow immediately.
+      if (err && err.name === 'AbortError') throw err;
+      if (attempt === maxRetries) throw err;
+      logger.warn(`[OpenAI] Network error, retry ${attempt + 1}/${maxRetries}: ${err.message}`);
+    }
+    // Exponential backoff: 500ms, 1000ms, ...
+    await new Promise((r) => setTimeout(r, 500 * Math.pow(2, attempt)));
+  }
+  if (lastErr) throw lastErr;
+}
+
 async function translateToEnglish(text, apiKey) {
   if (!text || !text.trim()) return null;
 
   try {
-    // A2.4 FIX: 30s timeout on OpenAI API
-    const translateCtrl = new AbortController();
-    const translateTimeout = setTimeout(() => translateCtrl.abort(), 30000);
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages: [
-          {
-            role: 'system',
-            content: 'You are a translator for a family travel blog about a camper van trip across Europe. Translate the following Italian text to English. Keep the same tone (informal, enthusiastic). Preserve all emoji and formatting exactly as they are. Return ONLY the translated text, nothing else.',
+    // A2.4 FIX: 30s timeout on OpenAI API (recreated per attempt for retry safety)
+    const response = await fetchOpenAIWithRetry(async () => {
+      const translateCtrl = new AbortController();
+      const translateTimeout = setTimeout(() => translateCtrl.abort(), 30000);
+      try {
+        return await fetch('https://api.openai.com/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`,
           },
-          { role: 'user', content: text },
-        ],
-        temperature: 0.3,
-        max_tokens: 1000,
-      }),
-      signal: translateCtrl.signal,
+          body: JSON.stringify({
+            model: 'gpt-4o-mini',
+            messages: [
+              {
+                role: 'system',
+                content: 'You are a translator for a family travel blog about a camper van trip across Europe. Translate the following Italian text to English. Keep the same tone (informal, enthusiastic). Preserve all emoji and formatting exactly as they are. Return ONLY the translated text, nothing else.',
+              },
+              { role: 'user', content: text },
+            ],
+            temperature: 0.3,
+            max_tokens: 1000,
+          }),
+          signal: translateCtrl.signal,
+        });
+      } finally {
+        clearTimeout(translateTimeout);
+      }
     });
-    clearTimeout(translateTimeout);
 
     if (!response.ok) {
       const err = await response.text();
@@ -1321,21 +1387,7 @@ exports.parseExpenseScreenshot = onCall(
       throw new HttpsError('internal', 'OPENAI_API_KEY not configured.');
     }
 
-    const CATEGORIES = [
-      'carburante', 'pedaggi_traghetti', 'cibo', 'campeggio',
-      'attivita', 'shopping', 'veicolo', 'altro'
-    ];
-
-    const SUBCATEGORIES = {
-      carburante: ['diesel', 'adblue', 'gpl', 'benzina'],
-      pedaggi_traghetti: ['autostrada', 'traghetto', 'tunnel', 'parcheggio'],
-      cibo: ['supermercato', 'ristorante', 'bar', 'fast_food'],
-      campeggio: ['campeggio', 'area_sosta', 'parcheggio_notte'],
-      attivita: ['biglietti', 'escursioni', 'musei', 'parchi'],
-      shopping: ['souvenir', 'abbigliamento', 'elettronica', 'altro'],
-      veicolo: ['manutenzione', 'lavaggio', 'assicurazione'],
-      altro: ['farmacia', 'sim', 'lavanderia', 'altro'],
-    };
+    // v4.08: Use shared EXPENSE_CATEGORIES / EXPENSE_SUBCATEGORIES from top of file
 
     const systemPrompt = `You are an expense parser for a family road trip across Europe. 
 Analyze the bank app screenshot and extract ALL visible transactions/expenses.
@@ -1344,7 +1396,7 @@ For each expense, return a JSON object with these fields:
 - currency: string (ISO code: EUR, NOK, SEK, DKK, PLN, GBP, CZK, CHF)
 - merchant: string (the merchant/store name as shown)
 - date: string (YYYY-MM-DD format, or null if not visible)
-- category: one of [${CATEGORIES.join(', ')}]
+- category: one of [${EXPENSE_CATEGORIES.join(', ')}]
 - subcategory: string (best match from known subcategories)
 - note: string (brief description, e.g. "Pieno diesel a Tromsø")
 
@@ -1361,33 +1413,38 @@ Return a JSON array of expense objects. If you cannot read the image clearly, re
 Return ONLY valid JSON, no markdown formatting.`;
 
     try {
-      // A2.4 FIX: 30s timeout on OpenAI Vision API
-      const ocrCtrl = new AbortController();
-      const ocrTimeout = setTimeout(() => ocrCtrl.abort(), 30000);
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apiKey}`,
-        },
-        body: JSON.stringify({
-          model: 'gpt-4o',
-          messages: [
-            { role: 'system', content: systemPrompt },
-            {
-              role: 'user',
-              content: [
-                { type: 'text', text: 'Extract all expenses from this bank app screenshot:' },
-                { type: 'image_url', image_url: { url: imageUrl, detail: 'high' } },
-              ],
+      // A2.4 FIX: 30s timeout on OpenAI Vision API (recreated per attempt for retry)
+      const response = await fetchOpenAIWithRetry(async () => {
+        const ocrCtrl = new AbortController();
+        const ocrTimeout = setTimeout(() => ocrCtrl.abort(), 30000);
+        try {
+          return await fetch('https://api.openai.com/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${apiKey}`,
             },
-          ],
-          temperature: 0.1,
-          max_tokens: 2000,
-        }),
-        signal: ocrCtrl.signal,
+            body: JSON.stringify({
+              model: 'gpt-4o',
+              messages: [
+                { role: 'system', content: systemPrompt },
+                {
+                  role: 'user',
+                  content: [
+                    { type: 'text', text: 'Extract all expenses from this bank app screenshot:' },
+                    { type: 'image_url', image_url: { url: imageUrl, detail: 'high' } },
+                  ],
+                },
+              ],
+              temperature: 0.1,
+              max_tokens: 2000,
+            }),
+            signal: ocrCtrl.signal,
+          });
+        } finally {
+          clearTimeout(ocrTimeout);
+        }
       });
-      clearTimeout(ocrTimeout);
 
       if (!response.ok) {
         const errText = await response.text();
@@ -1426,7 +1483,7 @@ Return ONLY valid JSON, no markdown formatting.`;
         currency: (exp.currency || 'EUR').toUpperCase(),
         merchant: exp.merchant || 'Sconosciuto',
         date: exp.date || null,
-        category: CATEGORIES.includes(exp.category) ? exp.category : 'altro',
+        category: EXPENSE_CATEGORIES.includes(exp.category) ? exp.category : 'altro',
         subcategory: exp.subcategory || 'altro',
         note: exp.note || '',
       }));
@@ -1527,11 +1584,7 @@ exports.parseExpensePdf = onCall(
       throw new HttpsError('internal', 'OPENAI_API_KEY not configured.');
     }
 
-    const CATEGORIES = [
-      'carburante', 'pedaggi_traghetti', 'cibo', 'campeggio',
-      'attivita', 'shopping', 'veicolo', 'altro'
-    ];
-
+        // v4.08: Use shared EXPENSE_CATEGORIES from top of file
     const systemPrompt = `You are an expense parser for a family road trip across Europe.
 Analyze the following bank statement / transaction list text extracted from a PDF.
 Extract ALL visible transactions/expenses (ignore income/credits).
@@ -1541,7 +1594,7 @@ For each expense, return a JSON object with these fields:
 - currency: string (ISO code: EUR, NOK, SEK, DKK, PLN, GBP, CZK, CHF)
 - merchant: string (the merchant/store name as shown)
 - date: string (YYYY-MM-DD format, or null if not visible)
-- category: one of [${CATEGORIES.join(', ')}]
+- category: one of [${EXPENSE_CATEGORIES.join(', ')}]
 - subcategory: string (best match from known subcategories)
 - note: string (brief description)
 
@@ -1558,26 +1611,31 @@ Return a JSON array of expense objects. If no expenses found, return [].
 Return ONLY valid JSON, no markdown formatting.`;
 
     try {
-      const ctrl = new AbortController();
-      const timeout = setTimeout(() => ctrl.abort(), 60000);
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apiKey}`,
-        },
-        body: JSON.stringify({
-          model: 'gpt-4o',
-          messages: [
-            { role: 'system', content: systemPrompt },
-            { role: 'user', content: `Extract all expenses from this bank statement:\n\n${pdfText.slice(0, 12000)}` },
-          ],
-          temperature: 0.1,
-          max_tokens: 4000,
-        }),
-        signal: ctrl.signal,
+      const response = await fetchOpenAIWithRetry(async () => {
+        const ctrl = new AbortController();
+        const timeout = setTimeout(() => ctrl.abort(), 60000);
+        try {
+          return await fetch('https://api.openai.com/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${apiKey}`,
+            },
+            body: JSON.stringify({
+              model: 'gpt-4o',
+              messages: [
+                { role: 'system', content: systemPrompt },
+                { role: 'user', content: `Extract all expenses from this bank statement:\n\n${pdfText.slice(0, 12000)}` },
+              ],
+              temperature: 0.1,
+              max_tokens: 4000,
+            }),
+            signal: ctrl.signal,
+          });
+        } finally {
+          clearTimeout(timeout);
+        }
       });
-      clearTimeout(timeout);
 
       if (!response.ok) {
         const errText = await response.text();
@@ -1611,7 +1669,7 @@ Return ONLY valid JSON, no markdown formatting.`;
         currency: (exp.currency || 'EUR').toUpperCase(),
         merchant: exp.merchant || 'Sconosciuto',
         date: exp.date || null,
-        category: CATEGORIES.includes(exp.category) ? exp.category : 'altro',
+        category: EXPENSE_CATEGORIES.includes(exp.category) ? exp.category : 'altro',
         subcategory: exp.subcategory || 'altro',
         note: exp.note || '',
       }));
@@ -1662,35 +1720,6 @@ exports.updateUserDisplayName = onCall({ memory: '256MiB' }, async (request) => 
 
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 15. NOTIFY NEW POSTCARD (v4.01)
-// Triggered when a new chat message is created; if msgType === 'postcard',
-// sends a push notification to all followers.
+// 15. NOTIFY NEW POSTCARD — REMOVED in v4.08 (postcard feature deprecated in v4.06)
+// When deploying, answer Y to delete this function from Firebase.
 // ─────────────────────────────────────────────────────────────────────────────
-exports.notifyNewPostcard = onValueCreated(
-  {
-    ref: 'chat/{familyId}/{msgId}',
-    timeoutSeconds: 60,
-  },
-  async (event) => {
-    const msg = event.data.val();
-    if (!msg || msg.msgType !== 'postcard') return null;
-
-    const familyId = event.params.familyId;
-    const senderName = msg.postcardFrom || msg.displayName || 'Qualcuno';
-
-    const notifRef = db.ref(`trips/${familyId}/notifications/queue`);
-    await notifRef.push({
-      type:      'postcard',
-      title:     `📮 Cartolina da ${senderName}`,
-      body:      msg.text ? msg.text.substring(0, 100) : 'Hai ricevuto una cartolina!',
-      target:    'chat',
-      url:       './#tab-chat',
-      tag:       'postcard_' + event.params.msgId,
-      senderUid: msg.uid || null,
-      createdAt: Date.now(),
-      sent:      false,
-    });
-
-    logger.log(`[Postcard] Push queued for postcard from ${senderName} in ${familyId}`);
-    return null;
-  });

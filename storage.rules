@@ -51,12 +51,7 @@ service firebase.storage {
       allow write: if isAuthenticated() && (isImage() || isAudio()) && maxSize(10);
     }
 
-    // v4.02: Postcard photos: postcards/{familyId}/{filename}
-    // Any authenticated user can send postcard photos (max 5MB, images only)
-    match /postcards/{familyId}/{filename} {
-      allow read: if isAuthenticated();
-      allow write: if isAuthenticated() && isImage() && maxSize(5);
-    }
+    // v4.08: Postcard storage rule removed (feature deprecated in v4.06)
 
     // Default: deny all other paths
     match /{allPaths=**} {

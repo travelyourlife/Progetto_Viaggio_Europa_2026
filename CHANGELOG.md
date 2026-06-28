@@ -5,12 +5,55 @@
 
 # Quo Vadis — Changelog
 
-## v4.06 — 2026-06-27
-- **Sezione "A piedi" rinnovata**: rimossa riga "Oggi" (3 chip giornalieri), rimossi chip bici e dislivello. Totale viaggio ora mostra solo 🧥 km + 👣 passi.
+## v4.10 — 2026-06-28
+Interventi derivati dall'audit tecnico (priorità P0→P4). Verificate riga per riga sul codice reale; gli item già risolti in build precedenti (es. `escapeHtml` apice singolo, pulsante `wasThere` sempre visibile) sono stati confermati e non ritoccati.
+
+**P0 — Critici**
+- **FIX conversione valute (`toEur`)**: le valute non presenti in `FX_RATES` non vengono più trattate erroneamente 1:1 con l'EUR. `toEur` ora restituisce `null` (segnale di errore) e il salvataggio manuale/modifica di una spesa viene **bloccato** con avviso se la valuta non è supportata. Per la sola visualizzazione/aggregazione è stato introdotto `toEurDisplay`, che evita `NaN` sui record storici.
+- **FIX rate-limit atomico (Cloud Functions)**: `checkRateLimit` è stato convertito da `once()`+`set()` (soggetto a race condition) a una **transazione atomica** (`transaction()`), evitando che richieste concorrenti aggirino il limite.
+
+**P1 — Alta priorità**
+- **FIX GPS resume**: anche nel percorso di ripristino del tracking, in caso di permesso negato il watcher si **ferma automaticamente** (come già avveniva nel percorso principale), evitando uno stato "attivo" che non registra.
+- **Hardening `linkify`**: regex resa case-insensitive e aggiunta validazione esplicita del protocollo (`http/https`) per rafforzare la difesa anti-XSS sui link generati dagli utenti.
+
+**P2 — Media priorità**
+- **Dark mode**: aggiunti override per il picker reazioni dei commenti (`.comment-react-picker`, ora con classe CSS dedicata al posto dello stile inline) e per i popup Leaflet (`.leaflet-popup-content-wrapper`/`.leaflet-popup-tip`), migliorando la leggibilità dei tip sulla mappa in tema scuro.
+- **Import GPX più robusto**: il completamento dell'importazione ora attende (via `Promise.all`) sia la scrittura del tracciato sia quella del riepilogo giornaliero, così il toast "completato" compare solo a dati effettivamente persistiti.
+- **Retry OpenAI (Cloud Functions)**: le tre chiamate OpenAI (traduzione, OCR screenshot, parsing PDF) usano un helper `fetchOpenAIWithRetry` con backoff esponenziale sugli errori transitori (429/500/502/503/504); timeout/abort preservati.
+
+**P3/P4 — Bassa priorità / debito tecnico**
+- **Error callback sui listener Firebase**: `registerFirebaseListener` ora applica un error callback di default a tutti i listener registrati (log + eventuale avviso), così un errore di permessi/rete non resta silenzioso. Aggiunti callback dedicati anche ai listener di diario e spese nel percorso di fallback.
+- **Tassi di cambio configurabili**: all'avvio del modulo spese, eventuali tassi presenti in `trips/{id}/fxRates` sovrascrivono i valori hardcoded (con validazione), consentendo l'aggiornamento dei cambi senza ridistribuire l'app. Fallback completo ai valori di default.
+- **Lazy-loading immagini**: confermato già presente sulle immagini di feed/commenti/avatar; la lightbox resta volutamente a caricamento immediato.
+- **Nota App Check**: raccomandazione di configurazione lato console Firebase (non una modifica di codice) documentata a parte.
+- **Cache bump**: `CACHE_NAME` aggiornato a `quo-vadis-v4.10`.
+
+## v4.09 — 2026-06-28
+- **Diario — bozza di default**: i nuovi post del diario vengono ora creati come **bozza** e non più pubblicati automaticamente. Sono visibili solo all'organizzatore finché non vengono pubblicati esplicitamente con il pulsante "✅ Pubblica".
+- **Diario — modale "Modifica voce" con doppia azione**: aggiunti i pulsanti **"Salva bozza"** (secondario) e **"Salva e pubblica"** (primario, verde). Lo stato del post non dipende più solo dalla data ma dall'azione scelta.
+- **FIX ordinamento timeline diario**: la timeline è ora ordinata principalmente per **data reale** (decrescente), con `dayNumber` e `createdAt` come tiebreaker. Corregge i post che apparivano in posizione errata (es. "Si parte!" del 25/06 mostrato sopra il 27/06).
+- **FIX `dayNumber` non sincronizzato**: modificando la **Data** di una voce nel modale, il `dayNumber` (giorni dalla partenza) viene ora ricalcolato automaticamente, mantenendo coerenti l'etichetta "Giorno N" e l'ordine cronologico.
+- **Cache bump**: `CACHE_NAME` aggiornato a `quo-vadis-v4.09` per forzare l'aggiornamento del service worker e ricaricare gli asset.
+
+## v4.08 — 2026-06-27
+- **FIX `days-renderer.js` language bug**: `_isEN` spostato prima di `COUNTRY_LABELS` — la versione EN ora mostra correttamente i nomi dei paesi in inglese.
+- **FIX GPS error recovery**: se il permesso posizione viene negato, il tracking si ferma automaticamente (prima restava "attivo" senza registrare).
+- **FIX Nominatim User-Agent dinamico**: usa `EXPECTED_VERSION` a runtime invece di versione hardcoded.
+- **FIX `removeChild` null check**: 4 file picker ora verificano `document.body.contains()` prima di rimuovere l'input (previene `NotFoundError` su alcuni browser).
+- **FIX `var db` shadowing**: rinominato a `delBtn` nel handler commenti per evitare conflitto con il riferimento Firebase.
+- **FIX Firebase rules `wasThere`**: aggiunta regola per permettere ai follower approvati di marcare "Ci siamo stati!" sui post del diario.
+- **Limite post diario aumentato**: da 500 a 2000 caratteri (`#diario-edit-text` maxlength + rows da 4 a 6).
+
+## v4.07 — 2026-06-27
+- **Sezione "A piedi" rinnovata** con 3 sotto-sezioni:
+  - 👣 **Passi giornalieri (Garmin)**: passi + km inseriti manualmente dal Garmin (type=daily_walk)
+  - 🧥 **Hiking (Strava)**: km da attività Hike/Walk sincronizzate automaticamente via webhook Strava
+  - **Totale viaggio**: somma km (daily + hiking) + passi totali
 - **Input Garmin/manuale**: pulsante "+ Aggiungi giorno" (owner only) apre modal con campi Data, Passi (da Garmin), Km a piedi, Nota. Se km vuoto, stima automatica da passi (×0.0007).
+- **Rimossa riga "Oggi"** e chip bici/dislivello dalla sezione attività.
 - **Nuovo campo `steps`** nel nodo Firebase `/activities` — i passi si sommano nel totale viaggio.
 - **CSS `pos-chip-purple`**: aggiunta classe per chip passi (light + dark mode).
-- **Rimossi dalla chat**: pulsante 🎙️ 5s (quick voice) e ✉️ cartolina (postcard) + relativi handler JS e modal `_showPostcardModal`.
+- **Rimossi dalla chat**: pulsante 🎙️ 5s (quick voice) e ✉️ cartolina (postcard) + relativi handler JS.
 
 ## v4.04 — 2026-06-27
 - **Zero prompt() residui**: sostituiti gli ultimi 2 `prompt()` (edit nome sosta + edit displayName admin) con modal custom `_showPromptModal`. L'app è ora 100% compatibile iOS PWA.

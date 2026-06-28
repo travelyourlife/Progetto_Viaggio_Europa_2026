@@ -64,7 +64,7 @@
     <link rel="apple-touch-icon" sizes="152x152" href="./icon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="./icon.png">
     <link rel="apple-touch-icon" sizes="167x167" href="./icon.png">
-    <title>Quo Vadis — V4.06</title>
+    <title>Quo Vadis — V4.10</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="home-variants.css">
@@ -86,7 +86,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = '4.06';
+  var EXPECTED_VERSION = '4.10';
   window.IS_PROD = true; // v2.71: disabilita debug overlay in produzione
     window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
@@ -9019,15 +9019,24 @@
 </div><!-- end pos-stats-wrapper -->
 <!-- progress bar removed v3.53 -->
 
-<!-- ─── ATTIVITÀ A PIEDI (Garmin / manuale) ─── -->
+<!-- ─── ATTIVITÀ A PIEDI (Garmin + Strava) ─── -->
 <div class="pos-garmin-card" id="pos-garmin-card">
     <h3 class="pos-section-title">🚶 A piedi</h3>
-    <div class="pos-garmin-sub-label" style="font-size:12px;color:var(--text-muted);margin-bottom:4px;">Totale viaggio</div>
+    <div class="pos-garmin-sub-label" style="font-size:12px;color:var(--text-muted);margin-bottom:4px;">👣 Passi giornalieri (Garmin)</div>
     <div class="pos-garmin-chips">
-        <span class="pos-garmin-chip pos-chip-green">🧥 <strong id="pos-garmin-walk">0</strong> km</span>
         <span class="pos-garmin-chip pos-chip-purple">👣 <strong id="pos-garmin-steps">0</strong> passi</span>
+        <span class="pos-garmin-chip pos-chip-green">🚶 <strong id="pos-garmin-walk-daily">0</strong> km</span>
     </div>
-    <button type="button" class="add-km-btn" id="garmin-add-day-btn" style="margin-top:10px;">+ Aggiungi giorno</button>
+    <button type="button" class="add-km-btn" id="garmin-add-day-btn" style="margin-top:8px;">+ Aggiungi giorno</button>
+    <div class="pos-garmin-sub-label" style="font-size:12px;color:var(--text-muted);margin:12px 0 4px;">🧥 Hiking (Strava)</div>
+    <div class="pos-garmin-chips">
+        <span class="pos-garmin-chip pos-chip-green">🧥 <strong id="pos-garmin-hike-km">0</strong> km</span>
+    </div>
+    <div class="pos-garmin-sub-label" style="font-size:12px;color:var(--text-muted);margin:12px 0 4px;font-weight:600;">Totale viaggio</div>
+    <div class="pos-garmin-chips">
+        <span class="pos-garmin-chip pos-chip-green">🚶 <strong id="pos-garmin-walk">0</strong> km totali</span>
+        <span class="pos-garmin-chip pos-chip-purple">👣 <strong id="pos-garmin-steps-total">0</strong> passi</span>
+    </div>
 </div>
 
 <!-- ─── METEO PROSSIME TAPPE ─── -->

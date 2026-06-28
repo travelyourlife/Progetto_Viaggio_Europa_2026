@@ -63,6 +63,13 @@
                             }
                         },
 
+                        "wasThere": {
+                            "$uid": {
+                                ".write": "auth != null && auth.uid === $uid && (root.child('trips/' + $familyId + '/ownerUsers/' + auth.uid).val() === true || (root.child('trips/' + $familyId + '/approvedUsers/' + auth.uid).exists() && !root.child('trips/' + $familyId + '/bannedUsers/' + auth.uid).exists()))",
+                                ".validate": "newData.val() === null || newData.val() === true"
+                            }
+                        },
+
                         "comments": {
                             "$commentId": {
                                 ".write": "auth != null && (((!data.exists() && newData.child('uid').val() === auth.uid) || (data.exists() && data.child('uid').val() === auth.uid) || auth.uid === 'RxlVlsfeaEeSwFUVYbKQujEsbBo1' || auth.uid === 'Mh8BOeFPnFe7WObcsUoP6wyRgPw1' || root.child('trips/' + $familyId + '/ownerUsers/' + auth.uid).val() === true) && (auth.uid === 'RxlVlsfeaEeSwFUVYbKQujEsbBo1' || auth.uid === 'Mh8BOeFPnFe7WObcsUoP6wyRgPw1' || root.child('trips/' + $familyId + '/ownerUsers/' + auth.uid).val() === true || (root.child('trips/' + $familyId + '/approvedUsers/' + auth.uid).exists() && !root.child('trips/' + $familyId + '/bannedUsers/' + auth.uid).exists())))",
