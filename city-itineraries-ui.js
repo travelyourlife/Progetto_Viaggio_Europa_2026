@@ -49,9 +49,26 @@
     tips:      { it: 'ℹ️ Info pratiche',             en: 'ℹ️ Practical info' },
     routeNote: { it: 'Il tracciato collega le tappe in ordine: è una guida indicativa a piedi, non una navigazione stradale.',
                  en: 'The line connects the stops in order: it is an indicative walking guide, not turn-by-turn navigation.' },
-    noData:    { it: 'Itinerari in arrivo per altre città.', en: 'More city itineraries coming soon.' }
+    noData:    { it: 'Itinerari in arrivo per altre città.', en: 'More city itineraries coming soon.' },
+    mustOnly:  { it: '⭐ Solo imperdibili',           en: '⭐ Must-see only' },
+    showAll:   { it: '↩︎ Mostra tutte',              en: '↩︎ Show all' },
+    mustBadge: { it: 'Imperdibile',                  en: 'Must-see' },
+    recBadge:  { it: 'Consigliato',                  en: 'Recommended' },
+    legend:    { it: 'Tocca i numeri sulla mappa. ⭐⭐ imperdibile, ⭐ consigliato.',
+                 en: 'Tap the numbers on the map. ⭐⭐ must-see, ⭐ recommended.' }
   };
   function t(key) { return isEN() ? T[key].en : T[key].it; }
+
+  // ---- Importance tier helpers -------------------------------------------
+  // tier: 2 = must-see (⭐⭐), 1 = recommended (⭐), 0/undefined = optional
+  function stopTier(s) { var n = s && s.tier; return (n === 2 || n === 1) ? n : 0; }
+  function tierStars(tier) { return tier === 2 ? '⭐⭐' : (tier === 1 ? '⭐' : ''); }
+  // Marker palette by tier (gold = must, orange = recommended, else category color)
+  function tierMarkerColor(tier, catColor) {
+    if (tier === 2) return '#f1c40f';
+    if (tier === 1) return '#e67e22';
+    return catColor;
+  }
 
   // ---- Category meta (icon/color) — aligned with app POI categories -------
   var CAT_META = {
@@ -209,6 +226,11 @@
             '<p class="ci-map-note">' + esc(t('routeNote')) + '</p>' +
             '</div>';
 
+    // "Only must-see" filter toggle
+    html += '<div class="ci-filterbar">' +
+            '<button type="button" class="ci-filter-btn" id="ciMustOnly" aria-pressed="false">' + esc(t('mustOnly')) + '</button>' +
+            '</div>';
+
     // Stops
     html += '<ol class="ci-stops">';
     (c.stops || []).forEach(function (s, idx) {
@@ -219,12 +241,17 @@
       var tipsTxt  = en ? (s.tipsEN || s.tips || '') : (s.tips || '');
       var nm       = en ? (s.nameEN || s.name) : s.name;
 
-      html += '<li class="ci-stop" id="cistop-' + esc(s.id) + '">';
-      html += '<div class="ci-stop-num" style="background:' + m.color + ';">' + n + '</div>';
+      var tier = stopTier(s);
+      var numColor = tierMarkerColor(tier, m.color);
+      html += '<li class="ci-stop ci-tier-' + tier + '" data-tier="' + tier + '" id="cistop-' + esc(s.id) + '">';
+      html += '<div class="ci-stop-num" style="background:' + numColor + ';">' + n + '</div>';
       html += '<div class="ci-stop-body">';
       html += '<div class="ci-stop-head">';
       html += '<span class="ci-stop-cat" title="' + esc(s.cat) + '">' + m.icon + '</span>';
       html += '<span class="ci-stop-name">' + esc(nm) + '</span>';
+      if (tier) {
+        html += '<span class="ci-stop-star ci-star-' + tier + '" title="' + esc(tier === 2 ? t('mustBadge') : t('recBadge')) + '">' + tierStars(tier) + '</span>';
+      }
       html += '</div>';
       html += '<p class="ci-stop-short">' + esc(shortTxt) + '</p>';
 
@@ -258,6 +285,16 @@
         else { full.setAttribute('hidden', ''); this.textContent = t('readMore'); }
       });
     });
+
+    // "Only must-see" filter toggle
+    var mustBtn = document.getElementById('ciMustOnly');
+    if (mustBtn) {
+      mustBtn.addEventListener('click', function () {
+        var on = box.classList.toggle('ci-mustonly');
+        this.setAttribute('aria-pressed', on ? 'true' : 'false');
+        this.textContent = on ? t('showAll') : t('mustOnly');
+      });
+    }
 
     // Open/close map
     var openBtn = document.getElementById('ciOpenMap');
@@ -314,13 +351,23 @@
       var m = catMeta(s.cat);
       var latlng = [s.lat, s.lng];
       pts.push(latlng);
+      var tier = stopTier(s);
+      var bg = tierMarkerColor(tier, m.color);
+      // Must-see markers are larger, with a gold ring and a star badge
+      var size = tier === 2 ? 34 : 28;
+      var border = tier === 2 ? '3px solid #fff' : '2px solid #fff';
+      var ring = tier === 2 ? 'box-shadow:0 0 0 2px #f1c40f,0 2px 6px rgba(0,0,0,.45);'
+                            : 'box-shadow:0 2px 6px rgba(0,0,0,.4);';
+      var starBadge = tier === 2
+        ? '<span style="position:absolute;top:-9px;right:-9px;transform:rotate(45deg);font-size:13px;line-height:1;">⭐</span>'
+        : '';
       var numIcon = L.divIcon({
-        className: 'ci-num-icon',
-        html: '<div style="background:' + m.color + ';color:#fff;width:28px;height:28px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;">' +
-              '<span style="transform:rotate(45deg);font-weight:700;font-size:13px;">' + (idx + 1) + '</span></div>',
-        iconSize: [30, 30], iconAnchor: [15, 28], popupAnchor: [0, -26]
+        className: 'ci-num-icon ci-num-tier-' + tier,
+        html: '<div style="position:relative;background:' + bg + ';color:#fff;width:' + size + 'px;height:' + size + 'px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:' + border + ';' + ring + 'display:flex;align-items:center;justify-content:center;">' +
+              '<span style="transform:rotate(45deg);font-weight:700;font-size:13px;">' + (idx + 1) + '</span>' + starBadge + '</div>',
+        iconSize: [size + 2, size + 2], iconAnchor: [(size + 2) / 2, size], popupAnchor: [0, -(size - 2)]
       });
-      var mk = L.marker(latlng, { icon: numIcon }).addTo(mapInstance);
+      var mk = L.marker(latlng, { icon: numIcon, zIndexOffset: tier === 2 ? 600 : (tier === 1 ? 300 : 0) }).addTo(mapInstance);
       mk.bindPopup(popupHtml(s, idx), { maxWidth: 280, minWidth: 220, className: 'ci-popup-wrap' });
       stopMarkers.push(mk);
     });

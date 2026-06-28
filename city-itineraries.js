@@ -28,6 +28,7 @@
     "zoom": 14,
     "stops": [
       {
+        "tier": 1,
         "id": "leo-1",
         "name": "Hauptplatz",
         "nameEN": "Hauptplatz",
@@ -47,6 +48,7 @@
         "maps": "https://maps.google.com/?q=47.38046,15.09476"
       },
       {
+        "tier": 2,
         "id": "leo-2",
         "name": "Schwammerlturm",
         "nameEN": "Schwammerlturm",
@@ -66,6 +68,7 @@
         "maps": "https://maps.google.com/?q=47.37999,15.09258"
       },
       {
+        "tier": 1,
         "id": "leo-3",
         "name": "MuseumsCenter Leoben",
         "nameEN": "MuseumsCenter Leoben",
@@ -85,6 +88,7 @@
         "maps": "https://maps.google.com/?q=47.3807,15.09167"
       },
       {
+        "tier": 1,
         "id": "leo-4",
         "name": "Pfarrkirche Leoben-St. Xaver",
         "nameEN": "St. Xaver Parish Church",
@@ -104,6 +108,7 @@
         "maps": "https://maps.google.com/?q=47.38079,15.09251"
       },
       {
+        "tier": 1,
         "id": "leo-5",
         "name": "Gösser Braumuseum",
         "nameEN": "Gösser Brewery Museum",
@@ -216,6 +221,7 @@
         "maps": "https://maps.google.com/?q=47.37709,15.097615"
       },
       {
+        "tier": 1,
         "id": "leo-11",
         "name": "Maßenburg",
         "nameEN": "Maßenburg",
@@ -346,6 +352,7 @@
     "zoom": 14,
     "stops": [
       {
+        "tier": 2,
         "id": "vie-1",
         "name": "Cattedrale di Santo Stefano",
         "nameEN": "St. Stephen's Cathedral",
@@ -365,6 +372,7 @@
         "maps": "https://maps.google.com/?q=48.20849,16.37311"
       },
       {
+        "tier": 2,
         "id": "vie-2",
         "name": "Palazzo dell'Hofburg",
         "nameEN": "Hofburg Palace",
@@ -384,6 +392,7 @@
         "maps": "https://maps.google.com/?q=48.20650,16.36526"
       },
       {
+        "tier": 1,
         "id": "vie-3",
         "name": "Museo di Storia Naturale",
         "nameEN": "Natural History Museum",
@@ -403,6 +412,7 @@
         "maps": "https://maps.google.com/?q=48.20522,16.35937"
       },
       {
+        "tier": 1,
         "id": "vie-4",
         "name": "Naschmarkt",
         "nameEN": "Naschmarkt",
@@ -422,6 +432,7 @@
         "maps": "https://maps.google.com/?q=48.19864,16.36142"
       },
       {
+        "tier": 1,
         "id": "vie-5",
         "name": "Karlskirche",
         "nameEN": "Karlskirche",
@@ -441,6 +452,7 @@
         "maps": "https://maps.google.com/?q=48.19822,16.37186"
       },
       {
+        "tier": 1,
         "id": "vie-6",
         "name": "Wiener Staatsoper",
         "nameEN": "Wiener Staatsoper",
@@ -460,6 +472,7 @@
         "maps": "https://maps.google.com/?q=48.203,16.3691"
       },
       {
+        "tier": 1,
         "id": "vie-7",
         "name": "Albertina",
         "nameEN": "Albertina",
@@ -479,6 +492,7 @@
         "maps": "https://maps.google.com/?q=48.2047,16.3681"
       },
       {
+        "tier": 2,
         "id": "vie-8",
         "name": "Kunsthistorisches Museum",
         "nameEN": "Kunsthistorisches Museum",
@@ -498,6 +512,7 @@
         "maps": "https://maps.google.com/?q=48.2038,16.3618"
       },
       {
+        "tier": 1,
         "id": "vie-9",
         "name": "Museumsquartier",
         "nameEN": "Museumsquartier",
@@ -669,6 +684,7 @@
         "maps": "https://maps.google.com/?q=48.208,16.3615"
       },
       {
+        "tier": 2,
         "id": "vie-18",
         "name": "Schloss Belvedere",
         "nameEN": "Schloss Belvedere",
@@ -688,6 +704,7 @@
         "maps": "https://maps.google.com/?q=48.1915,16.3809"
       },
       {
+        "tier": 1,
         "id": "vie-19",
         "name": "Hundertwasserhaus",
         "nameEN": "Hundertwasserhaus",
@@ -707,6 +724,7 @@
         "maps": "https://maps.google.com/?q=48.2077,16.3928"
       },
       {
+        "tier": 1,
         "id": "vie-20",
         "name": "Wiener Prater & Riesenrad",
         "nameEN": "Wiener Prater & Riesenrad",
@@ -818,6 +836,7 @@
         "maps": "https://maps.google.com/?q=52.24604,21.01382"
       },
       {
+        "tier": 2,
         "id": "war-2",
         "name": "Castello Reale di Varsavia",
         "nameEN": "Royal Castle in Warsaw",
@@ -837,6 +856,7 @@
         "maps": "https://maps.google.com/?q=52.24806,21.01444"
       },
       {
+        "tier": 2,
         "id": "war-3",
         "name": "Piazza del Mercato della Città Vecchia",
         "nameEN": "Old Town Market Square",
@@ -856,6 +876,7 @@
         "maps": "https://maps.google.com/?q=52.24972,21.01222"
       },
       {
+        "tier": 1,
         "id": "war-4",
         "name": "Barbacane di Varsavia",
         "nameEN": "Warsaw Barbican",
@@ -894,6 +915,7 @@
         "maps": "https://maps.google.com/?q=52.25417,21.01139"
       },
       {
+        "tier": 2,
         "id": "war-6",
         "name": "Palace of Culture and Science",
         "nameEN": "Palace of Culture and Science",
@@ -913,6 +935,7 @@
         "maps": "https://maps.google.com/?q=52.231838,21.005995"
       },
       {
+        "tier": 1,
         "id": "war-7",
         "name": "Krakowskie Przedmieście",
         "nameEN": "Krakowskie Przedmieście",
@@ -1003,6 +1026,7 @@
         "maps": "https://maps.google.com/?q=52.240278,21.008333"
       },
       {
+        "tier": 1,
         "id": "war-12",
         "name": "POLIN Museum of the History of Polish Jews",
         "nameEN": "POLIN Museum of the History of Polish Jews",
@@ -1022,6 +1046,7 @@
         "maps": "https://maps.google.com/?q=52.249444,20.993056"
       },
       {
+        "tier": 1,
         "id": "war-13",
         "name": "Warsaw Uprising Museum",
         "nameEN": "Warsaw Uprising Museum",
@@ -1041,6 +1066,7 @@
         "maps": "https://maps.google.com/?q=52.232222,20.980833"
       },
       {
+        "tier": 1,
         "id": "war-14",
         "name": "Łazienki Park",
         "nameEN": "Łazienki Park",
@@ -1059,6 +1085,7 @@
         "maps": "https://maps.google.com/?q=52.215,21.035556"
       },
       {
+        "tier": 1,
         "id": "war-15",
         "name": "Copernicus Science Centre",
         "nameEN": "Copernicus Science Centre",
@@ -1205,6 +1232,7 @@
     "zoom": 14,
     "stops": [
       {
+        "tier": 2,
         "id": "vln-1",
         "name": "Torre di Gediminas",
         "nameEN": "Gediminas's Tower",
@@ -1262,6 +1290,7 @@
         "maps": "https://maps.google.com/?q=54.68482,25.29159"
       },
       {
+        "tier": 2,
         "id": "vln-4",
         "name": "Užupis",
         "nameEN": "Užupis",
@@ -1301,6 +1330,7 @@
         "maps": "https://maps.google.com/?q=54.6730,25.2830"
       },
       {
+        "tier": 2,
         "id": "vln-6",
         "name": "Vilnius Cathedral",
         "nameEN": "Vilnius Cathedral",
@@ -1320,6 +1350,7 @@
         "maps": "https://maps.google.com/?q=54.685833,25.287778"
       },
       {
+        "tier": 1,
         "id": "vln-7",
         "name": "Palace of the Grand Dukes of Lithuania",
         "nameEN": "Palace of the Grand Dukes of Lithuania",
@@ -1357,6 +1388,7 @@
         "maps": "https://maps.google.com/?q=54.6828,25.2892"
       },
       {
+        "tier": 1,
         "id": "vln-9",
         "name": "St. Anne's Church",
         "nameEN": "St. Anne's Church",
@@ -1393,6 +1425,7 @@
         "maps": "https://maps.google.com/?q=54.6822,25.2903"
       },
       {
+        "tier": 1,
         "id": "vln-11",
         "name": "Vilnius University Architectural Ensemble",
         "nameEN": "Vilnius University Architectural Ensemble",
@@ -1430,6 +1463,7 @@
         "maps": "https://maps.google.com/?q=54.6781,25.2875"
       },
       {
+        "tier": 1,
         "id": "vln-13",
         "name": "Gate of Dawn",
         "nameEN": "Gate of Dawn",
@@ -1468,6 +1502,7 @@
         "maps": "https://maps.google.com/?q=54.6764,25.2928"
       },
       {
+        "tier": 1,
         "id": "vln-15",
         "name": "Three Crosses Monument",
         "nameEN": "Three Crosses Monument",
@@ -1506,6 +1541,7 @@
         "maps": "https://maps.google.com/?q=54.6795,25.2771"
       },
       {
+        "tier": 1,
         "id": "vln-17",
         "name": "Church of St. Peter and St. Paul",
         "nameEN": "Church of St. Peter and St. Paul",
@@ -1648,6 +1684,7 @@
     "zoom": 14,
     "stops": [
       {
+        "tier": 2,
         "id": "rig-1",
         "name": "Mercato Centrale di Riga",
         "nameEN": "Riga Central Market",
@@ -1667,6 +1704,7 @@
         "maps": "https://maps.google.com/?q=56.94436,24.11472"
       },
       {
+        "tier": 2,
         "id": "rig-2",
         "name": "Casa delle Teste Nere",
         "nameEN": "House of the Blackheads",
@@ -1686,6 +1724,7 @@
         "maps": "https://maps.google.com/?q=56.94714,24.10677"
       },
       {
+        "tier": 2,
         "id": "rig-3",
         "name": "Cattedrale di Riga",
         "nameEN": "Riga Cathedral",
@@ -1724,6 +1763,7 @@
         "maps": "https://maps.google.com/?q=56.95167,24.11111"
       },
       {
+        "tier": 1,
         "id": "rig-5",
         "name": "Museo dell'Art Nouveau di Riga",
         "nameEN": "Riga Art Nouveau Centre",
@@ -1743,6 +1783,7 @@
         "maps": "https://maps.google.com/?q=56.95944,24.10833"
       },
       {
+        "tier": 1,
         "id": "rig-6",
         "name": "St. Peter's Church",
         "nameEN": "St. Peter's Church",
@@ -1762,6 +1803,7 @@
         "maps": "https://maps.google.com/?q=56.9475,24.1094"
       },
       {
+        "tier": 1,
         "id": "rig-7",
         "name": "Three Brothers",
         "nameEN": "Three Brothers",
@@ -1780,6 +1822,7 @@
         "maps": "https://maps.google.com/?q=56.9503,24.1044"
       },
       {
+        "tier": 1,
         "id": "rig-8",
         "name": "Freedom Monument",
         "nameEN": "Freedom Monument",
@@ -1870,6 +1913,7 @@
         "maps": "https://maps.google.com/?q=56.9511,24.1086"
       },
       {
+        "tier": 1,
         "id": "rig-13",
         "name": "Cat House",
         "nameEN": "Cat House",
@@ -2012,6 +2056,7 @@
     "zoom": 14,
     "stops": [
       {
+        "tier": 1,
         "id": "tal-1",
         "name": "Porta di Viru",
         "nameEN": "Viru Gate",
@@ -2031,6 +2076,7 @@
         "maps": "https://maps.google.com/?q=59.43655,24.75027"
       },
       {
+        "tier": 2,
         "id": "tal-2",
         "name": "Piazza del Municipio",
         "nameEN": "Town Hall Square",
@@ -2050,6 +2096,7 @@
         "maps": "https://maps.google.com/?q=59.43709,24.74547"
       },
       {
+        "tier": 2,
         "id": "tal-3",
         "name": "Cattedrale di Aleksandr Nevskij",
         "nameEN": "Alexander Nevsky Cathedral",
@@ -2069,6 +2116,7 @@
         "maps": "https://maps.google.com/?q=59.43583,24.73936"
       },
       {
+        "tier": 2,
         "id": "tal-4",
         "name": "Piattaforma panoramica di Kohtuotsa",
         "nameEN": "Kohtuotsa viewing platform",
@@ -2107,6 +2155,7 @@
         "maps": "https://maps.google.com/?q=59.43995,24.73715"
       },
       {
+        "tier": 1,
         "id": "tal-6",
         "name": "St. Olaf's Church",
         "nameEN": "St. Olaf's Church",
@@ -2126,6 +2175,7 @@
         "maps": "https://maps.google.com/?q=59.4414,24.7475"
       },
       {
+        "tier": 1,
         "id": "tal-7",
         "name": "Toompea Castle",
         "nameEN": "Toompea Castle",
@@ -2164,6 +2214,7 @@
         "maps": "https://maps.google.com/?q=59.4358,24.7426"
       },
       {
+        "tier": 1,
         "id": "tal-9",
         "name": "Kiek in de Kök Museum and Bastion Tunnels",
         "nameEN": "Kiek in de Kök Museum and Bastion Tunnels",
@@ -2278,6 +2329,7 @@
         "maps": "https://maps.google.com/?q=59.4385,24.7565"
       },
       {
+        "tier": 1,
         "id": "tal-15",
         "name": "Telliskivi Creative City",
         "nameEN": "Telliskivi Creative City",
@@ -2370,6 +2422,7 @@
     "zoom": 14,
     "stops": [
       {
+        "tier": 1,
         "id": "rov-1",
         "name": "Piazza Lordi",
         "nameEN": "Lordi's Square",
@@ -2389,6 +2442,7 @@
         "maps": "https://maps.google.com/?q=66.5012,25.7305"
       },
       {
+        "tier": 1,
         "id": "rov-2",
         "name": "Korundi Casa della Cultura",
         "nameEN": "Korundi House of Culture",
@@ -2408,6 +2462,7 @@
         "maps": "https://maps.google.com/?q=66.5008,25.71797"
       },
       {
+        "tier": 2,
         "id": "rov-3",
         "name": "Arktikum",
         "nameEN": "Arktikum",
@@ -2446,6 +2501,7 @@
         "maps": "https://maps.google.com/?q=66.49463,25.72925"
       },
       {
+        "tier": 1,
         "id": "rov-5",
         "name": "Ponte della Candela del Boscaiolo",
         "nameEN": "Lumberjack's Candle Bridge",
@@ -2465,6 +2521,7 @@
         "maps": "https://maps.google.com/?q=66.50218,25.73186"
       },
       {
+        "tier": 1,
         "id": "rov-6",
         "name": "Pilke Science Centre",
         "nameEN": "Pilke Science Centre",
@@ -2541,6 +2598,7 @@
         "maps": "https://maps.google.com/?q=66.498078,25.733532"
       },
       {
+        "tier": 1,
         "id": "rov-10",
         "name": "Ounasvaara",
         "nameEN": "Ounasvaara",
@@ -2671,6 +2729,7 @@
     "zoom": 14,
     "stops": [
       {
+        "tier": 2,
         "id": "oul-1",
         "name": "Piazza del Mercato di Oulu",
         "nameEN": "Oulu Market Square",
@@ -2690,6 +2749,7 @@
         "maps": "https://maps.google.com/?q=65.01349,25.46451"
       },
       {
+        "tier": 1,
         "id": "oul-2",
         "name": "Cattedrale di Oulu",
         "nameEN": "Oulu Cathedral",
@@ -2708,6 +2768,7 @@
         "maps": "https://maps.google.com/?q=65.01472,25.47583"
       },
       {
+        "tier": 1,
         "id": "oul-3",
         "name": "Isole Hupisaaret",
         "nameEN": "Hupisaaret Islands",
@@ -2744,6 +2805,7 @@
         "maps": "https://maps.google.com/?q=65.01833,25.48194"
       },
       {
+        "tier": 1,
         "id": "oul-5",
         "name": "Castello di Oulu",
         "nameEN": "Oulu Castle",
@@ -2798,6 +2860,7 @@
         "maps": "https://maps.google.com/?q=65.0123,25.4705"
       },
       {
+        "tier": 1,
         "id": "oul-8",
         "name": "Tietomaa",
         "nameEN": "Tietomaa",
@@ -2940,6 +3003,7 @@
     "zoom": 14,
     "stops": [
       {
+        "tier": 1,
         "id": "tro-1",
         "name": "Cattedrale di Tromsø",
         "nameEN": "Tromsø Cathedral",
@@ -2978,6 +3042,7 @@
         "maps": "https://maps.google.com/?q=69.6495,18.9563"
       },
       {
+        "tier": 1,
         "id": "tro-3",
         "name": "Museo Polare",
         "nameEN": "The Polar Museum",
@@ -2997,6 +3062,7 @@
         "maps": "https://maps.google.com/?q=69.6521,18.9635"
       },
       {
+        "tier": 1,
         "id": "tro-4",
         "name": "Ponte di Tromsø",
         "nameEN": "Tromsø Bridge",
@@ -3016,6 +3082,7 @@
         "maps": "https://maps.google.com/?q=69.6514,18.975"
       },
       {
+        "tier": 2,
         "id": "tro-5",
         "name": "Cattedrale dell'Artico",
         "nameEN": "Arctic Cathedral",
@@ -3219,6 +3286,7 @@
         "maps": "https://maps.google.com/?q=69.6445,18.9515"
       },
       {
+        "tier": 1,
         "id": "tro-16",
         "name": "Polaria",
         "nameEN": "Polaria",
@@ -3238,6 +3306,7 @@
         "maps": "https://maps.google.com/?q=69.6433,18.95"
       },
       {
+        "tier": 2,
         "id": "tro-17",
         "name": "Fjellheisen",
         "nameEN": "Fjellheisen",
@@ -3273,6 +3342,7 @@
     "zoom": 14,
     "stops": [
       {
+        "tier": 2,
         "id": "trd-1",
         "name": "Cattedrale di Nidaros",
         "nameEN": "Nidaros Cathedral",
@@ -3292,6 +3362,7 @@
         "maps": "https://maps.google.com/?q=63.42692,10.39611"
       },
       {
+        "tier": 1,
         "id": "trd-2",
         "name": "Palazzo dell'Arcivescovo",
         "nameEN": "Archbishop's Palace",
@@ -3311,6 +3382,7 @@
         "maps": "https://maps.google.com/?q=63.42611,10.39556"
       },
       {
+        "tier": 1,
         "id": "trd-3",
         "name": "Ponte della Città Vecchia",
         "nameEN": "Old Town Bridge",
@@ -3330,6 +3402,7 @@
         "maps": "https://maps.google.com/?q=63.42833,10.40139"
       },
       {
+        "tier": 2,
         "id": "trd-4",
         "name": "Bakklandet",
         "nameEN": "Bakklandet",
@@ -3349,6 +3422,7 @@
         "maps": "https://maps.google.com/?q=63.42917,10.40306"
       },
       {
+        "tier": 1,
         "id": "trd-5",
         "name": "Fortezza di Kristiansten",
         "nameEN": "Kristiansten Fortress",
@@ -3442,6 +3516,7 @@
         "maps": "https://maps.google.com/?q=63.4344,10.4111"
       },
       {
+        "tier": 1,
         "id": "trd-10",
         "name": "Rockheim",
         "nameEN": "Rockheim",
@@ -3551,6 +3626,7 @@
     "zoom": 14,
     "stops": [
       {
+        "tier": 2,
         "id": "sta-1",
         "name": "Gamle Stavanger",
         "nameEN": "Old Stavanger",
@@ -3570,6 +3646,7 @@
         "maps": "https://maps.google.com/?q=58.97033,5.72583"
       },
       {
+        "tier": 1,
         "id": "sta-2",
         "name": "Cattedrale di Stavanger",
         "nameEN": "Stavanger Cathedral",
@@ -3608,6 +3685,7 @@
         "maps": "https://maps.google.com/?q=58.96806,5.733"
       },
       {
+        "tier": 1,
         "id": "sta-4",
         "name": "Øvre Holmegate",
         "nameEN": "Øvre Holmegate",
@@ -3627,6 +3705,7 @@
         "maps": "https://maps.google.com/?q=58.97271,5.73125"
       },
       {
+        "tier": 2,
         "id": "sta-5",
         "name": "Museo Norvegese del Petrolio",
         "nameEN": "Norwegian Petroleum Museum",
@@ -3703,6 +3782,7 @@
         "maps": "https://maps.google.com/?q=58.9715,5.7285"
       },
       {
+        "tier": 1,
         "id": "sta-9",
         "name": "Vågen",
         "nameEN": "Vågen",
@@ -3814,6 +3894,7 @@
         "maps": "https://maps.google.com/?q=58.14083,7.99583"
       },
       {
+        "tier": 1,
         "id": "kri-2",
         "name": "Fiskebrygga",
         "nameEN": "Fiskebrygga",
@@ -3833,6 +3914,7 @@
         "maps": "https://maps.google.com/?q=58.14188,7.99524"
       },
       {
+        "tier": 1,
         "id": "kri-3",
         "name": "Christiansholm Festning",
         "nameEN": "Christiansholm Fortress",
@@ -3871,6 +3953,7 @@
         "maps": "https://maps.google.com/?q=58.14611,7.99462"
       },
       {
+        "tier": 1,
         "id": "kri-5",
         "name": "Posebyen",
         "nameEN": "Posebyen",
@@ -3928,6 +4011,7 @@
         "maps": "https://maps.google.com/?q=58.1448,8.0065"
       },
       {
+        "tier": 2,
         "id": "kri-8",
         "name": "Kunstsilo",
         "nameEN": "Kunstsilo",
@@ -3985,6 +4069,7 @@
         "maps": "https://maps.google.com/?q=58.152,7.988"
       },
       {
+        "tier": 1,
         "id": "kri-11",
         "name": "Ravnedalen Naturpark",
         "nameEN": "Ravnedalen Naturpark",
@@ -4039,6 +4124,7 @@
     "zoom": 14,
     "stops": [
       {
+        "tier": 1,
         "id": "ber-1",
         "name": "Fortezza di Bergenhus",
         "nameEN": "Bergenhus Fortress",
@@ -4058,6 +4144,7 @@
         "maps": "https://maps.google.com/?q=60.40011,5.31785"
       },
       {
+        "tier": 1,
         "id": "ber-2",
         "name": "Mariakirken",
         "nameEN": "St Mary's Church",
@@ -4077,6 +4164,7 @@
         "maps": "https://maps.google.com/?q=60.3989,5.32343"
       },
       {
+        "tier": 2,
         "id": "ber-3",
         "name": "Bryggen",
         "nameEN": "Bryggen",
@@ -4096,6 +4184,7 @@
         "maps": "https://maps.google.com/?q=60.39772,5.32293"
       },
       {
+        "tier": 2,
         "id": "ber-4",
         "name": "Fisketorget",
         "nameEN": "Fish Market",
@@ -4115,6 +4204,7 @@
         "maps": "https://maps.google.com/?q=60.39469,5.32416"
       },
       {
+        "tier": 2,
         "id": "ber-5",
         "name": "Fløibanen",
         "nameEN": "Fløibanen Funicular",
@@ -4171,6 +4261,7 @@
         "maps": "https://maps.google.com/?q=60.3917,5.3325"
       },
       {
+        "tier": 1,
         "id": "ber-8",
         "name": "KODE Art Museums",
         "nameEN": "KODE Art Museums",
@@ -4334,6 +4425,7 @@
     "zoom": 14,
     "stops": [
       {
+        "tier": 2,
         "id": "cph-1",
         "name": "Nyhavn",
         "nameEN": "Nyhavn",
@@ -4353,6 +4445,7 @@
         "maps": "https://maps.google.com/?q=55.67974,12.59089"
       },
       {
+        "tier": 1,
         "id": "cph-2",
         "name": "Palazzo di Amalienborg",
         "nameEN": "Amalienborg Palace",
@@ -4372,6 +4465,7 @@
         "maps": "https://maps.google.com/?q=55.68396,12.59308"
       },
       {
+        "tier": 1,
         "id": "cph-3",
         "name": "Castello di Rosenborg",
         "nameEN": "Rosenborg Castle",
@@ -4391,6 +4485,7 @@
         "maps": "https://maps.google.com/?q=55.68569,12.57742"
       },
       {
+        "tier": 1,
         "id": "cph-4",
         "name": "Torvehallerne",
         "nameEN": "Torvehallerne",
@@ -4410,6 +4505,7 @@
         "maps": "https://maps.google.com/?q=55.68387,12.56955"
       },
       {
+        "tier": 1,
         "id": "cph-5",
         "name": "Rundetårn",
         "nameEN": "The Round Tower",
@@ -4429,6 +4525,7 @@
         "maps": "https://maps.google.com/?q=55.68136,12.57579"
       },
       {
+        "tier": 2,
         "id": "cph-6",
         "name": "Tivoli Gardens",
         "nameEN": "Tivoli Gardens",
@@ -4448,6 +4545,7 @@
         "maps": "https://maps.google.com/?q=55.6736,12.5681"
       },
       {
+        "tier": 1,
         "id": "cph-7",
         "name": "Christiansborg Palace",
         "nameEN": "Christiansborg Palace",
@@ -4466,6 +4564,7 @@
         "maps": "https://maps.google.com/?q=55.6762,12.5806"
       },
       {
+        "tier": 2,
         "id": "cph-8",
         "name": "The Little Mermaid",
         "nameEN": "The Little Mermaid",
@@ -4556,6 +4655,7 @@
         "maps": "https://maps.google.com/?q=55.6746,12.5746"
       },
       {
+        "tier": 1,
         "id": "cph-13",
         "name": "Ny Carlsberg Glyptotek",
         "nameEN": "Ny Carlsberg Glyptotek",
@@ -4734,6 +4834,7 @@
     "zoom": 14,
     "stops": [
       {
+        "tier": 2,
         "id": "bre-1",
         "name": "Piazza del Mercato e Municipio",
         "nameEN": "Market Square & Town Hall",
@@ -4753,6 +4854,7 @@
         "maps": "https://maps.google.com/?q=53.0758,8.8073"
       },
       {
+        "tier": 2,
         "id": "bre-2",
         "name": "I Musicanti di Brema",
         "nameEN": "Town Musicians of Bremen",
@@ -4772,6 +4874,7 @@
         "maps": "https://maps.google.com/?q=53.0761,8.8075"
       },
       {
+        "tier": 1,
         "id": "bre-3",
         "name": "Cattedrale di San Pietro",
         "nameEN": "St. Peter's Cathedral",
@@ -4791,6 +4894,7 @@
         "maps": "https://maps.google.com/?q=53.0755,8.8088"
       },
       {
+        "tier": 1,
         "id": "bre-4",
         "name": "Böttcherstraße",
         "nameEN": "Böttcherstraße",
@@ -4810,6 +4914,7 @@
         "maps": "https://maps.google.com/?q=53.075,8.8055"
       },
       {
+        "tier": 1,
         "id": "bre-5",
         "name": "Quartiere Schnoor",
         "nameEN": "Schnoor Quarter",
@@ -4829,6 +4934,7 @@
         "maps": "https://maps.google.com/?q=53.0728,8.8094"
       },
       {
+        "tier": 1,
         "id": "bre-6",
         "name": "Schlachte",
         "nameEN": "Schlachte",
@@ -5048,6 +5154,7 @@
     "zoom": 14,
     "stops": [
       {
+        "tier": 2,
         "id": "ami-1",
         "name": "Cattedrale di Notre-Dame",
         "nameEN": "Amiens Cathedral",
@@ -5067,6 +5174,7 @@
         "maps": "https://maps.google.com/?q=49.89449,2.29587"
       },
       {
+        "tier": 2,
         "id": "ami-2",
         "name": "Quartiere Saint-Leu",
         "nameEN": "Quartier Saint-Leu",
@@ -5105,6 +5213,7 @@
         "maps": "https://maps.google.com/?q=49.89898,2.30795"
       },
       {
+        "tier": 1,
         "id": "ami-4",
         "name": "Museo della Piccardia",
         "nameEN": "Musée de Picardie",
@@ -5124,6 +5233,7 @@
         "maps": "https://maps.google.com/?q=49.89046,2.29457"
       },
       {
+        "tier": 1,
         "id": "ami-5",
         "name": "Casa di Jules Verne",
         "nameEN": "Maison de Jules Verne",
@@ -5143,6 +5253,7 @@
         "maps": "https://maps.google.com/?q=49.8885,2.2975"
       },
       {
+        "tier": 1,
         "id": "ami-6",
         "name": "Les Hortillonnages d'Amiens",
         "nameEN": "Les Hortillonnages d'Amiens",
@@ -5161,6 +5272,7 @@
         "maps": "https://maps.google.com/?q=49.8986,2.3169"
       },
       {
+        "tier": 1,
         "id": "ami-7",
         "name": "Beffroi d'Amiens",
         "nameEN": "Beffroi d'Amiens",
@@ -5393,6 +5505,7 @@
     "zoom": 14,
     "stops": [
       {
+        "tier": 1,
         "id": "sse-1",
         "name": "Plaza de la Constitución",
         "nameEN": "Constitution Square",
@@ -5412,6 +5525,7 @@
         "maps": "https://maps.google.com/?q=43.3236,-1.98488"
       },
       {
+        "tier": 1,
         "id": "sse-2",
         "name": "Museo San Telmo",
         "nameEN": "San Telmo Museum",
@@ -5431,6 +5545,7 @@
         "maps": "https://maps.google.com/?q=43.32504,-1.985"
       },
       {
+        "tier": 2,
         "id": "sse-3",
         "name": "Castello della Mota",
         "nameEN": "Mota Castle",
@@ -5469,6 +5584,7 @@
         "maps": "https://maps.google.com/?q=43.3229,-1.99212"
       },
       {
+        "tier": 2,
         "id": "sse-5",
         "name": "Spiaggia della Concha",
         "nameEN": "La Concha Beach",
@@ -5524,6 +5640,7 @@
         "maps": "https://maps.google.com/?q=43.3245,-1.9839"
       },
       {
+        "tier": 1,
         "id": "sse-8",
         "name": "Mercado de la Bretxa",
         "nameEN": "Mercado de la Bretxa",
@@ -5614,6 +5731,7 @@
         "maps": "https://maps.google.com/?q=43.3144,-1.9989"
       },
       {
+        "tier": 1,
         "id": "sse-13",
         "name": "Peine del Viento",
         "nameEN": "Peine del Viento",
@@ -5632,6 +5750,7 @@
         "maps": "https://maps.google.com/?q=43.3216,-2.0058"
       },
       {
+        "tier": 1,
         "id": "sse-14",
         "name": "Monte Igueldo",
         "nameEN": "Monte Igueldo",
@@ -5668,6 +5787,7 @@
         "maps": "https://maps.google.com/?q=43.3265,-1.9752"
       },
       {
+        "tier": 1,
         "id": "sse-16",
         "name": "Kursaal",
         "nameEN": "Kursaal",
@@ -5793,6 +5913,7 @@
         "maps": "https://maps.google.com/?q=43.26550,-2.94160"
       },
       {
+        "tier": 2,
         "id": "bil-2",
         "name": "Museo Guggenheim Bilbao",
         "nameEN": "Guggenheim Museum Bilbao",
@@ -5830,6 +5951,7 @@
         "maps": "https://maps.google.com/?q=43.26800,-2.92750"
       },
       {
+        "tier": 1,
         "id": "bil-4",
         "name": "Plaza Nueva",
         "nameEN": "Plaza Nueva",
@@ -5849,6 +5971,7 @@
         "maps": "https://maps.google.com/?q=43.25950,-2.92320"
       },
       {
+        "tier": 2,
         "id": "bil-5",
         "name": "Mercado de la Ribera",
         "nameEN": "Mercado de la Ribera",
@@ -5868,6 +5991,7 @@
         "maps": "https://maps.google.com/?q=43.25650,-2.92440"
       },
       {
+        "tier": 1,
         "id": "bil-6",
         "name": "Catedral de Santiago de Bilbao",
         "nameEN": "Catedral de Santiago de Bilbao",
@@ -5887,6 +6011,7 @@
         "maps": "https://maps.google.com/?q=43.2575,-2.9242"
       },
       {
+        "tier": 1,
         "id": "bil-7",
         "name": "Museo de Bellas Artes de Bilbao",
         "nameEN": "Museo de Bellas Artes de Bilbao",
@@ -5906,6 +6031,7 @@
         "maps": "https://maps.google.com/?q=43.2661,-2.9383"
       },
       {
+        "tier": 1,
         "id": "bil-8",
         "name": "Teatro Arriaga",
         "nameEN": "Teatro Arriaga",
@@ -5944,6 +6070,7 @@
         "maps": "https://maps.google.com/?q=43.26,-2.9375"
       },
       {
+        "tier": 1,
         "id": "bil-10",
         "name": "Funicular de Artxanda",
         "nameEN": "Funicular de Artxanda",
@@ -5963,6 +6090,7 @@
         "maps": "https://maps.google.com/?q=43.2686,-2.9228"
       },
       {
+        "tier": 1,
         "id": "bil-11",
         "name": "Basílica de Begoña",
         "nameEN": "Basílica de Begoña",
@@ -6185,6 +6313,7 @@
           "mappingspain.com \"Walking tour of León\""
         ],
         "maps": "https://maps.google.com/?q=42.59900,-5.56640",
+        "tier": 2,
         "id": "leo-1"
       },
       {
@@ -6241,6 +6370,7 @@
           "checkinblog.it \"León cosa vedere\""
         ],
         "maps": "https://maps.google.com/?q=42.59720,-5.56990",
+        "tier": 2,
         "id": "leo-4"
       },
       {
@@ -6296,6 +6426,7 @@
           "checkinblog.it \"León cosa vedere\""
         ],
         "maps": "https://maps.google.com/?q=42.60040,-5.57150",
+        "tier": 2,
         "id": "leo-7"
       },
       {
@@ -6314,6 +6445,7 @@
           "mappingspain.com \"Walking tour of León\""
         ],
         "maps": "https://maps.google.com/?q=42.60090,-5.57050",
+        "tier": 1,
         "id": "leo-8"
       },
       {
@@ -6332,6 +6464,7 @@
           "mappingspain.com \"Walking tour of León\""
         ],
         "maps": "https://maps.google.com/?q=42.60240,-5.57900",
+        "tier": 1,
         "id": "leo-9"
       },
       {
@@ -6351,6 +6484,7 @@
           "checkinblog.it \"León cosa vedere\""
         ],
         "maps": "https://maps.google.com/?q=42.59650,-5.56800",
+        "tier": 1,
         "id": "leo-10"
       },
       {
@@ -6370,6 +6504,7 @@
           "mappingspain.com \"Walking tour of León\""
         ],
         "maps": "https://maps.google.com/?q=42.59720,-5.56750",
+        "tier": 1,
         "id": "leo-11"
       },
       {
@@ -6407,6 +6542,7 @@
     "zoom": 14,
     "stops": [
       {
+        "tier": 2,
         "id": "pal-1",
         "name": "Cristo del Otero",
         "nameEN": "Christ of the Knoll",
@@ -6426,6 +6562,7 @@
         "maps": "https://maps.google.com/?q=42.02833,-4.52944"
       },
       {
+        "tier": 2,
         "id": "pal-2",
         "name": "Cattedrale di Palencia",
         "nameEN": "Palencia Cathedral",
@@ -6445,6 +6582,7 @@
         "maps": "https://maps.google.com/?q=42.01087,-4.53444"
       },
       {
+        "tier": 1,
         "id": "pal-3",
         "name": "Plaza Mayor",
         "nameEN": "Plaza Mayor",
@@ -6483,6 +6621,7 @@
         "maps": "https://maps.google.com/?q=42.01048,-4.53133"
       },
       {
+        "tier": 1,
         "id": "pal-5",
         "name": "Parque del Salón de Isabel II",
         "nameEN": "Isabel II Hall Park",
@@ -6502,6 +6641,7 @@
         "maps": "https://maps.google.com/?q=42.00631,-4.52838"
       },
       {
+        "tier": 1,
         "id": "pal-6",
         "name": "Iglesia de San Miguel",
         "nameEN": "Iglesia de San Miguel",
@@ -6719,6 +6859,7 @@
     "zoom": 14,
     "stops": [
       {
+        "tier": 2,
         "id": "gen-1",
         "name": "Acquario di Genova",
         "nameEN": "Aquarium of Genoa",
@@ -6738,6 +6879,7 @@
         "maps": "https://maps.google.com/?q=44.41020,8.92655"
       },
       {
+        "tier": 2,
         "id": "gen-2",
         "name": "Cattedrale di San Lorenzo",
         "nameEN": "Genoa Cathedral",
@@ -6757,6 +6899,7 @@
         "maps": "https://maps.google.com/?q=44.40766,8.93151"
       },
       {
+        "tier": 1,
         "id": "gen-3",
         "name": "Piazza De Ferrari",
         "nameEN": "Piazza De Ferrari",
@@ -6776,6 +6919,7 @@
         "maps": "https://maps.google.com/?q=44.40718,8.93398"
       },
       {
+        "tier": 2,
         "id": "gen-4",
         "name": "Via Garibaldi e Palazzi dei Rolli",
         "nameEN": "Via Garibaldi and Palazzi dei Rolli",
@@ -6795,6 +6939,7 @@
         "maps": "https://maps.google.com/?q=44.41144,8.93222"
       },
       {
+        "tier": 1,
         "id": "gen-5",
         "name": "Spianata Castelletto",
         "nameEN": "Spianata Castelletto",
@@ -6814,6 +6959,7 @@
         "maps": "https://maps.google.com/?q=44.41295,8.93280"
       },
       {
+        "tier": 1,
         "id": "gen-6",
         "name": "Palazzo Ducale",
         "nameEN": "Palazzo Ducale",
@@ -6833,6 +6979,7 @@
         "maps": "https://maps.google.com/?q=44.4075,8.933"
       },
       {
+        "tier": 1,
         "id": "gen-7",
         "name": "Porto Antico",
         "nameEN": "Porto Antico",
@@ -6890,6 +7037,7 @@
         "maps": "https://maps.google.com/?q=44.4149,8.9261"
       },
       {
+        "tier": 1,
         "id": "gen-10",
         "name": "Porta Soprana e Casa di Colombo",
         "nameEN": "Porta Soprana e Casa di Colombo",
@@ -6909,6 +7057,7 @@
         "maps": "https://maps.google.com/?q=44.4055,8.934"
       },
       {
+        "tier": 1,
         "id": "gen-11",
         "name": "Mercato Orientale",
         "nameEN": "Mercato Orientale",

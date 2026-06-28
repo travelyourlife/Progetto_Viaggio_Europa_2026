@@ -64,7 +64,7 @@
     <link rel="apple-touch-icon" sizes="152x152" href="./icon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="./icon.png">
     <link rel="apple-touch-icon" sizes="167x167" href="./icon.png">
-    <title>Quo Vadis — V4.20</title>
+    <title>Quo Vadis — V4.21</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="home-variants.css">
@@ -86,7 +86,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = '4.20';
+  var EXPECTED_VERSION = '4.21';
   window.IS_PROD = true; // v2.96: parità con index.html — disabilita debug overlay in produzione
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
@@ -158,8 +158,8 @@
 <script src="curiosita-scheduler.js" defer></script>
 <script src="quiz-fun.js" defer></script>
 <script src="unified-map.js" defer></script>
-<script src="city-itineraries.js?v=4.20" defer></script>
-<script src="city-itineraries-ui.js?v=4.20" defer></script>
+<script src="city-itineraries.js?v=4.21" defer></script>
+<script src="city-itineraries-ui.js?v=4.21" defer></script>
 <script src="home-variants.js" defer></script>
 </head>
 <body class="on-home">
@@ -577,7 +577,10 @@
 <h1 style="text-align:center; margin-top:16px;">📅 Itinerary — Day by Day</h1>
 
 <div id="goto-today-box" style="text-align:center; margin-bottom:16px; display:none;">
-    <button type="button" id="goto-today-btn" class="pos-btn pos-btn-blue" style="font-size:15px; padding:12px 24px;">📅 Go to today</button>
+    <div style="display:inline-flex; flex-wrap:wrap; gap:10px; justify-content:center; align-items:center;">
+        <button type="button" id="goto-today-btn" class="pos-btn pos-btn-blue" style="font-size:15px; padding:12px 24px;">📅 Go to today</button>
+        <button type="button" id="goto-citta-btn" class="pos-btn pos-btn-green" style="font-size:15px; padding:12px 24px;">🗺️ City itineraries</button>
+    </div>
 </div>
 
 <!-- Quick Navigation by Region (dropdown style v3.16) -->

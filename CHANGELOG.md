@@ -5,6 +5,20 @@
 
 # Quo Vadis — Changelog
 
+## v4.21 — 2026-06-28
+Livelli di importanza e filtro "Solo imperdibili" negli **Itinerari città**.
+
+- **3 livelli di importanza per ogni tappa**: ⭐⭐ **Imperdibile**, ⭐ **Consigliato**, nessuna stella = opzionale. La stella compare accanto al nome della tappa nella lista. I livelli sono assegnati con criteri oggettivi (siti UNESCO, landmark-simbolo della città, tipo di luogo, notorietà nelle fonti) — non in base a giudizi soggettivi. Su 359 tappe: **48 imperdibili**, **101 consigliate**, 210 opzionali; ogni città ha almeno una imperdibile.
+- **Marker della mappa per livello**: le imperdibili (⭐⭐) hanno un marker più grande, dorato, con anello e stellina; le consigliate (⭐) sono arancioni; le altre mantengono il colore della categoria. Le imperdibili stanno sopra le altre (z-index) per essere sempre visibili.
+- **Filtro "⭐ Solo imperdibili"**: un pulsante nasconde le tappe minori e mostra solo le ⭐⭐, per chi ha poco tempo e vuole il percorso essenziale. Si ripristina con "↩︎ Mostra tutte".
+- Tutto bilingue IT/EN, con supporto tema chiaro e scuro.
+
+**Posizione attuale unificata (sezione "In viaggio" + Home).** Risolto il caso in cui in zone rurali (es. una *seniūnija* lituana) la card "Siamo a:" mostrava solo il **Paese** invece del luogo specifico. Ora un unico geocoder condiviso (`_geocodePlace`, zoom=14 con catena di fallback `city → town → village → municipality → hamlet → suburb → ... → county`) alimenta **Home, card "Siamo a:" e scrittura su Firebase**, così tutte le viste mostrano sempre lo **stesso luogo specifico** (es. *Pasvalys* / *Ąžuolynė*, non solo "Lituania"). Nessuna dipendenza dal check-in.
+
+**Pulsante "Itinerari città".** Aggiunto nella schermata "Itinerario — Giorno per Giorno" un pulsante verde **🗺️ Itinerari città** accanto a "📅 Vai a oggi", che apre direttamente la sezione Itinerari città. Il box dei pulsanti è ora sempre visibile (anche fuori dal periodo di viaggio), così l'accesso agli Itinerari città è sempre disponibile. Bilingue IT/EN.
+
+- **Cache-busting** aggiornato (`?v=4.21`) e precache del service worker allineato.
+
 ## v4.20 — 2026-06-28
 Popup mappa più compatto negli **Itinerari città**.
 

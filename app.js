@@ -255,6 +255,43 @@ try {
 // v3.93: UNIFIED LOCATION — Single source of truth
 // All writers call writeCurrentLocation(lat, lng). All readers listen to /currentLocation.
 // ═══════════════════════════════════════════════════════════════
+// v4.21: SHARED place-name extractor — single source of truth for "where are we".
+// Rich fallback chain so rural areas (e.g. Lithuanian seniūnijos) never collapse to country-only.
+window._extractPlaceName = function(addr) {
+  if (!addr) return '';
+  return addr.city || addr.town || addr.village || addr.municipality
+    || addr.hamlet || addr.suburb || addr.neighbourhood || addr.locality
+    || addr.quarter || addr.city_district || addr.district
+    || addr.county || addr.state_district || addr.state || '';
+};
+
+// v4.21: SHARED reverse geocoder used everywhere. zoom=14 = settlement-level detail.
+// cb(place, country, flag, countryCode). Cached by ~rounded coords.
+window._geoPlaceCache = window._geoPlaceCache || {};
+window._geocodePlace = function(lat, lng, cb) {
+  var key = lat.toFixed(3) + ',' + lng.toFixed(3);
+  if (window._geoPlaceCache[key]) {
+    var c = window._geoPlaceCache[key];
+    cb(c.place, c.country, c.flag, c.cc);
+    return;
+  }
+  var _en = (typeof isEN !== 'undefined') ? isEN : false;
+  window._nominatimFetch('https://nominatim.openstreetmap.org/reverse?lat=' + lat + '&lon=' + lng + '&format=json&zoom=14&accept-language=' + (_en ? 'en' : 'it'))
+    .then(function(data) {
+      var addr = (data && data.address) || {};
+      var place = window._extractPlaceName(addr);
+      var country = addr.country || '';
+      var cc = (addr.country_code || '').toUpperCase();
+      var flag = '';
+      if (cc && cc.length === 2) {
+        flag = String.fromCodePoint(0x1F1E6 + cc.charCodeAt(0) - 65) + String.fromCodePoint(0x1F1E6 + cc.charCodeAt(1) - 65);
+      }
+      window._geoPlaceCache[key] = { place: place, country: country, flag: flag, cc: cc };
+      cb(place, country, flag, cc);
+    })
+    .catch(function() { cb(null, null, null, null); });
+};
+
 window.writeCurrentLocation = function(lat, lng, optCity) {
   if (!dbRef) return;
   // v3.98 SECURITY: Only the owner can write to /currentLocation.
@@ -286,25 +323,20 @@ window.writeCurrentLocation = function(lat, lng, optCity) {
     // v3.98 FIX Audit #3: Don't write city='' — preserve existing city until Nominatim responds.
     // Use .update() instead of .set() so existing city/country fields are NOT wiped.
     dbRef.child('currentLocation').update(payload).catch(function() {});
-    // Async city lookup (throttled)
-    window._nominatimFetch('https://nominatim.openstreetmap.org/reverse?lat=' + lat + '&lon=' + lng + '&format=json&zoom=10&accept-language=' + (isEN ? 'en' : 'it'))
-      .then(function(data) {
-        var addr = data.address || {};
-        var city = addr.city || addr.town || addr.village || addr.municipality || addr.county || '';
-        var nominCountry = addr.country || countryName;
-        var nominCC = (addr.country_code || '').toUpperCase() || countryCode;
-        var nominFlag = '';
-        if (nominCC && nominCC.length === 2) {
-          nominFlag = String.fromCodePoint(0x1F1E6 + nominCC.charCodeAt(0) - 65) + String.fromCodePoint(0x1F1E6 + nominCC.charCodeAt(1) - 65);
-        }
-        dbRef.child('currentLocation').update({
-          city: city,
-          country: nominCountry,
-          countryCode: nominCC,
-          flag: nominFlag
-        }).catch(function() {});
-      })
-      .catch(function() { /* silent — offline country is enough */ });
+    // v4.21: Async city lookup via shared geocoder (zoom=14 + rich fallback chain)
+    window._geocodePlace(lat, lng, function(place, nCountry, nFlag, nCC) {
+      if (place == null && nCountry == null) return; // network error — keep offline country
+      var nominCity = place || '';
+      var nominCountry = nCountry || countryName;
+      var nominCC = nCC || countryCode;
+      var nominFlag = nFlag || flag;
+      dbRef.child('currentLocation').update({
+        city: nominCity,
+        country: nominCountry,
+        countryCode: nominCC,
+        flag: nominFlag
+      }).catch(function() {});
+    });
   }
 };
 
@@ -4092,14 +4124,13 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                 _lastGeocode = Date.now();
                 _lastGeocodeLat = d.lat;
                 _lastGeocodeLng = d.lng;
-                window._nominatimFetch('https://nominatim.openstreetmap.org/reverse?lat=' + d.lat + '&lon=' + d.lng + '&format=json&zoom=10&accept-language=' + (isEN ? 'en' : 'it'))
-                    .then(function(data) {
-                        var addr = data.address || {};
-                        var city = addr.city || addr.town || addr.village || addr.municipality || '';
-                        var country = addr.country || '';
-                        cityEl.textContent = city ? (city + ', ' + country) : country || '—';
+                // v4.21: shared geocoder (zoom=14 + rich fallback) — same logic as Home
+                window._geocodePlace(d.lat, d.lng, function(place, country, flag, cc) {
+                        if (place == null && country == null) return; // network error — keep previous text
+                        country = country || '';
+                        cityEl.textContent = place ? (place + (country ? ', ' + country : '')) : (country || '—');
                         // v3.91: Sync Statistics "Current country" with the same GPS data
-                        var cc = (addr.country_code || '').toUpperCase();
+                        cc = cc || '';
                         if (cc) {
                             var _statCountryEl = document.getElementById('stat-current-country');
                             var _statFlagEl = document.getElementById('stat-country-flag');
@@ -4111,7 +4142,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                             var _ccRef = getFamilyRef('countriesVisited/' + cc);
                             if (_ccRef) _ccRef.set({ name: _ccNames[cc] || country, firstSeen: firebase.database.ServerValue.TIMESTAMP });
                         }
-                    }).catch(function() {});
+                });
             }
             // Live dot status
             var liveTabDotEl = document.getElementById('liveTabDot');
@@ -6183,15 +6214,32 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
         var tripDay = getCurrentTripDay();
         var box = document.getElementById('goto-today-box');
         var btn = document.getElementById('goto-today-btn');
+        // v4.21: "Itinerari città" shortcut button next to the today button
+        var cittaBtn = document.getElementById('goto-citta-btn');
+        if (cittaBtn && !cittaBtn._wired) {
+            cittaBtn._wired = true;
+            cittaBtn.addEventListener('click', function() {
+                if (window.switchTab) {
+                    window.switchTab('itinerari');
+                    history.pushState(null, '', '#tab-itinerari');
+                }
+                if (window.haptic) window.haptic(15);
+            });
+        }
         if (!box || !btn) return;
         // v3.94: uses global isEN
+
+        // v4.21: the box is always visible because the "Itinerari città" shortcut
+        // must be reachable in every phase (pre/during/post trip). The today/countdown
+        // button is shown/hidden independently below.
+        box.style.display = 'block';
 
         // Check if day override is active (testing mode) — v1.84: session-only
         var isOverride = typeof window._dayOverride === 'number';
 
         if (tripDay >= 0 && tripDay <= TRIP_DAYS - 1) {
             // During trip: show "Vai a G[X] (oggi)"
-            box.style.display = 'block';
+            btn.style.display = '';
             btn.textContent = '\uD83D\uDCC5 ' + (isEN ? 'Go to D' : 'Vai a G') + (tripDay + 1) + (isEN ? ' (today)' : ' (oggi)');
             btn.addEventListener('click', function() {
                 function scrollToToday() {
@@ -6220,13 +6268,17 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             var start = new Date(TRIP_START.getTime()); start.setHours(0,0,0,0);
             var daysLeft = Math.ceil((start - now) / 86400000);
             if (daysLeft > 0) {
-                box.style.display = 'block';
+                btn.style.display = '';
                 var countdownTxt = daysLeft === 1
                     ? (isEN ? '1 day to departure' : 'Manca 1 giorno alla partenza')
                     : (isEN ? daysLeft + ' days to departure' : 'Mancano ' + daysLeft + ' giorni alla partenza');
                 btn.textContent = '\u23F3 ' + countdownTxt;
                 btn.style.cursor = 'default';
                 btn.style.opacity = '0.85';
+            } else {
+                // v4.21: post-trip — no today/countdown button, but keep the box
+                // visible so the "Itinerari città" shortcut stays reachable.
+                btn.style.display = 'none';
             }
         }
     })();
@@ -8458,19 +8510,13 @@ async function fetchForecast(lat, lon, date, _retry) {
         var key = lat.toFixed(3) + ',' + lng.toFixed(3);
         if (_geoCache[key]) { cb(_geoCache[key].city, _geoCache[key].country, _geoCache[key].flag); return; }
         var mySeq = ++_geocodeSeq;
-        // v2.58: routed through global throttle (1 req/s Nominatim limit)
-        window._nominatimFetch('https://nominatim.openstreetmap.org/reverse?lat=' + lat + '&lon=' + lng + '&format=json&zoom=10&accept-language=' + (isEN ? 'en' : 'it'))
-            .then(function(data) {
-                if (mySeq !== _geocodeSeq) return; // stale response — discard
-                var addr = data.address || {};
-                var city = addr.city || addr.town || addr.village || addr.municipality || addr.county || '';
-                var country = addr.country || '';
-                var cc = (addr.country_code || '').toUpperCase();
-                var flag = _ccToFlag(cc);
-                _geoCache[key] = { city: city, country: country, flag: flag };
-                cb(city, country, flag);
-            })
-            .catch(function() { if (mySeq === _geocodeSeq) cb(null, null, null); });
+        // v4.21: delegate to the shared geocoder (zoom=14 + rich fallback chain)
+        window._geocodePlace(lat, lng, function(place, country, flag, cc) {
+            if (mySeq !== _geocodeSeq) return; // stale response — discard
+            if (place == null && country == null) { cb(null, null, null); return; }
+            _geoCache[key] = { city: place || '', country: country || '', flag: flag || '' };
+            cb(place || '', country || '', flag || '');
+        });
     }
 
     function _ccToFlag(cc) {
