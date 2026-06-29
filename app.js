@@ -357,6 +357,10 @@ window.computeTotalKm = function(callback) {
     return;
   }
   var db = firebase.database();
+  // v4.22: ignore any data recorded BEFORE the trip start (e.g. the 24/06 GPX
+  // test track). The trip officially departs from Selvazzano on TRIP_START
+  // (25/06/2026); pre-departure days must not count toward total km.
+  var _tripStartKey = window.localDateStr ? window.localDateStr(TRIP_START) : TRIP_START.toISOString().slice(0,10);
   db.ref('trips/' + FAMILY_ID + '/dailySummaries').once('value', function(snap) {
     var summaries = snap.val() || {};
     var today = window.localDateStr ? window.localDateStr() : new Date().toISOString().slice(0,10);
@@ -364,6 +368,8 @@ window.computeTotalKm = function(callback) {
     var todaySummaryKm = 0;
     Object.entries(summaries).forEach(function(entry) {
       var dateKey = entry[0], s = entry[1];
+      // Skip pre-trip days (anything earlier than the departure date)
+      if (dateKey < _tripStartKey) return;
       var km = s.odometerKm != null ? s.odometerKm : (s.km || 0);
       if (dateKey === today) {
         todaySummaryKm = km;
@@ -3643,6 +3649,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             window._posMapInstance = map; // expose for UnifiedMap integration
             var spinner = document.getElementById('mapSpinner');
             if (spinner) spinner.remove();
+            window._posMapReady = true;
 
             // Mobile two-finger hint
             if (L.Browser.mobile) {
@@ -3707,6 +3714,11 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                 });
             }
         }
+        // v4.21: expose initMap so the tab-activation handler can guarantee the
+        // Live map initializes when the 'In Viaggio' tab is opened (fixes infinite spinner).
+        window._initPosMap = function() {
+            try { initMap(); if (map) map.invalidateSize(); } catch(e) { /* noop */ }
+        };
 
         function updateMapMarkers() {
             if (!map) return;
@@ -4014,6 +4026,12 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             if (_livePositionsRef) _livePositionsRef.off('value'); // v4.02: cleanup previous listener
             _livePositionsRef = ref;
             ref.on('value', function(snap) {
+                // v4.21 FIX: ensure the map is initialized before placing markers.
+                // Previously listenLivePositions assumed initMap() had already run;
+                // if the tab observer hadn't fired yet, `map` was undefined, markers
+                // were never added, the spinner stayed forever and updateInfoCard
+                // (which fills "Siamo a:") was never reached.
+                if (!map) { initMap(); if (map) map.invalidateSize(); }
                 var liveData = snap.val() || {};
                 var hasLive = Object.keys(liveData).some(function(uid) {
                     return liveData[uid] && liveData[uid].lat;
@@ -5306,7 +5324,12 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             _dailySummariesRef = ref;
             ref.on('value', function(snap) {
                 var summaries = snap.val() || {};
-                var arr = Object.entries(summaries).sort(function(a,b) { return b[0].localeCompare(a[0]); });
+                // v4.22: ignore pre-trip days (e.g. the 24/06 GPX test track).
+                // The trip departs from Selvazzano on TRIP_START (25/06/2026).
+                var _tripStartKey = window.localDateStr ? window.localDateStr(TRIP_START) : TRIP_START.toISOString().slice(0,10);
+                var arr = Object.entries(summaries)
+                    .filter(function(e) { return e[0] >= _tripStartKey; })
+                    .sort(function(a,b) { return b[0].localeCompare(a[0]); });
                 container.innerHTML = '';
                 if (arr.length === 0) {
                     container.innerHTML = '<p style="color:var(--text-muted);font-size:13px;">' + (isEN ? 'No data yet. Start a trip!' : 'Nessun dato. Avvia un viaggio!') + '</p>';
@@ -6242,25 +6265,46 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             btn.style.display = '';
             btn.textContent = '\uD83D\uDCC5 ' + (isEN ? 'Go to D' : 'Vai a G') + (tripDay + 1) + (isEN ? ' (today)' : ' (oggi)');
             btn.addEventListener('click', function() {
-                function scrollToToday() {
+                // v4.21 FIX: make "go to today" robust regardless of which tab is active.
+                // 1) Ensure the Itinerary (giorni) tab is active — otherwise its content is
+                //    display:none and getBoundingClientRect() returns 0, so the scroll did nothing.
+                // 2) Exclusively open today's accordion (close the others, like a normal click).
+                // 3) Scroll the OPENED HEADER into view (not the zero-height span anchor),
+                //    accounting for the sticky top bar. Done after a tick so layout is settled.
+                function openAndScrollToToday() {
                     var currentDay = getCurrentTripDay();
-                    var target = document.getElementById('g' + (currentDay + 1));
-                    // v3.47 FIX: target is the span anchor; the h3 accordion-header is the next sibling
-                    var header = document.getElementById('g' + (currentDay + 1) + '-header');
-                    if (header && !header.classList.contains('open')) {
-                        header.classList.add('open');
-                        var body = header.nextElementSibling;
-                        if (body && body.classList.contains('accordion-body')) body.classList.add('open');
+                    var n = currentDay + 1;
+                    var header = document.getElementById('g' + n + '-header');
+                    if (!header) return;
+                    var section = header.closest('.tab-content') || document.getElementById('tab-giorni');
+                    // Exclusive open: close any other open accordions in this section first.
+                    if (section) {
+                        section.querySelectorAll('.accordion-header.open').forEach(function(h) {
+                            if (h === header) return;
+                            h.classList.remove('open');
+                            var b = h.nextElementSibling;
+                            if (b && b.classList.contains('accordion-body')) b.classList.remove('open');
+                        });
                     }
-                    if (target) {
-                        setTimeout(function() {
-                            var topBarH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--top-bar-height')) || 56;
-                            var y = target.getBoundingClientRect().top + window.pageYOffset - topBarH - 16;
-                            window.scrollTo({ top: y, behavior: 'smooth' });
-                        }, 100);
-                    }
+                    header.classList.add('open');
+                    var body = header.nextElementSibling;
+                    if (body && body.classList.contains('accordion-body')) body.classList.add('open');
+                    // Scroll once layout reflows the now-open accordion.
+                    setTimeout(function() {
+                        var topBarH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--top-bar-height')) || 56;
+                        var y = header.getBoundingClientRect().top + window.pageYOffset - topBarH - 16;
+                        window.scrollTo({ top: y, behavior: 'smooth' });
+                    }, 120);
                 }
-                scrollToToday();
+                var giorniActive = document.getElementById('tab-giorni')
+                    && document.getElementById('tab-giorni').classList.contains('active');
+                if (!giorniActive && window.switchTab) {
+                    window.switchTab('giorni');
+                    // Wait for the tab to become visible & laid out before scrolling.
+                    setTimeout(openAndScrollToToday, 220);
+                } else {
+                    openAndScrollToToday();
+                }
             });
         } else {
             // Pre-trip: show countdown (respects override if set to -1)
@@ -7380,6 +7424,20 @@ async function fetchForecast(lat, lon, date, _retry) {
   window.addEventListener('tabSwitched', function(e) {
     if (e.detail === 'posizione') {
       setTimeout(loadPosWeather, 200);
+      // v4.21 FIX: guarantee the Live map initializes when the tab is opened.
+      // Previously the map only initialized via a fragile observer/preload, so it
+      // could stay stuck on the loading spinner. Now we init it explicitly.
+      setTimeout(function() {
+        if (typeof window._initPosMap === 'function') window._initPosMap();
+        // Fallback: if the map still didn't initialize (e.g. not logged in),
+        // remove the infinite spinner so the user isn't left staring at it.
+        setTimeout(function() {
+          if (!window._posMapReady) {
+            var sp = document.getElementById('mapSpinner');
+            if (sp) sp.remove();
+          }
+        }, 1500);
+      }, 250);
     }
   });
 
@@ -8904,9 +8962,12 @@ async function fetchForecast(lat, lon, date, _retry) {
 
 // ═══════════════════════════════════════════════════════════════
 // V5.5: Inject Wikipedia links into Cultura (country headings) and Trekking (trek names)
+// v4.24: refactored into a reusable function called on tabSwitched, because
+// wiki-links.js is lazy-loaded and tab content is rendered after app.js runs.
 // ═══════════════════════════════════════════════════════════════
-(function() {
-    if (typeof WIKI_COUNTRIES === 'undefined' && typeof WIKI_TREKS === 'undefined') return;
+window.injectAllWikiLinks = function() {
+    if (typeof WIKI_COUNTRIES === 'undefined' && typeof WIKI_TREKS === 'undefined'
+        && typeof WIKI_NATURE === 'undefined' && typeof WIKI_FOOD === 'undefined') return;
     // v3.94: uses global isEN
 
     function makeWikiIcon(url, title) {
@@ -8999,19 +9060,55 @@ async function fetchForecast(lat, lon, date, _retry) {
         scanAndInject(ciboSection, WIKI_FOOD);
     }
 
-    // ─── Cultura: inject people, monuments, media wiki links ───
+    // ─── Cultura: inject people, monuments, media, cuisine and nature wiki links ───
     var cultSec = document.getElementById('tab-cultura');
     if (cultSec) {
         if (typeof WIKI_PEOPLE !== 'undefined') scanAndInject(cultSec, WIKI_PEOPLE);
         if (typeof WIKI_MONUMENTS !== 'undefined') scanAndInject(cultSec, WIKI_MONUMENTS);
         if (typeof WIKI_MEDIA !== 'undefined') scanAndInject(cultSec, WIKI_MEDIA);
+        if (typeof WIKI_FOOD !== 'undefined') scanAndInject(cultSec, WIKI_FOOD);
+        if (typeof WIKI_NATURE !== 'undefined') scanAndInject(cultSec, WIKI_NATURE);
     }
 
-    // ─── Attività > Campeggio: inject parks wiki links ───
+    // ─── Cibo: also inject nature terms (sauna, aurora, ...) ───
+    if (typeof WIKI_NATURE !== 'undefined') {
+        var ciboSec2 = document.getElementById('tab-cibo');
+        if (ciboSec2) scanAndInject(ciboSec2, WIKI_NATURE);
+    }
+
+    // ─── Attività > Campeggio: inject parks + nature wiki links ───
     if (typeof WIKI_PARKS !== 'undefined') {
         var attSec = document.getElementById('tab-attivita');
         if (attSec) scanAndInject(attSec, WIKI_PARKS);
     }
+    if (typeof WIKI_NATURE !== 'undefined') {
+        var attSec2 = document.getElementById('tab-attivita');
+        if (attSec2) scanAndInject(attSec2, WIKI_NATURE);
+    }
+};
+
+// v4.24: Run injection when cultura/attivita/cibo tabs open (after lazy wiki-links.js
+// is loaded and the tab content is rendered). Retries briefly until data is available.
+(function() {
+    var _wikiTabs = ['cultura', 'attivita', 'cibo'];
+    function tryInject(attempt) {
+        if (typeof WIKI_NATURE !== 'undefined' || typeof WIKI_FOOD !== 'undefined'
+            || typeof WIKI_COUNTRIES !== 'undefined' || typeof WIKI_TREKS !== 'undefined') {
+            try { window.injectAllWikiLinks(); } catch (e) { /* noop */ }
+            return;
+        }
+        if (attempt < 30) setTimeout(function() { tryInject(attempt + 1); }, 150);
+    }
+    window.addEventListener('tabSwitched', function(e) {
+        if (_wikiTabs.indexOf(e.detail) !== -1) {
+            setTimeout(function() { tryInject(0); }, 100);
+        }
+    });
+    // Also run once on load in case a wiki tab is already active (deep link)
+    document.addEventListener('DOMContentLoaded', function() {
+        var active = document.querySelector('.tab-content.active, .tab.active');
+        setTimeout(function() { tryInject(0); }, 400);
+    });
 })();
 
 
@@ -10484,7 +10581,11 @@ async function fetchForecast(lat, lon, date, _retry) {
               fileRef.put(blob).then(function(snapshot) {
                 return snapshot.ref.getDownloadURL();
               }).then(function(url) {
-                var photoId = Date.now() + '_' + idx;
+                // v4.22 FIX: use firebase push() key (collision-proof) instead of
+                // Date.now()+idx, which could collide when multiple photos were
+                // uploaded in the same millisecond and silently overwrite each
+                // other (.set), making photos disappear from post & gallery.
+                // Also store uploadedAt so the gallery can sort reliably.
                 // v2.59: attach geotag from current live position if available
                 var _photoGeo = {};
                 if (todayPoints && todayPoints.length > 0) {
@@ -10493,7 +10594,7 @@ async function fetchForecast(lat, lon, date, _retry) {
                 } else if (window._lastKnownLat) {
                   _photoGeo.lat = window._lastKnownLat; _photoGeo.lng = window._lastKnownLng;
                 }
-                return diarioRef.child(dayKey + '/photos/' + photoId).set(Object.assign({ url: url, caption: '' }, _photoGeo));
+                return diarioRef.child(dayKey + '/photos').push(Object.assign({ url: url, caption: '', uploadedAt: Date.now() }, _photoGeo));
               }).then(resolve).catch(function(err) {
                 console.warn('[Recap] Photo upload error:', err);
                 resolve();
@@ -12585,8 +12686,44 @@ async function fetchForecast(lat, lon, date, _retry) {
       }
       // Extra sanitization: ensure no unescaped quotes in URL that could break href attribute
       var safeUrl = cleaned.replace(/"/g, '%22').replace(/'/g, '%27');
+      // v4.22: links pointing to THIS app (same origin) with a #tab-... hash should
+      // navigate inside the app (switch tab) instead of opening a new tab / reloading.
+      var _tabMatch = cleaned.match(/#(tab-[a-z0-9_-]+)/i);
+      if (_tabMatch) {
+        var _sameApp = false;
+        try {
+          var _u = new URL(cleaned, window.location.href);
+          _sameApp = (_u.host === window.location.host);
+        } catch (e) { _sameApp = false; }
+        if (_sameApp) {
+          var _tabId = _tabMatch[1].replace('tab-', '');
+          // Show only the readable label (#tab-diario → "Diario") instead of the full URL.
+          var _label = _tabId.charAt(0).toUpperCase() + _tabId.slice(1);
+          return '<a href="#' + _tabMatch[1] + '" class="chat-internal-link" data-qv-tab="' + _tabId + '">📂 ' + escapeHtml(_label) + '</a>' + escapeHtml(trailing);
+        }
+      }
       // v2.63 FIX: escape link text to prevent XSS via crafted URLs
       return '<a href="' + safeUrl + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(cleaned) + '</a>' + escapeHtml(trailing);
+    });
+  }
+
+  // v4.22: delegated handler — internal app links (#tab-...) inside chat messages
+  // navigate within the app instead of opening a new browser tab / reloading.
+  if (!window._qvInternalLinkHandler) {
+    window._qvInternalLinkHandler = true;
+    document.addEventListener('click', function(e) {
+      var a = e.target.closest && e.target.closest('a.chat-internal-link');
+      if (!a) return;
+      var tabId = a.getAttribute('data-qv-tab');
+      if (!tabId) return;
+      e.preventDefault();
+      if (typeof window.switchTab === 'function') {
+        window.switchTab(tabId);
+        try { history.pushState(null, '', '#tab-' + tabId); } catch (err) {}
+      } else {
+        // Fallback: at least set the hash without a full reload.
+        try { location.hash = '#tab-' + tabId; } catch (err) {}
+      }
     });
   }
 
@@ -12917,12 +13054,18 @@ async function fetchForecast(lat, lon, date, _retry) {
     plSection.style.display = '';
 
     // Toggle collapse
+    var plHint = document.getElementById('chat-playlist-hint');
     var _expanded = false;
-    if (plToggle) plToggle.addEventListener('click', function() {
+    function _plToggle() {
       _expanded = !_expanded;
       plBody.style.display = _expanded ? '' : 'none';
       plArrow.textContent = _expanded ? '\u25B2' : '\u25BC';
-    });
+      // Hide the "tap to suggest" hint once open (the form is already visible).
+      if (plHint) plHint.style.display = _expanded ? 'none' : '';
+    }
+    if (plToggle) plToggle.addEventListener('click', _plToggle);
+    // The hint itself is also clickable to open the section.
+    if (plHint) plHint.addEventListener('click', function() { if (!_expanded) _plToggle(); });
 
     // Firebase ref
     var plRef = firebase.database().ref('trips/' + FAMILY_ID + '/playlist/' + _dayKey);
@@ -13632,7 +13775,7 @@ async function fetchForecast(lat, lon, date, _retry) {
       viewGalleryBtn.style.background = isGallery ? 'var(--accent)' : '';
       viewGalleryBtn.style.color = isGallery ? '#fff' : '';
     }
-    if (isGallery) loadGallery();
+    if (isGallery) loadGallery(true); // v4.22: always refresh so new post photos always appear
   }
 
   function loadGallery(forceReload) {
@@ -13658,14 +13801,34 @@ async function fetchForecast(lat, lon, date, _retry) {
         Object.keys(entry.photos).forEach(function(photoKey) {
           var photo = entry.photos[photoKey];
           if (photo && photo.url && /^https:\/\//.test(photo.url)) {
-            allPhotos.push({ url: photo.url, caption: photo.caption || '', entryKey: entryKey, photoKey: photoKey, date: entryDate, ts: photo.uploadedAt || 0 });
+            // v4.22: derive a reliable chronological timestamp.
+            // Prefer explicit uploadedAt; otherwise parse legacy Date.now()+idx
+            // keys; otherwise fall back to the firebase push() key timestamp
+            // (push keys are time-ordered) so every photo gets a sensible order.
+            var ts = photo.uploadedAt || 0;
+            if (!ts) {
+              var m = String(photoKey).match(/^(\d{13})/); // legacy "<ms>_<idx>"
+              if (m) ts = parseInt(m[1], 10);
+            }
+            allPhotos.push({
+              url: photo.url,
+              caption: photo.caption || '',
+              entryKey: entryKey,
+              photoKey: photoKey,
+              date: entryDate,
+              ts: ts,
+              order: (typeof photo.order === 'number') ? photo.order : null
+            });
           }
         });
       });
-      // Sort by date descending, then by upload timestamp descending (newest first)
+      // Sort newest-first: by entry date desc, then by manual order (if set),
+      // then by upload timestamp desc, then by push-key as final tiebreaker.
       allPhotos.sort(function(a, b) {
         if (a.date !== b.date) return b.date.localeCompare(a.date);
-        return (b.ts || 0) - (a.ts || 0);
+        if (a.order !== null && b.order !== null && a.order !== b.order) return a.order - b.order;
+        if ((b.ts || 0) !== (a.ts || 0)) return (b.ts || 0) - (a.ts || 0);
+        return String(b.photoKey).localeCompare(String(a.photoKey));
       });
       if (allPhotos.length === 0) {
         if (galleryEmpty) galleryEmpty.style.display = '';
@@ -13751,6 +13914,53 @@ async function fetchForecast(lat, lon, date, _retry) {
       var key = btn.getAttribute('data-key');
       if (!key) return;
       showEditModal(key);
+    });
+
+    // v4.22: Reorder photos within a post (owner only). Clicking ◀/▶ swaps the
+    // photo with its neighbour by persisting a normalized numeric `order` field
+    // on every photo of the entry, so the order is stable in both post & gallery.
+    timelineEl.addEventListener('click', function(e) {
+      var btn = e.target.closest('.diario-photo-move');
+      if (!btn || btn.disabled) return;
+      if (!isOwner || window._simRole) return;
+      var key = btn.getAttribute('data-entry-key');
+      var photoKey = btn.getAttribute('data-photo-key');
+      var dir = parseInt(btn.getAttribute('data-dir'), 10) || 0;
+      if (!key || !photoKey || !dir) return;
+      var familyId = (typeof FAMILY_ID !== 'undefined') ? FAMILY_ID : 'viaggio-europa-2026';
+      var entryRef = firebase.database().ref('trips/' + familyId + '/diary/' + key);
+      entryRef.child('photos').once('value').then(function(snap) {
+        var photos = snap.val() || {};
+        // Build the same chronological ordering used for rendering.
+        function tsOf(k, p) {
+          var t = (p && p.uploadedAt) || 0;
+          if (!t) { var m = String(k).match(/^(\d{13})/); if (m) t = parseInt(m[1], 10); }
+          return t;
+        }
+        var keys = Object.keys(photos).sort(function(ka, kb) {
+          var pa = photos[ka] || {}, pb = photos[kb] || {};
+          var oa = (typeof pa.order === 'number') ? pa.order : null;
+          var ob = (typeof pb.order === 'number') ? pb.order : null;
+          if (oa !== null && ob !== null && oa !== ob) return oa - ob;
+          var ta = tsOf(ka, pa), tb = tsOf(kb, pb);
+          if (ta !== tb) return ta - tb;
+          return String(ka).localeCompare(String(kb));
+        });
+        var idx = keys.indexOf(photoKey);
+        var swapIdx = idx + dir;
+        if (idx === -1 || swapIdx < 0 || swapIdx >= keys.length) return;
+        // swap positions
+        var tmp = keys[idx]; keys[idx] = keys[swapIdx]; keys[swapIdx] = tmp;
+        // write normalized order for all photos
+        var updates = {};
+        keys.forEach(function(k, i) { updates[k + '/order'] = i; });
+        return entryRef.child('photos').update(updates).then(function() {
+          if (window.showToast) showToast(isEN ? 'Order updated' : 'Ordine aggiornato', 'success');
+        });
+      }).catch(function(err) {
+        console.error('[Diario] Reorder failed:', err);
+        if (window.showToast) showToast(isEN ? 'Failed to reorder' : 'Riordino fallito', 'danger');
+      });
     });
   }
 
@@ -14093,11 +14303,36 @@ async function fetchForecast(lat, lon, date, _retry) {
 
         // Photos
         if (entry.photos && Object.keys(entry.photos).length > 0) {
+          // v4.22: render photos in a stable, explicit order so what you see in
+          // the post matches the gallery, and supports manual reordering.
+          var _photoOwner = isOwner && !window._simRole;
+          var _orderedKeys = Object.keys(entry.photos).sort(function(ka, kb) {
+            var pa = entry.photos[ka] || {}, pb = entry.photos[kb] || {};
+            var oa = (typeof pa.order === 'number') ? pa.order : null;
+            var ob = (typeof pb.order === 'number') ? pb.order : null;
+            if (oa !== null && ob !== null && oa !== ob) return oa - ob;
+            function tsOf(k, p) {
+              var t = p.uploadedAt || 0;
+              if (!t) { var m = String(k).match(/^(\d{13})/); if (m) t = parseInt(m[1], 10); }
+              return t;
+            }
+            var ta = tsOf(ka, pa), tb = tsOf(kb, pb);
+            if (ta !== tb) return ta - tb; // chronological within a post (oldest first)
+            return String(ka).localeCompare(String(kb));
+          });
           html += '    <div class="diario-photos">';
-          Object.keys(entry.photos).forEach(function(photoKey) {
+          _orderedKeys.forEach(function(photoKey, _pi) {
             var photo = entry.photos[photoKey];
             var safeUrl = (photo.url && /^https:\/\//.test(photo.url)) ? escapeHtml(photo.url) : '';
-            html += '      <img src="' + safeUrl + '" alt="' + escapeHtml(photo.caption || '') + '" class="diario-photo" loading="lazy" data-entry-key="' + key + '" data-photo-key="' + photoKey + '">';
+            html += '      <div class="diario-photo-wrap" style="position:relative;">';
+            html += '        <img src="' + safeUrl + '" alt="' + escapeHtml(photo.caption || '') + '" class="diario-photo" loading="lazy" data-entry-key="' + key + '" data-photo-key="' + photoKey + '">';
+            if (_photoOwner && _orderedKeys.length > 1) {
+              html += '        <div class="diario-photo-reorder">';
+              html += '          <button class="diario-photo-move" data-entry-key="' + key + '" data-photo-key="' + photoKey + '" data-dir="-1"' + (_pi === 0 ? ' disabled' : '') + ' title="' + (isEN ? 'Move left' : 'Sposta a sinistra') + '">◀</button>';
+              html += '          <button class="diario-photo-move" data-entry-key="' + key + '" data-photo-key="' + photoKey + '" data-dir="1"' + (_pi === _orderedKeys.length - 1 ? ' disabled' : '') + ' title="' + (isEN ? 'Move right' : 'Sposta a destra') + '">▶</button>';
+              html += '        </div>';
+            }
+            html += '      </div>';
           });
           html += '    </div>';
         }
@@ -15068,10 +15303,12 @@ async function fetchForecast(lat, lon, date, _retry) {
           fileRef.put(blob).then(function(snapshot) {
             return snapshot.ref.getDownloadURL();
           }).then(function(url) {
-            var photoIdx = Date.now() + '_' + idx;
-            diarioRef.child(dayKey + '/photos/' + photoIdx).set({
+            // v4.22 FIX: collision-proof push() key + uploadedAt (see new-post upload).
+            // Previously Date.now()+idx could collide and overwrite a photo.
+            diarioRef.child(dayKey + '/photos').push({
               url: url,
-              caption: ''
+              caption: '',
+              uploadedAt: Date.now()
             });
             if (window.showToast) showToast(isEN ? 'Photo uploaded!' : 'Foto caricata!', 'success');
           }).catch(function(err) {

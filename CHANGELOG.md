@@ -5,6 +5,46 @@
 
 # Quo Vadis — Changelog
 
+## v4.24 — 2026-06-29
+**Collegamenti Wikipedia automatici in Attività, Cibo e Cultura**
+- I link Wikipedia (icona 📖) ora vengono **iniettati automaticamente** accanto ai termini rilevanti nelle tab **Attività**, **Cibo** e **Cultura**, senza modificare i testi a mano.
+- **Fix dell'iniezione**: la funzione girava una sola volta al caricamento di `app.js`, quando `wiki-links.js` (caricato in modo lazy) e il contenuto delle tab non esistevano ancora — risultato: 0 link iniettati. Ora l'iniezione è una funzione riutilizzabile (`injectAllWikiLinks`) richiamata all'apertura delle tab, con ritentativi finché i dati sono disponibili. Risultato verificato: **389 link** iniettati (Attività 72, Cibo 116, Cultura 147).
+- **Nuovi termini** aggiunti a `wiki-links.js`: tabella **WIKI_NATURE** (aurora boreale, sole di mezzanotte, sauna, fiordo, renna, Sami…), nuovi sentieri (WIKI_TREKS), parchi/aree naturali (WIKI_PARKS), diritto di libero accesso (Allemannsretten, Jokamiehenoikeus) e cucine nazionali (WIKI_FOOD). Tutti gli URL IT/EN verificati come pagine Wikipedia esistenti.
+- Versione bump a **4.24**, cache-busting (`?v=4.24`) e precache del service worker allineati.
+
+## v4.23 — 2026-06-29
+**Ordine delle tappe negli Itinerari città — percorso a piedi sensato**
+- Le tappe delle città erano numerate nell'ordine di inserimento dei dati, producendo sulla mappa un tracciato a zigzag (avanti e indietro). Ora un **ottimizzatore di percorso a piedi** (nearest-neighbour + raffinamento 2-opt) riordina automaticamente le tappe in una sequenza geograficamente logica, mantenendo la **prima tappa come punto di partenza**.
+- La nuova numerazione è **coerente ovunque**: marker sulla mappa, linea del tracciato, popup ed elenco numerato seguono lo stesso ordine. Vale anche per la mappa a schermo intero.
+- Applicato a **tutte le 21 città** a runtime (nessun dato riscritto a mano). Riduzione media del percorso a piedi di circa il 45% (totale ~261 km → ~138 km); es. Riga 10,0 → 4,4 km, Copenaghen 20,9 → 8,2 km, Bilbao 23,0 → 7,5 km. Salvaguardia inclusa: se l'ordine ottimizzato non risultasse migliore, viene mantenuto quello originale.
+- **Cache-busting** aggiornato (`?v=4.23`) e precache del service worker allineato.
+
+## v4.22 — 2026-06-28
+Sezione **"Colonna sonora"** (playlist collaborativa nella Chat) resa più chiara e invitante.
+
+- **Invito esplicito sempre visibile**: sotto al titolo "🎵 Colonna sonora — G_X_" compare ora la riga **"🎶 Tocca per suggerire una canzone per la tappa di oggi →"** (IT) / **"🎶 Tap to suggest a song for today's stop →"** (EN), così è chiaro che la sezione serve a proporre brani. La riga si nasconde automaticamente quando si apre la sezione (il form è già visibile) ed è cliccabile per aprirla.
+- **Form più comprensibile**: aggiunta l'etichetta **"➕ Suggerisci un brano per oggi:"**, placeholder più chiari (**"Titolo canzone"**, **"Artista"**) e il pulsante mostra ora il testo **"➕ Invia"** invece della sola icona.
+- **Freccia più evidente**: il chevron di apertura è ora un pallino azzurro ben riconoscibile come comando di espansione.
+- Tutto bilingue IT/EN.
+
+**Link interni nei messaggi (Chat/Diario)**
+- I link che puntano alla stessa app con un'ancora di tab (es. `https://viaggio-europa-2026.web.app/#tab-diario`) **non aprono più una scheda esterna né ricaricano l'app**: ora vengono riconosciuti come navigazione interna e mostrati in forma breve e leggibile (es. **"📂 Diario"**). Cliccandoli si passa direttamente alla tab corrispondente con `switchTab`, restando dentro l'app. I link esterni continuano ad aprirsi normalmente in una nuova scheda.
+
+**Mappa Itinerari città a schermo intero**
+- Aggiunto un pulsante **⛶ Schermo intero** sull'angolo della mappa di ogni città (come nella Mappa Percorso). Apre un overlay a tutto schermo che ricostruisce gli stessi marker numerati, il percorso a piedi e i livelli di importanza, con titolo della città e pulsante di chiusura (×). Disponibile anche senza login (la mappa città è pubblica).
+
+**Dati di viaggio — partenza da Selvazzano Dentro**
+- Il viaggio parte ufficialmente da **Selvazzano Dentro** il **25/06/2026** (TRIP_START). Eventuali dati GPS/GPX registrati **prima** della partenza (es. il tracciato di test del **24/06**) vengono ora **ignorati**: non vengono più conteggiati nei km totali (Home + Statistiche) né mostrati nell'elenco dei riepiloghi giornalieri. La mappa percorso già caricava solo le tracce dal giorno di partenza in poi.
+
+**Galleria foto e ordinamento (Diario)**
+- **Tutte le foto dei post ora compaiono in Galleria**: risolta la causa per cui alcune foto sparivano. In fase di upload (sia nuovo post sia aggiunta a un post esistente) le foto usavano una chiave basata su `Date.now()` che, con più immagini caricate insieme, poteva **collidere e sovrascrivere** una foto con l'altra. Ora ogni foto usa una **chiave univoca** generata da Firebase (`push()`) e salva `uploadedAt`.
+- **Ordine cronologico inverso affidabile**: la Galleria ordina le foto per data (più recenti in alto) e, a parità di giorno, per orario di caricamento/chiave cronologica, con supporto all'ordine manuale impostato nel post.
+- **Galleria sempre aggiornata**: aprendo la vista Galleria viene ricaricata, così le foto appena aggiunte ai post compaiono subito senza dover riavviare l'app.
+- **Riordino foto nei post (owner)**: ogni foto di un post con più immagini mostra i comandi **◀ ▶** per spostarla a sinistra/destra; il nuovo ordine viene salvato e si riflette sia nel post sia nella Galleria.
+
+**Altro**
+- **Cache-busting** aggiornato (`?v=4.22`) e precache del service worker allineato.
+
 ## v4.21 — 2026-06-28
 Livelli di importanza e filtro "Solo imperdibili" negli **Itinerari città**.
 
@@ -16,6 +56,10 @@ Livelli di importanza e filtro "Solo imperdibili" negli **Itinerari città**.
 **Posizione attuale unificata (sezione "In viaggio" + Home).** Risolto il caso in cui in zone rurali (es. una *seniūnija* lituana) la card "Siamo a:" mostrava solo il **Paese** invece del luogo specifico. Ora un unico geocoder condiviso (`_geocodePlace`, zoom=14 con catena di fallback `city → town → village → municipality → hamlet → suburb → ... → county`) alimenta **Home, card "Siamo a:" e scrittura su Firebase**, così tutte le viste mostrano sempre lo **stesso luogo specifico** (es. *Pasvalys* / *Ąžuolynė*, non solo "Lituania"). Nessuna dipendenza dal check-in.
 
 **Pulsante "Itinerari città".** Aggiunto nella schermata "Itinerario — Giorno per Giorno" un pulsante verde **🗺️ Itinerari città** accanto a "📅 Vai a oggi", che apre direttamente la sezione Itinerari città. Il box dei pulsanti è ora sempre visibile (anche fuori dal periodo di viaggio), così l'accesso agli Itinerari città è sempre disponibile. Bilingue IT/EN.
+
+**Fix: spinner infinito sulla mappa di "In viaggio".** Aprendo la tab "In viaggio" da loggato, la mappa Leaflet a volte restava bloccata sullo spinner di caricamento. Ora l'inizializzazione della mappa è idempotente e lo spinner viene sempre rimosso una volta pronti i tile (con fallback temporizzato di sicurezza), così la mappa con furgone/posizione si mostra correttamente.
+
+**Fix: pulsante "Vai a oggi".** Il pulsante non scrollava al giorno corrente quando veniva premuto mentre la tab Itinerario non era ancora attiva (il contenuto era `display:none`, quindi le coordinate erano nulle). Ora il pulsante: (1) attiva la tab Itinerario se necessario, (2) apre **solo** l'accordion del giorno di oggi chiudendo gli altri, (3) scrolla l'intestazione del giorno appena sotto la barra superiore. Verificato su G4 (oggi).
 
 - **Cache-busting** aggiornato (`?v=4.21`) e precache del service worker allineato.
 

@@ -44,7 +44,7 @@ var WIKI_LINKS = {
   "g15": { label: "Treriksröset", wiki: "https://it.wikipedia.org/wiki/Treriksröset", wikiEn: "https://en.wikipedia.org/wiki/Treriksröset" },
   "g16": [
     { label: "Tromsø", wiki: "https://it.wikipedia.org/wiki/Tromsø", wikiEn: "https://en.wikipedia.org/wiki/Tromsø" },
-    { label: "Fjellheisen", wiki: "https://it.wikipedia.org/wiki/Fjellheisen", wikiEn: "https://en.wikipedia.org/wiki/Fjellheisen" }
+    { label: "Fjellheisen", wiki: "https://it.wikipedia.org/wiki/Troms%C3%B8", wikiEn: "https://en.wikipedia.org/wiki/Fjellheisen" }
   ],
   "g17": { label: "Senja", wiki: "https://it.wikipedia.org/wiki/Senja", wikiEn: "https://en.wikipedia.org/wiki/Senja" },
   "g18": { label: "Andøya", wiki: "https://it.wikipedia.org/wiki/Andøya", wikiEn: "https://en.wikipedia.org/wiki/Andøya" },
@@ -126,20 +126,25 @@ var WIKI_LINKS = {
 // ─── Trekking Wikipedia links (used by injectWikiLinks) ───
 var WIKI_TREKS = {
   "Segla": { wiki: "https://it.wikipedia.org/wiki/Senja", wikiEn: "https://en.wikipedia.org/wiki/Senja" },
-  "Reinebringen": { wiki: "https://it.wikipedia.org/wiki/Reinebringen", wikiEn: "https://en.wikipedia.org/wiki/Reinebringen" },
+  "Reinebringen": { wiki: "https://it.wikipedia.org/wiki/Reine", wikiEn: "https://en.wikipedia.org/wiki/Reine" },
   "Ryten": { wiki: "https://it.wikipedia.org/wiki/Lofoten", wikiEn: "https://en.wikipedia.org/wiki/Lofoten" },
   "Vidden Trail": { wiki: "https://it.wikipedia.org/wiki/Bergen_(Norvegia)", wikiEn: "https://en.wikipedia.org/wiki/Vidden_(hiking_trail)" },
-  "Ruta del Cares": { wiki: "https://it.wikipedia.org/wiki/Ruta_del_Cares", wikiEn: "https://en.wikipedia.org/wiki/Cares_Trail" },
+  "Ruta del Cares": { wiki: "https://it.wikipedia.org/wiki/Picos_de_Europa", wikiEn: "https://en.wikipedia.org/wiki/Cares_Trail" },
   "Offersøykammen": { wiki: "https://it.wikipedia.org/wiki/Lofoten", wikiEn: "https://en.wikipedia.org/wiki/Lofoten" },
   "Fløyen Troll Forest": { wiki: "https://it.wikipedia.org/wiki/Fløyen", wikiEn: "https://en.wikipedia.org/wiki/Fløyen" },
   "Preikestolen": { wiki: "https://it.wikipedia.org/wiki/Preikestolen", wikiEn: "https://en.wikipedia.org/wiki/Preikestolen" },
   "San Juan de Gaztelugatxe": { wiki: "https://it.wikipedia.org/wiki/Gaztelugatxe", wikiEn: "https://en.wikipedia.org/wiki/Gaztelugatxe" },
   "Fuente Dé": { wiki: "https://it.wikipedia.org/wiki/Fuente_Dé", wikiEn: "https://en.wikipedia.org/wiki/Fuente_Dé" },
-  "Fjellheisen": { wiki: "https://it.wikipedia.org/wiki/Fjellheisen", wikiEn: "https://en.wikipedia.org/wiki/Fjellheisen" },
+  "Fjellheisen": { wiki: "https://it.wikipedia.org/wiki/Troms%C3%B8", wikiEn: "https://en.wikipedia.org/wiki/Fjellheisen" },
   "Sherpatrappa": { wiki: "https://it.wikipedia.org/wiki/Tromsø", wikiEn: "https://en.wikipedia.org/wiki/Tromsø" },
   "Hesten": { wiki: "https://it.wikipedia.org/wiki/Senja", wikiEn: "https://en.wikipedia.org/wiki/Senja" },
   "Trollstigen": { wiki: "https://it.wikipedia.org/wiki/Trollstigen", wikiEn: "https://en.wikipedia.org/wiki/Trollstigen" },
-  "Picos de Europa": { wiki: "https://it.wikipedia.org/wiki/Picos_de_Europa", wikiEn: "https://en.wikipedia.org/wiki/Picos_de_Europa" }
+  "Picos de Europa": { wiki: "https://it.wikipedia.org/wiki/Picos_de_Europa", wikiEn: "https://en.wikipedia.org/wiki/Picos_de_Europa" },
+  "Kjeragbolten": { wiki: "https://it.wikipedia.org/wiki/Kjerag", wikiEn: "https://en.wikipedia.org/wiki/Kjeragbolten" },
+  "Kjerag": { wiki: "https://it.wikipedia.org/wiki/Kjerag", wikiEn: "https://en.wikipedia.org/wiki/Kjerag" },
+  "Romsdalseggen": { wiki: "https://it.wikipedia.org/wiki/%C3%85ndalsnes", wikiEn: "https://en.wikipedia.org/wiki/%C3%85ndalsnes" },
+  "Naranjo de Bulnes": { wiki: "https://it.wikipedia.org/wiki/Naranjo_de_Bulnes", wikiEn: "https://en.wikipedia.org/wiki/Naranjo_de_Bulnes" },
+  "Geirangerfjord": { wiki: "https://it.wikipedia.org/wiki/Geirangerfjord", wikiEn: "https://en.wikipedia.org/wiki/Geirangerfjord" }
 };
 
 // ─── Cultura country Wikipedia links ───
@@ -246,7 +251,20 @@ var WIKI_FOOD = {
   "Bacalao": { wiki: "https://it.wikipedia.org/wiki/Baccalà", wikiEn: "https://en.wikipedia.org/wiki/Bacalhau" },
   "Croquetas": { wiki: "https://it.wikipedia.org/wiki/Crocchetta", wikiEn: "https://en.wikipedia.org/wiki/Croquette" },
   "Vafler": { wiki: "https://it.wikipedia.org/wiki/Waffle", wikiEn: "https://en.wikipedia.org/wiki/Waffle" },
-  "Rugbrød": { wiki: "https://it.wikipedia.org/wiki/Rugbrød", wikiEn: "https://en.wikipedia.org/wiki/Rugbrød" }
+  "Rugbrød": { wiki: "https://it.wikipedia.org/wiki/Rugbrød", wikiEn: "https://en.wikipedia.org/wiki/Rugbrød" },
+  "cucina austriaca": { labelEn: "Austrian cuisine", wiki: "https://it.wikipedia.org/wiki/Cucina_austriaca", wikiEn: "https://en.wikipedia.org/wiki/Austrian_cuisine" },
+  "cucina ceca": { labelEn: "Czech cuisine", wiki: "https://it.wikipedia.org/wiki/Cucina_ceca", wikiEn: "https://en.wikipedia.org/wiki/Czech_cuisine" },
+  "cucina polacca": { labelEn: "Polish cuisine", wiki: "https://it.wikipedia.org/wiki/Cucina_polacca", wikiEn: "https://en.wikipedia.org/wiki/Polish_cuisine" },
+  "cucina lituana": { labelEn: "Lithuanian cuisine", wiki: "https://it.wikipedia.org/wiki/Cucina_lituana", wikiEn: "https://en.wikipedia.org/wiki/Lithuanian_cuisine" },
+  "cucina lettone": { labelEn: "Latvian cuisine", wiki: "https://it.wikipedia.org/wiki/Cucina_lettone", wikiEn: "https://en.wikipedia.org/wiki/Latvian_cuisine" },
+  "cucina estone": { labelEn: "Estonian cuisine", wiki: "https://it.wikipedia.org/wiki/Cucina_estone", wikiEn: "https://en.wikipedia.org/wiki/Estonian_cuisine" },
+  "cucina finlandese": { labelEn: "Finnish cuisine", wiki: "https://it.wikipedia.org/wiki/Cucina_finlandese", wikiEn: "https://en.wikipedia.org/wiki/Finnish_cuisine" },
+  "cucina norvegese": { labelEn: "Norwegian cuisine", wiki: "https://it.wikipedia.org/wiki/Cucina_norvegese", wikiEn: "https://en.wikipedia.org/wiki/Norwegian_cuisine" },
+  "cucina danese": { labelEn: "Danish cuisine", wiki: "https://it.wikipedia.org/wiki/Cucina_danese", wikiEn: "https://en.wikipedia.org/wiki/Danish_cuisine" },
+  "cucina tedesca": { labelEn: "German cuisine", wiki: "https://it.wikipedia.org/wiki/Cucina_tedesca", wikiEn: "https://en.wikipedia.org/wiki/German_cuisine" },
+  "cucina francese": { labelEn: "French cuisine", wiki: "https://it.wikipedia.org/wiki/Cucina_francese", wikiEn: "https://en.wikipedia.org/wiki/French_cuisine" },
+  "cucina spagnola": { labelEn: "Spanish cuisine", wiki: "https://it.wikipedia.org/wiki/Cucina_spagnola", wikiEn: "https://en.wikipedia.org/wiki/Spanish_cuisine" },
+  "cucina ligure": { labelEn: "Ligurian cuisine", wiki: "https://it.wikipedia.org/wiki/Cucina_ligure", wikiEn: "https://en.wikipedia.org/wiki/Cuisine_of_Liguria" }
 };
 
 // ─── Monumenti, siti UNESCO, luoghi culturali ───
@@ -307,6 +325,23 @@ var WIKI_PARKS = {
   "Costa Brava": { wiki: "https://it.wikipedia.org/wiki/Costa_Brava", wikiEn: "https://en.wikipedia.org/wiki/Costa_Brava" },
   "Costa Azzurra": { labelEn: "French Riviera", wiki: "https://it.wikipedia.org/wiki/Costa_Azzurra", wikiEn: "https://en.wikipedia.org/wiki/French_Riviera" },
   "Circolo Polare Artico": { labelEn: "Arctic Circle", wiki: "https://it.wikipedia.org/wiki/Circolo_polare_artico", wikiEn: "https://en.wikipedia.org/wiki/Arctic_Circle" },
-  "Allemannsretten": { wiki: "https://it.wikipedia.org/wiki/Allemannsretten", wikiEn: "https://en.wikipedia.org/wiki/Freedom_to_roam" },
-  "Jokamiehenoikeus": { wiki: "https://it.wikipedia.org/wiki/Jokamiehenoikeus", wikiEn: "https://en.wikipedia.org/wiki/Freedom_to_roam#Finland" }
+  "Allemannsretten": { wiki: "https://it.wikipedia.org/wiki/Diritto_di_pubblico_accesso", wikiEn: "https://en.wikipedia.org/wiki/Freedom_to_roam" },
+  "Jokamiehenoikeus": { wiki: "https://it.wikipedia.org/wiki/Diritto_di_pubblico_accesso", wikiEn: "https://en.wikipedia.org/wiki/Freedom_to_roam#Finland" },
+  "Møns Klint": { labelEn: "Møns Klint", wiki: "https://it.wikipedia.org/wiki/M%C3%B8ns_Klint", wikiEn: "https://en.wikipedia.org/wiki/M%C3%B8ns_Klint" },
+  "Henningsvær": { wiki: "https://it.wikipedia.org/wiki/Henningsvaer", wikiEn: "https://en.wikipedia.org/wiki/Henningsv%C3%A6r" },
+  "Hirtshals": { wiki: "https://it.wikipedia.org/wiki/Hirtshals", wikiEn: "https://en.wikipedia.org/wiki/Hirtshals" },
+  "Getxo": { wiki: "https://it.wikipedia.org/wiki/Getxo", wikiEn: "https://en.wikipedia.org/wiki/Getxo" },
+  "Tankavaara": { wiki: "https://it.wikipedia.org/wiki/Sodankyl%C3%A4", wikiEn: "https://en.wikipedia.org/wiki/Tankavaara" },
+  "Lagos de Covadonga": { labelEn: "Lakes of Covadonga", wiki: "https://it.wikipedia.org/wiki/Covadonga", wikiEn: "https://en.wikipedia.org/wiki/Lakes_of_Covadonga" }
+};
+
+// ─── Termini cultura/natura nordica (used by injectWikiLinks) ───
+var WIKI_NATURE = {
+  "aurora boreale": { labelEn: "aurora", wiki: "https://it.wikipedia.org/wiki/Aurora_polare", wikiEn: "https://en.wikipedia.org/wiki/Aurora" },
+  "sole di mezzanotte": { labelEn: "midnight sun", wiki: "https://it.wikipedia.org/wiki/Sole_di_mezzanotte", wikiEn: "https://en.wikipedia.org/wiki/Midnight_sun" },
+  "sauna": { wiki: "https://it.wikipedia.org/wiki/Sauna", wikiEn: "https://en.wikipedia.org/wiki/Sauna" },
+  "fiordo": { labelEn: "fjord", wiki: "https://it.wikipedia.org/wiki/Fiordo", wikiEn: "https://en.wikipedia.org/wiki/Fjord" },
+  "renna": { labelEn: "reindeer", wiki: "https://it.wikipedia.org/wiki/Rangifer_tarandus", wikiEn: "https://en.wikipedia.org/wiki/Reindeer" },
+  "renne": { labelEn: "reindeer", wiki: "https://it.wikipedia.org/wiki/Rangifer_tarandus", wikiEn: "https://en.wikipedia.org/wiki/Reindeer" },
+  "Sami": { labelEn: "Sámi people", wiki: "https://it.wikipedia.org/wiki/Sami", wikiEn: "https://en.wikipedia.org/wiki/S%C3%A1mi_people" }
 };

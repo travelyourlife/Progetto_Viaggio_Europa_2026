@@ -55,7 +55,9 @@
     mustBadge: { it: 'Imperdibile',                  en: 'Must-see' },
     recBadge:  { it: 'Consigliato',                  en: 'Recommended' },
     legend:    { it: 'Tocca i numeri sulla mappa. ⭐⭐ imperdibile, ⭐ consigliato.',
-                 en: 'Tap the numbers on the map. ⭐⭐ must-see, ⭐ recommended.' }
+                 en: 'Tap the numbers on the map. ⭐⭐ must-see, ⭐ recommended.' },
+    fsOpen:    { it: 'Schermo intero',               en: 'Fullscreen' },
+    fsClose:   { it: 'Chiudi',                       en: 'Close' }
   };
   function t(key) { return isEN() ? T[key].en : T[key].it; }
 
@@ -199,6 +201,81 @@
     return sec;
   }
 
+  // ---- Walking-route optimizer -------------------------------------------
+  // v4.23: The stops in city-itineraries.js are stored in authoring order, which
+  // produced a zig-zagging route on the map (e.g. Riga ~10km of back-and-forth).
+  // We reorder them into a sensible walking sequence using nearest-neighbour +
+  // 2-opt, keeping the original first stop as the fixed starting point. The
+  // result is cached per city and reused for the list, markers, route line and
+  // popups so the numbering stays consistent everywhere.
+  var _orderedCache = {};
+
+  function _haversineKm(a, b) {
+    var R = 6371;
+    var dLat = (b.lat - a.lat) * Math.PI / 180;
+    var dLng = (b.lng - a.lng) * Math.PI / 180;
+    var la1 = a.lat * Math.PI / 180, la2 = b.lat * Math.PI / 180;
+    var h = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(la1) * Math.cos(la2) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
+    return 2 * R * Math.asin(Math.min(1, Math.sqrt(h)));
+  }
+
+  function _routeLenKm(seq) {
+    var d = 0;
+    for (var i = 1; i < seq.length; i++) d += _haversineKm(seq[i - 1], seq[i]);
+    return d;
+  }
+
+  function optimizeStops(stops) {
+    // Guard: need valid coordinates; otherwise keep original order.
+    var valid = stops.every(function (s) { return typeof s.lat === 'number' && typeof s.lng === 'number'; });
+    if (!valid || stops.length <= 2) return stops.slice();
+
+    // 1) Nearest-neighbour from the original first stop (fixed start).
+    var remaining = stops.slice();
+    var route = [remaining.shift()];
+    while (remaining.length) {
+      var last = route[route.length - 1];
+      var bi = 0, bd = Infinity;
+      for (var j = 0; j < remaining.length; j++) {
+        var dd = _haversineKm(last, remaining[j]);
+        if (dd < bd) { bd = dd; bi = j; }
+      }
+      route.push(remaining.splice(bi, 1)[0]);
+    }
+
+    // 2) 2-opt refinement, never moving index 0 (keep the fixed start).
+    var improved = true, n = route.length, pass = 0;
+    while (improved && pass < 60) {
+      improved = false; pass++;
+      for (var a = 1; a < n - 1; a++) {
+        for (var b2 = a + 1; b2 < n; b2++) {
+          // current edges (a-1,a) and (b2,b2+1) vs reversed segment
+          var A = route[a - 1], B = route[a], C = route[b2], D = (b2 + 1 < n) ? route[b2 + 1] : null;
+          var before = _haversineKm(A, B) + (D ? _haversineKm(C, D) : 0);
+          var after = _haversineKm(A, C) + (D ? _haversineKm(B, D) : 0);
+          if (after + 1e-9 < before) {
+            // reverse route[a..b2]
+            var lo = a, hi = b2;
+            while (lo < hi) { var tmp = route[lo]; route[lo] = route[hi]; route[hi] = tmp; lo++; hi--; }
+            improved = true;
+          }
+        }
+      }
+    }
+
+    // Safety: only adopt the optimized order if it is not worse than original.
+    if (_routeLenKm(route) <= _routeLenKm(stops) + 1e-6) return route;
+    return stops.slice();
+  }
+
+  function getOrderedStops(cityKey, city) {
+    if (_orderedCache[cityKey]) return _orderedCache[cityKey];
+    var ordered = optimizeStops(city.stops || []);
+    _orderedCache[cityKey] = ordered;
+    return ordered;
+  }
+
   // ---- Render a single city's itinerary cards ----------------------------
   function renderCity(cityKey) {
     var data = window.CITY_ITINERARIES || {};
@@ -206,6 +283,10 @@
     var box = document.getElementById('ciCity');
     if (!c || !box) return;
     activeCityKey = cityKey;
+
+    // v4.23: replace stops with the optimized walking order (cached per city) so
+    // the list, map markers, route line and popups all share one consistent order.
+    c = Object.assign({}, c, { stops: getOrderedStops(cityKey, c) });
 
     // Tear down any open map when switching city
     destroyMap();
@@ -333,19 +414,11 @@
     return html;
   }
 
-  // ---- Build the Leaflet map ---------------------------------------------
-  function buildMap(city) {
-    if (typeof L === 'undefined') return;
-    var el = document.getElementById('ciMap');
-    if (!el) return;
-    destroyMap();
-
-    mapInstance = L.map(el, { scrollWheelZoom: false }).setView(city.center, city.zoom || 14);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: '© OpenStreetMap'
-    }).addTo(mapInstance);
-
+  // ---- Shared layer builder (markers + walking route) --------------------
+  // Adds the numbered stop markers and the dashed walking route for `city`
+  // onto `targetMap`. Returns the array of [lat,lng] points (for fitBounds).
+  // `markerSink` (optional) collects created markers for later cleanup.
+  function addCityLayers(targetMap, city, markerSink) {
     var pts = [];
     (city.stops || []).forEach(function (s, idx) {
       var m = catMeta(s.cat);
@@ -367,21 +440,62 @@
               '<span style="transform:rotate(45deg);font-weight:700;font-size:13px;">' + (idx + 1) + '</span>' + starBadge + '</div>',
         iconSize: [size + 2, size + 2], iconAnchor: [(size + 2) / 2, size], popupAnchor: [0, -(size - 2)]
       });
-      var mk = L.marker(latlng, { icon: numIcon, zIndexOffset: tier === 2 ? 600 : (tier === 1 ? 300 : 0) }).addTo(mapInstance);
+      var mk = L.marker(latlng, { icon: numIcon, zIndexOffset: tier === 2 ? 600 : (tier === 1 ? 300 : 0) }).addTo(targetMap);
       mk.bindPopup(popupHtml(s, idx), { maxWidth: 280, minWidth: 220, className: 'ci-popup-wrap' });
-      stopMarkers.push(mk);
+      if (markerSink) markerSink.push(mk);
     });
 
     // Walking route connecting the stops in order
     if (pts.length > 1) {
-      routeLine = L.polyline(pts, {
+      L.polyline(pts, {
         color: '#2563eb', weight: 4, opacity: 0.7, dashArray: '6,8', lineJoin: 'round'
-      }).addTo(mapInstance);
+      }).addTo(targetMap);
     }
+    return pts;
+  }
+
+  // ---- Build the Leaflet map ---------------------------------------------
+  function buildMap(city) {
+    if (typeof L === 'undefined') return;
+    var el = document.getElementById('ciMap');
+    if (!el) return;
+    destroyMap();
+
+    mapInstance = L.map(el, { scrollWheelZoom: false }).setView(city.center, city.zoom || 14);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '© OpenStreetMap'
+    }).addTo(mapInstance);
+
+    var pts = addCityLayers(mapInstance, city, stopMarkers);
 
     // Fit to all stops
     if (pts.length) {
       mapInstance.fitBounds(L.latLngBounds(pts).pad(0.25));
+    }
+
+    // v4.22: fullscreen button (top-right) — opens a dedicated, ungated
+    // fullscreen overlay rebuilding the same city markers + route.
+    // NOTE: attach to the holder wrapper (NOT #ciMap), because Leaflet manages
+    // the children/panes of its map container and a direct child button would
+    // be unreliable. The holder is position:relative so absolute works here.
+    var holder = document.getElementById('ciMapHolder');
+    if (holder) {
+      holder.style.position = 'relative';
+      var prevBtn = holder.querySelector('.ci-map-fs-btn');
+      if (prevBtn) prevBtn.remove();
+      var fsBtn = document.createElement('button');
+      fsBtn.type = 'button';
+      fsBtn.className = 'map-fullscreen-btn ci-map-fs-btn';
+      fsBtn.innerHTML = '⛶';
+      fsBtn.title = t('fsOpen');
+      fsBtn.setAttribute('aria-label', t('fsOpen'));
+      holder.appendChild(fsBtn);
+      fsBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        openCityMapFullscreen(city);
+      });
     }
 
     // Ensure correct sizing after the container becomes visible
@@ -390,6 +504,111 @@
     // Start live blue-dot geolocation
     startLiveLocation();
   }
+
+  // ---- Fullscreen city map (dedicated, no auth gate) ---------------------
+  var fsMapInstance = null;
+  var fsLiveWatchId = null;
+  function openCityMapFullscreen(city) {
+    if (typeof L === 'undefined' || !city) return;
+    // Avoid duplicates
+    if (document.querySelector('.ci-map-fs-overlay')) return;
+
+    var overlay = document.createElement('div');
+    overlay.className = 'map-fs-overlay ci-map-fs-overlay';
+    var en = isEN();
+    var cityName = esc((city.flag ? city.flag + ' ' : '') + (en ? (city.cityEN || city.city) : city.city));
+    overlay.innerHTML =
+      '<div class="map-fs-header">' +
+        '<h3>🧭 ' + cityName + '</h3>' +
+        '<button class="map-fs-close" type="button" aria-label="' + esc(t('fsClose')) + '">&times;</button>' +
+      '</div>' +
+      '<div class="map-fs-body"><div id="ciMapFs" style="width:100%;height:100%;"></div></div>';
+    document.body.appendChild(overlay);
+    document.body.style.overflow = 'hidden';
+
+    var fsDiv = overlay.querySelector('#ciMapFs');
+    fsMapInstance = L.map(fsDiv, { scrollWheelZoom: true, zoomControl: false })
+      .setView(city.center, city.zoom || 14);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19, attribution: '© OpenStreetMap'
+    }).addTo(fsMapInstance);
+    L.control.zoom({ position: 'bottomright' }).addTo(fsMapInstance);
+
+    var pts = addCityLayers(fsMapInstance, city, null);
+
+    // Reuse the most recent GPS fix for an immediate blue dot, then keep watching
+    var fsLive = null;
+    var blueIcon = L.divIcon({
+      className: '',
+      html: '<div style="background:#3182ce;width:16px;height:16px;border-radius:50%;border:3px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.4);"></div>',
+      iconSize: [22, 22], iconAnchor: [11, 11]
+    });
+    if (lastFix) {
+      fsLive = L.marker([lastFix.lat, lastFix.lng], { icon: blueIcon, zIndexOffset: 1000 })
+        .bindPopup(t('youHere')).addTo(fsMapInstance);
+    }
+    if (navigator.geolocation) {
+      try {
+        fsLiveWatchId = navigator.geolocation.watchPosition(function (pos) {
+          var la = pos.coords.latitude, ln = pos.coords.longitude;
+          lastFix = { lat: la, lng: ln };
+          if (!fsMapInstance) return;
+          if (!fsLive) { fsLive = L.marker([la, ln], { icon: blueIcon, zIndexOffset: 1000 }).bindPopup(t('youHere')).addTo(fsMapInstance); }
+          else { fsLive.setLatLng([la, ln]); }
+        }, function () {}, { enableHighAccuracy: true, maximumAge: 10000, timeout: 20000 });
+      } catch (e) {}
+    }
+
+    setTimeout(function () {
+      if (!fsMapInstance) return;
+      fsMapInstance.invalidateSize();
+      if (pts.length > 1) fsMapInstance.fitBounds(L.latLngBounds(pts).pad(0.2), { animate: false });
+      else if (pts.length === 1) fsMapInstance.setView(pts[0], city.zoom || 14, { animate: false });
+    }, 80);
+
+    function closeFs() {
+      if (fsLiveWatchId != null && navigator.geolocation) {
+        try { navigator.geolocation.clearWatch(fsLiveWatchId); } catch (e) {}
+        fsLiveWatchId = null;
+      }
+      if (fsMapInstance) { try { fsMapInstance.remove(); } catch (e) {} fsMapInstance = null; }
+      if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
+      document.body.style.overflow = '';
+      window._ciMapFsOpen = false;
+      window._closeCiMapFs = null;
+      document.removeEventListener('keydown', onKey);
+      // resize the inline map underneath
+      setTimeout(function () { if (mapInstance) mapInstance.invalidateSize(); }, 60);
+    }
+    function onKey(e) { if (e.key === 'Escape') { e.preventDefault(); if (window.history && history.state && history.state.ciMapFsOpen) { history.back(); } else { closeFs(); } } }
+
+    // Hardware/browser back closes the overlay (consistent with the route map)
+    window._ciMapFsOpen = true;
+    window._closeCiMapFs = closeFs;
+    try { history.pushState({ ciMapFsOpen: true }, '', ''); } catch (e) {}
+    document.addEventListener('keydown', onKey);
+
+    var closeBtn = overlay.querySelector('.map-fs-close');
+    closeBtn.addEventListener('click', function () {
+      if (window.history && history.state && history.state.ciMapFsOpen) { history.back(); }
+      else { closeFs(); }
+    });
+    closeBtn.addEventListener('touchend', function (e) {
+      e.preventDefault();
+      if (window.history && history.state && history.state.ciMapFsOpen) { history.back(); }
+      else { closeFs(); }
+    });
+  }
+
+  // Close the city fullscreen map on browser/hardware back
+  window.addEventListener('popstate', function () {
+    if (window._ciMapFsOpen && typeof window._closeCiMapFs === 'function') {
+      var fn = window._closeCiMapFs;
+      window._ciMapFsOpen = false;
+      window._closeCiMapFs = null;
+      fn();
+    }
+  });
 
   function startLiveLocation() {
     if (!navigator.geolocation || !mapInstance) return;

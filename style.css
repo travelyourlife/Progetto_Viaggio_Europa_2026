@@ -4445,22 +4445,59 @@ html[lang="en"] .notif-drawer-list:empty::after {
   scroll-snap-type: x mandatory;
   padding: 0;
 }
-.diario-photos:has(img:only-child) .diario-photo {
+.diario-photos:has(.diario-photo-wrap:only-child) .diario-photo-wrap,
+.diario-photos:has(.diario-photo-wrap:only-child) .diario-photo {
   width: 100%;
   height: 220px;
 }
-.diario-photo {
+/* v4.22: each photo is wrapped to host reorder controls */
+.diario-photo-wrap {
   width: 200px;
   height: 180px;
+  flex-shrink: 0;
+  scroll-snap-align: start;
+  position: relative;
+}
+.diario-photo {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   border-radius: 0;
-  scroll-snap-align: start;
-  flex-shrink: 0;
   cursor: pointer;
+  display: block;
   transition: transform 0.2s, box-shadow 0.2s;
 }
 .diario-photo:active {
   transform: scale(0.97);
+}
+/* v4.22: photo reorder arrows (owner only) */
+.diario-photo-reorder {
+  position: absolute;
+  left: 0; right: 0; bottom: 6px;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 6px;
+  pointer-events: none;
+}
+.diario-photo-move {
+  pointer-events: auto;
+  width: 32px; height: 32px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.55);
+  color: #fff;
+  font-size: 14px;
+  line-height: 32px;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+}
+.diario-photo-move:disabled {
+  opacity: 0.25;
+  cursor: default;
+}
+.diario-photo-move:not(:disabled):active {
+  background: var(--accent, #1976d2);
 }
 
 /* Lightbox */
@@ -5025,6 +5062,9 @@ html[lang="en"] .notif-drawer-list:empty::after {
     transition: transform 0.2s, box-shadow 0.2s; line-height: 1;
 }
 .map-fullscreen-btn:active { transform: scale(0.9); }
+/* v4.22: fullscreen button on the city itinerary map (above Leaflet tiles/controls) */
+.ci-map-holder { position: relative; }
+.ci-map-holder .ci-map-fs-btn { position: absolute; top: 10px; right: 10px; z-index: 1100; }
 .map-fs-overlay {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
     z-index: 10000; background: var(--bg); display: flex; flex-direction: column;
