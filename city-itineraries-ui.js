@@ -93,6 +93,106 @@
       .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
   }
 
+  // ---- v4.30: trip-date awareness ----------------------------------------
+  // The trip starts on TRIP_START (app.js: 25/06/2026). Each city itinerary is
+  // anchored to the FIRST day in DAYS_DATA whose title mentions that city, so we
+  // can auto-open "today's" city (or the next upcoming one) when the tab opens.
+  function tripStart() {
+    if (typeof window.TRIP_START !== 'undefined' && window.TRIP_START instanceof Date) return window.TRIP_START;
+    if (typeof TRIP_START !== 'undefined' && TRIP_START instanceof Date) return TRIP_START;
+    return new Date(2026, 5, 25, 0, 0, 0);
+  }
+  function todayMidnight() { var d = new Date(); d.setHours(0, 0, 0, 0); return d; }
+  // Day index (0-based) of today relative to trip start; may be <0 or >range.
+  function todayTripIndex() {
+    var ms = todayMidnight().getTime() - (function(){ var s = new Date(tripStart()); s.setHours(0,0,0,0); return s; })().getTime();
+    return Math.round(ms / 86400000);
+  }
+  // Build { cityKey -> earliest trip day index } by matching DAYS_DATA titles.
+  var _cityDayIdxCache = null;
+  function cityDayIndexMap() {
+    if (_cityDayIdxCache) return _cityDayIdxCache;
+    var map = {};
+    var data = window.CITY_ITINERARIES || {};
+    var keys = Object.keys(data);
+    var days = (typeof window.DAYS_DATA !== 'undefined') ? window.DAYS_DATA
+             : (typeof DAYS_DATA !== 'undefined' ? DAYS_DATA : null);
+    if (days && days.length) {
+      keys.forEach(function (k) {
+        var c = data[k];
+        // candidate names to look for inside the day title (IT + EN + key)
+        var names = [c.city, c.cityEN, k].filter(Boolean).map(function (s) {
+          return String(s).toLowerCase();
+        });
+        for (var i = 0; i < days.length; i++) {
+          var d = days[i];
+          // Scan the day title plus any overnight "city"/"location" fields so
+          // that day-trip cities (e.g. Le\u00f3n) still get an anchor.
+          var hay = String(d.title || '');
+          if (d.city) hay += ' ' + d.city;
+          if (d.location) hay += ' ' + d.location;
+          if (d.overnight && d.overnight.city) hay += ' ' + d.overnight.city;
+          hay = hay.toLowerCase();
+          var hit = names.some(function (nm) { return nm && hay.indexOf(nm) !== -1; });
+          if (hit) { map[k] = i; break; }
+        }
+      });
+    }
+    _cityDayIdxCache = map;
+    return map;
+  }
+  // Pick the city key to auto-open: today's city, else the next upcoming one,
+  // else the first city. Returns a key from CITY_ITINERARIES (in object order).
+  function pickInitialCityKey(keys) {
+    if (!keys || !keys.length) return null;
+    var idxMap = cityDayIndexMap();
+    // keys that actually have a trip-day anchor
+    var anchored = keys.filter(function (k) { return typeof idxMap[k] === 'number'; });
+    if (!anchored.length) return keys[0];
+    var tIdx = todayTripIndex();
+    // 1) exact: a city whose anchor day == today
+    var exact = anchored.filter(function (k) { return idxMap[k] === tIdx; });
+    if (exact.length) {
+      // if multiple, the latest-anchored one (the city we're actually arriving in)
+      exact.sort(function (a, b) { return idxMap[b] - idxMap[a]; });
+      return exact[0];
+    }
+    // 2) the city we are currently "in": the latest anchor day <= today
+    var past = anchored.filter(function (k) { return idxMap[k] <= tIdx; });
+    if (past.length) {
+      // but only if today is before the NEXT city's anchor (i.e. still here);
+      // simplest robust choice: the city with the greatest anchor <= today.
+      past.sort(function (a, b) { return idxMap[b] - idxMap[a]; });
+      // If there is an upcoming city strictly after today and today is past all
+      // anchors, we still prefer the next upcoming per the user's rule. So:
+    }
+    // 3) next upcoming: the smallest anchor day > today
+    var future = anchored.filter(function (k) { return idxMap[k] > tIdx; });
+    if (future.length) {
+      future.sort(function (a, b) { return idxMap[a] - idxMap[b]; });
+      // If we are currently inside a city's stay (today between its anchor and
+      // the next city's anchor), prefer that current city; otherwise next.
+      if (past.length) {
+        var curr = past[0];        // greatest anchor <= today
+        var nxt = future[0];       // smallest anchor > today
+        // "current city" wins only if today is within 1 day window before next.
+        // Per user: if today's date is not available -> the one after. Today IS
+        // available whenever we are still within the trip; treat being inside a
+        // stay as today's city.
+        if (idxMap[curr] <= tIdx && tIdx < idxMap[nxt]) return curr;
+        return nxt;
+      }
+      return future[0];
+    }
+    // 4) today is after the whole trip -> fall back to last anchored city
+    if (past.length) return past[0];
+    return keys[0];
+  }
+  function isTodayCity(cityKey) {
+    var idxMap = cityDayIndexMap();
+    return typeof idxMap[cityKey] === 'number' && idxMap[cityKey] === todayTripIndex();
+  }
+
   // ---- State --------------------------------------------------------------
   var activeCityKey = null;
   var mapInstance = null;
@@ -203,34 +303,73 @@
       return sec;
     }
 
-    // City chips
+    // v4.30: pick the city to open by default (today's city / next upcoming).
+    var initialKey = pickInitialCityKey(keys) || keys[0];
+
+    // City chips (single horizontal scrollable row)
     html += '<div class="ci-chips" id="ciChips">';
-    keys.forEach(function (k, i) {
+    keys.forEach(function (k) {
       var c = data[k];
-      html += '<button type="button" class="ci-chip' + (i === 0 ? ' active' : '') + '" data-city="' + esc(k) + '">' +
-              esc(c.flag || '') + ' ' + esc(isEN() ? (c.cityEN || c.city) : c.city) + '</button>';
+      var todayDot = isTodayCity(k) ? ' \u25CF' : '';
+      html += '<button type="button" class="ci-chip' + (k === initialKey ? ' active' : '') + '" data-city="' + esc(k) + '">' +
+              esc(c.flag || '') + ' ' + esc(isEN() ? (c.cityEN || c.city) : c.city) + todayDot + '</button>';
     });
     html += '</div>';
 
-    // City container (filled on selection)
+    // City container (filled on selection) — behaves as the open accordion panel
     html += '<div id="ciCity"></div>';
     html += '</div>';
 
     sec.innerHTML = html;
     sec.setAttribute('data-built', '1');
 
-    // Chip handlers
+    // Chip handlers — select city, render it, then scroll the panel into view
     sec.querySelectorAll('.ci-chip').forEach(function (chip) {
       chip.addEventListener('click', function () {
         sec.querySelectorAll('.ci-chip').forEach(function (c) { c.classList.remove('active'); });
         this.classList.add('active');
         renderCity(this.getAttribute('data-city'));
+        scrollChipIntoView(this);
+        scrollCityPanelIntoView(true);
       });
     });
 
-    // Render first city
-    renderCity(keys[0]);
+    // Render the chosen initial city and bring it into view
+    renderCity(initialKey);
+    setTimeout(function () {
+      var activeChip = sec.querySelector('.ci-chip.active');
+      if (activeChip) scrollChipIntoView(activeChip);
+      // Only auto-scroll the panel when the initial city is NOT the first one,
+      // so a normal first-time open of "Leoben" doesn't jump the page.
+      if (initialKey !== keys[0]) scrollCityPanelIntoView(true);
+    }, 120);
     return sec;
+  }
+
+  // Center the active chip within the horizontal chip bar.
+  function scrollChipIntoView(chip) {
+    if (!chip) return;
+    try {
+      chip.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    } catch (e) {
+      var bar = document.getElementById('ciChips');
+      if (bar) bar.scrollLeft = chip.offsetLeft - bar.clientWidth / 2 + chip.clientWidth / 2;
+    }
+  }
+
+  // Scroll the open city panel into view (the "accordion opens below" effect).
+  function scrollCityPanelIntoView(flash) {
+    var head = document.querySelector('#ciCity .ci-city-head');
+    if (!head) return;
+    setTimeout(function () {
+      try { head.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) {}
+      if (flash) {
+        head.classList.remove('ci-city-flash');
+        // force reflow so the animation can replay
+        void head.offsetWidth;
+        head.classList.add('ci-city-flash');
+      }
+    }, 60);
   }
 
   // ---- Walking-route optimizer -------------------------------------------
@@ -327,8 +466,11 @@
     var html = '';
     html += '<div class="ci-city">';
     html += '<div class="ci-city-head">';
+    var todayBadge = isTodayCity(cityKey)
+      ? ' <span class="ci-today-badge">' + (en ? 'TODAY' : 'OGGI') + '</span>'
+      : '';
     html += '<h3 class="ci-city-name">' + esc(c.flag || '') + ' ' + esc(en ? (c.cityEN || c.city) : c.city) +
-            ' <span class="ci-city-country">' + esc(en ? (c.countryEN || c.country) : c.country) + '</span></h3>';
+            ' <span class="ci-city-country">' + esc(en ? (c.countryEN || c.country) : c.country) + '</span>' + todayBadge + '</h3>';
     html += '<p class="ci-city-intro">' + esc(en ? (c.introEN || c.intro) : c.intro) + '</p>';
     html += '<button type="button" class="ci-map-btn" id="ciOpenMap">' + esc(t('openMap')) + '</button>';
     html += '</div>';

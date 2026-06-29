@@ -183,6 +183,55 @@ function getCurrentTripDay() {
   return Math.max(-1, Math.min(diff, TRIP_DAYS - 1));
 }
 
+// v4.30: Self-contained, always-available "open + scroll to today's day".
+// Defined at top level (not inside an init IIFE) so it is guaranteed to exist
+// regardless of init order. Used by the "Vai a G[X] (oggi)" button AND by the
+// auto-jump when opening the Itinerario (giorni) tab. During the trip it targets
+// today's day; before the trip it falls back to the next upcoming day (G1);
+// after the trip it does nothing (rests at top).
+window.__gotoTodayDay = function() {
+  var currentDay = getCurrentTripDay(); // -1 before trip, clamped within range
+  var n;
+  if (currentDay >= 0 && currentDay <= TRIP_DAYS - 1) {
+    n = currentDay + 1;            // today's day number (1-based)
+  } else if (currentDay < 0) {
+    n = 1;                          // pre-trip fallback: next upcoming day (G1)
+  } else {
+    return;                         // post-trip: no auto-jump
+  }
+  function openAndScrollToToday() {
+    var header = document.getElementById('g' + n + '-header');
+    if (!header) return;
+    var section = header.closest('.tab-content') || document.getElementById('tab-giorni');
+    // Exclusive open: close any other open accordions in this section first.
+    if (section) {
+      section.querySelectorAll('.accordion-header.open').forEach(function(h) {
+        if (h === header) return;
+        h.classList.remove('open');
+        var b = h.nextElementSibling;
+        if (b && b.classList.contains('accordion-body')) b.classList.remove('open');
+      });
+    }
+    header.classList.add('open');
+    var body = header.nextElementSibling;
+    if (body && body.classList.contains('accordion-body')) body.classList.add('open');
+    // Scroll once layout reflows the now-open accordion.
+    setTimeout(function() {
+      var topBarH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--top-bar-height')) || 56;
+      var y = header.getBoundingClientRect().top + window.pageYOffset - topBarH - 16;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }, 120);
+  }
+  var giorniActive = document.getElementById('tab-giorni')
+    && document.getElementById('tab-giorni').classList.contains('active');
+  if (!giorniActive && window.switchTab) {
+    window.switchTab('giorni');
+    setTimeout(openAndScrollToToday, 220);
+  } else {
+    openAndScrollToToday();
+  }
+};
+
 // Escape HTML to prevent XSS in user-generated content
 function escapeHtml(str) {
   if (str == null || str === '') return '';
@@ -1699,10 +1748,29 @@ function initRouteMap() {
                     if (!latlngs || latlngs.length < 2) return;
                     var line = L.polyline(
                         latlngs,
-                        { color: '#e53e3e', weight: 3, opacity: 0.6, lineJoin: 'round' }
+                        { color: '#e53e3e', weight: 4, opacity: 0.75, lineJoin: 'round' }
                     ).addTo(routeMapInstance);
                     window._routeMapTrackLines.push(line);
                 });
+
+                // v4.31: keep historical tracks visible at low zoom (European scale).
+                // Thicken on zoom-out, thin on zoom-in, mirroring the Live map.
+                (function() {
+                    function _rmHistStyleForZoom(z) {
+                        var w = z >= 10 ? 4 : z >= 7 ? 5 : z >= 5 ? 6 : 7;
+                        var o = z >= 10 ? 0.75 : 0.85;
+                        return { weight: w, opacity: o };
+                    }
+                    function _rmApplyHistStyle() {
+                        var st = _rmHistStyleForZoom(routeMapInstance.getZoom());
+                        window._routeMapTrackLines.forEach(function(line) { line.setStyle(st); });
+                    }
+                    _rmApplyHistStyle();
+                    if (!routeMapInstance._historicalZoomListenerAdded) {
+                        routeMapInstance._historicalZoomListenerAdded = true;
+                        routeMapInstance.on('zoomend', _rmApplyHistStyle);
+                    }
+                })();
 
                 // All real tracks are now drawn: extend (don't replace) the planned
                 // bounds so the actual driven route is fully framed as well.
@@ -2677,6 +2745,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     el.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
             }, 50);
+        } else if (tabId === 'giorni' && typeof window.__gotoTodayDay === 'function') {
+            // v4.30: opening the Itinerario tab with no explicit target auto-opens
+            // and scrolls to today's day (fallback: next upcoming day). Deep-links
+            // (scrollToId set) are handled above and take precedence.
+            setTimeout(function() { window.__gotoTodayDay(); }, 60);
         } else {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -4086,11 +4159,30 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                     allDaysLatLngs.forEach(function(dayLatLngs) {
                         if (dayLatLngs && dayLatLngs.length > 1) {
                             var line = L.polyline(dayLatLngs, {
-                                color: '#e53e3e', weight: 3, opacity: 0.6
+                                color: '#e53e3e', weight: 4, opacity: 0.75
                             }).addTo(map);
                             _historicalTrackLines.push(line);
                         }
                     });
+
+                    // v4.31: keep historical tracks visible at low zoom (European scale).
+                    // At z<=6 a 3-4px line disappears; thicken on zoom-out, thin on zoom-in.
+                    function _histStyleForZoom(z) {
+                        var w = z >= 10 ? 4 : z >= 7 ? 5 : z >= 5 ? 6 : 7;
+                        var o = z >= 10 ? 0.75 : 0.85;
+                        return { weight: w, opacity: o };
+                    }
+                    function _applyHistStyle() {
+                        var st = _histStyleForZoom(map.getZoom());
+                        _historicalTrackLines.forEach(function(line) { line.setStyle(st); });
+                    }
+                    // Apply immediately for the current zoom (before any zoom event)
+                    _applyHistStyle();
+                    // Attach the zoom listener only once per map instance
+                    if (!map._historicalZoomListenerAdded) {
+                        map._historicalZoomListenerAdded = true;
+                        map.on('zoomend', _applyHistStyle);
+                    }
 
                     // Fit map bounds to show all tracks if no van marker yet
                     if (!_mapCenteredOnVan && _historicalTrackLines.length > 0) {
@@ -6345,62 +6437,27 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                 if (window.haptic) window.haptic(15);
             });
         }
-        if (!box || !btn) return;
         // v3.94: uses global isEN
+
+        // Check if day override is active (testing mode) — v1.84: session-only
+        var isOverride = typeof window._dayOverride === 'number';
+
+        // v4.30: window.__gotoTodayDay is now defined at top level (near
+        // getCurrentTripDay) so it is always available regardless of init order.
+        // This IIFE only wires the button label/visibility and the countdown.
 
         // v4.21: the box is always visible because the "Itinerari città" shortcut
         // must be reachable in every phase (pre/during/post trip). The today/countdown
         // button is shown/hidden independently below.
+        if (!box || !btn) return;
         box.style.display = 'block';
-
-        // Check if day override is active (testing mode) — v1.84: session-only
-        var isOverride = typeof window._dayOverride === 'number';
 
         if (tripDay >= 0 && tripDay <= TRIP_DAYS - 1) {
             // During trip: show "Vai a G[X] (oggi)"
             btn.style.display = '';
             btn.textContent = '\uD83D\uDCC5 ' + (isEN ? 'Go to D' : 'Vai a G') + (tripDay + 1) + (isEN ? ' (today)' : ' (oggi)');
             btn.addEventListener('click', function() {
-                // v4.21 FIX: make "go to today" robust regardless of which tab is active.
-                // 1) Ensure the Itinerary (giorni) tab is active — otherwise its content is
-                //    display:none and getBoundingClientRect() returns 0, so the scroll did nothing.
-                // 2) Exclusively open today's accordion (close the others, like a normal click).
-                // 3) Scroll the OPENED HEADER into view (not the zero-height span anchor),
-                //    accounting for the sticky top bar. Done after a tick so layout is settled.
-                function openAndScrollToToday() {
-                    var currentDay = getCurrentTripDay();
-                    var n = currentDay + 1;
-                    var header = document.getElementById('g' + n + '-header');
-                    if (!header) return;
-                    var section = header.closest('.tab-content') || document.getElementById('tab-giorni');
-                    // Exclusive open: close any other open accordions in this section first.
-                    if (section) {
-                        section.querySelectorAll('.accordion-header.open').forEach(function(h) {
-                            if (h === header) return;
-                            h.classList.remove('open');
-                            var b = h.nextElementSibling;
-                            if (b && b.classList.contains('accordion-body')) b.classList.remove('open');
-                        });
-                    }
-                    header.classList.add('open');
-                    var body = header.nextElementSibling;
-                    if (body && body.classList.contains('accordion-body')) body.classList.add('open');
-                    // Scroll once layout reflows the now-open accordion.
-                    setTimeout(function() {
-                        var topBarH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--top-bar-height')) || 56;
-                        var y = header.getBoundingClientRect().top + window.pageYOffset - topBarH - 16;
-                        window.scrollTo({ top: y, behavior: 'smooth' });
-                    }, 120);
-                }
-                var giorniActive = document.getElementById('tab-giorni')
-                    && document.getElementById('tab-giorni').classList.contains('active');
-                if (!giorniActive && window.switchTab) {
-                    window.switchTab('giorni');
-                    // Wait for the tab to become visible & laid out before scrolling.
-                    setTimeout(openAndScrollToToday, 220);
-                } else {
-                    openAndScrollToToday();
-                }
+                if (window.__gotoTodayDay) window.__gotoTodayDay();
             });
         } else {
             // Pre-trip: show countdown (respects override if set to -1)

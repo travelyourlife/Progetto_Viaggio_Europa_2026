@@ -5,6 +5,20 @@
 
 # Quo Vadis — Changelog
 
+## v4.31 — 2026-06-30
+**Tracce storiche sempre visibili a zoom europeo (Live + Mappa)**
+- **Tracce rosse storiche più visibili a zoom basso** — Alla scala europea (zoom ≤ 6) le polilinee rosse dei giorni già percorsi diventavano praticamente invisibili (1–2 px). Ora lo stile base è più marcato (`weight: 4`, `opacity: 0.75`) e, soprattutto, **lo spessore si adatta dinamicamente allo zoom**: più sottile da vicino (4 px a z≥10) e progressivamente più spesso allontanandosi (5 px a z≥7, 6 px a z≥5, 7 px sotto z5), con opacità leggermente maggiore a zoom basso.
+- L'adattamento è applicato a **entrambe** le mappe: la **mappa Live** (tab "In viaggio") e la **mappa percorso** (tab Mappa). Un listener `zoomend` viene agganciato **una sola volta** per istanza di mappa (guardia `_historicalZoomListenerAdded`) per evitare duplicazioni quando il layer viene rigenerato.
+- Versione bump a **4.31** su tutti i marcatori attivi (`version.json`, `EXPECTED_VERSION`, titolo `V4.31`, `?v=4.31`, cache `quo-vadis-v4.31`).
+
+## v4.30 — 2026-06-29
+**Menù città chip+accordion, apertura automatica "oggi", cache-busting completo**
+- **Itinerari città** — Nuovo menù **ibrido**: i selettori città sono ora **chip orizzontali su riga singola scrollabile** (niente più barra che va a capo con 21 città). Toccando una città, la scheda si apre **in linea** (accordion) con intro, mappa e tappe, e il chip selezionato viene centrato.
+- **Apertura automatica città di oggi** — Aprendo gli Itinerari città, viene aperta e messa a fuoco automaticamente la **città corrispondente alla data odierna** del viaggio; se oggi non corrisponde a nessuna città, si apre la **prossima in programma**. La città di oggi è marcata con il pallino **●** sul chip e il badge **OGGI** nell'intestazione.
+- **Tab Itinerario — salto automatico al giorno di oggi** — Entrando nel tab Itinerario (senza un deep-link a un giorno specifico), l'app **apre e scorre automaticamente al giorno corrente** (es. G5 · 29/06), espandendone l'accordion. Prima del viaggio ricade sul **primo giorno** in programma; dopo il viaggio resta in cima. La logica è centralizzata in `window.__gotoTodayDay`, riusata anche dal pulsante "Vai a G[X] (oggi)".
+- **Fix cache (causa radice)** — Gli asset locali principali (`app.js`, `style.css`, ecc.) erano caricati **senza `?v=`**, quindi il browser poteva servire una versione vecchia dalla **HTTP cache** anche dopo un aggiornamento (durante i test, una modifica a `app.js` non veniva eseguita pur essendo presente nel file). Ora **tutti** gli asset locali JS/CSS hanno `?v=4.30` in `index.html`/`index_en.html`, e il **precache del service worker** è allineato.
+- Versione bump a **4.30** su tutti i marcatori attivi (`version.json`, `EXPECTED_VERSION`, titolo `V4.30`, `?v=4.30`, cache `quo-vadis-v4.30`).
+
 ## v4.29 — 2026-06-29
 **Fix tab Live "In viaggio": aggiornamento in tempo reale anche a tracking fermo**
 - Risolto il problema per cui, quando il tracciamento live era fermo (nessun dato in `live/<uid>`), il tab **"In viaggio"** mostrava la posizione ("SIAMO A:") solo alla prima apertura e non si aggiornava senza refresh manuale, mentre la Home sì.
