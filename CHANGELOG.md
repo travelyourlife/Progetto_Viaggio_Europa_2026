@@ -5,6 +5,22 @@
 
 # Quo Vadis — Changelog
 
+## v4.27 — 2026-06-29
+**Popup mappa arricchito + traccia GPS continua senza buchi (Mappa e Live)**
+- **Popup mappa fullscreen arricchito**: toccando un marker sulla mappa a schermo intero degli Itinerari città, il popup ora mostra la **descrizione** e le **info pratiche** della tappa in un'area **scrollabile e responsive** (ottimizzata per schermi piccoli), oltre ai pulsanti direzioni già presenti.
+- Aggiunto il pulsante **📖 Apri dettaglio** nel popup: chiude la mappa fullscreen, riporta alla tab Itinerari e apre/espande automaticamente la scheda completa della tappa selezionata. Bilingue IT/EN.
+- **Ricostruzione gap GPS "al volo" (Spec Fix 3)**: introdotto un helper condiviso `_fillGapsOSRM` applicato sia alla mappa **"Mappa"** sia alla mappa **Live**. Quando tra due punti GPS registrati c'è un buco (≥ 3 km, es. tracciamento sospeso in galleria o app chiusa), il tratto mancante viene ricostruito con la **geometria stradale reale** tramite OSRM, ottenendo una **polyline rossa continua** per ciascuna giornata, senza salti in linea retta.
+- Ricostruzione **solo a video** (nessuna scrittura su Firebase), con **cache sessionStorage** per gap già risolti e **fallback a interpolazione lineare** se OSRM non risponde entro il timeout. Limite di sicurezza sui gap molto grandi (GAP_MAX_KM=400) per evitare richieste improprie.
+- Versione bump a **4.27**, cache-busting (`?v=4.27`) e precache del service worker allineati.
+
+## v4.26 — 2026-06-29
+**Traccia GPS reale (rossa) anche nella mappa "Mappa"**
+- La mappa del tab **Mappa** ora mostra, sopra il percorso pianificato (verde/blu), la **traccia GPS realmente percorsa** in rosso, recuperata da Firebase per tutti i giorni passati — finora era visibile solo nella mappa **Live**.
+- La traccia è disegnata **un giorno alla volta** (una polyline per giornata, senza unire la fine di un giorno con l'inizio del successivo), esattamente come nella mappa Live.
+- Esclude il **giorno corrente** (ancora "live") per non duplicare la traccia di oggi.
+- **Anti-duplicati**: le linee precedenti vengono rimosse prima di ridisegnare, così cambi di lingua o re-render non accumulano polyline sovrapposte.
+- Richiede l'autenticazione (owner/follower); in assenza di login o dati la mappa pianificata resta invariata.
+
 ## v4.25 — 2026-06-29
 **Reazioni e commenti sulle singole foto del diario**
 - Ora ogni **foto** del diario può ricevere **reazioni** e **commenti**, non solo l'intero post. Aprendo una foto a schermo intero (lightbox) compaiono la barra delle reazioni e la sezione commenti.

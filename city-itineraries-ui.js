@@ -57,7 +57,8 @@
     legend:    { it: 'Tocca i numeri sulla mappa. ⭐⭐ imperdibile, ⭐ consigliato.',
                  en: 'Tap the numbers on the map. ⭐⭐ must-see, ⭐ recommended.' },
     fsOpen:    { it: 'Schermo intero',               en: 'Fullscreen' },
-    fsClose:   { it: 'Chiudi',                       en: 'Close' }
+    fsClose:   { it: 'Chiudi',                       en: 'Close' },
+    openDetail:{ it: '📖 Apri dettaglio',              en: '📖 Open detail' }
   };
   function t(key) { return isEN() ? T[key].en : T[key].it; }
 
@@ -148,6 +149,37 @@
   document.addEventListener('click', function (ev) {
     var a = ev.target && ev.target.closest ? ev.target.closest('a.ci-dir-btn[data-dir="1"]') : null;
     if (a) onDirClick({ currentTarget: a });
+  }, true);
+
+  // v4.27: "Open detail" button inside a map popup — close any fullscreen map,
+  // switch to the itinerary tab, expand the matching stop card and scroll to it.
+  function openStopDetail(stopId) {
+    if (!stopId) return;
+    // 1) Close the fullscreen city map if it is open
+    try { if (typeof window._closeCiMapFs === 'function') window._closeCiMapFs(); } catch (e) {}
+    // 2) Make sure the Itinerari tab is visible
+    try { if (typeof window.switchTab === 'function') window.switchTab('itinerari'); } catch (e) {}
+    // 3) Expand the card and scroll to it (retry until the list is rendered)
+    var attempts = 0;
+    (function reveal() {
+      attempts++;
+      var li = document.getElementById('cistop-' + stopId);
+      if (!li) { if (attempts < 25) return void setTimeout(reveal, 120); return; }
+      var full = li.querySelector('.ci-stop-full');
+      var btn = li.querySelector('.ci-readmore');
+      if (full && full.hasAttribute('hidden')) {
+        full.removeAttribute('hidden');
+        if (btn) btn.textContent = t('readLess');
+      }
+      li.classList.add('ci-stop-highlight');
+      setTimeout(function () { li.classList.remove('ci-stop-highlight'); }, 2200);
+      try { li.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) { li.scrollIntoView(); }
+    })();
+  }
+
+  document.addEventListener('click', function (ev) {
+    var b = ev.target && ev.target.closest ? ev.target.closest('.ci-popup-detail') : null;
+    if (b) { ev.preventDefault(); openStopDetail(b.getAttribute('data-stop-id')); }
   }, true);
 
   // ---- Build the section shell -------------------------------------------
@@ -403,13 +435,22 @@
     var en = isEN();
     var nm = en ? (stop.nameEN || stop.name) : stop.name;
     var shortTxt = en ? (stop.shortEN || stop.short || '') : (stop.short || '');
+    var longTxt  = en ? (stop.descEN || stop.desc || '') : (stop.desc || '');
+    var tipsTxt  = en ? (stop.tipsEN || stop.tips || '') : (stop.tips || '');
     var pid = 'cipop-' + stop.id;
-    // Compact popup for the small map: title + short teaser + directions only.
-    // The full description lives in the stop list (with its own Read more).
+    // v4.27: richer popup — title + short teaser + full description + practical
+    // info, all inside a scrollable, height-capped body so it adapts to small
+    // phone screens. Directions and an "Open detail" link sit below the scroll
+    // area. The link jumps to the matching card in the itinerary list.
     var html = '<div class="ci-popup" id="' + esc(pid) + '">';
     html += '<div class="ci-popup-title"><strong>' + (idx + 1) + '. ' + esc(nm) + '</strong></div>';
-    html += '<div class="ci-popup-short">' + esc(shortTxt) + '</div>';
+    html += '<div class="ci-popup-scroll">';
+    if (shortTxt) html += '<div class="ci-popup-short">' + esc(shortTxt) + '</div>';
+    if (longTxt)  html += '<p class="ci-popup-desc">' + esc(longTxt) + '</p>';
+    if (tipsTxt)  html += '<p class="ci-popup-tips"><strong>' + esc(t('tips')) + ':</strong> ' + esc(tipsTxt) + '</p>';
+    html += '</div>'; // scroll
     html += directionsHtml(stop);
+    html += '<button type="button" class="ci-popup-detail" data-stop-id="' + esc(stop.id) + '">' + esc(t('openDetail')) + '</button>';
     html += '</div>';
     return html;
   }

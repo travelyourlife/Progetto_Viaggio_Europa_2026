@@ -1628,6 +1628,57 @@ function initRouteMap() {
             window.openMapFullscreen(routeMapInstance, isEN ? 'Route Map' : 'Mappa Percorso');
         });
 
+        // ─── v4.26: Real GPS historical tracks on route map ───
+        // Overlay the actual driven GPS tracks (red) from Firebase for all past days,
+        // one polyline per day (matches Live map style; days are NOT joined together).
+        // Excludes today (cursor < today) so the still-live current-day track isn't
+        // duplicated. Old polylines are removed first to avoid stacking on re-render.
+        (function loadHistoricalTracksOnRouteMap() {
+            if (typeof db === 'undefined' || !db || typeof FAMILY_ID === 'undefined' || !FAMILY_ID || typeof firebaseUser === 'undefined' || !firebaseUser) return;
+            // Cleanup any previous historical lines from a prior render
+            if (Array.isArray(window._routeMapTrackLines)) {
+                window._routeMapTrackLines.forEach(function(line) {
+                    try { if (routeMapInstance) routeMapInstance.removeLayer(line); } catch (e) { /* noop */ }
+                });
+            }
+            window._routeMapTrackLines = [];
+
+            var _rmTripStart = typeof TRIP_START !== 'undefined' ? TRIP_START : new Date(2026, 5, 25);
+            var _rmToday = new Date(); _rmToday.setHours(0, 0, 0, 0);
+            var _rmCursor = new Date(_rmTripStart); _rmCursor.setHours(0, 0, 0, 0);
+            var _rmDates = [];
+            while (_rmCursor < _rmToday) {
+                _rmDates.push(window.localDateStr(_rmCursor));
+                _rmCursor.setDate(_rmCursor.getDate() + 1);
+            }
+            // ── v4.27 (Spec Fix 3): on-the-fly gap reconstruction ──
+            // For each past day, ask the shared helper to insert real OSRM road
+            // geometry for every large gap (lost GPS in tunnel/ferry/background)
+            // and return ONE continuous [lat,lng] array, drawn as a single solid
+            // red polyline per day. Nothing is written to Firebase — recomputed
+            // at display time, with per-gap results cached in sessionStorage.
+            _rmDates.forEach(function(dateStr) {
+                db.ref('trips/' + FAMILY_ID + '/tracks/' + dateStr + '/points')
+                  .once('value', function(snap) {
+                      var raw = snap.val();
+                      var points = [];
+                      if (Array.isArray(raw)) points = raw;
+                      else if (raw && typeof raw === 'object') points = Object.values(raw);
+                      if (points.length < 2 || !routeMapInstance) return;
+                      var fill = (window._fillGapsOSRM ? window._fillGapsOSRM(points)
+                          : Promise.resolve(points.map(function(p) { return [p.lat, p.lng]; })));
+                      fill.then(function(latlngs) {
+                          if (!routeMapInstance || !latlngs || latlngs.length < 2) return;
+                          var line = L.polyline(
+                              latlngs,
+                              { color: '#e53e3e', weight: 3, opacity: 0.6, lineJoin: 'round' }
+                          ).addTo(routeMapInstance);
+                          window._routeMapTrackLines.push(line);
+                      });
+                  }, function() { /* permission/read error: ignore, keep planned route visible */ });
+            });
+        })();
+
         // ─── POI Layer via UnifiedMap (same as Mappa Live) ───
         if (typeof window.UnifiedMap !== 'undefined' && window.UnifiedMap.initForFullscreen) {
             window.UnifiedMap.initForFullscreen(routeMapInstance, mapDiv);
@@ -3975,54 +4026,33 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             });
 
             Promise.all(promises).then(function(allDaysPoints) {
-                // Merge all historical points into one polyline for performance
-                var allLatLngs = [];
-                allDaysPoints.forEach(function(dayPoints) {
-                    if (dayPoints.length > 1) {
-                        var dayLatLngs = dayPoints.map(function(p) { return [p.lat, p.lng]; });
-                        allLatLngs = allLatLngs.concat(dayLatLngs);
-                        // Add a break (null) between days to avoid connecting end of one day to start of next
-                        allLatLngs.push(null);
-                    }
+                // v4.27 (Spec Fix 3): fill GPS gaps on-the-fly via OSRM before drawing,
+                // producing one CONTINUOUS polyline per day (no dashArray).
+                var fillPromises = allDaysPoints.map(function(dayPoints) {
+                    return (window._fillGapsOSRM ? window._fillGapsOSRM(dayPoints)
+                        : Promise.resolve(dayPoints.map(function(p) { return [p.lat, p.lng]; })));
                 });
+                return Promise.all(fillPromises).then(function(allDaysLatLngs) {
+                    // Cleanup anti-duplicati (in case it ran again)
+                    _historicalTrackLines.forEach(function(line) { map.removeLayer(line); });
+                    _historicalTrackLines = [];
 
-                if (allLatLngs.length === 0) return;
-
-                // Split by null breaks and draw separate polylines per day
-                var segment = [];
-                allLatLngs.forEach(function(pt) {
-                    if (pt === null) {
-                        if (segment.length > 1) {
-                            var line = L.polyline(segment, {
-                                color: '#e53e3e',
-                                weight: 3,
-                                opacity: 0.5,
-                                dashArray: '8, 4'
+                    allDaysLatLngs.forEach(function(dayLatLngs) {
+                        if (dayLatLngs && dayLatLngs.length > 1) {
+                            var line = L.polyline(dayLatLngs, {
+                                color: '#e53e3e', weight: 3, opacity: 0.6
                             }).addTo(map);
                             _historicalTrackLines.push(line);
                         }
-                        segment = [];
-                    } else {
-                        segment.push(pt);
+                    });
+
+                    // Fit map bounds to show all tracks if no van marker yet
+                    if (!_mapCenteredOnVan && _historicalTrackLines.length > 0) {
+                        var group = L.featureGroup(_historicalTrackLines);
+                        if (trackLine) group.addLayer(trackLine);
+                        map.fitBounds(group.getBounds().pad(0.1));
                     }
                 });
-                // Last segment (if no trailing null)
-                if (segment.length > 1) {
-                    var line = L.polyline(segment, {
-                        color: '#e53e3e',
-                        weight: 3,
-                        opacity: 0.5,
-                        dashArray: '8, 4'
-                    }).addTo(map);
-                    _historicalTrackLines.push(line);
-                }
-
-                // Fit map bounds to show all tracks if no van marker yet
-                if (!_mapCenteredOnVan && _historicalTrackLines.length > 0) {
-                    var group = L.featureGroup(_historicalTrackLines);
-                    if (trackLine) group.addLayer(trackLine);
-                    map.fitBounds(group.getBounds().pad(0.1));
-                }
             }).catch(function(e) {
                 console.warn('[Historical tracks] load error:', e);
             });
@@ -7117,6 +7147,82 @@ function fetchWithTimeout(url, opts, timeoutMs) {
         if (timer) clearTimeout(timer);
     });
 }
+
+// ─── v4.27: Shared on-the-fly GPS gap reconstruction (Spec Fix 3) ───
+// Given raw GPS points for ONE day, returns a Promise resolving to a single
+// continuous [lat,lng] array with real road geometry (OSRM) inserted for every
+// gap longer than GAP_DRAW_KM. Small gaps are connected directly. When OSRM
+// has no route or fails, a linear interpolation keeps the line continuous.
+// Pure rendering helper — NEVER writes to Firebase. Per-gap results are cached
+// in sessionStorage to avoid repeated OSRM calls within a session.
+var GAP_DRAW_KM = 3.0; // gaps shorter than this are drawn as a direct segment
+var GAP_MAX_KM = 600;  // skip absurd gaps (data glitches) — keep direct segment
+
+function _linearInterp(from, to) {
+    var dist = window._haversineKm(from[0], from[1], to[0], to[1]);
+    var n = Math.max(2, Math.round(dist / 2));
+    var pts = [];
+    for (var i = 0; i <= n; i++) {
+        var t = i / n;
+        pts.push([from[0] + (to[0] - from[0]) * t, from[1] + (to[1] - from[1]) * t]);
+    }
+    return pts;
+}
+
+function _fillGapsOSRM(points) {
+    if (!points || points.length < 2) {
+        return Promise.resolve((points || []).map(function(p) { return [p.lat, p.lng]; }));
+    }
+    // Build ordered list of segments: 'direct' runs and 'osrm' gap bridges.
+    var segments = [];
+    var current = [[points[0].lat, points[0].lng]];
+    for (var i = 1; i < points.length; i++) {
+        var prev = points[i - 1], curr = points[i];
+        var dist = window._haversineKm(prev.lat, prev.lng, curr.lat, curr.lng);
+        if (dist > GAP_DRAW_KM && dist < GAP_MAX_KM) {
+            if (current.length > 0) { segments.push({ type: 'direct', latlngs: current }); current = []; }
+            segments.push({ type: 'osrm', from: [prev.lat, prev.lng], to: [curr.lat, curr.lng], latlngs: null });
+            current = [[curr.lat, curr.lng]];
+        } else {
+            current.push([curr.lat, curr.lng]);
+        }
+    }
+    if (current.length > 0) segments.push({ type: 'direct', latlngs: current });
+
+    var osrmPromises = segments.map(function(seg) {
+        if (seg.type === 'direct') return Promise.resolve(seg);
+        var cacheKey = 'rmgap:' + seg.from[0].toFixed(4) + ',' + seg.from[1].toFixed(4) + ';' +
+                       seg.to[0].toFixed(4) + ',' + seg.to[1].toFixed(4);
+        var cached = null;
+        try { cached = sessionStorage.getItem(cacheKey); } catch (e) {}
+        if (cached) {
+            try { seg.latlngs = JSON.parse(cached); return Promise.resolve(seg); } catch (e) {}
+        }
+        var url = 'https://router.project-osrm.org/route/v1/driving/' +
+                  seg.from[1] + ',' + seg.from[0] + ';' + seg.to[1] + ',' + seg.to[0] +
+                  '?overview=full&geometries=geojson';
+        return fetchWithTimeout(url, {}, 6000)
+            .then(function(r) { return r.ok ? r.json() : null; })
+            .then(function(data) {
+                if (data && data.code === 'Ok' && data.routes && data.routes[0] && data.routes[0].geometry) {
+                    seg.latlngs = data.routes[0].geometry.coordinates.map(function(c) { return [c[1], c[0]]; });
+                    try { sessionStorage.setItem(cacheKey, JSON.stringify(seg.latlngs)); } catch (e) {}
+                } else {
+                    seg.latlngs = _linearInterp(seg.from, seg.to);
+                }
+                return seg;
+            })
+            .catch(function() { seg.latlngs = _linearInterp(seg.from, seg.to); return seg; });
+    });
+
+    return Promise.all(osrmPromises).then(function(resolved) {
+        var result = [];
+        resolved.forEach(function(seg) { if (seg.latlngs) result = result.concat(seg.latlngs); });
+        return result;
+    });
+}
+window._fillGapsOSRM = _fillGapsOSRM;
+window._linearInterp = _linearInterp;
 
 // ─── METEO (Live Weather from Open-Meteo) ───
 (function() {

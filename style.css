@@ -5759,6 +5759,42 @@ html[lang="en"] .notif-drawer-list:empty::after {
 .ci-popup-more { background: none; border: none; color: #2563eb; font-weight: 600; font-size: .82rem; cursor: pointer; padding: 4px 0; }
 .ci-popup-wrap .leaflet-popup-content { margin: 12px 14px; }
 
+/* v4.27: richer, scrollable, mobile-friendly popup */
+.ci-popup-scroll {
+  max-height: 34vh; overflow-y: auto; -webkit-overflow-scrolling: touch;
+  margin: 4px 0 6px; padding-right: 4px;
+  overscroll-behavior: contain;
+}
+.ci-popup-desc { font-size: .86rem; color: #2f3742; line-height: 1.5; margin: 4px 0; }
+.ci-popup-tips { font-size: .83rem; color: #555e6b; line-height: 1.45; margin: 4px 0; }
+.ci-popup-detail {
+  display: block; width: 100%; margin-top: 8px; text-align: center;
+  background: #2563eb; color: #fff; border: none; border-radius: 8px;
+  padding: 8px 10px; font-size: .85rem; font-weight: 700; cursor: pointer;
+}
+.ci-popup-detail:hover { background: #1d4ed8; }
+/* Cap the whole popup so it never exceeds the small-screen viewport */
+.ci-popup-wrap .leaflet-popup-content { max-width: 78vw; }
+@media (max-width: 480px) {
+  .ci-popup, .ci-popup-wrap .leaflet-popup-content-wrapper { max-width: 80vw; }
+  .ci-popup-scroll { max-height: 30vh; }
+}
+/* Brief highlight of the target card when opened from a popup */
+.ci-stop-highlight {
+  animation: ciStopFlash 2.1s ease-out;
+  border-radius: 10px;
+}
+@keyframes ciStopFlash {
+  0% { box-shadow: 0 0 0 3px rgba(37,99,235,.55); background: rgba(37,99,235,.08); }
+  100% { box-shadow: 0 0 0 0 rgba(37,99,235,0); background: transparent; }
+}
+body.dark-mode .ci-popup-desc { color: #d4dae2; }
+body.dark-mode .ci-popup-tips { color: #aab3c0; }
+@media (prefers-color-scheme: dark) {
+  .ci-popup-desc { color: #e2e8f0; }
+  .ci-popup-tips { color: #b5bdc9; }
+}
+
 /* Importance tiers + must-see filter */
 .ci-filterbar { display: flex; justify-content: flex-end; margin: 14px 0 0; }
 .ci-filter-btn {
