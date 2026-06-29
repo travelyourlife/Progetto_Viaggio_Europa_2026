@@ -5,12 +5,18 @@
 
 # Quo Vadis — Changelog
 
+## v4.28 — 2026-06-29
+**Bump versione per pulizia cache**
+- Versione incrementata a **4.28** su tutti i marcatori attivi (`version.json`, `EXPECTED_VERSION`, titolo, `?v=` di cache-busting e nome cache del service worker `quo-vadis-v4.28`).
+- All'attivazione del nuovo service worker la cache precedente (`quo-vadis-v4.27`) viene **eliminata** e gli asset vengono riscaricati, risolvendo i casi in cui i dispositivi continuavano a servire file vecchi dalla cache. Nessuna modifica funzionale rispetto a v4.27.
+
 ## v4.27 — 2026-06-29
 **Popup mappa arricchito + traccia GPS continua senza buchi (Mappa e Live)**
 - **Popup mappa fullscreen arricchito**: toccando un marker sulla mappa a schermo intero degli Itinerari città, il popup ora mostra la **descrizione** e le **info pratiche** della tappa in un'area **scrollabile e responsive** (ottimizzata per schermi piccoli), oltre ai pulsanti direzioni già presenti.
 - Aggiunto il pulsante **📖 Apri dettaglio** nel popup: chiude la mappa fullscreen, riporta alla tab Itinerari e apre/espande automaticamente la scheda completa della tappa selezionata. Bilingue IT/EN.
 - **Ricostruzione gap GPS "al volo" (Spec Fix 3)**: introdotto un helper condiviso `_fillGapsOSRM` applicato sia alla mappa **"Mappa"** sia alla mappa **Live**. Quando tra due punti GPS registrati c'è un buco (≥ 3 km, es. tracciamento sospeso in galleria o app chiusa), il tratto mancante viene ricostruito con la **geometria stradale reale** tramite OSRM, ottenendo una **polyline rossa continua** per ciascuna giornata, senza salti in linea retta.
 - Ricostruzione **solo a video** (nessuna scrittura su Firebase), con **cache sessionStorage** per gap già risolti e **fallback a interpolazione lineare** se OSRM non risponde entro il timeout. Limite di sicurezza sui gap molto grandi (GAP_MAX_KM=400) per evitare richieste improprie.
+- La mappa **"Mappa"** ora carica tutte le giornate con `Promise.all` (come la mappa Live): c'è un momento preciso in cui tutte le tracce sono disegnate, dopo il quale i **bounds vengono estesi** (mai ristretti) per inquadrare anche il percorso realmente guidato, partendo dall'inquadratura del percorso pianificato.
 - Versione bump a **4.27**, cache-busting (`?v=4.27`) e precache del service worker allineati.
 
 ## v4.26 — 2026-06-29

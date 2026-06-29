@@ -1651,31 +1651,70 @@ function initRouteMap() {
                 _rmDates.push(window.localDateStr(_rmCursor));
                 _rmCursor.setDate(_rmCursor.getDate() + 1);
             }
+            if (_rmDates.length === 0) return;
+
             // ── v4.27 (Spec Fix 3): on-the-fly gap reconstruction ──
             // For each past day, ask the shared helper to insert real OSRM road
             // geometry for every large gap (lost GPS in tunnel/ferry/background)
             // and return ONE continuous [lat,lng] array, drawn as a single solid
             // red polyline per day. Nothing is written to Firebase — recomputed
             // at display time, with per-gap results cached in sessionStorage.
-            _rmDates.forEach(function(dateStr) {
-                db.ref('trips/' + FAMILY_ID + '/tracks/' + dateStr + '/points')
-                  .once('value', function(snap) {
-                      var raw = snap.val();
-                      var points = [];
-                      if (Array.isArray(raw)) points = raw;
-                      else if (raw && typeof raw === 'object') points = Object.values(raw);
-                      if (points.length < 2 || !routeMapInstance) return;
-                      var fill = (window._fillGapsOSRM ? window._fillGapsOSRM(points)
-                          : Promise.resolve(points.map(function(p) { return [p.lat, p.lng]; })));
-                      fill.then(function(latlngs) {
-                          if (!routeMapInstance || !latlngs || latlngs.length < 2) return;
-                          var line = L.polyline(
-                              latlngs,
-                              { color: '#e53e3e', weight: 3, opacity: 0.6, lineJoin: 'round' }
-                          ).addTo(routeMapInstance);
-                          window._routeMapTrackLines.push(line);
-                      });
-                  }, function() { /* permission/read error: ignore, keep planned route visible */ });
+            //
+            // v4.27 (review): mirror the Live map and load every day via Promise.all
+            // so there is a single "all tracks drawn" moment. After all per-day
+            // continuous polylines are added, EXTEND (never shrink) the map bounds
+            // to include the real driven tracks too, starting from the already-fit
+            // planned route — so a detour outside the planned corridor stays visible.
+            var _rmFetch = _rmDates.map(function(dateStr) {
+                return new Promise(function(resolve) {
+                    db.ref('trips/' + FAMILY_ID + '/tracks/' + dateStr + '/points')
+                      .once('value', function(snap) {
+                          var raw = snap.val();
+                          var points = [];
+                          if (Array.isArray(raw)) points = raw;
+                          else if (raw && typeof raw === 'object') points = Object.values(raw);
+                          resolve(points);
+                      }, function() { resolve([]); });
+                });
+            });
+
+            Promise.all(_rmFetch).then(function(allDaysPoints) {
+                var fillPromises = allDaysPoints.map(function(dayPoints) {
+                    if (!dayPoints || dayPoints.length < 2) return Promise.resolve([]);
+                    return (window._fillGapsOSRM ? window._fillGapsOSRM(dayPoints)
+                        : Promise.resolve(dayPoints.map(function(p) { return [p.lat, p.lng]; })));
+                });
+                return Promise.all(fillPromises);
+            }).then(function(allDaysLatLngs) {
+                if (!routeMapInstance) return;
+                // Cleanup anti-duplicati (in case this ran again meanwhile)
+                if (Array.isArray(window._routeMapTrackLines)) {
+                    window._routeMapTrackLines.forEach(function(line) {
+                        try { routeMapInstance.removeLayer(line); } catch (e) { /* noop */ }
+                    });
+                }
+                window._routeMapTrackLines = [];
+
+                allDaysLatLngs.forEach(function(latlngs) {
+                    if (!latlngs || latlngs.length < 2) return;
+                    var line = L.polyline(
+                        latlngs,
+                        { color: '#e53e3e', weight: 3, opacity: 0.6, lineJoin: 'round' }
+                    ).addTo(routeMapInstance);
+                    window._routeMapTrackLines.push(line);
+                });
+
+                // All real tracks are now drawn: extend (don't replace) the planned
+                // bounds so the actual driven route is fully framed as well.
+                if (window._routeMapTrackLines.length > 0) {
+                    try {
+                        var trackGroup = L.featureGroup(window._routeMapTrackLines);
+                        var extended = L.latLngBounds(bounds).extend(trackGroup.getBounds());
+                        routeMapInstance.fitBounds(extended, { padding: [15, 15], animate: false });
+                    } catch (e) { /* keep planned bounds on any error */ }
+                }
+            }).catch(function(e) {
+                if (typeof console !== 'undefined') console.warn('[Route map historical tracks] load error:', e);
             });
         })();
 
