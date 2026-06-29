@@ -64,7 +64,7 @@
     <link rel="apple-touch-icon" sizes="152x152" href="./icon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="./icon.png">
     <link rel="apple-touch-icon" sizes="167x167" href="./icon.png">
-    <title>Quo Vadis — V4.28</title>
+    <title>Quo Vadis — V4.29</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="home-variants.css">
@@ -86,7 +86,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = "4.28";
+  var EXPECTED_VERSION = "4.29";
   window.IS_PROD = true; // v2.96: parità con index.html — disabilita debug overlay in produzione
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
@@ -158,8 +158,8 @@
 <script src="curiosita-scheduler.js" defer></script>
 <script src="quiz-fun.js" defer></script>
 <script src="unified-map.js" defer></script>
-<script src="city-itineraries.js?v=4.28" defer></script>
-<script src="city-itineraries-ui.js?v=4.28" defer></script>
+<script src="city-itineraries.js?v=4.29" defer></script>
+<script src="city-itineraries-ui.js?v=4.29" defer></script>
 <script src="home-variants.js" defer></script>
 </head>
 <body class="on-home">

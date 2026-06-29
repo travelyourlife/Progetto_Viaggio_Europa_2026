@@ -5,6 +5,12 @@
 
 # Quo Vadis — Changelog
 
+## v4.29 — 2026-06-29
+**Fix tab Live "In viaggio": aggiornamento in tempo reale anche a tracking fermo**
+- Risolto il problema per cui, quando il tracciamento live era fermo (nessun dato in `live/<uid>`), il tab **"In viaggio"** mostrava la posizione ("SIAMO A:") solo alla prima apertura e non si aggiornava senza refresh manuale, mentre la Home sì.
+- Causa: il ramo "tracking fermo" leggeva `currentLocation` con una singola `.once('value')`. Ora usa un **listener persistente `.on('value')`** (come il ramo "tracking attivo"), quindi la card si aggiorna in tempo reale quando `currentLocation` cambia.
+- Il listener è tracciato su `window._clRefListener` e viene **rimosso (`off`) automaticamente** quando si abbandona il tab Live, agganciandosi al sistema di cleanup esistente (`detachFirebaseListeners('posizione')`) per evitare leak e listener duplicati.
+
 ## v4.28 — 2026-06-29
 **Bump versione per pulizia cache**
 - Versione incrementata a **4.28** su tutti i marcatori attivi (`version.json`, `EXPECTED_VERSION`, titolo, `?v=` di cache-busting e nome cache del service worker `quo-vadis-v4.28`).

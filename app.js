@@ -2580,6 +2580,13 @@ document.addEventListener('DOMContentLoaded', function() {
         ref.on(event, callback, _onError);
     };
     window.detachFirebaseListeners = function(tab) {
+        // v4.29 FIX: detach the persistent /currentLocation listener used by the
+        // "tracking fermo" branch of the Live (posizione) tab when leaving it, so
+        // it does not keep firing / leak after the tab is abandoned.
+        if (tab === 'posizione' && window._clRefListener) {
+            try { window._clRefListener.off('value'); } catch (e) {}
+            window._clRefListener = null;
+        }
         if (!_fbListeners[tab]) return;
         _fbListeners[tab].forEach(function(entry) {
             entry.ref.off(entry.event, entry.callback);
@@ -4148,9 +4155,17 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                     }
                 } else {
                     // v3.94 FIX: No live tracking — read /currentLocation only (single source of truth)
+                    // v4.29 FIX: use a PERSISTENT .on('value') listener (not .once) so the Live
+                    // tab updates in real time when currentLocation changes, mirroring the active
+                    // tracking branch. The listener ref is kept on window._clRefListener and
+                    // detached on Live-tab cleanup to avoid leaks/duplicate listeners.
                     var _clRef = getFamilyRef('currentLocation');
                     if (_clRef) {
-                        _clRef.once('value', function(clSnap) {
+                        if (window._clRefListener) {
+                            try { window._clRefListener.off('value'); } catch(e) {}
+                        }
+                        window._clRefListener = _clRef;
+                        _clRef.on('value', function(clSnap) {
                             var cl = clSnap.val();
                             if (cl && cl.lat && cl.lng) {
                                 var ageMs = Date.now() - (cl.updatedAt || cl.ts || 0);
