@@ -5,6 +5,18 @@
 
 # Quo Vadis — Changelog
 
+## v4.25 — 2026-06-29
+**Reazioni e commenti sulle singole foto del diario**
+- Ora ogni **foto** del diario può ricevere **reazioni** e **commenti**, non solo l'intero post. Aprendo una foto a schermo intero (lightbox) compaiono la barra delle reazioni e la sezione commenti.
+- Le **reazioni** usano lo **stesso identico set** già presente in Chat e Diario (👍 ❤️ 😂 😮 🍻 🥳 🙏): una reazione per utente, ritocco per rimuoverla, con conteggio e nomi di chi ha reagito.
+- I **commenti** per foto riusano lo stesso stile del diario: lista commenti con autore e data, campo per scrivere, invio con tasto Invio o pulsante, ed eliminazione consentita all'autore o all'owner.
+- Dati salvati su Firebase sotto `diary/{post}/photos/{foto}/reactions` e `.../comments`, con aggiornamento **in tempo reale** mentre il lightbox è aperto.
+- **Badge di riepilogo** (❤️ n · 💬 n) sulle miniature delle foto nel diario, per vedere a colpo d'occhio quali foto hanno interazioni senza doverle aprire.
+- Bilingue IT/EN; listener Firebase staccato alla chiusura del lightbox per evitare perdite di memoria.
+
+**Fix mappa live (spinner infinito al primo login)**
+- Risolto un caso residuo per cui, al **primo accesso** con il tab "In Viaggio" già attivo, la mappa restava sullo spinner: `initMap()` non veniva richiamata quando `posizione-content` diventava visibile dopo l'autenticazione. Ora l'inizializzazione usa l'accessor esposto `window._initPosMap()` sia nel percorso **owner** sia in quello **follower approvato**.
+
 ## v4.24 — 2026-06-29
 **Collegamenti Wikipedia automatici in Attività, Cibo e Cultura**
 - I link Wikipedia (icona 📖) ora vengono **iniettati automaticamente** accanto ai termini rilevanti nelle tab **Attività**, **Cibo** e **Cultura**, senza modificare i testi a mano.

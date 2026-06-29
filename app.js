@@ -585,6 +585,18 @@ function doGoogleSignIn(successCb) {
         if (_dg) _dg.style.display = 'none';
         if (_dc) _dc.style.display = '';
         if (_dp) _dp.style.display = 'none';
+        // v4.25 FIX (audit bug #1): on first login the posizione tab may already be
+        // active while posizione-content was display:none, so the MutationObserver
+        // never triggered initMap() and the map stayed on the spinner. Now that the
+        // content is visible, init the map if its tab is currently active.
+        (function() {
+          var _posTab = document.getElementById('tab-posizione');
+          if (_pc && _posTab && _posTab.classList.contains('active')) {
+            setTimeout(function() {
+              if (typeof window._initPosMap === 'function') window._initPosMap();
+            }, 120);
+          }
+        })();
         // Also notify AuthManager
         if (typeof AuthManager !== 'undefined') AuthManager._notify(user, true);
         updateProtectedTabsUI(user);
@@ -13592,7 +13604,13 @@ window.injectAllWikiLinks = function() {
     // Leaflet map needs init + invalidateSize after container becomes visible
     setTimeout(function() {
       // Trigger map initialization if not yet done
-      if (typeof initMap === 'function') {
+      // v4.25 FIX (audit bug #1): initMap is local to the Posizione IIFE and not in
+      // scope here, so the previous `typeof initMap === 'function'` check always
+      // failed for followers on first login, leaving the map on the spinner. Use the
+      // exposed window._initPosMap() accessor which guarantees init + invalidateSize.
+      if (typeof window._initPosMap === 'function') {
+        try { window._initPosMap(); } catch(e) {}
+      } else if (typeof initMap === 'function') {
         try { initMap(); } catch(e) {}
       }
       // Refresh stats now that content is visible
@@ -14326,6 +14344,15 @@ window.injectAllWikiLinks = function() {
             var safeUrl = (photo.url && /^https:\/\//.test(photo.url)) ? escapeHtml(photo.url) : '';
             html += '      <div class="diario-photo-wrap" style="position:relative;">';
             html += '        <img src="' + safeUrl + '" alt="' + escapeHtml(photo.caption || '') + '" class="diario-photo" loading="lazy" data-entry-key="' + key + '" data-photo-key="' + photoKey + '">';
+            // v4.25: reaction/comment summary badge (❤ n · 💬 n)
+            var _reactN = (photo.reactions && typeof photo.reactions === 'object') ? Object.keys(photo.reactions).length : 0;
+            var _commN = (photo.comments && typeof photo.comments === 'object') ? Object.keys(photo.comments).length : 0;
+            if (_reactN > 0 || _commN > 0) {
+              html += '        <div class="diario-photo-badge">' +
+                      (_reactN > 0 ? '<span>❤️ ' + _reactN + '</span>' : '') +
+                      (_commN > 0 ? '<span>💬 ' + _commN + '</span>' : '') +
+                      '</div>';
+            }
             if (_photoOwner && _orderedKeys.length > 1) {
               html += '        <div class="diario-photo-reorder">';
               html += '          <button class="diario-photo-move" data-entry-key="' + key + '" data-photo-key="' + photoKey + '" data-dir="-1"' + (_pi === 0 ? ' disabled' : '') + ' title="' + (isEN ? 'Move left' : 'Sposta a sinistra') + '">◀</button>';
@@ -15158,11 +15185,138 @@ window.injectAllWikiLinks = function() {
           'style="flex:1;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:var(--bg-card);color:var(--text);">' +
           '<button class="diario-lightbox-caption-save pos-btn" style="white-space:nowrap;font-size:13px;padding:8px 12px;">' +
           (isEN ? '💾 Save' : '💾 Salva') + '</button></div>' : '') +
+        // v4.25: per-photo reactions + comments (reuses the diary REACTION_EMOJIS set)
+        '<div class="diario-photo-social" data-entry-key="' + eKey + '" data-photo-key="' + pKey + '"></div>' +
         '<div class="diario-lightbox-actions">' +
           (isOwner ? '<button class="diario-lightbox-del">' + (isEN ? '🗑️ Delete photo' : '🗑️ Elimina foto') + '</button>' : '') +
           '<button class="diario-lightbox-close">' + (isEN ? '✕ Close' : '✕ Chiudi') + '</button>' +
         '</div>' +
       '</div>';
+    }
+
+    // ─── v4.25: Per-photo social (reactions + comments) ───
+    var _photoSocialRef = null;
+    var _photoSocialCb = null;
+    function _photoPath(eKey, pKey) {
+      return 'trips/' + FAMILY_ID + '/diary/' + eKey + '/photos/' + pKey;
+    }
+    function renderPhotoSocial(eKey, pKey, data) {
+      var holder = overlay.querySelector('.diario-photo-social');
+      if (!holder) return;
+      data = data || {};
+      var user = (typeof _socialUser === 'function') ? _socialUser() : (firebase.auth ? firebase.auth().currentUser : null);
+      var myUid = user ? user.uid : null;
+      var reactions = (data.reactions && typeof data.reactions === 'object') ? data.reactions : {};
+      var counts = {};
+      var myReaction = null;
+      Object.keys(reactions).forEach(function(uid) {
+        var emoji = reactions[uid];
+        if (typeof emoji !== 'string') return;
+        counts[emoji] = (counts[emoji] || 0) + 1;
+        if (uid === myUid) myReaction = emoji;
+      });
+      var comments = (data.comments && typeof data.comments === 'object') ? data.comments : {};
+      var commentCount = Object.keys(comments).length;
+      var h = '';
+      // Reaction bar (same look & emoji set as the diary post reactions)
+      h += '<div class="diario-reaction-bar">';
+      REACTION_EMOJIS.forEach(function(emoji) {
+        var c = counts[emoji] || 0;
+        var reacted = (myReaction === emoji) ? ' reacted' : '';
+        h += '<button type="button" class="diario-react-btn photo-react' + reacted + '" data-emoji="' + emoji + '">' +
+             emoji + (c > 0 ? '<span class="diario-react-count">' + c + '</span>' : '') + '</button>';
+      });
+      h += '<button type="button" class="diario-comments-toggle photo-comments-toggle">💬 ' +
+           (commentCount > 0 ? commentCount + ' ' : '') + (isEN ? 'Comments' : 'Commenti') + '</button>';
+      h += '</div>';
+      // Who reacted (names)
+      var reactorNames = [];
+      Object.keys(reactions).forEach(function(uid) {
+        var emoji = reactions[uid];
+        if (typeof emoji !== 'string') return;
+        var name = _diarioNameCache[uid] || null;
+        if (name) reactorNames.push(emoji + ' ' + name);
+      });
+      if (reactorNames.length > 0) {
+        h += '<div class="diario-reactors" style="font-size:12px;color:var(--text-muted,#6b7280);padding:2px 4px;margin-top:2px;">' + escapeHtml(reactorNames.join(', ')) + '</div>';
+      }
+      // Comments (collapsed)
+      h += '<div class="diario-comments photo-comments">';
+      h += renderPhotoCommentsList(comments, myUid);
+      h += '<div class="diario-comment-form">' +
+           '<input type="text" class="diario-comment-input photo-comment-input" maxlength="2000" placeholder="' +
+           (isEN ? 'Write a comment…' : 'Scrivi un commento…') + '">' +
+           '<button type="button" class="diario-comment-send photo-comment-send">' + (isEN ? 'Send' : 'Invia') + '</button>' +
+           '</div>';
+      h += '</div>';
+      holder.innerHTML = h;
+    }
+    function renderPhotoCommentsList(comments, myUid) {
+      var keys = Object.keys(comments || {});
+      if (keys.length === 0) {
+        return '<div class="diario-comments-empty">' + (isEN ? 'No comments yet. Be the first!' : 'Ancora nessun commento. Scrivi tu il primo!') + '</div>';
+      }
+      keys.sort(function(a, b) { return (comments[a].ts || 0) - (comments[b].ts || 0); });
+      var out = '';
+      keys.forEach(function(cid) {
+        var c = comments[cid] || {};
+        var canDelete = isOwner || (myUid && c.uid === myUid);
+        out += '<div class="diario-comment" data-cid="' + cid + '">';
+        out += '<div class="diario-comment-body">';
+        out += '<span class="diario-comment-author">' + escapeHtml(c.name || (isEN ? 'Guest' : 'Ospite')) + '</span>';
+        out += '<span class="diario-comment-time">' + escapeHtml(_formatCommentTime(c.ts)) + '</span>';
+        if (c.text) { out += '<span class="diario-comment-text">' + escapeHtml(c.text) + '</span>'; }
+        out += '</div>';
+        if (canDelete) {
+          out += '<button type="button" class="diario-comment-del photo-comment-del" data-cid="' + cid + '" title="' + (isEN ? 'Delete' : 'Elimina') + '">🗑️</button>';
+        }
+        out += '</div>';
+      });
+      return out;
+    }
+    function togglePhotoReaction(eKey, pKey, emoji) {
+      var user = (typeof _socialUser === 'function') ? _socialUser() : (firebase.auth ? firebase.auth().currentUser : null);
+      if (!user || !user.uid) { if (window.showToast) showToast(isEN ? 'Sign in to react' : 'Accedi per reagire', 'info'); return; }
+      var ref = firebase.database().ref(_photoPath(eKey, pKey) + '/reactions/' + user.uid);
+      ref.once('value').then(function(snap) {
+        if (snap.val() === emoji) return ref.remove();
+        return ref.set(emoji);
+      }).catch(function(err) { console.warn('[Diario] Photo reaction failed:', err.message); });
+    }
+    function sendPhotoComment(eKey, pKey, text) {
+      var user = (typeof _socialUser === 'function') ? _socialUser() : (firebase.auth ? firebase.auth().currentUser : null);
+      if (!user || !user.uid) { if (window.showToast) showToast(isEN ? 'Sign in to comment' : 'Accedi per commentare', 'info'); return Promise.resolve(); }
+      text = (text || '').trim();
+      if (!text) return Promise.resolve();
+      if (text.length > 2000) text = text.substring(0, 2000);
+      return firebase.database().ref(_photoPath(eKey, pKey) + '/comments').push({
+        uid: user.uid,
+        name: user.displayName || user.email || (isEN ? 'Guest' : 'Ospite'),
+        text: text,
+        ts: Date.now()
+      }).then(function() {
+        if (!isOwner && window.queuePushNotification) {
+          queuePushNotification('diary_comment', {
+            title: '💬 ' + (isEN ? 'New photo comment' : 'Nuovo commento foto'),
+            body: (user.displayName || (isEN ? 'Someone' : 'Qualcuno')) + ': ' + (text.length > 80 ? text.substring(0, 80) + '…' : text),
+            target: 'owner', url: './#diario', tag: 'diary_photo_comment_' + eKey, senderUid: user.uid
+          });
+        }
+      }).catch(function(err) { console.warn('[Diario] Photo comment failed:', err.message); });
+    }
+    function deletePhotoComment(eKey, pKey, cid) {
+      firebase.database().ref(_photoPath(eKey, pKey) + '/comments/' + cid).remove()
+        .catch(function(err) { console.warn('[Diario] Photo comment delete failed:', err.message); });
+    }
+    function attachPhotoSocial(eKey, pKey) {
+      if (_photoSocialRef && _photoSocialCb) { try { _photoSocialRef.off('value', _photoSocialCb); } catch(e) {} }
+      _photoSocialRef = firebase.database().ref(_photoPath(eKey, pKey));
+      _photoSocialCb = function(snap) {
+        var data = snap.val() || {};
+        // only re-render if still on this photo
+        if (entryKey === eKey && photoKey === pKey) renderPhotoSocial(eKey, pKey, data);
+      };
+      _photoSocialRef.on('value', _photoSocialCb);
     }
 
     overlay.innerHTML = buildContent(src, currentCaption, entryKey, photoKey);
@@ -15224,6 +15378,41 @@ window.injectAllWikiLinks = function() {
           });
         });
       }
+
+      // v4.25: Per-photo social events (reactions + comments)
+      var social = overlay.querySelector('.diario-photo-social');
+      if (social) {
+        social.addEventListener('click', function(e) {
+          var rb = e.target.closest('.photo-react');
+          if (rb) { togglePhotoReaction(entryKey, photoKey, rb.getAttribute('data-emoji')); return; }
+          var tg = e.target.closest('.photo-comments-toggle');
+          if (tg) { var box = social.querySelector('.photo-comments'); if (box) box.classList.toggle('open'); return; }
+          var sb = e.target.closest('.photo-comment-send');
+          if (sb) {
+            var input = social.querySelector('.photo-comment-input');
+            if (input && input.value.trim()) {
+              sb.disabled = true;
+              sendPhotoComment(entryKey, photoKey, input.value).then(function() { input.value = ''; sb.disabled = false; });
+            }
+            return;
+          }
+          var cdel = e.target.closest('.photo-comment-del');
+          if (cdel) {
+            showConfirm(isEN ? 'Delete this comment?' : 'Eliminare questo commento?', function() {
+              deletePhotoComment(entryKey, photoKey, cdel.getAttribute('data-cid'));
+            });
+            return;
+          }
+        });
+        social.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter' && e.target.classList.contains('photo-comment-input')) {
+            var sb = social.querySelector('.photo-comment-send');
+            if (sb) sb.click();
+          }
+        });
+      }
+      // Attach live listener for this photo's reactions/comments
+      attachPhotoSocial(entryKey, photoKey);
     }
     bindActions();
 
@@ -15273,6 +15462,7 @@ window.injectAllWikiLinks = function() {
     function closeLightbox() {
       document.body.style.overflow = '';
       document.removeEventListener('keydown', onKeyDown);
+      if (_photoSocialRef && _photoSocialCb) { try { _photoSocialRef.off('value', _photoSocialCb); } catch(e) {} _photoSocialRef = null; _photoSocialCb = null; }
       if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
     }
   }

@@ -5825,3 +5825,51 @@ body.dark-mode .ci-tier-1 { border-color: #8a6a3a; }
   .ci-map { height: 300px; }
   .ci-stop { padding: 12px; }
 }
+
+
+/* ─── v4.25: Per-photo reactions + comments in lightbox ─── */
+.diario-photo-social {
+  width: min(90vw, 520px);
+  max-height: 38vh;
+  overflow-y: auto;
+  margin: 8px 0 4px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 10px;
+  padding: 8px 10px;
+  -webkit-overflow-scrolling: touch;
+}
+.diario-photo-social .diario-reaction-bar {
+  flex-wrap: wrap;
+}
+.diario-photo-social .diario-comments-toggle {
+  color: #cbd5e1;
+}
+.diario-photo-social .diario-comment-author { color: #e2e8f0; }
+.diario-photo-social .diario-comment-time { color: #94a3b8; }
+.diario-photo-social .diario-comment-text { color: #f1f5f9; }
+.diario-photo-social .diario-comments-empty { color: #94a3b8; }
+.diario-photo-social .diario-comment-input {
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+.diario-photo-social .diario-comment-input::placeholder { color: #cbd5e1; }
+
+/* v4.25: reaction/comment summary badge on photo thumbnails */
+.diario-photo-badge {
+  position: absolute;
+  top: 6px; left: 6px;
+  display: flex;
+  gap: 5px;
+  pointer-events: none;
+}
+.diario-photo-badge span {
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  font-size: 11px;
+  line-height: 1;
+  padding: 3px 6px;
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
