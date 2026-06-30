@@ -26,20 +26,20 @@ var messaging = firebase.messaging();
 // ─── CACHING CONFIG ───
 // ═══════════════════════════════════════════════════════════════
 
-const CACHE_NAME = 'quo-vadis-v4.41';
+const CACHE_NAME = 'quo-vadis-v4.43';
 const IMAGE_CACHE_NAME = 'quo-vadis-images-v1';
 const IMAGE_CACHE_LIMIT = 80;
 const STATIC_ASSETS = [
   './',
   './index.html',
   './index_en.html',
-  './style.css?v=4.41',
+  './style.css?v=4.43',
   './data.js',
   './days-data.js',
   './days-renderer.js',
   // wiki-links.js: NOT precached — lazy-loaded on first open of Cultura/Attività tab
   './weather-coords.js',
-  './app.js?v=4.41',
+  './app.js?v=4.43',
   './manifest.json',
   './icon.png',
   './icon-192.png',
@@ -61,8 +61,8 @@ const STATIC_ASSETS = [
   './curiosita-data.js',
   './curiosita-scheduler.js',
   './quiz-fun.js',
-  './city-itineraries.js?v=4.41',
-  './city-itineraries-ui.js?v=4.41',
+  './city-itineraries.js?v=4.43',
+  './city-itineraries-ui.js?v=4.43',
   // debug-overlay.js: rimosso — caricato on-demand solo da Admin
   // v2.70: immagini placeholder per Home offline
   './img/placeholder/bridge-coast.jpg',
@@ -132,6 +132,15 @@ self.addEventListener('fetch', function(event) {
 
   // Skip non-GET requests
   if (event.request.method !== 'GET') return;
+
+  // v4.42 FIX: Map tiles (OpenStreetMap) must NEVER be intercepted by the SW.
+  // Previously imageCacheFirst() handled every external .png and, on any fetch
+  // miss/failure, returned an empty Response('', {status:404}). That empty body
+  // made Leaflet show GREY tiles (only the SVG markers/route stayed visible) on
+  // both the Live Map and the Home mini-map. Let the browser fetch tiles directly.
+  if (isMapTile(url)) {
+    return; // network passthrough, no SW handling
+  }
 
   // Network-Only for API calls (Firebase, meteo) — never cache
   if (isApiRequest(url)) {
@@ -234,7 +243,20 @@ function staleWhileRevalidate(request) {
   });
 }
 
+// v4.42: identify map tile hosts so the SW leaves them to the network untouched
+function isMapTile(url) {
+  var h = url.hostname;
+  return h === 'tile.openstreetmap.org' ||
+         /\.tile\.openstreetmap\.org$/.test(h) ||   // a/b/c.tile.openstreetmap.org
+         /\.tile\.opentopomap\.org$/.test(h) ||
+         h === 'tile.opentopomap.org' ||
+         /(^|\.)basemaps\.cartocdn\.com$/.test(h) ||
+         /(^|\.)tiles?\.stadiamaps\.com$/.test(h) ||
+         /(^|\.)tile\.thunderforest\.com$/.test(h);
+}
+
 function isDynamicImage(url) {
+  if (isMapTile(url)) return false; // never cache/serve map tiles via SW
   var ext = url.pathname.split('.').pop().toLowerCase();
   return (ext === 'png' || ext === 'jpg' || ext === 'jpeg' || ext === 'gif' || ext === 'webp' || ext === 'svg') &&
          url.hostname !== self.location.hostname; // only external images
@@ -260,7 +282,13 @@ function imageCacheFirst(request) {
         }
         return response;
       }).catch(function() {
-        return new Response('', { status: 404 });
+        // v4.42: do NOT fabricate an empty 404 (it made images/tiles render blank).
+        // Re-attempt a plain network fetch and, if that also fails, return a
+        // transparent error so the browser shows its normal broken-image state
+        // instead of a cached empty body.
+        return fetch(request).catch(function() {
+          return Response.error();
+        });
       });
     });
   });

@@ -5,6 +5,20 @@
 
 # Quo Vadis — Changelog
 
+## v4.43 — 2026-06-30
+**Riordino foto nei post del Diario più semplice**
+- **Trascina per riordinare.** Nei post con più foto compare una maniglia ☰ su ogni foto: tienila premuta e trascina per spostare la foto nell'ordine che preferisci. Funziona con il dito sul telefono e con il mouse su desktop. Le frecce ◀ ▶ restano disponibili come alternativa.
+- **"Ordina per data".** Nuovo pulsante per-post che dispone automaticamente le foto in ordine cronologico (in base all'orario di scatto/caricamento).
+- **Coerenza post ↔ galleria.** L'ordine scelto viene salvato e rispettato sia nel post sia nella galleria; la **galleria resta in ordine cronologico inverso** tra i giorni (più recenti prima), applicando l'ordine manuale solo all'interno dello stesso giorno.
+- *Nota:* i controlli di riordino sono visibili solo all'owner.
+
+## v4.42 — 2026-06-30
+**Fix: lo sfondo della mappa non si caricava (tile grigi)**
+- **Sintomo.** Sia nella *Live Map* a schermo intero sia nella mini-mappa in Home si vedevano i marker, la linea del percorso e i pin, ma lo **sfondo della cartina restava grigio**: le tile di OpenStreetMap non comparivano.
+- **Causa.** Il Service Worker intercettava **tutte** le immagini esterne `.png` (incluse le tile della mappa) tramite la cache immagini; al primo fallimento restituiva una risposta **vuota con stato 404**. Quel corpo vuoto veniva interpretato da Leaflet come tile "caricata ma vuota", producendo lo sfondo grigio (i marker/percorso sono livelli SVG separati e restavano visibili).
+- **Correzione.** Le tile delle mappe (OpenStreetMap e provider simili) ora **bypassano completamente il Service Worker** e vengono scaricate direttamente dalla rete. Inoltre la cache immagini non fabbrica più risposte 404 vuote: in caso di errore ritenta la rete e, se fallisce, lascia al browser la normale gestione dell'immagine mancante.
+- *Nota:* dopo l'aggiornamento, alla prima apertura online il vecchio Service Worker viene sostituito e le mappe tornano a mostrarsi correttamente.
+
 ## v4.41 — 2026-06-30
 **Coordinate dei giorni: una sola fonte di verità (Audit, Opzione A)**
 - **Eliminata la duplicazione delle coordinate.** Ogni giorno teneva le proprie coordinate in **tre file diversi** (`itinerario.mapsUrl` in data.js, `DAYS_DATA.meteo` in days-data.js, `TRIP_COORDS` in weather-coords.js). Quando se ne aggiornava uno e si dimenticava un altro, **meteo e mappa puntavano in silenzio al posto sbagliato** (il bug "Riga che mostrava Verona").

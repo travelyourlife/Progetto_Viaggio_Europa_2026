@@ -14363,7 +14363,66 @@ window.injectAllWikiLinks = function() {
     // v4.22: Reorder photos within a post (owner only). Clicking ◀/▶ swaps the
     // photo with its neighbour by persisting a normalized numeric `order` field
     // on every photo of the entry, so the order is stable in both post & gallery.
+
+    // v4.43: helper — compute the current chronological/explicit ordering of an
+    // entry's photo keys (same logic used everywhere for consistency).
+    function _orderedPhotoKeys(photos) {
+      function tsOf(k, p) {
+        var t = (p && p.uploadedAt) || 0;
+        if (!t) { var m = String(k).match(/^(\d{13})/); if (m) t = parseInt(m[1], 10); }
+        return t;
+      }
+      return Object.keys(photos || {}).sort(function(ka, kb) {
+        var pa = photos[ka] || {}, pb = photos[kb] || {};
+        var oa = (typeof pa.order === 'number') ? pa.order : null;
+        var ob = (typeof pb.order === 'number') ? pb.order : null;
+        if (oa !== null && ob !== null && oa !== ob) return oa - ob;
+        var ta = tsOf(ka, pa), tb = tsOf(kb, pb);
+        if (ta !== tb) return ta - tb;
+        return String(ka).localeCompare(String(kb));
+      });
+    }
+
+    // v4.43: helper — persist a normalized 0..n order for the given ordered keys.
+    function _persistPhotoOrder(entryKey, orderedKeys, okMsg) {
+      var familyId = (typeof FAMILY_ID !== 'undefined') ? FAMILY_ID : 'viaggio-europa-2026';
+      var photosRef = firebase.database().ref('trips/' + familyId + '/diary/' + entryKey + '/photos');
+      var updates = {};
+      orderedKeys.forEach(function(k, i) { updates[k + '/order'] = i; });
+      return photosRef.update(updates).then(function() {
+        if (window.showToast) showToast(okMsg || (isEN ? 'Order updated' : 'Ordine aggiornato'), 'success');
+      }).catch(function(err) {
+        console.error('[Diario] Reorder failed:', err);
+        if (window.showToast) showToast(isEN ? 'Failed to reorder' : 'Riordino fallito', 'danger');
+      });
+    }
+
     timelineEl.addEventListener('click', function(e) {
+      // v4.43: "Sort by date" button (owner only) — reorder a post's photos by capture/upload time.
+      var sortBtn = e.target.closest('.diario-photo-sortdate');
+      if (sortBtn) {
+        if (!isOwner || window._simRole) return;
+        var sKey = sortBtn.getAttribute('data-entry-key');
+        if (!sKey) return;
+        var familyId = (typeof FAMILY_ID !== 'undefined') ? FAMILY_ID : 'viaggio-europa-2026';
+        firebase.database().ref('trips/' + familyId + '/diary/' + sKey + '/photos').once('value').then(function(snap) {
+          var photos = snap.val() || {};
+          // Chronological by capture/upload time (oldest first); strip any manual order first.
+          function tsOf(k, p) {
+            var t = (p && p.uploadedAt) || 0;
+            if (!t) { var m = String(k).match(/^(\d{13})/); if (m) t = parseInt(m[1], 10); }
+            return t;
+          }
+          var keys = Object.keys(photos).sort(function(ka, kb) {
+            var ta = tsOf(ka, photos[ka]), tb = tsOf(kb, photos[kb]);
+            if (ta !== tb) return ta - tb;
+            return String(ka).localeCompare(String(kb));
+          });
+          return _persistPhotoOrder(sKey, keys, isEN ? 'Sorted by date' : 'Ordinate per data');
+        });
+        return;
+      }
+
       var btn = e.target.closest('.diario-photo-move');
       if (!btn || btn.disabled) return;
       if (!isOwner || window._simRole) return;
@@ -14375,37 +14434,83 @@ window.injectAllWikiLinks = function() {
       var entryRef = firebase.database().ref('trips/' + familyId + '/diary/' + key);
       entryRef.child('photos').once('value').then(function(snap) {
         var photos = snap.val() || {};
-        // Build the same chronological ordering used for rendering.
-        function tsOf(k, p) {
-          var t = (p && p.uploadedAt) || 0;
-          if (!t) { var m = String(k).match(/^(\d{13})/); if (m) t = parseInt(m[1], 10); }
-          return t;
-        }
-        var keys = Object.keys(photos).sort(function(ka, kb) {
-          var pa = photos[ka] || {}, pb = photos[kb] || {};
-          var oa = (typeof pa.order === 'number') ? pa.order : null;
-          var ob = (typeof pb.order === 'number') ? pb.order : null;
-          if (oa !== null && ob !== null && oa !== ob) return oa - ob;
-          var ta = tsOf(ka, pa), tb = tsOf(kb, pb);
-          if (ta !== tb) return ta - tb;
-          return String(ka).localeCompare(String(kb));
-        });
+        var keys = _orderedPhotoKeys(photos);
         var idx = keys.indexOf(photoKey);
         var swapIdx = idx + dir;
         if (idx === -1 || swapIdx < 0 || swapIdx >= keys.length) return;
         // swap positions
         var tmp = keys[idx]; keys[idx] = keys[swapIdx]; keys[swapIdx] = tmp;
-        // write normalized order for all photos
-        var updates = {};
-        keys.forEach(function(k, i) { updates[k + '/order'] = i; });
-        return entryRef.child('photos').update(updates).then(function() {
-          if (window.showToast) showToast(isEN ? 'Order updated' : 'Ordine aggiornato', 'success');
-        });
+        return _persistPhotoOrder(key, keys);
       }).catch(function(err) {
         console.error('[Diario] Reorder failed:', err);
         if (window.showToast) showToast(isEN ? 'Failed to reorder' : 'Riordino fallito', 'danger');
       });
     });
+
+    // v4.43: Touch-friendly drag-and-drop reordering of photos inside a post.
+    // Uses Pointer Events so it works on both desktop (mouse) and phone (touch).
+    // On drop, the new order is persisted via _persistPhotoOrder (same `order`
+    // field used by the arrows), keeping post + gallery consistent.
+    (function setupPhotoDnD() {
+      var drag = null; // { wrap, container, entryKey, startX, startY, started, ph }
+      function clearDrag() {
+        if (drag && drag.wrap) { drag.wrap.classList.remove('diario-photo-dragging'); drag.wrap.style.opacity = ''; }
+        if (drag && drag.ph && drag.ph.parentNode) drag.ph.parentNode.removeChild(drag.ph);
+        drag = null;
+      }
+      timelineEl.addEventListener('pointerdown', function(e) {
+        if (!isOwner || window._simRole) return;
+        if (e.pointerType === 'mouse' && e.button !== 0) return;
+        var handle = e.target.closest('.diario-photo-draghandle');
+        var wrap = e.target.closest('.diario-photo-wrap');
+        if (!wrap || !handle) return; // require grabbing the handle to start a drag
+        var container = wrap.closest('.diario-photos');
+        if (!container || container.querySelectorAll('.diario-photo-wrap').length < 2) return;
+        var entryKey = (wrap.querySelector('.diario-photo') || {}).getAttribute ?
+                       wrap.querySelector('.diario-photo').getAttribute('data-entry-key') : null;
+        drag = { wrap: wrap, container: container, entryKey: entryKey, startX: e.clientX, startY: e.clientY, started: false, ph: null };
+        try { wrap.setPointerCapture(e.pointerId); } catch (_e) {}
+      });
+      timelineEl.addEventListener('pointermove', function(e) {
+        if (!drag) return;
+        var dx = Math.abs(e.clientX - drag.startX), dy = Math.abs(e.clientY - drag.startY);
+        if (!drag.started) {
+          if (dx < 6 && dy < 6) return; // movement threshold
+          drag.started = true;
+          drag.wrap.classList.add('diario-photo-dragging');
+          drag.wrap.style.opacity = '0.6';
+        }
+        e.preventDefault();
+        // Find the wrap under the pointer (excluding the dragged one) and reposition.
+        var els = Array.prototype.slice.call(drag.container.querySelectorAll('.diario-photo-wrap'));
+        var target = null;
+        for (var i = 0; i < els.length; i++) {
+          if (els[i] === drag.wrap) continue;
+          var r = els[i].getBoundingClientRect();
+          if (e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom) { target = els[i]; break; }
+        }
+        if (target && target !== drag.wrap) {
+          var tr = target.getBoundingClientRect();
+          var after = (e.clientX - tr.left) > tr.width / 2;
+          if (after) { target.parentNode.insertBefore(drag.wrap, target.nextSibling); }
+          else { target.parentNode.insertBefore(drag.wrap, target); }
+        }
+      });
+      function finishDrag(e) {
+        if (!drag) return;
+        var wasDragging = drag.started;
+        var container = drag.container, entryKey = drag.entryKey;
+        clearDrag();
+        if (!wasDragging || !entryKey) return;
+        // Read the new DOM order of photoKeys and persist it.
+        var orderedKeys = Array.prototype.slice.call(container.querySelectorAll('.diario-photo'))
+          .map(function(img) { return img.getAttribute('data-photo-key'); })
+          .filter(Boolean);
+        if (orderedKeys.length) _persistPhotoOrder(entryKey, orderedKeys);
+      }
+      timelineEl.addEventListener('pointerup', finishDrag);
+      timelineEl.addEventListener('pointercancel', finishDrag);
+    })();
   }
 
   // ─── Approval Logic ───
@@ -14770,12 +14875,23 @@ window.injectAllWikiLinks = function() {
             if (ta !== tb) return ta - tb; // chronological within a post (oldest first)
             return String(ka).localeCompare(String(kb));
           });
+          // v4.43: owner toolbar — "Sort by date" shortcut for the whole post.
+          if (_photoOwner && _orderedKeys.length > 1) {
+            html += '    <div class="diario-photos-toolbar">';
+            html += '      <button class="diario-photo-sortdate" data-entry-key="' + key + '" title="' + (isEN ? 'Sort photos by date' : 'Ordina le foto per data') + '">🕒 ' + (isEN ? 'Sort by date' : 'Ordina per data') + '</button>';
+            html += '      <span class="diario-photos-hint">' + (isEN ? 'Drag ☰ to reorder' : 'Trascina ☰ per riordinare') + '</span>';
+            html += '    </div>';
+          }
           html += '    <div class="diario-photos">';
           _orderedKeys.forEach(function(photoKey, _pi) {
             var photo = entry.photos[photoKey];
             var safeUrl = (photo.url && /^https:\/\//.test(photo.url)) ? escapeHtml(photo.url) : '';
             html += '      <div class="diario-photo-wrap" style="position:relative;">';
             html += '        <img src="' + safeUrl + '" alt="' + escapeHtml(photo.caption || '') + '" class="diario-photo" loading="lazy" data-entry-key="' + key + '" data-photo-key="' + photoKey + '">';
+            // v4.43: drag handle (owner, multi-photo only) to start touch/mouse reorder.
+            if (_photoOwner && _orderedKeys.length > 1) {
+              html += '        <div class="diario-photo-draghandle" title="' + (isEN ? 'Drag to reorder' : 'Trascina per riordinare') + '" aria-label="' + (isEN ? 'Drag to reorder' : 'Trascina per riordinare') + '">☰</div>';
+            }
             // v4.25: reaction/comment summary badge (❤ n · 💬 n)
             var _reactN = (photo.reactions && typeof photo.reactions === 'object') ? Object.keys(photo.reactions).length : 0;
             var _commN = (photo.comments && typeof photo.comments === 'object') ? Object.keys(photo.comments).length : 0;

@@ -4500,6 +4500,59 @@ html[lang="en"] .notif-drawer-list:empty::after {
   background: var(--accent, #1976d2);
 }
 
+/* v4.43: per-post photo toolbar (Sort by date + drag hint), owner only */
+.diario-photos-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 6px 0 4px;
+  flex-wrap: wrap;
+}
+.diario-photo-sortdate {
+  border: 1px solid var(--border, #d8dee9);
+  background: var(--bg-secondary, #f4f6fb);
+  color: var(--text, #2d3748);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  line-height: 1.4;
+}
+.diario-photo-sortdate:active {
+  background: var(--accent, #1976d2);
+  color: #fff;
+  border-color: var(--accent, #1976d2);
+}
+.diario-photos-hint {
+  font-size: 11px;
+  color: var(--text-muted, #8a94a6);
+}
+/* v4.43: drag handle for touch/mouse photo reordering (owner only) */
+.diario-photo-draghandle {
+  position: absolute;
+  top: 6px; left: 6px;
+  width: 30px; height: 30px;
+  border-radius: 8px;
+  background: rgba(0,0,0,0.55);
+  color: #fff;
+  font-size: 15px;
+  line-height: 30px;
+  text-align: center;
+  cursor: grab;
+  touch-action: none; /* let Pointer Events drive the drag on touch devices */
+  z-index: 3;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  user-select: none;
+}
+.diario-photo-draghandle:active { cursor: grabbing; }
+.diario-photo-wrap.diario-photo-dragging {
+  outline: 2px dashed var(--accent, #1976d2);
+  outline-offset: -2px;
+  transform: scale(0.97);
+  z-index: 5;
+}
+
 /* Lightbox */
 .diario-lightbox {
   position: fixed; inset: 0; z-index: 99999;
