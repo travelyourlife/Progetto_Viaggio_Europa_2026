@@ -11184,6 +11184,10 @@ window.injectAllWikiLinks = function() {
         var photoPromises = _recapPhotos.map(function(p, idx) {
           return new Promise(function(resolve) {
             if (!storageRef) { resolve(); return; }
+            // v4.47: read the REAL capture date (EXIF DateTimeOriginal) from the
+            // ORIGINAL file BEFORE compression, so photos can be ordered by when
+            // they were actually taken (not when they were uploaded).
+            _readExifDate(p.file, function(takenMs) {
             compressImageFromFile(p.file, 3000, 0.85, function(blob) {
               var filename = dayKey + '_' + Date.now() + '_' + idx + '.jpg';
               var fileRef = storageRef.child(dayKey + '/' + filename);
@@ -11203,11 +11207,14 @@ window.injectAllWikiLinks = function() {
                 } else if (window._lastKnownLat) {
                   _photoGeo.lat = window._lastKnownLat; _photoGeo.lng = window._lastKnownLng;
                 }
-                return diarioRef.child(dayKey + '/photos').push(Object.assign({ url: url, caption: '', uploadedAt: Date.now() }, _photoGeo));
+                var _rec = Object.assign({ url: url, caption: '', uploadedAt: Date.now() }, _photoGeo);
+                if (takenMs) _rec.takenAt = takenMs; // v4.47: EXIF capture date
+                return diarioRef.child(dayKey + '/photos').push(_rec);
               }).then(resolve).catch(function(err) {
                 console.warn('[Recap] Photo upload error:', err);
                 resolve();
               });
+            });
             });
           });
         });
@@ -11266,23 +11273,217 @@ window.injectAllWikiLinks = function() {
   };
 
   // ─── Image compression helper (standalone, for recap widget) ───
-  function compressImageFromFile(file, maxSize, quality, callback) {
-    var reader = new FileReader();
-    reader.onload = function(e) {
-      var img = new Image();
-      img.onload = function() {
-        var canvas = document.createElement('canvas');
-        var longSide = Math.max(img.width, img.height);
-        var ratio = Math.min(maxSize / longSide, 1);
-        canvas.width = Math.round(img.width * ratio);
-        canvas.height = Math.round(img.height * ratio);
-        var ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        canvas.toBlob(function(blob) { callback(blob); }, 'image/jpeg', quality);
+  // ════════════════════════════════════════════════════════════════════
+  // ─── EXIF helpers (v4.47) ───
+  // Native, dependency-free EXIF reader + APP1-segment preserver.
+  // Goal: photos must be ordered by the REAL capture date (EXIF
+  // DateTimeOriginal), not by upload time, AND the EXIF must survive
+  // the JPEG re-compression so it stays inside the stored file.
+  // ════════════════════════════════════════════════════════════════════
+
+  // Parse a JPEG ArrayBuffer and return { dateMs, app1 } where:
+  //  - dateMs: capture time in ms epoch (from DateTimeOriginal 0x9003,
+  //            else CreateDate 0x9004, else DateTime 0x0132) or null
+  //  - app1:   the full APP1/Exif marker segment (Uint8Array incl. marker
+  //            + length) so it can be re-injected after recompression, or null
+  function _parseJpegExif(buffer) {
+    try {
+      var view = new DataView(buffer);
+      if (view.getUint16(0, false) !== 0xFFD8) return { dateMs: null, app1: null }; // not a JPEG
+      var offset = 2;
+      var len = view.byteLength;
+      while (offset < len) {
+        if (view.getUint16(offset, false) !== 0xFFE1) {
+          // not APP1: skip this marker using its length, or bail on SOS/EOI
+          var marker = view.getUint16(offset, false);
+          if ((marker & 0xFF00) !== 0xFF00) break;
+          if (marker === 0xFFDA || marker === 0xFFD9) break; // start of scan / end
+          var segLen = view.getUint16(offset + 2, false);
+          offset += 2 + segLen;
+          continue;
+        }
+        // APP1 found
+        var app1Len = view.getUint16(offset + 2, false);
+        var app1Start = offset;
+        var app1End = offset + 2 + app1Len;
+        var app1 = new Uint8Array(buffer.slice(app1Start, app1End));
+        var dateMs = _exifDateFromApp1(view, offset + 4, app1Len - 2);
+        return { dateMs: dateMs, app1: app1 };
+      }
+    } catch (_e) { /* fall through */ }
+    return { dateMs: null, app1: null };
+  }
+
+  // Given the DataView and the offset of the "Exif\0\0" header, locate the
+  // TIFF header, walk IFD0 (+ Exif sub-IFD) and read the date string tags.
+  function _exifDateFromApp1(view, exifHeaderOffset, exifDataLen) {
+    try {
+      // Expect "Exif\0\0"
+      if (view.getUint32(exifHeaderOffset, false) !== 0x45786966) return null; // 'Exif'
+      var tiff = exifHeaderOffset + 6;
+      var little;
+      var bom = view.getUint16(tiff, false);
+      if (bom === 0x4949) little = true;       // 'II'
+      else if (bom === 0x4D4D) little = false;  // 'MM'
+      else return null;
+      if (view.getUint16(tiff + 2, little) !== 0x002A) return null;
+      var ifd0 = tiff + view.getUint32(tiff + 4, little);
+
+      function readDateTag(ifdOffset, tagWanted) {
+        var entries = view.getUint16(ifdOffset, little);
+        for (var i = 0; i < entries; i++) {
+          var entry = ifdOffset + 2 + i * 12;
+          var tag = view.getUint16(entry, little);
+          if (tag === tagWanted) {
+            var count = view.getUint32(entry + 4, little);
+            var valOffset = tiff + view.getUint32(entry + 8, little);
+            // ASCII string "YYYY:MM:DD HH:MM:SS\0" (count includes the NUL)
+            var s = '';
+            for (var c = 0; c < count - 1; c++) {
+              s += String.fromCharCode(view.getUint8(valOffset + c));
+            }
+            return s;
+          }
+        }
+        return null;
+      }
+
+      function findExifSubIFD(ifdOffset) {
+        var entries = view.getUint16(ifdOffset, little);
+        for (var i = 0; i < entries; i++) {
+          var entry = ifdOffset + 2 + i * 12;
+          if (view.getUint16(entry, little) === 0x8769) { // ExifIFDPointer
+            return tiff + view.getUint32(entry + 8, little);
+          }
+        }
+        return null;
+      }
+
+      var dateStr = null;
+      var subIfd = findExifSubIFD(ifd0);
+      if (subIfd) {
+        dateStr = readDateTag(subIfd, 0x9003) || readDateTag(subIfd, 0x9004); // DateTimeOriginal / CreateDate
+      }
+      if (!dateStr) dateStr = readDateTag(ifd0, 0x0132); // DateTime (last resort)
+      if (!dateStr) return null;
+
+      // Parse "YYYY:MM:DD HH:MM:SS" as LOCAL time.
+      var m = dateStr.match(/^(\d{4}):(\d{2}):(\d{2})[ T](\d{2}):(\d{2}):(\d{2})/);
+      if (!m) return null;
+      var d = new Date(parseInt(m[1],10), parseInt(m[2],10)-1, parseInt(m[3],10),
+                       parseInt(m[4],10), parseInt(m[5],10), parseInt(m[6],10));
+      var ms = d.getTime();
+      return isNaN(ms) ? null : ms;
+    } catch (_e) { return null; }
+  }
+
+  // Public-ish helper: read capture date (ms) from a File. Falls back to
+  // file.lastModified, then null. Always async via callback.
+  function _readExifDate(file, cb) {
+    try {
+      var fr = new FileReader();
+      fr.onload = function(ev) {
+        var parsed = _parseJpegExif(ev.target.result);
+        if (parsed.dateMs) { cb(parsed.dateMs); return; }
+        cb(file && file.lastModified ? file.lastModified : null);
       };
-      img.src = e.target.result;
+      fr.onerror = function() { cb(file && file.lastModified ? file.lastModified : null); };
+      // Reading the first 256 KB is enough for the EXIF header on virtually
+      // all cameras/phones, and avoids loading huge files fully.
+      var slice = file.slice ? file.slice(0, 256 * 1024) : file;
+      fr.readAsArrayBuffer(slice);
+    } catch (_e) {
+      cb(file && file.lastModified ? file.lastModified : null);
+    }
+  }
+
+  // Re-inject an APP1/Exif segment (Uint8Array) right after SOI in a JPEG blob.
+  function _injectExifIntoJpeg(blob, app1, cb) {
+    if (!app1 || !blob || blob.type !== 'image/jpeg') { cb(blob); return; }
+    var fr = new FileReader();
+    fr.onload = function(ev) {
+      try {
+        var bytes = new Uint8Array(ev.target.result);
+        if (bytes.length < 2 || bytes[0] !== 0xFF || bytes[1] !== 0xD8) { cb(blob); return; }
+        // Find insertion point: right after SOI (and after an existing APP0/JFIF if present).
+        var insertAt = 2;
+        if (bytes.length > 4 && bytes[2] === 0xFF && bytes[3] === 0xE0) {
+          var app0Len = (bytes[4] << 8) | bytes[5];
+          insertAt = 4 + app0Len;
+        }
+        var out = new Uint8Array(bytes.length + app1.length);
+        out.set(bytes.subarray(0, insertAt), 0);
+        out.set(app1, insertAt);
+        out.set(bytes.subarray(insertAt), insertAt + app1.length);
+        cb(new Blob([out], { type: 'image/jpeg' }));
+      } catch (_e) { cb(blob); }
     };
-    reader.readAsDataURL(file);
+    fr.onerror = function() { cb(blob); };
+    fr.readAsArrayBuffer(blob);
+  }
+
+  // v4.47: compress but PRESERVE the original EXIF (so capture date survives).
+  // Strategy:
+  //  - If the original is already small enough (<= maxFileBytes) keep it AS-IS
+  //    (full EXIF intact, no canvas re-encode).
+  //  - Otherwise downscale via canvas, then re-inject the original APP1 segment
+  //    into the recompressed JPEG so DateTimeOriginal stays inside the file.
+  function compressImageFromFile(file, maxSize, quality, callback) {
+    var KEEP_ORIGINAL_BYTES = 4 * 1024 * 1024; // <=4MB: upload original untouched
+    // First, grab the original EXIF APP1 segment (best-effort) from the whole file.
+    var segReader = new FileReader();
+    segReader.onload = function(segEv) {
+      var parsed = _parseJpegExif(segEv.target.result);
+      var app1 = parsed.app1;
+      var isJpeg = file && /image\/jpe?g/i.test(file.type || '');
+      // Keep small JPEGs exactly as-is to retain ALL metadata.
+      if (isJpeg && file.size && file.size <= KEEP_ORIGINAL_BYTES) {
+        callback(file);
+        return;
+      }
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        var img = new Image();
+        img.onload = function() {
+          var canvas = document.createElement('canvas');
+          var longSide = Math.max(img.width, img.height);
+          var ratio = Math.min(maxSize / longSide, 1);
+          canvas.width = Math.round(img.width * ratio);
+          canvas.height = Math.round(img.height * ratio);
+          var ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          canvas.toBlob(function(blob) {
+            if (!blob) { callback(file); return; }
+            // Re-inject the original EXIF so capture date is preserved in-file.
+            _injectExifIntoJpeg(blob, app1, function(finalBlob) { callback(finalBlob); });
+          }, 'image/jpeg', quality);
+        };
+        img.onerror = function() { callback(file); };
+        img.src = e.target.result;
+      };
+      reader.onerror = function() { callback(file); };
+      reader.readAsDataURL(file);
+    };
+    segReader.onerror = function() {
+      // Fallback: original behaviour (re-encode, no EXIF) if we can't read bytes.
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        var img = new Image();
+        img.onload = function() {
+          var canvas = document.createElement('canvas');
+          var longSide = Math.max(img.width, img.height);
+          var ratio = Math.min(maxSize / longSide, 1);
+          canvas.width = Math.round(img.width * ratio);
+          canvas.height = Math.round(img.height * ratio);
+          var ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          canvas.toBlob(function(blob) { callback(blob || file); }, 'image/jpeg', quality);
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    };
+    segReader.readAsArrayBuffer(file);
   }
 
   // ─── todayStr helper (local scope) ───
@@ -11367,6 +11568,22 @@ window.injectAllWikiLinks = function() {
     if (!isFinite(lat1) || !isFinite(lon1) || !isFinite(lat2) || !isFinite(lon2)) return 0;
     return window._haversineKm(lat1, lon1, lat2, lon2);
   }
+
+  // v4.48: robust creation timestamp for a diary post, shared by the timeline and
+  // the follower-home list. Prefers a resolved numeric `createdAt`; otherwise uses
+  // the timestamp embedded in the entry key ("day-<n>-<ts>", "pre-<date>-<ts>", or a
+  // leading 13-digit ms). This is reliable even before Firebase resolves the
+  // ServerValue.TIMESTAMP (which is null on the writer's device right after posting)
+  // and offline, so two posts on the same day always order by when they were written.
+  function _entryCreatedTs(key, entry) {
+    var c = entry && entry.createdAt;
+    if (typeof c === 'number' && c > 0) return c;
+    var s = String(key || '');
+    var m = s.match(/-(\d{13,})$/) || s.match(/^(\d{13,})/);
+    if (m) return parseInt(m[1], 10);
+    return 0;
+  }
+  window._entryCreatedTs = _entryCreatedTs; // shared across diary closures
 
   function reverseGeocode(lat, lng, callback) {
     var key = lat.toFixed(3) + ',' + lng.toFixed(3);
@@ -14353,10 +14570,17 @@ window.injectAllWikiLinks = function() {
     var published = [];
     Object.keys(entries).forEach(function(key) {
       var e = entries[key];
-      if (!e.draft) published.push(e);
+      // v4.48: keep the entry key so we can use its embedded creation timestamp
+      // as a reliable tiebreaker for posts written on the same day.
+      if (!e.draft) { e._key = key; published.push(e); }
     });
-    // Sort by date descending
-    published.sort(function(a, b) { return (b.date || '').localeCompare(a.date || ''); });
+    // v4.48: sort by date descending, then by real creation time descending
+    // (newest post first) so a post written later the same day shows on top.
+    published.sort(function(a, b) {
+      var d = (b.date || '').localeCompare(a.date || '');
+      if (d !== 0) return d;
+      return window._entryCreatedTs(b._key, b) - window._entryCreatedTs(a._key, a);
+    });
     window._diaryEntriesForHome = published;
   };
   window.registerFirebaseListener('diario', _diarioQuery, 'value', _diarioCb);
@@ -14416,11 +14640,11 @@ window.injectAllWikiLinks = function() {
         Object.keys(entry.photos).forEach(function(photoKey) {
           var photo = entry.photos[photoKey];
           if (photo && photo.url && /^https:\/\//.test(photo.url)) {
-            // v4.22: derive a reliable chronological timestamp.
-            // Prefer explicit uploadedAt; otherwise parse legacy Date.now()+idx
-            // keys; otherwise fall back to the firebase push() key timestamp
+            // v4.47: derive a reliable chronological timestamp.
+            // Prefer the EXIF capture date (takenAt); else uploadedAt; else the
+            // legacy Date.now()+idx key; else the firebase push() key timestamp
             // (push keys are time-ordered) so every photo gets a sensible order.
-            var ts = photo.uploadedAt || 0;
+            var ts = photo.takenAt || photo.uploadedAt || 0;
             if (!ts) {
               var m = String(photoKey).match(/^(\d{13})/); // legacy "<ms>_<idx>"
               if (m) ts = parseInt(m[1], 10);
@@ -14539,7 +14763,7 @@ window.injectAllWikiLinks = function() {
     // entry's photo keys (same logic used everywhere for consistency).
     function _orderedPhotoKeys(photos) {
       function tsOf(k, p) {
-        var t = (p && p.uploadedAt) || 0;
+        var t = (p && (p.takenAt || p.uploadedAt)) || 0; // v4.47: EXIF date first
         if (!t) { var m = String(k).match(/^(\d{13})/); if (m) t = parseInt(m[1], 10); }
         return t;
       }
@@ -14578,9 +14802,10 @@ window.injectAllWikiLinks = function() {
         var familyId = (typeof FAMILY_ID !== 'undefined') ? FAMILY_ID : 'viaggio-europa-2026';
         firebase.database().ref('trips/' + familyId + '/diary/' + sKey + '/photos').once('value').then(function(snap) {
           var photos = snap.val() || {};
-          // Chronological by capture/upload time (oldest first); strip any manual order first.
+          // v4.47: chronological by EXIF capture date (takenAt) first, then upload
+          // time; strip any manual order first.
           function tsOf(k, p) {
-            var t = (p && p.uploadedAt) || 0;
+            var t = (p && (p.takenAt || p.uploadedAt)) || 0;
             if (!t) { var m = String(k).match(/^(\d{13})/); if (m) t = parseInt(m[1], 10); }
             return t;
           }
@@ -14940,6 +15165,12 @@ window.injectAllWikiLinks = function() {
       // v4.09 FIX: sort PRIMARILY by real date (descending) so the chronological order
       // is always correct even if a post's dayNumber is stale/inconsistent. dayNumber
       // and createdAt remain as tiebreakers for multiple posts on the same date.
+      // v4.48 FIX: createdAt is a Firebase ServerValue.TIMESTAMP and can still be
+      // unresolved (null) on the writer's device right after posting, which made the
+      // order of two posts on the SAME day non-deterministic ("the one I wrote last
+      // didn't move to the top"). The entry KEY always embeds the creation timestamp
+      // ("day-<n>-<ts>" / "pre-<date>-<ts>"), so we use that as a reliable final
+      // tiebreaker that works offline and before the server resolves createdAt.
       var sortedKeys = Object.keys(entries).sort(function(a, b) {
         var dateA = entries[a].date || '';
         var dateB = entries[b].date || '';
@@ -14948,8 +15179,9 @@ window.injectAllWikiLinks = function() {
         // Tiebreaker 1: dayNumber descending when dates are equal/missing
         var diff = (entries[b].dayNumber || 0) - (entries[a].dayNumber || 0);
         if (diff !== 0) return diff;
-        // Tiebreaker 2: createdAt descending (newest post first)
-        return (entries[b].createdAt || 0) - (entries[a].createdAt || 0);
+        // Tiebreaker 2: creation time descending (newest post first), using a robust
+        // timestamp that prefers a resolved createdAt and falls back to the key ts.
+        return window._entryCreatedTs(b, entries[b]) - window._entryCreatedTs(a, entries[a]);
       });
 
       sortedKeys.forEach(function(key) {
@@ -15038,7 +15270,7 @@ window.injectAllWikiLinks = function() {
             var ob = (typeof pb.order === 'number') ? pb.order : null;
             if (oa !== null && ob !== null && oa !== ob) return oa - ob;
             function tsOf(k, p) {
-              var t = p.uploadedAt || 0;
+              var t = (p.takenAt || p.uploadedAt) || 0; // v4.47: EXIF date first
               if (!t) { var m = String(k).match(/^(\d{13})/); if (m) t = parseInt(m[1], 10); }
               return t;
             }
@@ -16232,23 +16464,28 @@ window.injectAllWikiLinks = function() {
         var filename = dayKey + '_' + Date.now() + '_' + idx + '.jpg';
         var fileRef = storageRef.child(dayKey + '/' + filename);
 
-        // Compress before upload
+        // v4.47: read the REAL capture date (EXIF DateTimeOriginal) from the
+        // ORIGINAL file BEFORE compression, then compress (EXIF-preserving).
+        _readExifDate(file, function(takenMs) {
         compressImage(file, 3000, 0.85, function(blob) {
           fileRef.put(blob).then(function(snapshot) {
             return snapshot.ref.getDownloadURL();
           }).then(function(url) {
             // v4.22 FIX: collision-proof push() key + uploadedAt (see new-post upload).
             // Previously Date.now()+idx could collide and overwrite a photo.
-            diarioRef.child(dayKey + '/photos').push({
+            var _rec = {
               url: url,
               caption: '',
               uploadedAt: Date.now()
-            });
+            };
+            if (takenMs) _rec.takenAt = takenMs; // v4.47: EXIF capture date
+            diarioRef.child(dayKey + '/photos').push(_rec);
             if (window.showToast) showToast(isEN ? 'Photo uploaded!' : 'Foto caricata!', 'success');
           }).catch(function(err) {
             console.error('[Diario] Upload error:', err);
             if (window.showToast) showToast(isEN ? 'Upload failed' : 'Upload fallito', 'error');
           });
+        });
         });
       });
     });
@@ -16397,7 +16634,16 @@ window.injectAllWikiLinks = function() {
   }
 
   // ─── Image Compression (long side = maxSize, JPEG quality) ───
+  // v4.47: delegate to the EXIF-preserving compressor so the capture date
+  // (DateTimeOriginal) survives inside the stored JPEG. compressImageFromFile
+  // keeps small JPEGs untouched and re-injects the original APP1/Exif segment
+  // when it has to downscale.
   function compressImage(file, maxSize, quality, callback) {
+    if (typeof compressImageFromFile === 'function') {
+      compressImageFromFile(file, maxSize, quality, callback);
+      return;
+    }
+    // Fallback (should never run): legacy canvas re-encode without EXIF.
     var reader = new FileReader();
     reader.onload = function(e) {
       var img = new Image();

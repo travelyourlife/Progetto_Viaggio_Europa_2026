@@ -5,6 +5,24 @@
 
 # Quo Vadis — Changelog
 
+## v4.49 — 2026-06-30
+**Anteprima foto dei post nella home: foto intera, niente più tagli**
+- **Le foto nell'anteprima del "Diario di bordo" (home) ora si vedono per intero.** Prima la miniatura aveva un'altezza fissa (180px) con ritaglio forzato (`cover`) centrato: le foto **verticali** venivano tagliate sopra e sotto, "decapitando" il soggetto (come nella foto in spiaggia). Ora l'anteprima mostra la foto **completa**, mantenendo le proporzioni, con un'altezza massima (360px) e uno sfondo neutro che riempie le eventuali bande laterali. Verticali e orizzontali hanno entrambe senso.
+- Applicato sia ai post reali sia al percorso demo/fallback; il blocco placeholder senza foto conserva il suo gradiente.
+
+## v4.48 — 2026-06-30
+**Fix ordine dei post del Diario (stesso giorno)**
+- **Un post scritto dopo ora compare correttamente sopra.** Quando due post avevano la **stessa data** del viaggio, l'ordine tra loro poteva risultare sbagliato (il più recente non saliva in cima). Causa: il campo `createdAt` è un timestamp risolto **solo dal server** (`ServerValue.TIMESTAMP`) e, subito dopo aver pubblicato — o offline — sul dispositivo di chi scrive è ancora `null`; il confronto finiva quindi in parità e l'ordine diventava casuale.
+- **Soluzione robusta.** L'ordinamento usa ora un timestamp di creazione affidabile che preferisce il `createdAt` risolto e, in sua assenza, ricava il momento di creazione dal **timestamp già contenuto nella chiave del post** (`day-<n>-<ts>` / `pre-<data>-<ts>`). Questo valore è sempre disponibile, anche offline e prima che il server risolva `createdAt`, quindi a parità di giorno vince sempre il post scritto più tardi.
+- **Applicato ovunque:** sia alla timeline del Diario sia alla lista dei post mostrati nella home dei follower, così l'ordine è coerente nelle due viste. Logica verificata con test su casi reali (createdAt non risolto, chiavi pre-viaggio, valori misti).
+
+## v4.47 — 2026-06-30
+**Foto del Diario ordinate per data di scatto reale (EXIF)**
+- **"Ordina per data" ora usa la vera data di scatto.** Prima il pulsante 🕒 "Ordina per data" (e l'ordine della galleria) si basava sull'**orario di caricamento** della foto, non su quando era stata scattata: caricando insieme foto fatte in momenti diversi, l'ordine risultava sbagliato. Ora, al momento del caricamento, l'app **legge i metadati EXIF** della foto (`DateTimeOriginal`, con ripiego su `CreateDate`/`DateTime`) e salva la **data di scatto** (`takenAt`). Tutti gli ordinamenti — pulsante "Ordina per data", galleria e ordine dentro al post — usano ora questa data, con ripiego ordinato su data di caricamento per le foto che non hanno EXIF.
+- **L'EXIF non viene più rimosso.** In precedenza la compressione ridisegnava la foto su canvas e la riesportava in JPEG, **cancellando tutti i metadati** (inclusa la data di scatto). Ora le foto JPEG già leggere (≤ 4 MB) vengono caricate **integre** (EXIF preservato), e quando una foto grande deve essere ridotta, il blocco EXIF originale viene **reinserito** nel file compresso: la data di scatto resta quindi sia nel database sia dentro il file.
+- **Lettore EXIF nativo, senza dipendenze.** Il parsing dei metadati è implementato direttamente (gestione big/little-endian, IFD0 + sub-IFD Exif), quindi funziona anche offline senza librerie esterne. Validato su file di prova: data di scatto letta correttamente e file ancora valido dopo la reiniezione.
+- *Nota sulle foto già caricate:* le foto caricate prima di questo aggiornamento hanno **perso l'EXIF** durante la vecchia compressione, quindi per esse non è recuperabile una data di scatto automatica; mantengono l'ordine attuale (manuale o per caricamento) e restano riordinabili a mano. Solo le foto caricate da ora in poi avranno l'ordinamento per data di scatto.
+
 ## v4.46 — 2026-06-30
 **Tappe in un'unica lista cronologica + fix "Km oggi" + parità IT/EN**
 - **Lista tappe unificata (tab Tappe).** Le tappe extra aggiunte manualmente (📌) ora compaiono **intercalate nel punto giusto** dell'elenco, ordinate per data insieme alle tappe dell'itinerario, invece di stare in un blocco separato in fondo. L'eliminazione delle tappe extra e i check-in funzionano direttamente nella lista unica, e il contatore si aggiorna in tempo reale.

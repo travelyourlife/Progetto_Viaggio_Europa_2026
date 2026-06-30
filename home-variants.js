@@ -839,13 +839,16 @@
         }
       });
 
-      // Update feed photo
+      // Update feed photo — v4.49: use a real <img> (contain) so the whole photo
+      // shows without cropping the subject.
       var feedPhoto = container.querySelector('.hv-feed-photo');
       if (feedPhoto) {
-        feedPhoto.style.backgroundImage = 'url(' + lastPhoto + ')';
-        feedPhoto.style.backgroundSize = 'cover';
-        feedPhoto.style.backgroundPosition = 'center';
-        feedPhoto.style.backgroundColor = 'transparent';
+        feedPhoto.classList.remove('hv-feed-photo--placeholder');
+        feedPhoto.style.backgroundImage = '';
+        feedPhoto.style.backgroundColor = '';
+        var _fpImg = feedPhoto.querySelector('img');
+        if (!_fpImg) { _fpImg = document.createElement('img'); _fpImg.setAttribute('loading','lazy'); _fpImg.alt = ''; feedPhoto.appendChild(_fpImg); }
+        _fpImg.src = lastPhoto;
       }
     });
   }
@@ -1047,7 +1050,9 @@
       // SECURITY: only allow https:// photo URLs
       var safeFeedPhotoUrl = (firstPhoto.url && /^https:\/\//.test(firstPhoto.url)) ? escHtml(firstPhoto.url) : '';
       if (safeFeedPhotoUrl) {
-        html += '  <div class="hv-feed-photo" style="background-image:url(' + safeFeedPhotoUrl + ');background-size:cover;background-position:center;"></div>';
+        // v4.49: render a real <img> with object-fit:contain so the whole photo is
+        // visible (portrait photos are no longer cropped/"decapitated").
+        html += '  <div class="hv-feed-photo"><img src="' + safeFeedPhotoUrl + '" loading="lazy" alt=""></div>';
       }
     }
     var bodyText = (lang === 'en' && post.textEn) ? post.textEn : (post.text || '');
@@ -1101,7 +1106,7 @@
     html += '    <div class="hv-feed-time">' + todayStr + '</div>';
     html += '    <span class="hv-feed-type hv-type-photo">' + (lang === 'en' ? '📷 Photo' : '📷 Foto') + '</span>';
     html += '  </div>';
-    html += '  <div class="hv-feed-photo"></div>';
+    html += '  <div class="hv-feed-photo hv-feed-photo--placeholder"></div>';
     html += '  <div class="hv-feed-body">' + (lang === 'en' ? 'Incredible view!' : 'Vista incredibile!') + '</div>';
     html += '</div>';
 
