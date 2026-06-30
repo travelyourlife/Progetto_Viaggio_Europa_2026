@@ -72,7 +72,7 @@ var CURIOSITA_DATA = [
   { day: 4, emoji: "✝️", text: "La Collina delle Croci vicino a Šiauliai ha oltre 200.000 croci piantate dai pellegrini — i sovietici la distrussero 3 volte, ma i lituani la ricostruirono sempre.", source: "Hill of Crosses" },
   { day: 4, emoji: "🍯", text: "La Lettonia ha la più alta percentuale di foreste nell'UE dopo Finlandia e Svezia: il 54% del territorio è coperto da boschi.", source: "Central Statistical Bureau of Latvia" },
 
-  // G6 - Riga → Tallinn (Estonia)
+  // G6 - Riga ➔ Pärnu ➔ Haapsalu ➔ Tallinn (Estonia)
   { day: 5, emoji: "💻", text: "L'Estonia è il paese più digitale del mondo: il 99% dei servizi pubblici è online. Puoi persino votare dal telefono!", source: "e-Estonia" },
   { day: 5, emoji: "🏰", text: "Il centro storico di Tallinn è così ben conservato che è stato usato come set per film ambientati nel Medioevo — sembra di entrare in un libro di storia.", source: "Visit Tallinn" },
   { day: 5, emoji: "🚀", text: "Skype è stato inventato in Estonia nel 2003 da sviluppatori estoni. Il paese ha il maggior numero di startup pro capite in Europa.", source: "Startup Estonia" },

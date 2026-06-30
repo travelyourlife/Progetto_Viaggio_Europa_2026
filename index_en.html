@@ -64,12 +64,12 @@
     <link rel="apple-touch-icon" sizes="152x152" href="./icon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="./icon.png">
     <link rel="apple-touch-icon" sizes="167x167" href="./icon.png">
-    <title>Quo Vadis — V4.37</title>
+    <title>Quo Vadis — V4.38</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
-    <link rel="stylesheet" href="style.css?v=4.37">
-    <link rel="stylesheet" href="home-variants.css?v=4.37">
-    <link rel="stylesheet" href="unified-map.css?v=4.37">
-    <link rel="stylesheet" href="modern-pages.css?v=4.37">
+    <link rel="stylesheet" href="style.css?v=4.38">
+    <link rel="stylesheet" href="home-variants.css?v=4.38">
+    <link rel="stylesheet" href="unified-map.css?v=4.38">
+    <link rel="stylesheet" href="modern-pages.css?v=4.38">
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" crossorigin="">
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" crossorigin="">
 <!-- Firebase SDK (compat mode for single-file app) -->
@@ -86,7 +86,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = "4.37";
+  var EXPECTED_VERSION = "4.38";
   window.IS_PROD = true; // v2.96: parità con index.html — disabilita debug overlay in produzione
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
@@ -144,23 +144,23 @@
   });
 })();
 </script>
-<script src="data.js?v=4.37" defer></script>
-<script src="days-data.js?v=4.37" defer></script>
-<script src="days-renderer.js?v=4.37" defer></script>
+<script src="data.js?v=4.38" defer></script>
+<script src="days-data.js?v=4.38" defer></script>
+<script src="days-renderer.js?v=4.38" defer></script>
 <!-- wiki-links.js: lazy-loaded on first open of Culture/Activity tab (34KB) — parity with index.html -->
-<script src="weather-coords.js?v=4.37" defer></script>
+<script src="weather-coords.js?v=4.38" defer></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
 <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js" crossorigin="" defer></script>
-<script src="poi-data.js?v=4.37" defer></script>
-<script src="app.js?v=4.37" defer></script>
-<script src="curiosita-data.js?v=4.37" defer></script>
+<script src="poi-data.js?v=4.38" defer></script>
+<script src="app.js?v=4.38" defer></script>
+<script src="curiosita-data.js?v=4.38" defer></script>
 <script>window.QV_CURIOSITA_SERVER_SIDE = true;</script>
-<script src="curiosita-scheduler.js?v=4.37" defer></script>
-<script src="quiz-fun.js?v=4.37" defer></script>
-<script src="unified-map.js?v=4.37" defer></script>
-<script src="city-itineraries.js?v=4.37" defer></script>
-<script src="city-itineraries-ui.js?v=4.37" defer></script>
-<script src="home-variants.js?v=4.37" defer></script>
+<script src="curiosita-scheduler.js?v=4.38" defer></script>
+<script src="quiz-fun.js?v=4.38" defer></script>
+<script src="unified-map.js?v=4.38" defer></script>
+<script src="city-itineraries.js?v=4.38" defer></script>
+<script src="city-itineraries-ui.js?v=4.38" defer></script>
+<script src="home-variants.js?v=4.38" defer></script>
 </head>
 <body class="on-home">
 
@@ -7449,8 +7449,8 @@
 <p>🚗 <strong>D3:</strong> Vienna → Warsaw (670 km, 8h 30m)</p>
 <p>🚗 <strong>D4:</strong> Warsaw → Vilnius (510 km, 6h)</p>
 <p>🚗 <strong>D5:</strong> Vilnius → Riga (300 km, 4h)</p>
-<p>🚗 <strong>D7:</strong> Riga → Tallinn (310 km, 4h 30m)</p>
-<p><strong>The problem:</strong> You will drive about 1,790 km across 4 driving days (D3–D5 + D7, with D6 as a free day in Riga). Considering bathroom breaks, lunches, and traffic, actual travel times will increase by 20-30%. The children will spend most of the time strapped in car seats.</p>
+<p>🚗 <strong>D6:</strong> Riga ➔ Pärnu ➔ Haapsalu ➔ Tallinn (390 km, 5h)</p>
+<p><strong>The problem:</strong> You will drive about 1,870 km across 4 driving days (D3–D6), with D7 as a rest day in Tallinn. Considering bathroom breaks, lunches, and traffic, actual travel times will increase by 20-30%. The children will spend most of the time strapped in car seats.</p>
 <p><strong>Solution:</strong> Always start at dawn (e.g. 5:00 or 6:00 AM). The children will sleep for the first 3-4 hours of travel, allowing you to "cover kilometers" peacefully and arrive at the destination by lunchtime, saving afternoons for parks and explorations.</p>
 <h3 id="2-luscita-dalle-lofoten-g25-lofoten-mo-i-rana">2. Leaving the Lofoten (D25: Lofoten → Mo i Rana)</h3>
 <p>The table shows 400 km, 5h + ferry. Be careful as this estimate is optimistic:</p>
@@ -9085,8 +9085,8 @@
 })();
 </script>
 <!-- Debug Overlay (v2.47 diagnostic) -->
-<script src="debug-overlay.js?v=4.37" defer></script>
+<script src="debug-overlay.js?v=4.38" defer></script>
 <!-- Capacitor GPS Bridge (only activates inside native app, ignored in browser) -->
-<script src="capacitor-gps-bridge.js?v=4.37" defer></script>
+<script src="capacitor-gps-bridge.js?v=4.38" defer></script>
 </body>
 </html>

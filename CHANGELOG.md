@@ -5,6 +5,13 @@
 
 # Quo Vadis — Changelog
 
+## v4.38 — 2026-06-30
+**Programma di oggi e dettaglio giorno allineati al nuovo itinerario di Tallinn**
+- Corretta un'incoerenza: la sezione **"Programma di oggi"** e il **dettaglio giorno** (G6/G7) mostravano ancora i vecchi dati ("Riga — giorno libero" e "Riga → Tallinn"), perché il contenuto dettagliato è in un file separato (`days-data.js`) che non era stato aggiornato insieme alla card itinerario.
+- **G6 (30/06)** ora è il giorno di guida **Riga ➔ Pärnu ➔ Haapsalu ➔ Tallinn** (390 km, ~5h) con POI, soste cibo, parcheggio/notte a Tallinn, meteo su Tallinn e tour delle tappe aggiornati.
+- **G7 (01/07)** ora è un **giorno in città a Tallinn** (Città Vecchia + Lennusadam), km 0, niente più trasferimento da Riga.
+- Allineati anche i testi statici "Maratona Baltica" (IT/EN) e il commento curiosità del giorno.
+
 ## v4.37 — 2026-06-30
 **Bandiere dei Paesi nel grafico settimanale**
 - Nel grafico settimanale (km/ore), sotto la data di ogni giorno ora compare la **bandiera del Paese** in cui vi trovate quel giorno (presa dalle coordinate del viaggio).

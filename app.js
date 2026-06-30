@@ -2397,7 +2397,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     var dayDate = new Date(TRIP_START.getTime() + j * 86400000);
                     var wdIdx = (dayDate.getDay() + 6) % 7; // Mon=0
                     var wdName = isEN ? _wdEN[wdIdx] : _wdIT[wdIdx];
-                    // v4.37: per-day country flag from TRIP_COORDS (highlight border crossings)
+                    // v4.38: per-day country flag from TRIP_COORDS (highlight border crossings)
                     var _flagHtml = '';
                     if (typeof TRIP_COORDS !== 'undefined' && TRIP_COORDS[j]) {
                         var _tc = TRIP_COORDS[j];

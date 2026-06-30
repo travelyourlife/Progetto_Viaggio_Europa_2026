@@ -711,47 +711,36 @@ var DAYS_DATA = [
   {
     "id": "g6",
     "date": "30/06",
-    "title": "Riga — giorno libero",
+    "title": "Riga ➔ Pärnu ➔ Haapsalu ➔ Tallinn",
 
-    "titleEN": "Riga — free day",
-    "flags": "🇱🇻",
-    "country": "LV",
-    "region": "lettonia",
-    "km": 0,
-    "hours": "—",
+    "titleEN": "Riga ➔ Pärnu ➔ Haapsalu ➔ Tallinn",
+    "flags": "🇱🇻→🇪🇪",
+    "country": "EE",
+    "region": "estonia",
+    "km": 390,
+    "hours": "5h",
     "tolls": "Gratis",
     "tollLinks": [],
-    "narrative": "Una giornata intera per respirare Riga senza fretta. La città più grande delle Baltiche merita più di una notte.",
+    "narrative": "🛣️ Risalita lenta lungo la costa baltica (E67 / Via Baltica): sosta alle spiagge di <strong>Pärnu</strong> e alla cittadina termale di <strong>Haapsalu</strong>, arrivo a <strong>Tallinn</strong> nel tardo pomeriggio. Notte a Tallinn.",
     "highlights": [
       {
-        "icon": "🏛️",
-        "title": "Art Nouveau — Alberta iela",
-        "text": "Il quartiere più denso di Europa per architettura Liberty. A piedi in 30 minuti si vedono decine di facciate straordinarie.",
+        "icon": "🏖️",
+        "title": "Pärnu",
+        "text": "La 'capitale estiva' dell'Estonia: lunga spiaggia di sabbia, promenade e centro in legno. Sosta pranzo o bagno.",
         "star": true,
         "familyFriendly": true
       },
       {
         "icon": "🏛️",
-        "title": "Mercato Centrale",
-
-        "titleEN": "Central Market",
-        "text": "5 hangar zeppelin riconvertiti — pesce, carne, pane nero, spezie. Uno dei mercati più grandi d'Europa.",
+        "title": "Haapsalu",
+        "text": "Graziosa cittadina termale sul mare: castello vescovile, stazione ferroviaria storica in legno, lungomare tranquillo.",
         "star": true,
         "familyFriendly": true
       },
       {
         "icon": "🏛️",
-        "title": "Città Vecchia (Vecriga)",
-
-        "titleEN": "Old Town (Vecriga)",
-        "text": "Centro medievale UNESCO, la Casa delle Teste Nere, piazza del Duomo, torre di San Pietro (ascensore con panorama).",
-        "star": false,
-        "familyFriendly": true
-      },
-      {
-        "icon": "🏛️",
-        "title": "Riga Motor Museum",
-        "text": "Auto sovietiche rarissime, ZIL presidenziali, limousine di Stalin. I bambini adorano i manichini in cera al volante.",
+        "title": "Arrivo a Tallinn",
+        "text": "Arrivo in serata nella capitale estone. Sistemazione e prima passeggiata se rimane luce (18h+ di luce a fine giugno).",
         "star": false,
         "familyFriendly": true
       }
@@ -759,147 +748,136 @@ var DAYS_DATA = [
     "food": [
       {
         "type": "street",
-        "title": "Riga — cibo locale",
+        "title": "Pärnu — pranzo in spiaggia",
 
-        "titleEN": "Riga — local food",
-        "text": "<em>Piragi</em> (panini al bacon) dai banchi del Mercato Centrale ~€1-2 l'uno. <em>Lido</em> (Krasta iela 76) — self-service enorme ~€8/pax, parco giochi per bambini. Gelato <em>Ekselence</em>."
+        "titleEN": "Pärnu — beach lunch",
+        "text": "Caffè e ristoranti lungo la promenade di Pärnu. Pesce fresco, zuppe estoni e gelato. Ottima sosta a metà mattina/pranzo."
       },
       {
         "type": "market",
-        "title": "Mercato Centrale",
+        "title": "Haapsalu — caffè sul lungomare",
 
-        "titleEN": "Central Market",
-        "text": "Rīgas Centrāltirgus (Nēģu iela 7) — imperdibile al mattino. Pane di segale, formaggi, affumicati, miele.",
-        "schedule": "Lun-Dom 7:00-18:00"
+        "titleEN": "Haapsalu — seaside café",
+        "text": "Pausa nella cittadina termale: dolci e caffè vicino al castello e alla stazione storica in legno.",
+        "schedule": ""
       }
     ],
     "kids": [
       {
-        "name": "Līvu Akvaparks",
-        "desc": "(Jūrmala, 30 min da Riga) — grande parco acquatico con scivoli, onde, aree bimbi piccoli. Ottimo se fa caldo.",
-        "maps": "https://maps.google.com/?q=Līvu+Akvaparks+Jūrmala"
+        "name": "Spiaggia di Pärnu",
+        "desc": "Lunga spiaggia di sabbia con acqua bassa, ideale per i bambini. Aree gioco e gelati lungo la promenade.",
+        "maps": "https://maps.google.com/?q=P%C3%A4rnu+beach"
       },
       {
-        "name": "Riga Zoo",
-        "desc": "(Mežaparks) — zoo ben curato con percorsi naturalistici nel parco.",
-        "maps": "https://maps.google.com/?q=Riga+Zoo+Mežaparks"
-      },
-      {
-        "name": "Esplanāde Park",
-        "desc": "Grande parco centrale con aree gioco, fontane, spazio per correre. Gratuito.",
-        "maps": "https://maps.google.com/?q=Esplanāde+Park+Riga"
+        "name": "Castello di Haapsalu",
+        "desc": "Rovine del castello vescovile con cortile e mura: passeggiata breve adatta a tutta la famiglia.",
+        "maps": "https://maps.google.com/?q=Haapsalu+Castle"
       }
     ],
     "practical": {
-      "budget": "~€80-120/giorno (sosta)",
+      "budget": "~€100-140/giorno (guida + notte Tallinn)",
       "parking": [
         {
-          "name": "Riga City Camping",
-          "notes": "Seconda notte — elettricità, acqua, WiFi, docce, vicino al centro.",
-          "price": "~€25-30/notte",
-          "maps": "https://maps.google.com/?q=56.955,24.078",
+          "name": "Tallinn City Camping",
+          "notes": "Notte a Tallinn — elettricità, acqua, docce, vicino al centro.",
+          "price": "~€29/notte",
+          "maps": "https://maps.google.com/?q=59.4422,24.7833",
+          "address": ""
+        },
+        {
+          "name": "Pirita Harbor Camping",
+          "notes": "Alternativa sul mare a Tallinn.",
+          "price": "~€35/notte",
+          "maps": "https://maps.google.com/?q=59.4671,24.8265",
           "address": ""
         }
       ],
-      "fuel": "Circle K, Neste — diesel ~€1.85-1.92/L.",
+      "fuel": "Circle K, Neste, Alexela — diesel ~€1.77-1.92/L lungo la E67 / Via Baltica.",
       "grocery": [
         {
-          "name": "Maxima XXX o Rimi Hypermarket",
-          "location": "(periferia di Riga)",
-          "maps": "https://maps.google.com/?q=Maxima+XXX+Riga"
+          "name": "Selver o Rimi",
+          "location": "(Pärnu o Tallinn)",
+          "maps": "https://maps.google.com/?q=Selver+Tallinn"
         }
       ],
       "laundry": {
-        "text": "Speed Queen (centro di Riga) — ottimo momento per fare il bucato con calma.",
-        "maps": "https://maps.google.com/?q=Speed+Queen+Riga"
+        "text": "Laundromat Magistral (Tallinn) — una volta arrivati in città.",
+        "maps": "https://maps.google.com/?q=Laundromat+Magistral+Tallinn"
       },
       "camper": {
-        "text": "Rimani al Riga City Camping — stesso parcheggio del giorno precedente.",
-        "maps": "https://maps.google.com/?q=Riga+City+Camping"
+        "text": "Carico acqua e scarico al campeggio di Tallinn (Tallinn City Camping / Pirita Harbor).",
+        "maps": "https://maps.google.com/?q=59.4422,24.7833"
       },
       "emergency": {
-        "name": "Riga East Clinical University Hospital",
-        "phones": "112 (Generale), 113 (Ambulanza)",
-        "notes": "",
-        "maps": "https://maps.google.com/?q=Riga+East+Clinical+University+Hospital+Riga"
+        "name": "Ida-Tallinna Keskhaigla",
+        "phones": "112",
+        "notes": "(Ravi 18, Tallinn) Attenzione alla fauna selvatica sulla Via Baltica.",
+        "maps": "https://maps.google.com/?q=Ida-Tallinna+Keskhaigla+Tallinn"
       }
     },
     "meteo": {
-      "high": 22,
+      "high": 21,
       "low": 12,
       "cond": "Bel tempo",
-      "daylight": "18h di luce",
-      "lat": 56.9496,
-      "lon": 24.1052
+      "daylight": "18h 30m di luce",
+      "lat": 59.437,
+      "lon": 24.7536
     },
-    "scooter": "Riga centro compatto — ideale per monopattino o bici → <a href=\"#noleggi\">vedi noleggi</a>",
+    "scooter": "Soste a piedi a Pärnu e Haapsalu; a Tallinn Bolt/Tuul molto diffusi → <a href=\"#noleggi\">vedi noleggi</a>",
     "trekking": {
-      "title": "Parco Nazionale della Gauja (deviazione ~1h)",
+      "title": "Lungomare di Pärnu e Haapsalu",
 
-      "titleEN": "Gauja National Park (detour ~1h)",
-      "text": "Sigulda/Cēsis/Līgatne: trekking, mountain bike e canoa sulla Gauja (uno dei migliori percorsi in canoa d'Europa). Esempio canoa Cēsis→Sigulda. Noleggi presso Žagarkalns.",
+      "titleEN": "Pärnu and Haapsalu seafront walks",
+      "text": "Passeggiate facili lungo le promenade di Pärnu (parco costiero) e Haapsalu (lungomare e mura del castello). Soste rilassanti durante il trasferimento.",
       "link": null
     },
-    "waterSports": "🏄 <strong>SUP a Riga:</strong> noleggio sul canale cittadino e sulla Daugava. <em>SUP Guru</em> (Lucavsala) il più economico ~€8/h (€12/2h, €20/giorno, include pagaia e giubbotto); <em>Advaita Adventures</em> (Andrejosta) ~€15, possibile paddle notturno con luci LED. Stagione apr–set. Itinerario facile: canale cittadino ~6 km. Sulla Daugava restare vicino riva (traffico navi).",
+    "waterSports": "🏄 <strong>Bagno a Pärnu:</strong> spiaggia sabbiosa con acqua bassa e calda (per il Baltico). Possibile SUP/kayak a noleggio in stagione lungo la promenade.",
     "fishing": null,
     "events": [
       {
-        "title": "Rīgas Ritmi 2026",
-        "dates": "01–04/07/2026",
-        "text": "Festival internazionale di jazz e world music in varie sedi di Riga. Date limitrofe al passaggio: verificare in base alla data effettiva.",
-        "url": "https://www.rigasritmi.lv/",
-        "price": "variabile (alcuni eventi gratuiti)"
+        "title": "Õllesummer (Tallinn)",
+        "dates": "01–04/07",
+        "text": "Il più grande festival musicale e della birra dell'Estonia, al Song Festival Grounds di Tallinn. Da considerare per la serata d'arrivo / il giorno dopo.",
+        "url": "https://ollesummer.ee",
+        "price": "~€15-25"
       }
     ],
     "alternatives": [],
     "cityTour": {
-      "city": "Riga (Vecrīga, Città Vecchia UNESCO)",
-      "distance": "~3 km",
-      "duration": "2–3h",
+      "city": "Tappe: Pärnu → Haapsalu → Tallinn",
+      "distance": "~390 km",
+      "duration": "giornata (5h di guida + soste)",
       "walking": [
         {
-          "name": "Duomo di Riga (Doms)",
-          "text": "la più grande cattedrale medievale del Baltico, celebre organo; piazza con caffè",
-          "maps": "Riga Cathedral"
+          "name": "Pärnu — promenade e spiaggia",
+          "text": "sosta sulla spiaggia e nel centro in legno della 'capitale estiva' estone",
+          "maps": "Pärnu beach"
         },
         {
-          "name": "Casa delle Teste Nere",
-          "text": "facciata fiamminga riccamente decorata, simbolo di Riga (ricostruita)",
-          "maps": "House of the Black Heads Riga"
+          "name": "Haapsalu — castello e lungomare",
+          "text": "rovine del castello vescovile, stazione storica in legno, atmosfera termale tranquilla",
+          "maps": "Haapsalu Castle"
         },
         {
-          "name": "I Tre Fratelli",
-          "text": "le tre case più antiche della città, esempi di architettura abitativa medievale",
-          "maps": "Three Brothers Riga"
-        },
-        {
-          "name": "Castello di Riga",
-          "text": "residenza del presidente lettone, sulle rive della Daugava",
-          "maps": "Riga Castle"
-        },
-        {
-          "name": "Monumento della Libertà",
-          "text": "simbolo dell'indipendenza lettone con cambio della guardia",
-          "maps": "Freedom Monument Riga"
-        },
-        {
-          "name": "Quartiere Art Nouveau (Alberta iela)",
-          "text": "la più densa concentrazione di Jugendstil d'Europa, facciate di Eisenstein",
-          "maps": "Alberta iela Riga"
+          "name": "Arrivo a Tallinn",
+          "text": "sistemazione al campeggio e prima passeggiata serale verso la Città Vecchia se rimane luce",
+          "maps": "Tallinn Old Town"
         }
       ],
-      "scooter": "Bolt molto diffuso a Riga; piacevole l'argine della Daugava e il canale cittadino (Bastejkalns). Ottimo per collegare Vecrīga al quartiere Art Nouveau."
+      "scooter": "Durante il trasferimento le soste sono a piedi; a Tallinn, una volta arrivati, Bolt/Tuul sono ottimi sulla promenade di Pirita."
     }
   },
   {
     "id": "g7",
     "date": "01/07",
-    "title": "Riga → Tallinn",
-    "flags": "🇱🇻→🇪🇪",
+    "title": "Tallinn — giorno in città",
+
+    "titleEN": "Tallinn — city day",
+    "flags": "🇪🇪",
     "country": "EE",
     "region": "estonia",
-    "km": 310,
-    "hours": "4h 30m",
+    "km": 0,
+    "hours": "—",
     "tolls": "Gratis",
     "tollLinks": [],
     "meteo": {
@@ -910,7 +888,7 @@ var DAYS_DATA = [
       "cond": "Bel tempo",
       "daylight": "18h 30m di luce"
     },
-    "narrative": "🛣️ <strong>Via Baltica</strong> (E67)",
+    "narrative": "🏛️ Giornata intera a <strong>Tallinn</strong>: Città Vecchia medievale (UNESCO), terrazze panoramiche di Toompea e il museo marittimo <strong>Lennusadam</strong>. Nessuno spostamento, seconda notte in città.",
     "highlights": [
       {
         "icon": "🏛️",
