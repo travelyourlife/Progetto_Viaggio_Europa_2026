@@ -104,6 +104,10 @@
 }
 .hv-chip:hover { background: var(--border-color, #e2e8f0); transform: translateY(-1px); }
 .hv-chip:active { background: var(--border-color, #cbd5e1); transform: scale(0.96); }
+/* v4.44: highlight the "Install app" chip so followers spot it easily */
+.hv-chip-install { background: linear-gradient(135deg, #2563eb, #1d4ed8); border-color: #1d4ed8; color: #fff; }
+.hv-chip-install:hover { background: linear-gradient(135deg, #1d4ed8, #1e40af); }
+.hv-chip-install:active { background: #1e40af; }
 
 /* ─── Tools Row ─── */
 .hv-tools-row {

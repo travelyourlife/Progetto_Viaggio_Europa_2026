@@ -64,12 +64,12 @@
     <link rel="apple-touch-icon" sizes="152x152" href="./icon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="./icon.png">
     <link rel="apple-touch-icon" sizes="167x167" href="./icon.png">
-    <title>Quo Vadis — V4.43</title>
+    <title>Quo Vadis — V4.46</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
-    <link rel="stylesheet" href="style.css?v=4.43">
-    <link rel="stylesheet" href="home-variants.css?v=4.43">
-    <link rel="stylesheet" href="unified-map.css?v=4.43">
-    <link rel="stylesheet" href="modern-pages.css?v=4.43">
+    <link rel="stylesheet" href="style.css?v=4.46">
+    <link rel="stylesheet" href="home-variants.css?v=4.46">
+    <link rel="stylesheet" href="unified-map.css?v=4.46">
+    <link rel="stylesheet" href="modern-pages.css?v=4.46">
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" crossorigin="">
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" crossorigin="">
 <!-- Firebase SDK (compat mode for single-file app) -->
@@ -86,7 +86,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = "4.43";
+  var EXPECTED_VERSION = "4.46";
   window.IS_PROD = true; // v2.96: parità con index.html — disabilita debug overlay in produzione
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
@@ -144,23 +144,23 @@
   });
 })();
 </script>
-<script src="data.js?v=4.43" defer></script>
-<script src="days-data.js?v=4.43" defer></script>
-<script src="days-renderer.js?v=4.43" defer></script>
+<script src="data.js?v=4.46" defer></script>
+<script src="days-data.js?v=4.46" defer></script>
+<script src="days-renderer.js?v=4.46" defer></script>
 <!-- wiki-links.js: lazy-loaded on first open of Culture/Activity tab (34KB) — parity with index.html -->
-<script src="weather-coords.js?v=4.43" defer></script>
+<script src="weather-coords.js?v=4.46" defer></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
 <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js" crossorigin="" defer></script>
-<script src="poi-data.js?v=4.43" defer></script>
-<script src="app.js?v=4.43" defer></script>
-<script src="curiosita-data.js?v=4.43" defer></script>
+<script src="poi-data.js?v=4.46" defer></script>
+<script src="app.js?v=4.46" defer></script>
+<script src="curiosita-data.js?v=4.46" defer></script>
 <script>window.QV_CURIOSITA_SERVER_SIDE = true;</script>
-<script src="curiosita-scheduler.js?v=4.43" defer></script>
-<script src="quiz-fun.js?v=4.43" defer></script>
-<script src="unified-map.js?v=4.43" defer></script>
-<script src="city-itineraries.js?v=4.43" defer></script>
-<script src="city-itineraries-ui.js?v=4.43" defer></script>
-<script src="home-variants.js?v=4.43" defer></script>
+<script src="curiosita-scheduler.js?v=4.46" defer></script>
+<script src="quiz-fun.js?v=4.46" defer></script>
+<script src="unified-map.js?v=4.46" defer></script>
+<script src="city-itineraries.js?v=4.46" defer></script>
+<script src="city-itineraries-ui.js?v=4.46" defer></script>
+<script src="home-variants.js?v=4.46" defer></script>
 </head>
 <body class="on-home">
 
@@ -7661,24 +7661,7 @@
     </div>
 </div>
 
-<!-- Parking -->
-<div class="pos-admin-section" style="margin-bottom:16px;">
-    <h4 style="font-size:14px;font-weight:600;margin-bottom:10px;">🅿️ Save Parking</h4>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;">
-        <div style="flex:1;min-width:200px;position:relative;">
-            <input type="text" id="pos-parking-name" placeholder="Name (optional — saves with GPS)..." autocomplete="off" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;">
-            <div id="pos-parking-suggestions" style="display:none;position:absolute;top:100%;left:0;right:0;z-index:9999;background:var(--bg-card);border:1px solid var(--border);border-top:none;border-radius:0 0 8px 8px;max-height:200px;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,0.15);"></div>
-        </div>
-        <select id="pos-parking-rating" style="padding:8px;border:1px solid var(--border);border-radius:8px;">
-            <option value="5">⭐⭐⭐⭐⭐</option>
-            <option value="4">⭐⭐⭐⭐</option>
-            <option value="3" selected>⭐⭐⭐</option>
-            <option value="2">⭐⭐</option>
-            <option value="1">⭐</option>
-        </select>
-        <button type="button" id="pos-parking-btn" class="pos-btn pos-btn-purple">🅿️ Save</button>
-    </div>
-</div>
+<!-- v4.46: "Save Parking" box moved to the Live tab (Overnight Parking accordion) -->
 
 <!-- GPS Import -->
 <div class="pos-admin-section" style="margin-bottom:16px;">
@@ -8378,10 +8361,7 @@
 </div>
 
 <!-- ─── v2.18: WEATHER STATS ─── -->
-<div id="pos-weather-stats" class="pos-section-card" style="display:none;">
-    <h3 class="pos-section-title">📊 Trip Weather</h3>
-    <!-- populated by loadWeatherStats() -->
-</div>
+<!-- v4.45: "Trip Weather" widget removed (inconsistent weatherLog data) -->
 
 <!-- ─── STOPS (unified: itinerary + custom) ─── -->
 <details id="pos-checkin-details" class="pos-accordion" name="posizione-group">
@@ -8411,6 +8391,24 @@
 <details id="pos-parking-details" class="pos-accordion" name="posizione-group">
 <summary>🅿️ Overnight Parking <span class="pos-accordion-sub">(<span id="pos-parking-count">0</span>)</span></summary>
 <p style="color:var(--text-muted);font-size:13px;margin:4px 0 12px;">Parking spots and campsites where they slept.</p>
+<!-- v4.46: Save Parking moved from Admin (owner only, hidden via JS) -->
+<div id="pos-parking-add-row" style="display:none;margin-bottom:12px;">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+        <div style="flex:1;min-width:180px;position:relative;">
+            <input type="text" id="pos-parking-name" placeholder="Name (optional — saves with GPS)..." autocomplete="off" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;">
+            <div id="pos-parking-suggestions" style="display:none;position:absolute;top:100%;left:0;right:0;z-index:9999;background:var(--bg-card);border:1px solid var(--border);border-top:none;border-radius:0 0 8px 8px;max-height:200px;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,0.15);"></div>
+        </div>
+        <select id="pos-parking-rating" style="padding:8px;border:1px solid var(--border);border-radius:8px;">
+            <option value="5">⭐⭐⭐⭐⭐</option>
+            <option value="4">⭐⭐⭐⭐</option>
+            <option value="3" selected>⭐⭐⭐</option>
+            <option value="2">⭐⭐</option>
+            <option value="1">⭐</option>
+        </select>
+        <button type="button" id="pos-parking-btn" class="pos-btn pos-btn-purple">🅿️ Save</button>
+    </div>
+    <p style="font-size:11px;color:var(--text-muted);margin:4px 0 0;">The current GPS position will be saved automatically.</p>
+</div>
 <div id="pos-parking-list"></div>
 </details>
 
@@ -9006,6 +9004,11 @@
             <span class="altro-setting-label">Italiano</span>
             <span class="altro-setting-value">›</span>
         </a>
+        <button type="button" class="altro-setting-row" id="altro-install-btn" onclick="if(window.qvShowInstallModal)window.qvShowInstallModal();">
+            <span class="altro-setting-icon">📲</span>
+            <span class="altro-setting-label">Install app</span>
+            <span class="altro-setting-value">›</span>
+        </button>
         <button type="button" class="altro-setting-row" onclick="if(window.hardRefresh)window.hardRefresh();else window.location.reload(true);">
             <span class="altro-setting-icon">🔄</span>
             <span class="altro-setting-label">Update App</span>
@@ -9085,8 +9088,8 @@
 })();
 </script>
 <!-- Debug Overlay (v2.47 diagnostic) -->
-<script src="debug-overlay.js?v=4.43" defer></script>
+<script src="debug-overlay.js?v=4.46" defer></script>
 <!-- Capacitor GPS Bridge (only activates inside native app, ignored in browser) -->
-<script src="capacitor-gps-bridge.js?v=4.43" defer></script>
+<script src="capacitor-gps-bridge.js?v=4.46" defer></script>
 </body>
 </html>

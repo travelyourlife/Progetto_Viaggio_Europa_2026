@@ -1401,6 +1401,9 @@
     } else if (action === 'refresh' || action === 'updateApp') {
       if (window.hardRefresh) window.hardRefresh();
       else location.reload(true);
+    } else if (action === 'installApp') {
+      // v4.44: open the on-demand install guide (device-specific steps)
+      if (window.qvShowInstallModal) window.qvShowInstallModal();
     } else if (action === 'login') {
       // Trigger Google login
       var authBtn = document.getElementById('homeAuthBtn');

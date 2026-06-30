@@ -5,6 +5,25 @@
 
 # Quo Vadis — Changelog
 
+## v4.46 — 2026-06-30
+**Tappe in un'unica lista cronologica + fix "Km oggi" + parità IT/EN**
+- **Lista tappe unificata (tab Tappe).** Le tappe extra aggiunte manualmente (📌) ora compaiono **intercalate nel punto giusto** dell'elenco, ordinate per data insieme alle tappe dell'itinerario, invece di stare in un blocco separato in fondo. L'eliminazione delle tappe extra e i check-in funzionano direttamente nella lista unica, e il contatore si aggiorna in tempo reale.
+- **"Km oggi" ora conta l'intera giornata, non solo l'ultimo tratto.** Il totale del giorno viene calcolato come il **massimo** tra il riepilogo salvato, i km della sessione live e la somma di **tutti** i punti GPS registrati nella traccia del giorno (`tracks/{oggi}`). Inoltre il salvataggio del riepilogo giornaliero è ora **non distruttivo**: una nuova sessione (es. dopo una sosta) non può più azzerare o abbassare i km già accumulati nella giornata.
+- **Parità completa IT/EN.** La versione italiana ora include tutte le barre di navigazione contestuali tra le sezioni (31 `cross-link-bar`), le etichette "📑 In questa pagina:" degli indici (3 `tab-index-label`) e la riga sorgente meteo ("Fonte: Open-Meteo API…"), prima presenti solo nella versione inglese.
+- **"Segna Parcheggio" spostato.** Il box per registrare il parcheggio notte vive ora unicamente dentro l'accordion "Parcheggi Notte" della tab Live (IT + EN), visibile solo all'owner; rimosso il duplicato dalla tab Admin.
+
+## v4.45 — 2026-06-30
+**Rimosso il widget "Meteo del Viaggio"**
+- Il riquadro riepilogo meteo (media/più caldo/più freddo/giorni sole/giorni pioggia/pioggia totale) mostrava valori incoerenti perché basato su dati grezzi in `weatherLog` non affidabili. È stato **rimosso** dalla pagina Posizione (IT + EN) e la relativa lettura da Firebase è stata disattivata.
+
+## v4.44 — 2026-06-30
+**Istruzioni di installazione più chiare e sempre raggiungibili**
+- **Voce "Installa l'app" sempre disponibile.** Aggiunta nel menu **Altro** (italiano e inglese) e come chip evidenziato **📲 Installa app** nella home dei follower (Live Feed). Apre la guida quando vuoi, anche dopo aver chiuso il pop-up automatico.
+- **Guida su misura per il dispositivo in uso.** Il riquadro mostra solo i passi del telefono/computer che stai usando (niente elenchi confusi di altri sistemi).
+- **iPhone più semplice.** Su iPhone con Safari compare una **mini-grafica dei passi** (Condividi □↑ → Aggiungi a Home → Aggiungi), che rende il flusso molto meno ostico.
+- **Avviso intelligente.** Se apri l'app su iPhone con un browser diverso da Safari, un avviso ti ricorda di usare Safari (perché su iOS solo Safari può installare l'app); per Firefox su Android/desktop suggerisce Chrome/Edge.
+- **Copia link sempre a portata.** Pulsante "Copia link" disponibile per condividere facilmente l'indirizzo (es. via WhatsApp) o aprirlo in Safari.
+
 ## v4.43 — 2026-06-30
 **Riordino foto nei post del Diario più semplice**
 - **Trascina per riordinare.** Nei post con più foto compare una maniglia ☰ su ogni foto: tienila premuta e trascina per spostare la foto nell'ordine che preferisci. Funziona con il dito sul telefono e con il mouse su desktop. Le frecce ◀ ▶ restano disponibili come alternativa.

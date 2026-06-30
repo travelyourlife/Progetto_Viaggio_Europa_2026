@@ -64,12 +64,12 @@
     <link rel="apple-touch-icon" sizes="152x152" href="./icon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="./icon.png">
     <link rel="apple-touch-icon" sizes="167x167" href="./icon.png">
-    <title>Quo Vadis — V4.43</title>
+    <title>Quo Vadis — V4.46</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
-    <link rel="stylesheet" href="style.css?v=4.43">
-    <link rel="stylesheet" href="home-variants.css?v=4.43">
-    <link rel="stylesheet" href="unified-map.css?v=4.43">
-    <link rel="stylesheet" href="modern-pages.css?v=4.43">
+    <link rel="stylesheet" href="style.css?v=4.46">
+    <link rel="stylesheet" href="home-variants.css?v=4.46">
+    <link rel="stylesheet" href="unified-map.css?v=4.46">
+    <link rel="stylesheet" href="modern-pages.css?v=4.46">
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" crossorigin="">
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" crossorigin="">
 <!-- Firebase SDK (compat mode for single-file app) -->
@@ -86,7 +86,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = "4.43";
+  var EXPECTED_VERSION = "4.46";
   window.IS_PROD = true; // v2.71: disabilita debug overlay in produzione
     window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
@@ -144,25 +144,25 @@
   });
 })();
 </script>
-<script src="data.js?v=4.43" defer></script>
-<script src="days-data.js?v=4.43" defer></script>
-<script src="days-renderer.js?v=4.43" defer></script>
+<script src="data.js?v=4.46" defer></script>
+<script src="days-data.js?v=4.46" defer></script>
+<script src="days-renderer.js?v=4.46" defer></script>
 <!-- wiki-links.js: caricato lazy alla prima apertura tab Cultura/Attività (34KB) -->
-<script src="weather-coords.js?v=4.43" defer></script>
+<script src="weather-coords.js?v=4.46" defer></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
 <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js" crossorigin="" defer></script>
-<script src="poi-data.js?v=4.43" defer></script>
+<script src="poi-data.js?v=4.46" defer></script>
 <!-- poi-data.js caricato sopra con defer — 161KB, usato da UnifiedMap e tab Luoghi -->
 <!-- wiki-links.js lazy: caricato solo alla prima apertura tab Cultura/Attività -->
-<script src="app.js?v=4.43" defer></script>
-<script src="curiosita-data.js?v=4.43" defer></script>
+<script src="app.js?v=4.46" defer></script>
+<script src="curiosita-data.js?v=4.46" defer></script>
 <script>window.QV_CURIOSITA_SERVER_SIDE = true;</script>
-<script src="curiosita-scheduler.js?v=4.43" defer></script>
-<script src="quiz-fun.js?v=4.43" defer></script>
-<script src="unified-map.js?v=4.43" defer></script>
-<script src="city-itineraries.js?v=4.43" defer></script>
-<script src="city-itineraries-ui.js?v=4.43" defer></script>
-<script src="home-variants.js?v=4.43" defer></script>
+<script src="curiosita-scheduler.js?v=4.46" defer></script>
+<script src="quiz-fun.js?v=4.46" defer></script>
+<script src="unified-map.js?v=4.46" defer></script>
+<script src="city-itineraries.js?v=4.46" defer></script>
+<script src="city-itineraries-ui.js?v=4.46" defer></script>
+<script src="home-variants.js?v=4.46" defer></script>
 </head>
 <body class="on-home">
 
@@ -372,6 +372,7 @@
 <h1 style="text-align:center; margin-top:16px;">📌 Riepilogo Viaggio</h1>
 <hr>
 <div class="tab-index-wrapper"><div class="tab-index">
+<span class="tab-index-label">📑 In questa pagina:</span>
 <a href="#sintesi">📋 Sintesi</a>
 <a href="#curiosita-dati-geografici">🌍 Curiosità</a>
 <a href="#meteo-viaggio">🌤️ Meteo</a>
@@ -381,6 +382,7 @@
 <a href="#secB">🗺️ Alternative</a>
 <a href="#pioggia">☔ Piano Pioggia</a>
 </div></div>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerario</a> · 📍 <a href="javascript:void(0)" class="protected-link" onclick="switchTab('posizione')">Posizione Live</a> · 🍝 <a href="javascript:void(0)" onclick="switchTab('cibo')">Cibo</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura')">Cultura</a> · 📋 <a href="javascript:void(0)" onclick="switchTab('piano')">Piano</a></div>
 <h2 id="sintesi">📋 Sintesi — Equipaggio e Mezzo</h2>
 <p>👨‍👩‍👧‍👦 <strong>Equipaggio:</strong> 2 adulti + 2 bambini (8 e 6 anni)</p>
 <p>🚐 <strong>Mezzo:</strong> furgone camperizzato autonomo (LiFePo4 + bombola gas 5 kg)</p>
@@ -1110,6 +1112,7 @@
 
 <h1 style="text-align:center; margin-top:16px;">🏛️ Cultura — Storia e Tradizioni</h1>
 <div class="tab-index-wrapper"><div class="tab-index">
+<span class="tab-index-label">📑 In questa pagina:</span>
 <a href="#storia">Introduzione</a>
 <a href="#austria-g1-g2">🇦🇹 Austria</a>
 <a href="#repubblica-ceca-g2-transito-via-brno">🇨🇿 Cechia</a>
@@ -1126,12 +1129,14 @@
 <a href="#italia-g52-g54">🇮🇹 Italia</a>
 <a href="#libri-film">📚 Libri e Film</a>
 </div></div>
+<div class="cross-link-bar">🍝 <a href="javascript:void(0)" onclick="switchTab('cibo')">Cibo</a> · 🥾 <a href="javascript:void(0)" onclick="switchTab('attivita')">Attività</a> · 🧭 <a href="javascript:void(0)" onclick="switchTab('luoghi')">Luoghi</a> · 📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerario</a> · 📋 <a href="javascript:void(0)" onclick="switchTab('piano')">Piano</a></div>
 <h2 id="storia">🏛️ Cultura — Guida Approfondita</h2>
 <blockquote>
 <p>Una guida culturale da leggere la sera prima o durante i trasferimenti. Per ogni Paese: timeline storica, personaggi chiave, cosa osservare nell'architettura, tradizioni vive in estate, parole utili con pronuncia, e quiz/giochi per coinvolgere i bambini (6-8 anni).</p>
 </blockquote>
 <hr>
 <h2 id="austria-g1-g2">🇦🇹 Austria (G1-G2)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g1')">Itinerario G1-G2</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-austriaca-g1-g2')">Cibo</a></div>
 <h3 id="timeline">⏳ Timeline</h3>
 <table>
 <thead>
@@ -1451,6 +1456,7 @@
 <p>Una <strong>cartolina di Klimt</strong> dal museo — "Il Bacio" piace a tutti</p>
 <hr>
 <h2 id="repubblica-ceca-g2-transito-via-brno">🇨🇿 Repubblica Ceca (G2 — transito via Brno)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g2')">Itinerario G2</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-ceca-g2-g3-transito')">Cibo</a></div>
 <h3 id="timeline_1">⏳ Timeline</h3>
 <table>
 <thead>
@@ -1704,6 +1710,7 @@
 <p>🏛️ <strong>Cristallo di Boemia</strong> — tradizione dal 1300, ma fragile in furgone!</p>
 <hr>
 <h2 id="polonia-g3-g4">🇵🇱 Polonia (G3-G4)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g3')">Itinerario G3-G4</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-polacca-g3-g4')">Cibo</a></div>
 <h3 id="timeline_2">⏳ Timeline</h3>
 <table>
 <thead>
@@ -1991,6 +1998,7 @@
 <p>🏛️ <strong>Oscypek</strong> — formaggio affumicato dei monti Tatra (a forma di fuso, decorato)</p>
 <hr>
 <h2 id="lituania-g4-g5">🇱🇹 Lituania (G4-G5)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g4')">Itinerario G4-G5</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-baltica-g4-g7')">Cibo</a></div>
 <h3 id="timeline_3">⏳ Timeline</h3>
 <table>
 <thead>
@@ -2270,6 +2278,7 @@
 <p><strong>Šakotis</strong> in miniatura — il dolce-albero (si conserva bene)</p>
 <hr>
 <h2 id="lettonia-g5-g6">🇱🇻 Lettonia (G5-G6)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g5')">Itinerario G5-G6</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-baltica-g4-g7')">Cibo</a></div>
 <h3 id="timeline_4">⏳ Timeline</h3>
 <table>
 <thead>
@@ -2550,6 +2559,7 @@
 <p>🏛️ <strong>Guanti e calze di lana</strong> — con pattern tradizionali baltici</p>
 <hr>
 <h2 id="estonia-g6-g7">🇪🇪 Estonia (G6-G7)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g6')">Itinerario G6-G7</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-baltica-g4-g7')">Cibo</a></div>
 <h3 id="timeline_5">⏳ Timeline</h3>
 <table>
 <thead>
@@ -2840,6 +2850,7 @@
 <p>🏛️ <strong>Kalev chocolate</strong> — il cioccolato estone (dal 1806)</p>
 <hr>
 <h2 id="finlandia-g7-g15">🇫🇮 Finlandia (G7-G15)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g7')">Itinerario G7-G15</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-finlandese-g7-g15')">Cibo</a></div>
 <h3 id="timeline_6">⏳ Timeline</h3>
 <table>
 <thead>
@@ -3160,6 +3171,7 @@
 <p>🏛️ <strong>Mirtilli e liquirizia salata</strong> (salmiakki) — la liquirizia salata è un gusto acquisito!</p>
 <hr>
 <h2 id="norvegia-g16-g34">🇳🇴 Norvegia (G16-G34)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g16')">Itinerario G16-G34</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-norvegese-g15-g34')">Cibo</a></div>
 <h3 id="timeline_7">⏳ Timeline</h3>
 <table>
 <thead>
@@ -3492,6 +3504,7 @@
 <p>🏛️ <strong>Stoccafisso</strong> — se vi piace il baccalà, compratelo direttamente alle Lofoten</p>
 <hr>
 <h2 id="danimarca-g35-g39">🇩🇰 Danimarca (G35-G39)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g35')">Itinerario G35-G39</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-danese-g34-g39')">Cibo</a></div>
 <h3 id="timeline_8">⏳ Timeline</h3>
 <table>
 <thead>
@@ -3803,6 +3816,7 @@
 <p>🏛️ <strong>Smørrebrød to go</strong> — nei mercati, perfetto per il pranzo in furgone</p>
 <hr>
 <h2 id="germania-g40-transito-via-brema">🇩🇪 Germania (G40 — transito via Brema)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g40')">Itinerario G40</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-tedesca-g40-transito-brema')">Cibo</a></div>
 <h3 id="timeline_9">⏳ Timeline</h3>
 <table>
 <thead>
@@ -4070,6 +4084,7 @@
 <p>Un magnete dei <strong>Musicanti di Brema</strong> — il souvenir più iconico</p>
 <hr>
 <h2 id="francia-g41-g43-g51-g54">🇫🇷 Francia (G41-G43, G51-G54)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g41')">Itinerario G41-G43, G51-G54</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-francese-g40-g43-g51-g52')">Cibo</a></div>
 <h3 id="timeline_10">⏳ Timeline</h3>
 <table>
 <thead>
@@ -4387,6 +4402,7 @@
 <p>🏛️ <strong>Savon de Marseille</strong> — sapone tradizionale (in Camargue/Provenza)</p>
 <hr>
 <h2 id="spagna-g44-g50">🇪🇸 Spagna (G44-G50)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g44')">Itinerario G44-G50</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-spagnola-g44-g50')">Cibo</a></div>
 <h3 id="timeline_11">⏳ Timeline</h3>
 <table>
 <thead>
@@ -4711,6 +4727,7 @@
 <p>🏛️ <strong>Anchoas de Santoña</strong> — le migliori acciughe del mondo (Cantabria)</p>
 <hr>
 <h2 id="italia-g52-g54">🇮🇹 Italia (G52-G54)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g52')">Itinerario G52-G54</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-italiana-rientro-g51-g54')">Cibo</a></div>
 <h3 id="timeline_12">⏳ Timeline</h3>
 <table>
 <thead>
@@ -5372,6 +5389,7 @@
 
 <h1 style="text-align:center; margin-top:16px;">🍝 Cibo — Guida Gastronomica</h1>
 <div class="tab-index-wrapper"><div class="tab-index">
+<span class="tab-index-label">📑 In questa pagina:</span>
 <a href="#food">Tabella per Paese</a>
 <a href="#cucina-austriaca-g1-g2">🇦🇹 Austria</a>
 <a href="#cucina-ceca-g2-g3-transito">🇨🇿 Cechia</a>
@@ -5386,6 +5404,7 @@
 <a href="#cucina-italiana-rientro-g51-g54">🇮🇹 Italia</a>
 <a href="#gastronomia-consigli-cucina-in-furgone">👨‍🍳 Consigli cucina in furgone</a>
 </div></div>
+<div class="cross-link-bar">🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura')">Cultura</a> · 🥾 <a href="javascript:void(0)" onclick="switchTab('attivita')">Attività</a> · 🧭 <a href="javascript:void(0)" onclick="switchTab('luoghi')">Luoghi</a> · 📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerario</a> · 📋 <a href="javascript:void(0)" onclick="switchTab('piano')">Piano</a></div>
 <h2 id="food">🍽️ Gastronomia — per Paese e Zona</h2>
 <blockquote>
 <p>Piatti tipici, prodotti locali e consigli pratici per mangiare bene spendendo poco in furgone. Focus su cibi adatti anche ai bambini e facili da trovare nei supermercati o mercati locali.</p>
@@ -5470,6 +5489,7 @@
 
 <hr>
 <h2 id="cucina-austriaca-g1-g2">🇦🇹 Cucina Austriaca (G1-G2)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g1')">Itinerario G1-G2</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','austria-g1-g2')">Cultura</a></div>
 <h4 id="storia-cucina-austria">📜 Storia della cucina austriaca</h4>
 <p>La cucina austriaca è un crocevia di imperi: <a href="https://it.wikipedia.org/wiki/Cucina_austriaca" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>. Il <strong>Wiener Schnitzel</strong> arriva probabilmente da Milano (cotoletta alla milanese), portato a Vienna nel 1857 dal feldmaresciallo Radetzky. Il <strong>Kaiserschmarrn</strong> ("frittata dell'imperatore") fu inventato per Francesco Giuseppe I quando il suo cuoco sbagliò una crêpe. I <strong>Kaffeehäuser</strong> (caffè viennesi, <a href="https://it.wikipedia.org/wiki/Kaffeehaus" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) nacquero dopo l'assedio turco del 1683: i sacchi di caffè abbandonati dai turchi divennero un'ossessione viennese. Oggi sono Patrimonio UNESCO. La <strong>Sachertorte</strong> fu creata nel 1832 dal sedicenne Franz Sacher per il principe Metternich — la ricetta originale è ancora segreta!</p>
 <h4 id="extra-piatti-austria">🍽️ Altri piatti da provare</h4>
@@ -5512,6 +5532,7 @@
 </ul>
 <hr>
 <h2 id="cucina-ceca-g2-g3-transito">🇨🇿 Cucina Ceca (G2-G3, transito)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g2')">Itinerario G2-G3</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','repubblica-ceca-g2-transito-via-brno')">Cultura</a></div>
 <h4 id="storia-cucina-ceca">📜 Storia della cucina ceca</h4>
 <p>La cucina ceca (<a href="https://it.wikipedia.org/wiki/Cucina_ceca" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) è robusta e sostanziosa, nata per resistere ai lunghi inverni. La <strong>birra ceca</strong> ha una tradizione di 1.000 anni: la Pilsner fu inventata a Plzeň nel 1842 (<a href="https://it.wikipedia.org/wiki/Pilsner" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — i cechi bevono più birra pro capite di chiunque al mondo (140 litri/anno!). Il <strong>Trdelník</strong> (dolce a camino) che si vede ovunque a Praga è in realtà ungherese/slovacco, ma è diventato il simbolo del turismo praghese. I veri piatti cechi sono i <strong>knedlíky</strong> (gnocchi di pane bolliti) che accompagnano ogni piatto di carne.</p>
 <h4 id="extra-piatti-ceca">🍽️ Altri piatti da provare</h4>
@@ -5548,6 +5569,7 @@
 </ul>
 <hr>
 <h2 id="cucina-polacca-g3-g4">🇵🇱 Cucina Polacca (G3-G4)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g3')">Itinerario G3-G4</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','polonia-g3-g4')">Cultura</a></div>
 <h4 id="storia-cucina-polacca">📜 Storia della cucina polacca</h4>
 <p>La cucina polacca (<a href="https://it.wikipedia.org/wiki/Cucina_polacca" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) fonde tradizioni slave, ebraiche e nobili. I <strong>pierogi</strong> (<a href="https://it.wikipedia.org/wiki/Pierogi" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) sono ravioli portati dalla Cina attraverso la Via della Seta nel XIII secolo — oggi sono il piatto nazionale. La <strong>vodka polacca</strong> ha una storia di 500+ anni (la parola "vodka" appare per la prima volta in un documento polacco del 1405!). Il <strong>bigos</strong> ("stufato del cacciatore") migliora ogni volta che viene riscaldato — le famiglie nobili lo preparavano giorni prima delle feste. La tradizione della <strong>Wigilia</strong> (cena della vigilia di Natale) prevede 12 piatti, tutti senza carne.</p>
 <h4 id="extra-piatti-polonia">🍽️ Altri piatti da provare</h4>
@@ -5591,6 +5613,7 @@
 </ul>
 <hr>
 <h2 id="cucina-baltica-g4-g7">🇱🇹🇱🇻🇪🇪 Cucina Baltica (G4-G7)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g4')">Itinerario G4-G7</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','lituania-g4-g5')">Cultura</a></div>
 <h4 id="storia-cucina-baltica">📜 Storia della cucina baltica</h4>
 <p>Le cucine di Lituania, Lettonia ed Estonia (<a href="https://it.wikipedia.org/wiki/Cucina_lituana" target="_blank" rel="noopener noreferrer">📚 Lituana</a>, <a href="https://it.wikipedia.org/wiki/Cucina_lettone" target="_blank" rel="noopener noreferrer">📚 Lettone</a>, <a href="https://it.wikipedia.org/wiki/Cucina_estone" target="_blank" rel="noopener noreferrer">📚 Estone</a>) condividono radici comuni: pane nero di segale, patate, aringhe, latticini fermentati. Il <strong>pane nero</strong> (Rugpjūtis/Rupjmaize) è sacro — buttarlo via porta sfortuna! La tradizione della <strong>birra artigianale</strong> lituana è antichissima: birre di fattoria non filtrate e non pastorizzate, con ricette tramandate da secoli. L'Estonia ha una forte influenza scandinava (aringhe, salmone), la Lituania più influenza polacca (pierogi/cepelinai), la Lettonia è nel mezzo.</p>
 <h4 id="extra-piatti-baltici">🍽️ Altri piatti da provare</h4>
@@ -5637,6 +5660,7 @@
 </ul>
 <hr>
 <h2 id="cucina-finlandese-g7-g15">🇫🇮 Cucina Finlandese (G7-G15)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g7')">Itinerario G7-G15</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','finlandia-g7-g15')">Cultura</a></div>
 <h4 id="storia-cucina-finlandese">📜 Storia della cucina finlandese</h4>
 <p>La cucina finlandese (<a href="https://it.wikipedia.org/wiki/Cucina_finlandese" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) è "dal bosco e dal lago alla tavola". Per secoli i finlandesi hanno vissuto di pesca, caccia e raccolta di bacche e funghi. Il <strong>Kalakukko</strong> (pesce cotto dentro una pagnotta di segale) è il piatto più antico — i pescatori lo portavano come pranzo al sacco. La tradizione della <strong>sauna</strong> influenza anche la cucina: il <strong>saunapalvikinkku</strong> è prosciutto affumicato nella sauna per 24 ore! I finlandesi consumano più <strong>caffè</strong> pro capite al mondo (12 kg/anno!) e più <strong>latte</strong> di chiunque. Le <strong>bacche selvatiche</strong> (mirtilli, lamponi artici, mirtilli rossi) sono raccolte da tutti grazie al Jokamiehenoikeus.</p>
 <h4 id="extra-piatti-finlandia">🍽️ Altri piatti da provare</h4>
@@ -5686,6 +5710,7 @@
 </ul>
 <hr>
 <h2 id="cucina-norvegese-g15-g34">🇳🇴 Cucina Norvegese (G15-G34)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g16')">Itinerario G15-G34</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','norvegia-g16-g34')">Cultura</a></div>
 <h4 id="storia-cucina-norvegese">📜 Storia della cucina norvegese</h4>
 <p>La cucina norvegese (<a href="https://it.wikipedia.org/wiki/Cucina_norvegese" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) è plasmata dai fiordi e dal clima estremo. I Vichinghi inventarono la <strong>conservazione</strong>: pesce essiccato (tørrfisk/stoccafisso), affumicato (røkelaks) e fermentato (rakfisk). Lo <strong>stoccafisso</strong> (<a href="https://it.wikipedia.org/wiki/Stoccafisso" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) essiccato alle Lofoten era la "valuta" dei Vichinghi — lo esportavano in tutta Europa (anche in Italia per il baccalà!). Il <strong>brunost</strong> (formaggio marrone) fu inventato nel 1863 da una ragazza di fattoria, Anne Hov, che ebbe l'idea di aggiungere panna al siero. Oggi è il formaggio nazionale. Il <strong>salmone norvegese</strong> è il pesce più esportato al mondo — il sushi di salmone fu "inventato" dai norvegesi che convinsero i giapponesi negli anni '80!</p>
 <h4 id="extra-piatti-norvegia">🍽️ Altri piatti da provare</h4>
@@ -5741,6 +5766,7 @@
 </ul>
 <hr>
 <h2 id="cucina-danese-g34-g39">🇩🇰 Cucina Danese (G34-G39)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g35')">Itinerario G34-G39</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','danimarca-g35-g39')">Cultura</a></div>
 <h4 id="storia-cucina-danese">📜 Storia della cucina danese</h4>
 <p>La cucina danese (<a href="https://it.wikipedia.org/wiki/Cucina_danese" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) ha vissuto una rivoluzione: dal tradizionale <strong>smørrebrød</strong> (tartine aperte) al "New Nordic" di René Redzepi (Noma, 4 volte miglior ristorante del mondo). Lo <strong>smørrebrød</strong> (<a href="https://it.wikipedia.org/wiki/Sm%C3%B8rrebr%C3%B8d" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) nasce nel medioevo: il pane di segale era il "piatto" su cui si metteva il cibo. I <strong>Danish pastries</strong> (wienerbrød) in realtà furono portati da fornai austriaci nel 1850 durante uno sciopero dei panettieri danesi! Il <strong>Carlsberg</strong> fu fondato nel 1847 e il suo laboratorio scoprì il lievito puro per la birra lager — regalando la scoperta al mondo intero.</p>
 <h4 id="extra-piatti-danimarca">🍽️ Altri piatti da provare</h4>
@@ -5787,6 +5813,7 @@
 </ul>
 <hr>
 <h2 id="cucina-tedesca-g40-transito-brema">🇩🇪 Cucina Tedesca (G40 — transito Brema)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g40')">Itinerario G40</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','germania-g40-transito-via-brema')">Cultura</a></div>
 <h4 id="storia-cucina-tedesca">📜 Storia della cucina tedesca</h4>
 <p>La cucina tedesca (<a href="https://it.wikipedia.org/wiki/Cucina_tedesca" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) varia enormemente da regione a regione. Brema, città anseatica, ha una tradizione marinara: aringhe, anguille affumicate, Labskaus (stufato di marinai). La <strong>Reinheitsgebot</strong> (<a href="https://it.wikipedia.org/wiki/Reinheitsgebot" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) del 1516 è la legge sulla purezza della birra più antica del mondo: solo acqua, malto, luppolo e lievito. La Germania ha 1.500+ birrifici e 5.000+ birre diverse! Il <strong>Brot</strong> (pane tedesco) è Patrimonio UNESCO: oltre 3.000 varietà registrate, più di qualsiasi altro paese.</p>
 <h4 id="extra-piatti-germania">🍽️ Altri piatti da provare</h4>
@@ -5827,6 +5854,7 @@
 </ul>
 <hr>
 <h2 id="cucina-francese-g40-g43-g51-g52">🇫🇷 Cucina Francese (G40-G43, G51-G52)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g41')">Itinerario G41-G43, G51-G54</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','francia-g41-g43-g51-g54')">Cultura</a></div>
 <h4 id="storia-cucina-francese">📜 Storia della cucina francese</h4>
 <p>La cucina francese (<a href="https://it.wikipedia.org/wiki/Cucina_francese" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) è Patrimonio UNESCO dal 2010. <strong>Auguste Escoffier</strong> (<a href="https://it.wikipedia.org/wiki/Auguste_Escoffier" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) codificò la cucina moderna nel 1903 con "Le Guide Culinaire". La <strong>baguette</strong> (<a href="https://it.wikipedia.org/wiki/Baguette" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) è Patrimonio UNESCO dal 2022 — i francesi ne consumano 10 miliardi l'anno! La tradizione del <strong>fromage</strong> (formaggio) conta 1.220+ varietà — De Gaulle disse: "Come si può governare un paese con 246 formaggi diversi?". Il <strong>croissant</strong> in realtà è austriaco (Kipferl), portato a Parigi nel 1838. La Bretagna e la Normandia (sul vostro percorso) sono famose per crêpes, sidro, burro salato e ostriche.</p>
 <h4 id="extra-piatti-francia">🍽️ Altri piatti da provare</h4>
@@ -5875,6 +5903,7 @@
 </ul>
 <hr>
 <h2 id="cucina-spagnola-g44-g50">🇪🇸 Cucina Spagnola (G44-G50)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g44')">Itinerario G44-G50</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','spagna-g44-g50')">Cultura</a></div>
 <h4 id="storia-cucina-spagnola">📜 Storia della cucina spagnola</h4>
 <p>La cucina spagnola (<a href="https://it.wikipedia.org/wiki/Cucina_spagnola" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) del nord è molto diversa da quella mediterranea. I <strong>Paesi Baschi</strong> hanno la più alta concentrazione di stelle Michelin al mondo! I <strong>pintxos</strong> (<a href="https://it.wikipedia.org/wiki/Pintxo" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) sono l'arte culinaria basca: mini-creazioni gastronomiche su pane, fissate con uno stuzzicadenti. Si va di bar in bar ("txikiteo"). La <strong>sidra asturiana</strong> (<a href="https://it.wikipedia.org/wiki/Sidra" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) si versa da un metro di altezza ("escanciar") per ossigenarla! Il <strong>Cammino di Santiago</strong> ha creato una tradizione di "menú del peregrino" (3 portate + vino per ~12€) lungo tutto il nord.</p>
 <h4 id="extra-piatti-spagna">🍽️ Altri piatti da provare</h4>
@@ -5925,6 +5954,7 @@
 </ul>
 <hr>
 <h2 id="cucina-italiana-rientro-g51-g54">🇮🇹 Cucina Italiana — Rientro (G51-G54)</h2>
+<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g52')">Itinerario G52-G54</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','italia-g52-g54')">Cultura</a></div>
 <h4 id="storia-cucina-italiana">📜 Storia della cucina ligure</h4>
 <p>La cucina ligure (<a href="https://it.wikipedia.org/wiki/Cucina_ligure" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) è "cucina povera" diventata gourmet. Il <strong>pesto genovese</strong> (<a href="https://it.wikipedia.org/wiki/Pesto" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) nasce dal "moretum" romano (aglio pestato con formaggio), evoluto con il basilico genovese DOP — più piccolo e dolce di quello comune. La <strong>focaccia genovese</strong> (<a href="https://it.wikipedia.org/wiki/Focaccia_genovese" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) si mangia a colazione inzuppata nel cappuccino! La <strong>farinata</strong> (<a href="https://it.wikipedia.org/wiki/Farinata" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) di ceci fu inventata per caso: durante una tempesta, i barili di ceci e olio si rovesciarono nella stiva — la poltiglia cotta al sole divenne una prelibatezza. Genova fu la "Superba" delle Repubbliche Marinare: spezie, acciughe sotto sale, e il commercio marittimo plasmarono la cucina.</p>
 <h4 id="extra-piatti-italia">🍽️ Altri piatti da provare</h4>
@@ -6056,6 +6086,7 @@
 <a href="#drone">🛸 Drone</a>
 <a href="#inreach">📡 Garmin inReach</a>
 </div></div>
+<div class="cross-link-bar">📍 <a href="javascript:void(0)" class="protected-link" onclick="switchTab('posizione')">Posizione Live</a> · 🍝 <a href="javascript:void(0)" onclick="switchTab('cibo')">Cibo</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura')">Cultura</a> · 🧭 <a href="javascript:void(0)" onclick="switchTab('luoghi')">Luoghi</a> · 🎒 <a href="javascript:void(0)" onclick="switchTab('zaino','z-trekking')">Attrezzatura Trekking</a></div>
 <h2 id="campeggio">🚐 Campeggio — Regole per Paese</h2>
 <table>
 <thead>
@@ -7588,6 +7619,7 @@
 <a href="#secA">♨️ Terme</a>
 <a href="#poi-parchi-divertimento">🎢 Parchi</a>
 </div></div>
+<div class="cross-link-bar">📍 <a href="javascript:void(0)" class="protected-link" onclick="switchTab('posizione')">Posizione Live</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura')">Cultura</a> · 🥾 <a href="javascript:void(0)" onclick="switchTab('attivita')">Attività</a> · 📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerario</a> · 📋 <a href="javascript:void(0)" onclick="switchTab('piano')">Piano</a></div>
 <h2 id="musei-attrazioni">🏛️ Musei e Attrazioni</h2>
 <p>Musei, monumenti e attrazioni culturali imperdibili lungo il percorso. Molti sono già citati nei singoli giorni dell'itinerario.</p>
 <div id="poi-list-museum"></div>
@@ -7661,6 +7693,7 @@
 <a href="#rischi">⚠️ Rischi</a>
 <a href="#fonti">📚 Fonti</a>
 </div></div>
+<div class="cross-link-bar">📍 <a href="javascript:void(0)" class="protected-link" onclick="switchTab('posizione')">Posizione Live</a> · 🍝 <a href="javascript:void(0)" onclick="switchTab('cibo')">Cibo</a> · 🥾 <a href="javascript:void(0)" onclick="switchTab('attivita')">Attività</a> · 🎒 <a href="javascript:void(0)" onclick="switchTab('zaino')">Zaino</a> · 📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerario</a></div>
 <h2 id="checklist-pre-partenza">✅ Checklist — Pre-partenza</h2>
 <hr>
 <h3 id="prenotazioni-per-data">📅 Prenotazioni per data</h3>
@@ -8335,24 +8368,7 @@
     </div>
 </div>
 
-<!-- Parcheggi -->
-<div class="pos-admin-section" style="margin-bottom:16px;">
-    <h4 style="font-size:14px;font-weight:600;margin-bottom:10px;">🅿️ Segna Parcheggio</h4>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;">
-        <div style="flex:1;min-width:200px;position:relative;">
-            <input type="text" id="pos-parking-name" placeholder="Nome (opzionale — salva con GPS)..." autocomplete="off" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;">
-            <div id="pos-parking-suggestions" style="display:none;position:absolute;top:100%;left:0;right:0;z-index:9999;background:var(--bg-card);border:1px solid var(--border);border-top:none;border-radius:0 0 8px 8px;max-height:200px;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,0.15);"></div>
-        </div>
-        <select id="pos-parking-rating" style="padding:8px;border:1px solid var(--border);border-radius:8px;">
-            <option value="5">⭐⭐⭐⭐⭐</option>
-            <option value="4">⭐⭐⭐⭐</option>
-            <option value="3" selected>⭐⭐⭐</option>
-            <option value="2">⭐⭐</option>
-            <option value="1">⭐</option>
-        </select>
-        <button type="button" id="pos-parking-btn" class="pos-btn pos-btn-purple">🅿️ Salva</button>
-    </div>
-</div>
+<!-- v4.46: box "Segna Parcheggio" spostato nella scheda Live (accordion Parcheggi Notte) -->
 
 <!-- Import GPS -->
 <div class="pos-admin-section" style="margin-bottom:16px;">
@@ -8719,6 +8735,7 @@
     <div class="zp-sub" id="zp-percent">0% completato</div>
     <div class="zp-bar"><div class="zp-fill" id="zp-fill" style="width:0%"></div></div>
 </div>
+<div class="cross-link-bar">📋 <a href="javascript:void(0)" onclick="switchTab('piano')">Piano &amp; Budget</a> · 🥾 <a href="javascript:void(0)" onclick="switchTab('attivita')">Attività</a> · 🍝 <a href="javascript:void(0)" onclick="switchTab('cibo')">Cibo</a> · 📍 <a href="javascript:void(0)" class="protected-link" onclick="switchTab('posizione')">Posizione Live</a> · 📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerario</a></div>
 <div class="tab-index-wrapper"><div class="tab-index">
 <a href="#z-camper">🚐 Camper</a>
 <a href="#z-letto">🛏️ Letto</a>
@@ -9058,11 +9075,7 @@
   </div>
 </div>
 
-<!-- ─── v2.18: WEATHER STATS ─── -->
-<div id="pos-weather-stats" class="pos-section-card" style="display:none;">
-    <h3 class="pos-section-title">📊 Meteo del Viaggio</h3>
-    <!-- populated by loadWeatherStats() -->
-</div>
+<!-- v4.45: "Meteo del Viaggio" widget rimosso (dati weatherLog incoerenti) -->
 
 
 <!-- ─── TAPPE (unificata: itinerario + libere) ─── -->
@@ -9093,6 +9106,24 @@
 <details id="pos-parking-details" class="pos-accordion" name="posizione-group">
 <summary>🅿️ Parcheggi Notte <span class="pos-accordion-sub">(<span id="pos-parking-count">0</span>)</span></summary>
 <p style="color:var(--text-muted);font-size:13px;margin:4px 0 12px;">Parcheggi e campeggi dove hanno dormito.</p>
+<!-- v4.46: Segna Parcheggio spostato da Admin (solo owner, nascosto via JS) -->
+<div id="pos-parking-add-row" style="display:none;margin-bottom:12px;">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+        <div style="flex:1;min-width:180px;position:relative;">
+            <input type="text" id="pos-parking-name" placeholder="Nome (opzionale — salva con GPS)..." autocomplete="off" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;">
+            <div id="pos-parking-suggestions" style="display:none;position:absolute;top:100%;left:0;right:0;z-index:9999;background:var(--bg-card);border:1px solid var(--border);border-top:none;border-radius:0 0 8px 8px;max-height:200px;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,0.15);"></div>
+        </div>
+        <select id="pos-parking-rating" style="padding:8px;border:1px solid var(--border);border-radius:8px;">
+            <option value="5">⭐⭐⭐⭐⭐</option>
+            <option value="4">⭐⭐⭐⭐</option>
+            <option value="3" selected>⭐⭐⭐</option>
+            <option value="2">⭐⭐</option>
+            <option value="1">⭐</option>
+        </select>
+        <button type="button" id="pos-parking-btn" class="pos-btn pos-btn-purple">🅿️ Salva</button>
+    </div>
+    <p style="font-size:11px;color:var(--text-muted);margin:4px 0 0;">La posizione GPS attuale verrà salvata automaticamente.</p>
+</div>
 <div id="pos-parking-list"></div>
 </details>
 
@@ -9537,6 +9568,7 @@
     </div>
 </div>
 <div id="weatherRealtime" class="weather-realtime" data-alias-id="pos-weatherRealtime">
+<p class="weather-source"><em>Fonte: Open-Meteo API (tempo reale) + dati climatici storici</em></p>
 <blockquote>
 <p><strong>App consigliate:</strong> <a href="https://www.yr.no" target="_blank" rel="noopener noreferrer">Yr.no</a> (Scandinavia) · <a href="https://www.aemet.es" target="_blank" rel="noopener noreferrer">AEMET</a> (Spagna) · <a href="https://meteofrance.com" target="_blank" rel="noopener noreferrer">Météo-France</a> (Francia)</p>
 </blockquote>
@@ -9686,6 +9718,11 @@
             <span class="altro-setting-label">English</span>
             <span class="altro-setting-value">›</span>
         </a>
+        <button type="button" class="altro-setting-row" id="altro-install-btn" onclick="if(window.qvShowInstallModal)window.qvShowInstallModal();">
+            <span class="altro-setting-icon">📲</span>
+            <span class="altro-setting-label">Installa l'app</span>
+            <span class="altro-setting-value">›</span>
+        </button>
         <button type="button" class="altro-setting-row" onclick="if(window.hardRefresh)window.hardRefresh();else window.location.reload(true);">
             <span class="altro-setting-icon">🔄</span>
             <span class="altro-setting-label">Aggiorna App</span>
@@ -9775,12 +9812,12 @@
 <script>
   if (typeof window.IS_PROD === 'undefined' || window.IS_PROD !== true) {
     var _dbgScript = document.createElement('script');
-    _dbgScript.src = 'debug-overlay.js?v=4.43';
+    _dbgScript.src = 'debug-overlay.js?v=4.46';
     _dbgScript.defer = true;
     document.head.appendChild(_dbgScript);
   }
 </script>
 <!-- Capacitor GPS Bridge (only activates inside native app, ignored in browser) -->
-<script src="capacitor-gps-bridge.js?v=4.43" defer></script>
+<script src="capacitor-gps-bridge.js?v=4.46" defer></script>
 </body>
 </html>

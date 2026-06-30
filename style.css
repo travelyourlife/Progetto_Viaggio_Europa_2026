@@ -2154,6 +2154,25 @@ span[id^="admin-sec"] {
     text-align: left;
     margin-bottom: 20px;
 }
+/* v4.44: device-specific warning banner */
+.install-modal-warn {
+    background: #fff7ed; border: 1px solid #fdba74; color: #9a3412;
+    border-radius: 12px; padding: 10px 14px; margin: 0 0 16px;
+    font-size: 13px; line-height: 1.45; text-align: left;
+}
+/* v4.44: iPhone visual step graphic (Share -> Add to Home -> Add) */
+.install-modal-visual {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    flex-wrap: wrap; margin: 0 0 18px;
+    background: #f0f9ff; border: 1px solid #bfdbfe; border-radius: 12px; padding: 14px 10px;
+}
+.install-visual-step { display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 64px; }
+.install-visual-ico {
+    font-size: 24px; width: 46px; height: 46px; line-height: 46px; text-align: center;
+    background: #fff; border: 1px solid #bfdbfe; border-radius: 12px;
+}
+.install-visual-cap { font-size: 11px; font-weight: 600; color: #1e40af; }
+.install-visual-arrow { font-size: 18px; color: #60a5fa; font-weight: 700; }
 .install-modal-step {
     display: flex;
     align-items: flex-start;

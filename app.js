@@ -457,6 +457,48 @@ window.writeCurrentLocation = function(lat, lng, optCity) {
 // Both Statistics tab and Home hero call this one function.
 // Logic: sum(dailySummaries) + max(todaySummary, live.todayKm) for today.
 // ═════════════════════════════════════════════════════════════
+// v4.46: compute driven km by summing haversine distances between consecutive
+// track points. Works on a points array/object stored at tracks/{day}/points.
+// This is session-independent, so it always reflects the FULL day's track
+// (fixes "Km oggi" showing only the last segment).
+window._kmFromTrackPoints = function(points) {
+  var arr = points;
+  if (!arr) return 0;
+  if (!Array.isArray(arr)) {
+    arr = Object.keys(arr).map(function(k) { return arr[k]; });
+  }
+  // Sort by timestamp so the cumulative distance is computed in order.
+  arr = arr.filter(function(p) { return p && isFinite(p.lat) && isFinite(p.lng); })
+           .sort(function(a, b) { return (a.time || 0) - (b.time || 0); });
+  var km = 0;
+  for (var i = 1; i < arr.length; i++) {
+    km += window._haversineKm(arr[i-1].lat, arr[i-1].lng, arr[i].lat, arr[i].lng);
+  }
+  return km;
+};
+
+// v4.46: global non-destructive daily-summary writer. Reads the existing
+// summary and writes max(incoming.km, existing.km, trackKm) so a session that
+// restarts from 0 can never wipe earlier segments of the same day.
+// `pointsForKm` (optional) is the in-memory track for the day used to derive km.
+window._mergeDailySummary = function(summary, pointsForKm) {
+  if (typeof firebase === 'undefined' || !firebase.database || !FAMILY_ID) return;
+  var date = summary.date || (window.localDateStr ? window.localDateStr() : new Date().toISOString().slice(0,10));
+  var ref = firebase.database().ref('trips/' + FAMILY_ID + '/dailySummaries/' + date);
+  ref.once('value', function(_eSnap) {
+    var existing = _eSnap.val() || {};
+    var trackKm = window._kmFromTrackPoints ? window._kmFromTrackPoints(pointsForKm) : 0;
+    summary.km = Math.max(summary.km || 0, existing.km || 0, trackKm);
+    if ((existing.time || 0) > (summary.time || 0)) summary.time = existing.time;
+    if ((existing.points || 0) > (summary.points || 0)) summary.points = existing.points;
+    if (summary.time > 0) summary.avgSpeed = summary.km / (summary.time / 3600000);
+    if (existing.country) summary.country = existing.country;
+    if (existing.countryCode) summary.countryCode = existing.countryCode;
+    if (existing.odometerKm != null) summary.odometerKm = existing.odometerKm;
+    ref.set(summary);
+  });
+};
+
 window.computeTotalKm = function(callback) {
   if (typeof firebase === 'undefined' || !firebase.database || !FAMILY_ID) {
     // Offline fallback
@@ -502,8 +544,14 @@ window.computeTotalKm = function(callback) {
           }
         }
       });
-      totalKm += Math.max(todaySummaryKm, liveTodayKm);
-      callback(totalKm);
+      // v4.46: also derive today's km from the FULL day track (tracks/{today}/points).
+      // Summing all segments is session-independent and immune to a summary that
+      // was overwritten with only the last session's km.
+      db.ref('trips/' + FAMILY_ID + '/tracks/' + today + '/points').once('value', function(tSnap) {
+        var trackKm = window._kmFromTrackPoints ? window._kmFromTrackPoints(tSnap.val()) : 0;
+        totalKm += Math.max(todaySummaryKm, liveTodayKm, trackKm);
+        callback(totalKm);
+      });
     });
   });
 };
@@ -1298,10 +1346,23 @@ const tripDays = itinerario.map(function(t) {
   };
 });
 
+// v4.46: derive a sortable YYYY-MM-DD key from the DD/MM itinerary date so
+// itinerary stops and custom (free) stops can be merged into one ordered list.
+function _ddmmToSortKey(ddmm) {
+  if (!ddmm || typeof ddmm !== 'string') return '';
+  var m = ddmm.match(/^(\d{1,2})\/(\d{1,2})$/);
+  if (!m) return '';
+  var _ts = (typeof TRIP_START !== 'undefined') ? TRIP_START : new Date(2026, 5, 25);
+  var year = _ts.getFullYear();
+  // Trip spans a single calendar year (Jun→Aug 2026); no year rollover needed.
+  return year + '-' + ('0' + m[2]).slice(-2) + '-' + ('0' + m[1]).slice(-2);
+}
+
 const places = itinerario.map(function(t) {
   return {
     day: isEN ? t.labelEn : t.label,
     date: t.data,
+    sortKey: _ddmmToSortKey(t.data),
     title: isEN ? t.tragittoEn : t.tragitto,
     place: t.mapsLabel.replace('📍 ', '')
   };
@@ -3564,25 +3625,76 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             filter = (filter || '').toLowerCase();
             listContainer.innerHTML = '';
             var count = 0;
+            // v4.46: merge itinerary stops + custom (free) stops into ONE list
+            // ordered chronologically by date, so a stop added on a given day
+            // appears next to that day's itinerary stops.
+            var rows = [];
+            // 1) Itinerary stops
             places.forEach(function(p, idx) {
                 if (filter && p.place.toLowerCase().indexOf(filter) === -1 && p.day.toLowerCase().indexOf(filter) === -1 && p.title.toLowerCase().indexOf(filter) === -1) return;
-                var ci = checkins[idx]; var checked = !!ci;
-                if (checked) count++;
-                var card = document.createElement('div');
-                card.className = 'pos-card' + (checked ? ' pos-done' : '');
-                var html = '<div class="pos-card-header">';
-                html += '<label><input type="checkbox" class="pos-cb" data-idx="' + idx + '"' + (checked ? ' checked' : '') + '> ';
-                html += '<strong>' + p.day + '</strong> · ' + p.date + ' · ' + p.place + '</label>';
-                html += '<button class="pos-nav-btn" data-place="' + encodeURIComponent(p.place) + '" title="' + (isEN ? 'Navigate' : 'Naviga') + '">🧭</button>';
-                html += '</div>';
-                if (ci) {
-                    html += '<div class="pos-card-info">✅ ' + ci.time;
-                    if (ci.lat) html += ' · <a href="https://maps.google.com/?q=' + ci.lat + ',' + ci.lng + '" target="_blank">📍</a>';
-                    if (isOwner) html += ' <button class="pos-del-btn ci-del" data-ciidx="' + idx + '" title="' + (isEN ? 'Uncheck' : 'Rimuovi') + '">🗑️</button>';
+                rows.push({ type: 'itin', idx: idx, p: p, sortKey: p.sortKey || '' });
+            });
+            // 2) Custom (free) stops
+            var _cc = (typeof customCheckins !== 'undefined' && customCheckins) ? customCheckins : {};
+            Object.keys(_cc).forEach(function(ckey) {
+                var item = _cc[ckey] || {};
+                var nm = (item.name || '').toLowerCase();
+                if (filter && nm.indexOf(filter) === -1) return;
+                // item.date is already YYYY-MM-DD (localDateStr); use it directly.
+                rows.push({ type: 'custom', ckey: ckey, item: item, sortKey: item.date || '' });
+            });
+            // 3) Sort by date key ascending (itinerary order). Rows without a key
+            //    (shouldn't happen) sort last but keep stable relative order.
+            rows.sort(function(a, b) {
+                if (!a.sortKey && !b.sortKey) return 0;
+                if (!a.sortKey) return 1;
+                if (!b.sortKey) return -1;
+                return a.sortKey.localeCompare(b.sortKey);
+            });
+            // 4) Render
+            rows.forEach(function(row) {
+                if (row.type === 'itin') {
+                    var p = row.p, idx = row.idx;
+                    var ci = checkins[idx]; var checked = !!ci;
+                    if (checked) count++;
+                    var card = document.createElement('div');
+                    card.className = 'pos-card' + (checked ? ' pos-done' : '');
+                    var html = '<div class="pos-card-header">';
+                    html += '<label><input type="checkbox" class="pos-cb" data-idx="' + idx + '"' + (checked ? ' checked' : '') + '> ';
+                    html += '<strong>' + p.day + '</strong> · ' + p.date + ' · ' + p.place + '</label>';
+                    html += '<button class="pos-nav-btn" data-place="' + encodeURIComponent(p.place) + '" title="' + (isEN ? 'Navigate' : 'Naviga') + '">🧭</button>';
                     html += '</div>';
+                    if (ci) {
+                        html += '<div class="pos-card-info">✅ ' + ci.time;
+                        if (ci.lat) html += ' · <a href="https://maps.google.com/?q=' + ci.lat + ',' + ci.lng + '" target="_blank">📍</a>';
+                        if (isOwner) html += ' <button class="pos-del-btn ci-del" data-ciidx="' + idx + '" title="' + (isEN ? 'Uncheck' : 'Rimuovi') + '">🗑️</button>';
+                        html += '</div>';
+                    }
+                    card.innerHTML = html;
+                    listContainer.appendChild(card);
+                } else {
+                    // Custom (free) stop card — keeps the 📌 marker and delete button.
+                    var item = row.item, ckey = row.ckey;
+                    count++;
+                    var ccard = document.createElement('div');
+                    ccard.className = 'pos-card custom-checkin-card';
+                    var chtml = '<div class="pos-card-header">';
+                    chtml += '<label style="cursor:default;"><strong>📌</strong> ';
+                    // Show the date label (DD/MM) alongside the name for context.
+                    var _dlabel = '';
+                    if (item.date && /^\d{4}-\d{2}-\d{2}$/.test(item.date)) {
+                        _dlabel = item.date.slice(8,10) + '/' + item.date.slice(5,7) + ' · ';
+                    }
+                    chtml += _dlabel + escapeHtml(item.name || '—') + '</label>';
+                    if (item.lat) chtml += '<a class="pos-nav-btn" href="https://maps.google.com/?q=' + item.lat + ',' + item.lng + '" target="_blank" rel="noopener" title="' + (isEN ? 'Open in Google Maps' : 'Apri in Google Maps') + '" style="text-decoration:none;">🗺️</a>';
+                    chtml += '</div>';
+                    chtml += '<div class="pos-card-info">' + escapeHtml(item.time || item.date || '');
+                    if (item.lat) chtml += ' · <a href="https://maps.google.com/?q=' + item.lat + ',' + item.lng + '" target="_blank" style="text-decoration:none;">📍</a>';
+                    if (isOwner) chtml += ' <button class="pos-del-btn cc-del" data-ckey="' + ckey + '" title="' + (isEN ? 'Delete' : 'Elimina') + '">🗑️</button>';
+                    chtml += '</div>';
+                    ccard.innerHTML = chtml;
+                    listContainer.appendChild(ccard);
                 }
-                card.innerHTML = html;
-                listContainer.appendChild(card);
             });
             // Delete handler for check-ins (unchecks the stop)
             listContainer.querySelectorAll('.ci-del[data-ciidx]').forEach(function(btn) {
@@ -3596,8 +3708,25 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                     });
                 });
             });
+            // v4.46: Delete handler for custom (free) stops (now rendered inline)
+            listContainer.querySelectorAll('.cc-del[data-ckey]').forEach(function(btn) {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    var ckey = btn.getAttribute('data-ckey');
+                    showConfirm(isEN ? 'Delete this stop?' : 'Eliminare questa tappa?', function() {
+                        var cRef = getFamilyRef('customCheckins/' + ckey);
+                        if (cRef) cRef.remove();
+                        var local = loadLocal(KEYS.CUSTOM_CHECKINS, {});
+                        delete local[ckey];
+                        saveLocal(KEYS.CUSTOM_CHECKINS, local);
+                        if (typeof customCheckins !== 'undefined') { delete customCheckins[ckey]; }
+                        renderPlaces(document.getElementById('pos-search') ? document.getElementById('pos-search').value : '');
+                    });
+                });
+            });
             var countEl = document.getElementById('pos-checkin-count');
-            if (countEl) countEl.textContent = count + (typeof customCheckins !== 'undefined' && customCheckins ? Object.keys(customCheckins).length : 0);
+            if (countEl) countEl.textContent = count;
         }
         renderPlaces('');
         // Expose for re-render on tab switch
@@ -3906,8 +4035,8 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                 weatherStatsEl.style.display = '';
             });
         }
-        // Call weather stats on load
-        loadWeatherStats();
+        // v4.45: "Trip weather" widget removed (inconsistent weatherLog data) — call disabled
+        // loadWeatherStats();
 
         // ─── Map ───
         function initMap() {
@@ -4405,13 +4534,23 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                 if (liveActive && todayKm > 0) {
                     totalKmDisplay.textContent = todayKm.toFixed(0) + ' km';
                 } else {
-                    // Read today's km from dailySummaries
+                    // v4.46: today's km = max(dailySummary, full-day track sum).
+                    // The track sum is session-independent so it shows the FULL
+                    // day even if the summary only captured the last segment.
                     var _todayKmRef = getFamilyRef('dailySummaries/' + todayStr());
+                    var _todayTrackRef = getFamilyRef('tracks/' + todayStr() + '/points');
                     if (_todayKmRef) {
                         _todayKmRef.once('value', function(snap) {
                             var s = snap.val();
-                            var kmToday = s ? (s.odometerKm != null ? s.odometerKm : (s.km || 0)) : 0;
-                            totalKmDisplay.textContent = Math.round(kmToday) + ' km';
+                            var summaryKm = s ? (s.odometerKm != null ? s.odometerKm : (s.km || 0)) : 0;
+                            if (_todayTrackRef) {
+                                _todayTrackRef.once('value', function(tSnap) {
+                                    var trackKm = window._kmFromTrackPoints ? window._kmFromTrackPoints(tSnap.val()) : 0;
+                                    totalKmDisplay.textContent = Math.round(Math.max(summaryKm, trackKm)) + ' km';
+                                });
+                            } else {
+                                totalKmDisplay.textContent = Math.round(summaryKm) + ' km';
+                            }
                         });
                     }
                 }
@@ -4773,15 +4912,13 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                 if (!liveActive || todayKm <= 0) return;
                 var sessionElapsed = Date.now() - (liveStartTime || Date.now());
                 var totalElapsed = _prevElapsed + sessionElapsed;
-                var summary = {
+                _saveDailySummaryMerge({
                     km: todayKm,
                     time: totalElapsed,
                     avgSpeed: totalElapsed > 0 ? (todayKm / (totalElapsed / 3600000)) : 0,
                     points: todayPoints.length,
                     date: todayStr()
-                };
-                var autoSaveRef = getFamilyRef('dailySummaries/' + todayStr());
-                if (autoSaveRef) autoSaveRef.set(summary);
+                });
                 // v3.66 FIX: refresh stats display so km card stays current
                 updateStats();
                 _qvLog.info('[Tracking] Auto-saved dailySummary:', todayKm.toFixed(1), 'km');
@@ -4815,20 +4952,24 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             }, 1200);
         }
 
+        // v4.46: Non-destructive daily-summary writer (delegates to the global
+        // window._mergeDailySummary). Never lowers the day's km.
+        function _saveDailySummaryMerge(summary) {
+            if (window._mergeDailySummary) window._mergeDailySummary(summary, todayPoints);
+        }
+
         // ─── Save on background/close (prevents data loss) ───
         function _emergencySave() {
             if (!liveActive || todayKm <= 0) return;
             var sessionElapsed = Date.now() - (liveStartTime || Date.now());
             var totalElapsed = _prevElapsed + sessionElapsed;
-            var summary = {
+            _saveDailySummaryMerge({
                 km: todayKm,
                 time: totalElapsed,
                 avgSpeed: totalElapsed > 0 ? (todayKm / (totalElapsed / 3600000)) : 0,
                 points: todayPoints.length,
                 date: todayStr()
-            };
-            var saveRef = getFamilyRef('dailySummaries/' + todayStr());
-            if (saveRef) saveRef.set(summary);
+            });
         }
         // v2.58: GPS emergency-save on background. Distinct from stats-interval pause
         // listener in the Statistics IIFE (different module, different purpose).
@@ -5073,25 +5214,41 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                     date: todayStr()
                 };
                 var sumRef = getFamilyRef('dailySummaries/' + todayStr());
-                if (sumRef) sumRef.set(summary);
-
-                // v3.93: Save country in dailySummary using offline lookup (+ Nominatim fallback)
-                if (todayPoints.length > 0) {
-                    var _lastPtGeo = todayPoints[todayPoints.length - 1];
-                    var _offlineCountry = getCountryFromCoords(_lastPtGeo.lat, _lastPtGeo.lng);
-                    if (_offlineCountry) {
-                        sumRef.update({ country: isEN ? _offlineCountry.name : _offlineCountry.nameIt, countryCode: _offlineCountry.code });
-                    } else {
-                        // Fallback: Nominatim for countries not in lookup table
-                        var _geoUrl = 'https://nominatim.openstreetmap.org/reverse?format=json&lat=' + _lastPtGeo.lat + '&lon=' + _lastPtGeo.lng + '&zoom=5&accept-language=' + (isEN ? 'en' : 'it');
-                        fetch(_geoUrl).then(function(r) { return r.json(); }).then(function(data) {
-                            if (data && data.address) {
-                                var cc = (data.address.country_code || '').toUpperCase();
-                                var cn = data.address.country || '';
-                                if (cc && sumRef) sumRef.update({ country: cn, countryCode: cc });
+                // v4.46: NON-DESTRUCTIVE save — never let a new session lower the
+                // day's total km. Take max(existing, current session, full track).
+                // Country is written via update() AFTER the set() to avoid races.
+                if (sumRef) {
+                    sumRef.once('value', function(_eSnap) {
+                        var existing = _eSnap.val() || {};
+                        var existingKm = existing.km || 0;
+                        var trackKm = window._kmFromTrackPoints ? window._kmFromTrackPoints(todayPoints) : 0;
+                        summary.km = Math.max(todayKm, existingKm, trackKm);
+                        // Keep the larger elapsed/points too, so stats stay coherent.
+                        if ((existing.time || 0) > summary.time) summary.time = existing.time;
+                        if ((existing.points || 0) > summary.points) summary.points = existing.points;
+                        if (summary.time > 0) summary.avgSpeed = summary.km / (summary.time / 3600000);
+                        // Preserve an already-saved country if present.
+                        if (existing.country) summary.country = existing.country;
+                        if (existing.countryCode) summary.countryCode = existing.countryCode;
+                        sumRef.set(summary).then(function() {
+                            // v3.93: Save country (offline lookup + Nominatim fallback)
+                            if (todayPoints.length === 0) return;
+                            var _lastPtGeo = todayPoints[todayPoints.length - 1];
+                            var _offlineCountry = getCountryFromCoords(_lastPtGeo.lat, _lastPtGeo.lng);
+                            if (_offlineCountry) {
+                                sumRef.update({ country: isEN ? _offlineCountry.name : _offlineCountry.nameIt, countryCode: _offlineCountry.code });
+                            } else {
+                                var _geoUrl = 'https://nominatim.openstreetmap.org/reverse?format=json&lat=' + _lastPtGeo.lat + '&lon=' + _lastPtGeo.lng + '&zoom=5&accept-language=' + (isEN ? 'en' : 'it');
+                                fetch(_geoUrl).then(function(r) { return r.json(); }).then(function(data) {
+                                    if (data && data.address) {
+                                        var cc = (data.address.country_code || '').toUpperCase();
+                                        var cn = data.address.country || '';
+                                        if (cc && sumRef) sumRef.update({ country: cn, countryCode: cc });
+                                    }
+                                }).catch(function() {});
                             }
-                        }).catch(function() {});
-                    }
+                        });
+                    });
                 }
             }
 
@@ -5537,16 +5694,22 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             setupAutocomplete('pos-parking-name', 'pos-parking-suggestions');
         })();
 
+        // v4.46: custom (free) stops are now rendered INLINE inside the unified
+        // Tappe list (see renderPlaces). This listener only keeps the
+        // customCheckins data fresh and triggers a re-render of that list.
         var _customCheckinsRef = null;
+        function _refreshUnifiedStops() {
+            var _search = document.getElementById('pos-search');
+            if (typeof window._renderPosPlaces === 'function') {
+                window._renderPosPlaces(_search ? _search.value : '');
+            }
+        }
         function renderCustomCheckins() {
-            var container = document.getElementById('pos-custom-list');
-            if (!container) return;
             var ref = getFamilyRef('customCheckins');
             if (!ref) {
                 // Fallback: read from localStorage
-                var local = loadLocal(KEYS.CUSTOM_CHECKINS, {});
-                customCheckins = local;
-                renderCustomList(container, local);
+                customCheckins = loadLocal(KEYS.CUSTOM_CHECKINS, {});
+                _refreshUnifiedStops();
                 return;
             }
             if (_customCheckinsRef) _customCheckinsRef.off('value'); // v4.02: cleanup previous listener
@@ -5556,44 +5719,8 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                 customCheckins = data;
                 // Sync to localStorage
                 saveLocal(KEYS.CUSTOM_CHECKINS, data);
-                renderCustomList(container, data);
+                _refreshUnifiedStops();
                 updateMapMarkers();
-            });
-        }
-
-        function renderCustomList(container, data) {
-            var arr = Object.entries(data).sort(function(a,b) { return b[0] - a[0]; });
-            container.innerHTML = '';
-            var countEl = document.getElementById('pos-custom-count');
-            if (countEl) countEl.textContent = arr.length;
-            arr.forEach(function(entry) {
-                var key = entry[0]; var item = entry[1];
-                var card = document.createElement('div');
-                card.className = 'custom-checkin-card';
-                var html = '<div class="cc-info">';
-                html += '<div class="cc-name">📌 ' + escapeHtml(item.name || '—');
-                // v3.41: prominent Google Maps link for each check-in
-                if (item.lat) html += ' <a href="https://maps.google.com/?q=' + item.lat + ',' + item.lng + '" target="_blank" rel="noopener" style="font-size:13px;text-decoration:none;" title="' + (isEN ? 'Open in Google Maps' : 'Apri in Google Maps') + '">🗺️</a>';
-                html += '</div>';
-                html += '<div class="cc-meta">' + escapeHtml(item.time || item.date || '');
-                if (item.lat) html += ' · <a href="https://maps.google.com/?q=' + item.lat + ',' + item.lng + '" target="_blank" style="text-decoration:none;">📍</a>';
-                html += '</div></div>';
-                if (isOwner) html += '<button class="cc-del" data-ckey="' + key + '" title="' + (isEN ? 'Delete' : 'Elimina') + '">🗑️</button>';
-                card.innerHTML = html;
-                container.appendChild(card);
-            });
-            // Delete handlers
-            container.querySelectorAll('.cc-del[data-ckey]').forEach(function(btn) {
-                btn.addEventListener('click', function() {
-                    var ckey = btn.getAttribute('data-ckey');
-                    showConfirm(isEN ? 'Delete this stop?' : 'Eliminare questa tappa?', function() {
-                        var cRef = getFamilyRef('customCheckins/' + ckey);
-                        if (cRef) cRef.remove();
-                        var local = loadLocal(KEYS.CUSTOM_CHECKINS, {});
-                        delete local[ckey];
-                        saveLocal(KEYS.CUSTOM_CHECKINS, local);
-                    });
-                });
             });
         }
         renderCustomCheckins();
@@ -6050,6 +6177,9 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             // Show custom stop add row for owners
             var customAddRow = document.getElementById('pos-custom-add-row');
             if (customAddRow) customAddRow.style.display = effectiveOwner ? '' : 'none';
+            // v4.46: Mark-parking box (moved from Admin to Live) — owner only
+            var parkingAddRow = document.getElementById('pos-parking-add-row');
+            if (parkingAddRow) parkingAddRow.style.display = effectiveOwner ? '' : 'none';
             // v2.16: All owners can start/stop tracking (conflict check in startLive)
             if (startBtn) startBtn.style.display = effectiveOwner ? '' : 'none';
             if (stopBtn && !liveActive) stopBtn.style.display = 'none';
@@ -6287,15 +6417,13 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                 if (!liveActive || todayKm <= 0) return;
                 var sessionElapsed = Date.now() - (liveStartTime || Date.now());
                 var totalElapsed = _prevElapsed + sessionElapsed;
-                var summary = {
+                if (window._mergeDailySummary) window._mergeDailySummary({
                     km: todayKm,
                     time: totalElapsed,
                     avgSpeed: totalElapsed > 0 ? (todayKm / (totalElapsed / 3600000)) : 0,
                     points: todayPoints.length,
                     date: todayStr()
-                };
-                var autoSaveRef = getFamilyRef('dailySummaries/' + todayStr());
-                if (autoSaveRef) autoSaveRef.set(summary);
+                }, todayPoints);
                 // v3.66 FIX: refresh stats display so km card stays current
                 updateStats();
                 _qvLog.info('[Tracking] Auto-saved dailySummary (resume):', todayKm.toFixed(1), 'km');
@@ -6353,9 +6481,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             window._autoSaveTimer = setInterval(function() {
                 if (!liveActive) return;
                 var totalElapsed = Date.now() - (liveStartTime || Date.now());
-                var summary = { km: todayKm, time: totalElapsed, points: todayPoints.length, date: todayStr() };
-                var autoSaveRef = getFamilyRef('dailySummaries/' + todayStr());
-                if (autoSaveRef) autoSaveRef.set(summary);
+                if (window._mergeDailySummary) window._mergeDailySummary({ km: todayKm, time: totalElapsed, points: todayPoints.length, date: todayStr() }, todayPoints);
                 // v3.66 FIX: refresh stats display so km card stays current
                 updateStats();
             }, 5 * 60 * 1000);
@@ -8631,6 +8757,31 @@ async function fetchForecast(lat, lon, date, _retry) {
         var stepsHtml = '';
         var hasNativeInstall = !!deferredPrompt;
 
+        // v4.44: device-specific warning banner (shown above the steps)
+        var warnHtml = '';
+        if (isIOS && !isSafari) {
+            // On iOS the only browser that can install to Home is Safari
+            warnHtml = '<div class="install-modal-warn">' + (isEN
+                ? '\u26A0\uFE0F On iPhone/iPad you must use <strong>Safari</strong> to install the app. Copy the link below and open it in Safari.'
+                : '\u26A0\uFE0F Su iPhone/iPad devi usare <strong>Safari</strong> per installare l\'app. Copia il link qui sotto e aprilo in Safari.') + '</div>';
+        } else if (isFirefox && !isIOS) {
+            warnHtml = '<div class="install-modal-warn">' + (isEN
+                ? '\u26A0\uFE0F Firefox can\'t install apps well. Open this page in <strong>Chrome</strong> or <strong>Edge</strong>.'
+                : '\u26A0\uFE0F Firefox non installa bene le app. Apri questa pagina in <strong>Chrome</strong> o <strong>Edge</strong>.') + '</div>';
+        }
+
+        // v4.44: visual step graphic for iPhone Safari (makes the "ostico" flow obvious)
+        var visualHtml = '';
+        if (isIOS && isSafari) {
+            visualHtml = '<div class="install-modal-visual">'
+                + '<div class="install-visual-step"><span class="install-visual-ico">\u25A1\u2191</span><span class="install-visual-cap">' + (isEN ? 'Share' : 'Condividi') + '</span></div>'
+                + '<span class="install-visual-arrow">\u2192</span>'
+                + '<div class="install-visual-step"><span class="install-visual-ico">\u2795</span><span class="install-visual-cap">' + (isEN ? 'Add to Home' : 'Aggiungi a Home') + '</span></div>'
+                + '<span class="install-visual-arrow">\u2192</span>'
+                + '<div class="install-visual-step"><span class="install-visual-ico">\u2705</span><span class="install-visual-cap">' + (isEN ? 'Add' : 'Aggiungi') + '</span></div>'
+                + '</div>';
+        }
+
         if (hasNativeInstall) {
             // Chrome/Edge/Samsung — one-tap install
             stepsHtml = stepRow('\u2705', isEN
@@ -8713,7 +8864,8 @@ async function fetchForecast(lat, lon, date, _retry) {
         var btnHtml = '';
         if (hasNativeInstall) {
             btnHtml = '<button class="install-modal-btn install-modal-primary">' + (isEN ? 'Install Now' : 'Installa Ora') + '</button>';
-        } else if (isIOS && !isSafari && !isChromeIOS && !isEdgeIOS && !isFirefoxIOS) {
+        } else {
+            // v4.44: Copy link is always useful (share via WhatsApp, open in Safari, etc.)
             btnHtml = '<button class="install-modal-btn install-modal-primary" data-action="copy-link">' + (isEN ? 'Copy Link' : 'Copia Link') + '</button>';
         }
         btnHtml += '<button class="install-modal-btn install-modal-secondary">' + (isEN ? 'Later' : 'Dopo') + '</button>';
@@ -8722,6 +8874,8 @@ async function fetchForecast(lat, lon, date, _retry) {
             + '<div class="install-modal-icon">\uD83D\uDCF2</div>'
             + '<h2 class="install-modal-title">' + title + '</h2>'
             + '<p class="install-modal-subtitle">' + subtitle + '</p>'
+            + warnHtml
+            + visualHtml
             + '<div class="install-modal-steps">' + stepsHtml + '</div>'
             + '<div class="install-modal-actions">' + btnHtml + '</div>';
 
@@ -8818,6 +8972,23 @@ async function fetchForecast(lat, lon, date, _retry) {
         var modalEl = document.querySelector('.install-modal-overlay');
         if (modalEl) modalEl.remove();
     });
+
+    // v4.44: expose the (enhanced) install modal so it can be reopened on demand
+    // from the "More" menu and the follower welcome box — reuses all existing
+    // detection/branching logic. Works even on iOS where beforeinstallprompt
+    // never fires. We pass through the current deferredPrompt when available.
+    window.qvShowInstallModal = function() {
+        // If already installed, gently inform instead of showing install steps.
+        var _std = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+        if (_std) {
+            if (window.showToast) showToast(isEN ? '✅ App already installed' : '✅ App già installata', 'success');
+            return;
+        }
+        // Remove any existing overlay first so it always reopens cleanly.
+        var existing = document.querySelector('.install-modal-overlay');
+        if (existing) existing.remove();
+        showInstallModal();
+    };
 })();
 
 
