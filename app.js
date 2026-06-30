@@ -1728,13 +1728,14 @@ function initRouteMap() {
             });
 
             Promise.all(_rmFetch).then(function(allDaysPoints) {
-                var fillPromises = allDaysPoints.map(function(dayPoints) {
-                    if (!dayPoints || dayPoints.length < 2) return Promise.resolve([]);
-                    return (window._fillGapsOSRM ? window._fillGapsOSRM(dayPoints)
-                        : Promise.resolve(dayPoints.map(function(p) { return [p.lat, p.lng]; })));
-                });
-                return Promise.all(fillPromises);
-            }).then(function(allDaysLatLngs) {
+                // v4.32: flatten all days into ONE chronological list and gap-fill
+                // once, so jumps between consecutive days are bridged via OSRM too
+                // (no more holes at day boundaries). Single continuous polyline.
+                var flatPoints = window._flattenDaysForFill ? window._flattenDaysForFill(allDaysPoints)
+                    : [].concat.apply([], allDaysPoints || []);
+                return (window._fillGapsOSRM ? window._fillGapsOSRM(flatPoints)
+                    : Promise.resolve(flatPoints.map(function(p) { return [p.lat, p.lng]; })));
+            }).then(function(continuousLatLngs) {
                 if (!routeMapInstance) return;
                 // Cleanup anti-duplicati (in case this ran again meanwhile)
                 if (Array.isArray(window._routeMapTrackLines)) {
@@ -1744,14 +1745,13 @@ function initRouteMap() {
                 }
                 window._routeMapTrackLines = [];
 
-                allDaysLatLngs.forEach(function(latlngs) {
-                    if (!latlngs || latlngs.length < 2) return;
+                if (continuousLatLngs && continuousLatLngs.length > 1) {
                     var line = L.polyline(
-                        latlngs,
+                        continuousLatLngs,
                         { color: '#e53e3e', weight: 4, opacity: 0.75, lineJoin: 'round' }
                     ).addTo(routeMapInstance);
                     window._routeMapTrackLines.push(line);
-                });
+                }
 
                 // v4.31: keep historical tracks visible at low zoom (European scale).
                 // Thicken on zoom-out, thin on zoom-in, mirroring the Live map.
@@ -4145,25 +4145,25 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             });
 
             Promise.all(promises).then(function(allDaysPoints) {
-                // v4.27 (Spec Fix 3): fill GPS gaps on-the-fly via OSRM before drawing,
-                // producing one CONTINUOUS polyline per day (no dashArray).
-                var fillPromises = allDaysPoints.map(function(dayPoints) {
-                    return (window._fillGapsOSRM ? window._fillGapsOSRM(dayPoints)
-                        : Promise.resolve(dayPoints.map(function(p) { return [p.lat, p.lng]; })));
-                });
-                return Promise.all(fillPromises).then(function(allDaysLatLngs) {
+                // v4.32: concatenate ALL days into ONE chronological point list,
+                // then gap-fill once via OSRM. This bridges both intra-day GPS
+                // gaps AND the jumps between the end of one day and the start of
+                // the next (previously left as holes / green-only segments).
+                var flatPoints = window._flattenDaysForFill ? window._flattenDaysForFill(allDaysPoints)
+                    : [].concat.apply([], allDaysPoints || []);
+                var fillPromise = (window._fillGapsOSRM ? window._fillGapsOSRM(flatPoints)
+                    : Promise.resolve(flatPoints.map(function(p) { return [p.lat, p.lng]; })));
+                return fillPromise.then(function(continuousLatLngs) {
                     // Cleanup anti-duplicati (in case it ran again)
                     _historicalTrackLines.forEach(function(line) { map.removeLayer(line); });
                     _historicalTrackLines = [];
 
-                    allDaysLatLngs.forEach(function(dayLatLngs) {
-                        if (dayLatLngs && dayLatLngs.length > 1) {
-                            var line = L.polyline(dayLatLngs, {
-                                color: '#e53e3e', weight: 4, opacity: 0.75
-                            }).addTo(map);
-                            _historicalTrackLines.push(line);
-                        }
-                    });
+                    if (continuousLatLngs && continuousLatLngs.length > 1) {
+                        var line = L.polyline(continuousLatLngs, {
+                            color: '#e53e3e', weight: 4, opacity: 0.75
+                        }).addTo(map);
+                        _historicalTrackLines.push(line);
+                    }
 
                     // v4.31: keep historical tracks visible at low zoom (European scale).
                     // At z<=6 a 3-4px line disappears; thicken on zoom-out, thin on zoom-in.
@@ -7334,6 +7334,71 @@ function _fillGapsOSRM(points) {
 }
 window._fillGapsOSRM = _fillGapsOSRM;
 window._linearInterp = _linearInterp;
+
+// ─── v4.32: Flatten per-day points into ONE chronological array ───
+// Previously each day was gap-filled and drawn as a separate polyline, so the
+// jump between the LAST GPS point of day N and the FIRST point of day N+1 was
+// never bridged — leaving visible holes (planned green line only) at day
+// boundaries. We now concatenate all days in order into a single point list
+// and feed it to _fillGapsOSRM once, so inter-day jumps are treated exactly
+// like intra-day GPS gaps and reconstructed via OSRM road geometry.
+// `allDaysPoints` is an array (one entry per day) of point arrays, already in
+// chronological day order. Returns one flat array of {lat,lng,...} points.
+function _flattenDaysForFill(allDaysPoints) {
+    var flat = [];
+    (allDaysPoints || []).forEach(function(dayPoints) {
+        if (!dayPoints || !dayPoints.length) return;
+        dayPoints.forEach(function(p) {
+            if (p && typeof p.lat === 'number' && typeof p.lng === 'number') flat.push(p);
+        });
+    });
+    return flat;
+}
+window._flattenDaysForFill = _flattenDaysForFill;
+
+// ─── v4.33: Resolve the CORRECT coordinates for a diary entry's weather ───
+// Bug: the diary weather button fell back to hardcoded Verona (45.39, 11.85)
+// whenever live GPS (_lastKnownLat/Lng) was not available, so entries far from
+// Italy (e.g. Riga) got Italian weather ("36°/26°C"). This resolver picks the
+// right location with clear priority and NO silent Italy fallback:
+//   1) the planned stop for the entry's date (TRIP_COORDS[dayIndex]) — most
+//      reliable for past days, always matches where the trip actually was;
+//   2) live GPS (_lastKnownLat/Lng) — only used when it is close to that
+//      planned stop (or when no planned stop exists), i.e. "weather here now";
+// Returns {lat,lng,source} or null when it cannot determine a real location.
+function _resolveWeatherCoords(entry) {
+    var TC = (typeof TRIP_COORDS !== 'undefined') ? TRIP_COORDS : null;
+    var planned = null, dayIdx = -1;
+    // Map the entry date -> trip day index -> planned stop coordinates.
+    if (TC && entry && entry.date) {
+        var start = (typeof TRIP_START !== 'undefined') ? TRIP_START : new Date(2026, 5, 25);
+        var d = new Date(entry.date + 'T12:00:00');
+        if (!isNaN(d.getTime())) {
+            dayIdx = Math.floor((d - new Date(start.getFullYear(), start.getMonth(), start.getDate())) / 86400000);
+            if (dayIdx >= 0 && dayIdx < TC.length && TC[dayIdx] && typeof TC[dayIdx].lat === 'number') {
+                planned = { lat: TC[dayIdx].lat, lng: TC[dayIdx].lng, source: 'planned' };
+            }
+        }
+    }
+    var gpsLat = window._lastKnownLat, gpsLng = window._lastKnownLng;
+    var hasGps = (typeof gpsLat === 'number' && typeof gpsLng === 'number');
+    // Prefer live GPS only when there is no planned stop, or when GPS is plausibly
+    // at that planned stop (< 80 km). This makes "current weather" precise for
+    // today while preventing a stale Italian GPS from polluting a Riga entry.
+    if (hasGps && planned) {
+        var R = 6371, toR = Math.PI / 180;
+        var dLat = (planned.lat - gpsLat) * toR, dLng = (planned.lng - gpsLng) * toR;
+        var a = Math.sin(dLat/2)*Math.sin(dLat/2) +
+                Math.cos(gpsLat*toR)*Math.cos(planned.lat*toR)*Math.sin(dLng/2)*Math.sin(dLng/2);
+        var dist = 2 * R * Math.asin(Math.sqrt(a));
+        if (dist <= 80) return { lat: gpsLat, lng: gpsLng, source: 'gps' };
+        return planned;
+    }
+    if (planned) return planned;
+    if (hasGps) return { lat: gpsLat, lng: gpsLng, source: 'gps' };
+    return null; // no reliable location — caller must NOT silently use Italy
+}
+window._resolveWeatherCoords = _resolveWeatherCoords;
 
 // ─── METEO (Live Weather from Open-Meteo) ───
 (function() {
@@ -14268,6 +14333,8 @@ window.injectAllWikiLinks = function() {
     // v2.14: Respect role simulation for realistic preview
     var effectiveOwner = asOwner && !window._simRole;
     if (addEntryBtn) addEntryBtn.style.display = effectiveOwner ? '' : 'none';
+    var _fixBtn0 = document.getElementById('diario-fix-weather');
+    if (_fixBtn0) _fixBtn0.style.display = effectiveOwner ? '' : 'none';
     loadTimeline();
     // v2.64 FIX: client-side auto-publish for expired scheduled posts
     // CF publishScheduledPosts handles this server-side but may not be deployed yet.
@@ -14320,6 +14387,8 @@ window.injectAllWikiLinks = function() {
         contentEl.style.display = '';
         // v3.26 FIX: Show add-entry button for owner (was missing)
         if (addEntryBtn) addEntryBtn.style.display = (window._simRole) ? 'none' : '';
+        var _fixBtn1 = document.getElementById('diario-fix-weather');
+        if (_fixBtn1) _fixBtn1.style.display = (window._simRole) ? 'none' : '';
         if (typeof loadTimeline === 'function') loadTimeline();
       } else {
         checkDiarioAccess(effectiveUser);
@@ -14353,6 +14422,8 @@ window.injectAllWikiLinks = function() {
           contentEl.style.display = '';
           // v3.26 FIX: Show add-entry button for owner on tab switch
           if (addEntryBtn) addEntryBtn.style.display = (window._simRole) ? 'none' : '';
+          var _fixBtn2 = document.getElementById('diario-fix-weather');
+          if (_fixBtn2) _fixBtn2.style.display = (window._simRole) ? 'none' : '';
           if (typeof loadTimeline === 'function') loadTimeline();
         } else {
           checkDiarioAccess(user);
@@ -14707,8 +14778,32 @@ window.injectAllWikiLinks = function() {
         html += '</div>';
       });
 
+      // v4.34: preserve which comment sections are open across the full re-render
+      // (the listener fires on any change, incl. comment reactions, and rebuilds
+      // innerHTML — without this the comments box would snap shut and a reaction
+      // would look like it did nothing).
+      var _openCommentKeys = [];
+      try {
+        var _openNow = timelineEl.querySelectorAll('.diario-comments.open');
+        for (var _oi = 0; _oi < _openNow.length; _oi++) {
+          var _ok = _openNow[_oi].getAttribute('data-key');
+          if (_ok) _openCommentKeys.push(_ok);
+        }
+      } catch (e) {}
+      var _prevScroll = (typeof window !== 'undefined') ? (window.pageYOffset || document.documentElement.scrollTop || 0) : 0;
+
       timelineEl.innerHTML = html;
       bindEntryActions();
+
+      // v4.34: restore open comment sections after the re-render
+      _openCommentKeys.forEach(function(_ok) {
+        var _box = timelineEl.querySelector('.diario-comments[data-key="' + _ok + '"]');
+        if (_box) _box.classList.add('open');
+      });
+      // v4.34: avoid a visual jump when the timeline rebuilds while the user is reading
+      if (_openCommentKeys.length && _prevScroll > 0 && typeof window !== 'undefined') {
+        try { window.scrollTo(0, _prevScroll); } catch (e) {}
+      }
       // v3.67: loadDiaryWeather removed — weather now from entry.weatherData
     };
     // Register for cleanup on tab switch
@@ -14923,7 +15018,7 @@ window.injectAllWikiLinks = function() {
         if (em) cReactCounts[em] = (cReactCounts[em] || 0) + 1;
       });
       out += '<div class="diario-comment-reactions" style="display:flex;align-items:center;gap:4px;margin-top:3px;padding-left:4px;">';
-      var COMMENT_EMOJIS = ['\uD83D\uDC4D', '\u2764\uFE0F', '\uD83D\uDE0D', '\uD83D\uDD25', '\uD83D\uDE2E'];
+      var COMMENT_EMOJIS = REACTION_EMOJIS; // v4.34: same emoji set as post reactions
       if (Object.keys(cReactCounts).length > 0) {
         Object.keys(cReactCounts).forEach(function(em) {
           var isMyR = (em === myCReact);
@@ -14954,6 +15049,7 @@ window.injectAllWikiLinks = function() {
       return ref.set({ emoji: emoji, timestamp: firebase.database.ServerValue.TIMESTAMP });
     }).catch(function(err) {
       console.warn('[Diario] Comment reaction failed:', err.message);
+      if (window.showToast) showToast(isEN ? 'Could not save reaction' : 'Impossibile salvare la reazione', 'danger');
     });
   }
 
@@ -15139,7 +15235,7 @@ window.injectAllWikiLinks = function() {
       if (cReactAdd) {
         var addParts = cReactAdd.getAttribute('data-comment-react-add').split('|');
         if (addParts.length === 2) {
-          var CEMOJIS = ['\uD83D\uDC4D', '\u2764\uFE0F', '\uD83D\uDE0D', '\uD83D\uDD25', '\uD83D\uDE2E'];
+          var CEMOJIS = REACTION_EMOJIS; // v4.34: same emoji set as post reactions
           // Show mini picker inline
           var existing = cReactAdd.parentElement.querySelector('.comment-react-picker');
           if (existing) { existing.remove(); return; }
@@ -16057,12 +16153,23 @@ window.injectAllWikiLinks = function() {
       }
       _renderWeatherChip();
       _weatherBtn.addEventListener('click', function() {
+        // v4.33: resolve the correct location for THIS entry (planned stop for its
+        // date, or nearby live GPS) instead of silently defaulting to Verona.
+        var _entryDateVal = (overlay.querySelector('#diario-edit-date').value || entry.date || '');
+        var _coords = window._resolveWeatherCoords ? window._resolveWeatherCoords({ date: _entryDateVal, customStops: _editStops }) : null;
+        if (!_coords) {
+          if (window.showToast) showToast(isEN ? '❌ Cannot determine location for this entry' : '❌ Posizione non determinabile per questa voce', 'error');
+          return;
+        }
         _weatherBtn.textContent = isEN ? 'Loading...' : 'Caricamento...';
         _weatherBtn.disabled = true;
-        var lat = window._lastKnownLat || 45.39;
-        var lng = window._lastKnownLng || 11.85;
+        var lat = _coords.lat;
+        var lng = _coords.lng;
+        // Use the entry's own date so the weather matches the day being edited
+        // (past days return real reanalysis from this same endpoint).
+        var _dateParam = _entryDateVal ? ('&start_date=' + _entryDateVal + '&end_date=' + _entryDateVal) : '&forecast_days=1';
         var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + lat + '&longitude=' + lng +
-          '&daily=temperature_2m_max,temperature_2m_min,weathercode,sunrise,sunset,precipitation_sum,windspeed_10m_max&timezone=auto&forecast_days=1';
+          '&daily=temperature_2m_max,temperature_2m_min,weathercode,sunrise,sunset,precipitation_sum,windspeed_10m_max&timezone=auto' + _dateParam;
         fetchWithTimeout(url, {}, 8000).then(function(r) { return r.json(); }).then(function(data) {
           var d = data.daily;
           var rise = new Date(d.sunrise[0]);
@@ -16174,6 +16281,71 @@ window.injectAllWikiLinks = function() {
       var _pubBtn = overlay.querySelector('.diario-edit-publish');
       if (_pubBtn) _pubBtn.addEventListener('click', function() { _doDiarioSave(true); });
     });
+  }
+
+  // ─── v4.33: Repair weather on existing diary entries ───
+  // Re-resolves the correct coordinates for every entry that already has
+  // weatherData and refetches the REAL weather for that entry's date, fixing
+  // entries that were saved with the wrong (Verona) location.
+  function repairDiaryWeather(btn) {
+    if (!isOwner) { if (window.showToast) showToast(isEN ? '\ud83d\udd12 Owner only.' : '\ud83d\udd12 Solo organizzatori.', 'info'); return; }
+    if (typeof firebase === 'undefined' || !firebase.database) return;
+    var origLabel = btn ? btn.textContent : '';
+    if (btn) { btn.disabled = true; btn.textContent = isEN ? 'Fixing weather...' : 'Correggo meteo...'; }
+    var ref = firebase.database().ref('trips/' + FAMILY_ID + '/diary');
+    ref.once('value').then(function(snap) {
+      var entries = snap.val() || {};
+      var keys = Object.keys(entries).filter(function(k) { return entries[k] && entries[k].weatherData; });
+      if (!keys.length) {
+        if (window.showToast) showToast(isEN ? 'No weather to fix.' : 'Nessun meteo da correggere.', 'info');
+        if (btn) { btn.disabled = false; btn.textContent = origLabel; }
+        return;
+      }
+      var fixed = 0, processed = 0;
+      // Process sequentially to stay gentle on the weather API.
+      var chain = Promise.resolve();
+      keys.forEach(function(k) {
+        chain = chain.then(function() {
+          var entry = entries[k];
+          var dateVal = entry.date || '';
+          var coords = window._resolveWeatherCoords ? window._resolveWeatherCoords({ date: dateVal, customStops: entry.customStops }) : null;
+          if (!coords || !dateVal) { processed++; return; }
+          var dp = '&start_date=' + dateVal + '&end_date=' + dateVal;
+          var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + coords.lat + '&longitude=' + coords.lng +
+            '&daily=temperature_2m_max,temperature_2m_min,weathercode,sunrise,sunset,precipitation_sum,windspeed_10m_max&timezone=auto' + dp;
+          return fetchWithTimeout(url, {}, 8000).then(function(r) { return r.json(); }).then(function(data) {
+            processed++;
+            var d = data && data.daily;
+            if (!d || !d.temperature_2m_max || d.temperature_2m_max[0] == null) return;
+            var rise = d.sunrise ? new Date(d.sunrise[0]) : null;
+            var set = d.sunset ? new Date(d.sunset[0]) : null;
+            var newW = {
+              icon: weatherCodeToIconDiary(d.weathercode[0]),
+              high: Math.round(d.temperature_2m_max[0]),
+              low: Math.round(d.temperature_2m_min[0]),
+              precip: d.precipitation_sum ? parseFloat(d.precipitation_sum[0].toFixed(1)) : 0,
+              wind: d.windspeed_10m_max ? Math.round(d.windspeed_10m_max[0]) : 0,
+              sunrise: rise ? (rise.getHours().toString().padStart(2,'0') + ':' + rise.getMinutes().toString().padStart(2,'0')) : '',
+              sunset: set ? (set.getHours().toString().padStart(2,'0') + ':' + set.getMinutes().toString().padStart(2,'0')) : ''
+            };
+            return ref.child(k + '/weatherData').set(newW).then(function() { fixed++; });
+          }).catch(function() { processed++; });
+        });
+      });
+      chain.then(function() {
+        if (window.showToast) showToast((isEN ? '\u2705 Weather fixed on ' : '\u2705 Meteo corretto su ') + fixed + (isEN ? ' entries' : ' voci'), 'success', 5000);
+        if (btn) { btn.disabled = false; btn.textContent = origLabel; }
+        if (typeof loadTimeline === 'function') loadTimeline();
+      });
+    }).catch(function() {
+      if (window.showToast) showToast(isEN ? '\u274c Repair failed' : '\u274c Correzione fallita', 'error');
+      if (btn) { btn.disabled = false; btn.textContent = origLabel; }
+    });
+  }
+  window.repairDiaryWeather = repairDiaryWeather;
+  var _repairBtn = document.getElementById('diario-fix-weather');
+  if (_repairBtn) {
+    _repairBtn.addEventListener('click', function() { repairDiaryWeather(_repairBtn); });
   }
 
   // ─── Add Entry (auto-populate from today's data) ───

@@ -6,7 +6,7 @@ var TRIP_COORDS = [
   { lat: 52.2297, lng: 21.0122, city: "Varsavia", cityEn: "Warsaw", country: "Polonia", flag: "🇵🇱" },           // G3
   { lat: 54.6872, lng: 25.2797, city: "Vilnius", cityEn: "Vilnius", country: "Lituania", flag: "🇱🇹" },           // G4
   { lat: 56.9490, lng: 24.1052, city: "Riga", cityEn: "Riga", country: "Lettonia", flag: "🇱🇻" },           // G5 (destinazione: Riga)
-  { lat: 56.9490, lng: 24.1052, city: "Riga (sosta)", cityEn: "Riga (rest day)", country: "Lettonia", flag: "🇱🇻" },      // G6 (Riga — giorno libero)
+  { lat: 59.4370, lng: 24.7536, city: "Tallinn", cityEn: "Tallinn", country: "Estonia", flag: "🇪🇪" },      // G6 (Riga ➔ Pärnu ➔ Haapsalu ➔ Tallinn — notte a Tallinn, cambio programma 30/06)
   { lat: 59.4370, lng: 24.7536, city: "Tallinn", cityEn: "Tallinn", country: "Estonia", flag: "🇪🇪" },          // G7
   { lat: 60.1699, lng: 24.9384, city: "Helsinki", cityEn: "Helsinki", country: "Finlandia", flag: "🇫🇮" },       // G8
   { lat: 61.7667, lng: 29.3833, city: "Punkaharju", cityEn: "Punkaharju", country: "Finlandia", flag: "🇫🇮" },   // G9

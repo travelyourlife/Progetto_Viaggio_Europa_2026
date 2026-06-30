@@ -5,6 +5,35 @@
 
 # Quo Vadis — Changelog
 
+## v4.35 — 2026-06-30
+**Cambio di programma: oggi si va a Tallinn lungo la costa baltica**
+- **Giorno 6 (30/06)** — Da "Riga — giorno libero" a **Riga ➔ Pärnu ➔ Haapsalu ➔ Tallinn** (~390 km, ~5h di guida), con **notte a Tallinn**. Risalita lenta lungo la costa baltica con soste a Pärnu e Haapsalu.
+- **Giorno 7 (01/07)** — Aggiornato da "Riga ➔ Tallinn" a **giorno in città a Tallinn** (Città Vecchia e Lennusadam / Seaplane Harbour), dato che si arriva a Tallinn già oggi nel tardo pomeriggio.
+- **Coordinate meteo/mappa** del giorno 6 spostate da Riga a **Tallinn**, così il meteo del diario e la mappa puntano alla destinazione corretta.
+- Giorno 8 (Tallinn ➔ Helsinki) invariato. POI di Tallinn (Lennusadam, Õllesummer, Balti Jaama Turg) restano coerenti.
+
+## v4.34 — 2026-06-30
+**Reaction dei commenti: stesso set dei post e finalmente funzionanti**
+- **Stesse emoji dei post** — Le reaction dei commenti usavano un set diverso e ridotto (5: 👍 ❤️ 😍 🔥 😮). Ora usano **esattamente lo stesso set dei post** (7: 👍 ❤️ 😂 😮 🍻 🥳 🙏), tramite un'unica costante condivisa `REACTION_EMOJIS`.
+- **Reaction che "non funzionavano"** — La causa principale: ad ogni modifica (anche una reaction su un commento) la timeline del diario viene **ricostruita da zero**, e la sezione commenti aperta **si richiudeva**, facendo sembrare che il click non avesse effetto. Ora lo **stato aperto delle sezioni commenti viene preservato** attraverso il re-render (e la posizione di scorrimento mantenuta), quindi reaction e nuovi commenti restano visibili subito.
+- **Feedback d'errore visibile** — Se il salvataggio di una reaction su un commento viene rifiutato (es. permessi del database), ora compare un avviso ("Impossibile salvare la reazione") invece di fallire silenziosamente in console.
+- Versione bump a **4.34** su tutti i marcatori attivi (`version.json`, `EXPECTED_VERSION`, titolo `V4.34`, `?v=4.34`, cache `quo-vadis-v4.34`).
+
+## v4.33 — 2026-06-30
+**Meteo del diario corretto: usa la posizione giusta della voce (non più Verona)**
+- **Bug corretto** — Il pulsante "Aggiungi meteo attuale" nel diario, quando la posizione GPS reale non era ancora disponibile, ripiegava su **coordinate fisse di Verona/Italia (45.39, 11.85)**. Risultato: voci lontane dall'Italia (es. Riga) mostravano il meteo italiano (es. "36°/26°C" invece dei ~26°/21°C reali di Riga).
+- **Nuova risoluzione coordinate** (`_resolveWeatherCoords`) — Il meteo viene ora preso sulla **tappa pianificata corrispondente alla data della voce** (`TRIP_COORDS[giorno]`), oppure sul **GPS reale** solo se vicino a quella tappa (≤ 80 km, cioè "meteo qui adesso"). **Nessun ripiego silenzioso su Verona**: se non si riesce a determinare una posizione reale, l'operazione viene bloccata con un avviso.
+- Il meteo viene inoltre richiesto a Open-Meteo con la **data della voce** (`start_date`/`end_date`), così corrisponde al giorno effettivo (anche per giorni passati, con dati reali).
+- **Correzione delle voci passate** — Nuovo pulsante **"🌡️ Correggi meteo"** (solo organizzatori, in cima al Diario): riscarica il meteo **reale** per ogni voce già salvata usando le coordinate corrette e sovrascrive i valori sbagliati. Da premere una volta per sistemare lo storico.
+- Versione bump a **4.33** su tutti i marcatori attivi (`version.json`, `EXPECTED_VERSION`, titolo `V4.33`, `?v=4.33`, cache `quo-vadis-v4.33`).
+
+## v4.32 — 2026-06-30
+**Traccia percorsa continua: ricuciti i buchi tra un giorno e l'altro (Live + Mappa)**
+- **Niente più "buchi" nella traccia rossa al cambio giorno** — Finora ogni giornata veniva ricostruita e disegnata come una **polilinea separata**: il salto tra l'ultimo punto GPS di un giorno e il primo del giorno successivo non veniva mai ricucito, lasciando scoperti dei tratti (si vedeva solo la linea verde del percorso pianificato). Ora **tutti i giorni vengono uniti in un'unica sequenza cronologica** e passati una sola volta alla ricostruzione gap via OSRM: i salti tra giorni consecutivi sono trattati esattamente come i buchi GPS interni a una giornata e riempiti con la **geometria stradale reale**.
+- Il risultato è **un'unica traccia rossa continua** dall'inizio del viaggio a oggi, sia sulla **mappa Live** (tab "In viaggio") sia sulla **mappa percorso** (tab Mappa). Verifica deterministica: su 3 giorni con 2 salti inter-giorno (~530 km e ~100 km), l'output è continuo con salto massimo residuo di **2,65 km** e nessun buco.
+- Salti oltre **600 km** (possibili glitch dei dati) restano esclusi dalla ricostruzione, per evitare archi assurdi.
+- Versione bump a **4.32** su tutti i marcatori attivi (`version.json`, `EXPECTED_VERSION`, titolo `V4.32`, `?v=4.32`, cache `quo-vadis-v4.32`).
+
 ## v4.31 — 2026-06-30
 **Tracce storiche sempre visibili a zoom europeo (Live + Mappa)**
 - **Tracce rosse storiche più visibili a zoom basso** — Alla scala europea (zoom ≤ 6) le polilinee rosse dei giorni già percorsi diventavano praticamente invisibili (1–2 px). Ora lo stile base è più marcato (`weight: 4`, `opacity: 0.75`) e, soprattutto, **lo spessore si adatta dinamicamente allo zoom**: più sottile da vicino (4 px a z≥10) e progressivamente più spesso allontanandosi (5 px a z≥7, 6 px a z≥5, 7 px sotto z5), con opacità leggermente maggiore a zoom basso.
