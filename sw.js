@@ -26,20 +26,20 @@ var messaging = firebase.messaging();
 // ─── CACHING CONFIG ───
 // ═══════════════════════════════════════════════════════════════
 
-const CACHE_NAME = 'quo-vadis-v4.35';
+const CACHE_NAME = 'quo-vadis-v4.37';
 const IMAGE_CACHE_NAME = 'quo-vadis-images-v1';
 const IMAGE_CACHE_LIMIT = 80;
 const STATIC_ASSETS = [
   './',
   './index.html',
   './index_en.html',
-  './style.css?v=4.35',
+  './style.css?v=4.37',
   './data.js',
   './days-data.js',
   './days-renderer.js',
   // wiki-links.js: NOT precached — lazy-loaded on first open of Cultura/Attività tab
   './weather-coords.js',
-  './app.js?v=4.35',
+  './app.js?v=4.37',
   './manifest.json',
   './icon.png',
   './icon-192.png',
@@ -61,8 +61,8 @@ const STATIC_ASSETS = [
   './curiosita-data.js',
   './curiosita-scheduler.js',
   './quiz-fun.js',
-  './city-itineraries.js?v=4.35',
-  './city-itineraries-ui.js?v=4.35',
+  './city-itineraries.js?v=4.37',
+  './city-itineraries-ui.js?v=4.37',
   // debug-overlay.js: rimosso — caricato on-demand solo da Admin
   // v2.70: immagini placeholder per Home offline
   './img/placeholder/bridge-coast.jpg',

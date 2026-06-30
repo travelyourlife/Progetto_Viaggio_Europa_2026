@@ -2397,7 +2397,19 @@ document.addEventListener('DOMContentLoaded', function() {
                     var dayDate = new Date(TRIP_START.getTime() + j * 86400000);
                     var wdIdx = (dayDate.getDay() + 6) % 7; // Mon=0
                     var wdName = isEN ? _wdEN[wdIdx] : _wdIT[wdIdx];
-                    lbl.innerHTML = '<span style="font-weight:' + (currentDay === j ? '700' : '400') + ';">' + wdName + '</span><br>' + days[j].date;
+                    // v4.37: per-day country flag from TRIP_COORDS (highlight border crossings)
+                    var _flagHtml = '';
+                    if (typeof TRIP_COORDS !== 'undefined' && TRIP_COORDS[j]) {
+                        var _tc = TRIP_COORDS[j];
+                        var _prevTc = (j > 0) ? TRIP_COORDS[j - 1] : null;
+                        var _isCrossing = _prevTc && _prevTc.country !== _tc.country;
+                        var _cityName = (isEN ? (_tc.cityEn || _tc.city) : _tc.city) || '';
+                        var _titleTxt = _cityName + (_isCrossing ? (isEN ? ' — entering ' + _tc.country : ' — ingresso in ' + _tc.country) : '');
+                        if (_tc.flag) {
+                            _flagHtml = '<br><span title="' + _titleTxt.replace(/"/g, '') + '" style="font-size:13px;line-height:1;' + (_isCrossing ? 'filter:drop-shadow(0 0 1px #3b82f6);' : '') + '">' + _tc.flag + (_isCrossing ? '<span style="color:#3b82f6;font-weight:700;">•</span>' : '') + '</span>';
+                        }
+                    }
+                    lbl.innerHTML = '<span style="font-weight:' + (currentDay === j ? '700' : '400') + ';">' + wdName + '</span><br>' + days[j].date + _flagHtml;
                 }
                 weeklyLabels.appendChild(lbl);
             }
@@ -4602,14 +4614,14 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                     });
                 }
 
-                // v3.96: Update /currentLocation (throttled: every 5 min or >500m)
+                // v3.96: Update /currentLocation (throttled: every 90s or >200m — v4.36)
                 if (window.writeCurrentLocation) {
                     var _doLocW = false;
                     if (!window._lastLocWriteTime) _doLocW = true;
-                    else if ((Date.now() - window._lastLocWriteTime) >= 300000) _doLocW = true;
+                    else if ((Date.now() - window._lastLocWriteTime) >= 90000) _doLocW = true; // v4.36: 90s (was 5 min)
                     else if (window._lastLocWriteLat != null) {
                         var _dLoc = window._haversineKm ? window._haversineKm(window._lastLocWriteLat, window._lastLocWriteLng, lat, lng) : 999;
-                        if (_dLoc > 0.5) _doLocW = true;
+                        if (_dLoc > 0.2) _doLocW = true; // v4.36: 200m (was 500m)
                     }
                     if (_doLocW) {
                         window._lastLocWriteTime = Date.now();
@@ -6124,14 +6136,14 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                                  name: firebaseUser.displayName || 'Furgone' });
                 }
 
-                // v3.96: Update /currentLocation (throttled: every 5 min or >500m)
+                // v3.96: Update /currentLocation (throttled: every 90s or >200m — v4.36)
                 if (window.writeCurrentLocation) {
                     var _doLocW2 = false;
                     if (!window._lastLocWriteTime) _doLocW2 = true;
-                    else if ((Date.now() - window._lastLocWriteTime) >= 300000) _doLocW2 = true;
+                    else if ((Date.now() - window._lastLocWriteTime) >= 90000) _doLocW2 = true; // v4.36: 90s (was 5 min)
                     else if (window._lastLocWriteLat != null) {
                         var _dLoc2 = window._haversineKm ? window._haversineKm(window._lastLocWriteLat, window._lastLocWriteLng, lat, lng) : 999;
-                        if (_dLoc2 > 0.5) _doLocW2 = true;
+                        if (_dLoc2 > 0.2) _doLocW2 = true; // v4.36: 200m (was 500m)
                     }
                     if (_doLocW2) {
                         window._lastLocWriteTime = Date.now();

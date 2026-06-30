@@ -5,6 +5,18 @@
 
 # Quo Vadis — Changelog
 
+## v4.37 — 2026-06-30
+**Bandiere dei Paesi nel grafico settimanale**
+- Nel grafico settimanale (km/ore), sotto la data di ogni giorno ora compare la **bandiera del Paese** in cui vi trovate quel giorno (presa dalle coordinate del viaggio).
+- I giorni in cui si **cambia Paese** (attraversamento di confine) sono evidenziati con un **puntino blu** e un leggero alone sulla bandiera, così si vedono a colpo d'occhio gli ingressi in un nuovo Stato.
+- Al tocco/hover sulla bandiera compare un **tooltip** con la città (e l'indicazione "ingresso in …" nei giorni di confine).
+
+## v4.36 — 2026-06-30
+**Posizione "SIAMO A:" più reattiva durante la guida**
+- La posizione live ora viene aggiornata su Firebase **ogni ~90 secondi** (prima ogni 5 minuti) oppure appena vi spostate di **più di ~200 metri** (prima 500 m). Così il riquadro "SIAMO A:" e il furgoncino sulla mappa seguono il viaggio molto più da vicino.
+- La guardia anti-spreco resta attiva: da fermi (sosta/notte) non vengono fatte scritture inutili, quindi l'impatto sulla batteria è contenuto.
+- Promemoria d'uso: serve avere il **Viaggio attivo (▶)** nella tab Live e aver concesso il **permesso GPS** — senza, l'app mostra l'ultima posizione nota o la città pianificata del giorno.
+
 ## v4.35 — 2026-06-30
 **Cambio di programma: oggi si va a Tallinn lungo la costa baltica**
 - **Giorno 6 (30/06)** — Da "Riga — giorno libero" a **Riga ➔ Pärnu ➔ Haapsalu ➔ Tallinn** (~390 km, ~5h di guida), con **notte a Tallinn**. Risalita lenta lungo la costa baltica con soste a Pärnu e Haapsalu.
