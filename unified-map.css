@@ -271,6 +271,9 @@
   transition: transform 0.2s ease;
 }
 
+/* v4.40: restored home mini-map in the follower-a (Live Feed) variant */
+.hv-home-mini-map { margin-bottom: 14px; }
+
 .umap-mini-preview:hover {
   transform: scale(1.01);
 }

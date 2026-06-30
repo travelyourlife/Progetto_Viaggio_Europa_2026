@@ -5,6 +5,25 @@
 
 # Quo Vadis — Changelog
 
+## v4.41 — 2026-06-30
+**Coordinate dei giorni: una sola fonte di verità (Audit, Opzione A)**
+- **Eliminata la duplicazione delle coordinate.** Ogni giorno teneva le proprie coordinate in **tre file diversi** (`itinerario.mapsUrl` in data.js, `DAYS_DATA.meteo` in days-data.js, `TRIP_COORDS` in weather-coords.js). Quando se ne aggiornava uno e si dimenticava un altro, **meteo e mappa puntavano in silenzio al posto sbagliato** (il bug "Riga che mostrava Verona").
+- **Ora `TRIP_COORDS` è l'unica fonte.** All'avvio, le coordinate del **meteo** (`DAYS_DATA[i].meteo.lat/lon`) e della **mappa/geofencing** vengono **derivate automaticamente** da `TRIP_COORDS[i]`, cosí non possono più divergere. I valori statici di meteo (massime/minime/condizioni/ore di luce) e i link Google Maps ai POI restano invariati.
+- **Allineamento verificato sui 55 giorni.** Un test ha rilevato che prima della correzione **33 giorni su 55** avevano coordinate meteo che non coincidevano con `TRIP_COORDS`; dopo la sincronizzazione tutti e 55 sono allineati, e il giorno corrente **G6 risulta correttamente su Tallinn**.
+- **Auto-controllo anti-regressione.** Aggiunto un controllo di coerenza (visibile in console, silenzioso per gli utenti) che in futuro segnala subito eventuali disallineamenti di coordinate invece di mostrarli per caso.
+- *Nota:* questo è il "quick win" a basso rischio dell'audit. La fusione completa dei tre file in un'unica fonte `trip.js` (Opzione B) resta pianificata per fine viaggio.
+
+## v4.40 — 2026-06-30
+**Mini-mappa ripristinata in Home (follower) + etichetta marker "tragitto" nei giorni di guida**
+- **Mini-mappa in Home ripristinata.** La mini-mappa espandibile con la posizione attuale era stata rimossa dalla Home dei follower in v4.00 ("use Live tab instead"). È stata reinserita nella vista follower principale (Live Feed), subito sotto il box meteo e sopra le card Diario/Chat/Itinerario, in IT ed EN. Mostra il tile OSM centrato sulla posizione reale (`/currentLocation`), l'icona 🚐, il badge **LIVE** e il suggerimento "Tocca per espandere"; il tap apre la mappa intera. Riusa gli stili `umap-mini-*` già esistenti.
+- **Etichetta marker più chiara sulla mappa.** Nei giorni di **guida** il popup del marker tappa ora mostra il **tragitto "Origine ➔ Destinazione"** (es. "Riga ➔ Tallinn") invece della sola città di destinazione: così non capita più che il pin sia su Riga ma l'etichetta dica "Tallinn". Nei giorni di **sosta/città** (km 0, nessuna freccia nel tragitto) resta la sola città. I tragitti multi-tappa vengono sintetizzati alla prima e ultima località. Applicato sia alla mappa Itinerario sia alla mappa a schermo intero.
+
+## v4.39 — 2026-06-30
+**La linea rossa ora parte da Selvazzano (vero punto di partenza)**
+- La traccia storica rossa veniva ricostruita **solo** dai punti GPS effettivamente salvati su Firebase. Il primo giorno il tracker è stato acceso lungo strada, quindi i primi punti registrati erano già in **Friuli**: il tratto **Selvazzano → Friuli** mancava e la linea sembrava partire dal Friuli.
+- Ora la traccia viene **ancorata al punto di partenza reale (Selvazzano Dentro)**: viene anteposto il punto casa e il tratto Selvazzano → primo punto GPS viene disegnato lungo la rete stradale via OSRM. La linea rossa parte quindi da casa, in coerenza con i km totali.
+- L'ancoraggio è applicato a **entrambe le mappe** (Live e Itinerario) ed è prudente: scatta solo se il primo punto reale è lontano da casa (>2 km) ed entro la soglia massima OSRM (<600 km), così non vengono disegnati salti implausibili.
+
 ## v4.38 — 2026-06-30
 **Programma di oggi e dettaglio giorno allineati al nuovo itinerario di Tallinn**
 - Corretta un'incoerenza: la sezione **"Programma di oggi"** e il **dettaglio giorno** (G6/G7) mostravano ancora i vecchi dati ("Riga — giorno libero" e "Riga → Tallinn"), perché il contenuto dettagliato è in un file separato (`days-data.js`) che non era stato aggiornato insieme alla card itinerario.

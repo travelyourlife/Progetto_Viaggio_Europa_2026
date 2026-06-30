@@ -19,6 +19,69 @@ var LANG = document.documentElement.lang || 'it';
 var isEN = LANG === 'en' || location.pathname.indexOf('_en') !== -1;
 window.isEN = isEN;
 
+// ─── v4.41 (Audit Option A): SINGLE SOURCE OF TRUTH for per-day COORDINATES ───
+// Problem (from the data-architecture audit): each trip day stored its coordinates
+// in THREE separate places — itinerario[].mapsUrl (data.js), DAYS_DATA[].meteo
+// (days-data.js) and TRIP_COORDS[] (weather-coords.js). When one was updated and
+// another forgotten, the weather/map silently pointed to the wrong place (the
+// Riga-showing-Verona bug). We now make TRIP_COORDS the ONLY source for the
+// weather/map coordinate of each day, and derive the others from it at runtime,
+// so they can never diverge again. Static high/low/cond/daylight are preserved.
+(function _syncCoordsFromTripCoords() {
+  try {
+    if (typeof TRIP_COORDS === 'undefined' || !Array.isArray(TRIP_COORDS)) return;
+    // 1) Weather coordinates: DAYS_DATA[i].meteo.lat/lon  ←  TRIP_COORDS[i]
+    if (typeof DAYS_DATA !== 'undefined' && Array.isArray(DAYS_DATA)) {
+      for (var i = 0; i < DAYS_DATA.length; i++) {
+        var tc = TRIP_COORDS[i];
+        if (!tc || typeof tc.lat !== 'number' || typeof tc.lng !== 'number') continue;
+        var d = DAYS_DATA[i];
+        if (!d) continue;
+        if (!d.meteo || typeof d.meteo !== 'object') d.meteo = {};
+        d.meteo.lat = tc.lat;
+        d.meteo.lon = tc.lng; // note: DAYS_DATA uses .lon, TRIP_COORDS uses .lng
+      }
+    }
+    // 2) Map/itinerary day coordinate: expose a derived ._coords on each
+    //    itinerario entry so geofencing and markers can use the single source
+    //    instead of regex-parsing mapsUrl (which often points to a POI, not the
+    //    overnight city). mapsUrl/links are left untouched (they are POI links).
+    if (typeof itinerario !== 'undefined' && Array.isArray(itinerario)) {
+      for (var j = 0; j < itinerario.length; j++) {
+        var c = TRIP_COORDS[j];
+        if (!c || typeof c.lat !== 'number' || typeof c.lng !== 'number') continue;
+        if (itinerario[j]) itinerario[j]._coords = { lat: c.lat, lng: c.lng };
+      }
+    }
+  } catch (e) {
+    if (window.console && console.warn) console.warn('[coord-sync] skipped:', e);
+  }
+})();
+
+// ─── v4.41: Coordinate consistency self-check (dev only) ────────────────
+// Verifies that, after the sync above, every day's weather coordinate matches
+// TRIP_COORDS. If anything ever diverges in the future, it is logged loudly in
+// the console instead of silently showing the wrong city's weather/map.
+(function _coordConsistencyCheck() {
+  try {
+    if (window.IS_PROD === true) return; // stay quiet for end users
+    if (typeof TRIP_COORDS === 'undefined' || typeof DAYS_DATA === 'undefined') return;
+    var issues = [];
+    for (var i = 0; i < DAYS_DATA.length; i++) {
+      var tc = TRIP_COORDS[i], d = DAYS_DATA[i];
+      if (!tc || !d || !d.meteo) continue;
+      if (Math.abs((d.meteo.lat || 0) - tc.lat) > 1e-6 || Math.abs((d.meteo.lon || 0) - tc.lng) > 1e-6) {
+        issues.push('G' + (i + 1) + ': meteo(' + d.meteo.lat + ',' + d.meteo.lon + ') != TRIP_COORDS(' + tc.lat + ',' + tc.lng + ')');
+      }
+    }
+    if (issues.length && window.console) {
+      console.warn('[coord-check] ' + issues.length + ' day(s) with mismatched coordinates:\n' + issues.join('\n'));
+    } else if (window.console && console.info) {
+      console.info('[coord-check] OK — all ' + DAYS_DATA.length + ' days share one coordinate source.');
+    }
+  } catch (e) { /* never block startup */ }
+})();
+
 // ─── v2.96: LOCAL date key (YYYY-MM-DD in LOCAL time) ───
 // BUG FIX: toISOString().slice(0,10) returns the UTC date. In Italy (UTC+1/+2),
 // after ~22:00–23:00 local time the UTC date is already the NEXT day, so any
@@ -1333,9 +1396,13 @@ window.openMapFullscreen = function openMapFullscreen(mapInstance, title) {
                         dayDesc = typeof isEN !== 'undefined' && isEN ? day.descEn : day.desc;
                         dayFlags = day.paesi;
                     }
+                    // v4.40: smart title — "Origin ➔ Destination" on driving days, plain city on rest days.
+                    var rpTitle = (stop.days.length > 1)
+                        ? city
+                        : (window._smartStopLabel ? window._smartStopLabel(itinerario[dayIdx], city, (typeof isEN !== 'undefined' && isEN)) : city);
                     var popupHtml = '<div class="route-popup">' +
                         '<div class="rp-day">' + dayLabel + ' <span class="rp-flags">' + dayFlags + '</span></div>' +
-                        '<div class="rp-city">' + city + '</div>' +
+                        '<div class="rp-city">' + rpTitle + '</div>' +
                         '<div class="rp-desc">' + dayDesc + '</div>' +
                         '</div>';
                     marker.bindPopup(popupHtml, { maxWidth: 200, closeButton: false });
@@ -1647,9 +1714,15 @@ function initRouteMap() {
                 dayFlags = day.paesi;
             }
 
+            // v4.40: smart title — show "Origin ➔ Destination" on driving days,
+            // plain city on rest/city days (avoids "pin in Riga, label Tallinn").
+            var rpTitle = (stop.days.length > 1)
+                ? city
+                : (window._smartStopLabel ? window._smartStopLabel(itinerario[dayIdx], city, isEN) : city);
+
             var popupHtml = '<div class="route-popup">' +
                 '<div class="rp-day">' + dayLabel + ' <span class="rp-flags">' + dayFlags + '</span></div>' +
-                '<div class="rp-city">' + city + '</div>' +
+                '<div class="rp-city">' + rpTitle + '</div>' +
                 '<div class="rp-desc">' + dayDesc + '</div>' +
                 '</div>';
 
@@ -1733,6 +1806,9 @@ function initRouteMap() {
                 // (no more holes at day boundaries). Single continuous polyline.
                 var flatPoints = window._flattenDaysForFill ? window._flattenDaysForFill(allDaysPoints)
                     : [].concat.apply([], allDaysPoints || []);
+                // v4.39: anchor the track to Selvazzano (real departure) so the
+                // first leg Selvazzano → first GPS point is drawn via OSRM.
+                if (window._prependHomeAnchor) flatPoints = window._prependHomeAnchor(flatPoints);
                 return (window._fillGapsOSRM ? window._fillGapsOSRM(flatPoints)
                     : Promise.resolve(flatPoints.map(function(p) { return [p.lat, p.lng]; })));
             }).then(function(continuousLatLngs) {
@@ -3568,10 +3644,16 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
         });
 
         // ─── Geofencing (auto check-in) ───
-        // Extract coordinates from itinerario mapsUrl where available
+        // v4.41: prefer the single-source coordinate (._coords, derived from
+        // TRIP_COORDS) so geofencing matches the same point as weather/map.
+        // Fall back to parsing mapsUrl only when no single-source coord exists.
         var placeCoords = [];
         if (typeof itinerario !== 'undefined') {
             itinerario.forEach(function(t) {
+                if (t && t._coords && typeof t._coords.lat === 'number' && typeof t._coords.lng === 'number') {
+                    placeCoords.push({ lat: t._coords.lat, lng: t._coords.lng });
+                    return;
+                }
                 var url = t.mapsUrl || '';
                 // Try to extract lat,lng from mapsUrl (format: "lat,lng" or "?q=lat,lng")
                 var match = url.match(/([-]?\d+\.\d+)\s*,\s*([-]?\d+\.\d+)/);
@@ -4163,6 +4245,9 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                 // the next (previously left as holes / green-only segments).
                 var flatPoints = window._flattenDaysForFill ? window._flattenDaysForFill(allDaysPoints)
                     : [].concat.apply([], allDaysPoints || []);
+                // v4.39: anchor the track to Selvazzano (real departure) so the
+                // first leg Selvazzano → first GPS point is drawn via OSRM.
+                if (window._prependHomeAnchor) flatPoints = window._prependHomeAnchor(flatPoints);
                 var fillPromise = (window._fillGapsOSRM ? window._fillGapsOSRM(flatPoints)
                     : Promise.resolve(flatPoints.map(function(p) { return [p.lat, p.lng]; })));
                 return fillPromise.then(function(continuousLatLngs) {
@@ -7367,6 +7452,53 @@ function _flattenDaysForFill(allDaysPoints) {
     return flat;
 }
 window._flattenDaysForFill = _flattenDaysForFill;
+
+// ─── v4.39: Anchor the historical track to the real departure point ───
+// The red track is built ONLY from GPS points actually stored in Firebase. On
+// day 1 the tracker was switched on mid-route (first stored points are already
+// in Friuli), so the Selvazzano → Friuli leg was missing and the track appeared
+// to start in Friuli. We prepend the home/departure coordinates (Selvazzano)
+// as the first point so _fillGapsOSRM bridges Selvazzano → first real GPS point
+// along the road network. Guarded so it only kicks in when the first real point
+// is meaningfully away from home (>2 km) and within OSRM's max gap (<600 km).
+var HOME_DEPARTURE_COORDS = { lat: 45.3888, lng: 11.7956 }; // Selvazzano Dentro (home)
+function _prependHomeAnchor(flatPoints) {
+    if (!flatPoints || !flatPoints.length) return flatPoints;
+    var first = flatPoints[0];
+    if (!first || typeof first.lat !== 'number' || typeof first.lng !== 'number') return flatPoints;
+    var h = HOME_DEPARTURE_COORDS;
+    // If we are essentially already at home, do nothing.
+    if (Math.abs(first.lat - h.lat) < 0.02 && Math.abs(first.lng - h.lng) < 0.02) return flatPoints;
+    var distKm = window._haversineKm ? window._haversineKm(h.lat, h.lng, first.lat, first.lng) : 0;
+    // Only anchor when the first stored point is clearly away from home (>2 km)
+    // and within OSRM's drivable gap threshold (<600 km), so we don't draw a
+    // straight line across an implausibly large jump.
+    if (distKm <= 2 || distKm >= 600) return flatPoints;
+    return [{ lat: h.lat, lng: h.lng, anchor: true }].concat(flatPoints);
+}
+window._prependHomeAnchor = _prependHomeAnchor;
+window.HOME_DEPARTURE_COORDS = HOME_DEPARTURE_COORDS;
+
+// ─── v4.40: Smart stop label for route markers ──────────────────────────
+// On a DRIVING day, show the route "Origin ➔ Destination" instead of just the
+// destination city, so the marker no longer reads e.g. "Tallinn" while it sits
+// on Riga (the real GPS position at the start of the leg). On rest/city days
+// (km 0 or no arrow in tragitto) it falls back to the plain city name.
+function _smartStopLabel(day, city, isEN) {
+    if (!day) return city || '';
+    var route = (isEN ? day.tragittoEn : day.tragitto) || '';
+    var kmNum = parseInt(String(day.km || '0').replace(/[^0-9]/g, ''), 10) || 0;
+    // Arrow variants used in the data: ➔ (\u2794) and → (\u2192).
+    var hasArrow = /\u2794|\u2192|➔|→/.test(route);
+    if (kmNum > 0 && hasArrow) {
+        // Collapse a multi-stop route (A ➔ B ➔ C ➔ D) to "A ➔ D" to keep it short.
+        var parts = route.split(/\u2794|\u2192|➔|→/).map(function(s) { return s.trim(); }).filter(Boolean);
+        if (parts.length >= 2) return parts[0] + ' ➔ ' + parts[parts.length - 1];
+        return route;
+    }
+    return city || route;
+}
+window._smartStopLabel = _smartStopLabel;
 
 // ─── v4.33: Resolve the CORRECT coordinates for a diary entry's weather ───
 // Bug: the diary weather button fell back to hardcoded Verona (45.39, 11.85)

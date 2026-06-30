@@ -239,7 +239,15 @@
             <span class="hero-info-block" data-hv="nextStopWhen">Domani</span>
         </div>
     </div>
-    <!-- v4.00: Mini-map removed from Home — use Live tab instead -->
+    <!-- v4.40: Mini-map restored to Home (was removed in v4.00). Tap to open full map. -->
+    <div class="hv-home-mini-map umap-mini-preview" data-hv-action="openMap" id="hv-mini-map-fa">
+        <img class="umap-mini-tile" data-hv="miniMapTile" data-minimap="1" src="https://tile.openstreetmap.org/5/16/10.png" alt="Mappa posizione attuale" loading="lazy">
+        <div class="umap-mini-overlay">
+            <span class="umap-mini-marker">🚐</span>
+        </div>
+        <div class="umap-mini-badge">LIVE</div>
+        <div class="umap-mini-hint">🔍 Tocca per espandere</div>
+    </div>
     <!-- Quick actions -->
     <div class="hv-follower-actions">
         <a class="hv-follower-action" data-hv-action="tab:diario">
