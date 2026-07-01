@@ -908,6 +908,201 @@ exports.dailyReminders = onSchedule(
 
 
 // ═══════════════════════════════════════════════════════════════════════════════
+// 8b. EVENING PHOTO RECAP (Cloud Scheduler — 23:00 Rome)  [v4.52]
+// Server-side twin of the client evening recap. Runs reliably at 23:00 Rome
+// even if no owner device has the app open. Composes the SAME chat message
+// (diary posts, km/drive time, weather, steps, photos) and writes it to
+// chat/{FAMILY_ID}. Idempotent via the same notifications/eveningRecapMeta
+// claim used by the client, so the two can never double-post.
+// ═══════════════════════════════════════════════════════════════════════════════
+function recapWmoEmoji(code) {
+  if (code === 0) return '\u2600\ufe0f';        // ☀️
+  if (code <= 3) return '\u26c5';                // ⛅
+  if (code <= 48) return '\ud83c\udf2b\ufe0f';  // 🌫️
+  if (code <= 57) return '\ud83c\udf26\ufe0f';  // 🌦️
+  if (code <= 67) return '\ud83c\udf27\ufe0f';  // 🌧️
+  if (code <= 77) return '\u2744\ufe0f';        // ❄️
+  if (code <= 82) return '\ud83c\udf27\ufe0f';  // 🌧️
+  return '\u26c8\ufe0f';                         // ⛈️
+}
+function recapFormatTime(ms) {
+  const s = Math.floor(ms / 1000);
+  const h = Math.floor(s / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  return h + 'h ' + (m < 10 ? '0' : '') + m + 'min';
+}
+
+exports.eveningRecapDispatcher = onSchedule(
+  {
+    schedule: '0 23 * * *',
+    timeZone: 'Europe/Rome',
+  },
+  async (event) => {
+    const schedule = await getNotifSchedule();
+    if (!schedule.eveningEnabled) {
+      logger.log('[EveningRecap] Disabled by admin — skipping');
+      return null;
+    }
+
+    const TRIP_START = new Date(TRIP_START_STR);
+    const now = new Date();
+    const todayStr = getRomeDateStr(now);
+    const diffMs = now.getTime() - TRIP_START.getTime();
+    const tripDay = Math.floor(diffMs / 86400000);
+    if (tripDay < 0 || tripDay >= TRIP_DAYS) {
+      logger.log('[EveningRecap] Not during trip — skipping');
+      return null;
+    }
+
+    // Idempotency guard shared with the client: skip if already sent today.
+    const recapMetaRef = db.ref(`trips/${FAMILY_ID}/notifications/eveningRecapMeta`);
+    const metaSnap = await recapMetaRef.once('value');
+    const meta = metaSnap.val() || {};
+    if (meta.lastSentDate === todayStr) {
+      logger.log('[EveningRecap] Already sent today — skipping');
+      return null;
+    }
+
+    // ─── Load all data (same paths as the client) ───
+    const dayKey = 'day-' + tripDay + '-';
+    const [diarySnap, sumSnap, clSnap, weatherSnap, actSnap] = await Promise.all([
+      db.ref(`trips/${FAMILY_ID}/diary`).orderByKey().startAt(dayKey).endAt(dayKey + '\uf8ff').limitToFirst(20).once('value'),
+      db.ref(`trips/${FAMILY_ID}/dailySummaries/${todayStr}`).once('value'),
+      db.ref(`trips/${FAMILY_ID}/currentLocation`).once('value'),
+      db.ref(`trips/${FAMILY_ID}/weatherLog/${todayStr}`).once('value'),
+      db.ref(`trips/${FAMILY_ID}/activities`).once('value'),
+    ]);
+
+    // ─── Parse diary entries ───
+    const entriesRaw = diarySnap.val() || {};
+    const photos = [];
+    const textPosts = [];
+    let highlight = '';
+    Object.keys(entriesRaw).forEach((k) => {
+      if (k.indexOf(dayKey) !== 0) return;
+      const entry = entriesRaw[k];
+      if (!entry) return;
+      if (entry.photos) {
+        Object.values(entry.photos).forEach((p) => {
+          if (p && p.url && photos.length < 5) photos.push(p.url);
+        });
+      }
+      if (entry.text) {
+        textPosts.push(entry.text.substring(0, 120) + (entry.text.length > 120 ? '\u2026' : ''));
+      }
+      if (!highlight && entry.highlight) highlight = entry.highlight;
+    });
+
+    // ─── Summary (km + drive time) ───
+    const summary = sumSnap.val() || {};
+    const km = (typeof summary.km === 'number' && summary.km > 0) ? summary.km.toFixed(0) : '';
+    const driveTime = summary.time ? recapFormatTime(summary.time) : '';
+
+    // ─── Location ───
+    const cl = clSnap.val();
+    let cityName = '';
+    let flag = '';
+    if (cl && cl.updatedAt && (Date.now() - cl.updatedAt < 24 * 3600000)) {
+      cityName = cl.city || '';
+      flag = cl.flag || '';
+    }
+    if (!cityName && TRIP_COORDS[tripDay]) cityName = TRIP_COORDS[tripDay].city || '';
+
+    // ─── Weather ───
+    const weather = weatherSnap.val();
+    let weatherStr = '';
+    if (weather && weather.tempMax !== undefined) {
+      weatherStr = recapWmoEmoji(weather.weatherCode) + ' ' + weather.tempMax + '\u00b0/' + weather.tempMin + '\u00b0';
+    }
+
+    // ─── Steps (today only) ───
+    let todaySteps = 0;
+    let todayWalkKm = 0;
+    const activities = actSnap.val() || {};
+    Object.values(activities).forEach((act) => {
+      if (!act || act.type !== 'daily_walk') return;
+      if (act.date === todayStr) {
+        todaySteps += (parseInt(act.steps) || 0);
+        todayWalkKm += (parseFloat(act.distance) || 0);
+      }
+    });
+
+    // ─── Build chat message (identical format to client) ───
+    const g = 'G' + (tripDay + 1);
+    const appUrl = 'https://viaggio-europa-2026.web.app/';
+    const msgParts = [];
+    let header = '\ud83d\udcf8 *Riepilogo serale \u2014 ' + g;
+    if (cityName) header += ' \u00b7 ' + cityName;
+    header += '*';
+    if (flag) header += ' ' + flag;
+    msgParts.push(header);
+    msgParts.push('');
+    if (km) {
+      let driveLine = '\ud83d\ude90 ' + km + ' km percorsi';
+      if (driveTime) driveLine += ' \u00b7 \u23f1\ufe0f ' + driveTime;
+      msgParts.push(driveLine);
+    }
+    if (weatherStr) msgParts.push(weatherStr);
+    if (todaySteps > 0) {
+      let stepsLine = '\ud83d\udc63 ' + todaySteps.toLocaleString('it-IT') + ' passi';
+      if (todayWalkKm > 0) stepsLine += ' (' + todayWalkKm.toFixed(1) + ' km)';
+      msgParts.push(stepsLine);
+    }
+    if (textPosts.length > 0 || highlight) msgParts.push('');
+    textPosts.forEach((snippet) => { msgParts.push('\ud83d\udcdd ' + snippet); });
+    if (textPosts.length > 0) msgParts.push('\u2192 ' + appUrl + '#tab-diario');
+    if (highlight) { msgParts.push(''); msgParts.push('\u2b50 ' + highlight); }
+    if (photos.length > 0) { msgParts.push(''); msgParts.push('\ud83d\uddbc\ufe0f ' + photos.length + ' foto nel diario'); }
+
+    // Nothing meaningful to report (no posts, no km, no photos): still claim the
+    // day so we don't retry endlessly, but skip posting an empty recap.
+    const hasContent = textPosts.length > 0 || photos.length > 0 || !!km || !!weatherStr || todaySteps > 0;
+    if (!hasContent) {
+      await recapMetaRef.update({ lastSentDate: todayStr, tripDay: tripDay, skippedEmpty: true });
+      logger.log('[EveningRecap] No content for day ' + tripDay + ' — claimed, skipped empty post');
+      return null;
+    }
+
+    // ─── Atomically claim the day right before posting ───
+    const claim = await recapMetaRef.transaction((current) => {
+      current = current || {};
+      if (current.lastSentDate === todayStr) return; // abort → already claimed
+      current.lastSentDate = todayStr;
+      current.tripDay = tripDay;
+      current.source = 'server';
+      return current;
+    });
+    if (!claim.committed) {
+      logger.log('[EveningRecap] Claimed by another execution — skipping');
+      return null;
+    }
+
+    // ─── Post to chat ───
+    const chatMsg = {
+      uid: OWNER_UIDS[0],
+      displayName: 'Diario di bordo',
+      text: msgParts.join('\n'),
+      timestamp: admin.database.ServerValue.TIMESTAMP,
+      type: 'evening_recap',
+      photos: photos.length > 0 ? photos.slice(0, 3) : null,
+      source: 'scheduler',
+    };
+    try {
+      await db.ref(`chat/${FAMILY_ID}`).push(chatMsg);
+      logger.log('[EveningRecap] Sent for day ' + tripDay + ' (' + textPosts.length + ' posts, ' + photos.length + ' photos)');
+    } catch (err) {
+      logger.error('[EveningRecap] Send error:', err);
+      // Roll back the claim so a later run can retry.
+      await recapMetaRef.transaction((cur) => {
+        if (cur && cur.lastSentDate === todayStr) { cur.lastSentDate = null; return cur; }
+        return cur;
+      });
+    }
+    return null;
+  });
+
+
+// ═══════════════════════════════════════════════════════════════════════════════
 // 8. EVENING NEXT-STAGE REMINDER (Cloud Scheduler — 19:00 Rome)
 // ═══════════════════════════════════════════════════════════════════════════════
 exports.eveningNextStage = onSchedule(

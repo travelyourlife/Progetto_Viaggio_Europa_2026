@@ -64,12 +64,12 @@
     <link rel="apple-touch-icon" sizes="152x152" href="./icon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="./icon.png">
     <link rel="apple-touch-icon" sizes="167x167" href="./icon.png">
-    <title>Quo Vadis — V4.51</title>
+    <title>Quo Vadis — V4.54</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
-    <link rel="stylesheet" href="style.css?v=4.51">
-    <link rel="stylesheet" href="home-variants.css?v=4.51">
-    <link rel="stylesheet" href="unified-map.css?v=4.51">
-    <link rel="stylesheet" href="modern-pages.css?v=4.51">
+    <link rel="stylesheet" href="style.css?v=4.54">
+    <link rel="stylesheet" href="home-variants.css?v=4.54">
+    <link rel="stylesheet" href="unified-map.css?v=4.54">
+    <link rel="stylesheet" href="modern-pages.css?v=4.54">
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" crossorigin="">
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" crossorigin="">
 <!-- Firebase SDK (compat mode for single-file app) -->
@@ -86,7 +86,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = "4.51";
+  var EXPECTED_VERSION = "4.54";
   window.IS_PROD = true; // v2.96: parità con index.html — disabilita debug overlay in produzione
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
@@ -144,23 +144,23 @@
   });
 })();
 </script>
-<script src="data.js?v=4.51" defer></script>
-<script src="days-data.js?v=4.51" defer></script>
-<script src="days-renderer.js?v=4.51" defer></script>
+<script src="data.js?v=4.54" defer></script>
+<script src="days-data.js?v=4.54" defer></script>
+<script src="days-renderer.js?v=4.54" defer></script>
 <!-- wiki-links.js: lazy-loaded on first open of Culture/Activity tab (34KB) — parity with index.html -->
-<script src="weather-coords.js?v=4.51" defer></script>
+<script src="weather-coords.js?v=4.54" defer></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
 <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js" crossorigin="" defer></script>
-<script src="poi-data.js?v=4.51" defer></script>
-<script src="app.js?v=4.51" defer></script>
-<script src="curiosita-data.js?v=4.51" defer></script>
-<script>window.QV_CURIOSITA_SERVER_SIDE = true;</script>
-<script src="curiosita-scheduler.js?v=4.51" defer></script>
-<script src="quiz-fun.js?v=4.51" defer></script>
-<script src="unified-map.js?v=4.51" defer></script>
-<script src="city-itineraries.js?v=4.51" defer></script>
-<script src="city-itineraries-ui.js?v=4.51" defer></script>
-<script src="home-variants.js?v=4.51" defer></script>
+<script src="poi-data.js?v=4.54" defer></script>
+<script src="app.js?v=4.54" defer></script>
+<script src="curiosita-data.js?v=4.54" defer></script>
+<script>window.QV_CURIOSITA_SERVER_SIDE = true; window.QV_RECAP_SERVER_SIDE = true;</script>
+<script src="curiosita-scheduler.js?v=4.54" defer></script>
+<script src="quiz-fun.js?v=4.54" defer></script>
+<script src="unified-map.js?v=4.54" defer></script>
+<script src="city-itineraries.js?v=4.54" defer></script>
+<script src="city-itineraries-ui.js?v=4.54" defer></script>
+<script src="home-variants.js?v=4.54" defer></script>
 </head>
 <body class="on-home">
 
@@ -8885,24 +8885,7 @@
   </div>
   <button type="button" class="chat-scroll-bottom" id="chat-scroll-bottom" style="display:none;" aria-label="Scroll to bottom">↓</button>
   <div class="chat-typing" id="chat-typing" style="display:none;"></div>
-  <!-- v4.00 Feature #19: Collaborative Playlist -->
-  <div id="chat-playlist-section" class="chat-playlist-section" style="display:none;border-top:1px solid #e2e8f0;padding:10px 12px;background:#f8fafc;">
-    <div style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;" id="chat-playlist-toggle">
-      <span style="font-size:14px;font-weight:600;color:#334155;">🎵 <span id="chat-playlist-title">Soundtrack — G1</span></span>
-      <span id="chat-playlist-arrow" style="font-size:13px;font-weight:700;color:#3b82f6;background:#e0edff;border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;">▼</span>
-    </div>
-    <div id="chat-playlist-hint" style="font-size:12px;color:#3b82f6;margin-top:2px;cursor:pointer;">🎶 Tap to suggest a song for today's stop →</div>
-    <div id="chat-playlist-body" style="display:none;margin-top:8px;">
-      <div id="chat-playlist-approved" style="margin-bottom:8px;"></div>
-      <div id="chat-playlist-list" style="margin-bottom:8px;"></div>
-      <div id="chat-playlist-form-label" style="font-size:12px;font-weight:600;color:#334155;margin-bottom:5px;">➕ Suggest a song for today:</div>
-      <div id="chat-playlist-form" style="display:flex;gap:6px;">
-        <input type="text" id="chat-playlist-song" placeholder="Song title" style="flex:1;padding:6px 8px;border:1px solid #cbd5e1;border-radius:6px;font-size:13px;">
-        <input type="text" id="chat-playlist-artist" placeholder="Artist" style="flex:1;padding:6px 8px;border:1px solid #cbd5e1;border-radius:6px;font-size:13px;">
-        <button type="button" id="chat-playlist-submit" style="padding:6px 12px;background:#3b82f6;color:#fff;border:none;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;">➕ Send</button>
-      </div>
-    </div>
-  </div>
+  <!-- v4.53: Collaborative Playlist section removed per user request -->
   <div class="chat-input-bar" id="chat-input-bar">
     <div class="chat-input-group">
       <textarea id="chat-input" class="chat-input" placeholder="Write a message..." maxlength="5000" autocomplete="off" rows="1"></textarea>
@@ -9092,8 +9075,8 @@
 })();
 </script>
 <!-- Debug Overlay (v2.47 diagnostic) -->
-<script src="debug-overlay.js?v=4.51" defer></script>
+<script src="debug-overlay.js?v=4.54" defer></script>
 <!-- Capacitor GPS Bridge (only activates inside native app, ignored in browser) -->
-<script src="capacitor-gps-bridge.js?v=4.51" defer></script>
+<script src="capacitor-gps-bridge.js?v=4.54" defer></script>
 </body>
 </html>

@@ -3629,10 +3629,29 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             // ordered chronologically by date, so a stop added on a given day
             // appears next to that day's itinerary stops.
             var rows = [];
+            // v4.54: within the SAME day, order rows by their REAL time-of-day so a
+            // custom (free) stop added in the morning appears ABOVE an itinerary
+            // stop checked-in later the same day. We derive a numeric ms timestamp:
+            //   - custom stop  -> its Firebase key is Date.now() at creation; fall
+            //                     back to parsing item.time ("dd/mm/yyyy, HH:MM:SS").
+            //   - itinerary stop that is CHECKED-IN -> parse ci.time.
+            //   - itinerary stop NOT yet checked-in -> no real time; keep it at the
+            //     END of its day, in itinerary order (timeMs = Infinity).
+            function _parseItTime(s) {
+                // Accepts "dd/mm/yyyy, HH:MM:SS" or "dd/mm/yyyy HH:MM" (it-IT locale).
+                if (!s || typeof s !== 'string') return NaN;
+                var m = s.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})[,\s]+(\d{1,2}):(\d{2})(?::(\d{2}))?/);
+                if (!m) return NaN;
+                return new Date(+m[3], +m[2] - 1, +m[1], +m[4], +m[5], +(m[6] || 0)).getTime();
+            }
             // 1) Itinerary stops
             places.forEach(function(p, idx) {
                 if (filter && p.place.toLowerCase().indexOf(filter) === -1 && p.day.toLowerCase().indexOf(filter) === -1 && p.title.toLowerCase().indexOf(filter) === -1) return;
-                rows.push({ type: 'itin', idx: idx, p: p, sortKey: p.sortKey || '' });
+                var _ci = checkins[idx];
+                var _t = (_ci && _ci.time) ? _parseItTime(_ci.time) : NaN;
+                // Not-checked-in itinerary stops go to the end of their day (Infinity).
+                var _timeMs = isNaN(_t) ? Infinity : _t;
+                rows.push({ type: 'itin', idx: idx, p: p, sortKey: p.sortKey || '', timeMs: _timeMs, seq: idx });
             });
             // 2) Custom (free) stops
             var _cc = (typeof customCheckins !== 'undefined' && customCheckins) ? customCheckins : {};
@@ -3641,15 +3660,24 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                 var nm = (item.name || '').toLowerCase();
                 if (filter && nm.indexOf(filter) === -1) return;
                 // item.date is already YYYY-MM-DD (localDateStr); use it directly.
-                rows.push({ type: 'custom', ckey: ckey, item: item, sortKey: item.date || '' });
+                // Prefer the numeric creation key; fall back to parsing item.time.
+                var _keyMs = /^\d{10,}$/.test(String(ckey)) ? parseInt(ckey, 10) : NaN;
+                var _timeMs = !isNaN(_keyMs) ? _keyMs : _parseItTime(item.time);
+                if (isNaN(_timeMs)) _timeMs = 0; // has a day but unknown time -> start of day
+                rows.push({ type: 'custom', ckey: ckey, item: item, sortKey: item.date || '', timeMs: _timeMs, seq: -1 });
             });
-            // 3) Sort by date key ascending (itinerary order). Rows without a key
-            //    (shouldn't happen) sort last but keep stable relative order.
+            // 3) Sort: primary = trip day (YYYY-MM-DD), secondary = real time-of-day
+            //    (ms) within that day, tertiary = itinerary sequence for stable order.
             rows.sort(function(a, b) {
-                if (!a.sortKey && !b.sortKey) return 0;
-                if (!a.sortKey) return 1;
-                if (!b.sortKey) return -1;
-                return a.sortKey.localeCompare(b.sortKey);
+                if (a.sortKey !== b.sortKey) {
+                    if (!a.sortKey) return 1;
+                    if (!b.sortKey) return -1;
+                    return a.sortKey.localeCompare(b.sortKey);
+                }
+                // same day → order by real timestamp
+                if (a.timeMs !== b.timeMs) return a.timeMs - b.timeMs;
+                // final tiebreaker: keep itinerary order stable
+                return (a.seq || 0) - (b.seq || 0);
             });
             // 4) Render
             rows.forEach(function(row) {
@@ -11187,8 +11215,10 @@ window.injectAllWikiLinks = function() {
             // v4.47: read the REAL capture date (EXIF DateTimeOriginal) from the
             // ORIGINAL file BEFORE compression, so photos can be ordered by when
             // they were actually taken (not when they were uploaded).
-            _readExifDate(p.file, function(takenMs) {
-            compressImageFromFile(p.file, 3000, 0.85, function(blob) {
+            // v4.52: single FileReader — takenMs now comes from compressImageFromFile
+            // (2nd callback arg). The old outer _readExifDate wrapper opened a second
+            // concurrent FileReader on the same File and hung silently on Android.
+            compressImageFromFile(p.file, 3000, 0.85, function(blob, takenMs) {
               var filename = dayKey + '_' + Date.now() + '_' + idx + '.jpg';
               var fileRef = storageRef.child(dayKey + '/' + filename);
               fileRef.put(blob).then(function(snapshot) {
@@ -11214,7 +11244,6 @@ window.injectAllWikiLinks = function() {
                 console.warn('[Recap] Photo upload error:', err);
                 resolve();
               });
-            });
             });
           });
         });
@@ -11435,10 +11464,14 @@ window.injectAllWikiLinks = function() {
     segReader.onload = function(segEv) {
       var parsed = _parseJpegExif(segEv.target.result);
       var app1 = parsed.app1;
+      // v4.52: capture EXIF date here (single FileReader) and pass to callback as 2nd arg.
+      // This removes the old outer _readExifDate wrapper which opened a SECOND
+      // concurrent FileReader on the same File object and blocked silently on Android.
+      var takenMs = parsed.dateMs || (file && file.lastModified) || null;
       var isJpeg = file && /image\/jpe?g/i.test(file.type || '');
       // Keep small JPEGs exactly as-is to retain ALL metadata.
       if (isJpeg && file.size && file.size <= KEEP_ORIGINAL_BYTES) {
-        callback(file);
+        callback(file, takenMs);
         return;
       }
       var reader = new FileReader();
@@ -11453,15 +11486,15 @@ window.injectAllWikiLinks = function() {
           var ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
           canvas.toBlob(function(blob) {
-            if (!blob) { callback(file); return; }
+            if (!blob) { callback(file, takenMs); return; }
             // Re-inject the original EXIF so capture date is preserved in-file.
-            _injectExifIntoJpeg(blob, app1, function(finalBlob) { callback(finalBlob); });
+            _injectExifIntoJpeg(blob, app1, function(finalBlob) { callback(finalBlob, takenMs); });
           }, 'image/jpeg', quality);
         };
-        img.onerror = function() { callback(file); };
+        img.onerror = function() { callback(file, takenMs); };
         img.src = e.target.result;
       };
-      reader.onerror = function() { callback(file); };
+      reader.onerror = function() { callback(file, takenMs); };
       reader.readAsDataURL(file);
     };
     segReader.onerror = function() {
@@ -11477,7 +11510,7 @@ window.injectAllWikiLinks = function() {
           canvas.height = Math.round(img.height * ratio);
           var ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-          canvas.toBlob(function(blob) { callback(blob || file); }, 'image/jpeg', quality);
+          canvas.toBlob(function(blob) { callback(blob || file, (file && file.lastModified) || null); }, 'image/jpeg', quality);
         };
         img.src = e.target.result;
       };
@@ -13856,6 +13889,10 @@ window.injectAllWikiLinks = function() {
   // === END CHAT AUTH-AWARE INITIALIZATION ===
 
   // ─── v4.00 Feature #19: Collaborative Playlist ───
+  // v4.53: REMOVED — the collaborative playlist ("Colonna sonora / Soundtrack")
+  // section was removed from chat per user request. The HTML block was deleted
+  // from index.html / index_en.html and the init logic is no longer needed.
+  /* removed initPlaylist IIFE
   (function initPlaylist() {
     var plSection = document.getElementById('chat-playlist-section');
     var plToggle = document.getElementById('chat-playlist-toggle');
@@ -13979,6 +14016,7 @@ window.injectAllWikiLinks = function() {
       });
     });
   })();
+  */
 
 })();
 
@@ -16475,8 +16513,9 @@ window.injectAllWikiLinks = function() {
 
         // v4.47: read the REAL capture date (EXIF DateTimeOriginal) from the
         // ORIGINAL file BEFORE compression, then compress (EXIF-preserving).
-        _readExifDate(file, function(takenMs) {
-        compressImage(file, 3000, 0.85, function(blob) {
+        // v4.52: single FileReader — takenMs now comes from compressImage's 2nd
+        // callback arg (removed the outer _readExifDate wrapper that hung on Android).
+        compressImage(file, 3000, 0.85, function(blob, takenMs) {
           fileRef.put(blob).then(function(snapshot) {
             return snapshot.ref.getDownloadURL();
           }).then(function(url) {
@@ -16494,7 +16533,6 @@ window.injectAllWikiLinks = function() {
             console.error('[Diario] Upload error:', err);
             if (window.showToast) showToast(isEN ? 'Upload failed' : 'Upload fallito', 'error');
           });
-        });
         });
       });
     });
@@ -16665,7 +16703,7 @@ window.injectAllWikiLinks = function() {
         var ctx = canvas.getContext('2d');
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
         canvas.toBlob(function(blob) {
-          callback(blob);
+          callback(blob, (file && file.lastModified) || null);
         }, 'image/jpeg', quality);
       };
       img.src = e.target.result;

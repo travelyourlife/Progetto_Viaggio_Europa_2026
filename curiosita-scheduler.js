@@ -235,6 +235,26 @@
       }
       // v2.59: evening photo recap (always client-side)
       setTimeout(checkAndSendEveningRecap, 8000);
+      // v4.52 FIX: the recap used to be checked only ONCE, 8s after login, and
+      // only if it was already >= 23:00 at that exact moment. If the app was
+      // opened before 23:00 (or not in foreground at 23:00), the recap never
+      // fired for that day. Add a periodic watcher (like the curiosità one) so
+      // that while the app stays open it re-checks and fires as soon as it
+      // turns 23:00. The send stays idempotent per day via the atomic claim.
+      startRecapWatcher();
+    }
+  });
+
+  // v4.52: periodic + foreground re-check for the evening recap.
+  var _recapInterval = null;
+  function startRecapWatcher() {
+    if (_recapInterval) return;
+    _recapInterval = setInterval(checkAndSendEveningRecap, 10 * 60 * 1000); // ogni 10 min
+  }
+  // Also re-check when the app returns to the foreground (e.g. reopened at night).
+  document.addEventListener('visibilitychange', function() {
+    if (document.visibilityState === 'visible') {
+      setTimeout(checkAndSendEveningRecap, 1500);
     }
   });
 
@@ -262,6 +282,14 @@
   }
 
   function checkAndSendEveningRecap() {
+    // v4.52: recap is now sent server-side (eveningRecapDispatcher @ 23:00 Rome).
+    // Skip the client auto-send to avoid double-posting. The idempotent claim in
+    // notifications/eveningRecapMeta would also prevent duplicates, but gating here
+    // avoids needless reads. Pass force=true (manual/debug) to bypass.
+    if (window.QV_RECAP_SERVER_SIDE && !(typeof arguments[0] === 'object' && arguments[0] && arguments[0].force)) {
+      return;
+    }
+
     var user = (typeof AuthManager !== 'undefined' && AuthManager.isResolved())
       ? AuthManager.getUser()
       : (typeof firebase !== 'undefined' && firebase.auth ? firebase.auth().currentUser : null);
@@ -278,17 +306,17 @@
     var today = localDateStr(now);
     var db = firebase.database();
 
-    // Atomic claim to prevent duplicate recaps
+    // v4.52 FIX: check-then-load-then-claim. Previously the atomic claim was
+    // set BEFORE loading data, so if any data read failed (network/permissions)
+    // the day stayed "claimed" forever and the recap for that day was never
+    // retried → the recap silently "disappeared". Now we (1) quick-check it
+    // wasn't already sent, (2) load all data, (3) atomically claim right before
+    // sending, and (4) roll back the claim on ANY failure so a later reopen retries.
     var recapMetaRef = db.ref('trips/' + familyId + '/notifications/eveningRecapMeta');
-    recapMetaRef.transaction(function(current) {
-      current = current || {};
-      if (current.lastSentDate === today) return; // already sent → abort
-      current.lastSentDate = today;
-      current.tripDay = tripDay;
-      return current;
-    }).then(function(result) {
-      if (!result.committed) {
-        console.log('[EveningRecap] Già inviato oggi o reclamato da altra esecuzione, skip.');
+    recapMetaRef.once('value').then(function(_metaSnap) {
+      var _meta = _metaSnap.val() || {};
+      if (_meta.lastSentDate === today) {
+        console.log('[EveningRecap] Già inviato oggi, skip.');
         return;
       }
 
@@ -444,30 +472,47 @@
 
           var msgText = msgParts.join('\n');
 
-          // Push to chat
-          var chatRef = db.ref('chat/' + familyId);
-          var chatMsg = {
-            uid: user.uid,
-            displayName: user.displayName || 'Owner',
-            text: msgText,
-            timestamp: firebase.database.ServerValue.TIMESTAMP,
-            type: 'evening_recap',
-            photos: photos.length > 0 ? photos.slice(0, 3) : null
-          };
+          // v4.52: atomically claim the day ONLY now (data is ready). If another
+          // device/tab already claimed it in the meantime, abort without sending.
+          recapMetaRef.transaction(function(current) {
+            current = current || {};
+            if (current.lastSentDate === today) return; // already sent → abort
+            current.lastSentDate = today;
+            current.tripDay = tripDay;
+            return current;
+          }).then(function(claimResult) {
+            if (!claimResult.committed) {
+              console.log('[EveningRecap] Reclamato da altra esecuzione, skip invio.');
+              return;
+            }
 
-          chatRef.push(chatMsg).then(function() {
-            console.log('[EveningRecap] Sent for day', tripDay);
-          }).catch(function(err) {
-            console.error('[EveningRecap] Send error:', err);
-            // Rollback claim so a retry can re-send
-            recapMetaRef.transaction(function(cur) {
-              if (cur && cur.lastSentDate === today) { cur.lastSentDate = null; return cur; }
-              return cur;
+            // Push to chat
+            var chatRef = db.ref('chat/' + familyId);
+            var chatMsg = {
+              uid: user.uid,
+              displayName: user.displayName || 'Owner',
+              text: msgText,
+              timestamp: firebase.database.ServerValue.TIMESTAMP,
+              type: 'evening_recap',
+              photos: photos.length > 0 ? photos.slice(0, 3) : null
+            };
+
+            chatRef.push(chatMsg).then(function() {
+              console.log('[EveningRecap] Sent for day', tripDay);
+            }).catch(function(err) {
+              console.error('[EveningRecap] Send error:', err);
+              // Rollback claim so a retry can re-send
+              recapMetaRef.transaction(function(cur) {
+                if (cur && cur.lastSentDate === today) { cur.lastSentDate = null; return cur; }
+                return cur;
+              });
             });
+          }).catch(function(err) {
+            console.error('[EveningRecap] Claim error:', err);
           });
         }); // end Promise.all .then()
     }).catch(function(err) {
-      console.error('[EveningRecap] Meta read error:', err);
+      console.error('[EveningRecap] Data read error:', err);
     });
   }
 

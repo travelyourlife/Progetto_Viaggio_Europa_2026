@@ -5,6 +5,22 @@
 
 # Quo Vadis — Changelog
 
+## v4.54 — 2026-07-02
+**Fix ordine cronologico nella lista Tappe (stesso giorno)**
+- **Corretto l'ordine delle tappe all'interno dello stesso giorno.** Prima, a parità di data, le tappe erano ordinate solo per giorno: una tappa aggiunta a mano (📌) la mattina poteva comparire *sotto* una tappa dell'itinerario spuntata più tardi lo stesso giorno.
+- Ora, a parità di giorno, le voci sono ordinate per **orario reale**: per le tappe custom si usa il momento di creazione (o l'orario indicato), per le tappe dell'itinerario l'orario del check-in. Le tappe dell'itinerario **non ancora spuntate** restano in coda al loro giorno, nell'ordine dell'itinerario.
+
+## v4.53 — 2026-07-02
+**Rimossa la "Colonna sonora" dalla chat**
+- **Eliminata la sezione "🎵 Colonna sonora — G# / Tocca per suggerire una canzone per la tappa di oggi"** (la playlist collaborativa) dal fondo della chat. Rimossa in **entrambe le lingue** (IT/EN) sia dall'interfaccia sia dalla logica di inizializzazione.
+
+## v4.52 — 2026-07-02
+**Fix: le foto dei post del diario non venivano salvate su Android + riepilogo serale lato server**
+- **Risolto il bug per cui le foto aggiunte ai post del diario non venivano salvate su Android** (regressione introdotta con la lettura della data EXIF in v4.47). La causa: il caricamento apriva **due lettori di file (FileReader) contemporaneamente sullo stesso file** — uno per leggere la data dello scatto e uno per comprimere l'immagine. Su Android Chrome questa combinazione si bloccava in silenzio e la foto non veniva mai caricata.
+- **Soluzione:** ora la data dello scatto (EXIF `DateTimeOriginal`) viene letta **una sola volta**, all'interno della stessa fase di compressione, ed è restituita insieme all'immagine. Rimosso il secondo lettore ridondante da entrambi i punti di caricamento (nuovo post e aggiunta foto a un post esistente).
+- **Nessuna perdita di funzionalità:** la data reale dello scatto continua a essere salvata come `takenAt` per l'ordinamento corretto delle foto, e i metadati EXIF restano preservati dentro il file (con fallback a `lastModified` quando l'EXIF non è disponibile).
+- **Riepilogo serale ora lato server:** il riepilogo automatico delle 23:00 (ora di Roma) è gestito da una funzione pianificata su Firebase (`eveningRecapDispatcher`), così arriva **anche quando l'app è chiusa**. L'invio dal client è disattivato tramite il flag `QV_RECAP_SERVER_SIDE` per evitare messaggi doppi. *(Richiede il deploy della Cloud Function — vedi nota di consegna.)*
+
 ## v4.51 — 2026-07-01
 **Allineamento menu: voci mancanti aggiunte ovunque**
 - **"Itinerari città" ora anche nella home del visitatore** (griglia "Esplora il piano di viaggio"), oltre che nelle home owner/follower e nel menu "Altro". Così la voce è presente in **tutte** le viste della home.
