@@ -2007,6 +2007,8 @@
     overlay.querySelector('.diario-edit-cancel').addEventListener('click', function() { overlay.remove(); });
     overlay.addEventListener('click', function(e) { if (e.target === overlay) overlay.remove(); });
   }
+  // v4.51: expose so the static "Altro" menu (and others) can open the curiosity panel
+  try { window.openCuriosityPanel = openCuriosityPanel; } catch (e) {}
 
   // ─── Mini-map hint auto-hide ───
   function setupMiniMapHint() {

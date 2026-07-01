@@ -14013,6 +14013,15 @@ window.injectAllWikiLinks = function() {
     });
   });
 
+  // v4.51: Curiosità tile in Altro menu → opens the curiosity panel (parity with home menus)
+  var altroCuriositaBtn = document.getElementById('altro-curiosita-btn');
+  if (altroCuriositaBtn) {
+    altroCuriositaBtn.addEventListener('click', function() {
+      if (typeof window.openCuriosityPanel === 'function') window.openCuriosityPanel();
+      if (window.haptic) window.haptic(15);
+    });
+  }
+
   // Search button in Altro page → opens global search overlay
   var altroSearchBtn = document.getElementById('altroSearchBtn');
   if (altroSearchBtn) {

@@ -5,6 +5,17 @@
 
 # Quo Vadis — Changelog
 
+## v4.51 — 2026-07-01
+**Allineamento menu: voci mancanti aggiunte ovunque**
+- **"Itinerari città" ora anche nella home del visitatore** (griglia "Esplora il piano di viaggio"), oltre che nelle home owner/follower e nel menu "Altro". Così la voce è presente in **tutte** le viste della home.
+- **"Curiosità" aggiunta al menu "Altro"** (la pagina ⋯ in basso): prima era presente solo nelle home dinamiche; ora c'è anche qui, tra le Guide, e apre il pannello delle curiosità del viaggio.
+- Aggiunte applicate in **entrambe le lingue** (IT/EN) per piena coerenza tra i menu.
+
+## v4.50 — 2026-07-01
+**"Itinerari città" anche nel menu ESPLORA della home**
+- **Aggiunta la voce "🗺️ Itinerari città" nella sezione ESPLORA in fondo alla Home.** Prima il collegamento agli itinerari a piedi delle città era raggiungibile solo dal pulsante in cima alla Home e dal menu "Altro"; ora compare anche tra i chip ESPLORA (dopo "Luoghi"), accanto a Cibo, Cultura, Attività, Luoghi, Riepilogo e Curiosità, aprendo la stessa tab Itinerari.
+- **Applicato a tutte le varianti di home** (owner e follower) e in **entrambe le lingue** (IT "Itinerari città", EN "City Routes"), per coerenza con le altre voci.
+
 ## v4.49 — 2026-06-30
 **Anteprima foto dei post nella home: foto intera, niente più tagli**
 - **Le foto nell'anteprima del "Diario di bordo" (home) ora si vedono per intero.** Prima la miniatura aveva un'altezza fissa (180px) con ritaglio forzato (`cover`) centrato: le foto **verticali** venivano tagliate sopra e sotto, "decapitando" il soggetto (come nella foto in spiaggia). Ora l'anteprima mostra la foto **completa**, mantenendo le proporzioni, con un'altezza massima (360px) e uno sfondo neutro che riempie le eventuali bande laterali. Verticali e orizzontali hanno entrambe senso.
