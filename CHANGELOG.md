@@ -5,6 +5,11 @@
 
 # Quo Vadis — Changelog
 
+## v4.55 — 2026-07-02
+**Foto verticali nei post del diario: mostrate intere, niente più tagli**
+- **Corretta la visualizzazione delle foto verticali (ritratto) nei post con una sola foto.** Prima venivano forzate in un riquadro di altezza fissa e ritagliate (`object-fit: cover`), tagliando spesso la testa. Ora la foto singola è mostrata **intera** (`object-fit: contain`) con un'altezza massima ragionevole (70% dello schermo) e sfondo neutro, coerentemente con l'anteprima nella home (v4.49).
+- I post con **più foto** mantengono la striscia orizzontale di miniature come prima.
+
 ## v4.54 — 2026-07-02
 **Fix ordine cronologico nella lista Tappe (stesso giorno)**
 - **Corretto l'ordine delle tappe all'interno dello stesso giorno.** Prima, a parità di data, le tappe erano ordinate solo per giorno: una tappa aggiunta a mano (📌) la mattina poteva comparire *sotto* una tappa dell'itinerario spuntata più tardi lo stesso giorno.

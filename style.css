@@ -4464,10 +4464,20 @@ html[lang="en"] .notif-drawer-list:empty::after {
   scroll-snap-type: x mandatory;
   padding: 0;
 }
-.diario-photos:has(.diario-photo-wrap:only-child) .diario-photo-wrap,
+/* v4.55: single-photo posts show the WHOLE image (no crop / no decapitated
+   portraits). Use auto height with a sensible cap and object-fit: contain,
+   consistent with the home feed preview (v4.49). Multi-photo posts keep the
+   horizontal thumbnail strip below. */
+.diario-photos:has(.diario-photo-wrap:only-child) .diario-photo-wrap {
+  width: 100%;
+  height: auto;
+}
 .diario-photos:has(.diario-photo-wrap:only-child) .diario-photo {
   width: 100%;
-  height: 220px;
+  height: auto;
+  max-height: 70vh;
+  object-fit: contain;
+  background: #f1f5f9;
 }
 /* v4.22: each photo is wrapped to host reorder controls */
 .diario-photo-wrap {
