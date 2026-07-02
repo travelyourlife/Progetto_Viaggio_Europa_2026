@@ -19,6 +19,33 @@ var LANG = document.documentElement.lang || 'it';
 var isEN = LANG === 'en' || location.pathname.indexOf('_en') !== -1;
 window.isEN = isEN;
 
+// ─── v4.61: Ferry legs overlay (red dashed) — single source of truth ───
+// TRIP_COORDS index (0-based) of days whose leg arrives BY SEA (ferry).
+// G8 Tallinn→Helsinki(idx7), G19 Gryllefjord→Andenes(idx18), G21 Vesterålen(idx20),
+// G26 Moskenes→Bodø(idx25), G33 internal ferries(idx32), G35 Kristiansand→Hirtshals(idx34).
+window.FERRY_DAY_IDX = [7, 18, 20, 25, 32, 34];
+// Draws the ferry segments as a red dashed line on top of an existing route.
+// routeCoords must be [HOME, day0, day1, ...] (HOME prepended), matching the app's route arrays.
+window._drawFerryLegs = function(map, routeCoords) {
+  try {
+    if (!map || typeof L === 'undefined' || !Array.isArray(routeCoords)) return;
+    // map may be a Leaflet Map OR a LayerGroup; both expose addTo-compatible add via polyline.addTo(map)
+    window.FERRY_DAY_IDX.forEach(function(di) {
+      // day di (0-based TRIP_COORDS) sits at routeCoords[di+1] because HOME is prepended.
+      var iTo = di + 1;
+      var iFrom = iTo - 1;
+      if (iFrom < 0 || iTo >= routeCoords.length) return;
+      var a = routeCoords[iFrom], b = routeCoords[iTo];
+      if (!a || !b) return;
+      L.polyline([a, b], {
+        color: '#e53e3e', weight: 3, opacity: 0.9,
+        dashArray: '2,9', lineCap: 'round', lineJoin: 'round',
+        className: 'qv-ferry-leg'
+      }).addTo(map);
+    });
+  } catch (e) { if (window._qvLog) window._qvLog.warn('ferry legs draw failed', e); }
+};
+
 // ─── v4.41 (Audit Option A): SINGLE SOURCE OF TRUTH for per-day COORDINATES ───
 // Problem (from the data-architecture audit): each trip day stored its coordinates
 // in THREE separate places — itinerario[].mapsUrl (data.js), DAYS_DATA[].meteo
@@ -317,6 +344,7 @@ try {
   if (typeof firebase !== 'undefined' && firebaseConfig.apiKey) {
     firebase.initializeApp(firebaseConfig);
     db = firebase.database();
+    window.db = db; // v4.61: expose for fullscreen historical-track loader
     dbRef = db.ref('trips/' + FAMILY_ID);
     // v2.34 FIX: Force LOCAL persistence immediately after init (critical for Capacitor WebView)
     firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(function(e) {
@@ -1096,6 +1124,10 @@ function checkOwnerStatus() {
             _approvedRef.once('value', function(appSnap) {
               if (appSnap.exists()) {
                 window._userApproved = true; // Mark user as approved for tab access
+                // v4.62: approval resolved asynchronously — re-render the Home so the
+                // feed switches from the "awaiting approval" banner to the real feed
+                // (or honest empty state) without needing a manual reload.
+                try { if (window.HomeVariants && window.HomeVariants.rerender) window.HomeVariants.rerender(); } catch (e) {}
                 return; // already approved
               }
               _pendingRef.once('value', function(pendSnap) {
@@ -1400,7 +1432,7 @@ window.openMapFullscreen = function openMapFullscreen(mapInstance, title) {
         document.body.style.overflow = 'hidden';
         var fsMapDiv = overlay.querySelector('#map-fs-container');
         var fsMap = L.map(fsMapDiv, { zoomControl: false, attributionControl: false, scrollWheelZoom: true, dragging: true, tap: true, zoomAnimation: false, fadeAnimation: false }).setView([52.0, 15.0], 4);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(fsMap);
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { maxZoom: 19 }).addTo(fsMap);
         L.control.zoom({ position: 'bottomright' }).addTo(fsMap);
         // Draw route from TRIP_COORDS
         if (typeof TRIP_COORDS !== 'undefined') {
@@ -1421,6 +1453,8 @@ window.openMapFullscreen = function openMapFullscreen(mapInstance, title) {
             } else {
                 L.polyline(routeCoords, { color: '#2c5282', weight: 2.5, opacity: 0.5, dashArray: '8,6', lineJoin: 'round' }).addTo(fsMap);
             }
+            // v4.61: overlay ferry legs (red dashed)
+            if (window._drawFerryLegs) window._drawFerryLegs(fsMap, routeCoords);
             // Add stop markers (same style as Itinerario map)
             var stops = []; var prev = null;
             TRIP_COORDS.forEach(function(c, i) {
@@ -1523,7 +1557,7 @@ window.openMapFullscreen = function openMapFullscreen(mapInstance, title) {
     }).setView(center, zoom);
 
     // Copy tile layer
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
         maxZoom: 19
     }).addTo(fsMap);
 
@@ -1542,11 +1576,59 @@ window.openMapFullscreen = function openMapFullscreen(mapInstance, title) {
                 cloned = L.marker(layer.getLatLng(), { icon: layer.getIcon ? layer.getIcon() : layer.options.icon });
                 if (layer.getPopup()) cloned.bindPopup(layer.getPopup().getContent(), layer.getPopup().options);
             } else if (layer instanceof L.Polyline) {
+                // v4.61 FIX (doppia traccia): non clonare le tracce storiche.
+                // Verranno ricaricate una sola volta nel fullscreen (vedi blocco sotto),
+                // altrimenti si sommano al ridisegno asincrono creando linee doppie.
+                if (layer._isHistoricalTrack || (layer.options && layer.options._isHistoricalTrack)) return;
                 cloned = L.polyline(layer.getLatLngs(), layer.options);
             }
             if (cloned) cloned.addTo(fsMap);
         } catch(e) { /* skip non-clonable layers */ }
     });
+
+    // v4.61 FIX (doppia traccia): carica le tracce storiche UNA sola volta nel
+    // fullscreen (sono state escluse dalla clonazione eachLayer sopra). Usa la
+    // cache OSRM in sessionStorage, quindi niente chiamate di rete extra.
+    (function _fsLoadHistoricalTracks() {
+        try {
+            if (!window._fillGapsOSRM || !window.FAMILY_ID || !window.db || !window.localDateStr) return;
+            var _fsTripStart = typeof TRIP_START !== 'undefined' ? TRIP_START : new Date(2026, 5, 25);
+            var _fsToday = new Date(); _fsToday.setHours(0, 0, 0, 0);
+            var _fsCursor = new Date(_fsTripStart); _fsCursor.setHours(0, 0, 0, 0);
+            var _fsDates = [];
+            while (_fsCursor < _fsToday) {
+                _fsDates.push(window.localDateStr(_fsCursor));
+                _fsCursor.setDate(_fsCursor.getDate() + 1);
+            }
+            if (_fsDates.length === 0) return;
+            var _fsPromises = _fsDates.map(function(dateStr) {
+                return new Promise(function(resolve) {
+                    var ref = window.db.ref('trips/' + window.FAMILY_ID + '/tracks/' + dateStr + '/points');
+                    ref.once('value', function(snap) {
+                        var raw = snap.val(), pts = [];
+                        if (Array.isArray(raw)) pts = raw;
+                        else if (raw && typeof raw === 'object') pts = Object.values(raw);
+                        resolve(pts);
+                    }, function() { resolve([]); });
+                });
+            });
+            Promise.all(_fsPromises).then(function(allDays) {
+                var flat = window._flattenDaysForFill ? window._flattenDaysForFill(allDays)
+                    : [].concat.apply([], allDays || []);
+                if (window._prependHomeAnchor) flat = window._prependHomeAnchor(flat);
+                return window._fillGapsOSRM(flat);
+            }).then(function(latlngs) {
+                if (!fsMap || !fsMap._container) return; // fullscreen closed meanwhile
+                if (latlngs && latlngs.length > 1) {
+                    var hl = L.polyline(latlngs, {
+                        color: '#e53e3e', weight: 4, opacity: 0.75,
+                        _isHistoricalTrack: true
+                    }).addTo(fsMap);
+                    hl._isHistoricalTrack = true;
+                }
+            }).catch(function(e) { if (window._qvLog) window._qvLog.warn('[FS] historical tracks error', e); });
+        } catch (e) { if (window._qvLog) window._qvLog.warn('[FS] historical tracks setup error', e); }
+    })();
 
     // Auto-zoom to fit all route content
     setTimeout(function() {
@@ -1682,7 +1764,7 @@ function initRouteMap() {
             tap: true
         });
 
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
             maxZoom: 18
         }).addTo(routeMapInstance);
 
@@ -1713,6 +1795,8 @@ function initRouteMap() {
                 L.polyline(futureCoords, { color: '#2c5282', weight: 2.5, opacity: 0.5, dashArray: '8,6', lineJoin: 'round' }).addTo(routeMapInstance);
             }
         }
+        // v4.61: overlay ferry legs (red dashed)
+        if (window._drawFerryLegs) window._drawFerryLegs(routeMapInstance, routeCoords);
 
         // Group consecutive days at same location to avoid overlapping markers
         var stops = [];
@@ -2319,6 +2403,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         // ─── v3.39: Toggle km/ore + Vista settimanale espansa ───────────────
         var minibarTotal   = document.getElementById('minibar-total');
+        var minibarBreakdown = document.getElementById('minibar-breakdown');
         var toggleKm       = document.getElementById('minibar-toggle-km');
         var toggleOre      = document.getElementById('minibar-toggle-ore');
         var minibarLegend  = document.getElementById('minibar-legend');
@@ -2348,6 +2433,11 @@ document.addEventListener('DOMContentLoaded', function() {
         days.forEach(function(d) { totalKm += (d.km || 0); });
         var totalHours = 0;
         hoursData.forEach(function(h) { totalHours += h; });
+        // v4.61: ferry km itemization (sea distances of ferry legs, from data.js)
+        var FERRY_KM_BY_ID = { g8: 80, g19: 40, g21: 25, g26: 89, g33: 20, g35: 130 };
+        var totalFerryKm = 0;
+        days.forEach(function(d) { if (FERRY_KM_BY_ID[d.id]) totalFerryKm += FERRY_KM_BY_ID[d.id]; });
+        var totalRoadKm = totalKm - totalFerryKm;
 
         // Current unit state
         var currentUnit = 'km';
@@ -2359,12 +2449,25 @@ document.addEventListener('DOMContentLoaded', function() {
         // Max hours for bar height scaling
         var MAX_HOURS = 9;
 
+        function fmtKm(v) {
+            return v >= 1000 ? (v / 1000).toFixed(1).replace('.0', '').replace('.', '.') + '' : String(v);
+        }
         function formatTotal(unit) {
             if (unit === 'km') {
+                // Show rounded grand total in thousands, kept as before
                 return totalKm >= 1000 ? (Math.round(totalKm / 1000) + '.000 km') : (totalKm + ' km');
             } else {
                 return '~' + Math.round(totalHours) + (isEN ? 'h driving' : 'h guida');
             }
+        }
+        // v4.61: itemized breakdown string (road + ferry)
+        function formatKmBreakdown() {
+            var road = totalRoadKm.toLocaleString('it-IT');
+            var ferry = totalFerryKm.toLocaleString('it-IT');
+            if (isEN) {
+                return '\uD83D\uDE90 ' + road + ' km on road + \u26F4\uFE0F ' + ferry + ' km by ferry';
+            }
+            return '\uD83D\uDE90 ' + road + ' km su strada + \u26F4\uFE0F ' + ferry + ' km in traghetto';
         }
 
         function getColor(dayIdx, unit) {
@@ -2442,6 +2545,11 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             // Update total
             if (minibarTotal) minibarTotal.textContent = formatTotal(unit);
+            // v4.61: show km breakdown only in km mode
+            if (minibarBreakdown) {
+                if (unit === 'km') { minibarBreakdown.textContent = formatKmBreakdown(); minibarBreakdown.style.display = ''; }
+                else { minibarBreakdown.style.display = 'none'; }
+            }
             // Update compressed bars
             updateCompressedBars();
             // Update legend
@@ -2457,6 +2565,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Set initial total
         if (minibarTotal) minibarTotal.textContent = formatTotal('km');
+        // v4.61: set initial km breakdown
+        if (minibarBreakdown) { minibarBreakdown.textContent = formatKmBreakdown(); minibarBreakdown.style.display = ''; }
 
         // ─── Weekly expanded view ───
         var _currentWeek = 0;
@@ -4076,8 +4186,8 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                 tap: true,  // v3.48: must be true so cluster/marker taps work on mobile
                 scrollWheelZoom: true
             }).setView([52.0, 15.0], 4);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenStreetMap © CARTO', maxZoom: 19
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; OpenStreetMap contributors &copy; CARTO', maxZoom: 19
             }).addTo(map);
             window._posMapInstance = map; // expose for UnifiedMap integration
             var spinner = document.getElementById('mapSpinner');
@@ -4123,6 +4233,8 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                     }
                 }
                 // Before trip: no route line on pos-map (nothing to show yet)
+                // v4.61: overlay ferry legs (red dashed) on whatever route was drawn
+                if (window._drawFerryLegs) window._drawFerryLegs(map, routeCoords);
             }
 
             updateMapMarkers();
@@ -4414,8 +4526,10 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
 
                     if (continuousLatLngs && continuousLatLngs.length > 1) {
                         var line = L.polyline(continuousLatLngs, {
-                            color: '#e53e3e', weight: 4, opacity: 0.75
+                            color: '#e53e3e', weight: 4, opacity: 0.75,
+                            _isHistoricalTrack: true
                         }).addTo(map);
+                        line._isHistoricalTrack = true; // v4.61: robust flag on the layer object
                         _historicalTrackLines.push(line);
                     }
 
@@ -5991,7 +6105,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                             zoomControl: false, attributionControl: false,
                             dragging: true, tap: true
                         }).setView(map.getCenter(), 14);
-                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
                             maxZoom: 19, attribution: ''
                         }).addTo(dmMap);
                         // Live position update loop
@@ -6162,11 +6276,14 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
         if (posFullscreenBtn) {
             posFullscreenBtn.addEventListener('click', function() {
                 initMap();
-                // v3.98 FIX: Ensure trackLine is on the map before fullscreen clone.
-                // During active tracking, trackLine may not exist yet if no points
-                // have been recorded. loadTrackLine() now handles liveActive by
-                // drawing from in-memory todayPoints.
-                loadTrackLine();
+                // v4.61 FIX (doppia traccia): NON richiamare loadTrackLine() qui, perche'
+                // porta con se' loadHistoricalTracks() (asincrono/OSRM) e crea il doppione
+                // quando openMapFullscreen clona i layer gia' presenti + la Promise ridisegna.
+                // Assicura solo che trackLine (oggi) esista, senza rieseguire lo storico.
+                if (liveActive && todayPoints && todayPoints.length > 1 && !trackLine) {
+                    var _ll = todayPoints.map(function(p) { return [p.lat, p.lng]; });
+                    trackLine = L.polyline(_ll, { color: '#e53e3e', weight: 4, opacity: 0.8 }).addTo(map);
+                }
                 window.openMapFullscreen(map, isEN ? 'Live Map' : 'Mappa Live');
             });
         }

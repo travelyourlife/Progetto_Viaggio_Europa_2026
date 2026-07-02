@@ -645,7 +645,7 @@
     destroyMap();
 
     mapInstance = L.map(el, { scrollWheelZoom: false }).setView(city.center, city.zoom || 14);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
       maxZoom: 19,
       attribution: '© OpenStreetMap'
     }).addTo(mapInstance);
@@ -712,7 +712,7 @@
     var fsDiv = overlay.querySelector('#ciMapFs');
     fsMapInstance = L.map(fsDiv, { scrollWheelZoom: true, zoomControl: false })
       .setView(city.center, city.zoom || 14);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
       maxZoom: 19, attribution: '© OpenStreetMap'
     }).addTo(fsMapInstance);
     L.control.zoom({ position: 'bottomright' }).addTo(fsMapInstance);

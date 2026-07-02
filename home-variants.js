@@ -756,7 +756,7 @@
           var tZ = 6;
           var tX = Math.floor((cl.lng + 180) / 360 * Math.pow(2, tZ));
           var tY = Math.floor((1 - Math.log(Math.tan(cl.lat * Math.PI / 180) + 1 / Math.cos(cl.lat * Math.PI / 180)) / Math.PI) / 2 * Math.pow(2, tZ));
-          var tileUrl = 'https://tile.openstreetmap.org/' + tZ + '/' + tX + '/' + tY + '.png';
+          var tileUrl = 'https://a.basemaps.cartocdn.com/rastertiles/voyager/' + tZ + '/' + tX + '/' + tY + '.png';
           var mapImg = document.querySelector('.home-mini-map img, [data-minimap]');
           if (mapImg) mapImg.src = tileUrl;
         }
@@ -765,7 +765,7 @@
     var tileZ = data.tripPreMode ? 7 : 6; // higher zoom for home in pre-trip
     var tileX = Math.floor((mapLng + 180) / 360 * Math.pow(2, tileZ));
     var tileY = Math.floor((1 - Math.log(Math.tan(mapLat * Math.PI / 180) + 1 / Math.cos(mapLat * Math.PI / 180)) / Math.PI) / 2 * Math.pow(2, tileZ));
-    data.miniMapTile = 'https://tile.openstreetmap.org/' + tileZ + '/' + tileX + '/' + tileY + '.png';
+    data.miniMapTile = 'https://a.basemaps.cartocdn.com/rastertiles/voyager/' + tileZ + '/' + tileX + '/' + tileY + '.png';
 
     // Feed (Follower A)
     data.feed = buildFeed(dayData, data);
@@ -1069,6 +1069,37 @@
     return html;
   }
 
+  // v4.62: is the current follower waiting for approval? Owners and approved
+  // users are never pending. Uses the same global flags the tab gates rely on.
+  function _hvIsPending() {
+    var _owner = (typeof isOwner !== 'undefined' && isOwner);
+    var _approved = (typeof window._userApproved !== 'undefined' && window._userApproved);
+    var _loggedIn = (typeof firebaseUser !== 'undefined' && firebaseUser);
+    return !!(_loggedIn && !_owner && !_approved);
+  }
+
+  // v4.62: honest empty/pending state for the Home feed — replaces the old fake
+  // mockup blocks (Check-in "Arrivati a...", Foto "Vista incredibile", Riepilogo).
+  function _hvFeedEmptyState(lang) {
+    if (_hvIsPending()) {
+      return '<div class="hv-feed-item hv-feed-empty" style="text-align:center;padding:24px 16px;">' +
+             '  <div style="font-size:32px;margin-bottom:8px;">\u23f3</div>' +
+             '  <div class="hv-feed-body" style="font-weight:600;margin-bottom:4px;">' +
+             (lang === 'en' ? 'Request sent! Awaiting approval from the organizers.' : 'Richiesta inviata! Attendi l\'approvazione da parte degli organizzatori.') +
+             '  </div>' +
+             '  <div class="hv-feed-body" style="opacity:0.7;font-size:13px;">' +
+             (lang === 'en' ? 'You\'ll get access as soon as it\'s confirmed.' : 'Riceverai accesso appena confermato.') +
+             '  </div>' +
+             '</div>';
+    }
+    return '<div class="hv-feed-item hv-feed-empty" style="text-align:center;padding:24px 16px;">' +
+           '  <div style="font-size:32px;margin-bottom:8px;">\ud83d\udcd6</div>' +
+           '  <div class="hv-feed-body" style="opacity:0.75;">' +
+           (lang === 'en' ? 'No diary updates yet. Trip stories will appear here.' : 'Nessun aggiornamento dal diario per ora. I racconti del viaggio appariranno qui.') +
+           '  </div>' +
+           '</div>';
+  }
+
   function buildFeed(dayData, tripData) {
     var html = '';
     var lang = (typeof isEN !== 'undefined' && isEN) ? 'en' : 'it';
@@ -1081,49 +1112,17 @@
     }
 
     // v2.74: Active trip — show the latest 3 REAL diary posts (the rest are
-    // visible in the full Diary tab). Fall back to the demo blocks only when
-    // there are no real posts yet.
+    // visible in the full Diary tab).
     var realPosts = getPreTripPosts().slice(0, 3);
     if (realPosts.length > 0) {
       realPosts.forEach(function(post) { html += renderRealPost(post, lang); });
       return html;
     }
 
-    // Fallback (no real posts yet): show real feed (standardized: no author, date, tag)
-    var todayStr = new Date().toLocaleDateString('it-IT', {day:'2-digit', month:'2-digit', year:'numeric'}).replace(/\//g, '/');
-    // Check-in item
-    html += '<div class="hv-feed-item" data-hv-action="tab:diario" style="cursor:pointer;">';
-    html += '  <div class="hv-feed-header">';
-    html += '    <div class="hv-feed-time">' + todayStr + '</div>';
-    html += '    <span class="hv-feed-type hv-type-checkin">' + (lang === 'en' ? '📍 Check-in' : '📍 Check-in') + '</span>';
-    html += '  </div>';
-    html += '  <div class="hv-feed-body">' + (lang === 'en' ? 'Arrived in <strong>' : 'Arrivati a <strong>') + escHtml(tripData.city || '--') + '</strong>!</div>';
-    html += '</div>';
-
-    // Photo item
-    html += '<div class="hv-feed-item" data-hv-action="tab:diario" style="cursor:pointer;">';
-    html += '  <div class="hv-feed-header">';
-    html += '    <div class="hv-feed-time">' + todayStr + '</div>';
-    html += '    <span class="hv-feed-type hv-type-photo">' + (lang === 'en' ? '📷 Photo' : '📷 Foto') + '</span>';
-    html += '  </div>';
-    html += '  <div class="hv-feed-photo hv-feed-photo--placeholder"></div>';
-    html += '  <div class="hv-feed-body">' + (lang === 'en' ? 'Incredible view!' : 'Vista incredibile!') + '</div>';
-    html += '</div>';
-
-    // Recap item
-    if (dayData) {
-      html += '<div class="hv-feed-item" data-hv-action="tab:diario" style="cursor:pointer;">';
-      html += '  <div class="hv-feed-header">';
-      html += '    <div class="hv-feed-time">' + todayStr + '</div>';
-      html += '    <span class="hv-feed-type hv-type-recap">' + (lang === 'en' ? '📝 Recap' : '📝 Riepilogo') + '</span>';
-      html += '  </div>';
-      html += '  <div class="hv-feed-body">';
-      html += '    <strong>' + (lang === 'en' ? 'Recap D' : 'Riepilogo G') + (tripData.dayNum > 0 ? tripData.dayNum : '--') + '</strong><br>';
-      html += '    \ud83d\ude90 ' + (dayData.km || '--') + ' km &nbsp; \ud83d\udccd -- ' + (lang === 'en' ? 'stops' : 'tappe') + ' &nbsp; \ud83e\uddb6 -- km ' + (lang === 'en' ? 'on foot' : 'a piedi');
-      html += '  </div>';
-      html += '</div>';
-    }
-
+    // v4.62: no real posts yet — DO NOT fabricate mockup posts (Check-in/Photo/
+    // Recap). Show an honest empty state, or an "awaiting approval" banner if the
+    // follower is still pending, consistent with the Live/Diario/Chat tab gates.
+    html += _hvFeedEmptyState(lang);
     return html;
   }
 
@@ -1154,6 +1153,16 @@
       return html;
     }
 
+    // v4.62: follower awaiting approval — show the same "awaiting approval"
+    // message as the other tabs instead of a recap preview.
+    if (_hvIsPending()) {
+      html += '<div class="hv-diary-preview-header"><div>';
+      html += '  <div class="hv-diary-preview-title">\u23f3 ' + (lang === 'en' ? 'Awaiting approval' : 'In attesa di approvazione') + '</div>';
+      html += '</div></div>';
+      html += '<div class="hv-diary-preview-text">' + (lang === 'en' ? 'Request sent! You\'ll see the diary as soon as the organizers approve you.' : 'Richiesta inviata! Vedrai il diario appena gli organizzatori ti approvano.') + '</div>';
+      return html;
+    }
+
     // Active trip mode
     html += '<div class="hv-diary-preview-header">';
     html += '  <div>';
@@ -1165,8 +1174,10 @@
       html += '<div class="hv-diary-preview-highlight">⭐ ' + escHtml(dayData.narrative.substring(0, 80)) + '...</div>';
     }
     html += '<div class="hv-diary-preview-text">';
-    html += lang === 'en' ? '  Incredible day! ' : '  Giornata incredibile! ';
-    if (dayData) html += escHtml((dayData.narrative || '').replace(/[🚗🌒⛴️🚐]/g, '').substring(0, 120));
+    // v4.62: no hardcoded "Incredible day!" filler — show the real day narrative if
+    // available, otherwise a neutral placeholder (no fabricated enthusiasm).
+    var _narr = dayData ? escHtml((dayData.narrative || '').replace(/[🚗🌒⛴️🚐]/g, '').substring(0, 120)) : '';
+    html += _narr ? _narr : (lang === 'en' ? 'No diary update for today yet.' : 'Nessun aggiornamento dal diario per oggi.');
     html += '</div>';
     html += '<div class="hv-diary-preview-stats">';
     html += '  🚐 ' + (dayData ? dayData.km || '--' : '--') + ' km &nbsp; 📍 -- ' + (lang === 'en' ? 'stops' : 'tappe');
@@ -2034,7 +2045,13 @@
     }
   }
 
+    // v4.62: expose a minimal API so app.js can re-render the Home when the
+  // async approval status resolves (pending banner -> real feed).
+  window.HomeVariants = window.HomeVariants || {};
+  window.HomeVariants.rerender = function() {
+    try { if (_hvReady) renderCurrentVariant(); } catch (e) {}
+  };
+
   // ─── Start ───
   init();
-
 })();

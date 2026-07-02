@@ -161,6 +161,9 @@
       }).addTo(routePlanLayer);
     }
 
+    // v4.61: overlay ferry legs (red dashed) into the route layer group
+    if (window._drawFerryLegs) window._drawFerryLegs(routePlanLayer, routeCoords);
+
     TRIP_COORDS.forEach(function(c, i) {
       var visited = currentDay >= 0 && i <= currentDay;
       if (!visited && currentDay >= 0) {

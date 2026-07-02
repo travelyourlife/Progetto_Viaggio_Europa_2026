@@ -5,6 +5,23 @@
 
 # Quo Vadis — Changelog
 
+## v4.62 — 2026-07-03
+**Home: stop ai contenuti finti per utenti non approvati + stato di attesa coerente**
+- **Rimossi i post mockup dalla Home**: quando il diario è ancora vuoto, la Home non mostra più contenuti finti (il check-in "Arrivati a…", la foto "Vista incredibile!" e il "Riepilogo G" con tappe/km a piedi a "--"), che potevano confondere facendo credere fossero aggiornamenti reali del viaggio.
+- **Messaggio di attesa approvazione anche in Home**: un utente che ha effettuato l'accesso ma **non è ancora approvato** ora vede in Home lo stesso avviso presente nelle schede Live, Diario e Chat — *"Richiesta inviata! Attendi l'approvazione da parte degli organizzatori. Riceverai accesso appena confermato."* — invece di un feed con contenuti fittizi.
+- **Stato vuoto onesto per gli approvati**: se l'utente è approvato ma non ci sono ancora post nel diario, la Home mostra un messaggio neutro (*"Nessun aggiornamento dal diario per ora."*) senza inventare contenuti.
+- **Aggiornamento senza reload**: quando l'approvazione viene confermata, la Home si ri-renderizza automaticamente passando dal banner di attesa al feed reale, senza bisogno di ricaricare l'app.
+- Rimosso anche il testo fisso "Giornata incredibile!" dalla story card: ora mostra il racconto reale del giorno o un segnaposto neutro.
+- Modifiche applicate a entrambe le varianti di home (feed e story) e in entrambe le lingue (IT/EN).
+
+## v4.61 — 2026-07-02
+**Traghetti nei km, mappe con etichette in caratteri latini e tratte in traghetto tratteggiate**
+- **Km del viaggio itemizzati**: sotto il totale dei chilometri ora compare la ripartizione tra 🚐 **11.766 km su strada** e ⛴️ **384 km in traghetto** (totale 12.150 km). I km delle traversate non sono più esclusi né confusi con la strada, ma mostrati a parte. Aggiunto il dettaglio delle tratte in traghetto ai giorni interessati (G8, G19, G21, G26, G33, G35). La ripartizione si adatta anche cambiando unità (km/mi).
+- **Mappe con etichette leggibili (niente cirillico)**: tutte le mappe — sia le mappe interattive Leaflet (Posizione, Itinerario, schermo intero, itinerari città, mappa unificata, Drive Mode) sia la mini-mappa statica della Home — usano ora le tile **CARTO Voyager**, con nomi di luoghi in **caratteri latini/inglese** al posto dei nomi in cirillico che comparivano in alcune zone.
+- **Tratte in traghetto evidenziate**: su tutte le mappe le tratte percorse via mare (traghetti) sono ora disegnate con una **linea rossa tratteggiata**, mentre le tratte su strada restano linee continue colorate. Così è immediato distinguere il percorso via terra da quello via mare.
+- **Corretta la doppia traccia rossa sulla mappa Live a schermo intero**: la traccia GPS del percorso già percorso veniva disegnata **due volte** (una linea rossa sdoppiata/parallela lungo quasi tutto il tragitto). Causa: all'apertura della mappa a schermo intero la traccia storica veniva sia clonata dalla mappa sia ridisegnata dal caricamento asincrono. Ora la traccia storica è esclusa dalla clonazione e caricata una sola volta nel fullscreen → **una sola linea rossa pulita**.
+- Modifiche applicate a entrambe le lingue (IT/EN).
+
 ## v4.60 — 2026-07-02
 **Home follower: scorciatoie allineate alla barra di navigazione**
 - Le tre card "Azioni rapide" della home follower ora rispecchiano i tasti della barra in basso: **Live / Diario / Chat** (stesso ordine), al posto di Diario / Chat / Itinerario.
