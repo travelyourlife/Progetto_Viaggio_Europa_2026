@@ -5,6 +5,24 @@
 
 # Quo Vadis — Changelog
 
+## v4.60 — 2026-07-02
+**Home follower: scorciatoie allineate alla barra di navigazione**
+- Le tre card "Azioni rapide" della home follower ora rispecchiano i tasti della barra in basso: **Live / Diario / Chat** (stesso ordine), al posto di Diario / Chat / Itinerario.
+- "Live" apre la scheda Live (posizione in tempo reale), coerente con l'icona del furgone della barra; Diario e Chat invariati come destinazione.
+- Applicato a entrambe le varianti di home follower (feed e story) e in entrambe le lingue (IT/EN).
+- Aggiunto cache-busting al caricamento dei template home (`home-variants.html`) così la modifica arriva subito senza svuotare manualmente la cache.
+
+## v4.59 — 2026-07-02
+**Anteprima post nella Home: a capo rispettati come nel Diario**
+- Nell'anteprima dei post in Home il testo veniva mostrato tutto di seguito, ignorando gli **a capo** e le righe vuote tra i paragrafi, mentre nel Diario venivano rispettati.
+- Ora il testo dell'anteprima Home usa `white-space: pre-wrap` (come il Diario): gli a capo e i paragrafi del post vengono mostrati correttamente, mantenendo la stessa leggibilità.
+
+## v4.58 — 2026-07-02
+**Ordinamento foto: galleria, post e pulsanti di riordino**
+- **Galleria**: ora è **sempre in ordine cronologico inverso** (le foto più recenti prima), basato sulla data reale della foto (data di scatto EXIF, poi caricamento). Non dipende più dalla data del post né da eventuali riordini manuali fatti nei singoli post.
+- **Foto nei post**: restano in **ordine cronologico** (dalla più vecchia alla più recente) per data reale di scatto. Reso più robusto il caso misto: se in un post alcune foto sono state riordinate a mano e altre aggiunte dopo, quelle riordinate restano al loro posto e le nuove si accodano in ordine cronologico (invece di mescolarsi).
+- **Pulsanti di riordino** (◀ ▶, trascina ☰ e "🕒 Ordina per data"): verificato che funzionano e che la vista si aggiorna subito dopo l'azione. "Ordina per data" resta la scorciatoia per riallineare un post cronologicamente (utile per le foto vecchie caricate prima dell'introduzione della data di scatto).
+
 ## v4.57 — 2026-07-02
 **Nuovo itinerario città: Helsinki**
 - Aggiunto **Helsinki** nella sezione "Itinerari città", con lo stesso formato delle altre città (scheda bilingue IT/EN, mappa con percorso e schede delle tappe).

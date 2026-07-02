@@ -14719,11 +14719,10 @@ window.injectAllWikiLinks = function() {
           }
         });
       });
-      // Sort newest-first: by entry date desc, then by manual order (if set),
-      // then by upload timestamp desc, then by push-key as final tiebreaker.
+      // v4.58: Gallery is ALWAYS purely reverse-chronological by the photo's own
+      // real timestamp (EXIF takenAt → uploadedAt → push-key), independent of the
+      // post date and of any manual per-post order. Newest photo first.
       allPhotos.sort(function(a, b) {
-        if (a.date !== b.date) return b.date.localeCompare(a.date);
-        if (a.order !== null && b.order !== null && a.order !== b.order) return a.order - b.order;
         if ((b.ts || 0) !== (a.ts || 0)) return (b.ts || 0) - (a.ts || 0);
         return String(b.photoKey).localeCompare(String(a.photoKey));
       });
@@ -14829,6 +14828,9 @@ window.injectAllWikiLinks = function() {
         var pa = photos[ka] || {}, pb = photos[kb] || {};
         var oa = (typeof pa.order === 'number') ? pa.order : null;
         var ob = (typeof pb.order === 'number') ? pb.order : null;
+        // v4.58: keep consistent with post render — ordered items first.
+        if (oa !== null && ob === null) return -1;
+        if (oa === null && ob !== null) return 1;
         if (oa !== null && ob !== null && oa !== ob) return oa - ob;
         var ta = tsOf(ka, pa), tb = tsOf(kb, pb);
         if (ta !== tb) return ta - tb;
@@ -15326,6 +15328,10 @@ window.injectAllWikiLinks = function() {
             var pa = entry.photos[ka] || {}, pb = entry.photos[kb] || {};
             var oa = (typeof pa.order === 'number') ? pa.order : null;
             var ob = (typeof pb.order === 'number') ? pb.order : null;
+            // v4.58: photos with a manual order come first (in that order); photos
+            // without one (e.g. newly added) go to the end, chronologically.
+            if (oa !== null && ob === null) return -1;
+            if (oa === null && ob !== null) return 1;
             if (oa !== null && ob !== null && oa !== ob) return oa - ob;
             function tsOf(k, p) {
               var t = (p.takenAt || p.uploadedAt) || 0; // v4.47: EXIF date first

@@ -354,7 +354,7 @@
 .hv-feed-type.hv-type-plan { background: #ffedd5; color: #c2410c; }
 .hv-feed-type.hv-type-day { background: #fef9c3; color: #a16207; }
 .hv-feed-type.hv-type-recap { background: #eff6ff; color: #3b82f6; }
-.hv-feed-body { font-size: 14px; color: var(--text-color, #1a1a2e); line-height: 1.5; }
+.hv-feed-body { font-size: 14px; color: var(--text-color, #1a1a2e); line-height: 1.5; white-space: pre-wrap; word-wrap: break-word; }
 /* v4.49: show the WHOLE photo (no bad crop / "decapitated" subjects).
    The container has a max-height and centers the image with object-fit:contain,
    so portrait and landscape photos both display fully and make sense. A neutral
