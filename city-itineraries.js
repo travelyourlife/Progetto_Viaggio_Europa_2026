@@ -2407,6 +2407,200 @@
       }
     ]
   },
+  "helsinki": {
+    "city": "Helsinki",
+    "cityEN": "Helsinki",
+    "country": "Finlandia",
+    "countryEN": "Finland",
+    "flag": "🇫🇮",
+    "intro": "Esplora Helsinki partendo dal porto: una capitale compatta, verde e affacciata sul Baltico, perfetta da girare in monopattino tra mercati, cattedrali e sorprendenti spazi moderni a misura di famiglia. ⚠️ Dal 17 giugno 2025 i monopattini elettrici (oltre 15 km/h) sono vietati ai minori di 15 anni, anche a noleggio: i bambini più piccoli dovranno salire con un adulto o spostarsi a piedi.",
+    "introEN": "Explore Helsinki starting from the harbour: a compact, green capital on the Baltic, perfect to tour by e-scooter among markets, cathedrals and surprisingly family-friendly modern spaces. ⚠️ Since 17 June 2025, e-scooters (faster than 15 km/h) are banned for under-15s, including rentals: younger children must ride with an adult or go on foot.",
+    "center": [
+      60.1680,
+      24.9520
+    ],
+    "zoom": 14,
+    "stops": [
+      {
+        "tier": 1,
+        "id": "hel-1",
+        "name": "Kauppatori (Piazza del Mercato)",
+        "nameEN": "Kauppatori (Market Square)",
+        "cat": "cibo",
+        "lat": 60.16743,
+        "lng": 24.95261,
+        "short": "La vivace piazza del mercato sul porto: punto di partenza e noleggio monopattini.",
+        "shortEN": "The lively market square on the harbour: starting point and e-scooter pickup.",
+        "desc": "Kauppatori è la storica piazza del mercato di Helsinki, affacciata direttamente sul Mar Baltico e riconoscibile per i caratteristici tendoni arancioni. È il punto di partenza ideale dell'itinerario: qui si trovano numerosi monopattini a noleggio e bancarelle che vendono souvenir tipici in legno, pellicce di renna e prodotti artigianali. Sul fronte gastronomico è il posto giusto per assaggiare street food finlandese come la zuppa di salmone, le polpette di renna e i muikku fritti, piccoli pesciolini di lago. La vista sul porto e sul viavai dei traghetti rende l'atmosfera vivace e piacevole.",
+        "descEN": "Kauppatori is Helsinki's historic market square, facing the Baltic Sea and recognisable by its distinctive orange tents. It is the ideal starting point for the itinerary: plenty of rental e-scooters are parked here, alongside stalls selling typical wooden souvenirs, reindeer furs and handicrafts. For food, this is the place to try Finnish street food such as salmon soup, reindeer meatballs and fried muikku, small lake fish. The view over the harbour and the ferry traffic makes for a lively, pleasant atmosphere.",
+        "tips": "Configura in anticipo l'app di noleggio (Tier, Voi o Lime). Piatti tipici delle bancarelle: circa 10 euro.",
+        "tipsEN": "Set up the rental app (Tier, Voi or Lime) in advance. Stall dishes cost around 10 euros.",
+        "src": [
+          "Profumo di Follia: Helsinki in un giorno",
+          "Visit Finland"
+        ],
+        "maps": "https://maps.google.com/?q=60.16743,24.95261"
+      },
+      {
+        "tier": 2,
+        "id": "hel-2",
+        "name": "Havis Amanda",
+        "nameEN": "Havis Amanda",
+        "cat": "cultura",
+        "lat": 60.16719,
+        "lng": 24.94944,
+        "short": "L'iconica fontana con la ninfa del mare, a due passi dal mercato.",
+        "shortEN": "The iconic sea-nymph fountain, a stone's throw from the market.",
+        "desc": "A pochi metri da Kauppatori si trova la Havis Amanda, una delle statue più amate di Helsinki. Scolpita da Ville Vallgren e inaugurata nel 1908, raffigura una giovane donna che emerge dalle onde, circondata da quattro foche in bronzo che spruzzano acqua: un dettaglio che diverte molto i bambini. La statua rappresenta simbolicamente la rinascita della città. Durante la festa del primo maggio (Vappu) gli studenti la decorano con il tradizionale berretto dei diplomati.",
+        "descEN": "Just steps from Kauppatori stands Havis Amanda, one of Helsinki's most beloved statues. Sculpted by Ville Vallgren and unveiled in 1908, it depicts a young woman rising from the waves, surrounded by four bronze seals that spout water — a detail children love. The statue symbolises the city's rebirth. During the May Day celebration (Vappu), students decorate it with the traditional graduate's cap.",
+        "tips": "Perfetta per una foto ricordo con i bambini.",
+        "tipsEN": "Perfect for a family photo with the kids.",
+        "src": [
+          "Profumo di Follia: Helsinki in un giorno"
+        ],
+        "maps": "https://maps.google.com/?q=60.16719,24.94944"
+      },
+      {
+        "tier": 1,
+        "id": "hel-3",
+        "name": "Vanha Kauppahalli (Mercato Coperto)",
+        "nameEN": "Vanha Kauppahalli (Old Market Hall)",
+        "cat": "cibo",
+        "lat": 60.16680,
+        "lng": 24.95220,
+        "short": "Lo storico mercato coperto del 1889, ideale per una pausa o col maltempo.",
+        "shortEN": "The historic 1889 indoor market, ideal for a break or in bad weather.",
+        "desc": "Il Vanha Kauppahalli è il più antico mercato coperto di Helsinki, inaugurato nel 1889 e riconoscibile per la facciata a strisce rosse e bianche. All'interno, in un'atmosfera accogliente, si trovano piccole botteghe che vendono pesce fresco, formaggi, pane, dolci, spezie, caffè e prelibatezze locali, oltre a graziosi caffè dove sedersi. È la sosta perfetta in una giornata fredda o piovosa e il posto giusto per acquistare souvenir gastronomici come la carne di renna affumicata, venduta sottovuoto e adatta al trasporto.",
+        "descEN": "Vanha Kauppahalli is Helsinki's oldest indoor market, opened in 1889 and recognisable by its red-and-white striped facade. Inside, in a cosy atmosphere, small shops sell fresh fish, cheese, bread, pastries, spices, coffee and local delicacies, alongside charming cafes to sit down in. It is the perfect stop on a cold or rainy day, and a great place to buy edible souvenirs such as vacuum-packed smoked reindeer meat, easy to carry home.",
+        "tips": "A circa 50 metri da Kauppatori, verso il mare.",
+        "tipsEN": "About 50 metres from Kauppatori, towards the sea.",
+        "src": [
+          "Profumo di Follia: Helsinki in un giorno"
+        ],
+        "maps": "https://maps.google.com/?q=60.16680,24.95220"
+      },
+      {
+        "tier": 1,
+        "id": "hel-4",
+        "name": "Cattedrale Uspenski",
+        "nameEN": "Uspenski Cathedral",
+        "cat": "panorama",
+        "lat": 60.16820,
+        "lng": 24.95828,
+        "short": "Grande cattedrale ortodossa in mattoni rossi con vista sul porto.",
+        "shortEN": "Large red-brick Orthodox cathedral with harbour views.",
+        "desc": "A pochi minuti in monopattino verso est, sulla collina di Katajanokka, si erge la Cattedrale Uspenski, la più grande chiesa ortodossa dell'Europa occidentale e settentrionale. Costruita nel 1868 in mattoni rossi e sormontata da cupole a cipolla dorate, domina il porto e offre un bel colpo d'occhio sulla città. La breve salita è ripagata dal panorama e l'interno riccamente decorato in stile bizantino-russo merita una visita.",
+        "descEN": "A few minutes by e-scooter to the east, on the Katajanokka hill, stands Uspenski Cathedral, the largest Orthodox church in Western and Northern Europe. Built in 1868 in red brick and crowned with golden onion domes, it overlooks the harbour and offers a fine view of the city. The short climb is rewarded by the panorama, and the richly decorated Byzantine-Russian interior is worth a visit.",
+        "tips": "Breve salita; ottimo punto panoramico sul porto.",
+        "tipsEN": "Short climb; great viewpoint over the harbour.",
+        "src": [
+          "TripAdvisor: cose da vedere a Helsinki",
+          "Visit Finland"
+        ],
+        "maps": "https://maps.google.com/?q=60.16820,24.95828"
+      },
+      {
+        "tier": 1,
+        "id": "hel-5",
+        "name": "Piazza del Senato e Cattedrale di Helsinki",
+        "nameEN": "Senate Square & Helsinki Cathedral",
+        "cat": "cultura",
+        "lat": 60.16986,
+        "lng": 24.95229,
+        "short": "Il simbolo bianco della città e la sua piazza monumentale pedonale.",
+        "shortEN": "The city's white symbol and its monumental pedestrian square.",
+        "desc": "La Senaatintori è la piazza monumentale che rappresenta la nascita di Helsinki, progettata in stile neoclassico da Carl Ludvig Engel. A dominarla è la candida Cattedrale di Helsinki (Tuomiokirkko), completata nel 1852 e ispirata al Pantheon: la sua imponente scalinata e la cupola verde sono il simbolo più fotografato della città. La piazza, ampia e interamente pedonale, è uno spazio sicuro dove i bambini possono correre liberamente. Attorno si affacciano l'Università e il Palazzo del Governo.",
+        "descEN": "Senaatintori is the monumental square that represents the birth of Helsinki, designed in neoclassical style by Carl Ludvig Engel. It is dominated by the white Helsinki Cathedral (Tuomiokirkko), completed in 1852 and inspired by the Pantheon: its imposing staircase and green dome are the city's most photographed symbol. The wide, fully pedestrian square is a safe space where children can run freely. It is framed by the University and the Government Palace.",
+        "tips": "Piazza pedonale: spazio sicuro per i bambini e ottime foto.",
+        "tipsEN": "Pedestrian square: safe space for kids and great photos.",
+        "src": [
+          "Profumo di Follia: Helsinki in un giorno",
+          "TripAdvisor: cose da vedere a Helsinki"
+        ],
+        "maps": "https://maps.google.com/?q=60.16986,24.95229"
+      },
+      {
+        "tier": 2,
+        "id": "hel-6",
+        "name": "Esplanadi e Design District",
+        "nameEN": "Esplanadi & Design District",
+        "cat": "natura",
+        "lat": 60.16764,
+        "lng": 24.94517,
+        "short": "Il viale-parco alberato di Helsinki, cuore dello shopping e del design.",
+        "shortEN": "Helsinki's tree-lined park avenue, heart of shopping and design.",
+        "desc": "L'Esplanadi è il salotto verde di Helsinki: un viale alberato con un parco centrale, fiancheggiato dai due lati dalle vie dello shopping e dall'inizio del Design District, la zona dedicata al celebre design finlandese. Si può percorrere comodamente in monopattino sulle corsie laterali, ammirando le vetrine, oppure fermarsi nel parco per una pausa: in estate ci sono spesso musicisti di strada e ampi prati dove i bambini possono sgranchirsi le gambe.",
+        "descEN": "Esplanadi is Helsinki's green living room: a tree-lined avenue with a central park, flanked on both sides by shopping streets and the start of the Design District, the area dedicated to renowned Finnish design. You can easily ride it by e-scooter along the side lanes while admiring the shop windows, or stop in the park for a break: in summer there are often street musicians and wide lawns where children can stretch their legs.",
+        "tips": "Percorri le corsie laterali; ideale per una pausa in famiglia.",
+        "tipsEN": "Ride the side lanes; ideal for a family break.",
+        "src": [
+          "Profumo di Follia: Helsinki in un giorno",
+          "Visit Finland"
+        ],
+        "maps": "https://maps.google.com/?q=60.16764,24.94517"
+      },
+      {
+        "tier": 1,
+        "id": "hel-7",
+        "name": "Biblioteca Centrale Oodi",
+        "nameEN": "Oodi Central Library",
+        "cat": "kids",
+        "lat": 60.17359,
+        "lng": 24.93810,
+        "short": "Spettacolare biblioteca moderna con una fantastica area per bambini.",
+        "shortEN": "Spectacular modern library with a fantastic children's area.",
+        "desc": "La Biblioteca Centrale Oodi è molto più di una biblioteca: è un centro polifunzionale dall'architettura futuristica in legno e vetro, inaugurato nel 2018. Il terzo piano, luminoso e aperto, ospita alberi veri, un caffè e soprattutto una splendida area dedicata ai bambini con tappeti morbidi, giochi e costruzioni. È una sosta gratuita e rilassante, perfetta per far riposare i genitori mentre i più piccoli si divertono, specialmente in caso di pioggia.",
+        "descEN": "Oodi Central Library is far more than a library: it is a futuristic multi-purpose centre in wood and glass, opened in 2018. Its bright, open third floor features real trees, a cafe and, above all, a wonderful children's area with soft carpets, toys and building blocks. It is a free, relaxing stop, perfect for resting parents while the little ones play — especially handy in the rain.",
+        "tips": "Ingresso gratuito. Area bimbi al terzo piano.",
+        "tipsEN": "Free entry. Kids' area on the third floor.",
+        "src": [
+          "TripAdvisor: cose da vedere a Helsinki",
+          "Oodi Helsinki (sito ufficiale)"
+        ],
+        "maps": "https://maps.google.com/?q=60.17359,24.93810"
+      },
+      {
+        "tier": 1,
+        "id": "hel-8",
+        "name": "Chiesa nella Roccia (Temppeliaukio)",
+        "nameEN": "Rock Church (Temppeliaukio)",
+        "cat": "cultura",
+        "lat": 60.17313,
+        "lng": 24.92527,
+        "short": "Chiesa unica al mondo, interamente scavata nel granito.",
+        "shortEN": "A one-of-a-kind church carved entirely into granite.",
+        "desc": "La Temppeliaukion Kirkko è una delle attrazioni più spettacolari e insolite di Helsinki: una chiesa interamente scavata all'interno di un blocco di solido granito e inaugurata nel 1969. Entrare in questo 'cratere' circolare, coperto da un'enorme cupola in rame e illuminato dalla luce naturale che filtra dai lucernari, è un'esperienza suggestiva. L'acustica eccezionale la rende una sede molto amata per i concerti, e la particolarità del luogo affascina anche i bambini.",
+        "descEN": "Temppeliaukion Kirkko is one of Helsinki's most spectacular and unusual attractions: a church carved entirely into a block of solid granite and opened in 1969. Stepping into this circular 'crater', covered by a huge copper dome and lit by natural light filtering through the skylights, is a striking experience. Its exceptional acoustics make it a much-loved concert venue, and the sheer originality of the place fascinates children too.",
+        "tips": "Ingresso a pagamento; può chiudere durante concerti o funzioni.",
+        "tipsEN": "Paid entry; may close during concerts or services.",
+        "src": [
+          "TripAdvisor: cose da vedere a Helsinki",
+          "Wikipedia: Temppeliaukio Church"
+        ],
+        "maps": "https://maps.google.com/?q=60.17313,24.92527"
+      },
+      {
+        "tier": 2,
+        "id": "hel-9",
+        "name": "Allas Sea Pool",
+        "nameEN": "Allas Sea Pool",
+        "cat": "attivita",
+        "lat": 60.16812,
+        "lng": 24.95435,
+        "short": "Piscine galleggianti e sauna sul porto, a due passi da Kauppatori.",
+        "shortEN": "Floating pools and sauna on the harbour, steps from Kauppatori.",
+        "desc": "A conclusione del giro, tornando verso Kauppatori, l'Allas Sea Pool è un complesso galleggiante proprio sul porto, con saune pubbliche e piscine riscaldate all'aperto, oltre a una vasca con acqua di mare filtrata. È un'esperienza tipicamente finlandese e divertente anche per i bambini, con vista sul viavai dei traghetti. Una sosta rilassante e rigenerante prima di rientrare al van o al traghetto.",
+        "descEN": "To round off the tour, on the way back to Kauppatori, Allas Sea Pool is a floating complex right on the harbour, with public saunas and heated outdoor pools plus a filtered sea-water pool. It is a quintessentially Finnish experience and fun for children too, with views over the ferry traffic. A relaxing, rejuvenating stop before heading back to the van or ferry.",
+        "tips": "Alternativa adrenalinica per i bambini: il parco divertimenti Linnanmäki, più a nord.",
+        "tipsEN": "Adrenaline alternative for kids: Linnanmäki amusement park, further north.",
+        "src": [
+          "Visit Finland",
+          "Allas Sea Pool (sito ufficiale)"
+        ],
+        "maps": "https://maps.google.com/?q=60.16812,24.95435"
+      }
+    ]
+  },
   "rovaniemi": {
     "city": "Rovaniemi",
     "cityEN": "Rovaniemi",

@@ -11209,44 +11209,55 @@ window.injectAllWikiLinks = function() {
 
       diarioRef.child(dayKey).update(entryData).then(function() {
         // Upload photos
-        var photoPromises = _recapPhotos.map(function(p, idx) {
+        // v4.56: SEQUENTIAL upload with retry (was parallel Promise.all). On weak
+        // connections parallel uploads saturated the link, timed out and failed
+        // silently. We now upload one photo at a time and retry each up to 3x.
+        function _uploadRecapPhoto(p, idx) {
           return new Promise(function(resolve) {
             if (!storageRef) { resolve(); return; }
-            // v4.47: read the REAL capture date (EXIF DateTimeOriginal) from the
-            // ORIGINAL file BEFORE compression, so photos can be ordered by when
-            // they were actually taken (not when they were uploaded).
-            // v4.52: single FileReader — takenMs now comes from compressImageFromFile
-            // (2nd callback arg). The old outer _readExifDate wrapper opened a second
-            // concurrent FileReader on the same File and hung silently on Android.
             compressImageFromFile(p.file, 3000, 0.85, function(blob, takenMs) {
               var filename = dayKey + '_' + Date.now() + '_' + idx + '.jpg';
               var fileRef = storageRef.child(dayKey + '/' + filename);
-              fileRef.put(blob).then(function(snapshot) {
-                return snapshot.ref.getDownloadURL();
-              }).then(function(url) {
-                // v4.22 FIX: use firebase push() key (collision-proof) instead of
-                // Date.now()+idx, which could collide when multiple photos were
-                // uploaded in the same millisecond and silently overwrite each
-                // other (.set), making photos disappear from post & gallery.
-                // Also store uploadedAt so the gallery can sort reliably.
-                // v2.59: attach geotag from current live position if available
-                var _photoGeo = {};
-                if (todayPoints && todayPoints.length > 0) {
-                  var _lp = todayPoints[todayPoints.length - 1];
-                  if (_lp && _lp.lat && _lp.lng) { _photoGeo.lat = _lp.lat; _photoGeo.lng = _lp.lng; }
-                } else if (window._lastKnownLat) {
-                  _photoGeo.lat = window._lastKnownLat; _photoGeo.lng = window._lastKnownLng;
-                }
-                var _rec = Object.assign({ url: url, caption: '', uploadedAt: Date.now() }, _photoGeo);
-                if (takenMs) _rec.takenAt = takenMs; // v4.47: EXIF capture date
-                return diarioRef.child(dayKey + '/photos').push(_rec);
-              }).then(resolve).catch(function(err) {
-                console.warn('[Recap] Photo upload error:', err);
-                resolve();
-              });
+              var MAX_ATTEMPTS = 3;
+              function attempt(n) {
+                return fileRef.put(blob).then(function(snapshot) {
+                  return snapshot.ref.getDownloadURL();
+                }).then(function(url) {
+                  // v4.22 FIX: collision-proof push() key + uploadedAt.
+                  // v2.59: attach geotag from current live position if available
+                  var _photoGeo = {};
+                  if (todayPoints && todayPoints.length > 0) {
+                    var _lp = todayPoints[todayPoints.length - 1];
+                    if (_lp && _lp.lat && _lp.lng) { _photoGeo.lat = _lp.lat; _photoGeo.lng = _lp.lng; }
+                  } else if (window._lastKnownLat) {
+                    _photoGeo.lat = window._lastKnownLat; _photoGeo.lng = window._lastKnownLng;
+                  }
+                  var _rec = Object.assign({ url: url, caption: '', uploadedAt: Date.now() }, _photoGeo);
+                  if (takenMs) _rec.takenAt = takenMs; // v4.47: EXIF capture date
+                  return diarioRef.child(dayKey + '/photos').push(_rec);
+                }).catch(function(err) {
+                  console.warn('[Recap] Photo upload error (attempt ' + n + '/' + MAX_ATTEMPTS + '):', err);
+                  if (n < MAX_ATTEMPTS) {
+                    return new Promise(function(res) { setTimeout(res, 1500 * n); }).then(function() { return attempt(n + 1); });
+                  }
+                  throw err;
+                });
+              }
+              attempt(1).then(resolve).catch(function() { resolve(); });
             });
           });
+        }
+        // Serial queue: each photo starts after the previous finishes.
+        var photoChain = Promise.resolve();
+        _recapPhotos.forEach(function(p, idx) {
+          photoChain = photoChain.then(function() {
+            if (_recapPhotos.length > 1 && window.showToast) {
+              showToast((isEN ? 'Uploading ' : 'Caricamento ') + (idx + 1) + '/' + _recapPhotos.length + '…', 'info', 1500);
+            }
+            return _uploadRecapPhoto(p, idx);
+          });
         });
+        var photoPromises = [photoChain];
 
         // Upload audio (v2.59: supports multiple recordings per day via push)
         var audioPromise = Promise.resolve();
@@ -16501,39 +16512,82 @@ window.injectAllWikiLinks = function() {
     input.addEventListener('change', function() {
       if (document.body.contains(input)) document.body.removeChild(input);
       if (!input.files || input.files.length === 0) return;
+      if (!storageRef) {
+        if (window.showToast) showToast(isEN ? 'Storage not available' : 'Storage non disponibile', 'error');
+        return;
+      }
       var files = Array.from(input.files); // unlimited photos
+      var total = files.length;
 
-      files.forEach(function(file, idx) {
-        if (!storageRef) {
-          if (window.showToast) showToast(isEN ? 'Storage not available' : 'Storage non disponibile', 'error');
-          return;
-        }
+      // v4.56: upload photos SEQUENTIALLY (one at a time) with automatic retry.
+      // Previously all photos were compressed+uploaded in PARALLEL, which on a
+      // weak/unstable connection (e.g. on a ferry) saturated the link, timed out
+      // and failed silently — photos simply never appeared. A serial queue plus
+      // a few retries with backoff makes uploads resilient to flaky networks.
+      var okCount = 0, failCount = 0;
+
+      function compressAsync(file) {
+        return new Promise(function(resolve) {
+          compressImage(file, 3000, 0.85, function(blob, takenMs) {
+            resolve({ blob: blob, takenMs: takenMs });
+          });
+        });
+      }
+
+      function uploadOne(file, idx) {
         var filename = dayKey + '_' + Date.now() + '_' + idx + '.jpg';
         var fileRef = storageRef.child(dayKey + '/' + filename);
+        var MAX_ATTEMPTS = 3;
 
-        // v4.47: read the REAL capture date (EXIF DateTimeOriginal) from the
-        // ORIGINAL file BEFORE compression, then compress (EXIF-preserving).
-        // v4.52: single FileReader — takenMs now comes from compressImage's 2nd
-        // callback arg (removed the outer _readExifDate wrapper that hung on Android).
-        compressImage(file, 3000, 0.85, function(blob, takenMs) {
-          fileRef.put(blob).then(function(snapshot) {
+        function attempt(compressed, n) {
+          return fileRef.put(compressed.blob).then(function(snapshot) {
             return snapshot.ref.getDownloadURL();
           }).then(function(url) {
             // v4.22 FIX: collision-proof push() key + uploadedAt (see new-post upload).
-            // Previously Date.now()+idx could collide and overwrite a photo.
-            var _rec = {
-              url: url,
-              caption: '',
-              uploadedAt: Date.now()
-            };
-            if (takenMs) _rec.takenAt = takenMs; // v4.47: EXIF capture date
-            diarioRef.child(dayKey + '/photos').push(_rec);
-            if (window.showToast) showToast(isEN ? 'Photo uploaded!' : 'Foto caricata!', 'success');
+            var _rec = { url: url, caption: '', uploadedAt: Date.now() };
+            if (compressed.takenMs) _rec.takenAt = compressed.takenMs; // v4.47: EXIF capture date
+            return diarioRef.child(dayKey + '/photos').push(_rec);
           }).catch(function(err) {
-            console.error('[Diario] Upload error:', err);
-            if (window.showToast) showToast(isEN ? 'Upload failed' : 'Upload fallito', 'error');
+            console.error('[Diario] Upload error (attempt ' + n + '/' + MAX_ATTEMPTS + '):', err);
+            if (n < MAX_ATTEMPTS) {
+              // Exponential-ish backoff: 1.5s, 3s… before retrying this photo.
+              return new Promise(function(res) { setTimeout(res, 1500 * n); }).then(function() {
+                return attempt(compressed, n + 1);
+              });
+            }
+            throw err; // give up on this photo after MAX_ATTEMPTS
+          });
+        }
+
+        return compressAsync(file).then(function(compressed) {
+          return attempt(compressed, 1);
+        });
+      }
+
+      // Drive the queue one photo at a time.
+      var chain = Promise.resolve();
+      files.forEach(function(file, idx) {
+        chain = chain.then(function() {
+          if (total > 1 && window.showToast) {
+            showToast((isEN ? 'Uploading ' : 'Caricamento ') + (idx + 1) + '/' + total + '…', 'info', 1500);
+          }
+          return uploadOne(file, idx).then(function() {
+            okCount++;
+            if (total === 1 && window.showToast) showToast(isEN ? 'Photo uploaded!' : 'Foto caricata!', 'success');
+          }).catch(function() {
+            failCount++;
           });
         });
+      });
+
+      chain.then(function() {
+        if (total > 1 && window.showToast) {
+          if (failCount === 0) {
+            showToast((isEN ? 'All ' : 'Tutte le ') + okCount + (isEN ? ' photos uploaded!' : ' foto caricate!'), 'success');
+          } else {
+            showToast(okCount + '/' + total + (isEN ? ' photos uploaded, ' : ' foto caricate, ') + failCount + (isEN ? ' failed — check your connection and retry.' : ' non riuscite — controlla la connessione e riprova.'), 'error', 6000);
+          }
+        }
       });
     });
     document.body.appendChild(input);

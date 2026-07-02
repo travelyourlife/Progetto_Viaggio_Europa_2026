@@ -5,6 +5,19 @@
 
 # Quo Vadis — Changelog
 
+## v4.57 — 2026-07-02
+**Nuovo itinerario città: Helsinki**
+- Aggiunto **Helsinki** nella sezione "Itinerari città", con lo stesso formato delle altre città (scheda bilingue IT/EN, mappa con percorso e schede delle tappe).
+- 9 tappe pensate per un giro in monopattino partendo da **Kauppatori**: Piazza del Mercato, Havis Amanda, Vanha Kauppahalli (mercato coperto), Cattedrale Uspenski, Piazza del Senato e Cattedrale di Helsinki, Esplanadi/Design District, Biblioteca Oodi (area bimbi), Chiesa nella Roccia (Temppeliaukio), Allas Sea Pool.
+- Coordinate reali per la mappa, categorie (cibo/cultura/panorama/natura/kids/attività) e fonti citate per ogni tappa. Nota sulle nuove regole 2025 per i monopattini (vietati agli under 15).
+
+## v4.56 — 2026-07-02
+**Upload foto più robusto su connessione debole (traghetti, zone senza campo)**
+- **Risolto il caso in cui, con rete instabile, le foto non venivano caricate** (né su un post esistente né su un nuovo post). Prima tutte le foto selezionate venivano compresse e caricate **in parallelo, tutte insieme**: su connessione debole questo saturava la linea, gli upload andavano in timeout e fallivano **in silenzio**, così le foto non comparivano mai.
+- **Ora le foto vengono caricate una alla volta (coda sequenziale)** con **ritentativo automatico** (fino a 3 tentativi per foto, con attesa crescente). Così anche con linea ballerina le foto entrano appena la connessione regge.
+- **Feedback chiaro**: durante il caricamento multiplo compare l'avanzamento ("Caricamento 2/5…") e, al termine, un riepilogo con l'eventuale numero di foto non riuscite — niente più errori silenziosi.
+- Nessun limite al numero di foto selezionabili insieme (invariato).
+
 ## v4.55 — 2026-07-02
 **Foto verticali nei post del diario: mostrate intere, niente più tagli**
 - **Corretta la visualizzazione delle foto verticali (ritratto) nei post con una sola foto.** Prima venivano forzate in un riquadro di altezza fissa e ritagliate (`object-fit: cover`), tagliando spesso la testa. Ora la foto singola è mostrata **intera** (`object-fit: contain`) con un'altezza massima ragionevole (70% dello schermo) e sfondo neutro, coerentemente con l'anteprima nella home (v4.49).
