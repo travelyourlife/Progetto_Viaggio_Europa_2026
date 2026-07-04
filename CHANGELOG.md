@@ -1,3 +1,7 @@
+## v4.83 — 5 Luglio 2026
+- **Fix versioning**: consistenza versione in tutti i file (version.json, sw.js, HTML title, EXPECTED_VERSION, tutti i query string `?v=`)
+- Include tutte le fix di v4.81 e v4.82 (language dropdown + stringhe dinamiche ES)
+
 ## v4.82 — 5 Luglio 2026
 - **Fix completo stringhe dinamiche ES**: tutte le stringhe generate da JS ora mostrano spagnolo corretto
 - ON THE ROAD → EN RUTA, km driven → km recorridos, Tomorrow → Mañana, Must-see → Imperdible
