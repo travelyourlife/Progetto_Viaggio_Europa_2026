@@ -6190,3 +6190,43 @@ body.dark-mode .ci-tier-1 { border-color: #8a6a3a; }
   opacity: 1;
   color: #e53e3e;
 }
+
+/* ═══ Tab Natura ═══ */
+.natura-intro {
+    font-size: 0.95rem;
+    color: #555;
+    margin: 0 16px 16px;
+    line-height: 1.5;
+}
+.natura-country-index {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 0 16px 20px;
+}
+.natura-index-link {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 20px;
+    background: #f0f7f0;
+    color: #2d6a2d;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border: 1px solid #d4e8d4;
+    transition: background 0.2s;
+}
+.natura-index-link:hover,
+.natura-index-link:active {
+    background: #d4e8d4;
+}
+.natura-country-block {
+    margin: 0 0 32px;
+    padding: 0 16px;
+}
+.natura-country-block h2 {
+    font-size: 1.3rem;
+    margin: 24px 0 12px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #d4e8d4;
+}

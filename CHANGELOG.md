@@ -1,3 +1,8 @@
+## v4.74 — 4 Luglio 2025
+- Nuovo tab "Natura" nel menu Guide (Altro): raccoglie tutte le sezioni Flora, Fauna, Geologia, Fenomeni e Ecosistemi dei 10 Paesi in una pagina dedicata con indice per Paese
+- Pulsante 🌿 Natura aggiunto alla griglia Guide in IT/EN/ES
+- Tab registrato in app.js come altroSubTab con titolo localizzato
+
 ## v4.72 — 4 Luglio 2025
 - Fix doppia traccia rossa sulla mappa Live: loadHistoricalTracks() ora viene chiamata UNA sola volta per init mappa (flag _historicalLoaded). Prima veniva rieseguita ad ogni aggiornamento posizione, causando polyline duplicate asincrone.
 
