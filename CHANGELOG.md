@@ -1,3 +1,7 @@
+## v4.78 — 4 Luglio 2026
+- Km reali da GPX: aggiornati G1-G10 con km effettivi da tracciati GPSLogger (totale 3.077 km su strada, escluso traghetto)
+- G1: 427 (era 460), G2: 189 (era 160), G3: 701 (era 670), G4: 686 (era 510), G5: 164 (era 300), G6: 260 (era 390), G7: 18 (era 0), G8: 302 (era 225), G9: 116 (era 120), G10: 214 (era 0)
+
 ## v4.77 — 4 Luglio 2026
 - Lightbox foto Diario tipo WhatsApp: fullscreen nero, pinch-to-zoom, double-tap zoom, pan quando ingrandito, ottimizzato per landscape
 - Fix Itinerari città: mostra la prossima città futura (non l'ultima visitata) come default

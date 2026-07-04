@@ -1,4 +1,4 @@
-/* Quo Vadis — Days Data v1.49 */
+/* Quo Vadis — Days Data v1.50 */
 /* Auto-generated — do not edit manually */
 var DAYS_DATA = [
   {
@@ -8,7 +8,7 @@ var DAYS_DATA = [
     "flags": "🇮🇹→🇦🇹",
     "country": "AT",
     "region": "austria",
-    "km": 460,
+    "km": 427,
     "hours": "5h 30m",
     "tolls": "Pedaggi A4+A23 ~€15 + <a href=\"https://www.asfinag.at\" target=\"_blank\" rel=\"noopener\">Vignetta AT digitale</a> €12,80 (10gg)",
     "tollLinks": [
@@ -154,7 +154,7 @@ var DAYS_DATA = [
     "flags": "🇦🇹",
     "country": "AT",
     "region": "austria",
-    "km": 160,
+    "km": 189,
     "hours": "2h",
     "tolls": "Vignetta AT (già attiva)",
     "tollLinks": [],
@@ -401,7 +401,7 @@ var DAYS_DATA = [
     "flags": "🇦🇹→🇨🇿→🇵🇱",
     "country": "PL",
     "region": "polonia",
-    "km": 670,
+    "km": 701,
     "hours": "8h 30m",
     "tolls": "<a href=\"https://edalnice.cz\" target=\"_blank\" rel=\"noopener\">Vignetta CZ</a> 310 CZK/~€13 (10gg) + caselli PL ~€15-20",
     "tollLinks": [
@@ -618,7 +618,7 @@ var DAYS_DATA = [
     "flags": "🇵🇱→🇱🇹",
     "country": "LT",
     "region": "lituania",
-    "km": 510,
+    "km": 686,
     "hours": "6h",
     "tolls": "Gratis (nessun pedaggio)",
     "tollLinks": [],
@@ -872,7 +872,7 @@ var DAYS_DATA = [
     "flags": "🇱🇹→🇱🇻",
     "country": "LV",
     "region": "lettonia",
-    "km": 300,
+    "km": 164,
     "hours": "4h",
     "tolls": "Gratis",
     "tollLinks": [],
@@ -1090,7 +1090,7 @@ var DAYS_DATA = [
     "flags": "🇱🇻→🇪🇪",
     "country": "EE",
     "region": "estonia",
-    "km": 390,
+    "km": 260,
     "hours": "5h",
     "tolls": "Gratis",
     "tollLinks": [],
@@ -1341,7 +1341,7 @@ var DAYS_DATA = [
     "flags": "🇪🇪",
     "country": "EE",
     "region": "estonia",
-    "km": 0,
+    "km": 18,
     "hours": "—",
     "tolls": "Gratis",
     "tollLinks": [],
@@ -1628,7 +1628,7 @@ var DAYS_DATA = [
     "flags": "🇪🇪→🇫🇮",
     "country": "FI",
     "region": "finlandia",
-    "km": 225,
+    "km": 302,
     "hours": "3h + traghetto 2h",
     "tolls": "Traghetto Tallinn–Helsinki ~€100-150 (furgone+4)",
     "tollLinks": [
@@ -1830,7 +1830,7 @@ var DAYS_DATA = [
     "flags": "🇫🇮",
     "country": "FI",
     "region": "finlandia",
-    "km": 120,
+    "km": 116,
     "hours": "2h",
     "tolls": "Gratis",
     "tollLinks": [],
@@ -2065,7 +2065,7 @@ var DAYS_DATA = [
     "flags": "🇫🇮",
     "country": "FI",
     "region": "finlandia",
-    "km": 0,
+    "km": 214,
     "hours": null,
     "tolls": null,
     "tollLinks": [],
