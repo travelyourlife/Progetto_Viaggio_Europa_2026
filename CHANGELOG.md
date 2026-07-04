@@ -1,3 +1,11 @@
+## v4.79 — 5 Luglio 2026
+- FIX CRITICO Home GPS: fetchLiveDistanceFromHome() era definita ma mai chiamata — ora la Home mostra la città GPS reale (es. "Kuopio") invece della destinazione pianificata (es. "Oulu")
+- FIX km cumulativi: somma solo giorni completati (< currentDay, non <= currentDay) — non include più i km pianificati del giorno in corso
+- Strava Cloud Function: auto-refresh token ogni 6h + sync attività hiking/walking nel DB
+- Pulsante "Sincronizza Strava" nella sezione A piedi (owner only)
+- FIX mappa: traghetti futuri ora in blu tratteggiato (erano tutti rossi indistintamente)
+- node-fetch aggiunto alle dipendenze Cloud Functions
+
 ## v4.78 — 4 Luglio 2026
 - Km reali da GPX: aggiornati G1-G10 con km effettivi da tracciati GPSLogger (totale 3.077 km su strada, escluso traghetto)
 - G1: 427 (era 460), G2: 189 (era 160), G3: 701 (era 670), G4: 686 (era 510), G5: 164 (era 300), G6: 260 (era 390), G7: 18 (era 0), G8: 302 (era 225), G9: 116 (era 120), G10: 214 (era 0)

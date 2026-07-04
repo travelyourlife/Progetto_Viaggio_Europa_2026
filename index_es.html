@@ -59,12 +59,12 @@
 <link href="./icon.png" rel="apple-touch-icon" sizes="152x152"/>
 <link href="./icon.png" rel="apple-touch-icon" sizes="180x180"/>
 <link href="./icon.png" rel="apple-touch-icon" sizes="167x167"/>
-<title>Quo Vadis — V4.78</title>
+<title>Quo Vadis — V4.79</title>
 <link crossorigin="" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" rel="stylesheet"/>
-<link href="style.css?v=4.78" rel="stylesheet"/>
-<link href="home-variants.css?v=4.78" rel="stylesheet"/>
-<link href="unified-map.css?v=4.78" rel="stylesheet"/>
-<link href="modern-pages.css?v=4.78" rel="stylesheet"/>
+<link href="style.css?v=4.79" rel="stylesheet"/>
+<link href="home-variants.css?v=4.79" rel="stylesheet"/>
+<link href="unified-map.css?v=4.79" rel="stylesheet"/>
+<link href="modern-pages.css?v=4.79" rel="stylesheet"/>
 <link crossorigin="" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" rel="stylesheet"/>
 <link crossorigin="" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" rel="stylesheet"/>
 <!-- Firebase SDK (compat mode for single-file app) -->
@@ -81,7 +81,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = "4.78";
+  var EXPECTED_VERSION = "4.79";
   window.IS_PROD = true; // v2.96: parità con index.html — disabilita debug overlay in produzione
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
@@ -139,23 +139,23 @@
   });
 })();
 </script>
-<script defer="" src="data.js?v=4.78"></script>
-<script defer="" src="days-data.js?v=4.78"></script>
-<script defer="" src="days-renderer.js?v=4.78"></script>
+<script defer="" src="data.js?v=4.79"></script>
+<script defer="" src="days-data.js?v=4.79"></script>
+<script defer="" src="days-renderer.js?v=4.79"></script>
 <!-- wiki-links.js: lazy-loaded on first open of Culture/Activity tab (34KB) — parity with index.html -->
-<script defer="" src="weather-coords.js?v=4.78"></script>
+<script defer="" src="weather-coords.js?v=4.79"></script>
 <script crossorigin="" defer="" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script crossorigin="" defer="" src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
-<script defer="" src="poi-data.js?v=4.78"></script>
-<script defer="" src="app.js?v=4.78"></script>
-<script defer="" src="curiosita-data.js?v=4.78"></script>
+<script defer="" src="poi-data.js?v=4.79"></script>
+<script defer="" src="app.js?v=4.79"></script>
+<script defer="" src="curiosita-data.js?v=4.79"></script>
 <script>window.QV_CURIOSITA_SERVER_SIDE = true; window.QV_RECAP_SERVER_SIDE = true;</script>
-<script defer="" src="curiosita-scheduler.js?v=4.78"></script>
-<script defer="" src="quiz-fun.js?v=4.78"></script>
-<script defer="" src="unified-map.js?v=4.78"></script>
-<script defer="" src="city-itineraries.js?v=4.78"></script>
-<script defer="" src="city-itineraries-ui.js?v=4.78"></script>
-<script defer="" src="home-variants.js?v=4.78"></script>
+<script defer="" src="curiosita-scheduler.js?v=4.79"></script>
+<script defer="" src="quiz-fun.js?v=4.79"></script>
+<script defer="" src="unified-map.js?v=4.79"></script>
+<script defer="" src="city-itineraries.js?v=4.79"></script>
+<script defer="" src="city-itineraries-ui.js?v=4.79"></script>
+<script defer="" src="home-variants.js?v=4.79"></script>
 </head>
 <body class="on-home">
 <!-- ─── Splash Screen ─── -->
@@ -13972,6 +13972,7 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 <div class="pos-garmin-chips">
 <span class="pos-garmin-chip pos-chip-green">🧥 <strong id="pos-garmin-hike-km">0</strong> km</span>
 </div>
+<button type="button" class="add-km-btn" id="strava-sync-btn" style="margin-top:4px;font-size:11px;">🔄 Sincronizar Strava</button>
 <div class="pos-garmin-sub-label" style="font-size:12px;color:var(--text-muted);margin:12px 0 4px;font-weight:600;">Total del viaje</div>
 <div class="pos-garmin-chips">
 <span class="pos-garmin-chip pos-chip-green">🚶 <strong id="pos-garmin-walk">0</strong> km total</span>
@@ -14691,7 +14692,7 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 <script>
 // Load home-variants_es.html templates into the page
 (function(){
-  fetch('./home-variants_es.html?v=4.78').then(function(r){return r.text();}).then(function(html){
+  fetch('./home-variants_es.html?v=4.79').then(function(r){return r.text();}).then(function(html){
     var div = document.getElementById('hv-templates');
     if(div) div.innerHTML = html;
     // Move templates to document body for proper <template> access
@@ -14701,8 +14702,8 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 })();
 </script>
 <!-- Debug Overlay (v2.47 diagnostic) -->
-<script defer="" src="debug-overlay.js?v=4.78"></script>
+<script defer="" src="debug-overlay.js?v=4.79"></script>
 <!-- Capacitor GPS Bridge (only activates inside native app, ignored in browser) -->
-<script defer="" src="capacitor-gps-bridge.js?v=4.78"></script>
+<script defer="" src="capacitor-gps-bridge.js?v=4.79"></script>
 </body>
 </html>

@@ -300,6 +300,9 @@
 
     // Fetch live weather for hero
     fetchHeroLiveWeather();
+
+    // v4.79: Activate live GPS city override (was defined but never called!)
+    fetchLiveDistanceFromHome(45.39, 11.85);
   }
 
   // ─── Populate variant with real data ───
@@ -688,11 +691,12 @@
       data.kmBar = Math.min(100, Math.round((parseInt(data.totalKm.replace(/\./g, '')) || 0) / 12000 * 100));
       data.lastUpdate = '';
 
-      // v4.70: Distance = cumulative km from DAYS_DATA (sum of daily km up to currentDay)
-      // This matches the campervan odometer reading.
+      // v4.78: Distance = cumulative km from DAYS_DATA (sum of completed days only)
+      // Uses _di < currentDay so today's (not-yet-driven) km are excluded.
+      // Today's live km come from GPS tracking, not from DAYS_DATA.
       var cumulativeKm = 0;
       if (typeof DAYS_DATA !== 'undefined' && tripActive) {
-        for (var _di = 0; _di <= currentDay; _di++) {
+        for (var _di = 0; _di < currentDay; _di++) {
           if (DAYS_DATA[_di] && typeof DAYS_DATA[_di].km === 'number') {
             cumulativeKm += DAYS_DATA[_di].km;
           }

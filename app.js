@@ -46,12 +46,15 @@ window.T = T;
 // G8 Tallinn→Helsinki(idx7), G19 Gryllefjord→Andenes(idx18), G21 Vesterålen(idx20),
 // G26 Moskenes→Bodø(idx25), G33 internal ferries(idx32), G35 Kristiansand→Hirtshals(idx34).
 window.FERRY_DAY_IDX = [7, 18, 20, 25, 32, 34];
-// Draws the ferry segments as a red dashed line on top of an existing route.
+// Draws the ferry segments: red dashed for past, blue dashed for future.
 // routeCoords must be [HOME, day0, day1, ...] (HOME prepended), matching the app's route arrays.
 window._drawFerryLegs = function(map, routeCoords) {
   try {
     if (!map || typeof L === 'undefined' || !Array.isArray(routeCoords)) return;
-    // map may be a Leaflet Map OR a LayerGroup; both expose addTo-compatible add via polyline.addTo(map)
+    // Determine current day for past/future coloring
+    var now = new Date();
+    var tripStart = typeof TRIP_START !== 'undefined' ? TRIP_START : new Date(2026, 5, 25);
+    var currentDay = Math.floor((now - tripStart) / 86400000);
     window.FERRY_DAY_IDX.forEach(function(di) {
       // day di (0-based TRIP_COORDS) sits at routeCoords[di+1] because HOME is prepended.
       var iTo = di + 1;
@@ -59,8 +62,12 @@ window._drawFerryLegs = function(map, routeCoords) {
       if (iFrom < 0 || iTo >= routeCoords.length) return;
       var a = routeCoords[iFrom], b = routeCoords[iTo];
       if (!a || !b) return;
+      // v4.79: past ferries = red, future ferries = blue
+      var isPast = di < currentDay;
       L.polyline([a, b], {
-        color: '#e53e3e', weight: 3, opacity: 0.9,
+        color: isPast ? '#e53e3e' : '#2c5282',
+        weight: isPast ? 3 : 2.5,
+        opacity: isPast ? 0.9 : 0.6,
         dashArray: '2,9', lineCap: 'round', lineJoin: 'round',
         className: 'qv-ferry-leg'
       }).addTo(map);
@@ -14557,6 +14564,38 @@ window.injectAllWikiLinks = function() {
   }
 })();
 
+// ─── v4.79: Strava Sync Button (owner only) ───
+(function() {
+  var syncBtn = document.getElementById('strava-sync-btn');
+  if (!syncBtn) return;
+
+  // Show only for owner
+  function _showIfOwner() {
+    syncBtn.style.display = window.isOwner ? '' : 'none';
+  }
+  _showIfOwner();
+  window.addEventListener('authStateChanged', _showIfOwner);
+  window.addEventListener('simRoleChanged', _showIfOwner);
+  setTimeout(_showIfOwner, 2000);
+
+  syncBtn.addEventListener('click', function() {
+    if (!window.isOwner) return;
+    syncBtn.disabled = true;
+    syncBtn.textContent = '⏳ Sincronizzando...';
+    var stravaSyncFn = firebase.functions().httpsCallable('stravaSyncManual');
+    stravaSyncFn({}).then(function(result) {
+      var data = result.data || {};
+      syncBtn.textContent = '✅ ' + (data.synced || 0) + ' nuove attività';
+      syncBtn.disabled = false;
+      setTimeout(function() { syncBtn.textContent = '🔄 Sincronizza Strava'; }, 3000);
+    }).catch(function(err) {
+      console.error('[Strava] Sync error:', err);
+      syncBtn.textContent = '❌ Errore';
+      syncBtn.disabled = false;
+      setTimeout(function() { syncBtn.textContent = '🔄 Sincronizza Strava'; }, 3000);
+    });
+  });
+})();
 
 // ═══════════════════════════════════════════════════════════════
 // ─── v1.30: POSIZIONE (IN VIAGGIO) LOGIN GATE ───
