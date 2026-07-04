@@ -4455,6 +4455,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
 
         // ─── Track Line (from Firebase) ───
         var _historicalTrackLines = []; // v3.98: store historical polylines for cleanup
+        var _historicalLoaded = false; // v4.71 FIX: prevent duplicate historical track loads
 
         function loadTrackLine() {
             if (!map) return;
@@ -4488,8 +4489,14 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                     });
                 }
             }
-            // v3.98: Also load historical tracks from all previous days
-            loadHistoricalTracks();
+            // v4.71 FIX (doppia traccia): load historical tracks ONLY ONCE per map init.
+            // Previously this was called every time loadTrackLine() ran (e.g. on position
+            // updates), causing multiple async OSRM calls that each added a new polyline
+            // before the cleanup from the previous call could execute.
+            if (!_historicalLoaded) {
+                _historicalLoaded = true;
+                loadHistoricalTracks();
+            }
         }
 
         // v3.98: Load GPS tracks from ALL previous days and render as historical polyline
