@@ -6019,3 +6019,174 @@ body.dark-mode .ci-tier-1 { border-color: #8a6a3a; }
   border-radius: 10px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.3);
 }
+
+/* ─── v4.65: Nature Encyclopedia Section ─── */
+.nature-section {
+  margin: 12px 0;
+  border: 1px solid var(--border, #e2e8f0);
+  border-radius: var(--radius, 12px);
+  overflow: hidden;
+  background: var(--bg-card, #fff);
+}
+.nature-section > summary {
+  cursor: pointer;
+  padding: 14px 18px;
+  font-size: 16px;
+  font-weight: 600;
+  background: linear-gradient(135deg, var(--bg-card, #f8fafc), var(--bg, #f1f5f9));
+  border-bottom: 1px solid var(--border, #e2e8f0);
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.nature-section > summary::before {
+  content: '▶';
+  font-size: 11px;
+  transition: transform 0.2s;
+  color: var(--text-muted, #64748b);
+}
+.nature-section[open] > summary::before {
+  transform: rotate(90deg);
+}
+.nature-section > summary::-webkit-details-marker { display: none; }
+.nature-content {
+  padding: 16px 18px;
+}
+.nature-content p {
+  margin: 10px 0;
+  line-height: 1.7;
+  font-size: 14px;
+}
+.nature-subsection {
+  margin: 20px 0 10px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--primary, #2563eb);
+  border-bottom: 1px solid var(--border, #e2e8f0);
+  padding-bottom: 6px;
+}
+.nature-species-card {
+  margin: 14px 0;
+  padding: 12px;
+  border-radius: 10px;
+  background: var(--bg, #f8fafc);
+  border: 1px solid var(--border, #e2e8f0);
+}
+.nature-species-img {
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+  border-radius: 8px;
+  margin: 0 0 10px 0;
+  display: block;
+  object-fit: cover;
+  max-height: 220px;
+}
+.nature-species-text {
+  font-size: 14px;
+  line-height: 1.65;
+}
+.nature-species-text strong:first-child {
+  display: block;
+  font-size: 15px;
+  margin-bottom: 6px;
+  color: var(--text, #1e293b);
+}
+.nature-figure {
+  margin: 14px 0;
+  text-align: center;
+}
+.nature-img {
+  width: 100%;
+  max-width: 480px;
+  height: auto;
+  border-radius: 10px;
+  object-fit: cover;
+  max-height: 300px;
+}
+.nature-figure figcaption {
+  font-size: 12px;
+  color: var(--text-muted, #64748b);
+  margin-top: 6px;
+  font-style: italic;
+}
+.nature-table-wrap {
+  overflow-x: auto;
+  margin: 14px 0;
+  border-radius: 8px;
+  border: 1px solid var(--border, #e2e8f0);
+}
+.nature-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.nature-table th {
+  background: var(--bg, #f1f5f9);
+  padding: 10px 12px;
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 2px solid var(--border, #e2e8f0);
+  white-space: nowrap;
+}
+.nature-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border, #e2e8f0);
+  vertical-align: top;
+}
+.nature-table tr:last-child td { border-bottom: none; }
+.nature-table-img {
+  width: 100%;
+  max-width: 140px;
+  height: auto;
+  border-radius: 6px;
+  margin-top: 8px;
+  object-fit: cover;
+  max-height: 100px;
+}
+.nature-sources {
+  margin-top: 20px;
+  font-size: 12px;
+  color: var(--text-muted, #64748b);
+  border-top: 1px solid var(--border, #e2e8f0);
+  padding-top: 10px;
+}
+
+/* ─── Scooter / Monopattino table ─── */
+.scooter-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.scooter-table th {
+  text-align: left;
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 600;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--border);
+}
+.scooter-table td {
+  padding: 8px;
+  border-bottom: 1px solid var(--border-light, rgba(0,0,0,0.05));
+}
+.scooter-table tr:last-child td {
+  border-bottom: none;
+}
+.scooter-del-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+.scooter-del-btn:hover {
+  opacity: 1;
+  color: #e53e3e;
+}

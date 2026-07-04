@@ -21,7 +21,22 @@
   };
 
   // ─── Language flag (module-level, refreshed on each render) ───
-  var _en = (typeof isEN !== 'undefined' && isEN);
+  // v4.63: three-language support. _lang3 is the single source of truth.
+  var _lang3 = (typeof LANG3 !== 'undefined') ? LANG3 : (function() {
+    var l = (document.documentElement.lang || '').toLowerCase();
+    var p = (window.location.pathname || '').toLowerCase();
+    if (l === 'es' || p.indexOf('_es') !== -1) return 'es';
+    if (l === 'en' || p.indexOf('_en') !== -1) return 'en';
+    return 'it';
+  })();
+  // _en kept true for both EN and ES (existing ternaries fall back to EN, never IT).
+  var _en = (_lang3 === 'en' || _lang3 === 'es');
+  // v4.63: _hvT(it, en, es) picks the string for the active language (es falls back to en).
+  function _hvT(it, en, es) {
+    if (_lang3 === 'es') return (es !== undefined && es !== null) ? es : en;
+    if (_lang3 === 'en') return en;
+    return it;
+  }
 
   // ─── State ───
   var currentRole = 'auto'; // 'auto', 'owner', 'follower', 'visitor'
@@ -1085,17 +1100,17 @@
       return '<div class="hv-feed-item hv-feed-empty" style="text-align:center;padding:24px 16px;">' +
              '  <div style="font-size:32px;margin-bottom:8px;">\u23f3</div>' +
              '  <div class="hv-feed-body" style="font-weight:600;margin-bottom:4px;">' +
-             (lang === 'en' ? 'Request sent! Awaiting approval from the organizers.' : 'Richiesta inviata! Attendi l\'approvazione da parte degli organizzatori.') +
+             _hvT('Richiesta inviata! Attendi l\'approvazione da parte degli organizzatori.', 'Request sent! Awaiting approval from the organizers.', 'Solicitud enviada. Espera la aprobaci\u00f3n de los organizadores.') +
              '  </div>' +
              '  <div class="hv-feed-body" style="opacity:0.7;font-size:13px;">' +
-             (lang === 'en' ? 'You\'ll get access as soon as it\'s confirmed.' : 'Riceverai accesso appena confermato.') +
+             _hvT('Riceverai accesso appena confermato.', 'You\'ll get access as soon as it\'s confirmed.', 'Recibir\u00e1s acceso en cuanto se confirme.') +
              '  </div>' +
              '</div>';
     }
     return '<div class="hv-feed-item hv-feed-empty" style="text-align:center;padding:24px 16px;">' +
            '  <div style="font-size:32px;margin-bottom:8px;">\ud83d\udcd6</div>' +
            '  <div class="hv-feed-body" style="opacity:0.75;">' +
-           (lang === 'en' ? 'No diary updates yet. Trip stories will appear here.' : 'Nessun aggiornamento dal diario per ora. I racconti del viaggio appariranno qui.') +
+           _hvT('Nessun aggiornamento dal diario per ora. I racconti del viaggio appariranno qui.', 'No diary updates yet. Trip stories will appear here.', 'A\u00fan no hay novedades en el diario. Las historias del viaje aparecer\u00e1n aqu\u00ed.') +
            '  </div>' +
            '</div>';
   }
@@ -1157,9 +1172,9 @@
     // message as the other tabs instead of a recap preview.
     if (_hvIsPending()) {
       html += '<div class="hv-diary-preview-header"><div>';
-      html += '  <div class="hv-diary-preview-title">\u23f3 ' + (lang === 'en' ? 'Awaiting approval' : 'In attesa di approvazione') + '</div>';
+      html += '  <div class="hv-diary-preview-title">\u23f3 ' + _hvT('In attesa di approvazione', 'Awaiting approval', 'A la espera de aprobaci\u00f3n') + '</div>';
       html += '</div></div>';
-      html += '<div class="hv-diary-preview-text">' + (lang === 'en' ? 'Request sent! You\'ll see the diary as soon as the organizers approve you.' : 'Richiesta inviata! Vedrai il diario appena gli organizzatori ti approvano.') + '</div>';
+      html += '<div class="hv-diary-preview-text">' + _hvT('Richiesta inviata! Vedrai il diario appena gli organizzatori ti approvano.', 'Request sent! You\'ll see the diary as soon as the organizers approve you.', 'Solicitud enviada. Ver\u00e1s el diario en cuanto los organizadores te aprueben.') + '</div>';
       return html;
     }
 
@@ -1177,7 +1192,7 @@
     // v4.62: no hardcoded "Incredible day!" filler — show the real day narrative if
     // available, otherwise a neutral placeholder (no fabricated enthusiasm).
     var _narr = dayData ? escHtml((dayData.narrative || '').replace(/[🚗🌒⛴️🚐]/g, '').substring(0, 120)) : '';
-    html += _narr ? _narr : (lang === 'en' ? 'No diary update for today yet.' : 'Nessun aggiornamento dal diario per oggi.');
+    html += _narr ? _narr : _hvT('Nessun aggiornamento dal diario per oggi.', 'No diary update for today yet.', 'A\u00fan no hay novedades del diario para hoy.');
     html += '</div>';
     html += '<div class="hv-diary-preview-stats">';
     html += '  🚐 ' + (dayData ? dayData.km || '--' : '--') + ' km &nbsp; 📍 -- ' + (lang === 'en' ? 'stops' : 'tappe');

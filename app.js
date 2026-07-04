@@ -16,8 +16,30 @@ var _qvLog = (function() {
 
 // ─── Language Detection (v3.94: single global definition) ───
 var LANG = document.documentElement.lang || 'it';
-var isEN = LANG === 'en' || location.pathname.indexOf('_en') !== -1;
+// v4.63: three-language support (it | en | es).
+// LANG3 is the single source of truth for the active language.
+var LANG3 = (function() {
+  var l = (document.documentElement.lang || '').toLowerCase();
+  var p = (location.pathname || '').toLowerCase();
+  if (l === 'es' || p.indexOf('_es') !== -1) return 'es';
+  if (l === 'en' || p.indexOf('_en') !== -1) return 'en';
+  return 'it';
+}());
+window.LANG3 = LANG3;
+// isEN kept for backward compatibility with the ~950 existing ternaries.
+// For Spanish we treat isEN=true so the UI falls back to English strings
+// (never Italian) where a dedicated Spanish string is not provided; the
+// data layer still prefers the ...Es/...ES fields when present.
+var isEN = (LANG3 === 'en' || LANG3 === 'es');
 window.isEN = isEN;
+// v4.63: T(it, en, es) returns the string for the active language.
+// es is optional; if omitted, Spanish falls back to the English string.
+function T(it, en, es) {
+  if (LANG3 === 'es') return (es !== undefined && es !== null) ? es : en;
+  if (LANG3 === 'en') return en;
+  return it;
+}
+window.T = T;
 
 // ─── v4.61: Ferry legs overlay (red dashed) — single source of truth ───
 // TRIP_COORDS index (0-based) of days whose leg arrives BY SEA (ferry).
@@ -2385,21 +2407,23 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         // v2.70/2.73 Opzione 4: freccia sopra il segmento corrente.
-        // Usa i figli diretti del container (ogni giorno è ora un wrapper).
+        // v4.63 FIX: la vecchia implementazione misurava getBoundingClientRect()
+        // dentro requestAnimationFrame; se il minibar non era ancora "layoutato"
+        // (Home appena renderizzata o tab non visibile) tutte le misure erano ~0 e
+        // la freccia finiva sul PRIMO giorno. Inoltre veniva sempre aggiunta con
+        // appendChild senza rimuovere la precedente, causando frecce fantasma.
+        // Ora: (1) rimuovo sempre l'eventuale freccia esistente; (2) posiziono la
+        // freccia in PERCENTUALE sull'indice del giorno (robusto a larghezza 0).
+        var _oldArrow = segContainer.querySelector('.qv-minibar-arrow');
+        if (_oldArrow) _oldArrow.parentNode.removeChild(_oldArrow);
         if (currentDay >= 0 && currentDay < days.length) {
-            requestAnimationFrame(function() {
-                var segs = segContainer.children;
-                var todaySeg = segs[currentDay];
-                if (!todaySeg) return;
-                var r = todaySeg.getBoundingClientRect();
-                var barR = segContainer.getBoundingClientRect();
-                var cx = r.left - barR.left + r.width / 2;
-                var arrow = document.createElement('div');
-                arrow.style.cssText = 'position:absolute;top:-10px;left:' + cx + 'px;transform:translateX(-50%);font-size:10px;font-weight:700;color:#3b82f6;pointer-events:none;white-space:nowrap;line-height:1;';
-                arrow.textContent = '▼';
-                segContainer.style.position = 'relative';
-                segContainer.appendChild(arrow);
-            });
+            var cxPct = ((currentDay + 0.5) / days.length) * 100;
+            var arrow = document.createElement('div');
+            arrow.className = 'qv-minibar-arrow';
+            arrow.style.cssText = 'position:absolute;top:-10px;left:' + cxPct + '%;transform:translateX(-50%);font-size:10px;font-weight:700;color:#3b82f6;pointer-events:none;white-space:nowrap;line-height:1;';
+            arrow.textContent = '▼';
+            segContainer.style.position = 'relative';
+            segContainer.appendChild(arrow);
         }
         // ─── v3.39: Toggle km/ore + Vista settimanale espansa ───────────────
         var minibarTotal   = document.getElementById('minibar-total');
@@ -7421,8 +7445,8 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
         });
         // Save language preference when user manually switches
         langBtn.addEventListener('click', function() {
-            // Determine target language from href
-            var targetLang = (langBtn.href.indexOf('index_en') > -1) ? 'en' : 'it';
+            // Determine target language from href (3-way)
+            var targetLang = (langBtn.href.indexOf('index_es') > -1) ? 'es' : (langBtn.href.indexOf('index_en') > -1) ? 'en' : 'it';
             localStorage.setItem('quo-vadis-lang', targetLang);
         });
     }
@@ -7430,7 +7454,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
     var homeLangBtn = document.querySelector('.home-lang-switch');
     if (homeLangBtn) {
         homeLangBtn.addEventListener('click', function() {
-            var targetLang = (homeLangBtn.href.indexOf('index_en') > -1) ? 'en' : 'it';
+            var targetLang = (homeLangBtn.href.indexOf('index_es') > -1) ? 'es' : (homeLangBtn.href.indexOf('index_en') > -1) ? 'en' : 'it';
             localStorage.setItem('quo-vadis-lang', targetLang);
         });
     }
@@ -7438,7 +7462,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
     var altroLangBtn = document.getElementById('altro-lang-switch');
     if (altroLangBtn) {
         altroLangBtn.addEventListener('click', function() {
-            var targetLang = (altroLangBtn.href.indexOf('index_en') > -1) ? 'en' : 'it';
+            var targetLang = (altroLangBtn.href.indexOf('index_es') > -1) ? 'es' : (altroLangBtn.href.indexOf('index_en') > -1) ? 'en' : 'it';
             localStorage.setItem('quo-vadis-lang', targetLang);
         });
     }
@@ -14836,11 +14860,16 @@ window.injectAllWikiLinks = function() {
           }
         });
       });
-      // v4.58: Gallery is ALWAYS purely reverse-chronological by the photo's own
-      // real timestamp (EXIF takenAt → uploadedAt → push-key), independent of the
-      // post date and of any manual per-post order. Newest photo first.
+      // v4.69: Gallery reverse-chronological. Uses photo timestamp (EXIF takenAt →
+      // uploadedAt → push-key); falls back to entry date when ts=0 so photos without
+      // EXIF still appear in the correct day order. Newest photo first.
       allPhotos.sort(function(a, b) {
-        if ((b.ts || 0) !== (a.ts || 0)) return (b.ts || 0) - (a.ts || 0);
+        var tsA = a.ts || 0;
+        var tsB = b.ts || 0;
+        // Fallback: use entry date as midnight timestamp when ts is missing
+        if (!tsA && a.date) tsA = new Date(a.date + 'T12:00:00').getTime() || 0;
+        if (!tsB && b.date) tsB = new Date(b.date + 'T12:00:00').getTime() || 0;
+        if (tsB !== tsA) return tsB - tsA;
         return String(b.photoKey).localeCompare(String(a.photoKey));
       });
       if (allPhotos.length === 0) {
@@ -15339,26 +15368,18 @@ window.injectAllWikiLinks = function() {
       }
 
       var html = '';
-      // v4.09 FIX: sort PRIMARILY by real date (descending) so the chronological order
-      // is always correct even if a post's dayNumber is stale/inconsistent. dayNumber
-      // and createdAt remain as tiebreakers for multiple posts on the same date.
-      // v4.48 FIX: createdAt is a Firebase ServerValue.TIMESTAMP and can still be
-      // unresolved (null) on the writer's device right after posting, which made the
-      // order of two posts on the SAME day non-deterministic ("the one I wrote last
-      // didn't move to the top"). The entry KEY always embeds the creation timestamp
-      // ("day-<n>-<ts>" / "pre-<date>-<ts>"), so we use that as a reliable final
-      // tiebreaker that works offline and before the server resolves createdAt.
+      // v4.69: sort posts CHRONOLOGICALLY (oldest first, day 1 → day N).
+      // Primary: date ascending. Tiebreaker: dayNumber ascending, then createdAt ascending.
       var sortedKeys = Object.keys(entries).sort(function(a, b) {
         var dateA = entries[a].date || '';
         var dateB = entries[b].date || '';
-        var dateDiff = dateB.localeCompare(dateA);
+        var dateDiff = dateA.localeCompare(dateB);
         if (dateDiff !== 0) return dateDiff;
-        // Tiebreaker 1: dayNumber descending when dates are equal/missing
-        var diff = (entries[b].dayNumber || 0) - (entries[a].dayNumber || 0);
+        // Tiebreaker 1: dayNumber ascending when dates are equal/missing
+        var diff = (entries[a].dayNumber || 0) - (entries[b].dayNumber || 0);
         if (diff !== 0) return diff;
-        // Tiebreaker 2: creation time descending (newest post first), using a robust
-        // timestamp that prefers a resolved createdAt and falls back to the key ts.
-        return window._entryCreatedTs(b, entries[b]) - window._entryCreatedTs(a, entries[a]);
+        // Tiebreaker 2: creation time ascending (earliest post first)
+        return window._entryCreatedTs(a, entries[a]) - window._entryCreatedTs(b, entries[b]);
       });
 
       sortedKeys.forEach(function(key) {
@@ -20237,4 +20258,129 @@ window.injectAllWikiLinks = function() {
     }, 2000);
   });
 
+})();
+
+
+// ─── SCOOTER / MONOPATTINO ───
+(function() {
+  if (typeof firebase === 'undefined' || !firebase.database) return;
+  var FAMILY_ID = window.FAMILY_ID || 'fam1';
+  var scooterRef = firebase.database().ref('trips/' + FAMILY_ID + '/scooter_rides');
+  var isEN = (document.documentElement.lang === 'en');
+  var isES = (document.documentElement.lang === 'es');
+
+  var addBtn = document.getElementById('scooter-add-btn');
+  var tbody = document.getElementById('pos-scooter-tbody');
+  var countEl = document.getElementById('pos-scooter-count');
+  var tableWrap = document.getElementById('pos-scooter-table-wrap');
+
+  if (!addBtn || !tbody) return;
+
+  // Show/hide add button based on owner
+  function _showIfOwner() {
+    addBtn.style.display = window.isOwner ? '' : 'none';
+  }
+  _showIfOwner();
+  window.addEventListener('authStateChanged', _showIfOwner);
+  window.addEventListener('simRoleChanged', _showIfOwner);
+  setTimeout(_showIfOwner, 2000);
+
+  // Listen for data
+  function _renderScooterRides(snap) {
+    var data = snap.val() || {};
+    var rides = [];
+    Object.keys(data).forEach(function(k) {
+      var r = data[k];
+      r._key = k;
+      rides.push(r);
+    });
+    // Sort by date descending
+    rides.sort(function(a, b) { return (b.date || '').localeCompare(a.date || ''); });
+
+    if (countEl) countEl.textContent = rides.length;
+
+    if (rides.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:var(--text-muted);font-size:13px;padding:12px;">' +
+        (isEN ? 'No rides yet' : isES ? 'Sin salidas aún' : 'Nessuna uscita ancora') + '</td></tr>';
+      return;
+    }
+
+    var html = '';
+    rides.forEach(function(r) {
+      var dateStr = r.date || '';
+      // Format date nicely (DD/MM)
+      if (dateStr.length === 10) {
+        var parts = dateStr.split('-');
+        dateStr = parts[2] + '/' + parts[1];
+      }
+      var deleteBtn = window.isOwner
+        ? '<button class="scooter-del-btn" data-key="' + r._key + '" title="' + (isEN ? 'Delete' : isES ? 'Eliminar' : 'Elimina') + '">✕</button>'
+        : '';
+      html += '<tr><td>' + dateStr + '</td><td>' + (r.place || '') + '</td><td>' + deleteBtn + '</td></tr>';
+    });
+    tbody.innerHTML = html;
+
+    // Attach delete handlers
+    tbody.querySelectorAll('.scooter-del-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var key = this.getAttribute('data-key');
+        if (confirm(isEN ? 'Delete this ride?' : isES ? '¿Eliminar esta salida?' : 'Eliminare questa uscita?')) {
+          scooterRef.child(key).remove();
+        }
+      });
+    });
+  }
+
+  if (window.registerFirebaseListener) {
+    window.registerFirebaseListener('posizione', scooterRef, 'value', _renderScooterRides);
+  } else {
+    scooterRef.on('value', _renderScooterRides);
+  }
+
+  // Add ride modal
+  addBtn.addEventListener('click', function() {
+    var today = window.localDateStr ? window.localDateStr() : new Date().toISOString().slice(0, 10);
+    var overlay = document.createElement('div');
+    overlay.className = 'manual-km-overlay';
+    overlay.innerHTML = '<div class="manual-km-modal">' +
+      '<h3>' + (isEN ? '🛴 Add scooter ride' : isES ? '🛴 Añadir salida en patinete' : '🛴 Aggiungi uscita in monopattino') + '</h3>' +
+      '<label>' + (isEN ? 'Date' : isES ? 'Fecha' : 'Data') + '</label>' +
+      '<input type="date" id="scooter-ride-date" value="' + today + '">' +
+      '<label>' + (isEN ? 'Place' : isES ? 'Lugar' : 'Luogo') + '</label>' +
+      '<input type="text" id="scooter-ride-place" placeholder="' + (isEN ? 'e.g. Helsinki waterfront' : isES ? 'ej. Paseo marítimo Helsinki' : 'es. Lungomare Helsinki') + '" maxlength="80">' +
+      '<div class="manual-km-actions">' +
+      '  <button class="manual-km-cancel">' + (isEN ? 'Cancel' : isES ? 'Cancelar' : 'Annulla') + '</button>' +
+      '  <button class="manual-km-save">' + (isEN ? 'Save' : isES ? 'Guardar' : 'Salva') + '</button>' +
+      '</div>' +
+      '</div>';
+    document.body.appendChild(overlay);
+
+    overlay.querySelector('.manual-km-cancel').addEventListener('click', function() { overlay.remove(); });
+    overlay.addEventListener('click', function(e) { if (e.target === overlay) overlay.remove(); });
+
+    overlay.querySelector('.manual-km-save').addEventListener('click', function() {
+      var date = document.getElementById('scooter-ride-date').value;
+      var place = document.getElementById('scooter-ride-place').value.trim();
+
+      if (!place) {
+        if (window.showToast) showToast(isEN ? 'Enter a place' : isES ? 'Introduce un lugar' : 'Inserisci un luogo', 'error');
+        return;
+      }
+
+      var entry = {
+        date: date,
+        place: place,
+        ts: firebase.database.ServerValue.TIMESTAMP
+      };
+
+      var newKey = 'ride_' + date.replace(/-/g, '') + '_' + Date.now();
+      scooterRef.child(newKey).set(entry).then(function() {
+        if (window.showToast) showToast(isEN ? '🛴 Saved!' : isES ? '🛴 ¡Guardado!' : '🛴 Salvato!', 'success');
+        overlay.remove();
+      }).catch(function(err) {
+        console.error('Scooter ride save error:', err);
+        if (window.showToast) showToast(isEN ? 'Save failed' : isES ? 'Error al guardar' : 'Salvataggio fallito', 'error');
+      });
+    });
+  });
 })();

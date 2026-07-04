@@ -15,7 +15,14 @@ var MAP_POIS = [
     "hours": "Ven-Dom e vacanze scolastiche 11-19 (chiuso durante le vacanze estive)",
     "hoursEN": "Fri-Sun & school holidays 11am-7pm (closed during summer holidays)",
     "price": "Bambini 1-3 €9,90, Bambini 3-17 €19,90, Adulti €5, Under 1 Gratuito",
-    "priceEN": "Kids 1-3 €9.90, Kids 3-17 €19.90, Adults €5, Under 1 Free"
+    "priceEN": "Kids 1-3 €9.90, Kids 3-17 €19.90, Adults €5, Under 1 Free",
+    "nameEN": "Leopark (St. Michael bei Leoben)",
+    "nameES": "Leopark (St. Michael bei Leoben)",
+    "descES": "Un parque infantil cubierto de 2.400 m² en Stiria con trampolines, toboganes gigantes y una zona para los más pequeños.",
+    "cityEN": "Leoben",
+    "cityES": "Leoben",
+    "hoursES": "Vie-Dom y vacaciones escolares 11-19 (cerrado durante las vacaciones de verano)",
+    "priceES": "Niños 1-3 €9,90, Niños 3-17 €19,90, Adultos €5, Menos de 1 Gratis"
   },
   {
     "id": "poi-k-1",
@@ -33,7 +40,14 @@ var MAP_POIS = [
     "hours": "Mar-Ven 9-17, Sab 10-17",
     "hoursEN": "Tue-Fri 9am-5pm, Sat 10am-5pm",
     "price": "Kunsthalle Gratuito, MuseumsCenter Adulti €7",
-    "priceEN": "Kunsthalle Free, MuseumsCenter Adults €7"
+    "priceEN": "Kunsthalle Free, MuseumsCenter Adults €7",
+    "nameEN": "Kunsthalle Leoben",
+    "nameES": "Kunsthalle Leoben",
+    "descES": "Un animado centro cultural con exposiciones de arte contemporáneo y un Museo dei Bambini interactivo.",
+    "cityEN": "Leoben",
+    "cityES": "Leoben",
+    "hoursES": "Mar-Vie 9-17, Sáb 10-17",
+    "priceES": "Kunsthalle Gratis, MuseumsCenter Adultos €7"
   },
   {
     "id": "poi-p-2",
@@ -46,7 +60,13 @@ var MAP_POIS = [
     "lng": 15.0656,
     "day": "g1",
     "city": "Leoben",
-    "maps": "https://maps.google.com/?q=47.3611,15.0656"
+    "maps": "https://maps.google.com/?q=47.3611,15.0656",
+    "nameEN": "Campingclub Hinterberg",
+    "nameES": "Campingclub Hinterberg",
+    "descEN": "from €25/night (all included). Children under 15 free, pets free. Family-run, quiet. Check-in 7-21.",
+    "descES": "desde €25/noche (todo incluido). Niños menores de 15 gratis, mascotas gratis. Gestión familiar, tranquilo. Check-in 7-21.",
+    "cityEN": "Leoben",
+    "cityES": "Leoben"
   },
   {
     "id": "poi-s-3",
@@ -59,7 +79,13 @@ var MAP_POIS = [
     "lng": 15.0914,
     "day": "g1",
     "city": "Leoben",
-    "maps": "https://maps.google.com/?q=47.3765,15.0914"
+    "maps": "https://maps.google.com/?q=47.3765,15.0914",
+    "nameEN": "🛴 Leoben",
+    "nameES": "🛴 Leoben",
+    "descEN": "Leoben center — Hauptplatz and compact old town, ideal for an evening stroll → see rentals",
+    "descES": "Leoben centro — Hauptplatz y centro histórico compacto, ideal para paseo nocturno → ver alquileres",
+    "cityEN": "Leoben",
+    "cityES": "Leoben"
   },
   {
     "id": "poi-f-4",
@@ -72,7 +98,13 @@ var MAP_POIS = [
     "lng": 15.0914,
     "day": "g1",
     "city": "Leoben",
-    "maps": "https://maps.google.com/?q=47.3765,15.0914"
+    "maps": "https://maps.google.com/?q=47.3765,15.0914",
+    "nameEN": "Leoben street food",
+    "nameES": "Comida callejera en Leoben",
+    "descEN": "Inns on Hauptplatz — Styrian cuisine: Brettljause (platter of cold cuts and cheeses) ~€10-14, Backhendl (Styrian fried chicken) ~€12, Steirischer S",
+    "descES": "Posadas en Hauptplatz — cocina de Estiria: Brettljause (tabla de embutidos y quesos) ~€10-14, Backhendl (pollo frito de Estiria) ~€12, Steirischer S",
+    "cityEN": "Leoben",
+    "cityES": "Leoben"
   },
   {
     "id": "poi-h-5",
@@ -90,7 +122,14 @@ var MAP_POIS = [
     "hours": "Parco: Tutti i giorni 24/7. Attrazioni (15 Mar-31 Ott): circa 11-1",
     "hoursEN": "Park: Daily 24/7. Attractions (Mar 15-Oct 31): approx. 11am-1am",
     "price": "Ingresso parco: Gratuito. Attrazioni: €3.50-15.00",
-    "priceEN": "Park entry: Free. Attractions: €3.50-15.00"
+    "priceEN": "Park entry: Free. Attractions: €3.50-15.00",
+    "nameEN": "Prater",
+    "nameES": "Prater",
+    "descES": "Un amplio parque público que alberga el icónico parque de atracciones Wurstelprater, la Noria y zonas verdes.",
+    "cityEN": "Vienna",
+    "cityES": "Vienna",
+    "hoursES": "Parque: Todos los días 24/7. Atracciones (15 mar-31 oct): aprox. 11-1",
+    "priceES": "Entrada al parque: Gratis. Atracciones: €3.50-15.00"
   },
   {
     "id": "poi-h-6",
@@ -108,7 +147,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 10-22",
     "hoursEN": "Daily 10am-10pm",
     "price": "Adulti €19, Ridotto (studenti/senior) €15, Bambini (3-12) €8 (Combo con Mozarthaus disponibile)",
-    "priceEN": "Adults €19, Reduced (students/seniors) €15, Children (3-12) €8 (Combo with Mozarthaus available)"
+    "priceEN": "Adults €19, Reduced (students/seniors) €15, Children (3-12) €8 (Combo with Mozarthaus available)",
+    "nameEN": "Haus der Musik",
+    "nameES": "Haus der Musik",
+    "descES": "Un museo interactivo del sonido en Vienna con salas de compositores, una orquesta virtual y talleres musicales.",
+    "cityEN": "Vienna",
+    "cityES": "Vienna",
+    "hoursES": "Todos los días 10-22",
+    "priceES": "Adultos €19, Reducido (estudiantes/mayores) €15, Niños (3-12) €8 (Combo con Mozarthaus disponible)"
   },
   {
     "id": "poi-k-7",
@@ -126,7 +172,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 9:30-18:30 (Lug-Ago)",
     "hoursEN": "Daily 9:30am-6:30pm (Jul-Aug)",
     "price": "Adulti €16,00, Bambini €11,00",
-    "priceEN": "Adults €16.00, Children €11.00"
+    "priceEN": "Adults €16.00, Children €11.00",
+    "nameEN": "Schönbrunn Palace and Gardens (including Maze and Gloriette)",
+    "nameES": "Palacio y Jardines de Schönbrunn (incluyendo Laberinto y Gloriette)",
+    "descES": "Explora los magníficos jardines barrocos del Castello di Schönbrunn, con un laberinto histórico y la espléndida terraza panorámica de la Gloriette.",
+    "cityEN": "Vienna",
+    "cityES": "Vienna",
+    "hoursES": "Todos los días 9:30-18:30 (jul-ago)",
+    "priceES": "Adultos €16,00, Niños €11,00"
   },
   {
     "id": "poi-k-8",
@@ -144,7 +197,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 9-18:30",
     "hoursEN": "Daily 9am-6:30pm",
     "price": "Adulti €29, bambini €17",
-    "priceEN": "Adults €29, kids €17"
+    "priceEN": "Adults €29, kids €17",
+    "nameEN": "Zoo di Vienna (Schönbrunner Tiergarten)",
+    "nameES": "Zoo di Vienna (Schönbrunner Tiergarten)",
+    "descES": "Descubre más de 500 especies animales, incluidos los pandas gigantes, en el zoológico más antiguo del mundo en un sitio de la UNESCO.",
+    "cityEN": "Vienna",
+    "cityES": "Vienna",
+    "hoursES": "Todos los días 9-18:30",
+    "priceES": "Adultos €29, niños €17"
   },
   {
     "id": "poi-k-9",
@@ -162,7 +222,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni circa 11-01 (metà mar-ott)",
     "hoursEN": "Daily approx. 11am-1am (mid-Mar to Oct)",
     "price": "Ingresso gratuito, giostre €3.50-15.00",
-    "priceEN": "Free admission, rides €3.50-15.00"
+    "priceEN": "Free admission, rides €3.50-15.00",
+    "nameEN": "Parco Divertimenti Prater",
+    "nameES": "Parco Divertimenti Prater",
+    "descES": "El icónico parque de atracciones de Vienna con más de 250 atracciones, incluida la famosa Ruota Panoramica.",
+    "cityEN": "Vienna",
+    "cityES": "Vienna",
+    "hoursES": "Todos los días aproximadamente 11-01 (mediados de mar-oct)",
+    "priceES": "Entrada gratuita, atracciones €3.50-15.00"
   },
   {
     "id": "poi-p-10",
@@ -175,7 +242,13 @@ var MAP_POIS = [
     "lng": 16.316459,
     "day": "g2",
     "city": "Vienna",
-    "maps": "https://maps.google.com/?q=48.13673,16.316459"
+    "maps": "https://maps.google.com/?q=48.13673,16.316459",
+    "nameEN": "Reisemobilstellplatz Wien",
+    "nameES": "Reisemobilstellplatz Wien",
+    "descEN": "~€27-30/night. Electricity, water, drainage, open 24h.",
+    "descES": "~€27-30/noche. Electricidad, agua, desagüe, abierto 24h.",
+    "cityEN": "Vienna",
+    "cityES": "Vienna"
   },
   {
     "id": "poi-p-11",
@@ -188,7 +261,13 @@ var MAP_POIS = [
     "lng": 16.2501,
     "day": "g2",
     "city": "Vienna",
-    "maps": "https://maps.google.com/?q=48.21476,16.2501"
+    "maps": "https://maps.google.com/?q=48.21476,16.2501",
+    "nameEN": "MICAMPA Wien Wienerwald",
+    "nameES": "MICAMPA Wien Wienerwald",
+    "descEN": "Near the woods, trails, suitable for families.",
+    "descES": "Cerca del bosque, senderos, apto para familias.",
+    "cityEN": "Vienna",
+    "cityES": "Vienna"
   },
   {
     "id": "poi-s-12",
@@ -201,7 +280,13 @@ var MAP_POIS = [
     "lng": 16.3738,
     "day": "g2",
     "city": "Vienna",
-    "maps": "https://maps.google.com/?q=48.2082,16.3738"
+    "maps": "https://maps.google.com/?q=48.2082,16.3738",
+    "nameEN": "🛴 Vienna",
+    "nameES": "🛴 Vienna",
+    "descEN": "Vienna Ringstrasse, Prater, Donauinsel — all flat, excellent bike lanes → see rentals",
+    "descES": "Vienna Ringstrasse, Prater, Donauinsel — todo plano, carriles bici excelentes → ver alquileres",
+    "cityEN": "Vienna",
+    "cityES": "Vienna"
   },
   {
     "id": "poi-f-13",
@@ -214,7 +299,13 @@ var MAP_POIS = [
     "lng": 16.3738,
     "day": "g2",
     "city": "Vienna",
-    "maps": "https://maps.google.com/?q=48.2082,16.3738"
+    "maps": "https://maps.google.com/?q=48.2082,16.3738",
+    "nameEN": "Vienna street food",
+    "nameES": "Comida callejera en Vienna",
+    "descEN": "Bitzinger's Würstelstand (Albertinaplatz, behind the Opera) — Käsekrainer (cheese sausage) ~€5-7, a Viennese institution! Or falafel wrap at N",
+    "descES": "Bitzinger's Würstelstand (Albertinaplatz, detrás de la Opera) — Käsekrainer (salchicha con queso) ~€5-7, ¡institución vienesa! O falafel wrap en N",
+    "cityEN": "Vienna",
+    "cityES": "Vienna"
   },
   {
     "id": "poi-f-14",
@@ -227,7 +318,13 @@ var MAP_POIS = [
     "lng": 16.36361,
     "day": "g2",
     "city": "Vienna",
-    "maps": "https://maps.google.com/?q=48.19889,16.36361"
+    "maps": "https://maps.google.com/?q=48.19889,16.36361",
+    "nameEN": "Market",
+    "nameES": "Mercado",
+    "descEN": "Naschmarkt (Wienzeile) — stalls from all over the world, spices, sweets, olives.",
+    "descES": "Naschmarkt (Wienzeile) — puestos de todo el mundo, especias, dulces, aceitunas.",
+    "cityEN": "Vienna",
+    "cityES": "Vienna"
   },
   {
     "id": "poi-h-15",
@@ -240,7 +337,13 @@ var MAP_POIS = [
     "lng": 16.61583,
     "day": "g3",
     "city": "Brno",
-    "maps": "https://maps.google.com/?q=49.20722,16.61583"
+    "maps": "https://maps.google.com/?q=49.20722,16.61583",
+    "nameEN": "Stop Brno",
+    "nameES": "Parada Brno",
+    "descEN": "Villa Tugendhat (Unesco, 30 min) — ⚠️ CLOSED MONDAY + reservation required on tugendhat.eu (max 16 pax/slot, sells out fast!)",
+    "descES": "Villa Tugendhat (Unesco, 30 min) — ⚠️ CERRADA LOS LUNES + reserva obligatoria en tugendhat.eu (máx. 16 pax/turno, se agota rápido!)",
+    "cityEN": "Brno",
+    "cityES": "Brno"
   },
   {
     "id": "poi-h-16",
@@ -258,7 +361,14 @@ var MAP_POIS = [
     "hours": "Dom-Gio 9-21, Ven-Sab 9-22",
     "hoursEN": "Sun-Thu 9am-9pm, Fri-Sat 9am-10pm",
     "price": "Piatti principali PLN 49-76",
-    "priceEN": "Mains PLN 49-76"
+    "priceEN": "Mains PLN 49-76",
+    "nameEN": "Evening — Varsavia",
+    "nameES": "Noche — Varsavia",
+    "descES": "Un restaurante verde y acogedor en el corazón del barrio Sadyba de Varsavia que sirve platos de temporada y locales.",
+    "cityEN": "Varsavia",
+    "cityES": "Varsavia",
+    "hoursES": "Dom-Jue 9-21, Vie-Sáb 9-22",
+    "priceES": "Platos principales PLN 49-76"
   },
   {
     "id": "poi-k-18",
@@ -276,7 +386,14 @@ var MAP_POIS = [
     "hours": "Estate (29 giu-31 ago): Lun-Gio 9-19, Ven 9-20, Sab-Dom 9-19",
     "hoursEN": "Summer (Jun 29-Aug 31): Mon-Thu 9am-7pm, Fri 9am-8pm, Sat-Sun 9am-7pm",
     "price": "Adulti PLN 48 (feriali) / PLN 50 (weekend), Ridotti PLN 34 / PLN 36, Under 2 Gratuito",
-    "priceEN": "Adults PLN 48 (weekdays) / PLN 50 (weekend), Reduced PLN 34 / PLN 36, Under 2 Free"
+    "priceEN": "Adults PLN 48 (weekdays) / PLN 50 (weekend), Reduced PLN 34 / PLN 36, Under 2 Free",
+    "nameEN": "Copernicus Science Centre",
+    "nameES": "Copernicus Science Centre",
+    "descES": "Un museo de ciencia interactivo con exposiciones prácticas, un planetario y un jardín en la azotea.",
+    "cityEN": "Varsavia",
+    "cityES": "Varsavia",
+    "hoursES": "Verano (29 jun-31 ago): Lun-Jue 9-19, Vie 9-20, Sáb-Dom 9-19",
+    "priceES": "Adultos PLN 48 (días laborables) / PLN 50 (fin de semana), Reducidos PLN 34 / PLN 36, Menores de 2 Gratis"
   },
   {
     "id": "poi-p-19",
@@ -289,7 +406,13 @@ var MAP_POIS = [
     "lng": 21.1481,
     "day": "g3",
     "city": "Varsavia",
-    "maps": "https://maps.google.com/?q=52.1795,21.1481"
+    "maps": "https://maps.google.com/?q=52.1795,21.1481",
+    "nameEN": "Camping WOK",
+    "nameES": "Camping WOK",
+    "descEN": "~€35/night. Electricity, water, WiFi, playground, clean facilities.",
+    "descES": "~€35/noche. Electricidad, agua, WiFi, parque infantil, servicios limpios.",
+    "cityEN": "Varsavia",
+    "cityES": "Varsavia"
   },
   {
     "id": "poi-p-20",
@@ -302,7 +425,13 @@ var MAP_POIS = [
     "lng": 20.9661,
     "day": "g3",
     "city": "Varsavia",
-    "maps": "https://maps.google.com/?q=52.2144,20.9661"
+    "maps": "https://maps.google.com/?q=52.2144,20.9661",
+    "nameEN": "Camping Majawa",
+    "nameES": "Camping Majawa",
+    "descEN": "~€28/night. Basic facilities, close to the centre.",
+    "descES": "~€28/noche. Servicios básicos, cerca del centro.",
+    "cityEN": "Varsavia",
+    "cityES": "Varsavia"
   },
   {
     "id": "poi-s-21",
@@ -315,7 +444,13 @@ var MAP_POIS = [
     "lng": 21.0122,
     "day": "g3",
     "city": "Varsavia",
-    "maps": "https://maps.google.com/?q=52.2297,21.0122"
+    "maps": "https://maps.google.com/?q=52.2297,21.0122",
+    "nameEN": "🛴 Varsavia",
+    "nameES": "🛴 Varsavia",
+    "descEN": "Varsavia old town: spacious and pedestrian, Vistola riverfront → see rentals",
+    "descES": "Varsavia centro histórico amplio y peatonal, frente al río Vistola → ver alquileres",
+    "cityEN": "Varsavia",
+    "cityES": "Varsavia"
   },
   {
     "id": "poi-f-22",
@@ -328,7 +463,13 @@ var MAP_POIS = [
     "lng": 21.0122,
     "day": "g3",
     "city": "Varsavia",
-    "maps": "https://maps.google.com/?q=52.2297,21.0122"
+    "maps": "https://maps.google.com/?q=52.2297,21.0122",
+    "nameEN": "Varsavia street food",
+    "nameES": "Varsavia comida callejera",
+    "descEN": "Zapiekanki (gratinated baguettes) at Plac Nowy or kiosks on the Vistola ~€3-4. Obwarzanki (bread rings) from street vendors ~€1. Bar Mleczny Fami",
+    "descES": "Zapiekanki (baguettes gratinadas) en Plac Nowy o en quioscos junto al Vistola ~€3-4. Obwarzanki (rosquillas de pan) de los vendedores ambulantes ~€1. Bar Mleczny Fami",
+    "cityEN": "Varsavia",
+    "cityES": "Varsavia"
   },
   {
     "id": "poi-f-23",
@@ -341,7 +482,13 @@ var MAP_POIS = [
     "lng": 21.0122,
     "day": "g3",
     "city": "Varsavia",
-    "maps": "https://maps.google.com/?q=52.2297,21.0122"
+    "maps": "https://maps.google.com/?q=52.2297,21.0122",
+    "nameEN": "Market",
+    "nameES": "Mercado",
+    "descEN": "Hala Mirowska (Pl. Mirowski) — fresh produce, bread, cold cuts.",
+    "descES": "Hala Mirowska (Pl. Mirowski) — productos frescos, pan, embutidos.",
+    "cityEN": "Varsavia",
+    "cityES": "Varsavia"
   },
   {
     "id": "poi-f-24",
@@ -354,7 +501,13 @@ var MAP_POIS = [
     "lng": 20.94091,
     "day": "g3",
     "city": "Varsavia",
-    "maps": "https://maps.google.com/?q=52.24639,20.94091"
+    "maps": "https://maps.google.com/?q=52.24639,20.94091",
+    "nameEN": "Flea market",
+    "nameES": "Mercadillo de pulgas",
+    "descEN": "Bazar na Kole (Obozowa 99) — the largest second-hand market in Varsavia! Antiques, Soviet memorabilia, vinyl, vintage furniture.",
+    "descES": "Bazar na Kole (Obozowa 99) — ¡el mayor mercado de segunda mano de Varsavia! Antigüedades, memorabilia soviética, vinilos, muebles vintage.",
+    "cityEN": "Varsavia",
+    "cityES": "Varsavia"
   },
   {
     "id": "poi-h-25",
@@ -372,7 +525,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 7-22",
     "hoursEN": "Daily 7am-10pm",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Bernardinai Garden",
+    "nameES": "Bernardinai Garden",
+    "descES": "Un parque histórico del siglo XV en el corazón de Vilnius con jardines botánicos, una fuente musical y la encina más antigua de la ciudad.",
+    "cityEN": "Vilnius",
+    "cityES": "Vilnius",
+    "hoursES": "Todos los días 7-22",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-h-26",
@@ -386,7 +546,12 @@ var MAP_POIS = [
     "day": "g4",
     "city": "Vilnius",
     "maps": "https://maps.google.com/?q=54.68318,25.30719",
-    "descEN": "A quirky, bohemian neighborhood in Vilnius that declared itself an independent republic of artists in 1997."
+    "descEN": "A quirky, bohemian neighborhood in Vilnius that declared itself an independent republic of artists in 1997.",
+    "nameEN": "Uzupis",
+    "nameES": "Uzupis",
+    "descES": "Un barrio excéntrico y bohemio de Vilnius que en 1997 se declaró república independiente de artistas.",
+    "cityEN": "Vilnius",
+    "cityES": "Vilnius"
   },
   {
     "id": "poi-k-27",
@@ -404,7 +569,14 @@ var MAP_POIS = [
     "hours": "Gio-Ven 14-18, Sab 11-16 (Chiuso Dom-Lun, Mar-Mer solo per gruppi)",
     "hoursEN": "Thu-Fri 2pm-6pm, Sat 11am-4pm (Closed Sun-Mon, Tue-Wed for groups only)",
     "price": "Adulti €8, Bambini/Studenti/Anziani €6",
-    "priceEN": "Adults €8, Children/Students/Seniors €6"
+    "priceEN": "Adults €8, Children/Students/Seniors €6",
+    "nameEN": "Toys Museum (Žaislų muziejus)",
+    "nameES": "Toys Museum (Žaislų muziejus)",
+    "descES": "El primer centro educativo familiar en Lituania, que ofrece un viaje interactivo por la historia de los juguetes.",
+    "cityEN": "Vilnius",
+    "cityES": "Vilnius",
+    "hoursES": "Jue-Vie 14-18, Sáb 11-16 (Cerrado Dom-Lun, Mar-Mié solo para grupos)",
+    "priceES": "Adultos €8, Niños/Estudiantes/Mayores €6"
   },
   {
     "id": "poi-k-28",
@@ -422,7 +594,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 10-20",
     "hoursEN": "Daily 10am-8pm",
     "price": "Adulti €8, Ridotti €4",
-    "priceEN": "Adults €8, Concessions €4"
+    "priceEN": "Adults €8, Concessions €4",
+    "nameEN": "Tower of Gediminas Castle",
+    "nameES": "Torre del Castillo de Gediminas",
+    "descES": "Explora la parte restante del Castello Superiore medieval de Vilnius y disfruta de vistas panorámicas de la ciudad.",
+    "cityEN": "Vilnius",
+    "cityES": "Vilnius",
+    "hoursES": "Todos los días 10-20",
+    "priceES": "Adultos €8, Reducidos €4"
   },
   {
     "id": "poi-p-29",
@@ -435,7 +614,13 @@ var MAP_POIS = [
     "lng": 25.227935,
     "day": "g4",
     "city": "Vilnius",
-    "maps": "https://maps.google.com/?q=54.674444,25.227935"
+    "maps": "https://maps.google.com/?q=54.674444,25.227935",
+    "nameEN": "Vilnius City Campsite",
+    "nameES": "Vilnius City Campsite",
+    "descEN": "~€30/night. Electricity (10A), drinking water, waste disposal, Wi-Fi, showers, washing machine, near Litexpo.",
+    "descES": "~€30/noche. Electricidad (10A), agua potable, vaciado de aguas, Wi-Fi, duchas, lavadora, cerca de Litexpo.",
+    "cityEN": "Vilnius",
+    "cityES": "Vilnius"
   },
   {
     "id": "poi-f-30",
@@ -448,7 +633,13 @@ var MAP_POIS = [
     "lng": 25.2797,
     "day": "g4",
     "city": "Vilnius",
-    "maps": "https://maps.google.com/?q=54.6872,25.2797"
+    "maps": "https://maps.google.com/?q=54.6872,25.2797",
+    "nameEN": "Vilnius street food",
+    "nameES": "Comida callejera de Vilnius",
+    "descEN": "Kibinai (stuffed pastries, Karaite specialty) ~€3 — sold everywhere in the centre. Kepta Duona (fried bread with garlic) from kiosks ~€3-4. To sit:",
+    "descES": "Kibinai (empanadillas rellenas, especialidad karaíta) ~€3 — se venden por todo el centro. Kepta Duona (pan frito con ajo) de los quioscos ~€3-4. Para sentarse:",
+    "cityEN": "Vilnius",
+    "cityES": "Vilnius"
   },
   {
     "id": "poi-f-31",
@@ -461,7 +652,13 @@ var MAP_POIS = [
     "lng": 25.28609,
     "day": "g4",
     "city": "Vilnius",
-    "maps": "https://maps.google.com/?q=54.67365,25.28609"
+    "maps": "https://maps.google.com/?q=54.67365,25.28609",
+    "nameEN": "Market",
+    "nameES": "Mercado",
+    "descEN": "Halės Turgus (Pylimo g. 58) — fresh produce, dark bread, cheeses.",
+    "descES": "Halės Turgus (Pylimo g. 58) — productos frescos, pan negro, quesos.",
+    "cityEN": "Vilnius",
+    "cityES": "Vilnius"
   },
   {
     "id": "poi-h-32",
@@ -479,7 +676,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 24 ore",
     "hoursEN": "Daily 24 hours",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Collina delle Croci",
+    "nameES": "Collina delle Croci",
+    "descES": "Un lugar de peregrinación evocador caracterizado por una pequeña colina cubierta por más de 200.000 cruces.",
+    "cityEN": "Šiauliai",
+    "cityES": "Šiauliai",
+    "hoursES": "Abierto todos los días 24 horas",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-h-33",
@@ -497,7 +701,14 @@ var MAP_POIS = [
     "hours": "Mar-Dom 10-18",
     "hoursEN": "Tue-Sun 10am-6pm",
     "price": "Adulti €12, bambini/studenti/anziani €6",
-    "priceEN": "Adults €12, kids/students/seniors €6"
+    "priceEN": "Adults €12, kids/students/seniors €6",
+    "nameEN": "Riga Motor Museum",
+    "nameES": "Riga Motor Museum",
+    "descES": "El museo más grande y moderno de vehículos de época de los Paesi Baltici, con exposiciones interactivas y coches de época.",
+    "cityEN": "Riga",
+    "cityES": "Riga",
+    "hoursES": "Mar-Dom 10-18",
+    "priceES": "Adultos €12, niños/estudiantes/personas mayores €6"
   },
   {
     "id": "poi-h-34",
@@ -515,7 +726,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 10:00-18:00",
     "hoursEN": "Daily 10:00-18:00",
     "price": "Adulti €8, studenti €5",
-    "priceEN": "Adults €8, students €5"
+    "priceEN": "Adults €8, students €5",
+    "nameEN": "Museo dell'Occupazione",
+    "nameES": "Museo dell'Occupazione",
+    "descES": "Un museo histórico que documenta la ocupación de Lettonia por parte de la Unione Sovietica y la Germania nazista desde 1940 hasta 1991.",
+    "cityEN": "Riga",
+    "cityES": "Riga",
+    "hoursES": "Todos los días 10:00-18:00",
+    "priceES": "Adultos €8, estudiantes €5"
   },
   {
     "id": "poi-h-35",
@@ -533,7 +751,14 @@ var MAP_POIS = [
     "hours": "Mar-Dom 10-18",
     "hoursEN": "Tue-Sun 10am-6pm",
     "price": "Adulti €9, studenti/anziani €5",
-    "priceEN": "Adults €9, students/seniors €5"
+    "priceEN": "Adults €9, students/seniors €5",
+    "nameEN": "Art Nouveau",
+    "nameES": "Art Nouveau",
+    "descES": "Situado en el antiguo apartamento del arquitecto Konstantīns Pēkšēns, este museo exhibe auténticos interiores Art Nouveau de 1903.",
+    "cityEN": "Riga",
+    "cityES": "Riga",
+    "hoursES": "Mar-Dom 10-18",
+    "priceES": "Adultos €9, estudiantes/personas mayores €5"
   },
   {
     "id": "poi-k-36",
@@ -551,7 +776,14 @@ var MAP_POIS = [
     "hours": "Lun-Gio 12-21, Ven 12-22, Sab 11-22, Dom 11-21",
     "hoursEN": "Mon-Thu 12pm-9pm, Fri 12pm-10pm, Sat 11am-10pm, Sun 11am-9pm",
     "price": "Adulti €35, Bambini (6-13) €26.50, Bambini (sotto i 5) €10",
-    "priceEN": "Adults €35, Children (6-13) €26.50, Children (under 5) €10"
+    "priceEN": "Adults €35, Children (6-13) €26.50, Children (under 5) €10",
+    "nameEN": "Līvu Akvaparks",
+    "nameES": "Līvu Akvaparks",
+    "descES": "Uno de los parques acuáticos cubiertos más grandes del Norte de Europa, con toboganes emocionantes, zona de spa y playa veraniega al aire libre.",
+    "cityEN": "Jūrmala",
+    "cityES": "Jūrmala",
+    "hoursES": "Lun-Jue 12-21, Vie 12-22, Sáb 11-22, Dom 11-21",
+    "priceES": "Adultos €35, Niños (6-13) €26.50, Niños (menores de 5) €10"
   },
   {
     "id": "poi-k-37",
@@ -569,7 +801,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 10:00-18:00 (Stagione estiva)",
     "hoursEN": "Daily 10:00-18:00 (Summer season)",
     "price": "Adulti €15, Bambini (4-17) €8",
-    "priceEN": "Adults €15, Children (4-17) €8"
+    "priceEN": "Adults €15, Children (4-17) €8",
+    "nameEN": "Riga Zoo",
+    "nameES": "Riga Zoo",
+    "descES": "El zoológico más antiguo de los Países Bálticos, que alberga alrededor de 400 especies animales y ofrece actividades para familias.",
+    "cityEN": "Riga",
+    "cityES": "Riga",
+    "hoursES": "Todos los días 10:00-18:00 (Temporada de verano)",
+    "priceES": "Adultos €15, Niños (4-17) €8"
   },
   {
     "id": "poi-k-38",
@@ -587,7 +826,14 @@ var MAP_POIS = [
     "hours": "Aperto 24 ore",
     "hoursEN": "Open 24 hours",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Esplanāde Park",
+    "nameES": "Esplanāde Park",
+    "descES": "Un amplio e histórico parque verde en el centro de Riga con senderos sombreados, monumentos y lugares culturales.",
+    "cityEN": "Riga",
+    "cityES": "Riga",
+    "hoursES": "Abierto 24 horas",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-p-39",
@@ -600,7 +846,13 @@ var MAP_POIS = [
     "lng": 24.078,
     "day": "g5",
     "city": "Riga",
-    "maps": "https://maps.google.com/?q=56.955,24.078"
+    "maps": "https://maps.google.com/?q=56.955,24.078",
+    "nameEN": "Riga City Camping",
+    "nameES": "Riga City Camping",
+    "descEN": "~€25-30/night. Electricity, water, WiFi, showers, near the centre.",
+    "descES": "~€25-30/noche. Electricidad, agua, WiFi, duchas, cerca del centro.",
+    "cityEN": "Riga",
+    "cityES": "Riga"
   },
   {
     "id": "poi-p-40",
@@ -613,7 +865,13 @@ var MAP_POIS = [
     "lng": 24.07944,
     "day": "g5",
     "city": "Riga",
-    "maps": "https://maps.google.com/?q=56.96395,24.07944"
+    "maps": "https://maps.google.com/?q=56.96395,24.07944",
+    "nameEN": "Riverside Camping",
+    "nameES": "Riverside Camping",
+    "descEN": "~€30-35/night. Electricity, water, WiFi, camper services.",
+    "descES": "~€30-35/noche. Electricidad, agua, WiFi, servicios para autocaravanas.",
+    "cityEN": "Riga",
+    "cityES": "Riga"
   },
   {
     "id": "poi-s-41",
@@ -626,7 +884,13 @@ var MAP_POIS = [
     "lng": 23.4161,
     "day": "g5",
     "city": "Šiauliai",
-    "maps": "https://maps.google.com/?q=56.0153,23.4161"
+    "maps": "https://maps.google.com/?q=56.0153,23.4161",
+    "nameEN": "🛴 Šiauliai",
+    "nameES": "🛴 Šiauliai",
+    "descEN": "Riga compact centre / Tallinn Pirita promenade → see rentals",
+    "descES": "Riga centro compacto / Tallinn Pirita promenade → ver alquileres",
+    "cityEN": "Šiauliai",
+    "cityES": "Šiauliai"
   },
   {
     "id": "poi-f-42",
@@ -639,7 +903,13 @@ var MAP_POIS = [
     "lng": 24.15995,
     "day": "g5",
     "city": "Riga",
-    "maps": "https://maps.google.com/?q=56.92797,24.15995"
+    "maps": "https://maps.google.com/?q=56.92797,24.15995",
+    "nameEN": "Riga street food",
+    "nameES": "Comida callejera en Riga",
+    "descEN": "Piragi (bacon rolls) from the stalls of Mercato Centrale ~€1-2 each. Lido (Krasta iela 76) — huge self-service ~€8/pax, playground for children!",
+    "descES": "Piragi (bollos con bacon) de los puestos del Mercato Centrale ~€1-2 cada uno. Lido (Krasta iela 76) — self-service enorme ~€8/pax, zona de juegos para niños!",
+    "cityEN": "Riga",
+    "cityES": "Riga"
   },
   {
     "id": "poi-f-43",
@@ -652,7 +922,13 @@ var MAP_POIS = [
     "lng": 24.1156,
     "day": "g5",
     "city": "Riga",
-    "maps": "https://maps.google.com/?q=56.9419,24.1156"
+    "maps": "https://maps.google.com/?q=56.9419,24.1156",
+    "nameEN": "Market",
+    "nameES": "Mercado",
+    "descEN": "Rīgas Centrāltirgus (Nēģu iela 7, hangar Zeppelin!) — 5 pavilions: fish, meat, dairy, black bread, vegetables.",
+    "descES": "Rīgas Centrāltirgus (Nēģu iela 7, hangar Zeppelin!) — 5 pabellones: pescado, carne, lácteos, pan negro, verduras.",
+    "cityEN": "Riga",
+    "cityES": "Riga"
   },
   {
     "id": "poi-f-44",
@@ -665,7 +941,13 @@ var MAP_POIS = [
     "lng": 24.1156,
     "day": "g5",
     "city": "Riga",
-    "maps": "https://maps.google.com/?q=56.9419,24.1156"
+    "maps": "https://maps.google.com/?q=56.9419,24.1156",
+    "nameEN": "Flea market",
+    "nameES": "Mercadillo de pulgas",
+    "descEN": "Latgale Tirgus (Firsa Sadovņikova iela 9) — legendary Baltic second-hand market! Soviet memorabilia, vinyl, coins, vintage items.",
+    "descES": "Latgale Tirgus (Firsa Sadovņikova iela 9) — ¡legendario mercado de segunda mano báltico! Memorabilia soviética, vinilos, monedas, objetos vintage.",
+    "cityEN": "Riga",
+    "cityES": "Riga"
   },
   {
     "id": "poi-h-45",
@@ -683,7 +965,14 @@ var MAP_POIS = [
     "hours": "Mag-Set: Tutti i giorni 10-19",
     "hoursEN": "May-Sep: Daily 10am-7pm",
     "price": "Adulti €22, Studenti €11, Famiglia €40, Under 8 Gratuito",
-    "priceEN": "Adults €22, Students €11, Family €40, Under 8 Free"
+    "priceEN": "Adults €22, Students €11, Family €40, Under 8 Free",
+    "nameEN": "Lennusadam",
+    "nameES": "Lennusadam",
+    "descES": "Un fascinante museo marítimo alojado en históricos hangares de hidroaviones, con un auténtico submarino y barcos históricos.",
+    "cityEN": "Tallinn",
+    "cityES": "Tallinn",
+    "hoursES": "Mag-Set: Todos los días 10-19",
+    "priceES": "Adultos €22, Estudiantes €11, Familia €40, Menores de 8 Gratis"
   },
   {
     "id": "poi-h-46",
@@ -699,7 +988,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=59.43722,24.74528",
     "descEN": "A beautifully preserved medieval center with cobbled streets, Gothic architecture, and historic merchant guilds.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Old Town",
+    "nameES": "Casco antiguo",
+    "descES": "Un centro medieval maravillosamente conservado con calles empedradas, arquitectura gótica y gremios antiguos.",
+    "cityEN": "Tallinn",
+    "cityES": "Tallinn",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-k-47",
@@ -717,7 +1012,14 @@ var MAP_POIS = [
     "hours": "Mar-Dom 10-17 (Estate)",
     "hoursEN": "Tue-Sun 10am-5pm (Summer)",
     "price": "Adulti €8, Bambini (3+) €6, Famiglia €20",
-    "priceEN": "Adults €8, Children (3+) €6, Family €20"
+    "priceEN": "Adults €8, Children (3+) €6, Family €20",
+    "nameEN": "Children's Museum Miiamilla",
+    "nameES": "Children's Museum Miiamilla",
+    "descES": "Situado en el Parque de Kadriorg, este museo interactivo para niños ofrece exposiciones creativas y un pequeño jardín.",
+    "cityEN": "Tallinn",
+    "cityES": "Tallinn",
+    "hoursES": "Mar-Dom 10-17 (Verano)",
+    "priceES": "Adultos €8, Niños (3+) €6, Familia €20"
   },
   {
     "id": "poi-k-48",
@@ -735,7 +1037,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 10-21",
     "hoursEN": "Daily 10am-9pm",
     "price": "Pass giornaliero €11-15",
-    "priceEN": "Day pass €11-15"
+    "priceEN": "Day pass €11-15",
+    "nameEN": "Super Skypark",
+    "nameES": "Super Skypark",
+    "descES": "El mayor centro de entretenimiento familiar cubierto de la región con una enorme zona de trampolines.",
+    "cityEN": "Tallinn",
+    "cityES": "Tallinn",
+    "hoursES": "Todos los días 10-21",
+    "priceES": "Pase diario €11-15"
   },
   {
     "id": "poi-p-49",
@@ -748,7 +1057,13 @@ var MAP_POIS = [
     "lng": 24.8265,
     "day": "g6",
     "city": "Tallinn",
-    "maps": "https://maps.google.com/?q=59.4671,24.8265"
+    "maps": "https://maps.google.com/?q=59.4671,24.8265",
+    "nameEN": "Pirita Harbor Camping",
+    "nameES": "Pirita Harbor Camping",
+    "descEN": "~€35/night. Electricity, water, showers, by the sea.",
+    "descES": "~€35/noche. Electricidad, agua, duchas, junto al mar.",
+    "cityEN": "Tallinn",
+    "cityES": "Tallinn"
   },
   {
     "id": "poi-p-50",
@@ -761,7 +1076,13 @@ var MAP_POIS = [
     "lng": 24.80851,
     "day": "g6",
     "city": "Tallinn",
-    "maps": "https://maps.google.com/?q=59.44902,24.80851"
+    "maps": "https://maps.google.com/?q=59.44902,24.80851",
+    "nameEN": "Tallinn City Camping",
+    "nameES": "Tallinn City Camping",
+    "descEN": "~€29/night. Other",
+    "descES": "~€29/noche. Otro",
+    "cityEN": "Tallinn",
+    "cityES": "Tallinn"
   },
   {
     "id": "poi-s-51",
@@ -774,7 +1095,13 @@ var MAP_POIS = [
     "lng": 24.7536,
     "day": "g6",
     "city": "Tallinn",
-    "maps": "https://maps.google.com/?q=59.437,24.7536"
+    "maps": "https://maps.google.com/?q=59.437,24.7536",
+    "nameEN": "🛴 Tallinn",
+    "nameES": "🛴 Tallinn",
+    "descEN": "Tallinn Pirita promenade and historic centre → see rentals",
+    "descES": "Tallinn paseo de Pirita y centro histórico → ver alquileres",
+    "cityEN": "Tallinn",
+    "cityES": "Tallinn"
   },
   {
     "id": "poi-f-52",
@@ -787,7 +1114,13 @@ var MAP_POIS = [
     "lng": 24.7536,
     "day": "g6",
     "city": "Tallinn",
-    "maps": "https://maps.google.com/?q=59.437,24.7536"
+    "maps": "https://maps.google.com/?q=59.437,24.7536",
+    "nameEN": "Tallinn street food",
+    "nameES": "Comida callejera Tallinn",
+    "descEN": "Kompressor (Rataskaevu 3) — giant pancakes savory/sweet ~€6-8, take-away! Street food at Balti Jaama Turg — international stalls ~€7-10. Kohuke ",
+    "descES": "Kompressor (Rataskaevu 3) — pancakes gigantes salados/dulces ~€6-8, para llevar! Comida callejera en Balti Jaama Turg — puestos internacionales ~€7-10. Kohuke ",
+    "cityEN": "Tallinn",
+    "cityES": "Tallinn"
   },
   {
     "id": "poi-f-53",
@@ -800,7 +1133,13 @@ var MAP_POIS = [
     "lng": 24.73648,
     "day": "g6",
     "city": "Tallinn",
-    "maps": "https://maps.google.com/?q=59.44102,24.73648"
+    "maps": "https://maps.google.com/?q=59.44102,24.73648",
+    "nameEN": "Balti Jaama Turg",
+    "nameES": "Balti Jaama Turg",
+    "descEN": "(Kopli 1) — street food + fresh produce + handicrafts.",
+    "descES": "(Kopli 1) — comida callejera + productos frescos + artesanía.",
+    "cityEN": "Tallinn",
+    "cityES": "Tallinn"
   },
   {
     "id": "poi-f-54",
@@ -813,7 +1152,13 @@ var MAP_POIS = [
     "lng": 24.73648,
     "day": "g6",
     "city": "Tallinn",
-    "maps": "https://maps.google.com/?q=59.44102,24.73648"
+    "maps": "https://maps.google.com/?q=59.44102,24.73648",
+    "nameEN": "Balti Jaam Market",
+    "nameES": "Balti Jaam Market",
+    "descEN": "(upper floor) — vintage, second-hand clothing, Soviet memorabilia, antiques. Also: Telliskivi kirbukas and Kalamaja Bazaar (vintage sho",
+    "descES": "(planta superior) — vintage, ropa de segunda mano, memorabilia soviética, antigüedades. También: Telliskivi kirbukas y Kalamaja Bazaar (vintage sho",
+    "cityEN": "Tallinn",
+    "cityES": "Tallinn"
   },
   {
     "id": "poi-h-55",
@@ -831,7 +1176,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni, partenze multiple (circa 6:00-22:30)",
     "hoursEN": "Daily, multiple departures (approx. 6am-10:30pm)",
     "price": "Da €15",
-    "priceEN": "From €15"
+    "priceEN": "From €15",
+    "nameEN": "Ferry Tallinn → Helsinki",
+    "nameES": "Ferry Tallinn → Helsinki",
+    "descES": "Un ferry rápido y panorámico de 2 horas que cruza el Golfo de Finlandia, conectando las dos capitales.",
+    "cityEN": "Helsinki",
+    "cityES": "Helsinki",
+    "hoursES": "Todos los días, salidas múltiples (aprox. 6:00-22:30)",
+    "priceES": "Desde €15"
   },
   {
     "id": "poi-h-56",
@@ -849,7 +1201,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 11-21 (Estate)",
     "hoursEN": "Daily 11am-9pm (Summer)",
     "price": "Ingresso all'area €5, braccialetto Isohupi €53",
-    "priceEN": "Area entrance €5, Isohupi wristband €53"
+    "priceEN": "Area entrance €5, Isohupi wristband €53",
+    "nameEN": "Linnanmäki",
+    "nameES": "Linnanmäki",
+    "descES": "El parque de atracciones más antiguo y popular de Finlandia con más de 40 atracciones, incluida la icónica montaña rusa de madera Vuoristorata.",
+    "cityEN": "Helsinki",
+    "cityES": "Helsinki",
+    "hoursES": "Todos los días 11-21 (Verano)",
+    "priceES": "Entrada al área €5, pulsera Isohupi €53"
   },
   {
     "id": "poi-k-57",
@@ -867,7 +1226,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 24/7 (Servizi 10-19) dal 6 giu al 30 ago",
     "hoursEN": "Daily 24/7 (Services 10am-7pm) from Jun 6 to Aug 30",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Lappeenranta Sandcastle (Hiekkalinna)",
+    "nameES": "Lappeenranta Sandcastle (Hiekkalinna)",
+    "descES": "El mayor castillo de arena de Finlandia presenta un nuevo tema cada verano, con esculturas y actividades.",
+    "cityEN": "Helsinki",
+    "cityES": "Helsinki",
+    "hoursES": "Todos los días 24/7 (Servicios 10-19) del 6 jun al 30 ago",
+    "priceES": "Gratuito"
   },
   {
     "id": "poi-k-58",
@@ -885,7 +1251,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 11-21 (spiaggia sorvegliata 8 giu-9 ago)",
     "hoursEN": "Daily 11am-9pm (supervised beach Jun 8-Aug 9)",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Myllysaari Family Park",
+    "nameES": "Myllysaari Family Park",
+    "descES": "Una popular zona recreativa en el lago Saimaa con playa de arena, parque infantil, circuito de parkour y sauna.",
+    "cityEN": "Helsinki",
+    "cityES": "Helsinki",
+    "hoursES": "Todos los días 11-21 (playa vigilada 8 jun-9 ago)",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-p-59",
@@ -898,7 +1271,13 @@ var MAP_POIS = [
     "lng": 28.1561,
     "day": "g7",
     "city": "Lappeenranta",
-    "maps": "https://maps.google.com/?q=61.0544,28.1561"
+    "maps": "https://maps.google.com/?q=61.0544,28.1561",
+    "nameEN": "Huhtiniemi Camping",
+    "nameES": "Huhtiniemi Camping",
+    "descEN": "~€35-40/night. Electricity, drinking water, grey/black water disposal, WiFi, playground, saunas and direct access to Lago Saimaa.",
+    "descES": "~€35-40/noche. Electricidad, agua potable, vaciado de aguas grises/negras, WiFi, parque infantil, saunas y acceso directo al Lago Saimaa.",
+    "cityEN": "Lappeenranta",
+    "cityES": "Lappeenranta"
   },
   {
     "id": "poi-f-60",
@@ -911,7 +1290,13 @@ var MAP_POIS = [
     "lng": 24.9384,
     "day": "g7",
     "city": "Helsinki",
-    "maps": "https://maps.google.com/?q=60.1699,24.9384"
+    "maps": "https://maps.google.com/?q=60.1699,24.9384",
+    "nameEN": "Helsinki street food",
+    "nameES": "Comida callejera en Helsinki",
+    "descEN": "Stalls on the Kauppatori harbour — lohikeitto (salmon soup) ~€8, grilled salmon ~€10. Karjalanpiirakka (Karelian pasties with egg butter) ~€3",
+    "descES": "Puestos en el puerto de Kauppatori — lohikeitto (sopa de salmón) ~€8, salmón a la parrilla ~€10. Karjalanpiirakka (pastitas carelianas con mantequilla de huevo) ~€3",
+    "cityEN": "Helsinki",
+    "cityES": "Helsinki"
   },
   {
     "id": "poi-f-61",
@@ -924,7 +1309,13 @@ var MAP_POIS = [
     "lng": 24.95282,
     "day": "g7",
     "city": "Helsinki",
-    "maps": "https://maps.google.com/?q=60.16616,24.95282"
+    "maps": "https://maps.google.com/?q=60.16616,24.95282",
+    "nameEN": "Vanha Kauppahalli",
+    "nameES": "Vanha Kauppahalli",
+    "descEN": "(Old Market Hall, Eteläranta 1) — smoked salmon, reindeer, cheeses.",
+    "descES": "(Old Market Hall, Eteläranta 1) — salmón ahumado, reno, quesos.",
+    "cityEN": "Helsinki",
+    "cityES": "Helsinki"
   },
   {
     "id": "poi-f-62",
@@ -937,7 +1328,13 @@ var MAP_POIS = [
     "lng": 24.93004,
     "day": "g7",
     "city": "Helsinki",
-    "maps": "https://maps.google.com/?q=60.1628,24.93004"
+    "maps": "https://maps.google.com/?q=60.1628,24.93004",
+    "nameEN": "Hietalahti Flea Market",
+    "nameES": "Hietalahti Flea Market",
+    "descEN": "(Lönnrotinkatu 34) — the biggest outdoor market in Helsinki! Vintage, clothes, vinyl, curiosities.",
+    "descES": "(Lönnrotinkatu 34) — ¡el mayor mercado al aire libre de Helsinki! Vintage, ropa, vinilos, curiosidades.",
+    "cityEN": "Helsinki",
+    "cityES": "Helsinki"
   },
   {
     "id": "poi-h-63",
@@ -953,7 +1350,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=61.7739,29.3457",
     "descEN": "This internationally renowned scenic route runs along a narrow esker ridge, offering breathtaking views of Lake Saimaa through majestic pine forests.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Punkaharju Ridge Road",
+    "nameES": "Punkaharju Ridge Road",
+    "descES": "Esta carretera panorámica de fama internacional recorre una estrecha cresta, ofreciendo vistas impresionantes del lago Saimaa a través de majestuosos bosques de pinos.",
+    "cityEN": "Punkaharju",
+    "cityES": "Punkaharju",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-k-64",
@@ -971,7 +1374,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 10-18 (metà giu-inizio ago), 11-17 (inizio/fine stagione)",
     "hoursEN": "Daily 10am-6pm (mid-Jun to early Aug), 11am-5pm (early/late season)",
     "price": "Adulti/Bambini €24-27 (in base alla stagione), Anziani €18",
-    "priceEN": "Adults/Kids €24-27 (depending on season), Seniors €18"
+    "priceEN": "Adults/Kids €24-27 (depending on season), Seniors €18",
+    "nameEN": "Kesämaa Water and Amusement Park",
+    "nameES": "Kesämaa Water and Amusement Park",
+    "descES": "Kesämaa es un divertido parque acuático y de aventura que ofrece toboganes, piscinas y zonas de escalada para toda la familia.",
+    "cityEN": "Punkaharju",
+    "cityES": "Punkaharju",
+    "hoursES": "Todos los días 10-18 (mediados de junio–principio de agosto), 11-17 (inicio/fin de temporada)",
+    "priceES": "Adultos/Niños €24-27 (según la temporada), Personas mayores €18"
   },
   {
     "id": "poi-k-65",
@@ -989,7 +1399,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 10-17",
     "hoursEN": "Daily 10am-5pm",
     "price": "Adulti €18, Bambini €9",
-    "priceEN": "Adults €18, Children €9"
+    "priceEN": "Adults €18, Children €9",
+    "nameEN": "Lusto Finnish Forest Museum",
+    "nameES": "Lusto Finnish Forest Museum",
+    "descES": "El Museo Forestal Finlandés Lusto ofrece diversas perspectivas sobre la importancia de los bosques en la vida de los finlandeses.",
+    "cityEN": "Punkaharju",
+    "cityES": "Punkaharju",
+    "hoursES": "Todos los días 10-17",
+    "priceES": "Adultos €18, Niños €9"
   },
   {
     "id": "poi-p-66",
@@ -1002,7 +1419,13 @@ var MAP_POIS = [
     "lng": 29.3025,
     "day": "g8",
     "city": "Punkaharju",
-    "maps": "https://maps.google.com/?q=61.8005,29.3025"
+    "maps": "https://maps.google.com/?q=61.8005,29.3025",
+    "nameEN": "Punkaharju Resort",
+    "nameES": "Punkaharju Resort",
+    "descEN": "~€45-55/night. Electricity, water, WiFi, playground, saunas, lakeside pitches.",
+    "descES": "~€45-55/noche. Electricidad, agua, WiFi, zona de juegos, saunas, parcelas junto al lago.",
+    "cityEN": "Punkaharju",
+    "cityES": "Punkaharju"
   },
   {
     "id": "poi-p-67",
@@ -1015,7 +1438,13 @@ var MAP_POIS = [
     "lng": 29.305,
     "day": "g8",
     "city": "Punkaharju",
-    "maps": "https://maps.google.com/?q=61.8012,29.3050"
+    "maps": "https://maps.google.com/?q=61.8012,29.3050",
+    "nameEN": "Holiday Resort Harjun Portti",
+    "nameES": "Holiday Resort Harjun Portti",
+    "descEN": "~€40-50/night. Electricity, water, restaurant, equipment rental.",
+    "descES": "~€40-50/noche. Electricidad, agua, restaurante, alquiler de equipo.",
+    "cityEN": "Punkaharju",
+    "cityES": "Punkaharju"
   },
   {
     "id": "poi-f-68",
@@ -1028,7 +1457,13 @@ var MAP_POIS = [
     "lng": 29.3833,
     "day": "g8",
     "city": "Punkaharju",
-    "maps": "https://maps.google.com/?q=61.7667,29.3833"
+    "maps": "https://maps.google.com/?q=61.7667,29.3833",
+    "nameEN": "S-Market",
+    "nameES": "S-Market",
+    "descEN": "Buy karjalanpiirakka + burro all'uovo at S-Market for an authentic Finnish breakfast",
+    "descES": "Comprar karjalanpiirakka + burro all'uovo en S-Market para un auténtico desayuno finlandés",
+    "cityEN": "Punkaharju",
+    "cityES": "Punkaharju"
   },
   {
     "id": "poi-h-69",
@@ -1046,7 +1481,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 15-21",
     "hoursEN": "Daily 3pm-9pm",
     "price": "Adulti €10, bambini €6",
-    "priceEN": "Adults €10, kids €6"
+    "priceEN": "Adults €10, kids €6",
+    "nameEN": "Finnish sauna",
+    "nameES": "Sauna finlandesa",
+    "descES": "Vive una sauna finlandesa tradicional en las orillas del lago Saimaa, con refrescantes baños en el lago.",
+    "cityEN": "Lago Saimaa",
+    "cityES": "Lago Saimaa",
+    "hoursES": "Todos los días 15-21",
+    "priceES": "Adultos €10, niños €6"
   },
   {
     "id": "poi-k-72",
@@ -1064,7 +1506,14 @@ var MAP_POIS = [
     "hours": "Mar e Sab 11-15",
     "hoursEN": "Tue & Sat 11am-3pm",
     "price": "Biglietto giornaliero €20, 0-3 anni Gratuito",
-    "priceEN": "Day Ticket €20, Ages 0-3 Free"
+    "priceEN": "Day Ticket €20, Ages 0-3 Free",
+    "nameEN": "Angry Birds Activity Park",
+    "nameES": "Angry Birds Activity Park",
+    "descES": "El Angry Birds Activity Park en Holiday Club Saimaan Rauha ofrece diversión y aventura para niños.",
+    "cityEN": "Lago Saimaa",
+    "cityES": "Lago Saimaa",
+    "hoursES": "Mar y Sáb 11-15",
+    "priceES": "Entrada diaria €20, 0-3 años Gratis"
   },
   {
     "id": "poi-p-73",
@@ -1077,7 +1526,11 @@ var MAP_POIS = [
     "lng": 28.1569,
     "day": "g9",
     "city": "Lago Saimaa",
-    "maps": "https://maps.google.com/?q=61.0556,28.1569"
+    "maps": "https://maps.google.com/?q=61.0556,28.1569",
+    "nameEN": "Camping",
+    "nameES": "Camping",
+    "cityEN": "Lago Saimaa",
+    "cityES": "Lago Saimaa"
   },
   {
     "id": "poi-p-74",
@@ -1090,7 +1543,11 @@ var MAP_POIS = [
     "lng": 28.80643,
     "day": "g9",
     "city": "Lago Saimaa",
-    "maps": "https://maps.google.com/?q=61.86388,28.80643"
+    "maps": "https://maps.google.com/?q=61.86388,28.80643",
+    "nameEN": "Camping",
+    "nameES": "Camping",
+    "cityEN": "Lago Saimaa",
+    "cityES": "Lago Saimaa"
   },
   {
     "id": "poi-f-75",
@@ -1103,7 +1560,13 @@ var MAP_POIS = [
     "lng": 28.5,
     "day": "g9",
     "city": "Lago Saimaa",
-    "maps": "https://maps.google.com/?q=61.5,28.5"
+    "maps": "https://maps.google.com/?q=61.5,28.5",
+    "nameEN": "Lohikeitto",
+    "nameES": "Lohikeitto",
+    "descEN": "🍳 Lohikeitto (creamy salmon soup) — easy to make in the van with fresh salmon from S-Market!",
+    "descES": "🍳 Lohikeitto (sopa cremosa de salmón) — fácil de preparar en la furgoneta con salmón fresco del S-Market!",
+    "cityEN": "Lago Saimaa",
+    "cityES": "Lago Saimaa"
   },
   {
     "id": "poi-h-76",
@@ -1117,7 +1580,12 @@ var MAP_POIS = [
     "day": "g10",
     "city": "Oulu",
     "maps": "https://maps.google.com/?q=65.0121,25.4651",
-    "descEN": "The 2026 European Capital of Culture, Oulu blends northern nature, art, and innovation on the Bay of Bothnia."
+    "descEN": "The 2026 European Capital of Culture, Oulu blends northern nature, art, and innovation on the Bay of Bothnia.",
+    "nameEN": "Jyväskylä",
+    "nameES": "Jyväskylä",
+    "descES": "Capital Europea de la Cultura 2026, Oulu une naturaleza nórdica, arte e innovación en el Golfo di Botnia.",
+    "cityEN": "Oulu",
+    "cityES": "Oulu"
   },
   {
     "id": "poi-k-77",
@@ -1135,7 +1603,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 24h",
     "hoursEN": "Daily 24h",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Nallikari Beach, Ainolan Puisto and Hupisaaret Park",
+    "nameES": "Nallikari Beach, Ainolan Puisto y Hupisaaret Park",
+    "descES": "Una popular playa de arena de un chilometro y un pintoresco parque urbano con islas y puentes blancos.",
+    "cityEN": "Oulu",
+    "cityES": "Oulu",
+    "hoursES": "Todos los días 24h",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-p-78",
@@ -1148,7 +1623,13 @@ var MAP_POIS = [
     "lng": 24.4144,
     "day": "g10",
     "city": "Oulu",
-    "maps": "https://maps.google.com/?q=65.0306,24.4144"
+    "maps": "https://maps.google.com/?q=65.0306,24.4144",
+    "nameEN": "Nallikari Holiday Village (Oulu)",
+    "nameES": "Nallikari Holiday Village (Oulu)",
+    "descEN": "~€53/night. Electricity, water, WiFi, public sauna, laundry, beach access.",
+    "descES": "~€53/noche. Electricidad, agua, WiFi, sauna pública, lavandería, acceso a la playa.",
+    "cityEN": "Oulu",
+    "cityES": "Oulu"
   },
   {
     "id": "poi-s-79",
@@ -1161,7 +1642,13 @@ var MAP_POIS = [
     "lng": 25.4651,
     "day": "g10",
     "city": "Oulu",
-    "maps": "https://maps.google.com/?q=65.0121,25.4651"
+    "maps": "https://maps.google.com/?q=65.0121,25.4651",
+    "nameEN": "🛴 Oulu",
+    "nameES": "🛴 Oulu",
+    "descEN": "Scooters: Oulu is the most bike-friendly city in Finland — flat, bike lanes everywhere → see rentals\\nBike rental: Free/cheap city bikes in centers",
+    "descES": "Patinetes: Oulu es la ciudad más ciclable de Finlandia — llana, carriles bici por todas partes → ver alquileres\\nAlquiler de bicis: Bicis de ciudad gratuitas/económicas en centros",
+    "cityEN": "Oulu",
+    "cityES": "Oulu"
   },
   {
     "id": "poi-f-80",
@@ -1174,7 +1661,13 @@ var MAP_POIS = [
     "lng": 25.4651,
     "day": "g10",
     "city": "Oulu",
-    "maps": "https://maps.google.com/?q=65.0121,25.4651"
+    "maps": "https://maps.google.com/?q=65.0121,25.4651",
+    "nameEN": "Oulu",
+    "nameES": "Oulu",
+    "descEN": "Oulu stop: try grillimakkara (giant sausage) in a picnic area with a public grill",
+    "descES": "Parada Oulu: probar grillimakkara (salchicha gigante) en un área de picnic con una parrilla pública",
+    "cityEN": "Oulu",
+    "cityES": "Oulu"
   },
   {
     "id": "poi-h-81",
@@ -1192,7 +1685,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 10-18",
     "hoursEN": "Daily 10am-6pm",
     "price": "Adulti €24.50 (online) / €26.50 (ingresso), Bambini (4-14) €20 / €22, Under 4 Gratuito",
-    "priceEN": "Adults €24.50 (online) / €26.50 (gate), Children (4-14) €20 / €22, Under 4 Free"
+    "priceEN": "Adults €24.50 (online) / €26.50 (gate), Children (4-14) €20 / €22, Under 4 Free",
+    "nameEN": "Ranua Wildlife Park",
+    "nameES": "Ranua Wildlife Park",
+    "descES": "El Ranua Wildlife Park está especializado en especies animales árticas y del norte, incluyendo el único oso polar de Finlandia.",
+    "cityEN": "Ranua",
+    "cityES": "Ranua",
+    "hoursES": "Todos los días 10-18",
+    "priceES": "Adultos €24.50 (online) / €26.50 (entrada), Niños (4-14) €20 / €22, Menores de 4 gratis"
   },
   {
     "id": "poi-h-82",
@@ -1210,7 +1710,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 24 ore",
     "hoursEN": "Daily 24 hours",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Aavasaksa Hill",
+    "nameES": "Aavasaksa Hill",
+    "descES": "Una colina de 242 metri que ofrece vistas panorámicas sobre la valle del fiume Torne, el sol de medianoche y un sitio UNESCO.",
+    "cityEN": "Ranua",
+    "cityES": "Ranua",
+    "hoursES": "Abierto todos los días 24 ore",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-k-83",
@@ -1228,7 +1735,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 10-18 (Estate)",
     "hoursEN": "Daily 10am-6pm (Summer)",
     "price": "Adulti €24.50 (online) / €26.50 (ingresso), Bambini (4-14) €20 / €22, Under 4 Gratuito",
-    "priceEN": "Adults €24.50 (online) / €26.50 (gate), Children (4-14) €20 / €22, Under 4 Free"
+    "priceEN": "Adults €24.50 (online) / €26.50 (gate), Children (4-14) €20 / €22, Under 4 Free",
+    "nameEN": "Ranua Wildlife Park (Zoo)",
+    "nameES": "Ranua Wildlife Park (Zoo)",
+    "descES": "El Ranua Wildlife Park está especializado en especies animales árticas y nórdicas, inmerso en bosques de coníferas.",
+    "cityEN": "Ranua",
+    "cityES": "Ranua",
+    "hoursES": "Abierto todos los días 10-18 (Verano)",
+    "priceES": "Adultos €24.50 (online) / €26.50 (entrada), Niños (4-14) €20 / €22, Menores de 4 gratis"
   },
   {
     "id": "poi-k-84",
@@ -1246,7 +1760,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 10-18 (Estate)",
     "hoursEN": "Daily 10am-6pm (Summer)",
     "price": "Adulti €24,50, Bambini (4-14) €20,00 (prezzi online)",
-    "priceEN": "Adults €24.50, Children (4-14) €20.00 (online prices)"
+    "priceEN": "Adults €24.50, Children (4-14) €20.00 (online prices)",
+    "nameEN": "Playground",
+    "nameES": "Parque infantil",
+    "descES": "Ranua Wildlife Park es un auténtico zoo ártico en un bosque de coníferas, hogar de 50 especies nórdicas.",
+    "cityEN": "Ranua",
+    "cityES": "Ranua",
+    "hoursES": "Abierto todos los días 10-18 (Verano)",
+    "priceES": "Adultos €24,50, Niños (4-14) €20,00 (precios online)"
   },
   {
     "id": "poi-p-85",
@@ -1259,7 +1780,13 @@ var MAP_POIS = [
     "lng": 26.461588,
     "day": "g11",
     "city": "Ranua",
-    "maps": "https://maps.google.com/?q=65.944498,26.461588"
+    "maps": "https://maps.google.com/?q=65.944498,26.461588",
+    "nameEN": "Ranua Resort - Camping Wildlife Park",
+    "nameES": "Ranua Resort - Camping Wildlife Park",
+    "descEN": "~€50/notte. Electricity, kitchen, grill, saunas, showers, laundry, playground, WiFi and dump station. Next to the wildlife park.",
+    "descES": "~€50/notte. Electricidad, cocina, parrilla, saunas, duchas, lavandería, parque infantil, WiFi y estación de vaciado. Junto al parque faunístico.",
+    "cityEN": "Ranua",
+    "cityES": "Ranua"
   },
   {
     "id": "poi-h-86",
@@ -1277,7 +1804,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 24h (linea all'aperto)",
     "hoursEN": "Daily 24h (outdoor line)",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Photo at the Circolo Polare Artico",
+    "nameES": "Foto al Circolo Polare Artico",
+    "descES": "Atraviesa la mágica línea del Circolo Polare Artico en Villaggio di Babbo Natale y haz una foto icónica.",
+    "cityEN": "Rovaniemi",
+    "cityES": "Rovaniemi",
+    "hoursES": "Todos los días 24h (línea al aire libre)",
+    "priceES": "Gratuito"
   },
   {
     "id": "poi-k-87",
@@ -1295,7 +1829,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 24 ore",
     "hoursEN": "Daily 24 hours",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Santa Claus Village",
+    "nameES": "Santa Claus Village",
+    "descES": "Conoce a Babbo Natale, atraviesa el Circolo Polare Artico y vive la magia de la Navidad todos los días del año.",
+    "cityEN": "Every day 24 ore",
+    "cityES": "Todos los días 24 ore",
+    "hoursES": "Rovaniemi",
+    "priceES": "Gratuito"
   },
   {
     "id": "poi-k-88",
@@ -1313,7 +1854,14 @@ var MAP_POIS = [
     "hours": "Mar-Dom 10-18 (Lun chiuso)",
     "hoursEN": "Tue-Sun 10am-6pm (Mon closed)",
     "price": "Adulti €22, Bambini (7-17) €10, Sotto i 7 anni Gratuito",
-    "priceEN": "Adults €22, Kids (7-17) €10, Under 7 Free"
+    "priceEN": "Adults €22, Kids (7-17) €10, Under 7 Free",
+    "nameEN": "Arktikum Science Center and Museum",
+    "nameES": "Arktikum Science Center and Museum",
+    "descES": "Descubre la naturaleza, las culturas y la historia del Ártico a través de exposiciones memorables en un edificio espléndido.",
+    "cityEN": "Rovaniemi",
+    "cityES": "Rovaniemi",
+    "hoursES": "Mar-Dom 10-18 (Lun cerrado)",
+    "priceES": "Adultos €22, Niños (7-17) €10, Menores de 7 años Gratis"
   },
   {
     "id": "poi-p-89",
@@ -1326,7 +1874,13 @@ var MAP_POIS = [
     "lng": 25.7422,
     "day": "g12",
     "city": "Rovaniemi",
-    "maps": "https://maps.google.com/?q=66.4975,25.7422"
+    "maps": "https://maps.google.com/?q=66.4975,25.7422",
+    "nameEN": "Ounaskoski Camping",
+    "nameES": "Ounaskoski Camping",
+    "descEN": "~€40/night. Electricity, water, showers, kitchen, riverside location.",
+    "descES": "~€40/noche. Electricidad, agua, duchas, cocina, ubicación junto al río.",
+    "cityEN": "Rovaniemi",
+    "cityES": "Rovaniemi"
   },
   {
     "id": "poi-p-90",
@@ -1339,7 +1893,13 @@ var MAP_POIS = [
     "lng": 25.8476,
     "day": "g12",
     "city": "Rovaniemi",
-    "maps": "https://maps.google.com/?q=66.5436,25.8476"
+    "maps": "https://maps.google.com/?q=66.5436,25.8476",
+    "nameEN": "BestPark Arctic Circle",
+    "nameES": "BestPark Arctic Circle",
+    "descEN": "~€35-45/night. Electricity, water, waste disposal, near Santa Claus Village.",
+    "descES": "~€35-45/noche. Electricidad, agua, desagüe, cerca del Santa Claus Village.",
+    "cityEN": "Rovaniemi",
+    "cityES": "Rovaniemi"
   },
   {
     "id": "poi-s-91",
@@ -1352,7 +1912,13 @@ var MAP_POIS = [
     "lng": 25.8473,
     "day": "g12",
     "city": "Rovaniemi",
-    "maps": "https://maps.google.com/?q=66.5436,25.8473"
+    "maps": "https://maps.google.com/?q=66.5436,25.8473",
+    "nameEN": "🛴 Rovaniemi",
+    "nameES": "🛴 Rovaniemi",
+    "descEN": "🚴 Bike/e-bike rental: paved forest trails (~€30-50/day) → see rentals",
+    "descES": "🚴 Alquiler bici/e-bike: senderos asfaltados en el bosque (~€30-50/día) → ver alquileres",
+    "cityEN": "Rovaniemi",
+    "cityES": "Rovaniemi"
   },
   {
     "id": "poi-f-92",
@@ -1365,7 +1931,13 @@ var MAP_POIS = [
     "lng": 25.8473,
     "day": "g12",
     "city": "Rovaniemi",
-    "maps": "https://maps.google.com/?q=66.5436,25.8473"
+    "maps": "https://maps.google.com/?q=66.5436,25.8473",
+    "nameEN": "First taste of Rovaniemi",
+    "nameES": "Primer sabor de Rovaniemi",
+    "descEN": "🍽️ First taste of Rovaniemi",
+    "descES": "🍽️ Primer sabor de Rovaniemi",
+    "cityEN": "Rovaniemi",
+    "cityES": "Rovaniemi"
   },
   {
     "id": "poi-h-93",
@@ -1383,7 +1955,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 9-18 (9-17 inizio giugno)",
     "hoursEN": "Daily 9am-6pm (9am-5pm early June)",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Santa Claus Village",
+    "nameES": "Santa Claus Village",
+    "descES": "Encuentra a Babbo Natale y atraviesa el Circolo Polare Artico en su residencia oficial en Lapponia.",
+    "cityEN": "Rovaniemi",
+    "cityES": "Rovaniemi",
+    "hoursES": "Todos los días 9-18 (9-17 principios de junio)",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-h-94",
@@ -1401,7 +1980,14 @@ var MAP_POIS = [
     "hours": "Mar-Dom 10-18",
     "hoursEN": "Tue-Sun 10am-6pm",
     "price": "Adulti €22, bambini €10",
-    "priceEN": "Adults €22, kids €10"
+    "priceEN": "Adults €22, kids €10",
+    "nameEN": "Arktikum",
+    "nameES": "Arktikum",
+    "descES": "Un museo y centro científico que ofrece un viaje interactivo por la naturaleza, la cultura y la historia del Ártico.",
+    "cityEN": "Rovaniemi",
+    "cityES": "Rovaniemi",
+    "hoursES": "Mar-Dom 10-18",
+    "priceES": "Adultos €22, niños €10"
   },
   {
     "id": "poi-k-95",
@@ -1419,7 +2005,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 9-18 (orari estivi Ufficio di Babbo Natale)",
     "hoursEN": "Daily 9am-6pm (Santa Claus Office summer hours)",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Villaggio di Babbo Natale",
+    "nameES": "Villaggio di Babbo Natale",
+    "descES": "Encuentra a Babbo Natale durante todo el año y atraviesa el mágico Circolo Polare Artico en su ciudad oficial.",
+    "cityEN": "Rovaniemi",
+    "cityES": "Rovaniemi",
+    "hoursES": "Todos los días 9-18 (horario de verano Ufficio di Babbo Natale)",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-k-96",
@@ -1437,7 +2030,14 @@ var MAP_POIS = [
     "hours": "Mar-Dom 10-18, Lun chiuso",
     "hoursEN": "Tue-Sun 10am-6pm, Mon closed",
     "price": "Adulti €22, Bambini (7-17) €10, Sotto i 7 anni Gratuito",
-    "priceEN": "Adults €22, Children (7-17) €10, Under 7 Free"
+    "priceEN": "Adults €22, Children (7-17) €10, Under 7 Free",
+    "nameEN": "Arktikum",
+    "nameES": "Arktikum",
+    "descES": "Arktikum es un museo y centro científico en Rovaniemi que muestra la naturaleza, las culturas y la historia del Ártico.",
+    "cityEN": "Rovaniemi",
+    "cityES": "Rovaniemi",
+    "hoursES": "Mar-Dom 10-18, Lun cerrado",
+    "priceES": "Adultos €22, Niños (7-17) €10, Menores de 7 años Gratis"
   },
   {
     "id": "poi-p-97",
@@ -1450,7 +2050,13 @@ var MAP_POIS = [
     "lng": 25.74,
     "day": "g13",
     "city": "Rovaniemi",
-    "maps": "https://maps.google.com/?q=66.4965,25.7400"
+    "maps": "https://maps.google.com/?q=66.4965,25.7400",
+    "nameEN": "Ounaskoski Camping (Rovaniemi)",
+    "nameES": "Ounaskoski Camping (Rovaniemi)",
+    "descEN": "~€40/night. Electricity, water, showers, kitchen, playground, close to town.",
+    "descES": "~€40/noche. Electricidad, agua, duchas, cocina, parque infantil, cerca del centro.",
+    "cityEN": "Rovaniemi",
+    "cityES": "Rovaniemi"
   },
   {
     "id": "poi-h-98",
@@ -1468,7 +2074,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 9-18",
     "hoursEN": "Daily 9am-6pm",
     "price": "Adulti €18, bambini €7",
-    "priceEN": "Adults €18, kids €7"
+    "priceEN": "Adults €18, kids €7",
+    "nameEN": "Siida Museum",
+    "nameES": "Museo Siida",
+    "descES": "El Museo Sámi Siida es un museo nacional y centro natural que muestra la cultura Sámi y la naturaleza de Laponia.",
+    "cityEN": "Inari",
+    "cityES": "Inari",
+    "hoursES": "Todos los días 9-18",
+    "priceES": "Adultos €18, Niños €7"
   },
   {
     "id": "poi-h-99",
@@ -1482,7 +2095,12 @@ var MAP_POIS = [
     "day": "g14",
     "city": "Utsjoki",
     "maps": "https://maps.google.com/?q=69.0714,27.0142",
-    "descEN": "A scenic drive in Utsjoki where free-roaming reindeer are frequently encountered along the road."
+    "descEN": "A scenic drive in Utsjoki where free-roaming reindeer are frequently encountered along the road.",
+    "nameEN": "Reindeer along the road",
+    "nameES": "Renos a lo largo de la carretera",
+    "descES": "Una ruta panorámica en Utsjoki donde es frecuente encontrarse con renos en libertad a lo largo de la carretera.",
+    "cityEN": "Utsjoki",
+    "cityES": "Utsjoki"
   },
   {
     "id": "poi-k-100",
@@ -1500,7 +2118,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 9-18 (metà giu - fine ago)",
     "hoursEN": "Daily 9am-6pm (mid-Jun to late Aug)",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Santa Claus Village in Rovaniemi",
+    "nameES": "Santa Claus Village en Rovaniemi",
+    "descES": "Conoce a Papá Noel, cruza el Círculo Polar Ártico y vive la magia de la Navidad todos los días del año.",
+    "cityEN": "Utsjoki",
+    "cityES": "Utsjoki",
+    "hoursES": "Todos los días 9-18 (mediados de jun - finales de ago)",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-k-101",
@@ -1518,7 +2143,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 9-18",
     "hoursEN": "Daily 9am-6pm",
     "price": "Adulti €18, bambini €7",
-    "priceEN": "Adults €18, children €7"
+    "priceEN": "Adults €18, children €7",
+    "nameEN": "Siida - Sámi Museum and Nature Centre in Inari",
+    "nameES": "Siida - Museo Sámi y Centro de la Naturaleza en Inari",
+    "descES": "Museo nacional que ofrece un recorrido inmersivo por la vibrante cultura y el patrimonio del pueblo Sámi.",
+    "cityEN": "Inari",
+    "cityES": "Inari",
+    "hoursES": "Todos los días 9-18",
+    "priceES": "Adultos €18, niños €7"
   },
   {
     "id": "poi-p-102",
@@ -1531,7 +2163,13 @@ var MAP_POIS = [
     "lng": 27.0717,
     "day": "g14",
     "city": "Utsjoki",
-    "maps": "https://maps.google.com/?q=68.90282,27.0717"
+    "maps": "https://maps.google.com/?q=68.90282,27.0717",
+    "nameEN": "Uruniemi Camping (Inari)",
+    "nameES": "Uruniemi Camping (Inari)",
+    "descEN": "~€30-40/night. Electricity, water, showers, on the lakeshore.",
+    "descES": "~€30-40/noche. Electricidad, agua, duchas, a orillas del lago.",
+    "cityEN": "Utsjoki",
+    "cityES": "Utsjoki"
   },
   {
     "id": "poi-p-103",
@@ -1544,7 +2182,13 @@ var MAP_POIS = [
     "lng": 27.037,
     "day": "g14",
     "city": "Utsjoki",
-    "maps": "https://maps.google.com/?q=68.902,27.037"
+    "maps": "https://maps.google.com/?q=68.902,27.037",
+    "nameEN": "Holiday Village Inari",
+    "nameES": "Holiday Village Inari",
+    "descEN": "~€35-45/night. Electricity, water, WiFi, sauna.",
+    "descES": "~€35-45/noche. Electricidad, agua, WiFi, sauna.",
+    "cityEN": "Utsjoki",
+    "cityES": "Utsjoki"
   },
   {
     "id": "poi-h-104",
@@ -1560,7 +2204,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=69.05997,20.54864",
     "descEN": "The northernmost tripoint in the world where the borders of Finland, Sweden, and Norway meet.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Treriksröset",
+    "nameES": "Treriksröset",
+    "descES": "El tripunto más al norte del mundo donde se encuentran las fronteras de Finlandia, Suecia y Noruega.",
+    "cityEN": "Kilpisjärvi",
+    "cityES": "Kilpisjärvi",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-k-105",
@@ -1576,7 +2226,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=69.01666,20.87561",
     "descEN": "A well-stocked supermarket in Kilpisjärvi offering a wide range of groceries, local products, and outdoor gear.",
     "hours": "Lun-Sab 9-21, Dom 10-20",
-    "hoursEN": "Mon-Sat 9am-9pm, Sun 10am-8pm"
+    "hoursEN": "Mon-Sat 9am-9pm, Sun 10am-8pm",
+    "nameEN": "Short walks in the village, visit to K-Market Kilpishalli for ice creams",
+    "nameES": "Paseos cortos por el pueblo, visita al K-Market Kilpishalli para helados",
+    "descES": "Un supermercado bien surtido en Kilpisjärvi que ofrece una amplia gama de comestibles, productos locales y equipo.",
+    "cityEN": "Kilpisjärvi",
+    "cityES": "Kilpisjärvi",
+    "hoursES": "Lun-Sáb 9-21, Dom 10-20"
   },
   {
     "id": "poi-k-106",
@@ -1594,7 +2250,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 10:00 e 15:00 (da fine giugno a fine settembre)",
     "hoursEN": "Daily 10am and 3pm (late June to late September)",
     "price": "Adulti €65, Bambini (sotto i 16 anni) €10 (Andata e ritorno)",
-    "priceEN": "Adults €65, Children (under 16) €10 (Round trip)"
+    "priceEN": "Adults €65, Children (under 16) €10 (Round trip)",
+    "nameEN": "summer boat trip to the three-border marker (Treriksröset)",
+    "nameES": "excursión en barco de verano hasta el mojón de las tres fronteras (Treriksröset)",
+    "descES": "Una excursión panorámica en barco por el lago Kilpisjärvi hasta Koltaluokta, seguida de una breve caminata hasta el Mojón.",
+    "cityEN": "Kilpisjärvi",
+    "cityES": "Kilpisjärvi",
+    "hoursES": "Todos los días 10:00 y 15:00 (desde finales de junio hasta finales de septiembre)",
+    "priceES": "Adultos €65, Niños (menores de 16 años) €10 (Ida y vuelta)"
   },
   {
     "id": "poi-p-107",
@@ -1607,7 +2270,13 @@ var MAP_POIS = [
     "lng": 20.7964,
     "day": "g15",
     "city": "Kilpisjärvi",
-    "maps": "https://maps.google.com/?q=69.0483,20.7964"
+    "maps": "https://maps.google.com/?q=69.0483,20.7964",
+    "nameEN": "Kilpisjärvi Retkeilykeskus",
+    "nameES": "Kilpisjärvi Retkeilykeskus",
+    "descEN": "~€20-30/night. Pitch with electricity, near the trails.",
+    "descES": "~€20-30/noche. Parcela con electricidad, cerca de los senderos.",
+    "cityEN": "Kilpisjärvi",
+    "cityES": "Kilpisjärvi"
   },
   {
     "id": "poi-p-108",
@@ -1620,7 +2289,13 @@ var MAP_POIS = [
     "lng": 20.87997,
     "day": "g15",
     "city": "Kilpisjärvi",
-    "maps": "https://maps.google.com/?q=69.0145,20.87997"
+    "maps": "https://maps.google.com/?q=69.0145,20.87997",
+    "nameEN": "Tundrea Holiday Resort",
+    "nameES": "Tundrea Holiday Resort",
+    "descEN": "~€40/night. Electricity, restaurant, saunas.",
+    "descES": "~€40/noche. Electricidad, restaurante, saunas.",
+    "cityEN": "Kilpisjärvi",
+    "cityES": "Kilpisjärvi"
   },
   {
     "id": "poi-h-109",
@@ -1638,7 +2313,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 9-18 (Dom 13-18)",
     "hoursEN": "Daily 9am-6pm (Sun 1pm-6pm)",
     "price": "Adulti NOK 90, Bambini sotto i 12 anni Gratuito",
-    "priceEN": "Adults NOK 90, Children under 12 Free"
+    "priceEN": "Adults NOK 90, Children under 12 Free",
+    "nameEN": "Cattedrale Artica",
+    "nameES": "Cattedrale Artica",
+    "descES": "Un evocador punto de referencia de 1965 en Tromsø inspirado en la naturaleza ártica, con una arquitectura única y un espléndido mosaico de vidrio.",
+    "cityEN": "Tromsø",
+    "cityES": "Tromsø",
+    "hoursES": "Todos los días 9-18 (Dom 13-18)",
+    "priceES": "Adultos NOK 90, Niños menores de 12 años Gratis"
   },
   {
     "id": "poi-h-110",
@@ -1656,7 +2338,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 09:00-00:00",
     "hoursEN": "Daily 9am-12am",
     "price": "Adulti NOK 495, Bambini (6-17) NOK 280",
-    "priceEN": "Adults NOK 495, Children (6-17) NOK 280"
+    "priceEN": "Adults NOK 495, Children (6-17) NOK 280",
+    "nameEN": "Fjellheisen Cable Car",
+    "nameES": "Teleférico Fjellheisen",
+    "descES": "Este teleférico te lleva a 421 metros sobre el nivel del mar en Storsteinen para espectaculares vistas panorámicas de Tromsø.",
+    "cityEN": "Tromsø",
+    "cityES": "Tromsø",
+    "hoursES": "Todos los días 09:00-00:00",
+    "priceES": "Adultos NOK 495, Niños (6-17) NOK 280"
   },
   {
     "id": "poi-k-112",
@@ -1674,7 +2363,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 10-17",
     "hoursEN": "Daily 10am-5pm",
     "price": "Adulti NOK 395, Bambini (3-15) NOK 220",
-    "priceEN": "Adults NOK 395, Children (3-15) NOK 220"
+    "priceEN": "Adults NOK 395, Children (3-15) NOK 220",
+    "nameEN": "Polaria (Arctic aquarium)",
+    "nameES": "Polaria (acuario ártico)",
+    "descES": "Un centro de experiencias árticas y el acuario más al norte del mundo con focas barbudas y exposiciones interactivas.",
+    "cityEN": "Tromsø",
+    "cityES": "Tromsø",
+    "hoursES": "Todos los días 10-17",
+    "priceES": "Adultos NOK 395, Niños (3-15) NOK 220"
   },
   {
     "id": "poi-p-113",
@@ -1687,7 +2383,13 @@ var MAP_POIS = [
     "lng": 19.01326,
     "day": "g16",
     "city": "Tromsø",
-    "maps": "https://maps.google.com/?q=69.64748,19.01326"
+    "maps": "https://maps.google.com/?q=69.64748,19.01326",
+    "nameEN": "Tromsø Lodge & Camping",
+    "nameES": "Tromsø Lodge & Camping",
+    "descEN": "~€35-45/night. Electricity, water, WiFi, playground, toilets.",
+    "descES": "~€35-45/noche. Electricidad, agua, WiFi, parque infantil, servicios higiénicos.",
+    "cityEN": "Tromsø",
+    "cityES": "Tromsø"
   },
   {
     "id": "poi-f-114",
@@ -1700,7 +2402,13 @@ var MAP_POIS = [
     "lng": 18.956,
     "day": "g16",
     "city": "Tromsø",
-    "maps": "https://maps.google.com/?q=69.6496,18.956"
+    "maps": "https://maps.google.com/?q=69.6496,18.956",
+    "nameEN": "Tromsø street food",
+    "nameES": "Comida callejera en Tromsø",
+    "descEN": "Raketten Pølsebod (hot dog kiosk, centre) — pølse ~NOK 60-80 (~€5.6-€7.4). Fish &amp; chips take-away at the harbour ~NOK 150. Rein-burger (hamburger di r",
+    "descES": "Raketten Pølsebod (puesto de hot dogs, centro) — pølse ~NOK 60-80 (~€5.6-€7.4). Fish &amp; chips para llevar en el puerto ~NOK 150. Rein-burger (hamburger di r",
+    "cityEN": "Tromsø",
+    "cityES": "Tromsø"
   },
   {
     "id": "poi-f-115",
@@ -1713,7 +2421,13 @@ var MAP_POIS = [
     "lng": 18.956,
     "day": "g16",
     "city": "Tromsø",
-    "maps": "https://maps.google.com/?q=69.6496,18.956"
+    "maps": "https://maps.google.com/?q=69.6496,18.956",
+    "nameEN": "Market/supermarket",
+    "nameES": "Mercado/supermercado",
+    "descEN": "Rema 1000 or Kiwi (the cheaper ones) — brunost, salmone affumicato, pane fresco. Tip: in Norway cooking in the van is almost mandatory!",
+    "descES": "Rema 1000 o Kiwi (los más económicos) — brunost, salmone affumicato, pane fresco. Consejo: en Noruega cocinar en la furgoneta es casi obligatorio!",
+    "cityEN": "Tromsø",
+    "cityES": "Tromsø"
   },
   {
     "id": "poi-h-116",
@@ -1729,7 +2443,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=69.295,17.05",
     "descEN": "A 102-km scenic drive along Senja's rugged west coast, featuring steep mountains plunging into the ocean.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Senja National Tourist Route",
+    "nameES": "Senja National Tourist Route",
+    "descES": "Un recorrido panorámico de 102 km a lo largo de la costa occidental de Senja, entre montañas que se precipitan sobre el océano.",
+    "cityEN": "Senja",
+    "cityES": "Senja",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-h-117",
@@ -1745,7 +2465,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=69.48696,17.33326",
     "descEN": "A spectacular rest area and viewpoint with a Siberian larch walkway offering panoramic views of the jagged Okshornan peaks.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Tungeneset",
+    "nameES": "Tungeneset",
+    "descES": "Una espectacular área de descanso con una pasarela de alerce siberiano que ofrece vistas panorámicas de las cumbres de Okshornan.",
+    "cityEN": "Senja",
+    "cityES": "Senja",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-h-118",
@@ -1761,7 +2487,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=69.47882,17.39482",
     "descEN": "A stunning white-sand beach nestled in a fjord on Senja, surrounded by dramatic peaks and featuring a famous gold-plated toilet facility.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Ersfjordstranda",
+    "nameES": "Ersfjordstranda",
+    "descES": "Una hermosa playa de arena blanca en un fiordo de Senja, rodeada de cimas espectaculares y conocida por sus baños dorados.",
+    "cityEN": "Senja",
+    "cityES": "Senja",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-h-119",
@@ -1777,7 +2509,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=69.51327,17.58522",
     "descEN": "An iconic sail-shaped mountain on Senja offering a steep but rewarding hike with spectacular fjord views.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Segla",
+    "nameES": "Segla",
+    "descES": "Una icónica montaña con forma de vela en Senja que ofrece una subida empinada con vistas espectaculares a los fiordos.",
+    "cityEN": "Senja",
+    "cityES": "Senja",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-h-120",
@@ -1793,7 +2531,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=69.295,17.05",
     "descEN": "Known as \"Norway in miniature\", Senja Island offers a stunning mix of fjords, mountains, and fishing villages.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "\"Norway in miniature\"",
+    "nameES": "\"Noruega en miniatura\"",
+    "descES": "La isla de Senja, la \"Noruega en miniatura\", ofrece un concentrado de fiordos, montañas y pueblos de pescadores.",
+    "cityEN": "Senja",
+    "cityES": "Senja",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-k-121",
@@ -1811,7 +2555,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni alle 10:00 (8 giu - 16 ago)",
     "hoursEN": "Daily 10am (Jun 8 - Aug 16)",
     "price": "Da NOK 1050",
-    "priceEN": "From NOK 1050"
+    "priceEN": "From NOK 1050",
+    "nameEN": "Senja Husky Adventure",
+    "nameES": "Senja Husky Adventure",
+    "descES": "Una granja familiar de perros de trineo en Senja que ofrece excursiones de verano con husky siberianos en la naturaleza ártica.",
+    "cityEN": "Senja",
+    "cityES": "Senja",
+    "hoursES": "Todos los días a las 10:00 (8 jun - 16 ago)",
+    "priceES": "Desde NOK 1050"
   },
   {
     "id": "poi-k-122",
@@ -1827,7 +2578,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=69.47894,17.3947",
     "descEN": "Ersfjordstranda is a stunning beach on Senja island with fine white sand, surrounded by tall, craggy peaks.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Ersfjordstranda",
+    "nameES": "Ersfjordstranda",
+    "descES": "Ersfjordstranda es una preciosa playa en la isla de Senja con arena blanca y fina, rodeada de altas cumbres.",
+    "cityEN": "Senja",
+    "cityES": "Senja",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-p-123",
@@ -1840,7 +2597,13 @@ var MAP_POIS = [
     "lng": 17.8827,
     "day": "g17",
     "city": "Senja",
-    "maps": "https://maps.google.com/?q=69.4494,17.8827"
+    "maps": "https://maps.google.com/?q=69.4494,17.8827",
+    "nameEN": "Fjordbotn Camping",
+    "nameES": "Fjordbotn Camping",
+    "descEN": "~€30-40/night. Electricity, water, WiFi and playground.",
+    "descES": "~€30-40/noche. Electricidad, agua, WiFi y parque infantil.",
+    "cityEN": "Senja",
+    "cityES": "Senja"
   },
   {
     "id": "poi-p-124",
@@ -1853,7 +2616,13 @@ var MAP_POIS = [
     "lng": 17.2981,
     "day": "g17",
     "city": "Senja",
-    "maps": "https://maps.google.com/?q=69.4444,17.2981"
+    "maps": "https://maps.google.com/?q=69.4444,17.2981",
+    "nameEN": "Skaland Camping",
+    "nameES": "Skaland Camping",
+    "descEN": "~€30-40/night. Indoor bathrooms, kitchen and electrical hookup.",
+    "descES": "~€30-40/noche. Baños internos, cocina y conexión eléctrica.",
+    "cityEN": "Senja",
+    "cityES": "Senja"
   },
   {
     "id": "poi-f-125",
@@ -1866,7 +2635,13 @@ var MAP_POIS = [
     "lng": 17.05,
     "day": "g17",
     "city": "Senja",
-    "maps": "https://maps.google.com/?q=69.295,17.05"
+    "maps": "https://maps.google.com/?q=69.295,17.05",
+    "nameEN": "Senja",
+    "nameES": "Senja",
+    "descEN": "buy fresh salmon at Rema 1000/Kiwi (~NOK 150 (~€14)/kg) and grill in the picnic area",
+    "descES": "comprar salmón fresco en Rema 1000/Kiwi (~NOK 150 (~€14)/kg) y asarlo en el área de picnic",
+    "cityEN": "Senja",
+    "cityES": "Senja"
   },
   {
     "id": "poi-k-126",
@@ -1884,7 +2659,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 8-21 (20 mag - 20 ago)",
     "hoursEN": "Daily 8am-9pm (May 20 - Aug 20)",
     "price": "Da NOK 1690",
-    "priceEN": "From NOK 1690"
+    "priceEN": "From NOK 1690",
+    "nameEN": "Whale safari from the port of Andenes",
+    "nameES": "Safari de ballenas desde el puerto de Andenes",
+    "descES": "Vive un inolvidable safari de avistamiento de ballenas combinado con investigación científica desde el puerto de Andenes.",
+    "cityEN": "Andøya",
+    "cityES": "Andøya",
+    "hoursES": "Todos los días 8-21 (20 may - 20 ago)",
+    "priceES": "Desde NOK 1690"
   },
   {
     "id": "poi-k-127",
@@ -1900,7 +2682,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=69.30427,16.06736",
     "descEN": "A stunning white sand beach next to Andenes Camping, offering beautiful ocean views and midnight sun experiences.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Relax and play on the white-sand beach near Andenes Camping",
+    "nameES": "Relax y juegos en la playa de arena blanca cerca de Andenes Camping",
+    "descES": "Una hermosa playa de arena blanca cerca de Andenes Camping, con vistas al océano y el sol de medianoche.",
+    "cityEN": "Andøya",
+    "cityES": "Andøya",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-k-128",
@@ -1918,7 +2706,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 11:00, 13:00, 15:00 (estate)",
     "hoursEN": "Daily 11am, 1pm, 3pm (summer)",
     "price": "Adulti NOK 800, Giovani/Bambini NOK 400, Neonati Gratuito",
-    "priceEN": "Adults NOK 800, Youths/Children NOK 400, Infants Free"
+    "priceEN": "Adults NOK 800, Youths/Children NOK 400, Infants Free",
+    "nameEN": "Puffin-watching tour",
+    "nameES": "Tour de avistamiento de frailecillos",
+    "descES": "Un tour en barco de 90 minutos a los acantilados de Bleiksøya para ver miles de frailecillos y águilas.",
+    "cityEN": "Andøya",
+    "cityES": "Andøya",
+    "hoursES": "Todos los días 11:00, 13:00, 15:00 (verano)",
+    "priceES": "Adultos NOK 800, Jóvenes/Niños NOK 400, Bebés Gratis"
   },
   {
     "id": "poi-p-129",
@@ -1931,7 +2726,13 @@ var MAP_POIS = [
     "lng": 16.0928,
     "day": "g18",
     "city": "Andøya",
-    "maps": "https://maps.google.com/?q=69.3055,16.0928"
+    "maps": "https://maps.google.com/?q=69.3055,16.0928",
+    "nameEN": "Andenes Camping",
+    "nameES": "Andenes Camping",
+    "descEN": "~€25-40/night. Located on a beautiful white-sand beach, electricity, water hook-up, drainage, WiFi, toilets/showers, washing machine and lounge with view s",
+    "descES": "~€25-40/noche. Situado en una hermosa playa de arena blanca, electricidad, carga de agua, vaciado, WiFi, baños/duchas, lavadora y sala con vista s",
+    "cityEN": "Andøya",
+    "cityES": "Andøya"
   },
   {
     "id": "poi-h-130",
@@ -1949,7 +2750,14 @@ var MAP_POIS = [
     "hours": "Partenze giornaliere (mag-set)",
     "hoursEN": "Daily departures (May-Sep)",
     "price": "Adulti NOK 1690, Bambini NOK 1187",
-    "priceEN": "Adults NOK 1690, Children NOK 1187"
+    "priceEN": "Adults NOK 1690, Children NOK 1187",
+    "nameEN": "Whale Safari",
+    "nameES": "Safari de ballenas",
+    "descES": "Admira de cerca los magníficos cachalotes y la otra fauna marina en un safari guiado con salida desde Andenes.",
+    "cityEN": "Andøya",
+    "cityES": "Andøya",
+    "hoursES": "Salidas diarias (may-sep)",
+    "priceES": "Adultos NOK 1690, Niños NOK 1187"
   },
   {
     "id": "poi-h-131",
@@ -1967,7 +2775,14 @@ var MAP_POIS = [
     "hours": "Estate (15 giu-16 ago): Tutti i giorni 11-17; Bassa stagione (18 mag-14 giu e 17 ago-27 set): Tutti i giorni 11-15",
     "hoursEN": "Summer (Jun 15-Aug 16): Daily 11am-5pm; Shoulder season (May 18-Jun 14 & Aug 17-Sep 27): Daily 11am-3pm",
     "price": "Adulti NOK 275, Studenti/Anziani NOK 225, Bambini (10-16) NOK 165, Bambini (2-9) NOK 125",
-    "priceEN": "Adults NOK 275, Students/Seniors NOK 225, Children (10-16) NOK 165, Children (2-9) NOK 125"
+    "priceEN": "Adults NOK 275, Students/Seniors NOK 225, Children (10-16) NOK 165, Children (2-9) NOK 125",
+    "nameEN": "Andøya Space Center",
+    "nameES": "Andøya Space Center",
+    "descES": "Explora la historia espacial noruega, la investigación sobre la aurora boreal y exposiciones interactivas en este centro espacial.",
+    "cityEN": "Andøya",
+    "cityES": "Andøya",
+    "hoursES": "Verano (15 jun-16 ago): Todos los días 11-17; Temporada baja (18 may-14 jun y 17 ago-27 sep): Todos los días 11-15",
+    "priceES": "Adultos NOK 275, Estudiantes/Mayores NOK 225, Niños (10-16) NOK 165, Niños (2-9) NOK 125"
   },
   {
     "id": "poi-h-132",
@@ -1983,7 +2798,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=69.27623,15.96405",
     "descEN": "Bleik Beach is one of Norway's longest beaches, featuring stunning white sands and a dramatic mountain backdrop.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Bleik Beach",
+    "nameES": "Bleik Beach",
+    "descES": "Bleik Beach es una de las playas más largas de Noruega, con hermosas arenas blancas y montañas espectaculares.",
+    "cityEN": "Andøya",
+    "cityES": "Andøya",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-k-133",
@@ -2001,7 +2822,14 @@ var MAP_POIS = [
     "hours": "Estate (15 giu-16 ago): Tutti i giorni 11-17; Primavera/Fine estate: 11-15",
     "hoursEN": "Summer (Jun 15-Aug 16): Daily 11am-5pm; Spring/Late Summer: 11am-3pm",
     "price": "Adulti NOK 275, Studenti/Anziani NOK 225, Bambini (10-16) NOK 165, Bambini (2-9) NOK 125",
-    "priceEN": "Adults NOK 275, Students/Seniors NOK 225, Children (10-16) NOK 165, Children (2-9) NOK 125"
+    "priceEN": "Adults NOK 275, Students/Seniors NOK 225, Children (10-16) NOK 165, Children (2-9) NOK 125",
+    "nameEN": "Spaceship Aurora (Andøya Space Visitor Center)",
+    "nameES": "Spaceship Aurora (Andøya Space Visitor Center)",
+    "descES": "El único centro espacial operativo en Noruega donde descubrir la aurora boreal y la exploración espacial.",
+    "cityEN": "Andøya",
+    "cityES": "Andøya",
+    "hoursES": "Verano (15 jun-16 ago): Todos los días 11-17; Primavera/Final de verano: 11-15",
+    "priceES": "Adultos NOK 275, Estudiantes/Mayores NOK 225, Niños (10-16) NOK 165, Niños (2-9) NOK 125"
   },
   {
     "id": "poi-k-134",
@@ -2019,7 +2847,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 8-21 (20 mag-20 ago)",
     "hoursEN": "Daily 8am-9pm (May 20-Aug 20)",
     "price": "Da NOK 1690",
-    "priceEN": "From NOK 1690"
+    "priceEN": "From NOK 1690",
+    "nameEN": "Whale Safari",
+    "nameES": "Safari de ballenas",
+    "descES": "Vive la emoción de observar cachalotes en su hábitat natural ártico con un safari guiado en barco.",
+    "cityEN": "Andøya",
+    "cityES": "Andøya",
+    "hoursES": "Todos los días 8-21 (20 may-20 ago)",
+    "priceES": "Desde NOK 1690"
   },
   {
     "id": "poi-p-135",
@@ -2032,7 +2867,13 @@ var MAP_POIS = [
     "lng": 16.067359,
     "day": "g19",
     "city": "Andøya",
-    "maps": "https://maps.google.com/?q=69.304266,16.067359"
+    "maps": "https://maps.google.com/?q=69.304266,16.067359",
+    "nameEN": "Andenes Camping",
+    "nameES": "Andenes Camping",
+    "descEN": "~€35/night. Electricity, water, WiFi, toilets, showers, playground, washing machine, grey/chemical water disposal, on a white sand beach.",
+    "descES": "~€35/noche. Electricidad, agua, WiFi, baños, duchas, parque infantil, lavadora, descarga de aguas grises/químicas, en playa de arena blanca.",
+    "cityEN": "Andøya",
+    "cityES": "Andøya"
   },
   {
     "id": "poi-h-136",
@@ -2048,7 +2889,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=68.2344,14.5686",
     "descEN": "A 230 km scenic drive from Raftsundet to Å, offering breathtaking views of mountains, fjords, and beaches.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Lofoten National Tourist Route",
+    "nameES": "Lofoten National Tourist Route",
+    "descES": "Una ruta panorámica de 230 km desde Raftsundet hasta Å, con vistas impresionantes de montañas, fiordos y playas.",
+    "cityEN": "Svolvær",
+    "cityES": "Svolvær",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-h-137",
@@ -2064,7 +2911,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=68.234,14.5615",
     "descEN": "A picturesque Arctic harbor surrounded by rugged peaks, serving as the main gateway to the Lofoten Islands.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Port of Svolvær",
+    "nameES": "Puerto de Svolvær",
+    "descES": "Un pintoresco puerto ártico rodeado de cumbres escarpadas, que sirve como puerta principal a las Islas Lofoten.",
+    "cityEN": "Svolvær",
+    "cityES": "Svolvær",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-k-138",
@@ -2082,7 +2935,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 12-22",
     "hoursEN": "Daily 12pm-10pm",
     "price": "NOK 325",
-    "priceEN": "NOK 325"
+    "priceEN": "NOK 325",
+    "nameEN": "Magic Ice",
+    "nameES": "Magic Ice",
+    "descES": "Una galería y bar de hielo único con esculturas que cuentan la historia de las Lofoten, de los pescadores y de los vikingos.",
+    "cityEN": "Svolvær",
+    "cityES": "Svolvær",
+    "hoursES": "Todos los días 12-22",
+    "priceES": "NOK 325"
   },
   {
     "id": "poi-k-139",
@@ -2100,7 +2960,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 10-18",
     "hoursEN": "Daily 10am-6pm",
     "price": "Adulti NOK 160, Bambini NOK 100",
-    "priceEN": "Adults NOK 160, Children NOK 100"
+    "priceEN": "Adults NOK 160, Children NOK 100",
+    "nameEN": "Lofoten Aquarium",
+    "nameES": "Lofoten Aquarium",
+    "descES": "Descubre la vida marina local de las aguas de las Lofoten, incluidos bacalaos, erizos de mar y las alimentaciones diarias de focas y nutrias.",
+    "cityEN": "Svolvær",
+    "cityES": "Svolvær",
+    "hoursES": "Todos los días 10-18",
+    "priceES": "Adultos NOK 160, Niños NOK 100"
   },
   {
     "id": "poi-k-140",
@@ -2116,7 +2983,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=68.2344,14.5686",
     "descEN": "A challenging outdoor climbing park and playground in central Svolvær, perfect for older children and adults.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Playground",
+    "nameES": "Parque de juegos",
+    "descES": "Un parque de juegos y de escalada al aire libre en el centro de Svolvær, ideal para niños mayores y adultos.",
+    "cityEN": "Svolvær",
+    "cityES": "Svolvær",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-p-141",
@@ -2129,7 +3002,13 @@ var MAP_POIS = [
     "lng": 14.217583,
     "day": "g20",
     "city": "Svolvær",
-    "maps": "https://maps.google.com/?q=68.226194,14.217583"
+    "maps": "https://maps.google.com/?q=68.226194,14.217583",
+    "nameEN": "Lyngvær Lofoten Bobilcamp",
+    "nameES": "Lyngvær Lofoten Bobilcamp",
+    "descEN": "~€35/night. Electricity, water, waste drain, WiFi, showers, kitchen, great view.",
+    "descES": "~€35/noche. Electricidad, agua, desagüe, WiFi, duchas, cocina, excelente vista.",
+    "cityEN": "Svolvær",
+    "cityES": "Svolvær"
   },
   {
     "id": "poi-p-142",
@@ -2142,7 +3021,13 @@ var MAP_POIS = [
     "lng": 14.556528,
     "day": "g20",
     "city": "Svolvær",
-    "maps": "https://maps.google.com/?q=68.227056,14.556528"
+    "maps": "https://maps.google.com/?q=68.227056,14.556528",
+    "nameEN": "Svolvær Bobilpark",
+    "nameES": "Svolvær Bobilpark",
+    "descEN": "~€43/night. Electricity, toilets, showers, 10 min from the centre.",
+    "descES": "~€43/noche. Electricidad, baños, duchas, a 10 min del centro.",
+    "cityEN": "Svolvær",
+    "cityES": "Svolvær"
   },
   {
     "id": "poi-f-143",
@@ -2155,7 +3040,13 @@ var MAP_POIS = [
     "lng": 13.11186,
     "day": "g20",
     "city": "Svolvær",
-    "maps": "https://maps.google.com/?q=67.94182,13.11186"
+    "maps": "https://maps.google.com/?q=67.94182,13.11186",
+    "nameEN": "Lofoten street food",
+    "nameES": "Lofoten street food",
+    "descEN": "Anitas Sjømat (Sakrisøy, between Reine and Hamnøy) — fish burger take-away ~NOK 150 (~€14), stunning view! Fiskekaker (fish cakes) from the stalls in Sv",
+    "descES": "Anitas Sjømat (Sakrisøy, entre Reine y Hamnøy) — hamburguesa de pescado para llevar ~NOK 150 (~€14), ¡vista espectacular! Fiskekaker (albóndigas de pescado) de los puestos en Sv",
+    "cityEN": "Svolvær",
+    "cityES": "Svolvær"
   },
   {
     "id": "poi-h-144",
@@ -2173,7 +3064,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 24 ore",
     "hoursEN": "Daily 24 hours",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Henningsvær football pitch",
+    "nameES": "Campo de fútbol de Henningsvær",
+    "descES": "Este famoso campo de fútbol se encuentra en una isla rocosa rodeada por los espectaculares paisajes del Mare di Norvegia.",
+    "cityEN": "Henningsvær",
+    "cityES": "Henningsvær",
+    "hoursES": "Abierto 24 horas todos los días",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-h-145",
@@ -2189,7 +3087,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=68.15419,14.20725",
     "descEN": "Henningsvær is a picturesque fishing village in Lofoten, known for its vibrant art scene and scenic football field.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Fishing village",
+    "nameES": "Pueblo de pescadores",
+    "descES": "Henningsvær es un pintoresco pueblo de pescadores en las Lofoten, conocido por el arte y el campo de fútbol panorámico.",
+    "cityEN": "Henningsvær",
+    "cityES": "Henningsvær",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-k-146",
@@ -2207,7 +3111,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 10-18 (giugno-ottobre)",
     "hoursEN": "Daily 10am-6pm (June-October)",
     "price": "Adulti NOK 160, Bambini NOK 100",
-    "priceEN": "Adults NOK 160, Children NOK 100"
+    "priceEN": "Adults NOK 160, Children NOK 100",
+    "nameEN": "Lofoten Aquarium (Lofotakvariet)",
+    "nameES": "Lofoten Aquarium (Lofotakvariet)",
+    "descES": "Descubre la vida marina local de las aguas de las Lofoten, incluyendo bacalao, fletán, focas y nutrias.",
+    "cityEN": "Henningsvær",
+    "cityES": "Henningsvær",
+    "hoursES": "Todos los días 10-18 (junio-octubre)",
+    "priceES": "Adultos NOK 160, Niños NOK 100"
   },
   {
     "id": "poi-k-147",
@@ -2225,7 +3136,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 24 ore",
     "hoursEN": "Daily 24 hours",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Henningsvær",
+    "nameES": "Henningsvær",
+    "descES": "Un campo de fútbol de fama mundial situado en un islote rocoso en el Círculo Polar Ártico, con vistas impresionantes.",
+    "cityEN": "Henningsvær",
+    "cityES": "Henningsvær",
+    "hoursES": "Abierto 24 horas todos los días",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-p-148",
@@ -2238,7 +3156,13 @@ var MAP_POIS = [
     "lng": 14.215,
     "day": "g21",
     "city": "Henningsvær",
-    "maps": "https://maps.google.com/?q=68.2250,14.2150"
+    "maps": "https://maps.google.com/?q=68.2250,14.2150",
+    "nameEN": "Lyngvær Lofoten Bobilcamping",
+    "nameES": "Lyngvær Lofoten Bobilcamping",
+    "descEN": "~€45-50/night. Electricity, water, WiFi, kitchen, bathrooms, sea and mountain views. Alternative: Henningsvær parking (68.1520, 14.2010).",
+    "descES": "~€45-50/noche. Electricidad, agua, WiFi, cocina, baños, vistas al mar y a las montañas. Alternativa: Henningsvær parking (68.1520, 14.2010).",
+    "cityEN": "Henningsvær",
+    "cityES": "Henningsvær"
   },
   {
     "id": "poi-s-149",
@@ -2251,7 +3175,13 @@ var MAP_POIS = [
     "lng": 14.2017,
     "day": "g21",
     "city": "Henningsvær",
-    "maps": "https://maps.google.com/?q=68.1483,14.2017"
+    "maps": "https://maps.google.com/?q=68.1483,14.2017",
+    "nameEN": "🛴 Henningsvær",
+    "nameES": "🛴 Henningsvær",
+    "descEN": "Henningsvær, quiet villages, zero traffic → see rentals",
+    "descES": "Henningsvær, pueblos tranquilos, cero tráfico → ver alquileres",
+    "cityEN": "Henningsvær",
+    "cityES": "Henningsvær"
   },
   {
     "id": "poi-h-150",
@@ -2267,7 +3197,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=68.2500,13.5833",
     "descEN": "A spectacular white sand beach with crystal-clear waters and dramatic mountain scenery in the Lofoten Islands.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Haukland Beach + Ramberg",
+    "nameES": "Haukland Beach + Ramberg",
+    "descES": "Una espectacular playa de arena blanca con aguas cristalinas y un impresionante paisaje montañoso en las Lofoten.",
+    "cityEN": "Lofoten",
+    "cityES": "Lofoten",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-h-151",
@@ -2283,7 +3219,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=68.07693,13.09388",
     "descEN": "A stunning, isolated white sand beach in Lofotodden National Park, accessible only by foot and surrounded by steep cliffs.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Kvalvika Beach",
+    "nameES": "Kvalvika Beach",
+    "descES": "Una hermosa y aislada playa de arena blanca en el Parco Nazionale di Lofotodden, accesible solo a pie y rodeada de empinados acantilados.",
+    "cityEN": "Lofoten",
+    "cityES": "Lofoten",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-k-152",
@@ -2299,7 +3241,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=Haukland+Beach",
     "descEN": "A scenic, family-friendly coastal walk connecting the stunning white sand beaches of Haukland and Uttakleiv.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Coastal walk between Haukland Beach and Uttakleiv Beach",
+    "nameES": "Paseo costero entre Haukland Beach y Uttakleiv Beach",
+    "descES": "Un paseo costero panorámico para familias entre las espléndidas playas de Haukland y Uttakleiv.",
+    "cityEN": "Lofoten",
+    "cityES": "Lofoten",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-k-153",
@@ -2315,7 +3263,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=Ramberg+Beach",
     "descEN": "A stunning Arctic beach in Lofoten known for its white sand, azure waters, and majestic mountain backdrop.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Play on the white sand at Ramberg Beach or Haukland Beach",
+    "nameES": "Jugar en la arena blanca en Ramberg Beach o Haukland Beach",
+    "descES": "Una hermosa playa ártica en Lofoten conocida por su arena blanca, sus aguas azules y sus majestuosas montañas.",
+    "cityEN": "Lofoten",
+    "cityES": "Lofoten",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-k-154",
@@ -2333,7 +3287,14 @@ var MAP_POIS = [
     "hours": "Mer 12:00-18:30",
     "hoursEN": "Wed 12pm-6:30pm",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "In case of bad weather, visit the local shops or the library in Ramberg",
+    "nameES": "En caso de mal tiempo, visite las tiendas locales o la biblioteca en Ramberg",
+    "descES": "Una biblioteca pública local en Ramberg que ofrece libros, servicios digitales y un espacio para niños.",
+    "cityEN": "Lofoten",
+    "cityES": "Lofoten",
+    "hoursES": "Mié 12:00-18:30",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-p-155",
@@ -2346,7 +3307,13 @@ var MAP_POIS = [
     "lng": 13.502,
     "day": "g22",
     "city": "Lofoten",
-    "maps": "https://maps.google.com/?q=68.211,13.502"
+    "maps": "https://maps.google.com/?q=68.211,13.502",
+    "nameEN": "Uttakleiv Beach Camperpark",
+    "nameES": "Uttakleiv Beach Camperpark",
+    "descEN": "~€25/night. Basic parking, breathtaking views, midnight sun, toilets.",
+    "descES": "~€25/noche. Aparcamiento básico, vistas impresionantes, sol de medianoche, baños.",
+    "cityEN": "Lofoten",
+    "cityES": "Lofoten"
   },
   {
     "id": "poi-p-156",
@@ -2359,7 +3326,13 @@ var MAP_POIS = [
     "lng": 13.228,
     "day": "g22",
     "city": "Lofoten",
-    "maps": "https://maps.google.com/?q=68.091,13.228"
+    "maps": "https://maps.google.com/?q=68.091,13.228",
+    "nameEN": "Ramberg Gjestegård",
+    "nameES": "Ramberg Gjestegård",
+    "descEN": "~€38-51/night. Electricity, showers, WiFi, seafront, restaurant.",
+    "descES": "~€38-51/noche. Electricidad, duchas, WiFi, frente al mar, restaurante.",
+    "cityEN": "Lofoten",
+    "cityES": "Lofoten"
   },
   {
     "id": "poi-h-157",
@@ -2373,7 +3346,12 @@ var MAP_POIS = [
     "day": "g23",
     "city": "Reine",
     "maps": "https://maps.google.com/?q=67.9333,13.0833",
-    "descEN": "A spectacular fishing village in Lofoten consisting of a chain of islands linked by bridges and winding roads."
+    "descEN": "A spectacular fishing village in Lofoten consisting of a chain of islands linked by bridges and winding roads.",
+    "nameEN": "Reine",
+    "nameES": "Reine",
+    "descES": "Un espectacular pueblo de pescadores en Lofoten formado por islas conectadas por puentes y carreteras sinuosas.",
+    "cityEN": "Reine",
+    "cityES": "Reine"
   },
   {
     "id": "poi-k-158",
@@ -2389,7 +3367,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=68.10656,13.29513",
     "descEN": "Skagsanden Beach is a stunning golden-sand beach in Lofoten, famous for its intricate sand patterns and surfing.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Skagsanden Beach",
+    "nameES": "Skagsanden Beach",
+    "descES": "Skagsanden es una preciosa playa de arena dorada en Lofoten, famosa por los patrones en la arena y por el surf.",
+    "cityEN": "Reine",
+    "cityES": "Reine",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-k-159",
@@ -2405,7 +3389,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=Reine",
     "descEN": "Reine is a picturesque and authentic fishing village in the Lofoten Islands, renowned for its spectacular mountain and fjord scenery.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Reine",
+    "nameES": "Reine",
+    "descES": "Reine es un pintoresco y auténtico pueblo de pescadores en Lofoten, conocido por sus espectaculares paisajes de montañas y fiordos.",
+    "cityEN": "Reine",
+    "cityES": "Reine",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-p-160",
@@ -2418,7 +3408,13 @@ var MAP_POIS = [
     "lng": 13.05317,
     "day": "g23",
     "city": "Reine",
-    "maps": "https://maps.google.com/?q=67.90006,13.05317"
+    "maps": "https://maps.google.com/?q=67.90006,13.05317",
+    "nameEN": "Moskenes Camping",
+    "nameES": "Moskenes Camping",
+    "descEN": "~€25-30/night. Bathrooms, showers, kitchen, washing machine.",
+    "descES": "~€25-30/noche. Baños, duchas, cocina, lavadora.",
+    "cityEN": "Reine",
+    "cityES": "Reine"
   },
   {
     "id": "poi-p-161",
@@ -2431,7 +3427,13 @@ var MAP_POIS = [
     "lng": 13.301,
     "day": "g23",
     "city": "Reine",
-    "maps": "https://maps.google.com/?q=68.102,13.301"
+    "maps": "https://maps.google.com/?q=68.102,13.301",
+    "nameEN": "Lofoten Beach Camp",
+    "nameES": "Lofoten Beach Camp",
+    "descEN": "~€32/notte. Excellent facilities, WiFi, sauna.",
+    "descES": "~€32/notte. Excelentes servicios, WiFi, sauna.",
+    "cityEN": "Reine",
+    "cityES": "Reine"
   },
   {
     "id": "poi-h-162",
@@ -2447,7 +3449,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=68.0333,13.3500",
     "descEN": "One of the oldest and best-preserved fishing villages in Norway, featuring historic red and ochre cabins.",
     "price": "Adulti NOK 100",
-    "priceEN": "Adults NOK 100"
+    "priceEN": "Adults NOK 100",
+    "nameEN": "Nusfjord",
+    "nameES": "Nusfjord",
+    "descES": "Uno de los pueblos de pescadores más antiguos y mejor conservados de Norvegia, con históricas cabañas rojas y ocre.",
+    "cityEN": "Lofoten Sud",
+    "cityES": "Lofoten Sud",
+    "priceES": "Adultos NOK 100"
   },
   {
     "id": "poi-h-163",
@@ -2465,7 +3473,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 10-19 (15 giu - 15 ago)",
     "hoursEN": "Daily 10am-7pm (Jun 15-Aug 15)",
     "price": "Adulti NOK 265, Bambini (6-15) NOK 170",
-    "priceEN": "Adults NOK 265, Children (6-15) NOK 170"
+    "priceEN": "Adults NOK 265, Children (6-15) NOK 170",
+    "nameEN": "Lofotr Viking Museum",
+    "nameES": "Lofotr Viking Museum",
+    "descES": "Este museo alberga una reconstrucción a tamaño real de la mayor casa larga vikinga jamás descubierta.",
+    "cityEN": "Lofoten Sud",
+    "cityES": "Lofoten Sud",
+    "hoursES": "Todos los días 10-19 (15 jun - 15 ago)",
+    "priceES": "Adultos NOK 265, Niños (6-15) NOK 170"
   },
   {
     "id": "poi-k-164",
@@ -2483,7 +3498,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 10-17",
     "hoursEN": "Daily 10am-5pm",
     "price": "Adulti NOK 100",
-    "priceEN": "Adults NOK 100"
+    "priceEN": "Adults NOK 100",
+    "nameEN": "Nusfjord",
+    "nameES": "Nusfjord",
+    "descES": "Uno de los pueblos de pescadores más antiguos y mejor conservados de Norvegia, hoy museo al aire libre y resort.",
+    "cityEN": "Lofoten Sud",
+    "cityES": "Lofoten Sud",
+    "hoursES": "Todos los días 10-17",
+    "priceES": "Adultos NOK 100"
   },
   {
     "id": "poi-p-165",
@@ -2496,7 +3518,13 @@ var MAP_POIS = [
     "lng": 13.3488,
     "day": "g24",
     "city": "Lofoten Sud",
-    "maps": "https://maps.google.com/?q=68.0345,13.3488"
+    "maps": "https://maps.google.com/?q=68.0345,13.3488",
+    "nameEN": "Nusfjord Parking",
+    "nameES": "Nusfjord Parking",
+    "descEN": "~€13/night. Basic parking, without main facilities, but right in the historic village.",
+    "descES": "~€13/noche. Aparcamiento básico, sin servicios principales, pero justo en el pueblo histórico.",
+    "cityEN": "Lofoten Sud",
+    "cityES": "Lofoten Sud"
   },
   {
     "id": "poi-p-166",
@@ -2509,7 +3537,13 @@ var MAP_POIS = [
     "lng": 13.045,
     "day": "g24",
     "city": "Lofoten Sud",
-    "maps": "https://maps.google.com/?q=67.9000,13.0450"
+    "maps": "https://maps.google.com/?q=67.9000,13.0450",
+    "nameEN": "Moskenes Camping",
+    "nameES": "Moskenes Camping",
+    "descEN": "~€30-35/night. Electricity, water, WiFi, laundry and great view.",
+    "descES": "~€30-35/noche. Electricidad, agua, WiFi, lavandería y excelentes vistas.",
+    "cityEN": "Lofoten Sud",
+    "cityES": "Lofoten Sud"
   },
   {
     "id": "poi-h-167",
@@ -2527,7 +3561,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni, partenze multiple (durata circa 3-4 ore)",
     "hoursEN": "Daily, multiple departures (approx. 3-4 hours duration)",
     "price": "Passeggeri Gratuito, Auto fino a 6m NOK 605 (più NOK 250 di prenotazione)",
-    "priceEN": "Passengers Free, Cars up to 6m NOK 605 (plus NOK 250 reservation fee)"
+    "priceEN": "Passengers Free, Cars up to 6m NOK 605 (plus NOK 250 reservation fee)",
+    "nameEN": "Ferry Moskenes → Bodø",
+    "nameES": "Ferry Moskenes → Bodø",
+    "descES": "Un viaje panorámico en ferry de 3-4 horas que conecta Bodø con las Islas Lofoten, ofreciendo vistas impresionantes.",
+    "cityEN": "Saltstraumen",
+    "cityES": "Saltstraumen",
+    "hoursES": "Todos los días, salidas múltiples (duración aprox. 3-4 horas)",
+    "priceES": "Pasajeros Gratis, Coches hasta 6m NOK 605 (más NOK 250 de reserva)"
   },
   {
     "id": "poi-h-168",
@@ -2545,7 +3586,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 8-22 (15 giu-15 ago)",
     "hoursEN": "Daily 8am-10pm (Jun 15-Aug 15)",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Arctic Circle Centre",
+    "nameES": "Arctic Circle Centre",
+    "descES": "El Polarsirkelsenteret es una parada turística única en las montañas de Saltfjellet que marca el Círculo Polar Ártico.",
+    "cityEN": "Saltstraumen",
+    "cityES": "Saltstraumen",
+    "hoursES": "Todos los días 8-22 (15 jun-15 ago)",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-k-169",
@@ -2563,7 +3611,14 @@ var MAP_POIS = [
     "hours": "Lun-Ven 10-15, Sab-Dom 10-16 (Aperto il lunedì in estate)",
     "hoursEN": "Mon-Fri 10am-3pm, Sat-Sun 10am-4pm (Open Mondays in summer)",
     "price": "Adulti NOK 140, Bambini (3-17) NOK 115, Sotto i 3 anni Gratuito",
-    "priceEN": "Adults NOK 140, Kids (3-17) NOK 115, Under 3 Free"
+    "priceEN": "Adults NOK 140, Kids (3-17) NOK 115, Under 3 Free",
+    "nameEN": "Vitensenter Nordland",
+    "nameES": "Vitensenter Nordland",
+    "descES": "Un centro interactivo de ciencia y tecnología en Mo i Rana que ofrece experimentos prácticos para toda la familia.",
+    "cityEN": "Saltstraumen",
+    "cityES": "Saltstraumen",
+    "hoursES": "Lun-Vie 10-15, Sáb-Dom 10-16 (Abierto los lunes en verano)",
+    "priceES": "Adultos NOK 140, Niños (3-17) NOK 115, Menores de 3 años Gratis"
   },
   {
     "id": "poi-k-170",
@@ -2581,7 +3636,14 @@ var MAP_POIS = [
     "hours": "Mar-Dom 11-18 (estate)",
     "hoursEN": "Tue-Sun 11am-6pm (summer)",
     "price": "Adulti/Ragazzi NOK 425, Bambini (6-9) NOK 375, Bambini (2-5) NOK 205",
-    "priceEN": "Adults/Youth NOK 425, Kids (6-9) NOK 375, Kids (2-5) NOK 205"
+    "priceEN": "Adults/Youth NOK 425, Kids (6-9) NOK 375, Kids (2-5) NOK 205",
+    "nameEN": "Høyt & Lavt",
+    "nameES": "Høyt & Lavt",
+    "descES": "Un parque de aventuras para familias cerca del Círculo Polar Ártico con 6 recorridos, 62 elementos y 13 tirolinas.",
+    "cityEN": "Saltstraumen",
+    "cityES": "Saltstraumen",
+    "hoursES": "Mar-Dom 11-18 (verano)",
+    "priceES": "Adultos/Jóvenes NOK 425, Niños (6-9) NOK 375, Niños (2-5) NOK 205"
   },
   {
     "id": "poi-p-171",
@@ -2594,7 +3656,13 @@ var MAP_POIS = [
     "lng": 14.17956,
     "day": "g25",
     "city": "Saltstraumen",
-    "maps": "https://maps.google.com/?q=66.31672,14.17956"
+    "maps": "https://maps.google.com/?q=66.31672,14.17956",
+    "nameEN": "Mo i Rana Camping",
+    "nameES": "Mo i Rana Camping",
+    "descEN": "~€38/night. Electricity, Wi-Fi, showers/bathrooms, washing machines, family bathrooms. (Alt: Yttervik Camping — <a href=\"https://maps.google.com/?q=66.2833,13.9833\"",
+    "descES": "~€38/noche. Electricidad, Wi-Fi, duchas/baños, lavadoras, baños familiares. (Alt: Yttervik Camping — <a href=\"https://maps.google.com/?q=66.2833,13.9833\"",
+    "cityEN": "Saltstraumen",
+    "cityES": "Saltstraumen"
   },
   {
     "id": "poi-f-172",
@@ -2607,7 +3675,13 @@ var MAP_POIS = [
     "lng": 15.3117,
     "day": "g25",
     "city": "Saltstraumen",
-    "maps": "https://maps.google.com/?q=66.5633,15.3117"
+    "maps": "https://maps.google.com/?q=66.5633,15.3117",
+    "nameEN": "Lunch stop",
+    "nameES": "Parada para comer",
+    "descEN": "svele (pancake) on the Moskenes–Bodø ferry + coffee",
+    "descES": "svele (tortita) en el ferry Moskenes–Bodø + café",
+    "cityEN": "Saltstraumen",
+    "cityES": "Saltstraumen"
   },
   {
     "id": "poi-h-173",
@@ -2623,7 +3697,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=63.4305,10.3951",
     "descEN": "The longest of Norway's 18 Scenic Routes, offering a 433 km drive with stunning coastal views, glaciers, and six ferry crossings.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Helgelandskysten",
+    "nameES": "Helgelandskysten",
+    "descES": "La más larga de las 18 Rutas Escénicas de Noruega, ofrece 433 km de paisajes costeros, glaciares y seis ferries.",
+    "cityEN": "Trondheim",
+    "cityES": "Trondheim",
+    "priceES": "Gratuito"
   },
   {
     "id": "poi-h-174",
@@ -2641,7 +3721,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni da fine maggio a fine settembre (orari del traghetto variabili)",
     "hoursEN": "Daily late May to late Sep (shuttle boat schedule varies)",
     "price": "Gratuito (Traghetto: Adulti NOK 275, Bambini NOK 140)",
-    "priceEN": "Free (Shuttle boat: Adults NOK 275, Children NOK 140)"
+    "priceEN": "Free (Shuttle boat: Adults NOK 275, Children NOK 140)",
+    "nameEN": "Svartisen Glacier",
+    "nameES": "Glaciar Svartisen",
+    "descES": "Una hermosa lengua glaciar de fácil acceso del segundo glaciar más grande de Noruega.",
+    "cityEN": "Trondheim",
+    "cityES": "Trondheim",
+    "hoursES": "Todos los días desde finales de mayo hasta finales de septiembre (horarios del ferry variables)",
+    "priceES": "Gratuito (Ferry: Adultos NOK 275, Niños NOK 140)"
   },
   {
     "id": "poi-k-175",
@@ -2659,7 +3746,14 @@ var MAP_POIS = [
     "hours": "Lun-Ven 10-16, Sab-Dom 11-17",
     "hoursEN": "Mon-Fri 10am-4pm, Sat-Sun 11am-5pm",
     "price": "Adulti NOK 200, Bambini NOK 150",
-    "priceEN": "Adults NOK 200, Children NOK 150"
+    "priceEN": "Adults NOK 200, Children NOK 150",
+    "nameEN": "Vitensenteret",
+    "nameES": "Vitensenteret",
+    "descES": "Un centro científico interactivo en Trondheim con exposiciones prácticas, un makerspace y un planetario 3D.",
+    "cityEN": "Trondheim",
+    "cityES": "Trondheim",
+    "hoursES": "Lun-Vie 10-16, Sáb-Dom 11-17",
+    "priceES": "Adultos NOK 200, Niños NOK 150"
   },
   {
     "id": "poi-k-176",
@@ -2675,7 +3769,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=Bymarka+Trondheim",
     "descEN": "Bymarka is a vast nature reserve offering scenic hiking trails, cross-country skiing, and tranquil lakes.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Bymarka or Charlottenlund Park",
+    "nameES": "Bymarka o Charlottenlund Park",
+    "descES": "Bymarka es una amplia reserva natural que ofrece senderos panorámicos, esquí de fondo y lagos tranquilos.",
+    "cityEN": "Trondheim",
+    "cityES": "Trondheim",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-k-177",
@@ -2693,7 +3793,14 @@ var MAP_POIS = [
     "hours": "Lun/Mer/Ven 6:30-21, Mar/Gio 10-21, Sab/Dom 9-19 (estate)",
     "hoursEN": "Mon/Wed/Fri 6:30am-9pm, Tue/Thu 10am-9pm, Sat/Sun 9am-7pm (summer)",
     "price": "Adulti NOK 215, Giovani/Studenti NOK 190, Bambini (3-9) NOK 145",
-    "priceEN": "Adults NOK 215, Youth/Students NOK 190, Children (3-9) NOK 145"
+    "priceEN": "Adults NOK 215, Youth/Students NOK 190, Children (3-9) NOK 145",
+    "nameEN": "Pirbadet",
+    "nameES": "Pirbadet",
+    "descES": "El parque acuático cubierto más grande de Norvegia con piscinas, toboganes, saunas y hermosas vistas del fiordo.",
+    "cityEN": "Trondheim",
+    "cityES": "Trondheim",
+    "hoursES": "Lun/Mié/Vie 6:30-21, Mar/Jue 10-21, Sáb/Dom 9-19 (verano)",
+    "priceES": "Adultos NOK 215, Jóvenes/Estudiantes NOK 190, Niños (3-9) NOK 145"
   },
   {
     "id": "poi-p-178",
@@ -2706,7 +3813,13 @@ var MAP_POIS = [
     "lng": 10.421,
     "day": "g26",
     "city": "Trondheim",
-    "maps": "https://maps.google.com/?q=63.4383,10.4210"
+    "maps": "https://maps.google.com/?q=63.4383,10.4210",
+    "nameEN": "Trondheim Motorhome Parking (Dora)",
+    "nameES": "Trondheim Motorhome Parking (Dora)",
+    "descEN": "~€48/night. Electricity, water, waste disposal, close to the centre. (Alt: Flakk Camping — <a href=\"https://maps.google.com/?q=63.4500,10.2000\" target=\"_blank\" ",
+    "descES": "~€48/noche. Electricidad, agua, vaciado, cerca del centro. (Alt: Flakk Camping — <a href=\"https://maps.google.com/?q=63.4500,10.2000\" target=\"_blank\" ",
+    "cityEN": "Trondheim",
+    "cityES": "Trondheim"
   },
   {
     "id": "poi-f-179",
@@ -2719,7 +3832,13 @@ var MAP_POIS = [
     "lng": 10.3951,
     "day": "g26",
     "city": "Trondheim",
-    "maps": "https://maps.google.com/?q=63.4305,10.3951"
+    "maps": "https://maps.google.com/?q=63.4305,10.3951",
+    "nameEN": "Steinkjer stop",
+    "nameES": "Parada Steinkjer",
+    "descEN": "packed lunch. Buy brunost and knekkebrød (crispbread) for the next few days",
+    "descES": "almuerzo para llevar. Comprar brunost y knekkebrød (pan crujiente) para los próximos días",
+    "cityEN": "Trondheim",
+    "cityES": "Trondheim"
   },
   {
     "id": "poi-h-180",
@@ -2737,7 +3856,14 @@ var MAP_POIS = [
     "hours": "Lun-Ven 9-18, Sab 9-13, Dom 13-17",
     "hoursEN": "Mon-Fri 9am-6pm, Sat 9am-1pm, Sun 1pm-5pm",
     "price": "Adulti NOK 140, Giovani (8-25) NOK 70, Bambini (0-7) Gratuito",
-    "priceEN": "Adults NOK 140, Youth (8-25) NOK 70, Kids (0-7) Free"
+    "priceEN": "Adults NOK 140, Youth (8-25) NOK 70, Kids (0-7) Free",
+    "nameEN": "Nidaros Cathedral",
+    "nameES": "Catedral de Nidaros",
+    "descES": "La catedral gótica medieval más al norte del mundo, construida sobre la tumba de Sant'Olav, patrón de Noruega.",
+    "cityEN": "Trondheim",
+    "cityES": "Trondheim",
+    "hoursES": "Lun-Vie 9-18, Sáb 9-13, Dom 13-17",
+    "priceES": "Adultos NOK 140, Jóvenes (8-25) NOK 70, Niños (0-7) Gratis"
   },
   {
     "id": "poi-h-181",
@@ -2751,7 +3877,12 @@ var MAP_POIS = [
     "day": "g27",
     "city": "Trondheim",
     "maps": "https://maps.google.com/?q=63.42833,10.40361",
-    "descEN": "A charming, historic neighborhood with colorful wooden houses, cobbled streets, cozy cafes, and local shops."
+    "descEN": "A charming, historic neighborhood with colorful wooden houses, cobbled streets, cozy cafes, and local shops.",
+    "nameEN": "Bakklandet",
+    "nameES": "Bakklandet",
+    "descES": "Un encantador barrio histórico con casas de madera de colores, calles empedradas, cafeterías acogedoras y tiendas.",
+    "cityEN": "Trondheim",
+    "cityES": "Trondheim"
   },
   {
     "id": "poi-h-182",
@@ -2769,7 +3900,14 @@ var MAP_POIS = [
     "hours": "Estate: Cancelli 8-21, Museo 10:30-16",
     "hoursEN": "Summer: Gates 8am-9pm, Museum 10:30am-4pm",
     "price": "Gratuito (parco)",
-    "priceEN": "Free (grounds)"
+    "priceEN": "Free (grounds)",
+    "nameEN": "Kristiansten Fortress",
+    "nameES": "Kristiansten Fortress",
+    "descES": "Una histórica fortaleza del siglo XVII que ofrece vistas espectaculares de Trondheim, un museo y un parque recreativo.",
+    "cityEN": "Trondheim",
+    "cityES": "Trondheim",
+    "hoursES": "Verano: Puertas 8-21, Museo 10:30-16",
+    "priceES": "Gratis (parque)"
   },
   {
     "id": "poi-k-183",
@@ -2787,7 +3925,14 @@ var MAP_POIS = [
     "hours": "Vacanze estive 10-17",
     "hoursEN": "Summer holidays 10am-5pm",
     "price": "Adulti NOK 200, Bambini NOK 150",
-    "priceEN": "Adults NOK 200, Children NOK 150"
+    "priceEN": "Adults NOK 200, Children NOK 150",
+    "nameEN": "Vitensenteret (Trondheim Science Center)",
+    "nameES": "Vitensenteret (Trondheim Science Center)",
+    "descES": "Un centro científico interactivo con exhibiciones prácticas, un planetario 3D y actividades atractivas para todas las edades.",
+    "cityEN": "Trondheim",
+    "cityES": "Trondheim",
+    "hoursES": "Vacaciones de verano 10-17",
+    "priceES": "Adultos NOK 200, Niños NOK 150"
   },
   {
     "id": "poi-k-184",
@@ -2805,7 +3950,14 @@ var MAP_POIS = [
     "hours": "Lun/Mer/Ven 6:30-21, Mar/Gio 10-21, Sab/Dom 9-19 (estate)",
     "hoursEN": "Mon/Wed/Fri 6:30am-9pm, Tue/Thu 10am-9pm, Sat/Sun 9am-7pm (summer)",
     "price": "Adulti NOK 215, Giovani/Studenti NOK 190, Bambini (3-9) NOK 145",
-    "priceEN": "Adults NOK 215, Youth/Students NOK 190, Children (3-9) NOK 145"
+    "priceEN": "Adults NOK 215, Youth/Students NOK 190, Children (3-9) NOK 145",
+    "nameEN": "Pirbadet",
+    "nameES": "Pirbadet",
+    "descES": "El mayor parque acuático cubierto de Noruega con piscinas, toboganes, saunas y vistas al fiordo de Trondheim.",
+    "cityEN": "Trondheim",
+    "cityES": "Trondheim",
+    "hoursES": "Lun/Mié/Vie 6:30-21, Mar/Jue 10-21, Sáb/Dom 9-19 (verano)",
+    "priceES": "Adultos NOK 215, Jóvenes/Estudiantes NOK 190, Niños (3-9) NOK 145"
   },
   {
     "id": "poi-k-185",
@@ -2823,7 +3975,14 @@ var MAP_POIS = [
     "hours": "Estate: Tutti i giorni 8-21",
     "hoursEN": "Summer: Daily 8am-9pm",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Charlottenlund Park or Kristiansten Fortress",
+    "nameES": "Parque Charlottenlund o Fortaleza de Kristiansten",
+    "descES": "Una histórica fortaleza del siglo XVII que ofrece espléndidas vistas sobre la ciudad, un museo y áreas verdes para familias.",
+    "cityEN": "Trondheim",
+    "cityES": "Trondheim",
+    "hoursES": "Verano: Todos los días 8-21",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-p-186",
@@ -2836,7 +3995,13 @@ var MAP_POIS = [
     "lng": 10.4185,
     "day": "g27",
     "city": "Trondheim",
-    "maps": "https://maps.google.com/?q=63.4395,10.4185"
+    "maps": "https://maps.google.com/?q=63.4395,10.4185",
+    "nameEN": "Dora Bobilplass (Nyhavna, Trondheim)",
+    "nameES": "Dora Bobilplass (Nyhavna, Trondheim)",
+    "descEN": "~NOK 425-560 (€37-49)/night. Electricity, water, close to the city centre.",
+    "descES": "~NOK 425-560 (€37-49)/noche. Electricidad, agua, cerca del centro de la ciudad.",
+    "cityEN": "Trondheim",
+    "cityES": "Trondheim"
   },
   {
     "id": "poi-p-187",
@@ -2849,7 +4014,13 @@ var MAP_POIS = [
     "lng": 10.2,
     "day": "g27",
     "city": "Trondheim",
-    "maps": "https://maps.google.com/?q=63.4500,10.2000"
+    "maps": "https://maps.google.com/?q=63.4500,10.2000",
+    "nameEN": "Flakk Camping (Bosberg)",
+    "nameES": "Flakk Camping (Bosberg)",
+    "descEN": "~NOK 400 (€35)/night. Electricity, showers, close to the port.",
+    "descES": "~NOK 400 (€35)/noche. Electricidad, duchas, cerca del puerto.",
+    "cityEN": "Trondheim",
+    "cityES": "Trondheim"
   },
   {
     "id": "poi-s-188",
@@ -2862,7 +4033,13 @@ var MAP_POIS = [
     "lng": 10.3951,
     "day": "g27",
     "city": "Trondheim",
-    "maps": "https://maps.google.com/?q=63.4305,10.3951"
+    "maps": "https://maps.google.com/?q=63.4305,10.3951",
+    "nameEN": "🛴 Trondheim",
+    "nameES": "🛴 Trondheim",
+    "descEN": "Trondheim pedestrian centre, Bakklandet, flat waterfront → see rentals\n🚴 Bike rental: Trondheim City Bike (app, 700 bikes, NOK 175/30gg) → see rentals",
+    "descES": "Trondheim centro peatonal, Bakklandet, paseo marítimo plano → ver alquileres\n🚴 Alquiler de bicis: Trondheim City Bike (app, 700 bicicletas, NOK 175/30gg) → ver alquileres",
+    "cityEN": "Trondheim",
+    "cityES": "Trondheim"
   },
   {
     "id": "poi-f-189",
@@ -2875,7 +4052,13 @@ var MAP_POIS = [
     "lng": 10.4048,
     "day": "g27",
     "city": "Trondheim",
-    "maps": "https://maps.google.com/?q=Trekroneren+Trondheim"
+    "maps": "https://maps.google.com/?q=Trekroneren+Trondheim",
+    "nameEN": "Trondheim street food",
+    "nameES": "Comida callejera de Trondheim",
+    "descEN": "Trekroneren (Munkegata) — hot dog/pølse ~NOK 60-80 (~€5.6–€7.4), a local institution! Fresh shrimp from Ravnkloa Fiskehall — bag ~NOK 100 (~€",
+    "descES": "Trekroneren (Munkegata) — hot dog/pølse ~NOK 60-80 (~€5.6–€7.4), ¡institución local! Gambas frescas de Ravnkloa Fiskehall — bolsa ~NOK 100 (~€",
+    "cityEN": "Trondheim",
+    "cityES": "Trondheim"
   },
   {
     "id": "poi-f-190",
@@ -2888,7 +4071,13 @@ var MAP_POIS = [
     "lng": 10.3951,
     "day": "g27",
     "city": "Trondheim",
-    "maps": "https://maps.google.com/?q=63.4305,10.3951"
+    "maps": "https://maps.google.com/?q=63.4305,10.3951",
+    "nameEN": "Market",
+    "nameES": "Mercado",
+    "descEN": "Ravnkloa Fiskehall (Ravnkloa) — fresh fish, shrimp, salmon.",
+    "descES": "Ravnkloa Fiskehall (Ravnkloa) — pescado fresco, gambas, salmón.",
+    "cityEN": "Trondheim",
+    "cityES": "Trondheim"
   },
   {
     "id": "poi-h-191",
@@ -2904,7 +4093,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=63.01678,7.3547",
     "descEN": "The Atlantic Road is an iconic 8.3-kilometer scenic route connecting islands with eight spectacular bridges.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Atlantic Road",
+    "nameES": "Atlantic Road",
+    "descES": "La Strada dell'Atlantico es una icónica carretera panorámica de 8,3 km que conecta islas con ocho puentes espectaculares.",
+    "cityEN": "Atlanterhavsveien",
+    "cityES": "Atlanterhavsveien",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-k-192",
@@ -2922,7 +4117,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 10-20 (giu-ago); weekend 11-17 (mar-mag, set-nov); chiuso maggio 2026",
     "hoursEN": "Daily 10am-8pm (Jun-Aug); Weekends 11am-5pm (Mar-May, Sep-Nov); Closed May 2026",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Eldhusøya on the Strada dell'Atlantico",
+    "nameES": "Eldhusøya en la Strada dell'Atlantico",
+    "descES": "Una isla panorámica a lo largo de la Strada dell'Atlantico con una pasarela elevada de 550 metri y una cafetería.",
+    "cityEN": "Atlanterhavsveien",
+    "cityES": "Atlanterhavsveien",
+    "hoursES": "Todos los días 10-20 (jun-ago); fines de semana 11-17 (mar-may, sep-nov); cerrado mayo 2026",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-k-193",
@@ -2940,7 +4142,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 11-16 (Estate)",
     "hoursEN": "Daily 11am-4pm (Summer)",
     "price": "Adulti NOK 180, Giovani (12-18) NOK 75, Bambini (0-11) Gratuito",
-    "priceEN": "Adults NOK 180, Youth (12-18) NOK 75, Children (0-11) Free"
+    "priceEN": "Adults NOK 180, Youth (12-18) NOK 75, Children (0-11) Free",
+    "nameEN": "Romsdal Museum in Molde",
+    "nameES": "Romsdal Museum en Molde",
+    "descES": "Uno de los museos de folclore noruego más grandes con edificios históricos, una calle de la ciudad y el centro Krona.",
+    "cityEN": "Atlanterhavsveien",
+    "cityES": "Atlanterhavsveien",
+    "hoursES": "Todos los días 11-16 (verano)",
+    "priceES": "Adultos NOK 180, Jóvenes (12-18) NOK 75, Niños (0-11) Gratis"
   },
   {
     "id": "poi-p-194",
@@ -2953,7 +4162,13 @@ var MAP_POIS = [
     "lng": 7.2336,
     "day": "g28",
     "city": "Atlanterhavsveien",
-    "maps": "https://maps.google.com/?q=62.74246,7.2336"
+    "maps": "https://maps.google.com/?q=62.74246,7.2336",
+    "nameEN": "Kviltorp Camping (Molde)",
+    "nameES": "Kviltorp Camping (Molde)",
+    "descEN": "~€30-40/night. Electricity, drinking water, grey/black water disposal, WiFi, toilet facilities with showers, laundry and playground for children. Situated",
+    "descES": "~€30-40/noche. Electricidad, agua potable, desagüe de aguas grises/negras, WiFi, servicios higiénicos con duchas, lavandería y parque infantil. Situado",
+    "cityEN": "Atlanterhavsveien",
+    "cityES": "Atlanterhavsveien"
   },
   {
     "id": "poi-f-195",
@@ -2966,7 +4181,13 @@ var MAP_POIS = [
     "lng": 7.35,
     "day": "g28",
     "city": "Atlanterhavsveien",
-    "maps": "https://maps.google.com/?q=63.0167,7.35"
+    "maps": "https://maps.google.com/?q=63.0167,7.35",
+    "nameEN": "Svele",
+    "nameES": "Svele",
+    "descEN": "on the ferry of the Atlantic Road. Dinner: raspeball/komle (potato gnocchi, west coast specialty)",
+    "descES": "en el ferry de la Atlantic Road. Cena: raspeball/komle (ñoquis de patata, especialidad de la costa oeste)",
+    "cityEN": "Atlanterhavsveien",
+    "cityES": "Atlanterhavsveien"
   },
   {
     "id": "poi-h-196",
@@ -2984,7 +4205,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 24h (da metà maggio a ott/nov)",
     "hoursEN": "Daily 24h (mid-May to Oct/Nov)",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Trollstigen",
+    "nameES": "Trollstigen",
+    "descES": "Un icónico paso de montaña en Norvegia con 11 espectaculares curvas cerradas, cascadas impresionantes y vistas panorámicas.",
+    "cityEN": "Trollstigen",
+    "cityES": "Trollstigen",
+    "hoursES": "Todos los días 24h (desde mediados de mayo hasta oct/nov)",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-h-197",
@@ -3002,7 +4230,14 @@ var MAP_POIS = [
     "hours": "Aperto 24/7",
     "hoursEN": "Open 24/7",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Ørnesvingen viewpoint",
+    "nameES": "Ørnesvingen viewpoint",
+    "descES": "Un espectacular mirador a lo largo de la Strada delle Aquile con vistas al Geirangerfjord y a las Sette Sorelle.",
+    "cityEN": "Trollstigen",
+    "cityES": "Trollstigen",
+    "hoursES": "Abierto 24/7",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-k-198",
@@ -3020,7 +4255,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 9-19",
     "hoursEN": "Daily 9am-7pm",
     "price": "Adulti NOK 895, bambini NOK 595",
-    "priceEN": "Adults NOK 895, kids NOK 595"
+    "priceEN": "Adults NOK 895, kids NOK 595",
+    "nameEN": "Geiranger Fjord Safari/Boat Tour",
+    "nameES": "Geiranger Fjord Safari/Boat Tour",
+    "descES": "Vive un tour en lancha neumática lleno de adrenalina por el Geirangerfjord, acercándote a las famosas cascadas.",
+    "cityEN": "Trollstigen",
+    "cityES": "Trollstigen",
+    "hoursES": "Todos los días 9–19",
+    "priceES": "Adultos NOK 895, niños NOK 595"
   },
   {
     "id": "poi-k-199",
@@ -3038,7 +4280,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 9-19 (mag-ott), 10-16 (bassa stagione)",
     "hoursEN": "Daily 9am-7pm (May-Oct), 10am-4pm (low season)",
     "price": "Adulti NOK 160, Bambini (5-15) NOK 85, Sotto i 5 anni Gratuito",
-    "priceEN": "Adults NOK 160, Children (5-15) NOK 85, Under 5 Free"
+    "priceEN": "Adults NOK 160, Children (5-15) NOK 85, Under 5 Free",
+    "nameEN": "Norsk Fjord-senter",
+    "nameES": "Norsk Fjord-senter",
+    "descES": "Un centro de visitantes interactivo que explica la geología, la naturaleza y la cultura del Geirangerfjord.",
+    "cityEN": "Trollstigen",
+    "cityES": "Trollstigen",
+    "hoursES": "Todos los días 9–19 (may-oct), 10–16 (temporada baja)",
+    "priceES": "Adultos NOK 160, Niños (5-15) NOK 85, Menores de 5 años Gratis"
   },
   {
     "id": "poi-p-200",
@@ -3051,7 +4300,13 @@ var MAP_POIS = [
     "lng": 7.2026,
     "day": "g29",
     "city": "Trollstigen",
-    "maps": "https://maps.google.com/?q=62.0997,7.2026"
+    "maps": "https://maps.google.com/?q=62.0997,7.2026",
+    "nameEN": "Geiranger Camping",
+    "nameES": "Geiranger Camping",
+    "descEN": "~€40/night. WiFi, water, dump station, no reservations",
+    "descES": "~€40/noche. WiFi, agua, desagüe, no reservas",
+    "cityEN": "Trollstigen",
+    "cityES": "Trollstigen"
   },
   {
     "id": "poi-p-201",
@@ -3064,7 +4319,13 @@ var MAP_POIS = [
     "lng": 7.21838,
     "day": "g29",
     "city": "Trollstigen",
-    "maps": "https://maps.google.com/?q=62.09487,7.21838"
+    "maps": "https://maps.google.com/?q=62.09487,7.21838",
+    "nameEN": "Vinje Camping",
+    "nameES": "Vinje Camping",
+    "descEN": "~€35-43/night. Pitches, playground",
+    "descES": "~€35-43/noche. Parcelas, parque infantil",
+    "cityEN": "Trollstigen",
+    "cityES": "Trollstigen"
   },
   {
     "id": "poi-h-202",
@@ -3082,7 +4343,14 @@ var MAP_POIS = [
     "hours": "Aperto 24 ore su 24",
     "hoursEN": "Open 24 hours",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Stegastein Viewpoint",
+    "nameES": "Stegastein Viewpoint",
+    "descES": "Una espectacular plataforma panorámica que se proyecta 30 metri desde la montaña, ofreciendo vistas a 650 metri sobre el Aurlandsfjord.",
+    "cityEN": "Bergen",
+    "cityES": "Bergen",
+    "hoursES": "Abierto 24 horas",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-h-203",
@@ -3096,7 +4364,12 @@ var MAP_POIS = [
     "day": "g30",
     "city": "Bergen",
     "maps": "https://maps.google.com/?q=60.3913,5.3221",
-    "descEN": "A 158-km scenic drive through the Hardanger region, featuring fruit orchards, majestic waterfalls, and stunning fjord views."
+    "descEN": "A 158-km scenic drive through the Hardanger region, featuring fruit orchards, majestic waterfalls, and stunning fjord views.",
+    "nameEN": "Hardanger NTR",
+    "nameES": "Hardanger NTR",
+    "descES": "Un recorrido panorámico de 158 km en la región de Hardanger, entre huertos, majestuosas cascadas y vistas impresionantes de los fiordos.",
+    "cityEN": "Bergen",
+    "cityES": "Bergen"
   },
   {
     "id": "poi-k-204",
@@ -3114,7 +4387,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 8:00-00:00",
     "hoursEN": "Daily 8am-12am",
     "price": "Adulti NOK 200, Bambini NOK 100 (A/R estivo)",
-    "priceEN": "Adults NOK 200, Kids NOK 100 (Summer return)"
+    "priceEN": "Adults NOK 200, Kids NOK 100 (Summer return)",
+    "nameEN": "Funicular Fløibanen",
+    "nameES": "Funicular Fløibanen",
+    "descES": "Toma el icónico funicular Fløibanen hasta la cima del Monte Fløyen para disfrutar de vistas espectaculares de Bergen y del fiordo.",
+    "cityEN": "Bergen",
+    "cityES": "Bergen",
+    "hoursES": "Todos los días 8:00-00:00",
+    "priceES": "Adultos NOK 200, Niños NOK 100 (ida y vuelta, verano)"
   },
   {
     "id": "poi-k-205",
@@ -3132,7 +4412,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 9-18",
     "hoursEN": "Daily 9am-6pm",
     "price": "Adulti NOK 415, Bambini NOK 265",
-    "priceEN": "Adults NOK 415, Children NOK 265"
+    "priceEN": "Adults NOK 415, Children NOK 265",
+    "nameEN": "Acquario di Bergen (Akvariet i Bergen)",
+    "nameES": "Acquario di Bergen (Akvariet i Bergen)",
+    "descES": "El acuario más grande de Norvegia con leones marinos, cocodrilos, serpientes y una colorida variedad de peces.",
+    "cityEN": "Bergen",
+    "cityES": "Bergen",
+    "hoursES": "Todos los días 9-18",
+    "priceES": "Adultos NOK 415, Niños NOK 265"
   },
   {
     "id": "poi-p-206",
@@ -3145,7 +4432,13 @@ var MAP_POIS = [
     "lng": 5.3587,
     "day": "g30",
     "city": "Bergen",
-    "maps": "https://maps.google.com/?q=60.3543,5.3587"
+    "maps": "https://maps.google.com/?q=60.3543,5.3587",
+    "nameEN": "Bergenshallen Motorhome Parking",
+    "nameES": "Bergenshallen Motorhome Parking",
+    "descEN": "~€32/night. 28 pitches, electricity, water, grey/black water drain.",
+    "descES": "~€32/noche. 28 parcelas, electricidad, agua, desagüe de aguas grises/negras.",
+    "cityEN": "Bergen",
+    "cityES": "Bergen"
   },
   {
     "id": "poi-f-207",
@@ -3158,7 +4451,13 @@ var MAP_POIS = [
     "lng": 5.32722,
     "day": "g30",
     "city": "Bergen",
-    "maps": "https://maps.google.com/?q=60.39534,5.32722"
+    "maps": "https://maps.google.com/?q=60.39534,5.32722",
+    "nameEN": "Bergen (evening arrival)",
+    "nameES": "Bergen (llegada por la noche)",
+    "descEN": "first pølse at Trekroneren (Kong Oscars gate 1) ~NOK 80 (~€7.4) — the most famous hot dog stand in Bergen!",
+    "descES": "primer pølse en Trekroneren (Kong Oscars gate 1) ~NOK 80 (~€7.4) — ¡el puesto de hot dogs más famoso de Bergen!",
+    "cityEN": "Bergen",
+    "cityES": "Bergen"
   },
   {
     "id": "poi-h-208",
@@ -3176,7 +4475,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 10-18 (orari estivi mercato all'aperto)",
     "hoursEN": "Daily 10am-6pm (outdoor market summer hours)",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Bryggen Unesco + Mercato del Pesce",
+    "nameES": "Bryggen Unesco + Mercato del Pesce",
+    "descES": "Un sitio histórico Patrimonio de la Humanidad de la UNESCO con coloridos edificios hanseáticos de madera junto a un animado mercato del pesce.",
+    "cityEN": "Bergen",
+    "cityES": "Bergen",
+    "hoursES": "Todos los días 10-18 (horario de verano del mercado al aire libre)",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-k-210",
@@ -3194,7 +4500,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 10-17",
     "hoursEN": "Daily 10am-5pm",
     "price": "Adulti NOK 250, Bambini NOK 215",
-    "priceEN": "Adults NOK 250, Children NOK 215"
+    "priceEN": "Adults NOK 250, Children NOK 215",
+    "nameEN": "VilVite – Bergen Science Center",
+    "nameES": "VilVite – Bergen Science Center",
+    "descES": "Un centro interactivo de ciencia y tecnología donde niños y adultos pueden jugar, aprender y explorar.",
+    "cityEN": "Bergen",
+    "cityES": "Bergen",
+    "hoursES": "Todos los días 10-17",
+    "priceES": "Adultos NOK 250, Niños NOK 215"
   },
   {
     "id": "poi-k-211",
@@ -3212,7 +4525,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 9-18",
     "hoursEN": "Daily 9am-6pm",
     "price": "Adulti NOK 415, Bambini NOK 265",
-    "priceEN": "Adults NOK 415, Kids NOK 265"
+    "priceEN": "Adults NOK 415, Kids NOK 265",
+    "nameEN": "Acquario di Bergen",
+    "nameES": "Acquario di Bergen",
+    "descES": "Conoce leones marinos, pingüinos y cocodrilos en el acuario más grande de Norvegia, con actividades diarias.",
+    "cityEN": "Bergen",
+    "cityES": "Bergen",
+    "hoursES": "Todos los días 9-18",
+    "priceES": "Adultos NOK 415, Niños NOK 265"
   },
   {
     "id": "poi-p-213",
@@ -3225,7 +4545,13 @@ var MAP_POIS = [
     "lng": 5.43529,
     "day": "g31",
     "city": "Bergen",
-    "maps": "https://maps.google.com/?q=60.35235,5.43529"
+    "maps": "https://maps.google.com/?q=60.35235,5.43529",
+    "nameEN": "Bratland Camping (Haukeland)",
+    "nameES": "Bratland Camping (Haukeland)",
+    "descEN": "~€35-45/night. Electricity, water, WiFi, playground, minimarket, bus 90 to the centre. Alternative: Lone Camping — <a href=\"https://maps.google.com/",
+    "descES": "~€35-45/noche. Electricidad, agua, WiFi, parque infantil, minimarket, bus 90 al centro. Alternativa: Lone Camping — <a href=\"https://maps.google.com/",
+    "cityEN": "Bergen",
+    "cityES": "Bergen"
   },
   {
     "id": "poi-s-214",
@@ -3238,7 +4564,13 @@ var MAP_POIS = [
     "lng": 5.3221,
     "day": "g31",
     "city": "Bergen",
-    "maps": "https://maps.google.com/?q=60.3913,5.3221"
+    "maps": "https://maps.google.com/?q=60.3913,5.3221",
+    "nameEN": "🛴 Bergen",
+    "nameES": "🛴 Bergen",
+    "descEN": "Scooters: Bryggen and seafront (flat city centre, avoid hills) → see rentals",
+    "descES": "Patinetes: Bryggen y paseo marítimo (centro llano, evitar colinas) → ver alquileres",
+    "cityEN": "Bergen",
+    "cityES": "Bergen"
   },
   {
     "id": "poi-f-215",
@@ -3251,7 +4583,13 @@ var MAP_POIS = [
     "lng": 5.3221,
     "day": "g31",
     "city": "Bergen",
-    "maps": "https://maps.google.com/?q=60.3913,5.3221"
+    "maps": "https://maps.google.com/?q=60.3913,5.3221",
+    "nameEN": "Bergen street food",
+    "nameES": "Comida callejera de Bergen",
+    "descEN": "Trekroneren (Kong Oscars gate 1) — pølse ~NOK 80 (~€7.4), THE Bergen hot dog stand! Bag of fresh shrimp at Fisketorget ~NOK 100 (~€9.3",
+    "descES": "Trekroneren (Kong Oscars gate 1) — pølse ~NOK 80 (~€7.4), ¡EL puesto de hot dogs de Bergen! Bolsa de gambas frescas en Fisketorget ~NOK 100 (~€9.3",
+    "cityEN": "Bergen",
+    "cityES": "Bergen"
   },
   {
     "id": "poi-f-216",
@@ -3264,7 +4602,13 @@ var MAP_POIS = [
     "lng": 5.32372,
     "day": "g31",
     "city": "Bergen",
-    "maps": "https://maps.google.com/?q=60.39463,5.32372"
+    "maps": "https://maps.google.com/?q=60.39463,5.32372",
+    "nameEN": "Fisketorget",
+    "nameES": "Fisketorget",
+    "descEN": "Fisketorget (Fish Market, Strandkaien 3) — shrimp, crab, salmon.",
+    "descES": "Fisketorget (Fish Market, Strandkaien 3) — gambas, cangrejo, salmón.",
+    "cityEN": "Bergen",
+    "cityES": "Bergen"
   },
   {
     "id": "poi-h-217",
@@ -3280,7 +4624,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=58.97241,5.72549",
     "descEN": "A charming historic district featuring over 170 beautifully preserved white wooden houses from the 18th and 19th centuries.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Stavanger",
+    "nameES": "Stavanger",
+    "descES": "Un encantador barrio histórico con más de 170 casas de madera blancas bien conservadas de los siglos XVIII y XIX.",
+    "cityEN": "Stavanger",
+    "cityES": "Stavanger",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-k-218",
@@ -3296,7 +4646,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=58.95686,5.71148",
     "descEN": "A popular nature reserve and lake in Stavanger offering scenic walking trails and rich birdlife.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Mosvatnet",
+    "nameES": "Mosvatnet",
+    "descES": "Una popular reserva natural y lago en Stavanger que ofrece senderos panorámicos y una rica avifauna.",
+    "cityEN": "Stavanger",
+    "cityES": "Stavanger",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-k-219",
@@ -3314,7 +4670,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 10-19",
     "hoursEN": "Daily 10am-7pm",
     "price": "Adulti NOK 180, Bambini NOK 60",
-    "priceEN": "Adults NOK 180, Children NOK 60"
+    "priceEN": "Adults NOK 180, Children NOK 60",
+    "nameEN": "Norwegian Petroleum Museum",
+    "nameES": "Norwegian Petroleum Museum",
+    "descES": "Un museo interactivo que muestra la historia, la tecnología y el futuro de la industria petrolera noruega.",
+    "cityEN": "Stavanger",
+    "cityES": "Stavanger",
+    "hoursES": "Todos los días 10-19",
+    "priceES": "Adultos NOK 180, Niños NOK 60"
   },
   {
     "id": "poi-p-220",
@@ -3327,7 +4690,13 @@ var MAP_POIS = [
     "lng": 5.7119,
     "day": "g32",
     "city": "Stavanger",
-    "maps": "https://maps.google.com/?q=58.9511,5.7119"
+    "maps": "https://maps.google.com/?q=58.9511,5.7119",
+    "nameEN": "Mosvangen Camping Stavanger",
+    "nameES": "Mosvangen Camping Stavanger",
+    "descEN": "~€38/night. Electricity, water, WiFi, kitchen, toilets, showers, located near lake Mosvatnet.",
+    "descES": "~€38/noche. Electricidad, agua, WiFi, cocina, baños, duchas, situado cerca del lago Mosvatnet.",
+    "cityEN": "Stavanger",
+    "cityES": "Stavanger"
   },
   {
     "id": "poi-f-221",
@@ -3340,7 +4709,13 @@ var MAP_POIS = [
     "lng": 5.7331,
     "day": "g32",
     "city": "Stavanger",
-    "maps": "https://maps.google.com/?q=58.97,5.7331"
+    "maps": "https://maps.google.com/?q=58.97,5.7331",
+    "nameEN": "Stavanger street food",
+    "nameES": "Comida callejera de Stavanger",
+    "descEN": "Pølsebussen (Haakon VII Gate) — pølse ~NOK 50 (~€4-5), classic! Fiskesuppe at the harbour ~NOK 120. Buy krabbe (crab) if available.",
+    "descES": "Pølsebussen (Haakon VII Gate) — pølse ~NOK 50 (~€4-5), ¡clásico! Fiskesuppe en el puerto ~NOK 120. Comprar krabbe (granchio) si disponible.",
+    "cityEN": "Stavanger",
+    "cityES": "Stavanger"
   },
   {
     "id": "poi-f-222",
@@ -3353,7 +4728,13 @@ var MAP_POIS = [
     "lng": 5.7306,
     "day": "g32",
     "city": "Stavanger",
-    "maps": "https://maps.google.com/?q=58.97039,5.7306"
+    "maps": "https://maps.google.com/?q=58.97039,5.7306",
+    "nameEN": "Stavanger Fish Market",
+    "nameES": "Stavanger Fish Market",
+    "descEN": "fresh fish, shrimp.",
+    "descES": "pescado fresco, gambas.",
+    "cityEN": "Stavanger",
+    "cityES": "Stavanger"
   },
   {
     "id": "poi-h-223",
@@ -3371,7 +4752,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 24 ore (consigliato Mag-Ott)",
     "hoursEN": "Daily 24 hours (May-Oct recommended)",
     "price": "Gratuito (Parcheggio NOK 250-275)",
-    "priceEN": "Free (Parking NOK 250-275)"
+    "priceEN": "Free (Parking NOK 250-275)",
+    "nameEN": "Preikestolen",
+    "nameES": "Preikestolen",
+    "descES": "Un icónico acantilado plano que se eleva 604 metri sobre el Lysefjord, ofreciendo espectaculares vistas panorámicas.",
+    "cityEN": "Preikestolen",
+    "cityES": "Preikestolen",
+    "hoursES": "Abierto todos los días 24 ore (recomendado may-oct)",
+    "priceES": "Gratis (Aparcamiento NOK 250-275)"
   },
   {
     "id": "poi-h-224",
@@ -3385,7 +4773,12 @@ var MAP_POIS = [
     "day": "g33",
     "city": "Preikestolen",
     "maps": "https://maps.google.com/?q=58.79879,5.55383",
-    "descEN": "A 130-kilometer scenic coastal drive offering endless sandy beaches, sand dunes, and historic lighthouses."
+    "descEN": "A 130-kilometer scenic coastal drive offering endless sandy beaches, sand dunes, and historic lighthouses.",
+    "nameEN": "Jæren NTR",
+    "nameES": "Jæren NTR",
+    "descES": "Una ruta costera panorámica de 130 km que ofrece interminables playas de arena, dunas y faros históricos.",
+    "cityEN": "Preikestolen",
+    "cityES": "Preikestolen"
   },
   {
     "id": "poi-h-225",
@@ -3399,7 +4792,12 @@ var MAP_POIS = [
     "day": "g33",
     "city": "Preikestolen",
     "maps": "https://maps.google.com/?q=58.9863,6.1885",
-    "descEN": "A scenic coastal route offering unique landscapes, sandy beaches, lighthouses, and cultural heritage."
+    "descEN": "A scenic coastal route offering unique landscapes, sandy beaches, lighthouses, and cultural heritage.",
+    "nameEN": "Nordsjøvegen / North Sea Route",
+    "nameES": "Nordsjøvegen / North Sea Route",
+    "descES": "Una ruta costera panorámica que ofrece paisajes únicos, playas de arena, faros y patrimonio cultural.",
+    "cityEN": "Preikestolen",
+    "cityES": "Preikestolen"
   },
   {
     "id": "poi-k-226",
@@ -3417,7 +4815,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 10-19",
     "hoursEN": "Daily 10am-7pm",
     "price": "Prezzi dinamici: da NOK 269 (bassa stagione) a NOK 699 (estate)",
-    "priceEN": "Dynamic pricing: from NOK 269 (low season) to NOK 699 (summer)"
+    "priceEN": "Dynamic pricing: from NOK 269 (low season) to NOK 699 (summer)",
+    "nameEN": "Kristiansand Dyrepark",
+    "nameES": "Kristiansand Dyrepark",
+    "descES": "La mayor atracción familiar de Noruega con un zoológico de más de 100 especies y un parque de atracciones.",
+    "cityEN": "Preikestolen",
+    "cityES": "Preikestolen",
+    "hoursES": "Abierto todos los días 10-19",
+    "priceES": "Precios dinámicos: desde NOK 269 (temporada baja) hasta NOK 699 (verano)"
   },
   {
     "id": "poi-p-227",
@@ -3430,7 +4835,13 @@ var MAP_POIS = [
     "lng": 8.0658,
     "day": "g33",
     "city": "Preikestolen",
-    "maps": "https://maps.google.com/?q=58.1217,8.0658"
+    "maps": "https://maps.google.com/?q=58.1217,8.0658",
+    "nameEN": "Kristiansand Feriesenter Dvergsnestangen",
+    "nameES": "Kristiansand Feriesenter Dvergsnestangen",
+    "descEN": "~€30-40/night. Electricity, water, WiFi, playground, laundry, 4 stars.",
+    "descES": "~€30-40/noche. Electricidad, agua, WiFi, parque infantil, lavandería, 4 estrellas.",
+    "cityEN": "Preikestolen",
+    "cityES": "Preikestolen"
   },
   {
     "id": "poi-h-228",
@@ -3448,7 +4859,14 @@ var MAP_POIS = [
     "hours": "Partenze giornaliere alle 08:00 e alle 16:30 da Kristiansand",
     "hoursEN": "Daily departures at 08:00 and 16:30 from Kristiansand",
     "price": "Da €49 a persona (solo andata)",
-    "priceEN": "From €49 per person (one way)"
+    "priceEN": "From €49 per person (one way)",
+    "nameEN": "Color Line",
+    "nameES": "Color Line",
+    "descES": "Un ferry rápido y confortable que conecta Kristiansand (Noruega) y Hirtshals (Dinamarca) en solo 3 horas y 15 minutos.",
+    "cityEN": "Copenhagen",
+    "cityES": "Copenhagen",
+    "hoursES": "Salidas diarias a las 08:00 y a las 16:30 desde Kristiansand",
+    "priceES": "Desde €49 por persona (solo ida)"
   },
   {
     "id": "poi-h-229",
@@ -3466,7 +4884,14 @@ var MAP_POIS = [
     "hours": "Aperto 24 ore su 24",
     "hoursEN": "Open 24 hours",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Nyhavn",
+    "nameES": "Nyhavn",
+    "descES": "Nyhavn es un pintoresco barrio portuario del siglo XVII con casas adosadas coloridas, cafés y barcos históricos.",
+    "cityEN": "Copenhagen",
+    "cityES": "Copenhagen",
+    "hoursES": "Abierto 24 horas",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-k-230",
@@ -3484,7 +4909,14 @@ var MAP_POIS = [
     "hours": "Dom-Gio 11-22, Ven-Sab 11-24 (Stagione estiva)",
     "hoursEN": "Sun-Thu 11am-10pm, Fri-Sat 11am-12am (Summer season)",
     "price": "Ingresso da DKK 150; Ride Pass illimitato DKK 299 (giostre singole a gettoni)",
-    "priceEN": "Entrance from DKK 150; Unlimited Ride Pass DKK 299 (single rides via tickets)"
+    "priceEN": "Entrance from DKK 150; Unlimited Ride Pass DKK 299 (single rides via tickets)",
+    "nameEN": "Giardini di Tivoli",
+    "nameES": "Giardini di Tivoli",
+    "descES": "I Giardini di Tivoli son un histórico parque de atracciones del siglo XIX en el centro de Copenaghen con atracciones y jardines.",
+    "cityEN": "Copenhagen",
+    "cityES": "Copenhagen",
+    "hoursES": "Dom-Jue 11-22, Vie-Sáb 11-24 (Temporada de verano)",
+    "priceES": "Entrada desde DKK 150; Pase de atracciones ilimitado DKK 299 (atracciones individuales con fichas)"
   },
   {
     "id": "poi-k-231",
@@ -3502,7 +4934,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 10-17",
     "hoursEN": "Daily 10am-5pm",
     "price": "Adulti DKK 150, Minori di 18 anni Gratuito",
-    "priceEN": "Adults DKK 150, Under 18 Free"
+    "priceEN": "Adults DKK 150, Under 18 Free",
+    "nameEN": "Museo Nazionale Danese",
+    "nameES": "Museo Nazionale Danese",
+    "descES": "El museo más grande de historia cultural de Danimarca, con exposiciones inmersivas sobre 9.000 años de historia.",
+    "cityEN": "Copenhagen",
+    "cityES": "Copenhagen",
+    "hoursES": "Todos los días 10-17",
+    "priceES": "Adultos DKK 150, Menores de 18 años Gratis"
   },
   {
     "id": "poi-p-232",
@@ -3515,7 +4954,13 @@ var MAP_POIS = [
     "lng": 12.4419,
     "day": "g34",
     "city": "Copenhagen",
-    "maps": "https://maps.google.com/?q=55.6761,12.4419"
+    "maps": "https://maps.google.com/?q=55.6761,12.4419",
+    "nameEN": "DCU-Camping Absalon",
+    "nameES": "DCU-Camping Absalon",
+    "descEN": "~€45-60/notte. Electricity, water, WiFi, modern facilities, playground.",
+    "descES": "~€45-60/notte. Electricidad, agua, WiFi, instalaciones modernas, parque infantil.",
+    "cityEN": "Copenhagen",
+    "cityES": "Copenhagen"
   },
   {
     "id": "poi-p-233",
@@ -3528,7 +4973,13 @@ var MAP_POIS = [
     "lng": 12.53975,
     "day": "g34",
     "city": "Copenhagen",
-    "maps": "https://maps.google.com/?q=55.65447,12.53975"
+    "maps": "https://maps.google.com/?q=55.65447,12.53975",
+    "nameEN": "Camperparking.dk",
+    "nameES": "Camperparking.dk",
+    "descEN": "~€39/notte. Urban parking area, electricity, water, waste disposal.",
+    "descES": "~€39/notte. Área de pernocta urbana, electricidad, agua, vaciado de aguas.",
+    "cityEN": "Copenhagen",
+    "cityES": "Copenhagen"
   },
   {
     "id": "poi-f-234",
@@ -3541,7 +4992,13 @@ var MAP_POIS = [
     "lng": 12.5683,
     "day": "g34",
     "city": "Copenhagen",
-    "maps": "https://maps.google.com/?q=55.6761,12.5683"
+    "maps": "https://maps.google.com/?q=55.6761,12.5683",
+    "nameEN": "Svele",
+    "nameES": "Svele",
+    "descEN": "Svele on the Color Line ferry.",
+    "descES": "Svele en el ferry Color Line.",
+    "cityEN": "Copenhagen",
+    "cityES": "Copenhagen"
   },
   {
     "id": "poi-f-235",
@@ -3554,7 +5011,13 @@ var MAP_POIS = [
     "lng": 12.5683,
     "day": "g34",
     "city": "Copenhagen",
-    "maps": "https://maps.google.com/?q=55.6761,12.5683"
+    "maps": "https://maps.google.com/?q=55.6761,12.5683",
+    "nameEN": "Pølse",
+    "nameES": "Pølse",
+    "descEN": "Arrivo Danimarca: primo pølse (hot dog) dal chiosco rosso!",
+    "descES": "Arrivo Danimarca: primer pølse (hot dog) del chiosco rosso!",
+    "cityEN": "Copenhagen",
+    "cityES": "Copenhagen"
   },
   {
     "id": "poi-h-236",
@@ -3572,7 +5035,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 11-23 (ven-sab fino alle 24) in estate",
     "hoursEN": "Daily 11am-11pm (Fri-Sat until 12am) in summer",
     "price": "Adulti da DKK 150, Bambini (3-7) da DKK 75 (giostre non incluse)",
-    "priceEN": "Adults from DKK 150, Children (3-7) from DKK 75 (rides not included)"
+    "priceEN": "Adults from DKK 150, Children (3-7) from DKK 75 (rides not included)",
+    "nameEN": "Tivoli Gardens",
+    "nameES": "Tivoli Gardens",
+    "descES": "Un histórico y mágico parque de atracciones en el corazón de Copenaghen con atracciones, jardines exuberantes y restaurantes.",
+    "cityEN": "Copenhagen",
+    "cityES": "Copenhagen",
+    "hoursES": "Todos los días 11-23 (vie-sáb hasta las 24) en verano",
+    "priceES": "Adultos desde DKK 150, Niños (3-7) desde DKK 75 (atracciones no incluidas)"
   },
   {
     "id": "poi-k-237",
@@ -3590,7 +5060,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 11-22 (ven-sab fino alle 24) in estate",
     "hoursEN": "Daily 11am-10pm (Fri-Sat until 12am) in summer",
     "price": "Ingresso da DKK 150; Ride Pass illimitato DKK 299 (giostre singole a gettoni)",
-    "priceEN": "Entrance from DKK 150; Unlimited Ride Pass DKK 299 (single rides via tickets)"
+    "priceEN": "Entrance from DKK 150; Unlimited Ride Pass DKK 299 (single rides via tickets)",
+    "nameEN": "Giardini di Tivoli",
+    "nameES": "Giardini di Tivoli",
+    "descES": "Un histórico parque de atracciones del XIX siglo en el centro de Copenaghen con atracciones clásicas, jardines y restaurantes.",
+    "cityEN": "Copenhagen",
+    "cityES": "Copenhagen",
+    "hoursES": "Todos los días 11-22 (vie-sáb hasta las 24) en verano",
+    "priceES": "Entrada desde DKK 150; Pase ilimitado de atracciones DKK 299 (atracciones individuales con fichas)"
   },
   {
     "id": "poi-k-238",
@@ -3608,7 +5085,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 10-21 (Alta stagione estiva)",
     "hoursEN": "Daily 10am-9pm (Summer peak season)",
     "price": "Adulti DKK 259, Bambini (3-11) DKK 136, Bambini (0-2) Gratuito (Alta stagione/weekend)",
-    "priceEN": "Adults DKK 259, Children (3-11) DKK 136, Children (0-2) Free (Peak season/weekend)"
+    "priceEN": "Adults DKK 259, Children (3-11) DKK 136, Children (0-2) Free (Peak season/weekend)",
+    "nameEN": "The Blue Planet (Den Blå Planet)",
+    "nameES": "The Blue Planet (Den Blå Planet)",
+    "descES": "El mayor acuario del Norte de Europa con 7 millones de litros de agua, majestuosos tiburones martillo y elegantes rayas.",
+    "cityEN": "Copenhagen",
+    "cityES": "Copenhagen",
+    "hoursES": "Todos los días 10-21 (Temporada alta de verano)",
+    "priceES": "Adultos DKK 259, Niños (3-11) DKK 136, Niños (0-2) Gratis (Temporada alta/fines de semana)"
   },
   {
     "id": "poi-k-239",
@@ -3626,7 +5110,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 10-17",
     "hoursEN": "Daily 10am-5pm",
     "price": "Adulti DKK 150, under 18 Gratuito",
-    "priceEN": "Adults DKK 150, under 18 Free"
+    "priceEN": "Adults DKK 150, under 18 Free",
+    "nameEN": "Nationalmuseet",
+    "nameES": "Nationalmuseet",
+    "descES": "El museo de historia cultural más grande de Danimarca, con exposiciones desde la época vikinga hasta los tiempos modernos.",
+    "cityEN": "Copenhagen",
+    "cityES": "Copenhagen",
+    "hoursES": "Todos los días 10-17",
+    "priceES": "Adultos DKK 150, menores de 18 Gratis"
   },
   {
     "id": "poi-k-240",
@@ -3644,7 +5135,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 9:30-17:00",
     "hoursEN": "Daily 9:30am-5pm",
     "price": "Adulti DKK 255, Bambini (3-11) DKK 159",
-    "priceEN": "Adults DKK 255, Children (3-11) DKK 159"
+    "priceEN": "Adults DKK 255, Children (3-11) DKK 159",
+    "nameEN": "Experimentarium",
+    "nameES": "Experimentarium",
+    "descES": "Un centro científico de primer nivel que ofrece exposiciones interactivas y divertidas para toda la familia.",
+    "cityEN": "Copenhagen",
+    "cityES": "Copenhagen",
+    "hoursES": "Todos los días 9:30-17:00",
+    "priceES": "Adultos DKK 255, Niños (3-11) DKK 159"
   },
   {
     "id": "poi-p-241",
@@ -3657,7 +5155,13 @@ var MAP_POIS = [
     "lng": 12.5133,
     "day": "g35",
     "city": "Copenhagen",
-    "maps": "https://maps.google.com/?q=55.7018,12.5133"
+    "maps": "https://maps.google.com/?q=55.7018,12.5133",
+    "nameEN": "Bellahøj Camping",
+    "nameES": "Bellahøj Camping",
+    "descEN": "~€45-55/night. Electricity, water, WiFi, playground, near the center.",
+    "descES": "~€45-55/noche. Electricidad, agua, WiFi, parque infantil, cerca del centro.",
+    "cityEN": "Copenhagen",
+    "cityES": "Copenhagen"
   },
   {
     "id": "poi-p-242",
@@ -3670,7 +5174,11 @@ var MAP_POIS = [
     "lng": 12.4315,
     "day": "g35",
     "city": "Copenhagen",
-    "maps": "https://maps.google.com/?q=55.6692,12.4315"
+    "maps": "https://maps.google.com/?q=55.6692,12.4315",
+    "nameEN": "DCU-Copenhagen Camp Absalon",
+    "nameES": "DCU-Copenhagen Camp Absalon",
+    "cityEN": "Copenhagen",
+    "cityES": "Copenhagen"
   },
   {
     "id": "poi-s-243",
@@ -3683,7 +5191,13 @@ var MAP_POIS = [
     "lng": 12.5683,
     "day": "g35",
     "city": "Copenhagen",
-    "maps": "https://maps.google.com/?q=55.6761,12.5683"
+    "maps": "https://maps.google.com/?q=55.6761,12.5683",
+    "nameEN": "🛴 Copenhagen",
+    "nameES": "🛴 Copenhagen",
+    "descEN": "Copenhagen very flat, bike lanes everywhere (sidewalks by law) → see rentals",
+    "descES": "Copenhagen muy llana, carriles bici por todas partes (aceras por ley) → ver alquileres",
+    "cityEN": "Copenhagen",
+    "cityES": "Copenhagen"
   },
   {
     "id": "poi-f-244",
@@ -3696,7 +5210,13 @@ var MAP_POIS = [
     "lng": 12.5759,
     "day": "g35",
     "city": "Copenhagen",
-    "maps": "https://maps.google.com/?q=55.68129,12.5759"
+    "maps": "https://maps.google.com/?q=55.68129,12.5759",
+    "nameEN": "DØP",
+    "nameES": "DØP",
+    "descEN": "(Den Økologiske Pølsemand, near Rundetårnet) — Danish organic hot dog ~DKK 40 (~€5.4).",
+    "descES": "(Den Økologiske Pølsemand, cerca de Rundetårnet) — hot dog danés ecológico ~DKK 40 (~€5.4).",
+    "cityEN": "Copenhagen",
+    "cityES": "Copenhagen"
   },
   {
     "id": "poi-f-245",
@@ -3709,7 +5229,13 @@ var MAP_POIS = [
     "lng": 12.6097,
     "day": "g35",
     "city": "Copenhagen",
-    "maps": "https://maps.google.com/?q=55.69312,12.6097"
+    "maps": "https://maps.google.com/?q=55.69312,12.6097",
+    "nameEN": "Reffen",
+    "nameES": "Reffen",
+    "descEN": "(Refshaleøen) — 50+ stalls, portions ~DKK 75-130 (~€10-€17), huge space for kids!",
+    "descES": "(Refshaleøen) — 50+ puestos, raciones ~DKK 75-130 (~€10-€17), ¡espacio enorme para niños!",
+    "cityEN": "Copenhagen",
+    "cityES": "Copenhagen"
   },
   {
     "id": "poi-f-246",
@@ -3722,7 +5248,13 @@ var MAP_POIS = [
     "lng": 12.5603,
     "day": "g35",
     "city": "Copenhagen",
-    "maps": "https://maps.google.com/?q=55.66828,12.5603"
+    "maps": "https://maps.google.com/?q=55.66828,12.5603",
+    "nameEN": "John's Hotdog Deli",
+    "nameES": "John's Hotdog Deli",
+    "descEN": "(Kødbyen) — gourmet hot dog ~DKK 50.",
+    "descES": "(Kødbyen) — gourmet hot dog ~DKK 50.",
+    "cityEN": "Copenhagen",
+    "cityES": "Copenhagen"
   },
   {
     "id": "poi-f-247",
@@ -3735,7 +5267,13 @@ var MAP_POIS = [
     "lng": 12.56961,
     "day": "g35",
     "city": "Copenhagen",
-    "maps": "https://maps.google.com/?q=55.68368,12.56961"
+    "maps": "https://maps.google.com/?q=55.68368,12.56961",
+    "nameEN": "Torvehallerne",
+    "nameES": "Torvehallerne",
+    "descEN": "(Israels Plads) — smørrebrød, sweets, Danish products.",
+    "descES": "(Israels Plads) — smørrebrød, dulces, productos daneses.",
+    "cityEN": "Copenhagen",
+    "cityES": "Copenhagen"
   },
   {
     "id": "poi-h-248",
@@ -3753,7 +5291,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 9:30-17:00",
     "hoursEN": "Daily 9:30am-5pm",
     "price": "Adulti 255 DKK, Bambini (2-11) 159 DKK",
-    "priceEN": "Adults 255 DKK, Children (2-11) 159 DKK"
+    "priceEN": "Adults 255 DKK, Children (2-11) 159 DKK",
+    "nameEN": "Experimentarium",
+    "nameES": "Experimentarium",
+    "descES": "Un centro científico interactivo de nivel mundial en Copenaghen con exposiciones prácticas para toda la familia.",
+    "cityEN": "Copenhagen",
+    "cityES": "Copenhagen",
+    "hoursES": "Todos los días 9:30-17:00",
+    "priceES": "Adultos 255 DKK, Niños (2-11) 159 DKK"
   },
   {
     "id": "poi-k-249",
@@ -3771,7 +5316,14 @@ var MAP_POIS = [
     "hours": "Dom-Gio 11-22, Ven-Sab 11-24 (Stagione estiva: Apr-Set)",
     "hoursEN": "Sun-Thu 11am-10pm, Fri-Sat 11am-12am (Summer season: Apr-Sep)",
     "price": "Adulti 150-275 DKK, Bambini (3-7) 75-140 DKK (Solo ingresso)",
-    "priceEN": "Adults 150-275 DKK, Children (3-7) 75-140 DKK (Entrance only)"
+    "priceEN": "Adults 150-275 DKK, Children (3-7) 75-140 DKK (Entrance only)",
+    "nameEN": "Tivoli Gardens",
+    "nameES": "Tivoli Gardens",
+    "descES": "Un histórico y mágico parque de atracciones en el corazón de Copenaghen, que ofrece atracciones emocionantes, hermosos jardines y espectáculos en vivo.",
+    "cityEN": "Copenhagen",
+    "cityES": "Copenhagen",
+    "hoursES": "Dom-Jue 11-22, Vie-Sáb 11-24 (Temporada de verano: Abr-Sep)",
+    "priceES": "Adultos 150-275 DKK, Niños (3-7) 75-140 DKK (Solo entrada)"
   },
   {
     "id": "poi-k-250",
@@ -3789,7 +5341,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 9:30-17:00",
     "hoursEN": "Daily 9:30am-5pm",
     "price": "Adulti DKK 255, Bambini (2-11) DKK 159",
-    "priceEN": "Adults DKK 255, Children (2-11) DKK 159"
+    "priceEN": "Adults DKK 255, Children (2-11) DKK 159",
+    "nameEN": "Experimentarium",
+    "nameES": "Experimentarium",
+    "descES": "Experimentarium è un centro scientifico di livello mondiale a Copenaghen con mostre interattive per tutta la famiglia.",
+    "cityEN": "Copenhagen",
+    "cityES": "Copenhagen",
+    "hoursES": "Todos los días 9:30-17:00",
+    "priceES": "Adultos DKK 255, Niños (2-11) DKK 159"
   },
   {
     "id": "poi-k-251",
@@ -3807,7 +5366,14 @@ var MAP_POIS = [
     "hours": "Estate (27 giu-31 ago): Tutti i giorni 10-21",
     "hoursEN": "Summer (Jun 27-Aug 31): Daily 10am-9pm",
     "price": "Adulti DKK 259, Bambini (3-11) DKK 136, Sotto i 3 anni Gratuito",
-    "priceEN": "Adults DKK 259, Children (3-11) DKK 136, Under 3 Free"
+    "priceEN": "Adults DKK 259, Children (3-11) DKK 136, Under 3 Free",
+    "nameEN": "The Blue Planet",
+    "nameES": "The Blue Planet",
+    "descES": "El acuario más grande y moderno del Nord Europa, que ofrece un viaje submarino con miles de animales.",
+    "cityEN": "Copenhagen",
+    "cityES": "Copenhagen",
+    "hoursES": "Verano (27 jun-31 ago): Todos los días 10-21",
+    "priceES": "Adultos DKK 259, Niños (3-11) DKK 136, Menores de 3 años Gratis"
   },
   {
     "id": "poi-p-252",
@@ -3820,7 +5386,13 @@ var MAP_POIS = [
     "lng": 12.43,
     "day": "g36",
     "city": "Copenhagen",
-    "maps": "https://maps.google.com/?q=55.6710,12.4300"
+    "maps": "https://maps.google.com/?q=55.6710,12.4300",
+    "nameEN": "DCU-Camping København - Absalon",
+    "nameES": "DCU-Camping København - Absalon",
+    "descEN": "~€45-55/night. Electricity, water, WiFi, playgrounds, 30 min from the center.",
+    "descES": "~€45-55/noche. Electricidad, agua, WiFi, parques infantiles, 30 min del centro.",
+    "cityEN": "Copenhagen",
+    "cityES": "Copenhagen"
   },
   {
     "id": "poi-p-253",
@@ -3833,7 +5405,13 @@ var MAP_POIS = [
     "lng": 12.53,
     "day": "g36",
     "city": "Copenhagen",
-    "maps": "https://maps.google.com/?q=55.6550,12.5300"
+    "maps": "https://maps.google.com/?q=55.6550,12.5300",
+    "nameEN": "Urban Camp Copenhagen",
+    "nameES": "Urban Camp Copenhagen",
+    "descEN": "~€37/night. Electricity, water, near the center (10 min by bike).",
+    "descES": "~€37/noche. Electricidad, agua, cerca del centro (10 min en bici).",
+    "cityEN": "Copenhagen",
+    "cityES": "Copenhagen"
   },
   {
     "id": "poi-f-254",
@@ -3846,7 +5424,13 @@ var MAP_POIS = [
     "lng": 12.61806,
     "day": "g36",
     "city": "Copenhagen",
-    "maps": "https://maps.google.com/?q=55.69394,12.61806"
+    "maps": "https://maps.google.com/?q=55.69394,12.61806",
+    "nameEN": "Reffen",
+    "nameES": "Reffen",
+    "descEN": "street food market on the harbour",
+    "descES": "mercado de comida callejera en el puerto",
+    "cityEN": "Copenhagen",
+    "cityES": "Copenhagen"
   },
   {
     "id": "poi-h-255",
@@ -3864,7 +5448,14 @@ var MAP_POIS = [
     "hours": "Aperto 24 ore su 24",
     "hoursEN": "Open 24 hours",
     "price": "Auto standard DKK 280 (circa €38)",
-    "priceEN": "Standard car DKK 280 (approx. €38)"
+    "priceEN": "Standard car DKK 280 (approx. €38)",
+    "nameEN": "Ponte Storebælt",
+    "nameES": "Ponte Storebælt",
+    "descES": "El Ponte Storebaelt es una emblemática infraestructura de 18 km con puente colgante que conecta las islas danesas de Selandia y Fionia.",
+    "cityEN": "Billund",
+    "cityES": "Billund",
+    "hoursES": "Abierto 24 horas",
+    "priceES": "Coche estándar DKK 280 (aprox. €38)"
   },
   {
     "id": "poi-k-256",
@@ -3882,7 +5473,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 10-18 (prolungato fino alle 19 o 20 in alcuni giorni di luglio)",
     "hoursEN": "Daily 10am-6pm (extended to 7pm or 8pm on some days in July)",
     "price": "Adulti/Bambini da DKK 349 (online) o DKK 519 (all'ingresso); Bambini sotto i 2 anni Gratuito",
-    "priceEN": "Adults/Kids from DKK 349 (online) or DKK 519 (at gate); Kids under 2 Free"
+    "priceEN": "Adults/Kids from DKK 349 (online) or DKK 519 (at gate); Kids under 2 Free",
+    "nameEN": "LEGOLAND Billund",
+    "nameES": "LEGOLAND Billund",
+    "descES": "Un famoso parque temático familiar con más de 45 atracciones e impresionantes mundos en miniatura construidos con millones de ladrillos LEGO.",
+    "cityEN": "Billund",
+    "cityES": "Billund",
+    "hoursES": "Todos los días 10-18 (ampliado hasta las 19 o 20 en algunos días de julio)",
+    "priceES": "Adultos/Niños desde DKK 349 (online) o DKK 519 (en la entrada); Niños menores de 2 años Gratis"
   },
   {
     "id": "poi-k-257",
@@ -3900,7 +5498,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 10-19 (varia, spesso 10-16 in bassa stagione, fino alle 20 in estate)",
     "hoursEN": "Daily 10am-7pm (varies by day, often 10am-4pm off-season, up to 8pm peak summer)",
     "price": "Da 219 DKK (Bambini 0-2 Gratuito)",
-    "priceEN": "From 219 DKK (Children 0-2 Free)"
+    "priceEN": "From 219 DKK (Children 0-2 Free)",
+    "nameEN": "Lego House",
+    "nameES": "Lego House",
+    "descES": "Un centro interactivo de 12.000 metri quadrati que ofrece zonas de juego creativo LEGO y obras maestras icónicas.",
+    "cityEN": "Billund",
+    "cityES": "Billund",
+    "hoursES": "Todos los días 10-19 (varía, a menudo 10-16 en temporada baja, hasta las 20 en verano)",
+    "priceES": "Desde 219 DKK (Niños 0-2 Gratis)"
   },
   {
     "id": "poi-k-258",
@@ -3918,7 +5523,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 9:30-18:30 (varia leggermente in base al giorno)",
     "hoursEN": "Daily 9:30am-6:30pm (varies slightly by day)",
     "price": "Adulti/Bambini DKK 349, Bambini 0-2 Gratuito",
-    "priceEN": "Adults/Children DKK 349, Children 0-2 Free"
+    "priceEN": "Adults/Children DKK 349, Children 0-2 Free",
+    "nameEN": "Lalandia Aquadome",
+    "nameES": "Lalandia Aquadome",
+    "descES": "El mayor parque acuático tropical de Escandinavia con toboganes emocionantes, piscinas de olas y zonas de spa.",
+    "cityEN": "Billund",
+    "cityES": "Billund",
+    "hoursES": "Todos los días 9:30-18:30 (varía ligeramente según el día)",
+    "priceES": "Adultos/Niños DKK 349, Niños 0-2 Gratis"
   },
   {
     "id": "poi-p-259",
@@ -3931,7 +5543,13 @@ var MAP_POIS = [
     "lng": 9.1281,
     "day": "g37",
     "city": "Billund",
-    "maps": "https://maps.google.com/?q=55.7358,9.1281"
+    "maps": "https://maps.google.com/?q=55.7358,9.1281",
+    "nameEN": "LEGOLAND Holiday Village",
+    "nameES": "LEGOLAND Holiday Village",
+    "descEN": "~€50-80/notte. Electricity, water, WiFi, playgrounds, very close to Legoland.",
+    "descES": "~€50-80/notte. Electricidad, agua, WiFi, parques infantiles, muy cerca de Legoland.",
+    "cityEN": "Billund",
+    "cityES": "Billund"
   },
   {
     "id": "poi-p-260",
@@ -3944,7 +5562,13 @@ var MAP_POIS = [
     "lng": 9.13918,
     "day": "g37",
     "city": "Billund",
-    "maps": "https://maps.google.com/?q=55.73483,9.13918"
+    "maps": "https://maps.google.com/?q=55.73483,9.13918",
+    "nameEN": "Billund Camper Parking",
+    "nameES": "Billund Camper Parking",
+    "descEN": "Free/Low cost. Basic gravel parking, quiet, close to Legoland, playground nearby.",
+    "descES": "Gratuito/Bajo coste. Aparcamiento básico de grava, tranquilo, cerca de Legoland, parque infantil cercano.",
+    "cityEN": "Billund",
+    "cityES": "Billund"
   },
   {
     "id": "poi-f-261",
@@ -3957,7 +5581,13 @@ var MAP_POIS = [
     "lng": 9.1153,
     "day": "g37",
     "city": "Billund",
-    "maps": "https://maps.google.com/?q=55.7308,9.1153"
+    "maps": "https://maps.google.com/?q=55.7308,9.1153",
+    "nameEN": "Odense",
+    "nameES": "Odense",
+    "descEN": "flæskesteg sandwich (roast pork with crackling, ~DKK 60 (~€8)). Buy rugbrød (rye bread) for the next few days",
+    "descES": "flæskesteg sandwich (asado de cerdo con corteza, ~DKK 60 (~€8)). Comprar rugbrød (pan de centeno) para los próximos días",
+    "cityEN": "Billund",
+    "cityES": "Billund"
   },
   {
     "id": "poi-h-262",
@@ -3975,7 +5605,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 10-18 (fino alle 19 o 20 a luglio/agosto)",
     "hoursEN": "Daily 10am-6pm (extended to 7pm or 8pm in July/August)",
     "price": "Da DKK 349 online (DKK 519 all'ingresso)",
-    "priceEN": "From DKK 349 online (DKK 519 at entrance)"
+    "priceEN": "From DKK 349 online (DKK 519 at entrance)",
+    "nameEN": "Legoland Billund",
+    "nameES": "Legoland Billund",
+    "descES": "Famoso parque de atracciones danés con más de 45 atracciones e impresionantes mundos en miniatura construidos con LEGO.",
+    "cityEN": "Legoland",
+    "cityES": "Legoland",
+    "hoursES": "Todos los días 10-18 (hasta las 19 o 20 en julio/agosto)",
+    "priceES": "Desde DKK 349 online (DKK 519 en la entrada)"
   },
   {
     "id": "poi-k-263",
@@ -3993,7 +5630,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 10-17/19 (varia in base al giorno in estate)",
     "hoursEN": "Daily 10am-5pm/7pm (varies by day in summer)",
     "price": "Da DKK 349 online (DKK 519 all'ingresso)",
-    "priceEN": "From DKK 349 online (DKK 519 at entrance)"
+    "priceEN": "From DKK 349 online (DKK 519 at entrance)",
+    "nameEN": "LEGOLAND Billund",
+    "nameES": "LEGOLAND Billund",
+    "descES": "Un famoso parque de atracciones con más de 45 atracciones e increíbles mundos en miniatura construidos con ladrillos LEGO.",
+    "cityEN": "Legoland",
+    "cityES": "Legoland",
+    "hoursES": "Todos los días 10-17/19 (varía según el día en verano)",
+    "priceES": "Desde DKK 349 online (DKK 519 en la entrada)"
   },
   {
     "id": "poi-k-264",
@@ -4011,7 +5655,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 10-19 (estate)",
     "hoursEN": "Daily 10am-7pm (summer)",
     "price": "Adulti/Bambini (3+) da DKK 219, Sotto i 3 anni Gratuito",
-    "priceEN": "Adults/Kids (3+) from DKK 219, Under 3 Free"
+    "priceEN": "Adults/Kids (3+) from DKK 219, Under 3 Free",
+    "nameEN": "LEGO House",
+    "nameES": "LEGO House",
+    "descES": "Un centro experiencial de 12.000 metri quadrati con millones de ladrillos LEGO y zonas interactivas para todos.",
+    "cityEN": "Legoland",
+    "cityES": "Legoland",
+    "hoursES": "Todos los días 10-19 (verano)",
+    "priceES": "Adultos/Niños (3+) desde DKK 219, menores de 3 años Gratis"
   },
   {
     "id": "poi-k-265",
@@ -4029,7 +5680,14 @@ var MAP_POIS = [
     "hours": "La maggior parte dei giorni 10-17 durante la stagione di apertura",
     "hoursEN": "Most days 10am-5pm during open season",
     "price": "Da DKK 199 (dai 3 anni in su), sotto i 3 anni Gratuito",
-    "priceEN": "From DKK 199 (ages 3+), under 3 Free"
+    "priceEN": "From DKK 199 (ages 3+), under 3 Free",
+    "nameEN": "WOW Park",
+    "nameES": "WOW Park",
+    "descES": "Un enorme parque de aventuras al aire libre en el bosque con circuitos en los árboles, toboganes gigantes y tirolina para familias.",
+    "cityEN": "Legoland",
+    "cityES": "Legoland",
+    "hoursES": "La mayoría de los días 10-17 durante la temporada de apertura",
+    "priceES": "Desde DKK 199 (a partir de 3 años), menores de 3 años Gratis"
   },
   {
     "id": "poi-p-266",
@@ -4042,7 +5700,13 @@ var MAP_POIS = [
     "lng": 9.1333,
     "day": "g38",
     "city": "Legoland",
-    "maps": "https://maps.google.com/?q=55.7355,9.1333"
+    "maps": "https://maps.google.com/?q=55.7355,9.1333",
+    "nameEN": "LEGOLAND Holiday Village (Camping)",
+    "nameES": "LEGOLAND Holiday Village (Camping)",
+    "descEN": "~€55-75/notte. Electricity, water, WiFi, playgrounds, within walking distance of LEGOLAND.",
+    "descES": "~€55-75/notte. Electricidad, agua, WiFi, parques infantiles, a poca distancia a pie de LEGOLAND.",
+    "cityEN": "Legoland",
+    "cityES": "Legoland"
   },
   {
     "id": "poi-p-267",
@@ -4055,7 +5719,13 @@ var MAP_POIS = [
     "lng": 9.14429,
     "day": "g38",
     "city": "Legoland",
-    "maps": "https://maps.google.com/?q=55.71709,9.14429"
+    "maps": "https://maps.google.com/?q=55.71709,9.14429",
+    "nameEN": "Billund Havremarken 15",
+    "nameES": "Billund Havremarken 15",
+    "descEN": "free/cheap. Free/cheap parking, no facilities.",
+    "descES": "gratuito/económico. Aparcamiento gratuito/económico, sin servicios.",
+    "cityEN": "Legoland",
+    "cityES": "Legoland"
   },
   {
     "id": "poi-f-268",
@@ -4068,7 +5738,13 @@ var MAP_POIS = [
     "lng": 9.1153,
     "day": "g38",
     "city": "Legoland",
-    "maps": "https://maps.google.com/?q=55.7308,9.1153"
+    "maps": "https://maps.google.com/?q=55.7308,9.1153",
+    "nameEN": "Legoland",
+    "nameES": "Legoland",
+    "descEN": "bring a packed lunch (restaurants in the park are very expensive!). Snack: softice (soft-serve ice cream, ~DKK 30 (~€4))",
+    "descES": "llevar el almuerzo (¡los restaurantes en el parque son carísimos!). Merienda: softice (helado soft, ~DKK 30 (~€4))",
+    "cityEN": "Legoland",
+    "cityES": "Legoland"
   },
   {
     "id": "poi-h-269",
@@ -4086,7 +5762,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 10-19 (fino alle 20 a metà luglio/agosto)",
     "hoursEN": "Daily 10am-7pm (until 8pm in mid-July/August)",
     "price": "Da DKK 219",
-    "priceEN": "From DKK 219"
+    "priceEN": "From DKK 219",
+    "nameEN": "LEGO House",
+    "nameES": "LEGO House",
+    "descES": "LEGO House es un centro interactivo de 12.000 metros cuadrados con millones de piezas y zonas creativas.",
+    "cityEN": "LEGO House",
+    "cityES": "LEGO House",
+    "hoursES": "Todos los días 10-19 (hasta las 20 a mediados de julio/agosto)",
+    "priceES": "Desde DKK 219"
   },
   {
     "id": "poi-h-270",
@@ -4104,7 +5787,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 9:30-18:30 (varia leggermente)",
     "hoursEN": "Daily 9:30am-6:30pm (varies slightly by day)",
     "price": "Adulti/Bambini DKK 349 (Gratuito 0-2 anni)",
-    "priceEN": "Adults/Kids DKK 349 (Free for kids 0-2)"
+    "priceEN": "Adults/Kids DKK 349 (Free for kids 0-2)",
+    "nameEN": "Lalandia Aquadome",
+    "nameES": "Lalandia Aquadome",
+    "descES": "El mayor parque acuático tropical de Escandinavia con toboganes emocionantes, piscinas de olas y zonas de spa.",
+    "cityEN": "LEGO House",
+    "cityES": "LEGO House",
+    "hoursES": "Todos los días 9:30-18:30 (varía ligeramente)",
+    "priceES": "Adultos/Niños DKK 349 (Gratis 0-2 años)"
   },
   {
     "id": "poi-k-271",
@@ -4122,7 +5812,14 @@ var MAP_POIS = [
     "hours": "Gli orari estivi variano ogni giorno, in genere 10-19 o 10-20",
     "hoursEN": "Summer hours vary daily, typically 10am-7pm or 10am-8pm",
     "price": "Da 219 DKK",
-    "priceEN": "From 219 DKK"
+    "priceEN": "From 219 DKK",
+    "nameEN": "LEGO House",
+    "nameES": "LEGO House",
+    "descES": "Un centro interactivo LEGO con millones de piezas, zonas creativas y obras maestras únicas.",
+    "cityEN": "LEGO House",
+    "cityES": "LEGO House",
+    "hoursES": "Los horarios de verano varían cada día, generalmente 10-19 o 10-20",
+    "priceES": "Desde 219 DKK"
   },
   {
     "id": "poi-k-272",
@@ -4140,7 +5837,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 9:30/10:00-18:30/19:30 (varia in base al giorno)",
     "hoursEN": "Daily 9:30am/10am-6:30pm/7:30pm (varies by day)",
     "price": "Adulti DKK 349, Bambini (3-11) DKK 269, Sotto i 3 anni Gratuito",
-    "priceEN": "Adults DKK 349, Kids (3-11) DKK 269, Under 3 Free"
+    "priceEN": "Adults DKK 349, Kids (3-11) DKK 269, Under 3 Free",
+    "nameEN": "Lalandia Billund",
+    "nameES": "Lalandia Billund",
+    "descES": "El mayor parque acuático tropical de Escandinavia con toboganes emocionantes, piscinas de olas y bañeras de hidromasaje.",
+    "cityEN": "LEGO House",
+    "cityES": "LEGO House",
+    "hoursES": "Todos los días 9:30/10:00-18:30/19:30 (varía según el día)",
+    "priceES": "Adultos DKK 349, Niños (3-11) DKK 269, Menores de 3 años Gratis"
   },
   {
     "id": "poi-p-273",
@@ -4153,7 +5857,13 @@ var MAP_POIS = [
     "lng": 9.1283,
     "day": "g39",
     "city": "LEGO House",
-    "maps": "https://maps.google.com/?q=55.7358,9.1283"
+    "maps": "https://maps.google.com/?q=55.7358,9.1283",
+    "nameEN": "LEGOLAND Holiday Village (Billund)",
+    "nameES": "LEGOLAND Holiday Village (Billund)",
+    "descEN": "~€50-70/night. Electricity, water, WiFi, playgrounds, a short walk from LEGOLAND and Lalandia.",
+    "descES": "~€50-70/noche. Electricidad, agua, WiFi, parques infantiles, a pocos pasos de LEGOLAND y Lalandia.",
+    "cityEN": "LEGO House",
+    "cityES": "LEGO House"
   },
   {
     "id": "poi-h-274",
@@ -4169,7 +5879,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=53.0793,8.8017",
     "descEN": "A scenic 4,218 km tourist route winding through Denmark's most beautiful landscapes and over 200 attractions.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Margueritruten",
+    "nameES": "Margueritruten",
+    "descES": "Una ruta panorámica de 4.218 km que atraviesa los paisajes más bellos de Danimarca y más de 200 atracciones.",
+    "cityEN": "Brema",
+    "cityES": "Brema",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-h-275",
@@ -4185,7 +5901,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=53.0793,8.8017",
     "descEN": "A free long-term parking area south of Ribe's center, accommodating cars, campervans, and tourist buses.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Sosta Ribe",
+    "nameES": "Sosta Ribe",
+    "descES": "Un área de estacionamiento gratuita al sur del centro de Ribe, adecuada para coches, autocaravanas y autocares turísticos.",
+    "cityEN": "Brema",
+    "cityES": "Brema",
+    "priceES": "Gratuito"
   },
   {
     "id": "poi-h-276",
@@ -4203,7 +5925,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 24 ore su 24",
     "hoursEN": "Daily 24 hours",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Musicanti di Brema",
+    "nameES": "Musicanti di Brema",
+    "descES": "Una famosa estatua de bronce que representa al asno, el perro, el gato y el gallo del cuento de los fratelli Grimm.",
+    "cityEN": "Brema",
+    "cityES": "Brema",
+    "hoursES": "Abierto todos los días, 24 horas",
+    "priceES": "Gratuito"
   },
   {
     "id": "poi-k-277",
@@ -4221,7 +5950,14 @@ var MAP_POIS = [
     "hours": "Lun-Ven 9-18, Sab-Dom e festivi 10-18",
     "hoursEN": "Mon-Fri 9am-6pm, Sat-Sun & Holidays 10am-6pm",
     "price": "Adulti €18, Ridotti €12",
-    "priceEN": "Adults €18, Concessions €12"
+    "priceEN": "Adults €18, Concessions €12",
+    "nameEN": "Universum Bremen",
+    "nameES": "Universum Bremen",
+    "descES": "Un centro científico interactivo con forma de ballena con más de 300 exposiciones prácticas sobre el ser humano, la naturaleza y la tecnología.",
+    "cityEN": "Brema",
+    "cityES": "Brema",
+    "hoursES": "Lun-Vie 9-18, Sáb-Dom y festivos 10-18",
+    "priceES": "Adultos €18, Reducidos €12"
   },
   {
     "id": "poi-k-278",
@@ -4239,7 +5975,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 24 ore su 24",
     "hoursEN": "Daily 24 hours",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Musicanti di Brema",
+    "nameES": "Musicanti di Brema",
+    "descES": "Una famosa estatua de bronce que representa a los cuatro animales del cuento de los hermanos Grimm, situada junto al Ayuntamiento.",
+    "cityEN": "Brema",
+    "cityES": "Brema",
+    "hoursES": "Todos los días, 24 horas al día",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-p-279",
@@ -4252,7 +5995,13 @@ var MAP_POIS = [
     "lng": 8.83247,
     "day": "g40",
     "city": "Brema",
-    "maps": "https://maps.google.com/?q=53.11483,8.83247"
+    "maps": "https://maps.google.com/?q=53.11483,8.83247",
+    "nameEN": "HanseCamping Bremen",
+    "nameES": "HanseCamping Bremen",
+    "descEN": "~€40/night. Electricity, water, WiFi, playground, modern facilities.",
+    "descES": "~€40/noche. Electricidad, agua, WiFi, parque infantil, servicios modernos.",
+    "cityEN": "Brema",
+    "cityES": "Brema"
   },
   {
     "id": "poi-p-280",
@@ -4265,7 +6014,13 @@ var MAP_POIS = [
     "lng": 8.8183,
     "day": "g40",
     "city": "Brema",
-    "maps": "https://maps.google.com/?q=53.0658,8.8183"
+    "maps": "https://maps.google.com/?q=53.0658,8.8183",
+    "nameEN": "Stellplatz am Kuhhirten",
+    "nameES": "Stellplatz am Kuhhirten",
+    "descEN": "~€18/night. Electricity, water, waste disposal, a short walk from the centre.",
+    "descES": "~€18/noche. Electricidad, agua, punto de vaciado, a pocos pasos del centro.",
+    "cityEN": "Brema",
+    "cityES": "Brema"
   },
   {
     "id": "poi-h-281",
@@ -4283,7 +6038,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 8:30-18:15 (fino alle 19:30 ven-dom)",
     "hoursEN": "Daily 8:30am-6:15pm (until 7:30pm Fri-Sun)",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Amiens Cathedral",
+    "nameES": "Catedral de Amiens",
+    "descES": "Una obra maestra del arte gótico y Patrimonio de la Humanidad por la UNESCO; es la catedral medieval más grande del mundo.",
+    "cityEN": "Amiens",
+    "cityES": "Amiens",
+    "hoursES": "Todos los días 8:30-18:15 (hasta las 19:30 vie-dom)",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-h-282",
@@ -4301,7 +6063,14 @@ var MAP_POIS = [
     "hours": "Lun-Ven 10-17:30, Weekend 9-18:30",
     "hoursEN": "Mon-Fri 10am-5:30pm, Weekends 9am-6:30pm",
     "price": "Adulti €15, Bambini €12",
-    "priceEN": "Adults €15, Kids €12"
+    "priceEN": "Adults €15, Kids €12",
+    "nameEN": "Hortillonnages",
+    "nameES": "Hortillonnages",
+    "descES": "Un mosaico único de 300 ettari de jardines flotantes y canales en Amiens, accesible con recorridos en barco.",
+    "cityEN": "Amiens",
+    "cityES": "Amiens",
+    "hoursES": "Lun-Vie 10-17:30, Fin de semana 9-18:30",
+    "priceES": "Adultos €15, Niños €12"
   },
   {
     "id": "poi-h-283",
@@ -4319,7 +6088,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 10-19 (fino alle 22 durante l'Estate Gallica, da metà luglio a fine agosto)",
     "hoursEN": "Daily 10am-7pm (until 10pm during Gaulish Summer, mid-July to end of August)",
     "price": "Adulti €68, Bambini (3-11) €59",
-    "priceEN": "Adults €68, Children (3-11) €59"
+    "priceEN": "Adults €68, Children (3-11) €59",
+    "nameEN": "Amusement park",
+    "nameES": "Parque de atracciones",
+    "descES": "Un famoso parque temático cerca de Parigi, basado en los célebres cómics, con montañas rusas y atracciones de temática gálica.",
+    "cityEN": "Plailly",
+    "cityES": "Plailly",
+    "hoursES": "Todos los días 10-19 (hasta las 22 durante l'Estate Gallica, desde mediados de julio hasta finales de agosto)",
+    "priceES": "Adultos €68, Niños (3-11) €59"
   },
   {
     "id": "poi-k-284",
@@ -4337,7 +6113,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 10-19 (luglio-agosto)",
     "hoursEN": "Daily 10am-7pm (July-August)",
     "price": "Adulti €13, bambini (3-15) €10",
-    "priceEN": "Adults €13, children (3-15) €10"
+    "priceEN": "Adults €13, children (3-15) €10",
+    "nameEN": "Zoo d'Amiens",
+    "nameES": "Zoo d'Amiens",
+    "descES": "Un parque zoológico de 7 ettari situado cerca del centro de la ciudad, que alberga casi 700 animales de 120 especies.",
+    "cityEN": "Amiens",
+    "cityES": "Amiens",
+    "hoursES": "Todos los días 10-19 (julio-agosto)",
+    "priceES": "Adultos €13, niños (3-15) €10"
   },
   {
     "id": "poi-k-285",
@@ -4355,7 +6138,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni (apr-ott) 9:30-12:30 e 13:15-18:00 (orari variabili per mese)",
     "hoursEN": "Daily (Apr-Oct) 9:30am-12:30pm & 1:15pm-6pm (hours vary slightly by month)",
     "price": "Adulti €11, Adolescenti (11-16) €10, Bambini (3-10) €7",
-    "priceEN": "Adults €11, Teens (11-16) €10, Kids (3-10) €7"
+    "priceEN": "Adults €11, Teens (11-16) €10, Kids (3-10) €7",
+    "nameEN": "Les Hortillonnages d'Amiens",
+    "nameES": "Les Hortillonnages d'Amiens",
+    "descES": "Un mosaico único de 300 hectáreas de jardines flotantes y canales en el corazón de Amiens, que se puede explorar en barco.",
+    "cityEN": "Amiens",
+    "cityES": "Amiens",
+    "hoursES": "Todos los días (abr-oct) 9:30–12:30 y 13:15–18:00 (horarios variables por mes)",
+    "priceES": "Adultos €11, Adolescentes (11–16) €10, Niños (3–10) €7"
   },
   {
     "id": "poi-k-286",
@@ -4373,7 +6163,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 10-19 (Estate: 11 lug-30 ago fino alle 22)",
     "hoursEN": "Daily 10am-7pm (Summer: Jul 11-Aug 30 until 10pm)",
     "price": "Adulti €68, Bambini (3-11) €59",
-    "priceEN": "Adults €68, Children (3-11) €59"
+    "priceEN": "Adults €68, Children (3-11) €59",
+    "nameEN": "Parc Astérix",
+    "nameES": "Parc Astérix",
+    "descES": "Un popular parque temático francés basado en los cómics de Asterix, con más de 40 atracciones y montañas rusas.",
+    "cityEN": "Plailly",
+    "cityES": "Plailly",
+    "hoursES": "Todos los días 10:00–19:00 (Verano: 11 jul–30 ago hasta las 22:00)",
+    "priceES": "Adultos €68, Niños (3–11) €59"
   },
   {
     "id": "poi-p-287",
@@ -4386,7 +6183,13 @@ var MAP_POIS = [
     "lng": 2.26,
     "day": "g41",
     "city": "Amiens",
-    "maps": "https://maps.google.com/?q=49.9210,2.2600"
+    "maps": "https://maps.google.com/?q=49.9210,2.2600",
+    "nameEN": "Camping des Cygnes / Aire de Camping-Car des Cygnes",
+    "nameES": "Camping des Cygnes / Aire de Camping-Car des Cygnes",
+    "descEN": "~€20-25/night. Electricity, water, grey/black water disposal, WiFi, playground, near the centre of Amiens.",
+    "descES": "~€20-25/noche. Electricidad, agua, vaciado de aguas grises/negras, WiFi, parque infantil, cerca del centro de Amiens.",
+    "cityEN": "Amiens",
+    "cityES": "Amiens"
   },
   {
     "id": "poi-f-288",
@@ -4399,7 +6202,13 @@ var MAP_POIS = [
     "lng": 2.3022,
     "day": "g41",
     "city": "Amiens",
-    "maps": "https://maps.google.com/?q=49.8942,2.3022"
+    "maps": "https://maps.google.com/?q=49.8942,2.3022",
+    "nameEN": "Amiens street food",
+    "nameES": "Comida callejera en Amiens",
+    "descEN": "Friterie Nicolas (31 Rue de Metz) — cornet de frites ~€3-4, burger ~€6! Crêp' Rit des Halles (7 Rue del Chapeau de Violettes) — galette take-away ~€5-",
+    "descES": "Friterie Nicolas (31 Rue de Metz) — cornet de frites ~€3-4, hamburguesa ~€6! Crêp' Rit des Halles (7 Rue del Chapeau de Violettes) — galette para llevar ~€5-",
+    "cityEN": "Amiens",
+    "cityES": "Amiens"
   },
   {
     "id": "poi-f-289",
@@ -4412,7 +6221,13 @@ var MAP_POIS = [
     "lng": 2.3022,
     "day": "g41",
     "city": "Amiens",
-    "maps": "https://maps.google.com/?q=49.8942,2.3022"
+    "maps": "https://maps.google.com/?q=49.8942,2.3022",
+    "nameEN": "Market",
+    "nameES": "Mercado",
+    "descEN": "Les Halles d'Amiens (Pl. Maurice Vast) — fresh produce, cheeses, bakery. Tip: baguette + fromage + charcuterie = family lunch ~€10!",
+    "descES": "Les Halles d'Amiens (Pl. Maurice Vast) — productos frescos, quesos, panadería. Consejo: baguette + fromage + charcuterie = almuerzo familiar ~€10!",
+    "cityEN": "Amiens",
+    "cityES": "Amiens"
   },
   {
     "id": "poi-h-290",
@@ -4425,7 +6240,13 @@ var MAP_POIS = [
     "lng": 0.99,
     "day": "g42",
     "city": "Loira",
-    "maps": "https://maps.google.com/?q=Château+d'Amboise"
+    "maps": "https://maps.google.com/?q=Château+d'Amboise",
+    "nameEN": "Amboise",
+    "nameES": "Amboise",
+    "descEN": "Walk in 📍 Amboise (royal town)",
+    "descES": "Paseo en 📍 Amboise (pueblo real)",
+    "cityEN": "Loira",
+    "cityES": "Loira"
   },
   {
     "id": "poi-k-291",
@@ -4443,7 +6264,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 9-20",
     "hoursEN": "Daily 9am-8pm",
     "price": "Adulti €20, bambini (7-18) €15",
-    "priceEN": "Adults €20, children (7-18) €15"
+    "priceEN": "Adults €20, children (7-18) €15",
+    "nameEN": "Château du Clos Lucé in Amboise",
+    "nameES": "Château du Clos Lucé en Amboise",
+    "descES": "Explora la última residencia de Leonardo da Vinci, con sus espacios habitables restaurados y un parque con modelos a tamaño real de sus inventos.",
+    "cityEN": "Loira",
+    "cityES": "Loira",
+    "hoursES": "Todos los días 9-20",
+    "priceES": "Adultos €20, niños (7-18) €15"
   },
   {
     "id": "poi-k-292",
@@ -4461,7 +6289,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 10-18 (4 apr - 1 nov 2026)",
     "hoursEN": "Daily 10am-6pm (Apr 4 - Nov 1, 2026)",
     "price": "Adulti €17.50, Bambini (3-12) €13",
-    "priceEN": "Adults €17.50, Kids (3-12) €13"
+    "priceEN": "Adults €17.50, Kids (3-12) €13",
+    "nameEN": "Parc des Mini-Châteaux near Amboise",
+    "nameES": "Parc des Mini-Châteaux cerca de Amboise",
+    "descES": "Un parque de 2 hectáreas que alberga 41 reproducciones en miniatura altamente detalladas de los famosos castillos de la Loira.",
+    "cityEN": "Loira",
+    "cityES": "Loira",
+    "hoursES": "Todos los días 10-18 (4 abr - 1 nov 2026)",
+    "priceES": "Adultos €17.50, Niños (3-12) €13"
   },
   {
     "id": "poi-p-293",
@@ -4474,7 +6309,13 @@ var MAP_POIS = [
     "lng": 0.9858,
     "day": "g42",
     "city": "Loira",
-    "maps": "https://maps.google.com/?q=47.4172,0.9858"
+    "maps": "https://maps.google.com/?q=47.4172,0.9858",
+    "nameEN": "Aire CAMPING-CAR PARK d'Amboise",
+    "nameES": "Aire CAMPING-CAR PARK d'Amboise",
+    "descEN": "~€17.20/night. Electricity, water, WiFi, video surveillance, grassy pitches, a 10 min walk from the castle. Alternatively: Camping Municipal de l'Il",
+    "descES": "~€17.20/noche. Electricidad, agua, WiFi, videovigilancia, parcelas en césped, a 10 min a pie del castillo. En alternativa: Camping Municipal de l'Il",
+    "cityEN": "Loira",
+    "cityES": "Loira"
   },
   {
     "id": "poi-s-294",
@@ -4487,7 +6328,13 @@ var MAP_POIS = [
     "lng": 0.99,
     "day": "g42",
     "city": "Loira",
-    "maps": "https://maps.google.com/?q=47.4133,0.99"
+    "maps": "https://maps.google.com/?q=47.4133,0.99",
+    "nameEN": "🛴 Loira",
+    "nameES": "🛴 Loira",
+    "descEN": "🛴 Scooters: Loire à Vélo cycle paths, perfect along the castles → see rentals\n🚴 Bike rental: Détours de Loire (~€15-25/day, children's bikes ",
+    "descES": "🛴 Patinetes: carriles bici Loire à Vélo, perfecto a lo largo de los castillos → ver alquileres\n🚴 Alquiler de bicicletas: Détours de Loire (~€15-25/día, bicicletas para niños ",
+    "cityEN": "Loira",
+    "cityES": "Loira"
   },
   {
     "id": "poi-f-295",
@@ -4500,7 +6347,13 @@ var MAP_POIS = [
     "lng": 0.99,
     "day": "g42",
     "city": "Loira",
-    "maps": "https://maps.google.com/?q=47.4133,0.99"
+    "maps": "https://maps.google.com/?q=47.4133,0.99",
+    "nameEN": "Loira street food",
+    "nameES": "Loira street food",
+    "descEN": "Boulangerie de l'Horloge (18 Rue Nationale, Amboise) — sandwich jambon-emmental ~€4.50, take-away! Galette completa da asporto ~€8. Picnic on the banks ",
+    "descES": "Boulangerie de l'Horloge (18 Rue Nationale, Amboise) — sandwich jambon-emmental ~€4.50, ¡para llevar! Galette completa para llevar ~€8. Picnic en las orillas ",
+    "cityEN": "Loira",
+    "cityES": "Loira"
   },
   {
     "id": "poi-f-296",
@@ -4513,7 +6366,13 @@ var MAP_POIS = [
     "lng": 0.98193,
     "day": "g42",
     "city": "Loira",
-    "maps": "https://maps.google.com/?q=47.41283,0.98193"
+    "maps": "https://maps.google.com/?q=47.41283,0.98193",
+    "nameEN": "Marché d'Amboise",
+    "nameES": "Marché d'Amboise",
+    "descEN": "rillettes, Sainte-Maure goat cheeses, fruit. Tip: Vouvray in cellar ~€5-8!",
+    "descES": "rillettes, quesos de cabra Sainte-Maure, fruta. Consejo: Vouvray en bodega ~€5-8!",
+    "cityEN": "Loira",
+    "cityES": "Loira"
   },
   {
     "id": "poi-h-297",
@@ -4531,7 +6390,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 9-20",
     "hoursEN": "Daily 9am-8pm",
     "price": "Adulti €20, Bambini (7-18) €15",
-    "priceEN": "Adults €20, Kids (7-18) €15"
+    "priceEN": "Adults €20, Kids (7-18) €15",
+    "nameEN": "Clos Lucé",
+    "nameES": "Clos Lucé",
+    "descES": "La última residencia de Leonardo da Vinci, con sus inventos, los talleres y un parque dedicado a sus obras.",
+    "cityEN": "Loira",
+    "cityES": "Loira",
+    "hoursES": "Todos los días 9-20",
+    "priceES": "Adultos €20, Niños (7-18) €15"
   },
   {
     "id": "poi-h-298",
@@ -4549,7 +6415,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 9-19 (estate)",
     "hoursEN": "Daily 9am-7pm (summer)",
     "price": "Adulti €19, Senior €16, Studenti €16, Bambini (7-18) €15, Sotto i 7 anni Gratuito",
-    "priceEN": "Adults €19, Seniors €16, Students €16, Kids (7-18) €15, Under 7 Free"
+    "priceEN": "Adults €19, Seniors €16, Students €16, Kids (7-18) €15, Under 7 Free",
+    "nameEN": "Chenonceau",
+    "nameES": "Chenonceau",
+    "descES": "Un elegante castillo renacentista en el río Cher, célebre por su arquitectura única y sus magníficos jardines.",
+    "cityEN": "Loira",
+    "cityES": "Loira",
+    "hoursES": "Todos los días 9-19 (verano)",
+    "priceES": "Adultos €19, Mayores €16, Estudiantes €16, Niños (7-18) €15, Menores de 7 años Gratis"
   },
   {
     "id": "poi-k-299",
@@ -4567,7 +6440,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 9-20",
     "hoursEN": "Daily 9am-8pm",
     "price": "Adulti €20, bambini €15",
-    "priceEN": "Adults €20, kids €15"
+    "priceEN": "Adults €20, kids €15",
+    "nameEN": "Château du Clos Lucé (Amboise)",
+    "nameES": "Château du Clos Lucé (Amboise)",
+    "descES": "Descubre la última residencia de Leonardo da Vinci, con sus talleres originales y los modelos de sus invenciones.",
+    "cityEN": "Loira",
+    "cityES": "Loira",
+    "hoursES": "Todos los días 9-20",
+    "priceES": "Adultos €20, niños €15"
   },
   {
     "id": "poi-k-300",
@@ -4585,7 +6465,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 10-18 (da aprile a novembre)",
     "hoursEN": "Daily 10am-6pm (April to November)",
     "price": "Adulti €17.50, Bambini (3-12) €13",
-    "priceEN": "Adults €17.50, Kids (3-12) €13"
+    "priceEN": "Adults €17.50, Kids (3-12) €13",
+    "nameEN": "Parc des Mini-Châteaux (Amboise)",
+    "nameES": "Parc des Mini-Châteaux (Amboise)",
+    "descES": "Un parque para familias que exhibe más de 40 modelos en miniatura muy detallados de los famosos castillos de la Loira.",
+    "cityEN": "Loira",
+    "cityES": "Loira",
+    "hoursES": "Todos los días 10-18 (de abril a noviembre)",
+    "priceES": "Adultos €17.50, Niños (3-12) €13"
   },
   {
     "id": "poi-p-301",
@@ -4598,7 +6485,13 @@ var MAP_POIS = [
     "lng": 0.9833,
     "day": "g43",
     "city": "Loira",
-    "maps": "https://maps.google.com/?q=47.4167,0.9833"
+    "maps": "https://maps.google.com/?q=47.4167,0.9833",
+    "nameEN": "Camping l'Ile d'Or (Amboise)",
+    "nameES": "Camping l'Ile d'Or (Amboise)",
+    "descEN": "~€25-35/night. Electricity, water, WiFi, playground, pool, castle view.",
+    "descES": "~€25-35/noche. Electricidad, agua, WiFi, parque infantil, piscina, vista al castillo.",
+    "cityEN": "Loira",
+    "cityES": "Loira"
   },
   {
     "id": "poi-p-302",
@@ -4611,7 +6504,13 @@ var MAP_POIS = [
     "lng": 1.5359,
     "day": "g43",
     "city": "Loira",
-    "maps": "https://maps.google.com/?q=47.6177,1.5359"
+    "maps": "https://maps.google.com/?q=47.6177,1.5359",
+    "nameEN": "Aire de camping-car Chambord",
+    "nameES": "Aire de camping-car Chambord",
+    "descEN": "~€11/night. Parking, water, waste disposal, a short walk from the castle.",
+    "descES": "~€11/noche. Aparcamiento, agua, vaciado, a poca distancia a pie del castillo.",
+    "cityEN": "Loira",
+    "cityES": "Loira"
   },
   {
     "id": "poi-f-303",
@@ -4624,7 +6523,13 @@ var MAP_POIS = [
     "lng": 0.99,
     "day": "g43",
     "city": "Loira",
-    "maps": "https://maps.google.com/?q=47.4133,0.99"
+    "maps": "https://maps.google.com/?q=47.4133,0.99",
+    "nameEN": "Lunch",
+    "nameES": "Almuerzo",
+    "descEN": "galette completa (crêpe savory ham-cheese-egg, ~€7). Kids' snack: pain au chocolat from the bakery",
+    "descES": "galette completa (crêpe salada jamón-queso-huevo, ~€7). Merienda infantil: pain au chocolat de la boulangerie",
+    "cityEN": "Loira",
+    "cityES": "Loira"
   },
   {
     "id": "poi-h-304",
@@ -4642,7 +6547,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 24h (Bagnini giu-set 9-20/20:30)",
     "hoursEN": "Daily 24h (Lifeguards Jun-Sep 9am-8pm/8:30pm)",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Playa de la Zurriola",
+    "nameES": "Playa de la Zurriola",
+    "descES": "Situada en el barrio de Gros, esta animada playa es famosa por sus impresionantes olas y su ambiente surfista.",
+    "cityEN": "San Sebastián",
+    "cityES": "San Sebastián",
+    "hoursES": "Todos los días 24h (Socorristas jun-sep 9-20/20:30)",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-k-305",
@@ -4660,7 +6572,14 @@ var MAP_POIS = [
     "hours": "Verano feriali 11:15-14:00 e 16:00-20:00, weekend 11:15-14:00 e 16:00-21:30",
     "hoursEN": "Summer weekdays 11:15am-2pm & 4pm-8pm, weekends 11:15am-2pm & 4pm-9:30pm",
     "price": "Funicolare (include ingresso) Adulti €5.50, Bambini €2.50",
-    "priceEN": "Funicular (includes entrance) Adults €5.50, Kids €2.50"
+    "priceEN": "Funicular (includes entrance) Adults €5.50, Kids €2.50",
+    "nameEN": "Monte Igueldo",
+    "nameES": "Monte Igueldo",
+    "descES": "Un parque de atracciones histórico que ofrece un funicular centenario y vistas panorámicas impresionantes de la bahía.",
+    "cityEN": "San Sebastián",
+    "cityES": "San Sebastián",
+    "hoursES": "Verano días laborables 11:15-14:00 y 16:00-20:00, fines de semana 11:15-14:00 y 16:00-21:30",
+    "priceES": "Funicular (incluye entrada) Adultos €5.50, Niños €2.50"
   },
   {
     "id": "poi-k-306",
@@ -4678,7 +6597,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 10-20",
     "hoursEN": "Daily 10am-8pm",
     "price": "Adulti €16, Bambini (5-12) €8, Under 5 Gratuito, Ridotto €12",
-    "priceEN": "Adults €16, Children (5-12) €8, Under 5 Free, Reduced €12"
+    "priceEN": "Adults €16, Children (5-12) €8, Under 5 Free, Reduced €12",
+    "nameEN": "Acquario di San Sebastian",
+    "nameES": "Acquario di San Sebastian",
+    "descES": "Un museo oceanográfico histórico con un espectacular túnel submarino de 360 grados y más de 7.000 animales marinos.",
+    "cityEN": "San Sebastián",
+    "cityES": "San Sebastián",
+    "hoursES": "Todos los días 10-20",
+    "priceES": "Adultos €16, Niños (5-12) €8, Menores de 5 Gratis, Reducido €12"
   },
   {
     "id": "poi-k-307",
@@ -4694,7 +6620,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=43.31571,-2.00189",
     "descEN": "A family-friendly, golden-sand urban beach in San Sebastian offering calm waters and views of Santa Clara Island.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Ondarreta",
+    "nameES": "Ondarreta",
+    "descES": "Una playa urbana de arena dorada en San Sebastián, ideal para familias, con aguas tranquilas y vistas a la isla.",
+    "cityEN": "San Sebastián",
+    "cityES": "San Sebastián",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-p-308",
@@ -4707,7 +6639,13 @@ var MAP_POIS = [
     "lng": -2.0143,
     "day": "g44",
     "city": "San Sebastián",
-    "maps": "https://maps.google.com/?q=43.3079,-2.0143"
+    "maps": "https://maps.google.com/?q=43.3079,-2.0143",
+    "nameEN": "Motorhome Area Donosti (Berio)",
+    "nameES": "Área Autocaravanas Donosti (Berio)",
+    "descEN": "~€12/night. 44 pitches, water fill/drain, near bus and bike lanes. Max stay 72h, opening awnings/chairs prohibited.",
+    "descES": "~€12/noche. 44 plazas, carga/descarga de agua, cerca de bus y carriles bici. Estancia máx 72h, prohibido abrir toldos/sillas.",
+    "cityEN": "San Sebastián",
+    "cityES": "San Sebastián"
   },
   {
     "id": "poi-f-309",
@@ -4720,7 +6658,13 @@ var MAP_POIS = [
     "lng": -1.98333,
     "day": "g44",
     "city": "San Sebastián",
-    "maps": "https://maps.google.com/?q=43.32361,-1.98333"
+    "maps": "https://maps.google.com/?q=43.32361,-1.98333",
+    "nameEN": "San Sebastián street food",
+    "nameES": "Comida callejera de San Sebastián",
+    "descEN": "Pintxos ARE street food! Eat standing at the bar: Goiz Argi (Fermin Calbeton 4) — brocheta gambas €5. Borda Berri (Fermin Calbeton 12) — carri",
+    "descES": "¡Los pintxos SON comida callejera! Comer de pie en la barra: Goiz Argi (Fermin Calbeton 4) — brocheta gambas €5. Borda Berri (Fermin Calbeton 12) — carri",
+    "cityEN": "San Sebastián",
+    "cityES": "San Sebastián"
   },
   {
     "id": "poi-f-310",
@@ -4733,7 +6677,13 @@ var MAP_POIS = [
     "lng": -1.9812,
     "day": "g44",
     "city": "San Sebastián",
-    "maps": "https://maps.google.com/?q=43.3183,-1.9812"
+    "maps": "https://maps.google.com/?q=43.3183,-1.9812",
+    "nameEN": "Market",
+    "nameES": "Mercado",
+    "descEN": "Mercado de la Bretxa (Aldamar Kalea) — fish, Basque cheeses.",
+    "descES": "Mercado de la Bretxa (Aldamar Kalea) — pescado, quesos vascos.",
+    "cityEN": "San Sebastián",
+    "cityES": "San Sebastián"
   },
   {
     "id": "poi-f-311",
@@ -4746,7 +6696,13 @@ var MAP_POIS = [
     "lng": -1.9754,
     "day": "g44",
     "city": "San Sebastián",
-    "maps": "https://maps.google.com/?q=43.3167,-1.9754"
+    "maps": "https://maps.google.com/?q=43.3167,-1.9754",
+    "nameEN": "Flea market",
+    "nameES": "Mercadillo",
+    "descEN": "Donostiatruk (Tabakalera, Duque de Mandas 52) — second-hand market every Saturday 10:00-14:00. Vintage clothes, books, vinyl, local crafts. G43 =",
+    "descES": "Donostiatruk (Tabakalera, Duque de Mandas 52) — mercado second-hand cada sábado 10:00-14:00. Ropa vintage, libros, vinilos, artesanía local. G43 =",
+    "cityEN": "San Sebastián",
+    "cityES": "San Sebastián"
   },
   {
     "id": "poi-h-312",
@@ -4762,7 +6718,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=43.29447,-2.18655",
     "descEN": "A spectacular ten-kilometer protected coastal cliff area offering stunning views of the ocean and Pyrenees.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Corniche Basque",
+    "nameES": "Corniche Basque",
+    "descES": "Una espectacular área costera protegida de diez kilómetros con acantilados y vistas impresionantes al océano.",
+    "cityEN": "Bilbao",
+    "cityES": "Bilbao",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-h-313",
@@ -4780,7 +6742,14 @@ var MAP_POIS = [
     "hours": "Mar-Dom 10-19 (Estate/Pasqua: aperto fino alle 20, aperto i lunedì)",
     "hoursEN": "Tue-Sun 10am-7pm (Summer/Easter: open until 8pm, open Mondays)",
     "price": "Adulti €18, Ridotto (studenti/over 65) €9, Under 18 Gratuito (Mar 18-20 ingresso gratuito)",
-    "priceEN": "Adults €18, Reduced (students/over 65) €9, Under 18 Free (Tue 6-8pm free entry)"
+    "priceEN": "Adults €18, Reduced (students/over 65) €9, Under 18 Free (Tue 6-8pm free entry)",
+    "nameEN": "Museo Guggenheim",
+    "nameES": "Museo Guggenheim",
+    "descES": "Una espectacular obra maestra de titanio de la arquitectura contemporánea que alberga colecciones de arte moderno.",
+    "cityEN": "Bilbao",
+    "cityES": "Bilbao",
+    "hoursES": "Mar-Dom 10-19 (Verano/Pascua: abierto hasta las 20:00, abierto los lunes)",
+    "priceES": "Adultos €18, Reducida (estudiantes/mayores de 65) €9, Menores de 18 Gratis (Mar 18-20 entrada gratuita)"
   },
   {
     "id": "poi-k-314",
@@ -4798,7 +6767,14 @@ var MAP_POIS = [
     "hours": "Mar-Dom 10-19 (Aperto lun in estate)",
     "hoursEN": "Tue-Sun 10am-7pm (Open Mon in summer)",
     "price": "Adulti €18, Studenti/Anziani €9, Minori di 18 anni Gratuito",
-    "priceEN": "Adults €18, Students/Seniors €9, Under 18 Free"
+    "priceEN": "Adults €18, Students/Seniors €9, Under 18 Free",
+    "nameEN": "Museo Guggenheim Bilbao",
+    "nameES": "Museo Guggenheim Bilbao",
+    "descES": "Un espectacular museo de arte moderno y contemporáneo ubicado en el icónico edificio de titanio de Frank Gehry.",
+    "cityEN": "Bilbao",
+    "cityES": "Bilbao",
+    "hoursES": "Mar-Dom 10-19 (Abierto lunes en verano)",
+    "priceES": "Adultos €18, Estudiantes/Mayores €9, Menores de 18 años Gratis"
   },
   {
     "id": "poi-k-315",
@@ -4816,7 +6792,14 @@ var MAP_POIS = [
     "hours": "Lun-Sab 7:15-22:00, Dom/Festivi 8:15-22:00 (fino alle 23:00 Ven-Sab/prefestivi Giu-Set)",
     "hoursEN": "Mon-Sat 7:15am-10pm, Sun/Holidays 8:15am-10pm (until 11pm Fri-Sat/holiday eves Jun-Sep)",
     "price": "Corsa singola €3, Andata e ritorno €5",
-    "priceEN": "Single €3, Return €5"
+    "priceEN": "Single €3, Return €5",
+    "nameEN": "Funicular de Artxanda",
+    "nameES": "Funicular de Artxanda",
+    "descES": "Un histórico funicular que ofrece un rápido ascenso al Monte Artxanda para vistas panorámicas de Bilbao.",
+    "cityEN": "Bilbao",
+    "cityES": "Bilbao",
+    "hoursES": "Lun-Sáb 7:15-22:00, Dom/Festivos 8:15-22:00 (hasta las 23:00 Vie-Sáb/vísperas de festivos Jun-Sep)",
+    "priceES": "Billete sencillo €3, Ida y vuelta €5"
   },
   {
     "id": "poi-k-316",
@@ -4834,7 +6817,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 24 ore",
     "hoursEN": "Daily 24 hours",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Parco Doña Casilda Iturrizar",
+    "nameES": "Parco Doña Casilda Iturrizar",
+    "descES": "Este histórico parque urbano de estilo romántico cuenta con un sereno estanque con patos, un carrusel clásico y una fuente cibernética.",
+    "cityEN": "Bilbao",
+    "cityES": "Bilbao",
+    "hoursES": "Abierto 24 horas todos los días",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-p-317",
@@ -4847,7 +6837,13 @@ var MAP_POIS = [
     "lng": -2.9635,
     "day": "g45",
     "city": "Bilbao",
-    "maps": "https://maps.google.com/?q=43.2596,-2.9635"
+    "maps": "https://maps.google.com/?q=43.2596,-2.9635",
+    "nameEN": "Area de Autocaravanas Kobetamendi (Bilbao)",
+    "nameES": "Area de Autocaravanas Kobetamendi (Bilbao)",
+    "descEN": "~€15-20/night. Electricity, drinking water, grey/black water disposal, breathtaking view over Bilbao and direct bus (58) to the centre outside the cance",
+    "descES": "~€15-20/noche. Electricidad, agua potable, vaciado de aguas grises/negras, vista impresionante de Bilbao y autobús directo (58) al centro fuera del cance",
+    "cityEN": "Bilbao",
+    "cityES": "Bilbao"
   },
   {
     "id": "poi-s-318",
@@ -4860,7 +6856,13 @@ var MAP_POIS = [
     "lng": -2.935,
     "day": "g45",
     "city": "Bilbao",
-    "maps": "https://maps.google.com/?q=43.263,-2.935"
+    "maps": "https://maps.google.com/?q=43.263,-2.935",
+    "nameEN": "🛴 Bilbao",
+    "nameES": "🛴 Bilbao",
+    "descEN": "riverside pedestrian path to the Guggenheim, flat → see rentals",
+    "descES": "paseo ribereño peatonal hasta el Guggenheim, plano → ver alquileres",
+    "cityEN": "Bilbao",
+    "cityES": "Bilbao"
   },
   {
     "id": "poi-f-319",
@@ -4873,7 +6875,13 @@ var MAP_POIS = [
     "lng": -2.92389,
     "day": "g45",
     "city": "Bilbao",
-    "maps": "https://maps.google.com/?q=43.25722,-2.92389"
+    "maps": "https://maps.google.com/?q=43.25722,-2.92389",
+    "nameEN": "Casco Viejo Bilbao",
+    "nameES": "Casco Viejo Bilbao",
+    "descEN": "— tapas and txakoli",
+    "descES": "— tapas y txakoli",
+    "cityEN": "Bilbao",
+    "cityES": "Bilbao"
   },
   {
     "id": "poi-f-320",
@@ -4886,7 +6894,13 @@ var MAP_POIS = [
     "lng": -2.92336,
     "day": "g45",
     "city": "Bilbao",
-    "maps": "https://maps.google.com/?q=43.25964,-2.92336"
+    "maps": "https://maps.google.com/?q=43.25964,-2.92336",
+    "nameEN": "Bilbao street food",
+    "nameES": "Comida callejera en Bilbao",
+    "descEN": "Lautxo (Casco Viejo) — croquetas takeaway €1.50-2 each, perfect for kids! Txiriboga (C/ Santa Maria) — pintxos at the counter €2.50. Tortilla al tag",
+    "descES": "Lautxo (Casco Viejo) — croquetas para llevar €1.50-2 la unidad, ¡perfectas para niños! Txiriboga (C/ Santa Maria) — pintxos en la barra €2.50. Tortilla al tag",
+    "cityEN": "Bilbao",
+    "cityES": "Bilbao"
   },
   {
     "id": "poi-f-321",
@@ -4899,7 +6913,13 @@ var MAP_POIS = [
     "lng": -2.92421,
     "day": "g45",
     "city": "Bilbao",
-    "maps": "https://maps.google.com/?q=43.25557,-2.92421"
+    "maps": "https://maps.google.com/?q=43.25557,-2.92421",
+    "nameEN": "Mercado de la Ribera",
+    "nameES": "Mercado de la Ribera",
+    "descEN": "(Erribera Kalea) — the largest covered market in Europe! Pintxos on the ground floor.",
+    "descES": "(Erribera Kalea) — ¡el mayor mercado cubierto de Europa! Pintxos en la planta baja.",
+    "cityEN": "Bilbao",
+    "cityES": "Bilbao"
   },
   {
     "id": "poi-h-322",
@@ -4917,7 +6937,14 @@ var MAP_POIS = [
     "hours": "Lug-Set: Tutti i giorni 8-19",
     "hoursEN": "Jul-Sep: Daily 8am-7pm",
     "price": "Adulti €30 (andata e ritorno)",
-    "priceEN": "Adults €30 (round trip)"
+    "priceEN": "Adults €30 (round trip)",
+    "nameEN": "Fuente Dé",
+    "nameES": "Fuente Dé",
+    "descES": "Un espectacular teleférico en los Picos de Europa que sube 753 metros en solo cuatro minutos, ofreciendo vistas impresionantes de las montañas.",
+    "cityEN": "Picos de Europa",
+    "cityES": "Picos de Europa",
+    "hoursES": "Jul-Sep: Todos los días 8-19",
+    "priceES": "Adultos €30 (ida y vuelta)"
   },
   {
     "id": "poi-k-323",
@@ -4935,7 +6962,14 @@ var MAP_POIS = [
     "hours": "Lug: Tutti i giorni 9-19; Ago: Tutti i giorni 8-19; 1-22 Set: Tutti i giorni 9-19",
     "hoursEN": "Jul: Daily 9am-7pm; Aug: Daily 8am-7pm; Sep 1-22: Daily 9am-7pm",
     "price": "Adulti €30, Bambini (4-12) €15 (Alta stagione andata e ritorno)",
-    "priceEN": "Adults €30, Kids (4-12) €15 (High season round trip)"
+    "priceEN": "Adults €30, Kids (4-12) €15 (High season round trip)",
+    "nameEN": "Fuente Dé cable car",
+    "nameES": "Teleférico de Fuente Dé",
+    "descES": "Un teleférico que salva un desnivel de 753 metros en 4 minutos, ofreciendo vistas impresionantes de los Picos de Europa.",
+    "cityEN": "Picos de Europa",
+    "cityES": "Picos de Europa",
+    "hoursES": "Jul: Todos los días 9-19; Ago: Todos los días 8-19; 1-22 Sep: Todos los días 9-19",
+    "priceES": "Adultos €30, Niños (4-12) €15 (Temporada alta ida y vuelta)"
   },
   {
     "id": "poi-k-324",
@@ -4953,7 +6987,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 9-18",
     "hoursEN": "Daily 9am-6pm",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Centro de Interpretación de los Picos de Europa (Tama)",
+    "nameES": "Centro de Interpretación de los Picos de Europa (Tama)",
+    "descES": "Este moderno centro de visitantes ofrece exposiciones interactivas sobre la geología, la flora, la fauna y la cultura de los Picos de Europa.",
+    "cityEN": "Picos de Europa",
+    "cityES": "Picos de Europa",
+    "hoursES": "Todos los días 9-18",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-p-325",
@@ -4966,7 +7007,13 @@ var MAP_POIS = [
     "lng": -4.6369,
     "day": "g46",
     "city": "Picos de Europa",
-    "maps": "https://maps.google.com/?q=43.1533,-4.6369"
+    "maps": "https://maps.google.com/?q=43.1533,-4.6369",
+    "nameEN": "Camping La Viorna (Potes)",
+    "nameES": "Camping La Viorna (Potes)",
+    "descEN": "~€40-50/night. Electricity, water, WiFi, pool, playground, stunning view. (Alternative: Camping Naranjo de Bulnes — <a href=\"https://maps.goog",
+    "descES": "~€40-50/noche. Electricidad, agua, WiFi, piscina, parque infantil, vista impresionante. (Alternativa: Camping Naranjo de Bulnes — <a href=\"https://maps.goog",
+    "cityEN": "Picos de Europa",
+    "cityES": "Picos de Europa"
   },
   {
     "id": "poi-f-326",
@@ -4979,7 +7026,13 @@ var MAP_POIS = [
     "lng": -4.8,
     "day": "g46",
     "city": "Picos de Europa",
-    "maps": "https://maps.google.com/?q=43.15,-4.8"
+    "maps": "https://maps.google.com/?q=43.15,-4.8",
+    "nameEN": "Picos de Europa",
+    "nameES": "Picos de Europa",
+    "descEN": "fabada asturiana (bean soup) or cachopo (giant stuffed cutlet). Cabrales cheese!",
+    "descES": "fabada asturiana (sopa de alubias) o cachopo (filete empanado gigante relleno). ¡Queso Cabrales!",
+    "cityEN": "Picos de Europa",
+    "cityES": "Picos de Europa"
   },
   {
     "id": "poi-h-327",
@@ -4997,7 +7050,14 @@ var MAP_POIS = [
     "hours": "Lug-Ago: Mar-Dom 10:30-14:00 e 17:00-20:30",
     "hoursEN": "Jul-Aug: Tue-Sun 10:30am-2pm & 5pm-8:30pm",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Cristo del Otero",
+    "nameES": "Cristo del Otero",
+    "descES": "Una imponente estatua de Cristo de 21 metros que ofrece vistas panorámicas de Palencia y alberga un museo.",
+    "cityEN": "Palencia",
+    "cityES": "Palencia",
+    "hoursES": "Jul-Ago: Mar-Dom 10:30-14:00 y 17:00-20:30",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-h-328",
@@ -5015,7 +7075,14 @@ var MAP_POIS = [
     "hours": "Lun-Sab 10-14 e 16-19; Dom/Festivi 10-13 e 16-20",
     "hoursEN": "Mon-Sat 10am-2pm & 4pm-7pm; Sun/Holidays 10am-1pm & 4pm-8pm",
     "price": "Adulti €7, Ridotto €5, Bambini €1",
-    "priceEN": "Adults €7, Reduced €5, Kids €1"
+    "priceEN": "Adults €7, Reduced €5, Kids €1",
+    "nameEN": "Cattedrale di Palencia",
+    "nameES": "Cattedrale di Palencia",
+    "descES": "Conocida como \"La Bella Sconosciuta\", es la tercera catedral más grande de España, con una espléndida arquitectura gótica.",
+    "cityEN": "Palencia",
+    "cityES": "Palencia",
+    "hoursES": "Lun-Sab 10-14 y 16-19; Dom/Festivos 10-13 y 16-20",
+    "priceES": "Adultos €7, Reducido €5, Niños €1"
   },
   {
     "id": "poi-h-329",
@@ -5033,7 +7100,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 24 ore",
     "hoursEN": "Daily 24 hours",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Eclipse site reconnaissance",
+    "nameES": "Reconocimiento del lugar para el eclipse",
+    "descES": "Este lugar ofrece una vista panorámica elevada sobre las llanuras castellanas, ideal para observar el eclipse solar de 2026.",
+    "cityEN": "Palencia",
+    "cityES": "Palencia",
+    "hoursES": "Abierto 24 horas todos los días",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-k-330",
@@ -5051,7 +7125,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 24 ore",
     "hoursEN": "Daily 24 hours",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Parco Isla Dos Aguas",
+    "nameES": "Parco Isla Dos Aguas",
+    "descES": "Un gran parque urbano en una isla del río Carrión, con senderos, instalaciones deportivas y un lago.",
+    "cityEN": "Palencia",
+    "cityES": "Palencia",
+    "hoursES": "Abierto 24 horas todos los días",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-k-331",
@@ -5067,7 +7148,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=42.01067,-4.53271",
     "descEN": "The historic center of Palencia features the symmetric Plaza Mayor, the Calle Mayor, and stunning architecture.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Explore the center of Palencia",
+    "nameES": "Explora el centro de Palencia",
+    "descES": "El centro histórico de Palencia cuenta con la simétrica Plaza Mayor, la Calle Mayor y una arquitectura impresionante.",
+    "cityEN": "Palencia",
+    "cityES": "Palencia",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-k-332",
@@ -5085,7 +7172,14 @@ var MAP_POIS = [
     "hours": "Mar-Dom 10:30-14:00 e 17:00-20:30 (Estate)",
     "hoursEN": "Tue-Sun 10:30am-2pm & 5pm-8:30pm (Summer)",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Museo del Agua in Palencia",
+    "nameES": "Museo del Agua en Palencia",
+    "descES": "Un museo inmersivo en un antiguo almacén de cereales que explora la historia y la ingeniería del Canal de Castilla.",
+    "cityEN": "Palencia",
+    "cityES": "Palencia",
+    "hoursES": "Mar-Dom 10:30-14:00 y 17:00-20:30 (Verano)",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-p-333",
@@ -5098,7 +7192,13 @@ var MAP_POIS = [
     "lng": -4.5346,
     "day": "g47",
     "city": "Palencia",
-    "maps": "https://maps.google.com/?q=42.0040,-4.5346"
+    "maps": "https://maps.google.com/?q=42.0040,-4.5346",
+    "nameEN": "Área de Autocaravanas Isla Dos Aguas (Palencia)",
+    "nameES": "Área de Autocaravanas Isla Dos Aguas (Palencia)",
+    "descEN": "~€Gratis/notte. Quiet parking on a river island, close to the center, camper services, a playground, and a dog area.",
+    "descES": "~€Gratis/notte. Aparcamiento tranquilo en una isla fluvial, cerca del centro, servicios para autocaravanas, zona de juegos, zona para perros.",
+    "cityEN": "Palencia",
+    "cityES": "Palencia"
   },
   {
     "id": "poi-f-334",
@@ -5111,7 +7211,13 @@ var MAP_POIS = [
     "lng": -4.5288,
     "day": "g47",
     "city": "Palencia",
-    "maps": "https://maps.google.com/?q=42.0096,-4.5288"
+    "maps": "https://maps.google.com/?q=42.0096,-4.5288",
+    "nameEN": "Castiglia",
+    "nameES": "Castiglia",
+    "descEN": "lechazo (roast lamb) or cochinillo (suckling pig). For children: tortilla española (always available, ~€2 at the bar)",
+    "descES": "lechazo (cordero asado) o cochinillo (lechón). Para niños: tortilla española (siempre disponible, ~€2 en el bar)",
+    "cityEN": "Palencia",
+    "cityES": "Palencia"
   },
   {
     "id": "poi-h-335",
@@ -5129,7 +7235,14 @@ var MAP_POIS = [
     "hours": "Lun-Ven 8-23, Sab 9-22, Dom e festivi 9-14",
     "hoursEN": "Mon-Fri 8am-11pm, Sat 9am-10pm, Sun & Holidays 9am-2pm",
     "price": "Adulti €8,67, Bambini (5-17) €4,42, Sotto i 5 anni Gratuito",
-    "priceEN": "Adults €8.67, Kids (5-17) €4.42, Under 5 Free"
+    "priceEN": "Adults €8.67, Kids (5-17) €4.42, Under 5 Free",
+    "nameEN": "Thermal baths",
+    "nameES": "Termas",
+    "descES": "Un moderno centro deportivo y recreativo que ofrece un área de spa con piscina, hidromasaje, baño turco y sauna.",
+    "cityEN": "Palencia",
+    "cityES": "Palencia",
+    "hoursES": "Lun-Vie 8-23, Sáb 9-22, Dom y festivos 9-14",
+    "priceES": "Adultos €8,67, Niños (5-17) €4,42, Menores de 5 años Gratis"
   },
   {
     "id": "poi-h-336",
@@ -5143,7 +7256,12 @@ var MAP_POIS = [
     "day": "g48",
     "city": "Palencia",
     "maps": "https://maps.google.com/?q=42.0096,-4.5288",
-    "descEN": "Total solar eclipse on August 12, 2026, visible across Palencia, with peak totality occurring at 20:29."
+    "descEN": "Total solar eclipse on August 12, 2026, visible across Palencia, with peak totality occurring at 20:29.",
+    "nameEN": "TOTAL ECLIPSE",
+    "nameES": "ECLIPSE TOTAL",
+    "descES": "Eclipse solar total del 12 de agosto de 2026 visible en toda Palencia, con el máximo de oscuridad a las 20:29.",
+    "cityEN": "Palencia",
+    "cityES": "Palencia"
   },
   {
     "id": "poi-k-337",
@@ -5159,7 +7277,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=42.01067,-4.53271",
     "descEN": "A historic 17th-century arcaded square in the heart of Palencia, featuring the neoclassical City Hall and a monument to Alonso Berruguete.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Plaza Mayor in Palencia",
+    "nameES": "Plaza Mayor en Palencia",
+    "descES": "Una histórica plaza porticada del siglo XVII en el corazón de Palencia, con el Ayuntamiento neoclásico y un monumento a Alonso Berruguete.",
+    "cityEN": "Palencia",
+    "cityES": "Palencia",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-p-338",
@@ -5172,7 +7296,13 @@ var MAP_POIS = [
     "lng": -4.5333,
     "day": "g48",
     "city": "Palencia",
-    "maps": "https://maps.google.com/?q=42.0067,-4.5333"
+    "maps": "https://maps.google.com/?q=42.0067,-4.5333",
+    "nameEN": "Motorhome Area Suances (Palencia)",
+    "nameES": "Área de Autocaravanas Suances (Palencia)",
+    "descEN": "~€Free/night. Water, drain, near the town center and the river. Alternatively, Camping de Cubillas de Sta. Marta.",
+    "descES": "~€Gratis/noche. Agua, desagüe, cerca del centro de la ciudad y del río. Como alternativa, Camping de Cubillas de Sta. Marta.",
+    "cityEN": "Palencia",
+    "cityES": "Palencia"
   },
   {
     "id": "poi-f-339",
@@ -5185,7 +7315,13 @@ var MAP_POIS = [
     "lng": -4.5288,
     "day": "g48",
     "city": "Palencia",
-    "maps": "https://maps.google.com/?q=42.0096,-4.5288"
+    "maps": "https://maps.google.com/?q=42.0096,-4.5288",
+    "nameEN": "Palencia",
+    "nameES": "Palencia",
+    "descEN": "churros con chocolate for a pre-eclipse breakfast! Dinner: tapas in Plaza Mayor",
+    "descES": "churros con chocolate para el desayuno pre-eclipse! Cena: tapas en Plaza Mayor",
+    "cityEN": "Palencia",
+    "cityES": "Palencia"
   },
   {
     "id": "poi-h-340",
@@ -5201,7 +7337,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=42.31902,3.31583",
     "descEN": "A spectacular maritime-terrestrial natural park in Catalonia known for its rugged, windswept rocky landscapes.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Cap de Creus",
+    "nameES": "Cap de Creus",
+    "descES": "Un espectacular parque natural marino-terrestre en Cataluña conocido por sus paisajes rocosos y salvajes.",
+    "cityEN": "Costa Brava",
+    "cityES": "Costa Brava",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-k-341",
@@ -5214,7 +7356,13 @@ var MAP_POIS = [
     "lng": 3.12,
     "day": "g49",
     "city": "Costa Brava",
-    "maps": "https://maps.google.com/?q=Aquabrava+Roses"
+    "maps": "https://maps.google.com/?q=Aquabrava+Roses",
+    "nameEN": "Pool or beach",
+    "nameES": "Piscina o playa",
+    "descEN": "After over 7 hours of driving, the best activity is to relax in the campsite's pool or on the beach in Costa Brava. For the following days, the pa",
+    "descES": "Tras más de 7 horas de viaje, la mejor actividad es relajarse en la piscina del camping o en la playa en Costa Brava. Para los días siguientes, el pa",
+    "cityEN": "Costa Brava",
+    "cityES": "Costa Brava"
   },
   {
     "id": "poi-p-342",
@@ -5227,7 +7375,13 @@ var MAP_POIS = [
     "lng": 3.10777,
     "day": "g49",
     "city": "Costa Brava",
-    "maps": "https://maps.google.com/?q=42.16098,3.10777"
+    "maps": "https://maps.google.com/?q=42.16098,3.10777",
+    "nameEN": "Camping Las Dunas (Sant Pere Pescador)",
+    "nameES": "Camping Las Dunas (Sant Pere Pescador)",
+    "descEN": "~€60-80/night. Electricity, water, WiFi, huge pool, beach access, playground.",
+    "descES": "~€60-80/noche. Electricidad, agua, WiFi, piscina enorme, acceso a la playa, parque infantil.",
+    "cityEN": "Costa Brava",
+    "cityES": "Costa Brava"
   },
   {
     "id": "poi-p-343",
@@ -5240,7 +7394,13 @@ var MAP_POIS = [
     "lng": 3.1619,
     "day": "g49",
     "city": "Costa Brava",
-    "maps": "https://maps.google.com/?q=42.2686,3.1619"
+    "maps": "https://maps.google.com/?q=42.2686,3.1619",
+    "nameEN": "Area Camper Roses",
+    "nameES": "Area Camper Roses",
+    "descEN": "~€15-20/night. Basic camper services, close to the town centre.",
+    "descES": "~€15-20/noche. Servicios básicos para autocaravanas, cerca del centro.",
+    "cityEN": "Costa Brava",
+    "cityES": "Costa Brava"
   },
   {
     "id": "poi-f-344",
@@ -5253,7 +7413,13 @@ var MAP_POIS = [
     "lng": 3.27683,
     "day": "g49",
     "city": "Costa Brava",
-    "maps": "https://maps.google.com/?q=42.28938,3.27683"
+    "maps": "https://maps.google.com/?q=42.28938,3.27683",
+    "nameEN": "Cadaqués street food",
+    "nameES": "Cadaqués comida callejera",
+    "descEN": "Tongas Pizza (Riera de Sant Vicenç 8) — pizza take-away ~€10-12. Sa Creperia (Av. Caritat Serinyana) — crêpes + frozen yogurt ~€5-8, the kids go crazy",
+    "descES": "Tongas Pizza (Riera de Sant Vicenç 8) — pizza para llevar ~€10-12. Sa Creperia (Av. Caritat Serinyana) — crêpes + frozen yogurt ~€5-8, a los niños les encantará",
+    "cityEN": "Costa Brava",
+    "cityES": "Costa Brava"
   },
   {
     "id": "poi-f-345",
@@ -5266,7 +7432,13 @@ var MAP_POIS = [
     "lng": 3.2721,
     "day": "g49",
     "city": "Costa Brava",
-    "maps": "https://maps.google.com/?q=42.2892,3.2721"
+    "maps": "https://maps.google.com/?q=42.2892,3.2721",
+    "nameEN": "Market",
+    "nameES": "Mercado",
+    "descEN": "Mercat de Cadaqués (Riera de Sant Vicenç) — only Monday morning 8:30-13:00.",
+    "descES": "Mercat de Cadaqués (Riera de Sant Vicenç) — solo el lunes por la mañana 8:30-13:00.",
+    "cityEN": "Costa Brava",
+    "cityES": "Costa Brava"
   },
   {
     "id": "poi-h-346",
@@ -5280,7 +7452,12 @@ var MAP_POIS = [
     "day": "g50",
     "city": "Cadaqués",
     "maps": "https://maps.google.com/?q=Cadaqués+Spain",
-    "descEN": "A picturesque coastal town on the Costa Brava known for its white houses, rocky coves, and artistic heritage."
+    "descEN": "A picturesque coastal town on the Costa Brava known for its white houses, rocky coves, and artistic heritage.",
+    "nameEN": "Cadaqués",
+    "nameES": "Cadaqués",
+    "descES": "Una pintoresca localidad costera de la Costa Brava conocida por sus casas blancas, sus calas rocosas y el arte.",
+    "cityEN": "Cadaqués",
+    "cityES": "Cadaqués"
   },
   {
     "id": "poi-h-347",
@@ -5296,7 +7473,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=42.31894,3.31572",
     "descEN": "A spectacular maritime-terrestrial natural park offering unique geological formations and stunning coastal views.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Cap de Creus",
+    "nameES": "Cap de Creus",
+    "descES": "Un espectacular parque natural marino-terrestre que ofrece formaciones geológicas únicas y vistas costeras.",
+    "cityEN": "Cadaqués",
+    "cityES": "Cadaqués",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-k-348",
@@ -5314,7 +7497,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 9:30-20:00",
     "hoursEN": "Daily 9:30am-8pm",
     "price": "Adulti €15, Bambini (0-8) Gratuito",
-    "priceEN": "Adults €15, Kids (0-8) Free"
+    "priceEN": "Adults €15, Kids (0-8) Free",
+    "nameEN": "Casa-Museo Salvador Dalí",
+    "nameES": "Casa-Museo Salvador Dalí",
+    "descES": "Explora la laberíntica cabaña de pescadores donde Salvador Dalí vivió y trabajó durante 40 años en Portlligat.",
+    "cityEN": "Cadaqués",
+    "cityES": "Cadaqués",
+    "hoursES": "Todos los días 9:30-20:00",
+    "priceES": "Adultos €15, Niños (0-8) Gratis"
   },
   {
     "id": "poi-k-349",
@@ -5328,7 +7518,12 @@ var MAP_POIS = [
     "day": "g50",
     "city": "Cadaqués",
     "maps": "https://maps.google.com/?q=Cadaqués+beach",
-    "descEN": "The beaches of Cadaqués offer picturesque coves, crystal-clear waters, and a tranquil Mediterranean atmosphere."
+    "descEN": "The beaches of Cadaqués offer picturesque coves, crystal-clear waters, and a tranquil Mediterranean atmosphere.",
+    "nameEN": "Beaches of Cadaqués",
+    "nameES": "Playas de Cadaqués",
+    "descES": "Las playas de Cadaqués ofrecen pintorescas calas, aguas cristalinas y una tranquila atmósfera mediterránea.",
+    "cityEN": "Cadaqués",
+    "cityES": "Cadaqués"
   },
   {
     "id": "poi-p-350",
@@ -5341,7 +7536,13 @@ var MAP_POIS = [
     "lng": 3.2842,
     "day": "g50",
     "city": "Cadaqués",
-    "maps": "https://maps.google.com/?q=42.2914,3.2842"
+    "maps": "https://maps.google.com/?q=42.2914,3.2842",
+    "nameEN": "WeCamp Cadaqués",
+    "nameES": "WeCamp Cadaqués",
+    "descEN": "~€45-90/night. (Alternative: Parking Riera de Sant Vicenç — <a href=\"https://maps.google.com/?q=42.2895,3.2758\" target=\"_blank\" rel=\"noopener\">📍 Maps<",
+    "descES": "~€45-90/noche. (Alternativa: Parking Riera de Sant Vicenç — <a href=\"https://maps.google.com/?q=42.2895,3.2758\" target=\"_blank\" rel=\"noopener\">📍 Maps<",
+    "cityEN": "Cadaqués",
+    "cityES": "Cadaqués"
   },
   {
     "id": "poi-k-351",
@@ -5357,7 +7558,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=43.6332,7.13797",
     "descEN": "Family-friendly public pebble and sand beaches on the French Riviera, known for excellent water quality.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Villeneuve-Loubet Beach",
+    "nameES": "Playa Villeneuve-Loubet",
+    "descES": "Playas públicas de guijarros y arena en Costa Azzurra, ideales para familias y con excelente calidad del agua.",
+    "cityEN": "Costa Azzurra",
+    "cityES": "Costa Azzurra",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-k-352",
@@ -5371,7 +7578,12 @@ var MAP_POIS = [
     "day": "g51",
     "city": "Costa Azzurra",
     "maps": "https://maps.google.com/?q=43.61496,7.12068",
-    "descEN": "Marineland of Antibes was a large marine animal park that permanently closed on January 5, 2025."
+    "descEN": "Marineland of Antibes was a large marine animal park that permanently closed on January 5, 2025.",
+    "nameEN": "Marineland at Antibes",
+    "nameES": "Marineland en Antibes",
+    "descES": "Marineland di Antibes era un gran parque de animales marinos que cerró definitivamente el 5 de enero de 2025.",
+    "cityEN": "Costa Azzurra",
+    "cityES": "Costa Azzurra"
   },
   {
     "id": "poi-p-353",
@@ -5384,7 +7596,13 @@ var MAP_POIS = [
     "lng": 7.1236,
     "day": "g51",
     "city": "Costa Azzurra",
-    "maps": "https://maps.google.com/?q=43.6264,7.1236"
+    "maps": "https://maps.google.com/?q=43.6264,7.1236",
+    "nameEN": "Camping de La Vieille Ferme (Villeneuve-Loubet)",
+    "nameES": "Camping de La Vieille Ferme (Villeneuve-Loubet)",
+    "descEN": "~€60/night. Electricity, water, WiFi, pool, playground, motorhome service area. Alternative: Camping Les Cigales (Mandelieu-la-Napoule).",
+    "descES": "~€60/noche. Electricidad, agua, WiFi, piscina, zona de juegos, área de servicio para autocaravanas. Alternativa: Camping Les Cigales (Mandelieu-la-Napoule).",
+    "cityEN": "Costa Azzurra",
+    "cityES": "Costa Azzurra"
   },
   {
     "id": "poi-s-354",
@@ -5397,7 +7615,13 @@ var MAP_POIS = [
     "lng": 7.0174,
     "day": "g51",
     "city": "Costa Azzurra",
-    "maps": "https://maps.google.com/?q=43.5528,7.0174"
+    "maps": "https://maps.google.com/?q=43.5528,7.0174",
+    "nameEN": "🛴 Costa Azzurra",
+    "nameES": "🛴 Costa Azzurra",
+    "descEN": "🛴 Scooters: seafronts and seaside promenades, ideal in the evening → see rentals",
+    "descES": "🛴 Patinetes: paseos marítimos y paseos junto al mar, ideal por la noche → ver alquileres",
+    "cityEN": "Costa Azzurra",
+    "cityES": "Costa Azzurra"
   },
   {
     "id": "poi-h-355",
@@ -5415,7 +7639,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 8:30-20:00 (agosto)",
     "hoursEN": "Daily 8:30am-8pm (August)",
     "price": "Adulti da €26, Bambini (4-12) da €16, Bambini (0-3) Gratuito",
-    "priceEN": "Adults from €26, Kids (4-12) from €16, Kids (0-3) Free"
+    "priceEN": "Adults from €26, Kids (4-12) from €16, Kids (0-3) Free",
+    "nameEN": "Acquario di Genova",
+    "nameES": "Acquario di Genova",
+    "descES": "Descubre el acuario más grande de Europa, con más de 12.000 ejemplares y 400 especies en una rica exposición de biodiversidad.",
+    "cityEN": "Genova",
+    "cityES": "Genova",
+    "hoursES": "Todos los días 8:30-20:00 (agosto)",
+    "priceES": "Adultos desde €26, Niños (4-12) desde €16, Niños (0-3) Gratis"
   },
   {
     "id": "poi-h-356",
@@ -5433,7 +7664,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 9-21",
     "hoursEN": "Daily 9am-9pm",
     "price": "Adulti €10-15 (Trekking Card)",
-    "priceEN": "Adults €10-15 (Trekking Card)"
+    "priceEN": "Adults €10-15 (Trekking Card)",
+    "nameEN": "Sentiero Azzurro",
+    "nameES": "Sentiero Azzurro",
+    "descES": "Un famoso sendero costero que conecta los cinco pintorescos pueblos de las Cinque Terre con espléndidas vistas al mar.",
+    "cityEN": "Cinque Terre",
+    "cityES": "Cinque Terre",
+    "hoursES": "Todos los días 9-21",
+    "priceES": "Adultos €10-15 (Trekking Card)"
   },
   {
     "id": "poi-h-357",
@@ -5451,7 +7689,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 10-19",
     "hoursEN": "Daily 10am-7pm",
     "price": "Intero €19, ridotto (7-17) €14, bambini (0-6) Gratuito",
-    "priceEN": "Adults €19, kids (7-17) €14, kids (0-6) Free"
+    "priceEN": "Adults €19, kids (7-17) €14, kids (0-6) Free",
+    "nameEN": "Galata Museo del Mare",
+    "nameES": "Galata Museo del Mare",
+    "descES": "El museo marítimo más grande del Mediterraneo, con reconstrucciones de barcos a tamaño real y un auténtico submarino.",
+    "cityEN": "Genova",
+    "cityES": "Genova",
+    "hoursES": "Todos los días 10-19",
+    "priceES": "General €19, reducido (7-17) €14, niños (0-6) Gratis"
   },
   {
     "id": "poi-k-358",
@@ -5469,7 +7714,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 8:30-20:00",
     "hoursEN": "Daily 8:30am-8pm",
     "price": "Adulti da €26, Ragazzi (4-12) da €16, Bambini (0-3) Gratuito",
-    "priceEN": "Adults from €26, Kids (4-12) from €16, Kids (0-3) Free"
+    "priceEN": "Adults from €26, Kids (4-12) from €16, Kids (0-3) Free",
+    "nameEN": "Acquario di Genova",
+    "nameES": "Acquario di Genova",
+    "descES": "El acuario más grande de Italia y entre los más importantes de Europa, que ofrece un viaje inmersivo en la biodiversidad marina con más de 70 tanques.",
+    "cityEN": "Genova",
+    "cityES": "Genova",
+    "hoursES": "Todos los días 8:30-20:00",
+    "priceES": "Adultos desde €26, Niños (4-12) desde €16, Niños (0-3) Gratis"
   },
   {
     "id": "poi-k-359",
@@ -5487,7 +7739,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 10:00-19:00",
     "hoursEN": "Daily 10am-7pm",
     "price": "Intero €19, ridotto (7-17) €14, bambini (0-6) Gratuito",
-    "priceEN": "Adults €19, kids (7-17) €14, kids (0-6) Free"
+    "priceEN": "Adults €19, kids (7-17) €14, kids (0-6) Free",
+    "nameEN": "Galata Museo del Mare e Sottomarino Nazario Sauro",
+    "nameES": "Galata Museo del Mare e Sottomarino Nazario Sauro",
+    "descES": "El mayor museo marítimo del Mediterráneo, con exposiciones interactivas y un auténtico submarino para explorar.",
+    "cityEN": "Genova",
+    "cityES": "Genova",
+    "hoursES": "Todos los días 10:00-19:00",
+    "priceES": "Tarifa general €19, reducida (7-17) €14, niños (0-6) Gratis"
   },
   {
     "id": "poi-k-360",
@@ -5505,7 +7764,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 8:00-19:30 (estate)",
     "hoursEN": "Daily 8am-7:30pm (summer)",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Parchi di Nervi",
+    "nameES": "Parchi di Nervi",
+    "descES": "El mayor parque urbano junto al mar del Mediterráneo, con jardines botánicos, museos y un rosal.",
+    "cityEN": "Genova",
+    "cityES": "Genova",
+    "hoursES": "Todos los días 8:00-19:30 (verano)",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-p-361",
@@ -5518,7 +7784,13 @@ var MAP_POIS = [
     "lng": 8.8183,
     "day": "g52",
     "city": "Genova",
-    "maps": "https://maps.google.com/?q=44.4325,8.8183"
+    "maps": "https://maps.google.com/?q=44.4325,8.8183",
+    "nameEN": "Camping Villa Doria",
+    "nameES": "Camping Villa Doria",
+    "descEN": "~€40-50/night. Electricity, water, WiFi, hot showers.",
+    "descES": "~€40-50/noche. Electricidad, agua, WiFi, duchas calientes.",
+    "cityEN": "Genova",
+    "cityES": "Genova"
   },
   {
     "id": "poi-p-362",
@@ -5531,7 +7803,13 @@ var MAP_POIS = [
     "lng": 9.008,
     "day": "g52",
     "city": "Genova",
-    "maps": "https://maps.google.com/?q=44.3932,9.0080"
+    "maps": "https://maps.google.com/?q=44.3932,9.0080",
+    "nameEN": "Camper stop area in Genova by Pons",
+    "nameES": "Área para autocaravanas en Genova de Pons",
+    "descEN": "~€24/night. Camper service.",
+    "descES": "~€24/noche. Servicio para autocaravanas.",
+    "cityEN": "Genova",
+    "cityES": "Genova"
   },
   {
     "id": "poi-f-363",
@@ -5544,7 +7822,13 @@ var MAP_POIS = [
     "lng": 8.92692,
     "day": "g52",
     "city": "Genova",
-    "maps": "https://maps.google.com/?q=44.4119,8.92692"
+    "maps": "https://maps.google.com/?q=44.4119,8.92692",
+    "nameEN": "Focaccia + pesto",
+    "nameES": "Focaccia + pesto",
+    "descEN": "at Porto Antico",
+    "descES": "en Porto Antico",
+    "cityEN": "Genova",
+    "cityES": "Genova"
   },
   {
     "id": "poi-h-364",
@@ -5562,7 +7846,14 @@ var MAP_POIS = [
     "hours": "Aperto tutti i giorni 24 ore su 24",
     "hoursEN": "Open daily 24/7",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Porto Antico",
+    "nameES": "Porto Antico",
+    "descES": "El corazón del paseo marítimo de Genova, una amplia plaza abierta con atracciones, restaurantes y vistas panorámicas.",
+    "cityEN": "Genova",
+    "cityES": "Genova",
+    "hoursES": "Abierto todos los días 24 horas al día",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-h-365",
@@ -5578,7 +7869,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=44.39,8.97472",
     "descEN": "An ancient, picturesque fishing village in Genoa known for its pastel-colored houses, pebble beach, and timeless charm.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Boccadasse",
+    "nameES": "Boccadasse",
+    "descES": "Un antiguo y pintoresco borgo marinaro de Genova conocido por sus casas de colores pastel, la playita y su encanto atemporal.",
+    "cityEN": "Genova",
+    "cityES": "Genova",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-h-366",
@@ -5594,7 +7891,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=44.39131,8.96587",
     "descEN": "A scenic 3 km seaside promenade connecting Genoa's center to the picturesque village of Boccadasse.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Seafront promenade Corso Italia",
+    "nameES": "Paseo marítimo Corso Italia",
+    "descES": "Un paseo panorámico junto al mar de 3 km que conecta el centro de Genova con el pintoresco pueblo de Boccadasse.",
+    "cityEN": "Genova",
+    "cityES": "Genova",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-k-367",
@@ -5612,7 +7915,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 8:30-20:00 (luglio-agosto)",
     "hoursEN": "Daily 8:30am-8pm (July-August)",
     "price": "Adulti da €26, Ragazzi (4-12) da €16, Bambini (0-3) Gratuito",
-    "priceEN": "Adults from €26, Kids (4-12) from €16, Kids (0-3) Free"
+    "priceEN": "Adults from €26, Kids (4-12) from €16, Kids (0-3) Free",
+    "nameEN": "Acquario di Genova",
+    "nameES": "Acquario di Genova",
+    "descES": "El acuario más grande de Italia y uno de los más importantes de Europa, con más de 400 especies acuáticas.",
+    "cityEN": "Genova",
+    "cityES": "Genova",
+    "hoursES": "Todos los días 8:30-20:00 (julio-agosto)",
+    "priceES": "Adultos desde €26, Niños (4-12) desde €16, Niños (0-3) Gratis"
   },
   {
     "id": "poi-k-368",
@@ -5630,7 +7940,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 9:30-18:30 (lug-ago), 9:30-17:30 (set-giu)",
     "hoursEN": "Daily 9:30am-6:30pm (Jul-Aug), 9:30am-5:30pm (Sep-Jun)",
     "price": "Adulti/Ragazzi (4-12) €12, Bambini (2-3) €7, Bambini (0-1) Gratuito",
-    "priceEN": "Adults/Kids (4-12) €12, Kids (2-3) €7, Kids (0-1) Free"
+    "priceEN": "Adults/Kids (4-12) €12, Kids (2-3) €7, Kids (0-1) Free",
+    "nameEN": "Città dei bambini",
+    "nameES": "Città dei bambini",
+    "descES": "Un museo interactivo dedicado a los cinco sentidos donde los niños y los jóvenes pueden aprender jugando.",
+    "cityEN": "Genova",
+    "cityES": "Genova",
+    "hoursES": "Todos los días 9:30-18:30 (jul-ago), 9:30-17:30 (sep-jun)",
+    "priceES": "Adultos/Niños (4-12) €12, Niños (2-3) €7, Niños (0-1) Gratis"
   },
   {
     "id": "poi-k-369",
@@ -5648,7 +7965,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 9:30-18:30 (luglio-agosto)",
     "hoursEN": "Daily 9:30am-6:30pm (July-August)",
     "price": "Adulti/Ragazzi (4-12) €12, Bambini (2-3) €7, Sotto i 2 anni Gratuito",
-    "priceEN": "Adults/Kids (4-12) €12, Kids (2-3) €7, Under 2 Free"
+    "priceEN": "Adults/Kids (4-12) €12, Kids (2-3) €7, Under 2 Free",
+    "nameEN": "Many activities for children in the Porto Antico area.",
+    "nameES": "Muchas actividades para niños en el área del Porto Antico.",
+    "descES": "Un museo experiencial e interactivo dedicado a los cinco sentidos, con zonas de juego educativo para niños de 2 a 12 años.",
+    "cityEN": "Genova",
+    "cityES": "Genova",
+    "hoursES": "Todos los días 9:30-18:30 (julio-agosto)",
+    "priceES": "Adultos/Jóvenes (4-12) €12, Niños (2-3) €7, Menores de 2 años Gratis"
   },
   {
     "id": "poi-p-370",
@@ -5661,7 +7985,13 @@ var MAP_POIS = [
     "lng": 9.008,
     "day": "g53",
     "city": "Genova",
-    "maps": "https://maps.google.com/?q=44.3932,9.0080"
+    "maps": "https://maps.google.com/?q=44.3932,9.0080",
+    "nameEN": "Camper Parking Area at Genova di Pons",
+    "nameES": "Área de estacionamiento para autocaravanas en Genova di Pons",
+    "descEN": "~€24/night. Services included.",
+    "descES": "~€24/noche. Servicios incluidos.",
+    "cityEN": "Genova",
+    "cityES": "Genova"
   },
   {
     "id": "poi-p-371",
@@ -5674,7 +8004,11 @@ var MAP_POIS = [
     "lng": 8.70464,
     "day": "g53",
     "city": "Genova",
-    "maps": "https://maps.google.com/?q=44.41421,8.70464"
+    "maps": "https://maps.google.com/?q=44.41421,8.70464",
+    "nameEN": "Caravan Park La Vesima",
+    "nameES": "Caravan Park La Vesima",
+    "cityEN": "Genova",
+    "cityES": "Genova"
   },
   {
     "id": "poi-f-372",
@@ -5687,7 +8021,13 @@ var MAP_POIS = [
     "lng": 8.9463,
     "day": "g53",
     "city": "Genova",
-    "maps": "https://maps.google.com/?q=44.4056,8.9463"
+    "maps": "https://maps.google.com/?q=44.4056,8.9463",
+    "nameEN": "Genova street food",
+    "nameES": "Comida callejera de Genova",
+    "descEN": "Antica Sciamadda (Via San Giorgio 14R) — farinata + panissa ~€3-5, an institution since 1700! Antico Forno della Casana (Vico Casana) — focaccia genovese ~",
+    "descES": "Antica Sciamadda (Via San Giorgio 14R) — farinata + panissa ~€3-5, ¡institución desde 1700! Antico Forno della Casana (Vico Casana) — focaccia genovese ~",
+    "cityEN": "Genova",
+    "cityES": "Genova"
   },
   {
     "id": "poi-f-373",
@@ -5700,7 +8040,13 @@ var MAP_POIS = [
     "lng": 8.94197,
     "day": "g53",
     "city": "Genova",
-    "maps": "https://maps.google.com/?q=44.40577,8.94197"
+    "maps": "https://maps.google.com/?q=44.40577,8.94197",
+    "nameEN": "Mercato Orientale MOG",
+    "nameES": "Mercato Orientale MOG",
+    "descEN": "(Via XX Settembre 75R) — street food + fresh produce.",
+    "descES": "(Via XX Settembre 75R) — comida callejera + productos frescos.",
+    "cityEN": "Genova",
+    "cityES": "Genova"
   },
   {
     "id": "poi-k-374",
@@ -5716,7 +8062,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=45.44879,11.84493",
     "descEN": "A large and well-equipped highway rest stop on the A4 near Padova, offering food, snacks, and clean facilities.",
     "hours": "Aperto 24 ore",
-    "hoursEN": "Open 24 hours"
+    "hoursEN": "Open 24 hours",
+    "nameEN": "Autogrill A4",
+    "nameES": "Autogrill A4",
+    "descES": "Un gran y bien equipado autogrill en la A4 cerca de Padova, que ofrece comida, snacks y servicios higiénicos limpios.",
+    "cityEN": "Home",
+    "cityES": "Casa",
+    "hoursES": "Abierto 24 ore"
   },
   {
     "id": "poi-p-375",
@@ -5729,7 +8081,13 @@ var MAP_POIS = [
     "lng": 11.7956,
     "day": "g54",
     "city": "Casa",
-    "maps": "https://maps.google.com/?q=45.3888,11.7956"
+    "maps": "https://maps.google.com/?q=45.3888,11.7956",
+    "nameEN": "Home — Selvazzano Dentro",
+    "nameES": "Casa — Selvazzano Dentro",
+    "descEN": "€0/notte. No camping necessary for this night.",
+    "descES": "€0/notte. No es necesario acampar esta noche.",
+    "cityEN": "Home",
+    "cityES": "Casa"
   },
   {
     "id": "poi-a-400",
@@ -5745,7 +8103,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=61.7739,29.3457",
     "descEN": "A stunning, internationally renowned esker ridge formed during the Ice Age, offering majestic pine forests and beautiful lake views.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Punkaharju Ridge",
+    "nameES": "Punkaharju Ridge",
+    "descES": "Una espléndida cresta morrénica formada durante la era glaciar, que ofrece majestuosos bosques de pinos y hermosas vistas al lago.",
+    "cityEN": "Punkaharju",
+    "cityES": "Punkaharju",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-a-401",
@@ -5763,7 +8127,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 24 ore",
     "hoursEN": "Daily 24 hours",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Aavasaksa Hill",
+    "nameES": "Aavasaksa Hill",
+    "descES": "Aavasaksa es una colina panorámica Patrimonio de la UNESCO que ofrece vistas impresionantes del sol de medianoche.",
+    "cityEN": "Aavasaksa",
+    "cityES": "Aavasaksa",
+    "hoursES": "Todos los días 24 ore",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-a-402",
@@ -5773,7 +8144,7 @@ var MAP_POIS = [
     "name": "Fjellheisen Tromsø",
     "desc": "Una popolare funivia che offre viste panoramiche su Tromsø e sulle montagne circostanti da 421 metri di altitudine.",
     "lat": 69.64,
-    "lng": 19.0,
+    "lng": 19,
     "day": "g16",
     "city": "Tromsø",
     "maps": "https://maps.google.com/?q=Fjellheisen+Tromsø",
@@ -5781,7 +8152,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 09:00-00:00",
     "hoursEN": "Daily 9am-12am",
     "price": "Adulti NOK 495, Bambini NOK 280 (Andata e ritorno)",
-    "priceEN": "Adults NOK 495, Children NOK 280 (Round trip)"
+    "priceEN": "Adults NOK 495, Children NOK 280 (Round trip)",
+    "nameEN": "Fjellheisen Tromsø",
+    "nameES": "Fjellheisen Tromsø",
+    "descES": "Un teleférico popular que ofrece vistas panorámicas de Tromsø y de las montañas circundantes a una altitud de 421 metri.",
+    "cityEN": "Tromsø",
+    "cityES": "Tromsø",
+    "hoursES": "Todos los días 09:00-00:00",
+    "priceES": "Adultos NOK 495, Niños NOK 280 (Ida y vuelta)"
   },
   {
     "id": "poi-a-404",
@@ -5797,7 +8175,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=Reinebringen+Lofoten",
     "descEN": "A challenging but rewarding hike up 1,560 stone steps offering spectacular views over the fishing village of Reine.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Reinebringen",
+    "nameES": "Reinebringen",
+    "descES": "Una caminata exigente pero gratificante por 1.560 escalones de piedra con vistas espectaculares al pueblo de Reine.",
+    "cityEN": "Reine, Lofoten",
+    "cityES": "Reine, Lofoten",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-a-405",
@@ -5813,7 +8197,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=Atlantic+Road+Norway",
     "descEN": "A spectacular 8.3-kilometer scenic coastal road connecting islands via eight bridges over the Atlantic Ocean.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Atlantic Road",
+    "nameES": "Atlantic Road",
+    "descES": "Una espectacular carretera costera panorámica de 8,3 km que conecta las islas mediante ocho puentes sobre el Océano Atlántico.",
+    "cityEN": "Averøy",
+    "cityES": "Averøy",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-a-406",
@@ -5831,7 +8221,14 @@ var MAP_POIS = [
     "hours": "24/7 (Da metà maggio a ott/nov, chiuso in inverno)",
     "hoursEN": "24/7 (Mid-May to Oct/Nov, closed in winter)",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Trollstigen Viewpoint",
+    "nameES": "Trollstigen Viewpoint",
+    "descES": "Espectacular mirador arquitectónico con vistas a la sinuosa carretera de Trollstigen y a las empinadas montañas.",
+    "cityEN": "Trollstigen",
+    "cityES": "Trollstigen",
+    "hoursES": "24/7 (De mediados de mayo a oct/nov, cerrado en invierno)",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-a-407",
@@ -5849,7 +8246,14 @@ var MAP_POIS = [
     "hours": "Aperto 24 ore su 24",
     "hoursEN": "Open 24 hours",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Ørnesvingen (Geirangerfjord)",
+    "nameES": "Ørnesvingen (Geirangerfjord)",
+    "descES": "Un espectacular mirador en la cima de la Strada delle Aquile con vistas al Geirangerfjord y a las cascadas de las Sette Sorelle.",
+    "cityEN": "Geiranger",
+    "cityES": "Geiranger",
+    "hoursES": "Abierto 24 horas",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-a-408",
@@ -5867,7 +8271,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 24 ore",
     "hoursEN": "Daily 24 hours",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Stegastein Viewpoint",
+    "nameES": "Stegastein Viewpoint",
+    "descES": "Admira vistas panorámicas impresionantes del Aurlandsfjord desde una espectacular plataforma de madera a 650 metri sobre el agua.",
+    "cityEN": "Aurland",
+    "cityES": "Aurland",
+    "hoursES": "Todos los días, 24 horas",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-a-409",
@@ -5885,7 +8296,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 24 ore su 24",
     "hoursEN": "Daily 24/7",
     "price": "Gratuito (Parcheggio NOK 275)",
-    "priceEN": "Free (Parking NOK 275)"
+    "priceEN": "Free (Parking NOK 275)",
+    "nameEN": "Preikestolen",
+    "nameES": "Preikestolen",
+    "descES": "Una icónica atracción natural con un acantilado de 604 metri que ofrece vistas espectaculares del Lysefjord.",
+    "cityEN": "Stavanger",
+    "cityES": "Stavanger",
+    "hoursES": "Todos los días 24 horas al día",
+    "priceES": "Gratis (Aparcamiento NOK 275)"
   },
   {
     "id": "poi-a-410",
@@ -5901,7 +8319,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=44.3050,9.1900",
     "descEN": "A scenic viewpoint in the Portofino Regional Nature Park offering breathtaking panoramic views of the Ligurian coast.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Monte di Portofino",
+    "nameES": "Monte di Portofino",
+    "descES": "Un mirador en el Parco Naturale Regionale di Portofino que ofrece vistas impresionantes de la costa de Liguria.",
+    "cityEN": "Portofino",
+    "cityES": "Portofino",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-a-411",
@@ -5919,7 +8343,14 @@ var MAP_POIS = [
     "hours": "Mer-Gio 17:00-23:55, Ven-Sab 15:00-00:55 (1-4 luglio 2026)",
     "hoursEN": "Wed-Thu 5pm-11:55pm, Fri-Sat 3pm-12:55am (July 1-4, 2026)",
     "price": "Biglietto 1 giorno €29-39, pass 4 giorni €59-69 (varia in base alla data di acquisto)",
-    "priceEN": "1-day ticket €29-39, 4-day pass €59-69 (varies by purchase date)"
+    "priceEN": "1-day ticket €29-39, 4-day pass €59-69 (varies by purchase date)",
+    "nameEN": "Õllesummer",
+    "nameES": "Õllesummer",
+    "descES": "El mayor festival de música y cerveza de Estonia, que se celebra en el Tallinn Song Festival Grounds.",
+    "cityEN": "Tallinn",
+    "cityES": "Tallinn",
+    "hoursES": "Mié-Jue 17:00-23:55, Vie-Sáb 15:00-00:55 (1-4 julio 2026)",
+    "priceES": "Entrada 1 día €29-39, pase 4 días €59-69 (varía según la fecha de compra)"
   },
   {
     "id": "poi-a-412",
@@ -5937,7 +8368,14 @@ var MAP_POIS = [
     "hours": "Ven 15-02, Sab 13-02, Dom 14-00 (3-5 luglio 2026)",
     "hoursEN": "Fri 3pm-2am, Sat 1pm-2am, Sun 2pm-12am (July 3-5, 2026)",
     "price": "1 giorno da €120, 2 giorni da €209, 3 giorni €239",
-    "priceEN": "1-day from €120, 2-day from €209, 3-day €239"
+    "priceEN": "1-day from €120, 2-day from €209, 3-day €239",
+    "nameEN": "Ruisrock",
+    "nameES": "Ruisrock",
+    "descES": "Uno de los festivales de rock más antiguos de Europa, que se celebra cada año en el pintoresco parque Kansanpuisto en la isla de Ruissalo.",
+    "cityEN": "Turku",
+    "cityES": "Turku",
+    "hoursES": "Vie 15-02, Sáb 13-02, Dom 14-00 (3-5 julio 2026)",
+    "priceES": "1 día desde €120, 2 días desde €209, 3 días €239"
   },
   {
     "id": "poi-a-413",
@@ -5955,7 +8393,14 @@ var MAP_POIS = [
     "hours": "10-14 giugno 2026 (Biglietteria: 8:00-1:30)",
     "hoursEN": "June 10-14, 2026 (Box office: 8am-1:30am)",
     "price": "Biglietto singolo €12, Film Card (12 biglietti) €125",
-    "priceEN": "Screening ticket €12, Film Card (12 tickets) €125"
+    "priceEN": "Screening ticket €12, Film Card (12 tickets) €125",
+    "nameEN": "Midnight Sun Film Festival",
+    "nameES": "Midnight Sun Film Festival",
+    "descES": "Un icónico festival de cine anual de cinco días que se celebra en junio bajo el sol de medianoche en Sodankylä.",
+    "cityEN": "Sodankylä",
+    "cityES": "Sodankylä",
+    "hoursES": "10-14 junio 2026 (Taquilla: 8:00-1:30)",
+    "priceES": "Entrada individual €12, Film Card (12 entradas) €125"
   },
   {
     "id": "poi-a-414",
@@ -5973,7 +8418,14 @@ var MAP_POIS = [
     "hours": "Ven-Sab 15-24 (Bukta for Alle: Sab 11-14)",
     "hoursEN": "Fri-Sat 3pm-12am (Bukta for Everyone: Sat 11am-2pm)",
     "price": "Pass festival NOK 2099",
-    "priceEN": "Festival pass NOK 2099"
+    "priceEN": "Festival pass NOK 2099",
+    "nameEN": "Bukta Festival",
+    "nameES": "Bukta Festival",
+    "descES": "Un festival al aire libre de rock, cerveza y mariscos que se celebra cada julio en la idílica Telegrafbukta.",
+    "cityEN": "Tromsø",
+    "cityES": "Tromsø",
+    "hoursES": "Vie-Sáb 15-24 (Bukta for Alle: Sáb 11-14)",
+    "priceES": "Pase del festival NOK 2099"
   },
   {
     "id": "poi-a-415",
@@ -5991,7 +8443,14 @@ var MAP_POIS = [
     "hours": "28 lug - 3 ago 2026",
     "hoursEN": "Jul 28 - Aug 3, 2026",
     "price": "Varia in base all'evento (circa NOK 250-695); molti eventi e il mercato sono gratuiti",
-    "priceEN": "Varies by event (approx. NOK 250-695); many events and the market are free"
+    "priceEN": "Varies by event (approx. NOK 250-695); many events and the market are free",
+    "nameEN": "Olavsfestdagene",
+    "nameES": "Olavsfestdagene",
+    "descES": "El mayor festival cultural y religioso de Noruega, con conciertos, debates y un mercado histórico.",
+    "cityEN": "Trondheim",
+    "cityES": "Trondheim",
+    "hoursES": "28 jul - 3 ago 2026",
+    "priceES": "Varía según el evento (aprox. NOK 250-695); muchos eventos y el mercado son gratuitos"
   },
   {
     "id": "poi-a-416",
@@ -6009,7 +8468,14 @@ var MAP_POIS = [
     "hours": "3-12 luglio 2026",
     "hoursEN": "July 3-12, 2026",
     "price": "Molti concerti gratuiti; gli eventi a pagamento variano (circa DKK 295 - DKK 800+)",
-    "priceEN": "Many free concerts; ticketed events vary (approx. DKK 295 - DKK 800+)"
+    "priceEN": "Many free concerts; ticketed events vary (approx. DKK 295 - DKK 800+)",
+    "nameEN": "Copenhagen Jazz Festival",
+    "nameES": "Copenhagen Jazz Festival",
+    "descES": "Un festival musical veraniego anual en Copenaghen con más de 1.200 conciertos, muchos de ellos gratuitos, en 120 lugares.",
+    "cityEN": "Copenhagen",
+    "cityES": "Copenhagen",
+    "hoursES": "3-12 jul 2026",
+    "priceES": "Muchos conciertos gratuitos; los eventos de pago varían (aprox. DKK 295 - DKK 800+)"
   },
   {
     "id": "poi-a-417",
@@ -6027,7 +8493,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 9-22",
     "hoursEN": "Daily 9am-10pm",
     "price": "Adulti €32, Giovani €21.20, Bambini €20.70 (Biglietto giornaliero estivo)",
-    "priceEN": "Adults €32, Youth €21.20, Kids €20.70 (Summer Day Ticket)"
+    "priceEN": "Adults €32, Youth €21.20, Kids €20.70 (Summer Day Ticket)",
+    "nameEN": "Therme Wien Oberlaa",
+    "nameES": "Therme Wien Oberlaa",
+    "descES": "Las termas urbanas más grandes y modernas de Europa, con 26 piscinas, saunas y amplias áreas de bienestar para relajarse.",
+    "cityEN": "Vienna",
+    "cityES": "Vienna",
+    "hoursES": "Todos los días 9-22",
+    "priceES": "Adultos €32, Jóvenes €21.20, Niños €20.70 (Entrada diaria de verano)"
   },
   {
     "id": "poi-a-418",
@@ -6045,7 +8518,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 8-20 (su prenotazione)",
     "hoursEN": "Daily 8am-8pm (booking required)",
     "price": "€15",
-    "priceEN": "€15"
+    "priceEN": "€15",
+    "nameEN": "Lakeside Finnish sauna",
+    "nameES": "Sauna finlandesa junto al lago",
+    "descES": "Esta tradicional sauna finlandesa en Pistohiekka Resort ofrece vistas panorámicas al lago Saimaa.",
+    "cityEN": "Saimaa",
+    "cityES": "Saimaa",
+    "hoursES": "Todos los días 8-20 (con reserva)",
+    "priceES": "€15"
   },
   {
     "id": "poi-a-419",
@@ -6063,7 +8543,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 6-23",
     "hoursEN": "Daily 6am-11pm",
     "price": "Da NOK 150",
-    "priceEN": "From NOK 150"
+    "priceEN": "From NOK 150",
+    "nameEN": "Pust Tromsø",
+    "nameES": "Pust Tromsø",
+    "descES": "Una sauna flotante en el puerto histórico de Tromsø que ofrece una mezcla relajante de calor y un baño vigorizante en el Oceano Artico.",
+    "cityEN": "Tromsø",
+    "cityES": "Tromsø",
+    "hoursES": "Todos los días 6-23",
+    "priceES": "Desde NOK 150"
   },
   {
     "id": "poi-a-420",
@@ -6081,7 +8568,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 24/7 (attrazioni aperte 15 mar-31 ott)",
     "hoursEN": "Daily 24/7 (attractions open 15 Mar-31 Oct)",
     "price": "Gratuito (giostre €3.50-15.00)",
-    "priceEN": "Free (rides €3.50-15.00)"
+    "priceEN": "Free (rides €3.50-15.00)",
+    "nameEN": "Wurstelprater",
+    "nameES": "Wurstelprater",
+    "descES": "Un histórico parque de atracciones en Vienna que ofrece una variedad de atracciones, juegos y experiencias culinarias.",
+    "cityEN": "Vienna",
+    "cityES": "Vienna",
+    "hoursES": "Todos los días 24/7 (atracciones abiertas 15 mar-31 oct)",
+    "priceES": "Gratis (atracciones €3.50-15.00)"
   },
   {
     "id": "poi-a-421",
@@ -6099,7 +8593,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 11-21 (Estate)",
     "hoursEN": "Daily 11am-9pm (Summer)",
     "price": "Ingresso all'area €5, Braccialetto Isohupi €53",
-    "priceEN": "Area entrance €5, Isohupi wristband €53"
+    "priceEN": "Area entrance €5, Isohupi wristband €53",
+    "nameEN": "Linnanmäki",
+    "nameES": "Linnanmäki",
+    "descES": "El parque de atracciones más antiguo y popular de Finlandia con más de 40 atracciones, juegos y entretenimiento.",
+    "cityEN": "Helsinki",
+    "cityES": "Helsinki",
+    "hoursES": "Todos los días 11-21 (Verano)",
+    "priceES": "Entrada al área €5, Pulsera Isohupi €53"
   },
   {
     "id": "poi-a-422",
@@ -6117,7 +8618,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 10-18",
     "hoursEN": "Daily 10am-6pm",
     "price": "Adulti €24.50 (online) / €26.50 (ingresso), Bambini (4-14) €20 / €22, Under 4 Gratuito",
-    "priceEN": "Adults €24.50 (online) / €26.50 (gate), Children (4-14) €20 / €22, Under 4 Free"
+    "priceEN": "Adults €24.50 (online) / €26.50 (gate), Children (4-14) €20 / €22, Under 4 Free",
+    "nameEN": "Ranua Wildlife Park",
+    "nameES": "Ranua Wildlife Park",
+    "descES": "Ranua Wildlife Park está especializado en especies animales árticas y nórdicas, con amplios recintos en bosques de coníferas.",
+    "cityEN": "Ranua",
+    "cityES": "Ranua",
+    "hoursES": "Todos los días 10-18",
+    "priceES": "Adultos €24.50 (online) / €26.50 (entrada), Niños (4-14) €20 / €22, Menores de 4 Gratis"
   },
   {
     "id": "poi-a-423",
@@ -6131,7 +8639,12 @@ var MAP_POIS = [
     "day": "g13",
     "city": "Rovaniemi",
     "maps": "https://maps.google.com/?q=66.53925,25.79719",
-    "descEN": "An underground Christmas theme park located beneath the Arctic Circle where visitors can meet Santa and his elves."
+    "descEN": "An underground Christmas theme park located beneath the Arctic Circle where visitors can meet Santa and his elves.",
+    "nameEN": "SantaPark",
+    "nameES": "SantaPark",
+    "descES": "Un parque temático navideño subterráneo bajo el Círculo Polar Ártico donde se puede conocer a Babbo Natale y a sus elfos.",
+    "cityEN": "Rovaniemi",
+    "cityES": "Rovaniemi"
   },
   {
     "id": "poi-a-425",
@@ -6149,7 +8662,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 10-19 (Estate)",
     "hoursEN": "Daily 10am-7pm (Summer)",
     "price": "Prezzi dinamici: da NOK 269 (bassa stagione) a NOK 699 (estate)",
-    "priceEN": "Dynamic pricing: from NOK 269 (low season) to NOK 699 (summer)"
+    "priceEN": "Dynamic pricing: from NOK 269 (low season) to NOK 699 (summer)",
+    "nameEN": "Kristiansand Dyrepark",
+    "nameES": "Kristiansand Dyrepark",
+    "descES": "La mayor atracción familiar de Noruega con un zoo con más de 100 especies, parque de atracciones y parque acuático.",
+    "cityEN": "Kristiansand",
+    "cityES": "Kristiansand",
+    "hoursES": "Todos los días 10-19 (Verano)",
+    "priceES": "Precios dinámicos: desde NOK 269 (temporada baja) hasta NOK 699 (Verano)"
   },
   {
     "id": "poi-a-426",
@@ -6167,7 +8687,14 @@ var MAP_POIS = [
     "hours": "Dom-Gio 11-22, Ven-Sab 11-24 (Estate)",
     "hoursEN": "Sun-Thu 11am-10pm, Fri-Sat 11am-12am (Summer)",
     "price": "Ingresso da 150 DKK, bambini 3-7 da 75 DKK",
-    "priceEN": "Entrance from 150 DKK, children 3-7 from 75 DKK"
+    "priceEN": "Entrance from 150 DKK, children 3-7 from 75 DKK",
+    "nameEN": "Tivoli Gardens",
+    "nameES": "Tivoli Gardens",
+    "descES": "Tivoli Gardens es un histórico y mágico parque de atracciones en el corazón de Copenhagen con atracciones y restaurantes.",
+    "cityEN": "Copenhagen",
+    "cityES": "Copenhagen",
+    "hoursES": "Dom-Jue 11-22, Vie-Sáb 11-24 (Verano)",
+    "priceES": "Entrada desde 150 DKK, niños 3-7 desde 75 DKK"
   },
   {
     "id": "poi-a-427",
@@ -6185,7 +8712,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 10-18 (da fine marzo a inizio novembre)",
     "hoursEN": "Daily 10am-6pm (late March to early November)",
     "price": "Da 349 DKK (online) / 519 DKK (all'ingresso)",
-    "priceEN": "From 349 DKK (online) / 519 DKK (at entrance)"
+    "priceEN": "From 349 DKK (online) / 519 DKK (at entrance)",
+    "nameEN": "Legoland Billund",
+    "nameES": "Legoland Billund",
+    "descES": "El parque LEGOLAND original en Danimarca con más de 45 atracciones, atracciones interactivas y el icónico Miniland construido con millones de ladrillos LEGO.",
+    "cityEN": "Billund",
+    "cityES": "Billund",
+    "hoursES": "Todos los días 10-18 (desde finales de marzo hasta principios de noviembre)",
+    "priceES": "Desde 349 DKK (online) / 519 DKK (en taquilla)"
   },
   {
     "id": "poi-a-428",
@@ -6203,7 +8737,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 9:30-18:30",
     "hoursEN": "Daily 9:30am-6:30pm",
     "price": "Adulti/Bambini DKK 349, Bambini (0-2) Gratuito",
-    "priceEN": "Adults/Children DKK 349, Children (0-2) Free"
+    "priceEN": "Adults/Children DKK 349, Children (0-2) Free",
+    "nameEN": "Lalandia Aquadome",
+    "nameES": "Lalandia Aquadome",
+    "descES": "El mayor parque acuático tropical de Scandinavia con emocionantes toboganes, piscinas de olas y zonas de spa.",
+    "cityEN": "Billund",
+    "cityES": "Billund",
+    "hoursES": "Todos los días 9:30-18:30",
+    "priceES": "Adultos/Niños DKK 349, Niños (0-2) Gratis"
   },
   {
     "id": "poi-a-429",
@@ -6221,7 +8762,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 10-18",
     "hoursEN": "Daily 10am-6pm",
     "price": "Da €37",
-    "priceEN": "From €37"
+    "priceEN": "From €37",
+    "nameEN": "Heide Park Resort",
+    "nameES": "Heide Park Resort",
+    "descES": "El mayor parque de atracciones del norte de Alemania con más de 30 atracciones y montañas rusas para todos. Desvío de ~72 km del itinerario (parada en Brema).",
+    "cityEN": "Soltau",
+    "cityES": "Soltau",
+    "hoursES": "Todos los días 10-18",
+    "priceES": "Desde €37"
   },
   {
     "id": "poi-a-430",
@@ -6239,7 +8787,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 10:00-21:30 (fino alle 23:15 in alcune serate)",
     "hoursEN": "Daily 10am-9:30pm (extended to 11:15pm on certain evenings)",
     "price": "Adulti da €47, Bambini (5-12) da €39, Sotto i 5 anni Gratuito",
-    "priceEN": "Adults from €47, Children (5-12) from €39, Under 5 Free"
+    "priceEN": "Adults from €47, Children (5-12) from €39, Under 5 Free",
+    "nameEN": "Futuroscope",
+    "nameES": "Futuroscope",
+    "descES": "Un parque temático futurista que ofrece atracciones multimedia inmersivas, atracciones 3D/4D y espectaculares shows nocturnos. Desvío de ~95 km del itinerario (Valle della Loira).",
+    "cityEN": "Poitiers",
+    "cityES": "Poitiers",
+    "hoursES": "Todos los días 10:00-21:30 (hasta las 23:15 algunas noches)",
+    "priceES": "Adultos desde €47, Niños (5-12) desde €39, Menores de 5 años Gratis"
   },
   {
     "id": "poi-a-431",
@@ -6257,7 +8812,14 @@ var MAP_POIS = [
     "hours": "Lun-Ven 6-21, Sab 6-18 (Ristorazione fino alle 23)",
     "hoursEN": "Mon-Fri 6am-9pm, Sat 6am-6pm (Food stands until 11pm)",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Naschmarkt",
+    "nameES": "Naschmarkt",
+    "descES": "El mercado más famoso de Vienna ofrece una animada oferta culinaria con alrededor de 130 puestos y un mercadillo los sábados.",
+    "cityEN": "Vienna",
+    "cityES": "Vienna",
+    "hoursES": "Lun-Vie 6-21, Sáb 6-18 (Restauración hasta las 23)",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-a-432",
@@ -6275,7 +8837,14 @@ var MAP_POIS = [
     "hours": "Lun-Ven 7-20, Sab 7-18, Dom 8-16",
     "hoursEN": "Mon-Fri 7am-8pm, Sat 7am-6pm, Sun 8am-4pm",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Hala Mirowska",
+    "nameES": "Hala Mirowska",
+    "descES": "Hala Mirowska es un histórico mercado cubierto de Varsavia que ofrece una animada experiencia de compra local con productos frescos.",
+    "cityEN": "Warsaw",
+    "cityES": "Warsaw",
+    "hoursES": "Lun-Vie 7-20, Sáb 7-18, Dom 8-16",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-a-433",
@@ -6293,7 +8862,14 @@ var MAP_POIS = [
     "hours": "Mar-Sab 7-18, Dom 7-15, Lun Chiuso",
     "hoursEN": "Tue-Sat 7am-6pm, Sun 7am-3pm, Mon Closed",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Halės Turgus",
+    "nameES": "Halės Turgus",
+    "descES": "Halės Turgus es el mercado más antiguo de Vilnius que ofrece una experiencia auténtica con productos locales frescos, salumi e formaggi.",
+    "cityEN": "Vilnius",
+    "cityES": "Vilnius",
+    "hoursES": "Mar-Sáb 7-18, Dom 7-15, Lun Cerrado",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-a-434",
@@ -6311,7 +8887,14 @@ var MAP_POIS = [
     "hours": "Lun-Sab 7:30-18:00, Dom 7:30-17:00",
     "hoursEN": "Mon-Sat 7:30am-6pm, Sun 7:30am-5pm",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Mercato Centrale di Riga",
+    "nameES": "Mercato Centrale di Riga",
+    "descES": "El mercado más grande de Europa alojado en cinco antiguos hangares para dirigibles Zeppelin, con una gran variedad de productos locales.",
+    "cityEN": "Riga",
+    "cityES": "Riga",
+    "hoursES": "Lun-Sáb 7:30-18:00, Dom 7:30-17:00",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-a-435",
@@ -6329,7 +8912,14 @@ var MAP_POIS = [
     "hours": "Mar-Sab 9-19, Dom-Lun 9-17 (Caffè/Bar aperti più a lungo)",
     "hoursEN": "Tue-Sat 9am-7pm, Sun-Mon 9am-5pm (Cafes/Bars open later)",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Āgenskalns Market",
+    "nameES": "Āgenskalns Market",
+    "descES": "Un histórico mercado de 1898 que ofrece una animada mezcla de productos locales, comida callejera y eventos culturales.",
+    "cityEN": "Riga",
+    "cityES": "Riga",
+    "hoursES": "Mar-Sáb 9-19, Dom-Lun 9-17 (Cafés/Bares abiertos más tiempo)",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-a-436",
@@ -6347,7 +8937,14 @@ var MAP_POIS = [
     "hours": "Lun-Sab 9-19, Dom 9-17",
     "hoursEN": "Mon-Sat 9am-7pm, Sun 9am-5pm",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Balti Jaama Turg",
+    "nameES": "Balti Jaama Turg",
+    "descES": "Un animado mercado de varios niveles en Tallinn que ofrece productos frescos locales, comida callejera, artesanía y artículos vintage.",
+    "cityEN": "Tallinn",
+    "cityES": "Tallinn",
+    "hoursES": "Lun-Sáb 9-19, Dom 9-17",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-a-437",
@@ -6365,7 +8962,14 @@ var MAP_POIS = [
     "hours": "Lun-Ven 6:30-18:00, Sab 6:30-16:00, Dom 10:00-17:00",
     "hoursEN": "Mon-Fri 6:30am-6pm, Sat 6:30am-4pm, Sun 10am-5pm",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Kauppatori",
+    "nameES": "Kauppatori",
+    "descES": "La plaza de mercado más famosa de Helsinki, que ofrece comidas tradicionales, artesanía y un animado ambiente junto al mar.",
+    "cityEN": "Helsinki",
+    "cityES": "Helsinki",
+    "hoursES": "Lun-Vie 6:30-18:00, Sáb 6:30-16:00, Dom 10:00-17:00",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-a-438",
@@ -6383,7 +8987,14 @@ var MAP_POIS = [
     "hours": "Estate (Mag-Set): Tutti i giorni 10-18 (Mathallen al coperto 9-21:30, Dom 10-21:30)",
     "hoursEN": "Summer (May-Sep): Daily 10am-6pm (indoor Mathallen 9am-9:30pm, Sun 10am-9:30pm)",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Fisketorget Bergen",
+    "nameES": "Fisketorget Bergen",
+    "descES": "Un pintoresco e histórico mercado al aire libre en el corazón de Bergen que ofrece pescado fresco, fruta y verduras.",
+    "cityEN": "Bergen",
+    "cityES": "Bergen",
+    "hoursES": "Verano (may-ago): Todos los días 10-18 (Mathallen cubierto 9-21:30, Dom 10-21:30)",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-a-439",
@@ -6401,7 +9012,14 @@ var MAP_POIS = [
     "hours": "Lun-Ven 10-19, Sab-Dom 10-18",
     "hoursEN": "Mon-Fri 10am-7pm, Sat-Sun 10am-6pm",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Torvehallerne",
+    "nameES": "Torvehallerne",
+    "descES": "Un animado mercado cubierto en el centro de Copenaghen que ofrece productos frescos, especialidades gourmet y comida callejera.",
+    "cityEN": "Copenhagen",
+    "cityES": "Copenhagen",
+    "hoursES": "Lun-Vie 10-19, Sáb-Dom 10-18",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-a-440",
@@ -6419,7 +9037,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 11:30-21:30",
     "hoursEN": "Daily 11:30am-9:30pm",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Reffen Street Food",
+    "nameES": "Reffen Street Food",
+    "descES": "El mayor mercado de comida callejera del Norte de Europa, con diversas cocinas del mundo en el paseo marítimo.",
+    "cityEN": "Copenhagen",
+    "cityES": "Copenhagen",
+    "hoursES": "Todos los días 11:30-21:30",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-a-441",
@@ -6437,7 +9062,14 @@ var MAP_POIS = [
     "hours": "Lun 10-16, Mar-Gio e Dom 10-23, Ven-Sab 10-24",
     "hoursEN": "Mon 10am-4pm, Tue-Thu & Sun 10am-11pm, Fri-Sat 10am-12am",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Mercato Orientale",
+    "nameES": "Mercato Orientale",
+    "descES": "Un animado mercado gastronómico cubierto en el corazón de Genova que ofrece especialidades ligures y cocina internacional.",
+    "cityEN": "Genova",
+    "cityES": "Genova",
+    "hoursES": "Lun 10-16, Mar-Jue y Dom 10-23, Vie-Sáb 10-24",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-a-442",
@@ -6447,13 +9079,19 @@ var MAP_POIS = [
     "name": "Parco Nazionale Lemmenjoki",
     "desc": "Il più grande parco nazionale della Finlandia offre una vasta natura selvaggia, antiche foreste e un leggendario fiume d'oro.",
     "lat": 68.85,
-    "lng": 26.0,
+    "lng": 26,
     "day": "g14",
     "city": "Lemmenjoki",
     "maps": "https://maps.google.com/?q=Lemmenjoki+National+Park",
     "descEN": "Finland's largest national park offers a vast wilderness of fells, old-growth forests, and a legendary gold river.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Lemmenjoki National Park",
+    "nameES": "Parque Nacional Lemmenjoki",
+    "descES": "El mayor parque nacional de Finlandia ofrece una vasta naturaleza salvaje, bosques milenarios y un legendario río de oro.",
+    "cityEN": "Lemmenjoki",
+    "cityES": "Lemmenjoki",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-a-443",
@@ -6463,13 +9101,19 @@ var MAP_POIS = [
     "name": "Parco Nazionale Urho Kekkonen",
     "desc": "Il secondo parco nazionale più grande della Finlandia, con vaste distese selvagge, foreste secolari e sentieri.",
     "lat": 68.3,
-    "lng": 28.0,
+    "lng": 28,
     "day": "g14",
     "city": "Saariselkä",
     "maps": "https://maps.google.com/?q=Urho+Kekkonen+National+Park",
     "descEN": "Finland's second-largest national park, offering vast fell wilderness, old-growth forests, and extensive trails.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Urho Kekkonen National Park",
+    "nameES": "Parque Nacional Urho Kekkonen",
+    "descES": "El segundo parque nacional más grande de Finlandia, con extensas zonas salvajes, bosques centenarios y senderos.",
+    "cityEN": "Saariselkä",
+    "cityES": "Saariselkä",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-a-444",
@@ -6487,7 +9131,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 9-17 (estate)",
     "hoursEN": "Daily 9am-5pm (summer)",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Abisko National Park",
+    "nameES": "Parque Nacional de Abisko",
+    "descES": "Un paisaje montañoso del extremo norte con bosques de abedules, brezales abiertos y áspero terreno ártico. Desvío de ~145 km en Svezia desde el itinerario (parada en Tromsø).",
+    "cityEN": "Abisko",
+    "cityES": "Abisko",
+    "hoursES": "Todos los días 9-17 (verano)",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-a-445",
@@ -6503,7 +9154,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=Ånderdalen+National+Park+Senja",
     "descEN": "A diverse coastal national park on Senja island featuring old-growth pine forests, bogs, and rugged mountains.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Ånderdalen National Park",
+    "nameES": "Parque Nacional Ånderdalen",
+    "descES": "Un parque nacional costero en la isla de Senja con antiguos bosques de pinos, turberas y montañas escarpadas.",
+    "cityEN": "Senja",
+    "cityES": "Senja",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-a-446",
@@ -6519,7 +9176,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=Jotunheimen+National+Park",
     "descEN": "A vast mountainous area in Norway known as the \"Home of the Giants,\" featuring over 250 peaks above 2,000 meters.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Jotunheimen National Park",
+    "nameES": "Parque Nacional Jotunheimen",
+    "descES": "Una extensa zona montañosa en Norvegia conocida como \"Casa de los Gigantes\", con más de 250 cimas por encima de los 2.000 metri.",
+    "cityEN": "Jotunheimen",
+    "cityES": "Jotunheimen",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-a-447",
@@ -6535,7 +9198,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=Hardangervidda+National+Park",
     "descEN": "Norway's largest national park, featuring a vast mountain plateau with wild reindeer and excellent hiking trails.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Hardangervidda National Park",
+    "nameES": "Parque Nacional Hardangervidda",
+    "descES": "El parque nacional más grande de Norvegia, con una vasta meseta montañosa, renos salvajes y excelentes senderos.",
+    "cityEN": "Hardangervidda",
+    "cityES": "Hardangervidda",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-a-448",
@@ -6551,7 +9220,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=Folgefonna+National+Park",
     "descEN": "A spectacular national park in Norway featuring the country's third-largest glacier, wild valleys, and dramatic icefalls.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Folgefonna National Park",
+    "nameES": "Parque Nacional Folgefonna",
+    "descES": "Un espectacular parque nacional en Norvegia con el tercer glaciar más grande del país, valles salvajes y cascadas de hielo.",
+    "cityEN": "Folgefonna",
+    "cityES": "Folgefonna",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-a-449",
@@ -6569,7 +9244,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 10-17 (Lug-Ago)",
     "hoursEN": "Daily 10am-5pm (Jul-Aug)",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Thy National Park",
+    "nameES": "Parque Nacional Thy",
+    "descES": "El parque nacional más antiguo de Danimarca, con una naturaleza costera salvaje, extensas dunas y senderos.",
+    "cityEN": "Thy",
+    "cityES": "Thy",
+    "hoursES": "Todos los días 10-17 (Jul-Ago)",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-a-450",
@@ -6587,7 +9269,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 24h (accesso veicoli limitato in estate, navetta disponibile)",
     "hoursEN": "Daily 24h (vehicle access restricted in summer, shuttle available)",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Cap de Creus Natural Park",
+    "nameES": "Parque Natural Cap de Creus",
+    "descES": "Un espléndido parque natural caracterizado por costas rocosas, calas escondidas y el punto más oriental de la penisola iberica.",
+    "cityEN": "Cap de Creus",
+    "cityES": "Cap de Creus",
+    "hoursES": "Todos los días 24h (acceso de vehículos limitado en verano, lanzadera disponible)",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-a-451",
@@ -6603,7 +9292,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=Parc+National+des+Calanques",
     "descEN": "A stunning coastal national park featuring dramatic limestone cliffs, turquoise coves, and rich biodiversity.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Calanques National Park",
+    "nameES": "Parque Nacional Calanques",
+    "descES": "Un espléndido parque nacional costero con espectaculares acantilados calcáreos, calas turquesas y una rica biodiversidad.",
+    "cityEN": "Marseille",
+    "cityES": "Marseille",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-a-452",
@@ -6621,7 +9316,14 @@ var MAP_POIS = [
     "hours": "Sentieri aperti 24/7; Via dell'Amore 9-21 (estate)",
     "hoursEN": "Trails open 24/7; Via dell'Amore 9am-9pm (summer)",
     "price": "Trekking Card da €10, Treno Card da €22",
-    "priceEN": "Trekking Card from €10, Train Card from €22"
+    "priceEN": "Trekking Card from €10, Train Card from €22",
+    "nameEN": "Cinque Terre National Park",
+    "nameES": "Parque Nacional Cinque Terre",
+    "descES": "Un espléndido parque nacional costero con viñedos en terrazas, senderos panorámicos y cinco pueblos históricos.",
+    "cityEN": "Cinque Terre",
+    "cityES": "Cinque Terre",
+    "hoursES": "Senderos abiertos 24/7; Via dell'Amore 9-21 (verano)",
+    "priceES": "Trekking Card desde €10, Treno Card desde €22"
   },
   {
     "id": "poi-t-500",
@@ -6639,7 +9341,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 09:00-00:00",
     "hoursEN": "Daily 9am-12am",
     "price": "Adulti NOK 495, Bambini (6-17) NOK 280",
-    "priceEN": "Adults NOK 495, Children (6-17) NOK 280"
+    "priceEN": "Adults NOK 495, Children (6-17) NOK 280",
+    "nameEN": "Fjellheisen (Tromsø)",
+    "nameES": "Fjellheisen (Tromsø)",
+    "descES": "Un famoso teleférico que lleva a los visitantes a 421 metri en el monte Storsteinen para vistas panorámicas de Tromsø y la aurora boreal.",
+    "cityEN": "Tromsø",
+    "cityES": "Tromsø",
+    "hoursES": "Todos los días 09:00-00:00",
+    "priceES": "Adultos NOK 495, Niños (6-17) NOK 280"
   },
   {
     "id": "poi-t-501",
@@ -6657,7 +9366,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 24 ore",
     "hoursEN": "Daily 24 hours",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Prestvannet lake loop",
+    "nameES": "Prestvannet lake loop",
+    "descES": "Una tranquila reserva natural y un lago en la cima de la isla de Tromsøya, ideal para la observación de aves y la aurora.",
+    "cityEN": "Tromsø",
+    "cityES": "Tromsø",
+    "hoursES": "Todos los días 24 ore",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-t-502",
@@ -6675,7 +9391,14 @@ var MAP_POIS = [
     "hours": "Aperto 24 ore su 24",
     "hoursEN": "Open 24 hours",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Sherpatrappa (Tromsø)",
+    "nameES": "Sherpatrappa (Tromsø)",
+    "descES": "Una popular excursión con 1.203 escalones de piedra construidos por Sherpas nepaleses, con vistas a Tromsø.",
+    "cityEN": "Tromsø",
+    "cityES": "Tromsø",
+    "hoursES": "Abierto 24 ore su 24",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-t-503",
@@ -6691,7 +9414,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=69.48991,17.33338",
     "descEN": "A scenic rest area with a Siberian larch walkway offering dramatic views of the jagged Oksen mountain peaks.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Tungeneset boardwalk (Senja)",
+    "nameES": "Tungeneset boardwalk (Senja)",
+    "descES": "Una zona de descanso panorámica con una pasarela de alerce siberiano que ofrece vistas espectaculares a los montes Oksen.",
+    "cityEN": "Senja",
+    "cityES": "Senja",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-t-504",
@@ -6707,7 +9436,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=69.50737,17.59572",
     "descEN": "Segla is Senja's most iconic mountain, offering a steep, challenging hike with a dramatic 639-meter cliff drop.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Segla (Senja)",
+    "nameES": "Segla (Senja)",
+    "descES": "Segla es la montaña más icónica de Senja, con una subida empinada y un espectacular acantilado de 639 metri.",
+    "cityEN": "Senja",
+    "cityES": "Senja",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-t-505",
@@ -6723,7 +9458,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=69.51384,17.58483",
     "descEN": "A short but steep hike offering spectacular views of the iconic Segla mountain and surrounding fjords.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Hesten (Senja)",
+    "nameES": "Hesten (Senja)",
+    "descES": "Una caminata corta pero empinada que ofrece vistas espectaculares de la icónica montaña Segla y los fiordos circundantes.",
+    "cityEN": "Senja",
+    "cityES": "Senja",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-t-506",
@@ -6739,7 +9480,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=69.27623,15.96405",
     "descEN": "One of Norway's longest white-sand beaches, offering spectacular views of the ocean and the bird island Bleiksøya.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Bleik Beach (Andøya)",
+    "nameES": "Bleik Beach (Andøya)",
+    "descES": "Una de las playas de arena blanca más largas de Noruega, con vistas espectaculares al océano y a la isla de aves Bleiksøya.",
+    "cityEN": "Andøya",
+    "cityES": "Andøya",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-t-507",
@@ -6755,7 +9502,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=69.23567,15.9485",
     "descEN": "A popular coastal hike offering spectacular 360-degree views of dramatic mountain peaks, white sandy beaches, and the ocean.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Måtinden (Andøya)",
+    "nameES": "Måtinden (Andøya)",
+    "descES": "Una popular caminata costera que ofrece espectaculares vistas de 360 grados de cumbres montañosas, playas blancas y el océano.",
+    "cityEN": "Andøya",
+    "cityES": "Andøya",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-t-508",
@@ -6773,7 +9526,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 24h",
     "hoursEN": "Daily 24h",
     "price": "Parcheggio NOK 60/3h o NOK 100/ingresso",
-    "priceEN": "Parking NOK 60/3h or NOK 100/entry"
+    "priceEN": "Parking NOK 60/3h or NOK 100/entry",
+    "nameEN": "Haukland - Uttakleiv",
+    "nameES": "Haukland - Uttakleiv",
+    "descES": "Una playa salvaje de arena blanca con rocas, famosa por la roca con forma de Occhio di Drago y el sol de medianoche.",
+    "cityEN": "Lofoten",
+    "cityES": "Lofoten",
+    "hoursES": "Abierto 24h todos los días",
+    "priceES": "Aparcamiento NOK 60/3h o NOK 100/entrada"
   },
   {
     "id": "poi-t-509",
@@ -6789,7 +9549,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=68.16126,13.5019",
     "descEN": "A popular, easy-to-moderate hike offering stunning panoramic views of the Lofoten landscape from its 436m summit.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Offersøykammen (Lofoten)",
+    "nameES": "Offersøykammen (Lofoten)",
+    "descES": "Una excursión popular de dificultad fácil-moderada que ofrece espléndidas vistas panorámicas de las Lofoten desde la cima de 436 m.",
+    "cityEN": "Lofoten",
+    "cityES": "Lofoten",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-t-510",
@@ -6805,7 +9571,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=67.92769,13.07652",
     "descEN": "A famous hike in Lofoten featuring nearly 2,000 Sherpa steps leading to a spectacular panoramic view of Reinefjorden.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Reinebringen (Lofoten)",
+    "nameES": "Reinebringen (Lofoten)",
+    "descES": "Una famosa excursión en las Lofoten con casi 2.000 escalones Sherpa que conducen a una vista espectacular sobre Reinefjorden.",
+    "cityEN": "Lofoten",
+    "cityES": "Lofoten",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-t-511",
@@ -6821,7 +9593,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=68.0900,13.1200",
     "descEN": "A popular hike in Lofoten offering spectacular views from the 543-meter summit of Ryten down to Kvalvika Beach.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Ryten + Kvalvika (Lofoten)",
+    "nameES": "Ryten + Kvalvika (Lofoten)",
+    "descES": "Una popular excursión en las Lofoten que ofrece vistas espectaculares desde la cima del Ryten sobre la playa de Kvalvika.",
+    "cityEN": "Lofoten",
+    "cityES": "Lofoten",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-t-512",
@@ -6837,7 +9615,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=62.4560,7.6700",
     "descEN": "An architectural viewpoint offering spectacular views of the Trollstigen road, Stigfossen waterfall, and mountains.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Trollstigen Viewpoint",
+    "nameES": "Trollstigen Viewpoint",
+    "descES": "Un mirador arquitectónico que ofrece vistas espectaculares de la carretera Trollstigen, la cascada Stigfossen y las montañas.",
+    "cityEN": "Trollstigen",
+    "cityES": "Trollstigen",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-t-513",
@@ -6853,7 +9637,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=62.0900,7.0700",
     "descEN": "A spectacular viewpoint offering iconic, sweeping vistas over the Geirangerfjord and the village of Geiranger.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Flydalsjuvet (Geiranger)",
+    "nameES": "Flydalsjuvet (Geiranger)",
+    "descES": "Un espectacular mirador que ofrece vistas icónicas e impresionantes del Geirangerfjord y del pueblo.",
+    "cityEN": "Geiranger",
+    "cityES": "Geiranger",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-t-514",
@@ -6867,7 +9657,12 @@ var MAP_POIS = [
     "day": "g29",
     "city": "Geiranger",
     "maps": "https://maps.google.com/?q=62.11009,7.12121",
-    "descEN": "Skageflå is a historic, abandoned mountain farm perched 250 meters above the Geirangerfjord with stunning views."
+    "descEN": "Skageflå is a historic, abandoned mountain farm perched 250 meters above the Geirangerfjord with stunning views.",
+    "nameEN": "Skageflå (Geiranger)",
+    "nameES": "Skageflå (Geiranger)",
+    "descES": "Skageflå es una histórica granja de montaña abandonada a 250 metri sobre el Geirangerfjord con vistas impresionantes.",
+    "cityEN": "Geiranger",
+    "cityES": "Geiranger"
   },
   {
     "id": "poi-t-515",
@@ -6885,7 +9680,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 24/24",
     "hoursEN": "Daily 24/24",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Fløyen Troll Forest (Bergen)",
+    "nameES": "Fløyen Troll Forest (Bergen)",
+    "descES": "Un mágico parque infantil en Monte Fløyen con esculturas de trolls de madera, circuitos de obstáculos y senderos naturales.",
+    "cityEN": "Bergen",
+    "cityES": "Bergen",
+    "hoursES": "Todos los días 24/24",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-t-516",
@@ -6901,7 +9703,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=60.3770,5.3890",
     "descEN": "A popular 15 km mountain hike between Mount Ulriken and Mount Fløyen offering panoramic views of Bergen and the fjords.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Vidden Trail (Bergen)",
+    "nameES": "Vidden Trail (Bergen)",
+    "descES": "Una popular excursión de montaña de 15 km entre el Monte Ulriken y el Monte Fløyen con vistas panorámicas de Bergen y de los fiordos.",
+    "cityEN": "Bergen",
+    "cityES": "Bergen",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-t-517",
@@ -6919,7 +9727,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 24 ore su 24",
     "hoursEN": "Daily 24 hours",
     "price": "Gratuito (Parcheggio NOK 275)",
-    "priceEN": "Free (Parking NOK 275)"
+    "priceEN": "Free (Parking NOK 275)",
+    "nameEN": "Preikestolen",
+    "nameES": "Preikestolen",
+    "descES": "Preikestolen (il Pulpito) es un célebre acantilado de 604 metri de altura que ofrece vistas espectaculares del Lysefjord.",
+    "cityEN": "Stavanger",
+    "cityES": "Stavanger",
+    "hoursES": "Todos los días 24 ore su 24",
+    "priceES": "Gratis (Aparcamiento NOK 275)"
   },
   {
     "id": "poi-t-518",
@@ -6937,7 +9752,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 24/7 (metà maggio - ott)",
     "hoursEN": "Daily 24/7 (mid-May to Oct)",
     "price": "Gratuito (Parcheggio NOK 300)",
-    "priceEN": "Free (Parking NOK 300)"
+    "priceEN": "Free (Parking NOK 300)",
+    "nameEN": "Kjerag",
+    "nameES": "Kjerag",
+    "descES": "Kjerag es la cumbre más alta del Lysefjord, famosa por la roca Kjeragbolten encajada entre dos acantilados.",
+    "cityEN": "Lysebotn",
+    "cityES": "Lysebotn",
+    "hoursES": "Todos los días 24/7 (metà maggio - ott)",
+    "priceES": "Gratis (Aparcamiento NOK 300)"
   },
   {
     "id": "poi-t-519",
@@ -6953,7 +9775,13 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=61.77389,29.34583",
     "descEN": "A stunning esker ridge offering breathtaking views of Lake Saimaa and a centuries-old travel route.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Punkaharju Ridge",
+    "nameES": "Punkaharju Ridge",
+    "descES": "Una hermosa cresta esker que ofrece vistas impresionantes del lago Saimaa y una ruta de viaje secular.",
+    "cityEN": "Punkaharju",
+    "cityES": "Punkaharju",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-t-520",
@@ -6971,7 +9799,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 9:30-19:00 (estate)",
     "hoursEN": "Daily 9:30am-7pm (summer)",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "San Juan de Gaztelugatxe",
+    "nameES": "San Juan de Gaztelugatxe",
+    "descES": "Un islote mágico en la costa vasca coronado por una ermita, accesible por un puente de piedra y 241 escalones.",
+    "cityEN": "Bermeo",
+    "cityES": "Bermeo",
+    "hoursES": "Todos los días 9:30-19:00 (verano)",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-t-521",
@@ -6989,7 +9824,14 @@ var MAP_POIS = [
     "hours": "Aperto 24 ore",
     "hoursEN": "Open 24 hours",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Flysch Zumaia",
+    "nameES": "Flysch Zumaia",
+    "descES": "Famosa por sus espectaculares acantilados costeros y las formaciones rocosas estriadas, es una maravilla geológica.",
+    "cityEN": "Zumaia",
+    "cityES": "Zumaia",
+    "hoursES": "Abierto 24 horas",
+    "priceES": "Gratis"
   },
   {
     "id": "poi-t-522",
@@ -7007,7 +9849,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 10-21 (estate)",
     "hoursEN": "Daily 10am-9pm (summer)",
     "price": "Funicolare a/r: Adulti €5.50, Bambini €2.50. Accesso recinto: €3.00",
-    "priceEN": "Funicular return: Adults €5.50, Kids €2.50. Enclosure access: €3.00"
+    "priceEN": "Funicular return: Adults €5.50, Kids €2.50. Enclosure access: €3.00",
+    "nameEN": "Monte Igueldo (San Sebastián)",
+    "nameES": "Monte Igueldo (San Sebastián)",
+    "descES": "Un clásico parque de atracciones y mirador que ofrece vistas espectaculares de la bahía de La Concha.",
+    "cityEN": "San Sebastián",
+    "cityES": "San Sebastián",
+    "hoursES": "Todos los días 10-21 (verano)",
+    "priceES": "Funicular ida y vuelta: Adultos €5.50, Niños €2.50. Acceso al recinto: €3.00"
   },
   {
     "id": "poi-t-523",
@@ -7025,7 +9874,14 @@ var MAP_POIS = [
     "hours": "Lun-Ven 10-18, Sab-Dom 9-18 (Primavera)",
     "hoursEN": "Mon-Fri 10am-6pm, Sat-Sun 9am-6pm (Spring)",
     "price": "Adulti €30, Bambini €15 (Alta Stagione Andata e Ritorno)",
-    "priceEN": "Adults €30, Kids €15 (High Season Round Trip)"
+    "priceEN": "Adults €30, Kids €15 (High Season Round Trip)",
+    "nameEN": "Fuente Dé (Picos de Europa)",
+    "nameES": "Fuente Dé (Picos de Europa)",
+    "descES": "El teleférico de Fuente Dé asciende 753 metros en el corazón de los Picos de Europa, ofreciendo vistas espectaculares de las montañas.",
+    "cityEN": "Picos de Europa",
+    "cityES": "Picos de Europa",
+    "hoursES": "Lun-Vie 10-18, Sáb-Dom 9-18 (Primavera)",
+    "priceES": "Adultos €30, Niños €15 (Temporada alta Ida y Vuelta)"
   },
   {
     "id": "poi-t-524",
@@ -7043,7 +9899,14 @@ var MAP_POIS = [
     "hours": "Tutti i giorni 24h (Strada chiusa alle auto private 8-20:50 in estate; accesso solo in bus)",
     "hoursEN": "Daily 24h (Road closed to private cars 8am-8:50pm in summer; access via bus only)",
     "price": "Gratuito (Biglietto bus €9)",
-    "priceEN": "Free (Bus ticket €9)"
+    "priceEN": "Free (Bus ticket €9)",
+    "nameEN": "Lagos de Covadonga",
+    "nameES": "Lagos de Covadonga",
+    "descES": "Dos hermosos lagos alpinos, Enol y Ercina, situados entre las espectaculares cumbres del Parco Nazionale dei Picos de Europa.",
+    "cityEN": "Picos de Europa",
+    "cityES": "Picos de Europa",
+    "hoursES": "Todos los días 24h (Carretera cerrada a vehículos privados 8-20:50 en verano; acceso solo en bus)",
+    "priceES": "Gratuito (Billete de bus €9)"
   },
   {
     "id": "poi-t-525",
@@ -7059,6 +9922,12 @@ var MAP_POIS = [
     "maps": "https://maps.google.com/?q=43.2480,-4.8380",
     "descEN": "A spectacular 12km trail carved into the limestone cliffs of the Divine Gorge in Picos de Europa National Park.",
     "price": "Gratuito",
-    "priceEN": "Free"
+    "priceEN": "Free",
+    "nameEN": "Ruta del Cares",
+    "nameES": "Ruta del Cares",
+    "descES": "Un espectacular sendero de 12 km excavado en los acantilados calcáreos de la Gola Divina en los Picos de Europa.",
+    "cityEN": "Picos de Europa",
+    "cityES": "Picos de Europa",
+    "priceES": "Gratis"
   }
 ];
