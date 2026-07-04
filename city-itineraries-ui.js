@@ -169,35 +169,13 @@
       exact.sort(function (a, b) { return idxMap[b] - idxMap[a]; });
       return exact[0];
     }
-    // 2) the city we are currently "in": the latest anchor day <= today
-    var past = anchored.filter(function (k) { return idxMap[k] <= tIdx; });
-    if (past.length) {
-      // but only if today is before the NEXT city's anchor (i.e. still here);
-      // simplest robust choice: the city with the greatest anchor <= today.
-      past.sort(function (a, b) { return idxMap[b] - idxMap[a]; });
-      // If there is an upcoming city strictly after today and today is past all
-      // anchors, we still prefer the next upcoming per the user's rule. So:
-    }
-    // 3) next upcoming: the smallest anchor day > today
+    // 2) next upcoming: the smallest anchor day > today (prefer future city)
     var future = anchored.filter(function (k) { return idxMap[k] > tIdx; });
     if (future.length) {
       future.sort(function (a, b) { return idxMap[a] - idxMap[b]; });
-      // If we are currently inside a city's stay (today between its anchor and
-      // the next city's anchor), prefer that current city; otherwise next.
-      if (past.length) {
-        var curr = past[0];        // greatest anchor <= today
-        var nxt = future[0];       // smallest anchor > today
-        // "current city" wins only if today is within 1 day window before next.
-        // Per user: if today's date is not available -> the one after. Today IS
-        // available whenever we are still within the trip; treat being inside a
-        // stay as today's city.
-        if (idxMap[curr] <= tIdx && tIdx < idxMap[nxt]) return curr;
-        return nxt;
-      }
       return future[0];
     }
-    // 4) today is after the whole trip -> fall back to last anchored city
-    if (past.length) return past[0];
+    // 3) trip is over -> start from the beginning (first city)
     return keys[0];
   }
   function isTodayCity(cityKey) {

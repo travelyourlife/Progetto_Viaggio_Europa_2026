@@ -4585,15 +4585,19 @@ html[lang="en"] .notif-drawer-list:empty::after {
 /* Lightbox */
 .diario-lightbox {
   position: fixed; inset: 0; z-index: 99999;
-  background: rgba(0,0,0,0.85);
+  background: #000;
   display: flex; align-items: center; justify-content: center;
-  padding: 20px;
+  padding: 0;
   animation: fadeIn 0.2s ease;
+  touch-action: none;
+  -webkit-user-select: none; user-select: none;
 }
 .diario-lightbox-content {
   display: flex; flex-direction: column; align-items: center;
-  max-width: 90vw; max-height: 85vh;
+  width: 100vw; height: 100vh; max-width: 100vw; max-height: 100vh;
   position: relative;
+  justify-content: center;
+  overflow: hidden;
 }
 /* v3.48: Navigation arrows */
 .diario-lightbox-nav {
@@ -4614,22 +4618,36 @@ html[lang="en"] .notif-drawer-list:empty::after {
 }
 /* Counter */
 .diario-lightbox-counter {
-  position: absolute; top: 8px; right: 12px;
-  background: rgba(0,0,0,0.6); color: white; font-size: 12px;
-  padding: 4px 10px; border-radius: 12px; z-index: 10;
+  position: fixed; top: 16px; right: 16px;
+  background: rgba(0,0,0,0.6); color: white; font-size: 13px;
+  padding: 6px 14px; border-radius: 16px; z-index: 10;
+  backdrop-filter: blur(4px);
 }
 /* Caption display */
 .diario-lightbox-caption-display {
-  color: rgba(255,255,255,0.85); font-size: 13px; margin-top: 8px;
+  color: rgba(255,255,255,0.9); font-size: 14px; margin-top: 8px;
   text-align: center; max-width: 80vw;
+  position: absolute; bottom: 60px; left: 50%; transform: translateX(-50%);
+  background: rgba(0,0,0,0.5); padding: 6px 14px; border-radius: 8px;
+  backdrop-filter: blur(4px);
 }
 .diario-lightbox-img {
-  max-width: 100%; max-height: 70vh;
-  border-radius: 12px; object-fit: contain;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  max-width: 100vw; max-height: 100vh;
+  border-radius: 0; object-fit: contain;
+  box-shadow: none;
+  transition: transform 0.1s ease;
+  touch-action: pinch-zoom;
+  -webkit-touch-callout: none;
+}
+/* Landscape optimization */
+@media (orientation: landscape) {
+  .diario-lightbox-img { max-height: 100vh; max-width: 100vw; }
+  .diario-lightbox-actions { position: fixed; bottom: 8px; left: 50%; transform: translateX(-50%); }
+  .diario-lightbox-caption-display { position: fixed; bottom: 48px; left: 50%; transform: translateX(-50%); }
 }
 .diario-lightbox-actions {
-  display: flex; gap: 12px; margin-top: 16px;
+  display: flex; gap: 12px; margin-top: 12px;
+  position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%);
 }
 .diario-lightbox-close, .diario-lightbox-del {
   padding: 10px 20px; border-radius: 8px; border: none;
@@ -4637,9 +4655,13 @@ html[lang="en"] .notif-drawer-list:empty::after {
   transition: transform 0.2s;
 }
 .diario-lightbox-close {
-  background: rgba(255,255,255,0.15); color: white;
+  position: fixed; top: 12px; left: 12px; z-index: 20;
+  background: rgba(0,0,0,0.6); color: white;
+  border-radius: 50%; width: 40px; height: 40px;
+  padding: 0; display: flex; align-items: center; justify-content: center;
+  font-size: 18px; backdrop-filter: blur(4px);
 }
-.diario-lightbox-close:hover { background: rgba(255,255,255,0.25); }
+.diario-lightbox-close:hover { background: rgba(0,0,0,0.8); }
 .diario-lightbox-del {
   background: #e53e3e; color: white;
 }

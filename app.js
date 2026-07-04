@@ -5646,6 +5646,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                     var card = document.createElement('div');
                     card.className = 'pos-card pos-done';
                     var html = '<div class="pos-card-header"><strong>🅿️ ' + escapeHtml(s.name || '—') + '</strong> · ' + '⭐'.repeat(s.rating || 3);
+                    if (isOwner) html += ' <button class="pos-edit-btn" data-pkey="' + key + '" title="' + (isEN ? 'Edit' : 'Modifica') + '">✏️</button>';
                     if (isOwner) html += ' <button class="pos-del-btn" data-pkey="' + key + '" title="' + (isEN ? 'Delete' : 'Elimina') + '">🗑️</button>';
                     html += '</div>';
                     html += '<div class="pos-card-info">' + (s.time || s.date || '');
@@ -5653,6 +5654,24 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                     html += '</div>';
                     card.innerHTML = html;
                     container.appendChild(card);
+                });
+                // Edit handler
+                container.querySelectorAll('.pos-edit-btn[data-pkey]').forEach(function(btn) {
+                    btn.addEventListener('click', function() {
+                        var pkey = btn.getAttribute('data-pkey');
+                        var spot = spots[pkey];
+                        if (!spot) return;
+                        var newName = prompt(isEN ? 'Edit name:' : 'Modifica nome:', spot.name || '');
+                        if (newName === null) return; // cancelled
+                        var newRatingStr = prompt(isEN ? 'Rating (1-5 stars):' : 'Valutazione (1-5 stelle):', String(spot.rating || 3));
+                        if (newRatingStr === null) return;
+                        var newRating = parseInt(newRatingStr, 10);
+                        if (isNaN(newRating) || newRating < 1) newRating = 1;
+                        if (newRating > 5) newRating = 5;
+                        var pRef = getFamilyRef('parking/' + pkey);
+                        if (pRef) pRef.update({ name: newName.trim() || spot.name, rating: newRating });
+                        showToast('✏️ ' + (isEN ? 'Updated!' : 'Aggiornato!'), 'success');
+                    });
                 });
                 // Delete handler
                 container.querySelectorAll('.pos-del-btn[data-pkey]').forEach(function(btn) {
@@ -16510,9 +16529,63 @@ window.injectAllWikiLinks = function() {
     document.body.appendChild(overlay);
     document.body.style.overflow = 'hidden';
 
+    // v4.77: Pinch-to-zoom support
+    var _scale = 1, _lastScale = 1, _pinchStartDist = 0;
+    var _imgTranslateX = 0, _imgTranslateY = 0;
+    var _panStartX = 0, _panStartY = 0, _isPanning = false;
+    function _getDist(t) { return Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY); }
+    function _applyTransform() {
+      var img = overlay.querySelector('.diario-lightbox-img');
+      if (img) img.style.transform = 'scale(' + _scale + ') translate(' + (_imgTranslateX/_scale) + 'px,' + (_imgTranslateY/_scale) + 'px)';
+    }
+    overlay.addEventListener('touchstart', function(e) {
+      if (e.touches.length === 2) {
+        _pinchStartDist = _getDist(e.touches);
+        _lastScale = _scale;
+      } else if (e.touches.length === 1 && _scale > 1) {
+        _isPanning = true;
+        _panStartX = e.touches[0].clientX - _imgTranslateX;
+        _panStartY = e.touches[0].clientY - _imgTranslateY;
+      }
+    }, { passive: true });
+    overlay.addEventListener('touchmove', function(e) {
+      if (e.touches.length === 2) {
+        e.preventDefault();
+        var dist = _getDist(e.touches);
+        _scale = Math.min(5, Math.max(1, _lastScale * (dist / _pinchStartDist)));
+        _applyTransform();
+      } else if (e.touches.length === 1 && _isPanning && _scale > 1) {
+        e.preventDefault();
+        _imgTranslateX = e.touches[0].clientX - _panStartX;
+        _imgTranslateY = e.touches[0].clientY - _panStartY;
+        _applyTransform();
+      }
+    }, { passive: false });
+    overlay.addEventListener('touchend', function(e) {
+      _isPanning = false;
+      if (e.touches.length < 2 && _scale <= 1) {
+        _scale = 1; _imgTranslateX = 0; _imgTranslateY = 0;
+        _applyTransform();
+      }
+    }, { passive: true });
+    // Double-tap to zoom in/out
+    var _lastTap = 0;
+    overlay.addEventListener('touchend', function(e) {
+      if (e.changedTouches.length !== 1) return;
+      var now = Date.now();
+      if (now - _lastTap < 300) {
+        if (_scale > 1) { _scale = 1; _imgTranslateX = 0; _imgTranslateY = 0; }
+        else { _scale = 2.5; }
+        _applyTransform();
+      }
+      _lastTap = now;
+    }, { passive: true });
+
     function navigateTo(idx) {
       if (idx < 0 || idx >= photoList.length) return;
       currentIdx = idx;
+      // Reset zoom on navigate
+      _scale = 1; _lastScale = 1; _imgTranslateX = 0; _imgTranslateY = 0;
       var p = photoList[idx];
       entryKey = p.entryKey;
       photoKey = p.photoKey;

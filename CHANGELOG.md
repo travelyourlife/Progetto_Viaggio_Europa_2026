@@ -1,4 +1,11 @@
-## v4.74 — 4 Luglio 2025
+## v4.77 — 4 Luglio 2026
+- Lightbox foto Diario tipo WhatsApp: fullscreen nero, pinch-to-zoom, double-tap zoom, pan quando ingrandito, ottimizzato per landscape
+- Fix Itinerari città: mostra la prossima città futura (non l'ultima visitata) come default
+- Pulsante ✏️ Modifica per parcheggi/campeggi (nome + rating)
+- Rimossi tutti i 31 cross-link-bar ridondanti
+- Fix Diario: ordine cronologico inverso (newest first)
+
+## v4.74 — 4 Luglio 2026
 - Nuovo tab "Natura" nel menu Guide (Altro): raccoglie tutte le sezioni Flora, Fauna, Geologia, Fenomeni e Ecosistemi dei 10 Paesi in una pagina dedicata con indice per Paese
 - Pulsante 🌿 Natura aggiunto alla griglia Guide in IT/EN/ES
 - Tab registrato in app.js come altroSubTab con titolo localizzato

@@ -59,12 +59,12 @@
 <link href="./icon.png" rel="apple-touch-icon" sizes="152x152"/>
 <link href="./icon.png" rel="apple-touch-icon" sizes="180x180"/>
 <link href="./icon.png" rel="apple-touch-icon" sizes="167x167"/>
-<title>Quo Vadis — V4.75</title>
+<title>Quo Vadis — V4.77</title>
 <link crossorigin="" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" rel="stylesheet"/>
-<link href="style.css?v=4.75" rel="stylesheet"/>
-<link href="home-variants.css?v=4.75" rel="stylesheet"/>
-<link href="unified-map.css?v=4.75" rel="stylesheet"/>
-<link href="modern-pages.css?v=4.75" rel="stylesheet"/>
+<link href="style.css?v=4.77" rel="stylesheet"/>
+<link href="home-variants.css?v=4.77" rel="stylesheet"/>
+<link href="unified-map.css?v=4.77" rel="stylesheet"/>
+<link href="modern-pages.css?v=4.77" rel="stylesheet"/>
 <link crossorigin="" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" rel="stylesheet"/>
 <link crossorigin="" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" rel="stylesheet"/>
 <!-- Firebase SDK (compat mode for single-file app) -->
@@ -81,7 +81,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = "4.75";
+  var EXPECTED_VERSION = "4.77";
   window.IS_PROD = true; // v2.96: parità con index.html — disabilita debug overlay in produzione
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
@@ -139,23 +139,23 @@
   });
 })();
 </script>
-<script defer="" src="data.js?v=4.75"></script>
-<script defer="" src="days-data.js?v=4.75"></script>
-<script defer="" src="days-renderer.js?v=4.75"></script>
+<script defer="" src="data.js?v=4.77"></script>
+<script defer="" src="days-data.js?v=4.77"></script>
+<script defer="" src="days-renderer.js?v=4.77"></script>
 <!-- wiki-links.js: lazy-loaded on first open of Culture/Activity tab (34KB) — parity with index.html -->
-<script defer="" src="weather-coords.js?v=4.75"></script>
+<script defer="" src="weather-coords.js?v=4.77"></script>
 <script crossorigin="" defer="" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script crossorigin="" defer="" src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
-<script defer="" src="poi-data.js?v=4.75"></script>
-<script defer="" src="app.js?v=4.75"></script>
-<script defer="" src="curiosita-data.js?v=4.75"></script>
+<script defer="" src="poi-data.js?v=4.77"></script>
+<script defer="" src="app.js?v=4.77"></script>
+<script defer="" src="curiosita-data.js?v=4.77"></script>
 <script>window.QV_CURIOSITA_SERVER_SIDE = true; window.QV_RECAP_SERVER_SIDE = true;</script>
-<script defer="" src="curiosita-scheduler.js?v=4.75"></script>
-<script defer="" src="quiz-fun.js?v=4.75"></script>
-<script defer="" src="unified-map.js?v=4.75"></script>
-<script defer="" src="city-itineraries.js?v=4.75"></script>
-<script defer="" src="city-itineraries-ui.js?v=4.75"></script>
-<script defer="" src="home-variants.js?v=4.75"></script>
+<script defer="" src="curiosita-scheduler.js?v=4.77"></script>
+<script defer="" src="quiz-fun.js?v=4.77"></script>
+<script defer="" src="unified-map.js?v=4.77"></script>
+<script defer="" src="city-itineraries.js?v=4.77"></script>
+<script defer="" src="city-itineraries-ui.js?v=4.77"></script>
+<script defer="" src="home-variants.js?v=4.77"></script>
 </head>
 <body class="on-home">
 <!-- ─── Splash Screen ─── -->
@@ -355,7 +355,6 @@
 <a href="#secB">🗺️ Alternativas</a>
 <a href="#pioggia">☔ Plan de lluvia</a>
 </div></div>
-<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerario</a> · 📍 <a class="protected-link" href="javascript:void(0)" onclick="switchTab('posizione')">Posición en directo</a> · 🍝 <a href="javascript:void(0)" onclick="switchTab('cibo')">Comida</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura')">Cultura</a> · 📋 <a href="javascript:void(0)" onclick="switchTab('piano')">Plan</a></div>
 <h2 id="sintesi">📋 Resumen — Tripulación y vehículo</h2>
 <p>👨‍👩‍👧‍👦 <strong>Tripulación:</strong> 2 adultos + 2 niños (8 y 6 años)</p>
 <p>🚐 <strong>Vehículo:</strong> furgoneta camper autosuficiente (LiFePo4 + bombona de gas 5 kg)</p>
@@ -1092,14 +1091,12 @@
 <a href="#italia-g52-g54">🇮🇹 Italia</a>
 <a href="#libri-film">📚 Libros y películas</a>
 </div></div>
-<div class="cross-link-bar">🍝 <a href="javascript:void(0)" onclick="switchTab('cibo')">Comida</a> · 🥾 <a href="javascript:void(0)" onclick="switchTab('attivita')">Actividades</a> · 🧭 <a href="javascript:void(0)" onclick="switchTab('luoghi')">Lugares</a> · 📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerario</a> · 📋 <a href="javascript:void(0)" onclick="switchTab('piano')">Plan</a></div>
 <h2 id="storia">🏛️ Cultura — Guía en profundidad</h2>
 <blockquote>
 <p>Una guía cultural para leer la noche anterior o durante los traslados. Para cada país: línea del tiempo histórica, personajes clave, qué observar en la arquitectura, tradiciones veraniegas vivas, palabras útiles con pronunciación y cuestionarios/juegos para involucrar a los niños (6-8 años).</p>
 </blockquote>
 <hr/>
 <h2 id="austria-g1-g2">🇦🇹 Austria (D1-D2)</h2>
-<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g1')">Itinerario D1-D2</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-austriaca-g1-g2')">Comida</a></div>
 <h3 id="timeline">⏳ Línea del tiempo</h3>
 <table class="no-responsive">
 <thead>
@@ -1789,7 +1786,6 @@ Rocas, hielo, líquenes, plantas pioneras en grietas; permafrost. Fauna escasa y
 <p>A <strong>Postal de Klimt</strong> del museo — "The Kiss" encanta a todo el mundo</p>
 <hr/>
 <h2 id="repubblica-ceca-g2-transito-via-brno">🇨🇿 Czech Republic (D2 — tránsito vía Brno)</h2>
-<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g2')">Itinerario D2</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-ceca-g2-g3-transito')">Comida</a></div>
 <h3 id="timeline_1">⏳ Línea del tiempo</h3>
 <table class="no-responsive">
 <thead>
@@ -1990,7 +1986,6 @@ Rocas, hielo, líquenes, plantas pioneras en grietas; permafrost. Fauna escasa y
 <p><strong>Moravian Karst</strong> (<a href="https://en.wikipedia.org/wiki/Moravian_Karst" rel="noopener noreferrer" target="_blank">📚 Wikipedia</a>) — Sistema de cuevas con estalactitas y el río subterráneo Punkva. ¡Puedes montar en barco bajo tierra! <a href="https://maps.google.com/?q=49.3653,16.7622(Punkevni+jeskyne)" rel="noopener noreferrer" target="_blank">📍 Mapas</a></p>
 <hr/>
 <h2 id="polonia-g3-g4">🇵🇱 Poland (D3-D4)</h2>
-<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g3')">Itinerario D3-D4</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-polacca-g3-g4')">Comida</a></div>
 <h3 id="timeline_2">⏳ Línea del tiempo</h3>
 <table class="no-responsive">
 <thead>
@@ -2485,7 +2480,6 @@ Rocas, hielo, líquenes, plantas pioneras en grietas; permafrost. Fauna escasa y
 <p><strong>Tatra Mountains</strong> (<a href="https://en.wikipedia.org/wiki/Tatra_Mountains" rel="noopener noreferrer" target="_blank">📚 Wikipedia</a>) — Las "miniature Alps" de Poland. Cumbres de hasta 2,499m, lagos glaciares, rebecos. <a href="https://maps.google.com/?q=49.2500,19.9500(Tatra+Mountains)" rel="noopener noreferrer" target="_blank">📍 Mapas</a></p>
 <hr/>
 <h2 id="lituania-g4-g5">🇱🇹 Lithuania (D4-D5)</h2>
-<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g4')">Itinerario D4-D5</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-baltica-g4-g7')">Comida</a></div>
 <h3 id="timeline_3">⏳ Línea del tiempo</h3>
 <table class="no-responsive">
 <thead>
@@ -3043,7 +3037,6 @@ Lagos de caldera con orillas boscosas (Aukštaitija, Žemaitija), conectados por
 <p><strong>Šakotis en miniatura</strong> — el pastel-árbol (se conserva bien)</p>
 <hr/>
 <h2 id="lettonia-g5-g6">🇱🇻 Latvia (D5-D6)</h2>
-<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g5')">Itinerario D5-D6</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-baltica-g4-g7')">Comida</a></div>
 <h3 id="timeline_4">⏳ Línea del tiempo</h3>
 <table class="no-responsive">
 <thead>
@@ -3542,7 +3535,6 @@ Lagos de caldera con orillas boscosas (Aukštaitija, Žemaitija), conectados por
 <p><strong>Playas de Jūrmala</strong> (<a href="https://en.wikipedia.org/wiki/J%C5%ABrmala" rel="noopener noreferrer" target="_blank">📚 Wikipedia</a>) — 33 km de playa de arena blanca en el Báltico. Arquitectura de madera Art Nouveau. <a href="https://maps.google.com/?q=56.9680,23.7700(Jurmala+Beach)" rel="noopener noreferrer" target="_blank">📍 Mapas</a></p>
 <hr/>
 <h2 id="estonia-g6-g7">🇪🇪 Estonia (D6-D7)</h2>
-<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g6')">Itinerario D6-D7</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-baltica-g4-g7')">Comida</a></div>
 <h3 id="timeline_5">⏳ Línea del tiempo</h3>
 <table class="no-responsive">
 <thead>
@@ -4149,7 +4141,6 @@ Unos días al año en abril, los machos de Rana arvalis viran a azul intenso: ef
 <p>🏛️ <strong>Chocolate Kalev</strong> — chocolate estonio (desde 1806)</p>
 <hr/>
 <h2 id="finlandia-g7-g15">🇫🇮 Finlandia (D7-D15)</h2>
-<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g7')">Itinerario D7-D15</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-finlandese-g7-g15')">Comida</a></div>
 <h3 id="timeline_6">⏳ Línea del tiempo</h3>
 <table class="no-responsive">
 <thead>
@@ -4652,7 +4643,6 @@ Colinas morrénicas con forma de gota alargada (de hasta un kilómetro de largo 
 <p>🏛️ <strong>Arándanos y regaliz salado</strong> (salmiakki) — el regaliz salado es un gusto adquirido!</p>
 <hr/>
 <h2 id="norvegia-g16-g34">🇳🇴 Noruega (D16-D34)</h2>
-<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g16')">Itinerario D16-D34</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-norvegese-g15-g34')">Comida</a></div>
 <h3 id="timeline_7">⏳ Línea del tiempo</h3>
 <table class="no-responsive">
 <thead>
@@ -5043,7 +5033,6 @@ Cada invierno (de noviembre a febrero), cientos de orcas y jorobadas siguen los 
 <p>🏛️ <strong>Stockfish</strong> — si te gusta el baccalà, cómpralo directamente en Lofoten</p>
 <hr/>
 <h2 id="danimarca-g35-g39">🇩🇰 Denmark (D35-D39)</h2>
-<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g35')">Itinerario D35-D39</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-danese-g34-g39')">Comida</a></div>
 <h3 id="timeline_8">⏳ Línea del tiempo</h3>
 <table class="no-responsive">
 <thead>
@@ -5539,7 +5528,6 @@ Dónde: Tønder Marsk, Ribe. Llegar 1–2 h antes del ocaso; guías locales actu
 <p>🏛️ <strong>Smørrebrød para llevar</strong> — en los mercados, perfecto para el almuerzo en la autocaravana</p>
 <hr/>
 <h2 id="germania-g40-transito-via-brema">🇩🇪 Alemania (D40 — tránsito vía Bremen)</h2>
-<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g40')">Itinerario D40</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-tedesca-g40-transito-brema')">Comida</a></div>
 <h3 id="timeline_9">⏳ Línea del tiempo</h3>
 <table class="no-responsive">
 <thead>
@@ -5754,7 +5742,6 @@ Dónde: Tønder Marsk, Ribe. Llegar 1–2 h antes del ocaso; guías locales actu
 <p>Un imán de <strong>Músicos de Bremen</strong> — el recuerdo más icónico <a href="https://maps.google.com/?q=53.0758,8.8072" rel="noopener noreferrer" target="_blank">📍 Mapas</a></p>
 <hr/>
 <h2 id="francia-g41-g43-g51-g54">🇫🇷 France (D41-D43, D51-D54)</h2>
-<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g41')">Itinerario D41-D43, D51-D54</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-francese-g40-g43-g51-g52')">Comida</a></div>
 <h3 id="timeline_10">⏳ Línea del tiempo</h3>
 <table class="no-responsive">
 <thead>
@@ -6303,7 +6290,6 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 <p><strong>Camargue</strong> (<a href="https://en.wikipedia.org/wiki/Camargue" rel="noopener noreferrer" target="_blank">📚 Wikipedia</a>) — delta del Rhône: caballos blancos salvajes, toros negros, flamencos rosados! Paisaje único de marismas y salinas. <a href="https://maps.google.com/?q=43.5000,4.5000(Camargue)" rel="noopener noreferrer" target="_blank">📍 Mapas</a></p>
 <hr/>
 <h2 id="spagna-g44-g50">🇪🇸 Spain (D44-D50)</h2>
-<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g44')">Itinerario D44-D50</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-spagnola-g44-g50')">Comida</a></div>
 <h3 id="timeline_11">⏳ Línea del tiempo</h3>
 <table class="no-responsive">
 <thead>
@@ -6833,7 +6819,6 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 <p>🏛️ <strong>Anchoas de Santoña</strong> — las mejores anchoas del mundo (Cantabria)</p>
 <hr/>
 <h2 id="italia-g52-g54">🇮🇹 Italia (D52-D54)</h2>
-<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g52')">Itinerario D52-D54</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-italiana-rientro-g51-g54')">Comida</a></div>
 <h3 id="timeline_12">⏳ Línea del tiempo</h3>
 <table class="no-responsive">
 <thead>
@@ -7459,7 +7444,6 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 <a href="#cucina-italiana-rientro-g51-g54">🇮🇹 Italia</a>
 <a href="#gastronomia-consigli-cucina-in-furgone">👨‍🍳 Consejos para cocinar en furgoneta</a>
 </div></div>
-<div class="cross-link-bar">🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura')">Cultura</a> · 🥾 <a href="javascript:void(0)" onclick="switchTab('attivita')">Actividades</a> · 🧭 <a href="javascript:void(0)" onclick="switchTab('luoghi')">Lugares</a> · 📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerario</a> · 📋 <a href="javascript:void(0)" onclick="switchTab('piano')">Plan</a></div>
 <h2 id="food">🍽️ Gastronomía — por país y zona</h2>
 <blockquote>
 <p>Platos típicos, productos locales y consejos prácticos para comer bien gastando poco en una furgoneta. Enfocado en alimentos aptos también para niños y fáciles de encontrar en supermercados o mercados locales.</p>
@@ -7557,7 +7541,6 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 </table>
 <hr/>
 <h2 id="cucina-austriaca-g1-g2">🇦🇹 Cocina austriaca (D1-D2)</h2>
-<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g1')">Itinerario D1-D2</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','austria-g1-g2')">Cultura</a></div>
 <h4 id="storia-cucina-austria">📜 Historia de la cocina austriaca</h4>
 <p>La cocina austriaca es un cruce de imperios: <a href="https://en.wikipedia.org/wiki/Austrian_cuisine" rel="noopener noreferrer" target="_blank">📚 Wikipedia</a>. La <strong>Wiener Schnitzel</strong> probablemente proviene de Milán (cotoletta alla milanese), traído a Viena en 1857 por el mariscal de campo Radetzky. <strong>Kaiserschmarrn</strong> ("Emperor's mess") fue inventado para Franz Joseph I cuando su cocinero estropeó una crêpe. <strong>Kaffeehäuser</strong> (Las cafeterías vienesas, <a href="https://en.wikipedia.org/wiki/Viennese_coffee_house" rel="noopener noreferrer" target="_blank">📚 Wikipedia</a>) nacieron tras el asedio turco de 1683: los sacos de café que dejaron los turcos se convirtieron en una obsesión vienesa. Hoy son patrimonio de la UNESCO. La <strong>Sachertorte</strong> fue creada en 1832 por Franz Sacher, de 16 años, para el príncipe Metternich — ¡la receta original sigue siendo secreta!</p>
 <h4 id="extra-piatti-austria">🍽️ Más platos para probar</h4>
@@ -7600,7 +7583,6 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 </ul>
 <hr/>
 <h2 id="cucina-ceca-g2-g3-transito">🇨🇿 Cocina checa (D2-D3, tránsito)</h2>
-<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g2')">Itinerario D2-D3</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','repubblica-ceca-g2-transito-via-brno')">Cultura</a></div>
 <h4 id="storia-cucina-ceca">📜 Historia de la cocina checa</h4>
 <p>La cocina checa (<a href="https://en.wikipedia.org/wiki/Czech_cuisine" rel="noopener noreferrer" target="_blank">📚 Wikipedia</a>) es contundente y saciante, nacida para sobrevivir a inviernos largos. <strong>Cerveza checa</strong> tiene una tradición de 1,000 años: Pilsner fue inventada en Plzeň en 1842 (<a href="https://en.wikipedia.org/wiki/Pilsner" rel="noopener noreferrer" target="_blank">📚 Wikipedia</a>) — Los checos beben más cerveza per cápita que nadie (140 litros/año!). El <strong>Trdelník</strong> (trdelník) visto por todas partes en Praga es en realidad húngaro/eslovaco, pero se ha convertido en el símbolo del turismo de Praga. Los platos checos auténticos son <strong>knedlíky</strong> (bolas de pan hervido) que acompañan a cada plato de carne.</p>
 <h4 id="extra-piatti-ceca">🍽️ Más platos para probar</h4>
@@ -7637,7 +7619,6 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 </ul>
 <hr/>
 <h2 id="cucina-polacca-g3-g4">🇵🇱 Cocina polaca (D3-D4)</h2>
-<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g3')">Itinerario D3-D4</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','polonia-g3-g4')">Cultura</a></div>
 <h4 id="storia-cucina-polacca">📜 Historia de la cocina polaca</h4>
 <p>La cocina polaca (<a href="https://en.wikipedia.org/wiki/Polish_cuisine" rel="noopener noreferrer" target="_blank">📚 Wikipedia</a>) mezcla tradiciones eslavas, judías y de la nobleza. <strong>Pierogi</strong> (<a href="https://en.wikipedia.org/wiki/Pierogi" rel="noopener noreferrer" target="_blank">📚 Wikipedia</a>) son unas empanadillas traídas desde China por la Ruta de la Seda en el siglo XIII — hoy son el plato nacional. <strong>Vodka polaco</strong> tiene más de 500 años de historia (la palabra "vodka" aparece por primera vez en un documento polaco de 1405!). <strong>Bigos</strong> ("estofado del cazador") mejora cada vez que se recalienta — las familias nobles lo preparaban días antes de las fiestas. La <strong>Wigilia</strong> la tradición (la cena de Nochebuena) requiere 12 platos, todos sin carne.</p>
 <h4 id="extra-piatti-polonia">🍽️ Más platos para probar</h4>
@@ -7681,7 +7662,6 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 </ul>
 <hr/>
 <h2 id="cucina-baltica-g4-g7">🇱🇹🇱🇻🇪🇪 Cocina báltica (D4-D7)</h2>
-<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g4')">Itinerario D4-D7</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','lituania-g4-g5')">Cultura</a></div>
 <h4 id="storia-cucina-baltica">📜 Historia de la cocina báltica</h4>
 <p>Las cocinas de Lituania, Letonia y Estonia (<a href="https://en.wikipedia.org/wiki/Lithuanian_cuisine" rel="noopener noreferrer" target="_blank">📚 lituano</a>, <a href="https://en.wikipedia.org/wiki/Latvian_cuisine" rel="noopener noreferrer" target="_blank">📚 letón</a>, <a href="https://en.wikipedia.org/wiki/Estonian_cuisine" rel="noopener noreferrer" target="_blank">📚 estonio</a>) comparten raíces comunes: pan de centeno oscuro, patatas, arenque, lácteos fermentados. <strong>Pan negro</strong> (Rugpjūtis/Rupjmaize) es sagrado — tirarlo trae mala suerte. ¡La tradición de <strong>cerveza casera</strong> es milenaria: cervezas sin filtrar ni pasteurizar con recetas transmitidas durante siglos. Estonia tiene fuerte influencia escandinava (arenque, salmón), Lituania más influencia polaca (pierogi/cepelinai), Letonia queda en medio.</p>
 <h4 id="extra-piatti-baltici">🍽️ Más platos para probar</h4>
@@ -7728,7 +7708,6 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 </ul>
 <hr/>
 <h2 id="cucina-finlandese-g7-g15">🇫🇮 Cocina finlandesa (D7-D15)</h2>
-<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g7')">Itinerario D7-D15</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','finlandia-g7-g15')">Cultura</a></div>
 <h4 id="storia-cucina-finlandese">📜 Historia de la cocina finlandesa</h4>
 <p>La cocina finlandesa (<a href="https://en.wikipedia.org/wiki/Finnish_cuisine" rel="noopener noreferrer" target="_blank">📚 Wikipedia</a>) es "del bosque y del lago a la mesa". Durante siglos los finlandeses vivieron de la pesca, la caza y la recolección de bayas y setas. <strong>Kalakukko</strong> (pescado horneado dentro de un pan de centeno) es el plato más antiguo — los pescadores lo llevaban como almuerzo para llevar. La <strong>sauna</strong> tradición también influye en la cocina: <strong>saunapalvikinkku</strong> ¡es jamón ahumado en la sauna durante 24 horas! Los finlandeses consumen más <strong>café</strong> per cápita que nadie (12 kg/year!) y más <strong>leche</strong> que ningún otro país. <strong>Bayas silvestres</strong> (arándanos, moras árticas, arándanos rojos) los recoge todo el mundo gracias a Jokamiehenoikeus.</p>
 <h4 id="extra-piatti-finlandia">🍽️ Más platos para probar</h4>
@@ -7778,7 +7757,6 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 </ul>
 <hr/>
 <h2 id="cucina-norvegese-g15-g34">🇳🇴 Cocina noruega (D15-D34)</h2>
-<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g16')">Itinerario D15-D34</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','norvegia-g16-g34')">Cultura</a></div>
 <h4 id="storia-cucina-norvegese">📜 Historia de la cocina noruega</h4>
 <p>La cocina noruega (<a href="https://en.wikipedia.org/wiki/Norwegian_cuisine" rel="noopener noreferrer" target="_blank">📚 Wikipedia</a>) está moldeada por los fiordos y el clima extremo. Los vikingos inventaron <strong>conservación</strong>: pescado seco (tørrfisk/stockfish), ahumado (røkelaks) y fermentado (rakfisk). <strong>Stockfish</strong> (<a href="https://en.wikipedia.org/wiki/Stockfish" rel="noopener noreferrer" target="_blank">📚 Wikipedia</a>) secado en las islas Lofoten fue la "moneda" vikinga — exportado por toda Europa (¡incluida Italia para el baccalà!). <strong>Brunost</strong> (queso marrón) fue inventado en 1863 por una campesina, Anne Hov, que tuvo la idea de añadir crema al suero. Hoy es el queso nacional. <strong>Salmón noruego</strong> es el pescado más exportado del mundo — el sushi de salmón fue "inventado" por noruegos que convencieron a los japoneses en los años 80!</p>
 <h4 id="extra-piatti-norvegia">🍽️ Más platos para probar</h4>
@@ -7834,7 +7812,6 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 </ul>
 <hr/>
 <h2 id="cucina-danese-g34-g39">🇩🇰 Cocina danesa (D34-D39)</h2>
-<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g35')">Itinerario D34-D39</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','danimarca-g35-g39')">Cultura</a></div>
 <h4 id="storia-cucina-danese">📜 Historia de la cocina danesa</h4>
 <p>La cocina danesa (<a href="https://en.wikipedia.org/wiki/Danish_cuisine" rel="noopener noreferrer" target="_blank">📚 Wikipedia</a>) ha experimentado una revolución: desde la tradicional <strong>smørrebrød</strong> (sándwiches abiertos) hasta el "New Nordic" de René Redzepi (Noma, 4 veces el mejor restaurante del mundo). <strong>Smørrebrød</strong> (<a href="https://en.wikipedia.org/wiki/Sm%C3%B8rrebr%C3%B8d" rel="noopener noreferrer" target="_blank">📚 Wikipedia</a>) se originó en la época medieval: el pan de centeno era el "plato" sobre el que se colocaba la comida. <strong>Bollería danesa</strong> ¡(wienerbrød) en realidad fueron traídos por panaderos austríacos en 1850 durante una huelga de panaderos daneses! <strong>Carlsberg</strong> fue fundada en 1847 y su laboratorio descubrió la levadura pura para la cerveza lager — compartió el descubrimiento con el mundo de forma gratuita.</p>
 <h4 id="extra-piatti-danimarca">🍽️ Más platos para probar</h4>
@@ -7881,7 +7858,6 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 </ul>
 <hr/>
 <h2 id="cucina-tedesca-g40-transito-brema">🇩🇪 Cocina alemana (D40 — tránsito por Bremen)</h2>
-<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g40')">Itinerario D40</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','germania-g40-transito-via-brema')">Cultura</a></div>
 <h4 id="storia-cucina-tedesca">📜 Historia de la cocina alemana</h4>
 <p>Cocina alemana (<a href="https://en.wikipedia.org/wiki/German_cuisine" rel="noopener noreferrer" target="_blank">📚 Wikipedia</a>) varía enormemente según la región. Bremen, una ciudad hanseática, tiene tradición marítima: arenque, anguila ahumada, Labskaus (estofado de marineros). El  <strong>Reinheitsgebot</strong> (<a href="https://en.wikipedia.org/wiki/Reinheitsgebot" rel="noopener noreferrer" target="_blank">📚 Wikipedia</a>) de 1516 es la ley de pureza cervecera más antigua del mundo: solo agua, malta, lúpulo y levadura. ¡Alemania tiene 1,500+ cervecerías y 5,000+ cervezas diferentes! <strong>Brot</strong> (pan alemán) es patrimonio de la UNESCO: más de 3,000 variedades registradas, más que ningún otro país.</p>
 <h4 id="extra-piatti-germania">🍽️ Más platos para probar</h4>
@@ -7922,7 +7898,6 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 </ul>
 <hr/>
 <h2 id="cucina-francese-g40-g43-g51-g52">🇫🇷 Cocina francesa (D40-D43, D51-D52)</h2>
-<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g41')">Itinerario D40-D43, D51-D52</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','francia-g41-g43-g51-g54')">Cultura</a></div>
 <h4 id="storia-cucina-francese">📜 Historia de la cocina francesa</h4>
 <p>La cocina francesa (<a href="https://en.wikipedia.org/wiki/French_cuisine" rel="noopener noreferrer" target="_blank">📚 Wikipedia</a>) es Patrimonio de la UNESCO desde 2010. <strong>Auguste Escoffier</strong> (<a href="https://en.wikipedia.org/wiki/Auguste_Escoffier" rel="noopener noreferrer" target="_blank">📚 Wikipedia</a>) codificó la cocina moderna en 1903 con "Le Guide Culinaire". El <strong>baguette</strong> (<a href="https://en.wikipedia.org/wiki/Baguette" rel="noopener noreferrer" target="_blank">📚 Wikipedia</a>) se convirtió en Patrimonio de la UNESCO en 2022 — ¡los franceses consumen 10 billion al año! La <strong>fromage</strong> (queso) la tradición cuenta con 1,200+ variedades — De Gaulle dijo: "¿Cómo se puede gobernar un país con 246 quesos diferentes?". El <strong>croissant</strong> es en realidad austríaco (Kipferl), llevado a París en 1838. Bretaña y Normandía (en tu ruta) son famosas por crêpes, sidra, mantequilla salada y ostras.</p>
 <h4 id="extra-piatti-francia">🍽️ Más platos para probar</h4>
@@ -7971,7 +7946,6 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 </ul>
 <hr/>
 <h2 id="cucina-spagnola-g44-g50">🇪🇸 Cocina española (D44-D50)</h2>
-<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g44')">Itinerario D44-D50</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','spagna-g44-g50')">Cultura</a></div>
 <h4 id="storia-cucina-spagnola">📜 Historia de la cocina española</h4>
 <p>Cocina española (<a href="https://en.wikipedia.org/wiki/Spanish_cuisine" rel="noopener noreferrer" target="_blank">📚 Wikipedia</a>) del norte es muy diferente de la mediterránea. El <strong>País Vasco</strong> tiene la mayor concentración de estrellas Michelin del mundo! <strong>Pintxos</strong> (<a href="https://en.wikipedia.org/wiki/Pintxo" rel="noopener noreferrer" target="_blank">📚 Wikipedia</a>) son arte culinario vasco: pequeñas creaciones gastronómicas sobre pan, sujetas con un palillo. Vas de bar en bar ("txikiteo"). <strong>Sidra asturiana</strong> (<a href="https://en.wikipedia.org/wiki/Asturian_cider" rel="noopener noreferrer" target="_blank">📚 Wikipedia</a>) se vierte desde un metro de altura ("escanciar") para oxigenarla! <strong>Camino de Santiago</strong> creó la tradición del "menú del peregrino" (3 platos + vino por ~12€) a lo largo de todo el norte.</p>
 <h4 id="extra-piatti-spagna">🍽️ Más platos para probar</h4>
@@ -8022,7 +7996,6 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 </ul>
 <hr/>
 <h2 id="cucina-italiana-rientro-g51-g54">🇮🇹 Cocina italiana — Regreso (D51-D54)</h2>
-<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g52')">Itinerario D51-D54</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','italia-g52-g54')">Cultura</a></div>
 <h4 id="storia-cucina-italiana">📜 Historia de la cocina de Liguria</h4>
 <p>Cocina de Liguria (<a href="https://en.wikipedia.org/wiki/Ligurian_cuisine" rel="noopener noreferrer" target="_blank">📚 Wikipedia</a>) es la "cocina humilde" convertida en gourmet. <strong>Pesto genovés</strong> (<a href="https://en.wikipedia.org/wiki/Pesto" rel="noopener noreferrer" target="_blank">📚 Wikipedia</a>) desciende del romano "moretum" (ajo machacado con queso), evolucionó con la albahaca DOP genovesa — más pequeña y más dulce que la albahaca común. <strong>Focaccia genovesa</strong> (<a href="https://en.wikipedia.org/wiki/Focaccia" rel="noopener noreferrer" target="_blank">📚 Wikipedia</a>) se come en el desayuno mojada en el cappuccino! <strong>Farinata</strong> (<a href="https://en.wikipedia.org/wiki/Farinata" rel="noopener noreferrer" target="_blank">📚 Wikipedia</a>) se inventó por accidente: durante una tormenta, barriles de garbanzos y aceite se derramaron en la bodega — la mezcla horneada por el sol se convirtió en una delicatessen. Genoa fue "La Superba" de las Repúblicas Marítimas: las especias, las anchoas en salazón y el comercio marítimo moldearon la cocina.</p>
 <h4 id="extra-piatti-italia">🍽️ Más platos para probar</h4>
@@ -8152,7 +8125,6 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 <a href="#drone">🛸 Dron</a>
 <a href="#inreach">📡 Garmin inReach</a>
 </div></div>
-<div class="cross-link-bar">📍 <a class="protected-link" href="javascript:void(0)" onclick="switchTab('posizione')">Posición en directo</a> · 🍝 <a href="javascript:void(0)" onclick="switchTab('cibo')">Comida</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura')">Cultura</a> · 🧭 <a href="javascript:void(0)" onclick="switchTab('luoghi')">Lugares</a> · 🎒 <a href="javascript:void(0)" onclick="switchTab('zaino','z-trekking')">Equipo de senderismo</a></div>
 <h2 id="campeggio">🚐 Camping — Normas por país</h2>
 <table class="no-responsive">
 <thead>
@@ -9670,7 +9642,6 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 <a href="#secA">♨️ Baños termales</a>
 <a href="#poi-parchi-divertimento">🎢 Parques de atracciones</a>
 </div></div>
-<div class="cross-link-bar">📍 <a class="protected-link" href="javascript:void(0)" onclick="switchTab('posizione')">Posición en directo</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura')">Cultura</a> · 🥾 <a href="javascript:void(0)" onclick="switchTab('attivita')">Actividades</a> · 📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerario</a> · 📋 <a href="javascript:void(0)" onclick="switchTab('piano')">Plan</a></div>
 <h2 id="musei-attrazioni">🏛️ Museos y atracciones</h2>
 <p>Museos, monumentos y atracciones culturales imprescindibles a lo largo de la ruta. Muchos ya están mencionados en los días individuales del itinerario.</p>
 <div id="poi-list-museum"></div>
@@ -12687,7 +12658,6 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 <a href="#rischi">⚠️ Riesgos</a>
 <a href="#fonti">📚 Fuentes</a>
 </div></div>
-<div class="cross-link-bar">📍 <a class="protected-link" href="javascript:void(0)" onclick="switchTab('posizione')">Posición en directo</a> · 🍝 <a href="javascript:void(0)" onclick="switchTab('cibo')">Comida</a> · 🥾 <a href="javascript:void(0)" onclick="switchTab('attivita')">Actividades</a> · 🎒 <a href="javascript:void(0)" onclick="switchTab('zaino')">Equipo</a> · 📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerario</a></div>
 <h2 id="checklist-pre-partenza">✅ Lista de verificación — Antes de la salida</h2>
 <hr/>
 <h3 id="prenotazioni-per-data">📅 Reservas por fecha</h3>
@@ -13693,7 +13663,6 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 <div class="zp-sub" id="zp-percent">0% completado</div>
 <div class="zp-bar"><div class="zp-fill" id="zp-fill" style="width:0%"></div></div>
 </div>
-<div class="cross-link-bar">📋 <a href="javascript:void(0)" onclick="switchTab('piano')">Plan y presupuesto</a> · 🥾 <a href="javascript:void(0)" onclick="switchTab('attivita')">Actividades</a> · 🍝 <a href="javascript:void(0)" onclick="switchTab('cibo')">Comida</a> · 📍 <a class="protected-link" href="javascript:void(0)" onclick="switchTab('posizione')">Posición en directo</a> · 📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerario</a></div>
 <div class="tab-index-wrapper"><div class="tab-index">
 <a href="#z-camper">🚐 Autocaravana</a>
 <a href="#z-letto">🛏️ Cama</a>
@@ -14722,7 +14691,7 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 <script>
 // Load home-variants_es.html templates into the page
 (function(){
-  fetch('./home-variants_es.html?v=4.75').then(function(r){return r.text();}).then(function(html){
+  fetch('./home-variants_es.html?v=4.77').then(function(r){return r.text();}).then(function(html){
     var div = document.getElementById('hv-templates');
     if(div) div.innerHTML = html;
     // Move templates to document body for proper <template> access
@@ -14732,8 +14701,8 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 })();
 </script>
 <!-- Debug Overlay (v2.47 diagnostic) -->
-<script defer="" src="debug-overlay.js?v=4.75"></script>
+<script defer="" src="debug-overlay.js?v=4.77"></script>
 <!-- Capacitor GPS Bridge (only activates inside native app, ignored in browser) -->
-<script defer="" src="capacitor-gps-bridge.js?v=4.75"></script>
+<script defer="" src="capacitor-gps-bridge.js?v=4.77"></script>
 </body>
 </html>

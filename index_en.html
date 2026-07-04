@@ -72,12 +72,12 @@
     <link rel="apple-touch-icon" sizes="152x152" href="./icon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="./icon.png">
     <link rel="apple-touch-icon" sizes="167x167" href="./icon.png">
-    <title>Quo Vadis — V4.75</title>
+    <title>Quo Vadis — V4.77</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
-    <link rel="stylesheet" href="style.css?v=4.75">
-    <link rel="stylesheet" href="home-variants.css?v=4.75">
-    <link rel="stylesheet" href="unified-map.css?v=4.75">
-    <link rel="stylesheet" href="modern-pages.css?v=4.75">
+    <link rel="stylesheet" href="style.css?v=4.77">
+    <link rel="stylesheet" href="home-variants.css?v=4.77">
+    <link rel="stylesheet" href="unified-map.css?v=4.77">
+    <link rel="stylesheet" href="modern-pages.css?v=4.77">
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" crossorigin="">
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" crossorigin="">
 <!-- Firebase SDK (compat mode for single-file app) -->
@@ -94,7 +94,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = "4.75";
+  var EXPECTED_VERSION = "4.77";
   window.IS_PROD = true; // v2.96: parità con index.html — disabilita debug overlay in produzione
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
@@ -152,23 +152,23 @@
   });
 })();
 </script>
-<script src="data.js?v=4.75" defer></script>
-<script src="days-data.js?v=4.75" defer></script>
-<script src="days-renderer.js?v=4.75" defer></script>
+<script src="data.js?v=4.77" defer></script>
+<script src="days-data.js?v=4.77" defer></script>
+<script src="days-renderer.js?v=4.77" defer></script>
 <!-- wiki-links.js: lazy-loaded on first open of Culture/Activity tab (34KB) — parity with index.html -->
-<script src="weather-coords.js?v=4.75" defer></script>
+<script src="weather-coords.js?v=4.77" defer></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
 <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js" crossorigin="" defer></script>
-<script src="poi-data.js?v=4.75" defer></script>
-<script src="app.js?v=4.75" defer></script>
-<script src="curiosita-data.js?v=4.75" defer></script>
+<script src="poi-data.js?v=4.77" defer></script>
+<script src="app.js?v=4.77" defer></script>
+<script src="curiosita-data.js?v=4.77" defer></script>
 <script>window.QV_CURIOSITA_SERVER_SIDE = true; window.QV_RECAP_SERVER_SIDE = true;</script>
-<script src="curiosita-scheduler.js?v=4.75" defer></script>
-<script src="quiz-fun.js?v=4.75" defer></script>
-<script src="unified-map.js?v=4.75" defer></script>
-<script src="city-itineraries.js?v=4.75" defer></script>
-<script src="city-itineraries-ui.js?v=4.75" defer></script>
-<script src="home-variants.js?v=4.75" defer></script>
+<script src="curiosita-scheduler.js?v=4.77" defer></script>
+<script src="quiz-fun.js?v=4.77" defer></script>
+<script src="unified-map.js?v=4.77" defer></script>
+<script src="city-itineraries.js?v=4.77" defer></script>
+<script src="city-itineraries-ui.js?v=4.77" defer></script>
+<script src="home-variants.js?v=4.77" defer></script>
 </head>
 <body class="on-home">
 
@@ -385,7 +385,6 @@
 <a href="#secB">🗺️ Alternatives</a>
 <a href="#pioggia">☔ Rain Plan</a>
 </div></div>
-<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerary</a> · 📍 <a href="javascript:void(0)" class="protected-link" onclick="switchTab('posizione')">Live Position</a> · 🍝 <a href="javascript:void(0)" onclick="switchTab('cibo')">Food</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura')">Culture</a> · 📋 <a href="javascript:void(0)" onclick="switchTab('piano')">Plan</a></div>
 <h2 id="sintesi">📋 Summary — Crew and Vehicle</h2>
 <p>👨‍👩‍👧‍👦 <strong>Crew:</strong> 2 adults + 2 children (8 and 6 years old)</p>
 <p>🚐 <strong>Vehicle:</strong> self-sufficient camper van (LiFePo4 + 5 kg gas cylinder)</p>
@@ -1132,14 +1131,12 @@
 <a href="#italia-g52-g54">🇮🇹 Italy</a>
 <a href="#libri-film">📚 Books and Films</a>
 </div></div>
-<div class="cross-link-bar">🍝 <a href="javascript:void(0)" onclick="switchTab('cibo')">Food</a> · 🥾 <a href="javascript:void(0)" onclick="switchTab('attivita')">Activities</a> · 🧭 <a href="javascript:void(0)" onclick="switchTab('luoghi')">Places</a> · 📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerary</a> · 📋 <a href="javascript:void(0)" onclick="switchTab('piano')">Plan</a></div>
 <h2 id="storia">🏛️ Culture — In-Depth Guide</h2>
 <blockquote>
 <p>A cultural guide to read the evening before or during transfers. For each country: historical timeline, key figures, what to observe in architecture, living summer traditions, useful words with pronunciation, and quizzes/games to engage children (6-8 years old).</p>
 </blockquote>
 <hr>
 <h2 id="austria-g1-g2">🇦🇹 Austria (D1-D2)</h2>
-<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g1')">Itinerary D1-D2</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-austriaca-g1-g2')">Food</a></div>
 <h3 id="timeline">⏳ Timeline</h3>
 <table class="no-responsive">
 <thead>
@@ -1755,7 +1752,6 @@ In foothills and valleys, scattered fruit trees in meadows harbor cavity nesters
 <p>A <strong>Klimt postcard</strong> from the museum — "The Kiss" is loved by everyone</p>
 <hr>
 <h2 id="repubblica-ceca-g2-transito-via-brno">🇨🇿 Czech Republic (D2 — transit via Brno)</h2>
-<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g2')">Itinerary D2</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-ceca-g2-g3-transito')">Food</a></div>
 <h3 id="timeline_1">⏳ Timeline</h3>
 <table class="no-responsive">
 <thead>
@@ -1956,7 +1952,6 @@ In foothills and valleys, scattered fruit trees in meadows harbor cavity nesters
 <p><strong>Moravian Karst</strong> (<a href="https://en.wikipedia.org/wiki/Moravian_Karst" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — Cave system with stalactites and the underground Punkva river. You can ride a boat underground! <a href="https://maps.google.com/?q=49.3653,16.7622(Punkevni+jeskyne)" target="_blank" rel="noopener noreferrer">📍 Maps</a></p>
 <hr>
 <h2 id="polonia-g3-g4">🇵🇱 Poland (D3-D4)</h2>
-<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g3')">Itinerary D3-D4</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-polacca-g3-g4')">Food</a></div>
 <h3 id="timeline_2">⏳ Timeline</h3>
 <table class="no-responsive">
 <thead>
@@ -2522,7 +2517,6 @@ In foothills and valleys, scattered fruit trees in meadows harbor cavity nesters
 <p><strong>Tatra Mountains</strong> (<a href="https://en.wikipedia.org/wiki/Tatra_Mountains" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — The "miniature Alps" of Poland. Peaks up to 2,499m, glacial lakes, chamois. <a href="https://maps.google.com/?q=49.2500,19.9500(Tatra+Mountains)" target="_blank" rel="noopener noreferrer">📍 Maps</a></p>
 <hr>
 <h2 id="lituania-g4-g5">🇱🇹 Lithuania (D4-D5)</h2>
-<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g4')">Itinerary D4-D5</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-baltica-g4-g7')">Food</a></div>
 <h3 id="timeline_3">⏳ Timeline</h3>
 <table class="no-responsive">
 <thead>
@@ -3181,7 +3175,6 @@ Tip: Look for oily spraints on bridge stones.</div>
 <p><strong>Miniature Šakotis</strong> — the tree-cake (keeps well)</p>
 <hr>
 <h2 id="lettonia-g5-g6">🇱🇻 Latvia (D5-D6)</h2>
-<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g5')">Itinerary D5-D6</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-baltica-g4-g7')">Food</a></div>
 <h3 id="timeline_4">⏳ Timeline</h3>
 <table class="no-responsive">
 <thead>
@@ -3758,7 +3751,6 @@ Tip: Look for oily spraints on bridge stones.</div>
 <p><strong>Jūrmala Beaches</strong> (<a href="https://en.wikipedia.org/wiki/J%C5%ABrmala" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — 33 km of white sand beach on the Baltic. Art Nouveau wooden architecture. <a href="https://maps.google.com/?q=56.9680,23.7700(Jurmala+Beach)" target="_blank" rel="noopener noreferrer">📍 Maps</a></p>
 <hr>
 <h2 id="estonia-g6-g7">🇪🇪 Estonia (D6-D7)</h2>
-<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g6')">Itinerary D6-D7</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-baltica-g4-g7')">Food</a></div>
 <h3 id="timeline_5">⏳ Timeline</h3>
 <table class="no-responsive">
 <thead>
@@ -4273,7 +4265,6 @@ Tip: Look for oily spraints on bridge stones.</div>
 <p>🏛️ <strong>Kalev chocolate</strong> — Estonian chocolate (since 1806)</p>
 <hr>
 <h2 id="finlandia-g7-g15">🇫🇮 Finland (D7-D15)</h2>
-<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g7')">Itinerary D7-D15</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-finlandese-g7-g15')">Food</a></div>
 <h3 id="timeline_6">⏳ Timeline</h3>
 <table class="no-responsive">
 <thead>
@@ -4776,7 +4767,6 @@ Elongated, teardrop-shaped moraine hills (up to a kilometre long but only a few 
 <p>🏛️ <strong>Blueberries and salty licorice</strong> (salmiakki) — salty licorice is an acquired taste!</p>
 <hr>
 <h2 id="norvegia-g16-g34">🇳🇴 Norway (D16-D34)</h2>
-<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g16')">Itinerary D16-D34</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-norvegese-g15-g34')">Food</a></div>
 <h3 id="timeline_7">⏳ Timeline</h3>
 <table class="no-responsive">
 <thead>
@@ -5167,7 +5157,6 @@ Every winter (from November to February), hundreds of orcas and humpback whales 
 <p>🏛️ <strong>Stockfish</strong> — if you like baccalà, buy it directly in the Lofoten</p>
 <hr>
 <h2 id="danimarca-g35-g39">🇩🇰 Denmark (D35-D39)</h2>
-<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g35')">Itinerary D35-D39</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-danese-g34-g39')">Food</a></div>
 <h3 id="timeline_8">⏳ Timeline</h3>
 <table class="no-responsive">
 <thead>
@@ -5668,7 +5657,6 @@ On cold, foggy winter mornings, reeds and hedges coat in delicate ice crystals, 
 <p>🏛️ <strong>Smørrebrød to go</strong> — in markets, perfect for lunch in the camper</p>
 <hr>
 <h2 id="germania-g40-transito-via-brema">🇩🇪 Germany (D40 — transit via Bremen)</h2>
-<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g40')">Itinerary D40</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-tedesca-g40-transito-brema')">Food</a></div>
 <h3 id="timeline_9">⏳ Timeline</h3>
 <table class="no-responsive">
 <thead>
@@ -5883,7 +5871,6 @@ On cold, foggy winter mornings, reeds and hedges coat in delicate ice crystals, 
 <p>A magnet of the <strong>Bremen Town Musicians</strong> — the most iconic souvenir <a href="https://maps.google.com/?q=53.0758,8.8072" target="_blank" rel="noopener noreferrer">📍 Maps</a></p>
 <hr>
 <h2 id="francia-g41-g43-g51-g54">🇫🇷 France (D41-D43, D51-D54)</h2>
-<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g41')">Itinerary D41-D43, D51-D54</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-francese-g40-g43-g51-g52')">Food</a></div>
 <h3 id="timeline_10">⏳ Timeline</h3>
 <table class="no-responsive">
 <thead>
@@ -6445,7 +6432,6 @@ On cold, foggy winter mornings, reeds and hedges coat in delicate ice crystals, 
 <p><strong>Camargue</strong> (<a href="https://en.wikipedia.org/wiki/Camargue" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — Rhône delta: wild white horses, black bulls, pink flamingos! Unique landscape of marshes and salt flats. <a href="https://maps.google.com/?q=43.5000,4.5000(Camargue)" target="_blank" rel="noopener noreferrer">📍 Maps</a></p>
 <hr>
 <h2 id="spagna-g44-g50">🇪🇸 Spain (D44-D50)</h2>
-<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g44')">Itinerary D44-D50</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-spagnola-g44-g50')">Food</a></div>
 <h3 id="timeline_11">⏳ Timeline</h3>
 <table class="no-responsive">
 <thead>
@@ -7085,7 +7071,6 @@ On cold, foggy winter mornings, reeds and hedges coat in delicate ice crystals, 
 <p>🏛️ <strong>Anchoas de Santoña</strong> — the best anchovies in the world (Cantabria)</p>
 <hr>
 <h2 id="italia-g52-g54">🇮🇹 Italy (D52-D54)</h2>
-<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g52')">Itinerary D52-D54</a> · 🍽️ <a href="javascript:void(0)" onclick="switchTab('cibo','cucina-italiana-rientro-g51-g54')">Food</a></div>
 <h3 id="timeline_12">⏳ Timeline</h3>
 <table class="no-responsive">
 <thead>
@@ -7723,7 +7708,6 @@ On cold, foggy winter mornings, reeds and hedges coat in delicate ice crystals, 
 <a href="#cucina-italiana-rientro-g51-g54">🇮🇹 Italy</a>
 <a href="#gastronomia-consigli-cucina-in-furgone">👨‍🍳 Van cooking tips</a>
 </div></div>
-<div class="cross-link-bar">🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura')">Culture</a> · 🥾 <a href="javascript:void(0)" onclick="switchTab('attivita')">Activities</a> · 🧭 <a href="javascript:void(0)" onclick="switchTab('luoghi')">Places</a> · 📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerary</a> · 📋 <a href="javascript:void(0)" onclick="switchTab('piano')">Plan</a></div>
 <h2 id="food">🍽️ Gastronomy — by Country and Area</h2>
 <blockquote>
 <p>Typical dishes, local products and practical tips for eating well while spending little in a van. Focus on foods suitable also for children and easy to find in supermarkets or local markets.</p>
@@ -7821,7 +7805,6 @@ On cold, foggy winter mornings, reeds and hedges coat in delicate ice crystals, 
 </table>
 <hr>
 <h2 id="cucina-austriaca-g1-g2">🇦🇹 Austrian Cuisine (D1-D2)</h2>
-<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g1')">Itinerary D1-D2</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','austria-g1-g2')">Culture</a></div>
 <h4 id="storia-cucina-austria">📜 History of Austrian cuisine</h4>
 <p>Austrian cuisine is a crossroads of empires: <a href="https://en.wikipedia.org/wiki/Austrian_cuisine" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>. The <strong>Wiener Schnitzel</strong> likely came from Milan (cotoletta alla milanese), brought to Vienna in 1857 by Field Marshal Radetzky. <strong>Kaiserschmarrn</strong> ("Emperor's mess") was invented for Franz Joseph I when his cook botched a crêpe. <strong>Kaffeehäuser</strong> (Viennese coffeehouses, <a href="https://en.wikipedia.org/wiki/Viennese_coffee_house" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) were born after the Turkish siege of 1683: coffee sacks left by the Turks became a Viennese obsession. Today they're UNESCO heritage. The <strong>Sachertorte</strong> was created in 1832 by 16-year-old Franz Sacher for Prince Metternich — the original recipe is still secret!</p>
 <h4 id="extra-piatti-austria">🍽️ More dishes to try</h4>
@@ -7864,7 +7847,6 @@ On cold, foggy winter mornings, reeds and hedges coat in delicate ice crystals, 
 </ul>
 <hr>
 <h2 id="cucina-ceca-g2-g3-transito">🇨🇿 Czech Cuisine (D2-D3, transit)</h2>
-<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g2')">Itinerary D2-D3</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','repubblica-ceca-g2-transito-via-brno')">Culture</a></div>
 <h4 id="storia-cucina-ceca">📜 History of Czech cuisine</h4>
 <p>Czech cuisine (<a href="https://en.wikipedia.org/wiki/Czech_cuisine" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) is hearty and filling, born to survive long winters. <strong>Czech beer</strong> has a 1,000-year tradition: Pilsner was invented in Plzeň in 1842 (<a href="https://en.wikipedia.org/wiki/Pilsner" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) — Czechs drink more beer per capita than anyone (140 litres/year!). The <strong>Trdelník</strong> (chimney cake) seen everywhere in Prague is actually Hungarian/Slovak, but has become the symbol of Prague tourism. Real Czech dishes are <strong>knedlíky</strong> (boiled bread dumplings) that accompany every meat dish.</p>
 <h4 id="extra-piatti-ceca">🍽️ More dishes to try</h4>
@@ -7901,7 +7883,6 @@ On cold, foggy winter mornings, reeds and hedges coat in delicate ice crystals, 
 </ul>
 <hr>
 <h2 id="cucina-polacca-g3-g4">🇵🇱 Polish Cuisine (D3-D4)</h2>
-<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g3')">Itinerary D3-D4</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','polonia-g3-g4')">Culture</a></div>
 <h4 id="storia-cucina-polacca">📜 History of Polish cuisine</h4>
 <p>Polish cuisine (<a href="https://en.wikipedia.org/wiki/Polish_cuisine" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) blends Slavic, Jewish and noble traditions. <strong>Pierogi</strong> (<a href="https://en.wikipedia.org/wiki/Pierogi" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) are dumplings brought from China via the Silk Road in the 13th century — today they're the national dish. <strong>Polish vodka</strong> has a 500+ year history (the word "vodka" first appears in a Polish document from 1405!). <strong>Bigos</strong> ("hunter's stew") improves every time it's reheated — noble families prepared it days before feasts. The <strong>Wigilia</strong> tradition (Christmas Eve dinner) requires 12 dishes, all meatless.</p>
 <h4 id="extra-piatti-polonia">🍽️ More dishes to try</h4>
@@ -7945,7 +7926,6 @@ On cold, foggy winter mornings, reeds and hedges coat in delicate ice crystals, 
 </ul>
 <hr>
 <h2 id="cucina-baltica-g4-g7">🇱🇹🇱🇻🇪🇪 Baltic Cuisine (D4-D7)</h2>
-<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g4')">Itinerary D4-D7</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','lituania-g4-g5')">Culture</a></div>
 <h4 id="storia-cucina-baltica">📜 History of Baltic cuisine</h4>
 <p>The cuisines of Lithuania, Latvia and Estonia (<a href="https://en.wikipedia.org/wiki/Lithuanian_cuisine" target="_blank" rel="noopener noreferrer">📚 Lithuanian</a>, <a href="https://en.wikipedia.org/wiki/Latvian_cuisine" target="_blank" rel="noopener noreferrer">📚 Latvian</a>, <a href="https://en.wikipedia.org/wiki/Estonian_cuisine" target="_blank" rel="noopener noreferrer">📚 Estonian</a>) share common roots: dark rye bread, potatoes, herring, fermented dairy. <strong>Dark bread</strong> (Rugpjūtis/Rupjmaize) is sacred — throwing it away brings bad luck! Lithuania's <strong>farmhouse beer</strong> tradition is ancient: unfiltered, unpasteurised beers with recipes passed down for centuries. Estonia has strong Scandinavian influence (herring, salmon), Lithuania more Polish influence (pierogi/cepelinai), Latvia is in between.</p>
 <h4 id="extra-piatti-baltici">🍽️ More dishes to try</h4>
@@ -7992,7 +7972,6 @@ On cold, foggy winter mornings, reeds and hedges coat in delicate ice crystals, 
 </ul>
 <hr>
 <h2 id="cucina-finlandese-g7-g15">🇫🇮 Finnish Cuisine (D7-D15)</h2>
-<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g7')">Itinerary D7-D15</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','finlandia-g7-g15')">Culture</a></div>
 <h4 id="storia-cucina-finlandese">📜 History of Finnish cuisine</h4>
 <p>Finnish cuisine (<a href="https://en.wikipedia.org/wiki/Finnish_cuisine" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) is "from forest and lake to table". For centuries Finns lived on fishing, hunting and gathering berries and mushrooms. <strong>Kalakukko</strong> (fish baked inside a rye bread loaf) is the oldest dish — fishermen carried it as packed lunch. The <strong>sauna</strong> tradition also influences cuisine: <strong>saunapalvikinkku</strong> is ham smoked in the sauna for 24 hours! Finns consume more <strong>coffee</strong> per capita than anyone (12 kg/year!) and more <strong>milk</strong> than any country. <strong>Wild berries</strong> (blueberries, arctic cloudberries, lingonberries) are picked by everyone thanks to Jokamiehenoikeus.</p>
 <h4 id="extra-piatti-finlandia">🍽️ More dishes to try</h4>
@@ -8042,7 +8021,6 @@ On cold, foggy winter mornings, reeds and hedges coat in delicate ice crystals, 
 </ul>
 <hr>
 <h2 id="cucina-norvegese-g15-g34">🇳🇴 Norwegian Cuisine (D15-D34)</h2>
-<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g16')">Itinerary D15-D34</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','norvegia-g16-g34')">Culture</a></div>
 <h4 id="storia-cucina-norvegese">📜 History of Norwegian cuisine</h4>
 <p>Norwegian cuisine (<a href="https://en.wikipedia.org/wiki/Norwegian_cuisine" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) is shaped by fjords and extreme climate. Vikings invented <strong>preservation</strong>: dried fish (tørrfisk/stockfish), smoked (røkelaks) and fermented (rakfisk). <strong>Stockfish</strong> (<a href="https://en.wikipedia.org/wiki/Stockfish" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) dried in the Lofoten Islands was Viking "currency" — exported across Europe (including Italy for baccalà!). <strong>Brunost</strong> (brown cheese) was invented in 1863 by a farm girl, Anne Hov, who had the idea of adding cream to whey. Today it's the national cheese. <strong>Norwegian salmon</strong> is the world's most exported fish — salmon sushi was "invented" by Norwegians who convinced the Japanese in the 1980s!</p>
 <h4 id="extra-piatti-norvegia">🍽️ More dishes to try</h4>
@@ -8098,7 +8076,6 @@ On cold, foggy winter mornings, reeds and hedges coat in delicate ice crystals, 
 </ul>
 <hr>
 <h2 id="cucina-danese-g34-g39">🇩🇰 Danish Cuisine (D34-D39)</h2>
-<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g35')">Itinerary D34-D39</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','danimarca-g35-g39')">Culture</a></div>
 <h4 id="storia-cucina-danese">📜 History of Danish cuisine</h4>
 <p>Danish cuisine (<a href="https://en.wikipedia.org/wiki/Danish_cuisine" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) has undergone a revolution: from traditional <strong>smørrebrød</strong> (open sandwiches) to René Redzepi's "New Nordic" (Noma, 4-time world's best restaurant). <strong>Smørrebrød</strong> (<a href="https://en.wikipedia.org/wiki/Sm%C3%B8rrebr%C3%B8d" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) originated in medieval times: rye bread was the "plate" on which food was placed. <strong>Danish pastries</strong> (wienerbrød) were actually brought by Austrian bakers in 1850 during a Danish bakers' strike! <strong>Carlsberg</strong> was founded in 1847 and its laboratory discovered pure yeast for lager beer — giving the discovery to the world for free.</p>
 <h4 id="extra-piatti-danimarca">🍽️ More dishes to try</h4>
@@ -8145,7 +8122,6 @@ On cold, foggy winter mornings, reeds and hedges coat in delicate ice crystals, 
 </ul>
 <hr>
 <h2 id="cucina-tedesca-g40-transito-brema">🇩🇪 German Cuisine (D40 — Bremen transit)</h2>
-<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g40')">Itinerary D40</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','germania-g40-transito-via-brema')">Culture</a></div>
 <h4 id="storia-cucina-tedesca">📜 History of German cuisine</h4>
 <p>German cuisine (<a href="https://en.wikipedia.org/wiki/German_cuisine" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) varies enormously by region. Bremen, a Hanseatic city, has a maritime tradition: herring, smoked eel, Labskaus (sailors' stew). The <strong>Reinheitsgebot</strong> (<a href="https://en.wikipedia.org/wiki/Reinheitsgebot" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) of 1516 is the world's oldest beer purity law: only water, malt, hops and yeast. Germany has 1,500+ breweries and 5,000+ different beers! <strong>Brot</strong> (German bread) is UNESCO heritage: over 3,000 registered varieties, more than any other country.</p>
 <h4 id="extra-piatti-germania">🍽️ More dishes to try</h4>
@@ -8186,7 +8162,6 @@ On cold, foggy winter mornings, reeds and hedges coat in delicate ice crystals, 
 </ul>
 <hr>
 <h2 id="cucina-francese-g40-g43-g51-g52">🇫🇷 French Cuisine (D40-D43, D51-D52)</h2>
-<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g41')">Itinerary D40-D43, D51-D52</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','francia-g41-g43-g51-g54')">Culture</a></div>
 <h4 id="storia-cucina-francese">📜 History of French cuisine</h4>
 <p>French cuisine (<a href="https://en.wikipedia.org/wiki/French_cuisine" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) has been UNESCO heritage since 2010. <strong>Auguste Escoffier</strong> (<a href="https://en.wikipedia.org/wiki/Auguste_Escoffier" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) codified modern cuisine in 1903 with "Le Guide Culinaire". The <strong>baguette</strong> (<a href="https://en.wikipedia.org/wiki/Baguette" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) became UNESCO heritage in 2022 — the French consume 10 billion per year! The <strong>fromage</strong> (cheese) tradition counts 1,200+ varieties — De Gaulle said: "How can you govern a country with 246 different cheeses?". The <strong>croissant</strong> is actually Austrian (Kipferl), brought to Paris in 1838. Brittany and Normandy (on your route) are famous for crêpes, cider, salted butter and oysters.</p>
 <h4 id="extra-piatti-francia">🍽️ More dishes to try</h4>
@@ -8235,7 +8210,6 @@ On cold, foggy winter mornings, reeds and hedges coat in delicate ice crystals, 
 </ul>
 <hr>
 <h2 id="cucina-spagnola-g44-g50">🇪🇸 Spanish Cuisine (D44-D50)</h2>
-<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g44')">Itinerary D44-D50</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','spagna-g44-g50')">Culture</a></div>
 <h4 id="storia-cucina-spagnola">📜 History of Spanish cuisine</h4>
 <p>Spanish cuisine (<a href="https://en.wikipedia.org/wiki/Spanish_cuisine" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) of the north is very different from Mediterranean. The <strong>Basque Country</strong> has the highest concentration of Michelin stars in the world! <strong>Pintxos</strong> (<a href="https://en.wikipedia.org/wiki/Pintxo" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) are Basque culinary art: mini gastronomic creations on bread, fixed with a toothpick. You go from bar to bar ("txikiteo"). <strong>Asturian cider</strong> (<a href="https://en.wikipedia.org/wiki/Asturian_cider" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) is poured from a metre high ("escanciar") to oxygenate it! The <strong>Camino de Santiago</strong> created a tradition of "menú del peregrino" (3 courses + wine for ~12€) along the entire north.</p>
 <h4 id="extra-piatti-spagna">🍽️ More dishes to try</h4>
@@ -8286,7 +8260,6 @@ On cold, foggy winter mornings, reeds and hedges coat in delicate ice crystals, 
 </ul>
 <hr>
 <h2 id="cucina-italiana-rientro-g51-g54">🇮🇹 Italian Cuisine — Return (D51-D54)</h2>
-<div class="cross-link-bar">📅 <a href="javascript:void(0)" onclick="switchTab('giorni','g52')">Itinerary D51-D54</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura','italia-g52-g54')">Culture</a></div>
 <h4 id="storia-cucina-italiana">📜 History of Ligurian cuisine</h4>
 <p>Ligurian cuisine (<a href="https://en.wikipedia.org/wiki/Ligurian_cuisine" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) is "poor cuisine" turned gourmet. <strong>Pesto genovese</strong> (<a href="https://en.wikipedia.org/wiki/Pesto" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) descends from Roman "moretum" (garlic pounded with cheese), evolved with Genoese DOP basil — smaller and sweeter than common basil. <strong>Focaccia genovese</strong> (<a href="https://en.wikipedia.org/wiki/Focaccia" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) is eaten for breakfast dipped in cappuccino! <strong>Farinata</strong> (<a href="https://en.wikipedia.org/wiki/Farinata" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) was invented by accident: during a storm, barrels of chickpeas and oil spilled in the hold — the mixture baked by the sun became a delicacy. Genoa was "La Superba" of the Maritime Republics: spices, salted anchovies, and maritime trade shaped the cuisine.</p>
 <h4 id="extra-piatti-italia">🍽️ More dishes to try</h4>
@@ -8419,7 +8392,6 @@ On cold, foggy winter mornings, reeds and hedges coat in delicate ice crystals, 
 <a href="#drone">🛸 Drone</a>
 <a href="#inreach">📡 Garmin inReach</a>
 </div></div>
-<div class="cross-link-bar">📍 <a href="javascript:void(0)" class="protected-link" onclick="switchTab('posizione')">Live Position</a> · 🍝 <a href="javascript:void(0)" onclick="switchTab('cibo')">Food</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura')">Culture</a> · 🧭 <a href="javascript:void(0)" onclick="switchTab('luoghi')">Places</a> · 🎒 <a href="javascript:void(0)" onclick="switchTab('zaino','z-trekking')">Trekking Gear</a></div>
 <h2 id="campeggio">🚐 Camping — Rules by Country</h2>
 <table class="no-responsive">
 <thead>
@@ -9952,7 +9924,6 @@ On cold, foggy winter mornings, reeds and hedges coat in delicate ice crystals, 
 <a href="#secA">♨️ Thermal Baths</a>
 <a href="#poi-parchi-divertimento">🎢 Theme Parks</a>
 </div></div>
-<div class="cross-link-bar">📍 <a href="javascript:void(0)" class="protected-link" onclick="switchTab('posizione')">Live Position</a> · 🏛️ <a href="javascript:void(0)" onclick="switchTab('cultura')">Culture</a> · 🥾 <a href="javascript:void(0)" onclick="switchTab('attivita')">Activities</a> · 📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerary</a> · 📋 <a href="javascript:void(0)" onclick="switchTab('piano')">Plan</a></div>
 
 <h2 id="musei-attrazioni">🏛️ Museums and Attractions</h2>
 <p>Museums, monuments and must-see cultural attractions along the route. Many are already mentioned in the individual itinerary days.</p>
@@ -13190,7 +13161,6 @@ On cold, foggy winter mornings, reeds and hedges coat in delicate ice crystals, 
 <a href="#rischi">⚠️ Rischi</a>
 <a href="#fonti">📚 Fonti</a>
 </div></div>
-<div class="cross-link-bar">📍 <a href="javascript:void(0)" class="protected-link" onclick="switchTab('posizione')">Live Position</a> · 🍝 <a href="javascript:void(0)" onclick="switchTab('cibo')">Food</a> · 🥾 <a href="javascript:void(0)" onclick="switchTab('attivita')">Activities</a> · 🎒 <a href="javascript:void(0)" onclick="switchTab('zaino')">Gear</a> · 📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerary</a></div>
 <h2 id="checklist-pre-partenza">✅ Checklist — Pre-departure</h2>
 <hr>
 <h3 id="prenotazioni-per-data">📅 Bookings by date</h3>
@@ -14226,7 +14196,6 @@ On cold, foggy winter mornings, reeds and hedges coat in delicate ice crystals, 
     <div class="zp-sub" id="zp-percent">0% complete</div>
     <div class="zp-bar"><div class="zp-fill" id="zp-fill" style="width:0%"></div></div>
 </div>
-<div class="cross-link-bar">📋 <a href="javascript:void(0)" onclick="switchTab('piano')">Plan & Budget</a> · 🥾 <a href="javascript:void(0)" onclick="switchTab('attivita')">Activities</a> · 🍝 <a href="javascript:void(0)" onclick="switchTab('cibo')">Food</a> · 📍 <a href="javascript:void(0)" class="protected-link" onclick="switchTab('posizione')">Live Position</a> · 📅 <a href="javascript:void(0)" onclick="switchTab('giorni')">Itinerary</a></div>
 
 <div class="tab-index-wrapper"><div class="tab-index">
 <a href="#z-camper">🚐 Motorhome</a>
@@ -15285,7 +15254,7 @@ On cold, foggy winter mornings, reeds and hedges coat in delicate ice crystals, 
 <script>
 // Load home-variants_en.html templates into the page
 (function(){
-  fetch('./home-variants_en.html?v=4.75').then(function(r){return r.text();}).then(function(html){
+  fetch('./home-variants_en.html?v=4.77').then(function(r){return r.text();}).then(function(html){
     var div = document.getElementById('hv-templates');
     if(div) div.innerHTML = html;
     // Move templates to document body for proper <template> access
@@ -15295,8 +15264,8 @@ On cold, foggy winter mornings, reeds and hedges coat in delicate ice crystals, 
 })();
 </script>
 <!-- Debug Overlay (v2.47 diagnostic) -->
-<script src="debug-overlay.js?v=4.75" defer></script>
+<script src="debug-overlay.js?v=4.77" defer></script>
 <!-- Capacitor GPS Bridge (only activates inside native app, ignored in browser) -->
-<script src="capacitor-gps-bridge.js?v=4.75" defer></script>
+<script src="capacitor-gps-bridge.js?v=4.77" defer></script>
 </body>
 </html>
