@@ -222,6 +222,10 @@
     /* ─── Home language switch ─── */
     .home-lang-switch { background: #2d3748; border-color: #4a5568; }
     .home-action-btn { background: #2d3748; border-color: #4a5568; }
+    .lang-dropdown-menu { background: #2d3748; border-color: #4a5568; }
+    .lang-option { color: #e2e8f0; }
+    .lang-option:hover { background: rgba(255,255,255,0.08); }
+    .lang-option.active { background: rgba(59,130,246,0.15); }
 
     /* ─── Zaino progress ─── */
     .zaino-progress-bar { background: #2d3748; border-color: #4a5568; }
@@ -628,7 +632,7 @@
     }
 
     /* ─── v1.64: Rimozione effetto Neumorfico Chiaro ─── */
-    .home-hero-card, .home-lang-switch, .home-action-btn {
+    .home-hero-card, .home-lang-switch, .home-action-btn, .lang-current {
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
         border-color: #4a5568 !important;
     }
@@ -1009,6 +1013,23 @@ mark.search-hl.current { background: #f97316; color: white; }
 }
 .home-action-btn:hover { transform: scale(1.1); }
 .home-action-btn:active { transform: scale(0.92); }
+
+/* Language Dropdown */
+.lang-dropdown { position: relative; display: inline-block; }
+.lang-dropdown-menu {
+    display: none; position: absolute; right: 0; top: calc(100% + 6px);
+    background: var(--bg-alt, #fff); border: 1px solid var(--border);
+    border-radius: 10px; box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    min-width: 140px; z-index: 1000; overflow: hidden;
+}
+.lang-dropdown-menu.open { display: block; }
+.lang-option {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 16px; text-decoration: none;
+    color: var(--text); font-size: 14px; transition: background 0.15s;
+}
+.lang-option:hover { background: rgba(0,0,0,0.05); }
+.lang-option.active { font-weight: 700; background: rgba(59,130,246,0.08); }
 
 /* Hero Countdown Card — Neumorphism */
 .home-hero-card {
@@ -5710,7 +5731,7 @@ html[lang="en"] .notif-drawer-list:empty::after {
 
 /* ─── v1.82: Responsive top bar ─── */
 @media (max-width: 400px) {
-    .home-lang-switch { display: none; }
+    .home-lang-switch, .lang-dropdown { display: none; }
     .hero-card-avatar { display: none; }
     #homeSearchOpen { display: none; }
 }

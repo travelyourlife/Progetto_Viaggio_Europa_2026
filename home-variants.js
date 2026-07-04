@@ -373,11 +373,11 @@
     var badges = container.querySelectorAll('.hv-status-badge');
     badges.forEach(function(badge) {
       if (tripData.tripPreMode) {
-        badge.textContent = (typeof isEN !== 'undefined' && isEN) ? ('🚀 Departure in ' + tripData.daysUntil + ' days') : ('🚀 Partenza tra ' + tripData.daysUntil + ' giorni');
+        badge.textContent = _hvT('🚀 Partenza tra ' + tripData.daysUntil + ' giorni', '🚀 Departure in ' + tripData.daysUntil + ' days', '🚀 Salida en ' + tripData.daysUntil + ' días');
         badge.classList.remove('hv-badge-green');
         badge.classList.add('hv-badge-blue');
       } else {
-        badge.textContent = (typeof isEN !== 'undefined' && isEN) ? '● ON THE ROAD' : '● IN VIAGGIO';
+        badge.textContent = _hvT('● IN VIAGGIO', '● ON THE ROAD', '● EN RUTA');
         badge.classList.remove('hv-badge-blue');
         badge.classList.add('hv-badge-green');
       }
@@ -387,7 +387,7 @@
     var timeEls = container.querySelectorAll('.hv-status-time, .hv-story-time');
     timeEls.forEach(function(el) {
       if (tripData.tripPreMode) {
-        el.textContent = (typeof isEN !== 'undefined' && isEN) ? ((typeof window.TRIP_META !== 'undefined') ? 'Departure: ' + window.TRIP_META.startEN : 'Departure: 25 June 2026') : ((typeof window.TRIP_META !== 'undefined') ? 'Partenza: ' + window.TRIP_META.startIT : 'Partenza: 25 giugno 2026');
+        el.textContent = _hvT((typeof window.TRIP_META !== 'undefined') ? 'Partenza: ' + window.TRIP_META.startIT : 'Partenza: 25 giugno 2026', (typeof window.TRIP_META !== 'undefined') ? 'Departure: ' + window.TRIP_META.startEN : 'Departure: 25 June 2026', (typeof window.TRIP_META !== 'undefined') ? 'Salida: ' + window.TRIP_META.startEN : 'Salida: 25 de junio de 2026');
       }
     });
 
@@ -395,14 +395,14 @@
     if (tripData.tripPreMode) {
       var programHeader = container.querySelector('.hv-section-header span');
       if (programHeader && programHeader.textContent.indexOf('oggi') > -1) {
-        programHeader.textContent = (typeof isEN !== 'undefined' && isEN) ? '📅 Day 1 Preview' : '📅 Anteprima Giorno 1';
+        programHeader.textContent = _hvT('📅 Anteprima Giorno 1', '📅 Day 1 Preview', '📅 Vista previa Día 1');
       }
       // Feed section label is already set in HTML as 'Diario di bordo'
 
       // Safety: override 'Giorno X/54' in during-trip hero (in case CSS hide fails)
       var countryLines = container.querySelectorAll('.hv-hero-country, .hv-hero-country-inline, .hv-bento-country');
       countryLines.forEach(function(el) {
-        el.innerHTML = '<span data-hv="country">' + (tripData.country || '--') + '</span> <span data-hv="flag">' + (tripData.flag || '') + '</span> · ' + ((typeof isEN !== 'undefined' && isEN) ? 'First stop' : 'Prima tappa');
+        el.innerHTML = '<span data-hv="country">' + (tripData.country || '--') + '</span> <span data-hv="flag">' + (tripData.flag || '') + '</span> · ' + _hvT('Prima tappa', 'First stop', 'Primera parada');
       });
     }
 
@@ -410,7 +410,7 @@
     if (tripData.tripPreMode) {
       var mapBadges = container.querySelectorAll('.umap-mini-badge');
       mapBadges.forEach(function(badge) {
-        badge.textContent = (typeof isEN !== 'undefined' && isEN) ? ('🏠 Departure in ' + tripData.daysUntil + 'd') : ('🏠 Partenza tra ' + tripData.daysUntil + 'g');
+        badge.textContent = _hvT('🏠 Partenza tra ' + tripData.daysUntil + 'g', '🏠 Departure in ' + tripData.daysUntil + 'd', '🏠 Salida en ' + tripData.daysUntil + 'd');
         badge.classList.add('umap-mini-badge-pretrip');
       });
       var mapMarkers = container.querySelectorAll('.umap-mini-marker');
@@ -515,27 +515,35 @@
 
     if (dayData) {
       // Parse title for route
-      data.routeTitle = (_en && dayData.titleEN) ? dayData.titleEN : (dayData.title || '--');
+      data.routeTitle = (_lang3 === 'es' && dayData.titleES) ? dayData.titleES : (_lang3 === 'en' && dayData.titleEN) ? dayData.titleEN : (dayData.title || '--');
       data.routeKm = '~' + (dayData.km || '--') + ' km';
       data.routeTime = dayData.hours || '--';
 
       // Country/city from title
-      var _dayTitle = (_en && dayData.titleEN) ? dayData.titleEN : (dayData.title || '');
+      var _dayTitle = (_lang3 === 'es' && dayData.titleES) ? dayData.titleES : (_lang3 === 'en' && dayData.titleEN) ? dayData.titleEN : (dayData.title || '');
       var titleParts = _dayTitle.split('→');
       var destination = titleParts.length > 1 ? titleParts[titleParts.length - 1].trim() : titleParts[0].trim();
       data.city = destination;
 
       // Country from region
-      var countryMap = _en ? {
+      var countryMap = _lang3 === 'es' ? {
+        'austria': 'Austria', 'germania': 'Alemania', 'danimarca': 'Dinamarca',
+        'norvegia': 'Noruega', 'svezia': 'Suecia', 'finlandia': 'Finlandia',
+        'estonia': 'Estonia', 'lettonia': 'Letonia', 'lituania': 'Lituania',
+        'polonia': 'Polonia', 'cechia': 'Chequia', 'italia': 'Italia',
+        'francia': 'Francia', 'spagna': 'Espa\u00f1a'
+      } : _lang3 === 'en' ? {
         'austria': 'Austria', 'germania': 'Germany', 'danimarca': 'Denmark',
         'norvegia': 'Norway', 'svezia': 'Sweden', 'finlandia': 'Finland',
         'estonia': 'Estonia', 'lettonia': 'Latvia', 'lituania': 'Lithuania',
-        'polonia': 'Poland', 'cechia': 'Czechia', 'italia': 'Italy'
+        'polonia': 'Poland', 'cechia': 'Czechia', 'italia': 'Italy',
+        'francia': 'France', 'spagna': 'Spain'
       } : {
         'austria': 'Austria', 'germania': 'Germania', 'danimarca': 'Danimarca',
         'norvegia': 'Norvegia', 'svezia': 'Svezia', 'finlandia': 'Finlandia',
         'estonia': 'Estonia', 'lettonia': 'Lettonia', 'lituania': 'Lituania',
-        'polonia': 'Polonia', 'cechia': 'Cechia', 'italia': 'Italia'
+        'polonia': 'Polonia', 'cechia': 'Cechia', 'italia': 'Italia',
+        'francia': 'Francia', 'spagna': 'Spagna'
       };
       data.country = countryMap[dayData.region] || dayData.region || '--';
       data.flag = dayData.flags ? dayData.flags.split('→').pop().trim() : '';
@@ -554,17 +562,19 @@
       var weekdays = ['Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato'];
       var months = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
       data.dayFullDate = weekdays[dayDateObj.getDay()] + ' ' + dayDateObj.getDate() + ' ' + months[dayDateObj.getMonth()] + ' ' + dayDateObj.getFullYear();
-      // Short date for hero badge (e.g. "8 Luglio" / "8 July")
+      // Short date for hero badge (e.g. "8 Luglio" / "8 July" / "8 julio")
       var monthsShort_it = ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
       var monthsShort_en = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-      data.dayDateShort = dayDateObj.getDate() + ' ' + (_en ? monthsShort_en[dayDateObj.getMonth()] : monthsShort_it[dayDateObj.getMonth()]);
+      var monthsShort_es = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+      var _monthArr = _lang3 === 'es' ? monthsShort_es : _lang3 === 'en' ? monthsShort_en : monthsShort_it;
+      data.dayDateShort = dayDateObj.getDate() + ' ' + _monthArr[dayDateObj.getMonth()];
 
       // Km today
       data.kmToday = dayData.km || '--';
 
       // Highlights for route sub
       if (dayData.highlights && dayData.highlights.length > 0) {
-        data.routeHighlights = dayData.highlights.map(function(h) { return h.name || h; }).join(' · ');
+        data.routeHighlights = dayData.highlights.map(function(h) { return (_lang3 === 'es' && h.titleES) ? h.titleES : (_lang3 === 'en' && h.titleEN) ? h.titleEN : (h.name || h.title || h); }).join(' · ');
       } else {
         data.routeHighlights = dayData.narrative ? dayData.narrative.substring(0, 60) + '...' : '';
       }
@@ -588,48 +598,56 @@
       var previewDay = (typeof DAYS_DATA !== 'undefined' && DAYS_DATA[0]) ? DAYS_DATA[0] : null;
 
       if (previewDay) {
-        var _pdTitle = (_en && previewDay.titleEN) ? previewDay.titleEN : (previewDay.title || '');
+        var _pdTitle = (_lang3 === 'es' && previewDay.titleES) ? previewDay.titleES : (_lang3 === 'en' && previewDay.titleEN) ? previewDay.titleEN : (previewDay.title || '');
         var titleParts = _pdTitle.split('→');
         data.city = titleParts.length > 1 ? titleParts[titleParts.length - 1].trim() : titleParts[0].trim();
-        var countryMap = _en ? {
+        var countryMap = _lang3 === 'es' ? {
+          'austria': 'Austria', 'germania': 'Alemania', 'danimarca': 'Dinamarca',
+          'norvegia': 'Noruega', 'svezia': 'Suecia', 'finlandia': 'Finlandia',
+          'estonia': 'Estonia', 'lettonia': 'Letonia', 'lituania': 'Lituania',
+          'polonia': 'Polonia', 'cechia': 'Chequia', 'italia': 'Italia',
+          'francia': 'Francia', 'spagna': 'Espa\u00f1a'
+        } : _lang3 === 'en' ? {
           'austria': 'Austria', 'germania': 'Germany', 'danimarca': 'Denmark',
           'norvegia': 'Norway', 'svezia': 'Sweden', 'finlandia': 'Finland',
           'estonia': 'Estonia', 'lettonia': 'Latvia', 'lituania': 'Lithuania',
-          'polonia': 'Poland', 'cechia': 'Czechia', 'italia': 'Italy'
+          'polonia': 'Poland', 'cechia': 'Czechia', 'italia': 'Italy',
+          'francia': 'France', 'spagna': 'Spain'
         } : {
           'austria': 'Austria', 'germania': 'Germania', 'danimarca': 'Danimarca',
           'norvegia': 'Norvegia', 'svezia': 'Svezia', 'finlandia': 'Finlandia',
           'estonia': 'Estonia', 'lettonia': 'Lettonia', 'lituania': 'Lituania',
-          'polonia': 'Polonia', 'cechia': 'Cechia', 'italia': 'Italia'
+          'polonia': 'Polonia', 'cechia': 'Cechia', 'italia': 'Italia',
+          'francia': 'Francia', 'spagna': 'Spagna'
         };
         data.country = countryMap[previewDay.region] || previewDay.region || '--';
         data.flag = previewDay.flags ? previewDay.flags.split('→').pop().trim() : '🇦🇹';
         data.temp = previewDay.meteo ? previewDay.meteo.high + '°C' : '25°C';
         data.weatherIcon = '☀️';
-        data.weatherDesc = previewDay.meteo ? previewDay.meteo.cond : (_en ? 'Fair weather' : 'Bel tempo');
-        data.daylight = previewDay.meteo ? previewDay.meteo.daylight : (_en ? '16h of daylight' : '16h di luce');
+        data.weatherDesc = previewDay.meteo ? previewDay.meteo.cond : _hvT('Bel tempo', 'Fair weather', 'Buen tiempo');
+        data.daylight = previewDay.meteo ? previewDay.meteo.daylight : _hvT('16h di luce', '16h of daylight', '16h de luz');
         data.dayDate = previewDay.date || '25/06';
-        data.dayFullDate = (typeof TRIP_START !== 'undefined') ? TRIP_START.toLocaleDateString(_en ? 'en-GB' : 'it-IT', {weekday:'long',day:'numeric',month:'long',year:'numeric'}) : (_en ? 'Thursday 25 June 2026' : 'Giovedì 25 Giugno 2026');
+        data.dayFullDate = (typeof TRIP_START !== 'undefined') ? TRIP_START.toLocaleDateString(_lang3 === 'es' ? 'es-ES' : _lang3 === 'en' ? 'en-GB' : 'it-IT', {weekday:'long',day:'numeric',month:'long',year:'numeric'}) : _hvT('Giovedì 25 Giugno 2026', 'Thursday 25 June 2026', 'Jueves 25 de junio de 2026');
         data.kmToday = previewDay.km || '460';
-        data.routeTitle = (_en && previewDay.titleEN) ? previewDay.titleEN : (previewDay.title || 'Selvazzano → Leoben');
+        data.routeTitle = (_lang3 === 'es' && previewDay.titleES) ? previewDay.titleES : (_lang3 === 'en' && previewDay.titleEN) ? previewDay.titleEN : (previewDay.title || 'Selvazzano → Leoben');
         data.routeKm = '~' + (previewDay.km || '460') + ' km';
         data.routeTime = previewDay.hours || '5h 30m';
-        data.routeHighlights = previewDay.narrative ? previewDay.narrative.replace(/[🚗🌒]/g, '').substring(0, 80) : (_en ? 'First stop: where it all began!' : 'Prima tappa: dove tutto è iniziato!');
+        data.routeHighlights = previewDay.narrative ? previewDay.narrative.replace(/[🚗🌒]/g, '').substring(0, 80) : _hvT('Prima tappa: dove tutto è iniziato!', 'First stop: where it all began!', 'Primera parada: ¡donde todo empezó!');
       } else {
         data.city = 'Leoben';
         data.country = 'Austria';
         data.flag = '🇦🇹';
         data.temp = '25°C';
         data.weatherIcon = '☀️';
-        data.weatherDesc = _en ? 'Fair weather' : 'Bel tempo';
-        data.daylight = _en ? '16h of daylight' : '16h di luce';
+        data.weatherDesc = _hvT('Bel tempo', 'Fair weather', 'Buen tiempo');
+        data.daylight = _hvT('16h di luce', '16h of daylight', '16h de luz');
         data.dayDate = '25/06';
-        data.dayFullDate = (typeof TRIP_START !== 'undefined') ? TRIP_START.toLocaleDateString(_en ? 'en-GB' : 'it-IT', {weekday:'long',day:'numeric',month:'long',year:'numeric'}) : (_en ? 'Thursday 25 June 2026' : 'Giovedì 25 Giugno 2026');
+        data.dayFullDate = (typeof TRIP_START !== 'undefined') ? TRIP_START.toLocaleDateString(_lang3 === 'es' ? 'es-ES' : _lang3 === 'en' ? 'en-GB' : 'it-IT', {weekday:'long',day:'numeric',month:'long',year:'numeric'}) : _hvT('Giovedì 25 Giugno 2026', 'Thursday 25 June 2026', 'Jueves 25 de junio de 2026');
         data.kmToday = '460';
         data.routeTitle = 'Selvazzano → Leoben';
         data.routeKm = '~460 km';
         data.routeTime = '5h 30m';
-        data.routeHighlights = _en ? 'First stop: where it all began!' : 'Prima tappa: dove tutto è iniziato!';
+        data.routeHighlights = _hvT('Prima tappa: dove tutto è iniziato!', 'First stop: where it all began!', 'Primera parada: ¡donde todo empezó!');
       }
 
       data.dayNum = '0'; // pre-trip: no trip day yet
@@ -637,22 +655,22 @@
 
       // Pre-trip hero countdown text
       var _en2 = (typeof isEN !== 'undefined' && isEN);
-      data.countdownText = data.daysUntil === 1 ? (_en2 ? 'day to go' : 'giorno alla partenza') : (_en2 ? 'days to go' : 'giorni alla partenza');
+      data.countdownText = data.daysUntil === 1 ? _hvT('giorno alla partenza', 'day to go', 'd\u00eda para la salida') : _hvT('giorni alla partenza', 'days to go', 'd\u00edas para la salida');
 
       // Pre-trip program (dynamic from DAYS_DATA[0])
       var _preKm = (previewDay ? previewDay.km : data.kmToday) || '460';
       var _preHours = (previewDay ? previewDay.hours : data.routeTime) || '5h 30m';
-      var _preTitle = (previewDay ? ((_en2 && previewDay.titleEN) ? previewDay.titleEN : previewDay.title) : data.routeTitle) || 'Selvazzano → Leoben';
-      data.todayProgram = '<div class="hv-program-item"><span class="hv-program-icon">🚐</span><div class="hv-program-text"><div class="hv-program-title">' + _preTitle + '</div><div class="hv-program-sub">~' + _preKm + ' km · ' + _preHours + (_en2 ? ' estimated' : ' stimati') + '</div></div></div>';
-      data.todayProgram += '<div class="hv-program-item"><span class="hv-program-icon">🍺</span><div class="hv-program-text"><div class="hv-program-title">Gösser Bräu — ' + (_en2 ? 'historic brewery' : 'birrificio storico') + '</div><div class="hv-program-sub hv-tag-food">' + (_en2 ? 'Dinner' : 'Cena') + '</div></div></div>';
-      data.todayProgram += '<div class="hv-program-item"><span class="hv-program-icon">🅿️</span><div class="hv-program-text"><div class="hv-program-title">Campingclub Hinterberg</div><div class="hv-program-sub">' + (_en2 ? 'from €25/night — check-in by 21:00' : 'da €25/notte — check-in entro le 21') + '</div></div></div>';
+      var _preTitle = (previewDay ? ((_lang3 === 'es' && previewDay.titleES) ? previewDay.titleES : (_en2 && previewDay.titleEN) ? previewDay.titleEN : previewDay.title) : data.routeTitle) || 'Selvazzano → Leoben';
+      data.todayProgram = '<div class="hv-program-item"><span class="hv-program-icon">🚐</span><div class="hv-program-text"><div class="hv-program-title">' + _preTitle + '</div><div class="hv-program-sub">~' + _preKm + ' km \u00b7 ' + _preHours + _hvT(' stimati', ' estimated', ' estimados') + '</div></div></div>';
+      data.todayProgram += '<div class="hv-program-item"><span class="hv-program-icon">🍺</span><div class="hv-program-text"><div class="hv-program-title">G\u00f6sser Br\u00e4u \u2014 ' + _hvT('birrificio storico', 'historic brewery', 'cervecer\u00eda hist\u00f3rica') + '</div><div class="hv-program-sub hv-tag-food">' + _hvT('Cena', 'Dinner', 'Cena') + '</div></div></div>';
+      data.todayProgram += '<div class="hv-program-item"><span class="hv-program-icon">🅿\ufe0f</span><div class="hv-program-text"><div class="hv-program-title">Campingclub Hinterberg</div><div class="hv-program-sub">' + _hvT('da \u20ac25/notte \u2014 check-in entro le 21', 'from \u20ac25/night \u2014 check-in by 21:00', 'desde \u20ac25/noche \u2014 check-in antes de las 21:00') + '</div></div></div>';
 
       // Pre-trip timeline (dynamic from DAYS_DATA[0])
       data.timeline = '';
-      data.timeline += '<div class="hv-tl-item hv-tl-future"><div class="hv-tl-time">15:00</div><div class="hv-tl-dot"></div><div class="hv-tl-content"><div class="hv-tl-title">' + (_en2 ? 'Departure from Selvazzano' : 'Partenza da Selvazzano') + '</div><div class="hv-tl-sub">' + (_en2 ? 'Loading van, final check' : 'Caricamento furgone, ultimo check') + '</div><div class="hv-tl-tag">' + (_en2 ? 'Departure' : 'Partenza') + '</div></div></div>';
+      data.timeline += '<div class="hv-tl-item hv-tl-future"><div class="hv-tl-time">15:00</div><div class="hv-tl-dot"></div><div class="hv-tl-content"><div class="hv-tl-title">' + _hvT('Partenza da Selvazzano', 'Departure from Selvazzano', 'Salida desde Selvazzano') + '</div><div class="hv-tl-sub">' + _hvT('Caricamento furgone, ultimo check', 'Loading van, final check', 'Cargar la furgoneta, \u00faltimo control') + '</div><div class="hv-tl-tag">' + _hvT('Partenza', 'Departure', 'Salida') + '</div></div></div>';
       data.timeline += '<div class="hv-tl-item hv-tl-future"><div class="hv-tl-time">15:30 – 21:00</div><div class="hv-tl-dot"></div><div class="hv-tl-content"><div class="hv-tl-title">Guida ' + _preTitle + '</div><div class="hv-tl-sub">' + _preKm + ' km via A4+A23, vista Alpi</div><div class="hv-tl-tag">Guida</div></div></div>';
-      data.timeline += '<div class="hv-tl-item hv-tl-future"><div class="hv-tl-time">21:00</div><div class="hv-tl-dot"></div><div class="hv-tl-content"><div class="hv-tl-title">' + (_en2 ? 'Arrival Leoben — Campingclub Hinterberg' : 'Arrivo Leoben — Campingclub Hinterberg') + '</div><div class="hv-tl-sub">' + (_en2 ? 'Check-in and settling in' : 'Check-in e sistemazione') + '</div><div class="hv-tl-tag">' + (_en2 ? 'Arrival' : 'Arrivo') + '</div></div></div>';
-      data.timeline += '<div class="hv-tl-item hv-tl-future"><div class="hv-tl-time">21:30</div><div class="hv-tl-dot"></div><div class="hv-tl-content"><div class="hv-tl-title">' + (_en2 ? 'Dinner at Gösser Bräu' : 'Cena al Gösser Bräu') + '</div><div class="hv-tl-sub">Brettljause + Backhendl + Gösser ' + (_en2 ? 'beer' : 'birra') + '</div><div class="hv-tl-tag">' + (_en2 ? 'Food' : 'Cibo') + '</div></div></div>';
+      data.timeline += '<div class="hv-tl-item hv-tl-future"><div class="hv-tl-time">21:00</div><div class="hv-tl-dot"></div><div class="hv-tl-content"><div class="hv-tl-title">' + _hvT('Arrivo Leoben \u2014 Campingclub Hinterberg', 'Arrival Leoben \u2014 Campingclub Hinterberg', 'Llegada Leoben \u2014 Campingclub Hinterberg') + '</div><div class="hv-tl-sub">' + _hvT('Check-in e sistemazione', 'Check-in and settling in', 'Check-in e instalaci\u00f3n') + '</div><div class="hv-tl-tag">' + _hvT('Arrivo', 'Arrival', 'Llegada') + '</div></div></div>';
+      data.timeline += '<div class="hv-tl-item hv-tl-future"><div class="hv-tl-time">21:30</div><div class="hv-tl-dot"></div><div class="hv-tl-content"><div class="hv-tl-title">' + _hvT('Cena al G\u00f6sser Br\u00e4u', 'Dinner at G\u00f6sser Br\u00e4u', 'Cena en G\u00f6sser Br\u00e4u') + '</div><div class="hv-tl-sub">Brettljause + Backhendl + G\u00f6sser ' + _hvT('birra', 'beer', 'cerveza') + '</div><div class="hv-tl-tag">' + _hvT('Cibo', 'Food', 'Comida') + '</div></div></div>';
 
       // Pre-trip checklist
       data.checklist = '';
@@ -679,15 +697,15 @@
       data.totalKm = '0';
       data.totalCountries = '0';
       data.totalCheckins = '0';
-      var countdownWord = data.daysUntil === 1 ? (_en ? 'day' : 'giorno') : (_en ? 'days' : 'giorni');
+      var countdownWord = data.daysUntil === 1 ? _hvT('giorno', 'day', 'd\u00eda') : _hvT('giorni', 'days', 'd\u00edas');
       var _tripDays = (typeof TRIP_DAYS !== 'undefined') ? TRIP_DAYS : (typeof window.TRIP_META !== 'undefined' ? window.TRIP_META.days : 55);
-      data.progressText = (_en ? 'Departure in ' : 'Partenza tra ') + data.daysUntil + ' ' + countdownWord;
+      data.progressText = _hvT('Partenza tra ', 'Departure in ', 'Salida en ') + data.daysUntil + ' ' + countdownWord;
       data.kmBar = 0;
       data.lastUpdate = '';
       data.distanceFromHome = '';
     } else {
       var _td = (typeof TRIP_DAYS !== 'undefined') ? TRIP_DAYS : 55;
-      data.progressText = _dayPrefix + (currentDay + 1) + '/' + _td + ' · ' + data.totalKm + ' km · ' + data.totalCountries + (_en ? '/13 countries' : '/13 paesi');
+      data.progressText = _dayPrefix + (currentDay + 1) + '/' + _td + ' \u00b7 ' + data.totalKm + ' km \u00b7 ' + data.totalCountries + _hvT('/13 paesi', '/13 countries', '/13 pa\u00edses');
       data.kmBar = Math.min(100, Math.round((parseInt(data.totalKm.replace(/\./g, '')) || 0) / 12000 * 100));
       data.lastUpdate = '';
 
@@ -699,7 +717,7 @@
         (function(_data, _en2, _container) {
           window.computeTotalKm(function(totalKm) {
             if (totalKm > 0) {
-              var kmStr = '~' + formatKmDistance(totalKm) + (_en2 ? ' driven \ud83d\ude90' : ' percorsi \ud83d\ude90');
+              var kmStr = '~' + formatKmDistance(totalKm) + (_lang3 === 'es' ? ' recorridos \ud83d\ude90' : _en2 ? ' driven \ud83d\ude90' : ' percorsi \ud83d\ude90');
               // Update DOM directly (async callback)
               if (_container) {
                 _container.querySelectorAll('[data-hv="distanceFromHome"]').forEach(function(el) {
@@ -889,16 +907,16 @@
     html += '<div class="hv-program-item">';
     html += '  <span class="hv-program-icon">🚐</span>';
     html += '  <div class="hv-program-text">';
-    html += '    <div class="hv-program-title">' + escHtml(dayData.title || '--') + '</div>';
-    html += '    <div class="hv-program-sub">~' + (dayData.km || '--') + ' km · ' + (dayData.hours || '--') + (_en ? ' estimated' : ' stimati') + '</div>';
+    html += '    <div class="hv-program-title">' + escHtml((_lang3 === 'es' && dayData.titleES) ? dayData.titleES : (_lang3 === 'en' && dayData.titleEN) ? dayData.titleEN : (dayData.title || '--')) + '</div>';
+    html += '    <div class="hv-program-sub">~' + (dayData.km || '--') + ' km \u00b7 ' + (dayData.hours || '--') + _hvT(' stimati', ' estimated', ' estimados') + '</div>';
     html += '  </div>';
     html += '</div>';
 
     // Highlights
     if (dayData.highlights && dayData.highlights.length > 0) {
       dayData.highlights.forEach(function(h) {
-        var name = (typeof h === 'string') ? h : (h.name || h.title || '');
-        var tag = (typeof h === 'object' && h.type) ? h.type : 'Must-see';
+        var name = (typeof h === 'string') ? h : (_lang3 === 'es' && h.titleES) ? h.titleES : (_lang3 === 'en' && h.titleEN) ? h.titleEN : (h.name || h.title || '');
+        var tag = (typeof h === 'object' && h.type) ? h.type : _hvT('Da vedere', 'Must-see', 'Imperdible');
         html += '<div class="hv-program-item">';
         html += '  <span class="hv-program-icon">⭐</span>';
         html += '  <div class="hv-program-text">';
@@ -963,7 +981,7 @@
     // Highlights
     if (dayData.highlights && dayData.highlights.length > 0) {
       dayData.highlights.forEach(function(h, i) {
-        var name = (typeof h === 'string') ? h : (h.name || h.title || '');
+        var name = (typeof h === 'string') ? h : (_lang3 === 'es' && h.titleES) ? h.titleES : (_lang3 === 'en' && h.titleEN) ? h.titleEN : (h.name || h.title || '');
         var time = (12 + i * 2) + ':00 – ' + (14 + i * 2) + ':00';
         items.push({ time: time, title: name, desc: '', tag: 'Attività', done: false, active: i === 0 });
       });
@@ -1045,9 +1063,9 @@
     var now = new Date();
     var diffMs = now - d;
     var diffDays = Math.floor(diffMs / 86400000);
-    if (diffDays === 0) return lang === 'en' ? 'Today' : 'Oggi';
-    if (diffDays === 1) return lang === 'en' ? 'Yesterday' : 'Ieri';
-    if (diffDays >= 2 && diffDays < 7) return lang === 'en' ? diffDays + ' days ago' : diffDays + ' giorni fa';
+    if (diffDays === 0) return lang === 'es' ? 'Hoy' : lang === 'en' ? 'Today' : 'Oggi';
+    if (diffDays === 1) return lang === 'es' ? 'Ayer' : lang === 'en' ? 'Yesterday' : 'Ieri';
+    if (diffDays >= 2 && diffDays < 7) return lang === 'es' ? 'hace ' + diffDays + ' d\u00edas' : lang === 'en' ? diffDays + ' days ago' : diffDays + ' giorni fa';
     // >= 7 days: fixed format
     var months_it = ['gen','feb','mar','apr','mag','giu','lug','ago','set','ott','nov','dic'];
     var months_en = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -1131,7 +1149,7 @@
 
   function buildFeed(dayData, tripData) {
     var html = '';
-    var lang = (typeof isEN !== 'undefined' && isEN) ? 'en' : 'it';
+    var lang = _lang3 || 'it';
 
     // Pre-trip mode: show the latest 3 published diary entries.
     if (tripData.tripPreMode) {
@@ -1158,26 +1176,26 @@
   // ─── Build Diary Preview HTML (Follower B) ───
   function buildDiaryPreview(dayData, tripData) {
     var html = '';
-    var lang = (typeof isEN !== 'undefined' && isEN) ? 'en' : 'it';
+    var lang = _lang3 || 'it';
 
     // Pre-trip mode: show latest published diary entry as diary preview
     if (tripData.tripPreMode) {
       var prePosts = getPreTripPosts();
       var latestPost = prePosts[0]; // Most recent
-      var daysUntilStr = tripData.daysUntil === 1 ? (lang === 'en' ? '1 day' : '1 giorno') : (tripData.daysUntil + (lang === 'en' ? ' days' : ' giorni'));
+      var daysUntilStr = tripData.daysUntil === 1 ? (lang === 'es' ? '1 d\u00eda' : lang === 'en' ? '1 day' : '1 giorno') : (tripData.daysUntil + (lang === 'es' ? ' d\u00edas' : lang === 'en' ? ' days' : ' giorni'));
       html += '<div class="hv-diary-preview-header">';
       html += '  <div>';
-      html += '    <div class="hv-diary-preview-title">' + (lang === 'en' ? '\ud83d\ude90 The adventure is about to begin!' : '\ud83d\ude90 L\'avventura sta per iniziare!') + '</div>';
-      html += '    <div class="hv-diary-preview-time">' + (lang === 'en' ? 'Departure in ' + daysUntilStr : 'Partenza tra ' + daysUntilStr) + '</div>';
+      html += '    <div class="hv-diary-preview-title">' + (lang === 'es' ? '\ud83d\ude90 \u00a1La aventura est\u00e1 a punto de empezar!' : lang === 'en' ? '\ud83d\ude90 The adventure is about to begin!' : '\ud83d\ude90 L\'avventura sta per iniziare!') + '</div>';
+      html += '    <div class="hv-diary-preview-time">' + (lang === 'es' ? 'Salida en ' + daysUntilStr : lang === 'en' ? 'Departure in ' + daysUntilStr : 'Partenza tra ' + daysUntilStr) + '</div>';
       html += '  </div>';
       html += '</div>';
-      html += '<div class="hv-diary-preview-highlight">\u2b50 ' + (lang === 'en' ? '55 days, 13 countries, 12,000 km in a van with the whole family!' : '55 giorni, 13 paesi, 12.000 km in furgone con tutta la famiglia!') + '</div>';
+      html += '<div class="hv-diary-preview-highlight">\u2b50 ' + (lang === 'es' ? '55 d\u00edas, 13 pa\u00edses, 12.000 km en furgoneta con toda la familia!' : lang === 'en' ? '55 days, 13 countries, 12,000 km in a van with the whole family!' : '55 giorni, 13 paesi, 12.000 km in furgone con tutta la famiglia!') + '</div>';
       if (latestPost && latestPost.text) {
         var bodyText = (latestPost.text || '').substring(0, 120);
         html += '<div class="hv-diary-preview-text">' + escHtml(bodyText) + '</div>';
       }
       html += '<div class="hv-diary-preview-stats">';
-      html += '  \ud83d\ude90 12.000 km &nbsp; \ud83c\uddf3\ud83c\uddf4\ud83c\uddf8\ud83c\uddea\ud83c\uddeb\ud83c\uddee 13 ' + (lang === 'en' ? 'countries' : 'paesi') + ' &nbsp; \ud83d\udcc5 54 ' + (lang === 'en' ? 'days' : 'giorni');
+      html += '  \ud83d\ude90 12.000 km &nbsp; \ud83c\uddf3\ud83c\uddf4\ud83c\uddf8\ud83c\uddea\ud83c\uddeb\ud83c\uddee 13 ' + (lang === 'es' ? 'pa\u00edses' : lang === 'en' ? 'countries' : 'paesi') + ' &nbsp; \ud83d\udcc5 54 ' + (lang === 'es' ? 'd\u00edas' : lang === 'en' ? 'days' : 'giorni');
       html += '</div>';
       return html;
     }
@@ -1195,7 +1213,7 @@
     // Active trip mode
     html += '<div class="hv-diary-preview-header">';
     html += '  <div>';
-    html += '    <div class="hv-diary-preview-title">' + (lang === 'en' ? 'Recap D' : 'Riepilogo G') + (tripData.dayNum > 0 ? tripData.dayNum : '--') + '</div>';
+    html += '    <div class="hv-diary-preview-title">' + (lang === 'es' ? 'Resumen D' : lang === 'en' ? 'Recap D' : 'Riepilogo G') + (tripData.dayNum > 0 ? tripData.dayNum : '--') + '</div>';
     html += '    <div class="hv-diary-preview-time">' + new Date().toLocaleDateString('it-IT', {day:'2-digit', month:'2-digit', year:'numeric'}) + '</div>';
     html += '  </div>';
     html += '</div>';
@@ -1209,7 +1227,7 @@
     html += _narr ? _narr : _hvT('Nessun aggiornamento dal diario per oggi.', 'No diary update for today yet.', 'A\u00fan no hay novedades del diario para hoy.');
     html += '</div>';
     html += '<div class="hv-diary-preview-stats">';
-    html += '  🚐 ' + (dayData ? dayData.km || '--' : '--') + ' km &nbsp; 📍 -- ' + (lang === 'en' ? 'stops' : 'tappe');
+    html += '  🚐 ' + (dayData ? dayData.km || '--' : '--') + ' km &nbsp; 📍 -- ' + (lang === 'es' ? 'paradas' : lang === 'en' ? 'stops' : 'tappe');
     html += '</div>';
     return html;
   }
@@ -1365,14 +1383,14 @@
               });
               document.body.appendChild(simBanner);
             }
-            simBanner.textContent = '\u26a0\ufe0f ' + (typeof isEN !== 'undefined' && isEN ? 'Simulating: ' : 'Simulazione: ') + (currentRole === 'visitor' ? 'Visitor' : 'Follower') + ' — ' + (typeof isEN !== 'undefined' && isEN ? 'tap to reset' : 'tocca per resettare');
+            simBanner.textContent = '\u26a0\ufe0f ' + _hvT('Simulazione: ', 'Simulating: ', 'Simulando: ') + (currentRole === 'visitor' ? _hvT('Visitatore', 'Visitor', 'Visitante') : 'Follower') + ' — ' + _hvT('tocca per resettare', 'tap to reset', 'toca para restablecer');
             simBanner.style.display = 'block';
           } else {
             if (simBanner) simBanner.style.display = 'none';
           }
 
-          var roleLabel = currentRole === 'owner' ? 'Owner' : currentRole === 'follower' ? 'Follower' : (typeof isEN !== 'undefined' && isEN ? 'Visitor' : 'Visitatore');
-          showToastHV('🧪 ' + (typeof isEN !== 'undefined' && isEN ? 'View: ' : 'Vista: ') + roleLabel);
+          var roleLabel = currentRole === 'owner' ? 'Owner' : currentRole === 'follower' ? 'Follower' : _hvT('Visitatore', 'Visitor', 'Visitante');
+          showToastHV('🧪 ' + _hvT('Vista: ', 'View: ', 'Vista: ') + roleLabel);
         });
       });
     }
@@ -1423,7 +1441,7 @@
       // Open fullscreen map directly
       if (typeof window.openMapFullscreen === 'function') {
         var _mapInst = window._posMapInstance || null;
-        window.openMapFullscreen(_mapInst, (typeof isEN !== 'undefined' && isEN) ? 'Live Map' : 'Mappa Live');
+        window.openMapFullscreen(_mapInst, _hvT('Mappa Live', 'Live Map', 'Mapa en vivo'));
       } else if (typeof window.switchTab === 'function') {
         window.switchTab('posizione');
       } else if (typeof switchTabFromHome === 'function') {
@@ -1502,13 +1520,13 @@
       if (isActive) {
         // Stop tracking
         if (typeof window.showConfirm === 'function') {
-          window.showConfirm((typeof isEN !== 'undefined' && isEN) ? 'End today\'s trip?' : 'Terminare il viaggio di oggi?', function() {
+          window.showConfirm(_hvT('Terminare il viaggio di oggi?', 'End today\'s trip?', '\u00bfTerminar el viaje de hoy?'), function() {
             if (window._stopLiveTracking) window._stopLiveTracking();
             updateTrackingCard();
             // Reminder to stop GPSLogger
             setTimeout(function() {
               if (typeof window.showToast === 'function') {
-                window.showToast((typeof isEN !== 'undefined' && isEN) ? '\u23f9 Tracking stopped. Remember to stop GPSLogger too!' : '\u23f9 Tracking fermato. Ricordati di fermare anche GPSLogger!', 'info', 5000);
+                window.showToast(_hvT('\u23f9 Tracking fermato. Ricordati di fermare anche GPSLogger!', '\u23f9 Tracking stopped. Remember to stop GPSLogger too!', '\u23f9 Seguimiento detenido. \u00a1Recuerda detener tambi\u00e9n GPSLogger!'), 'info', 5000);
               }
             }, 500);
           });
@@ -1521,7 +1539,7 @@
           // Reminder to start GPSLogger
           setTimeout(function() {
             if (typeof window.showToast === 'function') {
-              window.showToast((typeof isEN !== 'undefined' && isEN) ? '\ud83d\udef0\ufe0f Tracking started! Remember to also start GPSLogger.' : '\ud83d\udef0\ufe0f Tracking avviato! Ricordati di avviare anche GPSLogger.', 'info', 5000);
+              window.showToast(_hvT('\ud83d\udef0\ufe0f Tracking avviato! Ricordati di avviare anche GPSLogger.', '\ud83d\udef0\ufe0f Tracking started! Remember to also start GPSLogger.', '\ud83d\udef0\ufe0f \u00a1Seguimiento iniciado! Recuerda iniciar tambi\u00e9n GPSLogger.'), 'info', 5000);
             }
 
           }, 800);
@@ -1610,14 +1628,14 @@
       card.style.borderColor = 'var(--danger, #e53e3e)';
       card.style.background = 'rgba(229,62,62,0.05)';
       if (icon) icon.textContent = '\u23f9';
-      if (label) label.textContent = 'Tracking';
-      if (sub) { sub.textContent = (typeof isEN !== 'undefined' && isEN) ? '\u23f9 Stop' : '\u23f9 Ferma'; sub.style.color = 'var(--danger, #e53e3e)'; }
+      if (label) label.textContent = _hvT('Tracking', 'Tracking', 'Seguimiento');
+      if (sub) { sub.textContent = _hvT('\u23f9 Ferma', '\u23f9 Stop', '\u23f9 Detener'); sub.style.color = 'var(--danger, #e53e3e)'; }
     } else {
       card.style.borderColor = '';
       card.style.background = '';
       if (icon) icon.textContent = '\ud83d\udef0\ufe0f';
-      if (label) label.textContent = 'Tracking';
-      if (sub) { sub.textContent = (typeof isEN !== 'undefined' && isEN) ? '\u25b6 Start' : '\u25b6 Avvia'; sub.style.color = ''; }
+      if (label) label.textContent = _hvT('Tracking', 'Tracking', 'Seguimiento');
+      if (sub) { sub.textContent = _hvT('\u25b6 Avvia', '\u25b6 Start', '\u25b6 Iniciar'); sub.style.color = ''; }
     }
   }
 
@@ -1781,7 +1799,7 @@
     if (!nextCoord) return;
 
     var _en = (typeof isEN !== 'undefined' && isEN);
-    var nextCity = _en ? (nextCoord.cityEn || nextCoord.city) : nextCoord.city;
+    var nextCity = (_lang3 === 'es') ? (nextCoord.cityEs || nextCoord.cityEn || nextCoord.city) : _en ? (nextCoord.cityEn || nextCoord.city) : nextCoord.city;
 
     // Show next stop row and its dashed separator
     var nextStopRows = container.querySelectorAll('[data-hv="nextStopRow"]');
@@ -1795,7 +1813,7 @@
 
     // Set "Tomorrow" / "Domani"
     var nextWhenEls = container.querySelectorAll('[data-hv="nextStopWhen"]');
-    nextWhenEls.forEach(function(el) { el.textContent = _en ? 'Tomorrow' : 'Domani'; });
+    nextWhenEls.forEach(function(el) { el.textContent = _hvT('Domani', 'Tomorrow', 'Ma\u00f1ana'); });
 
     // Fetch weather for next stop
     var tomorrow = new Date();
@@ -1887,7 +1905,7 @@
         if (container && cl.restMode) {
           // Update status badge to show rest mode
           container.querySelectorAll('[data-hv="statusBadge"]').forEach(function(el) {
-            el.textContent = _enRest ? '\uD83C\uDF19 Resting' : '\uD83C\uDF19 In sosta';
+            el.textContent = _hvT('\uD83C\uDF19 In sosta', '\uD83C\uDF19 Resting', '\uD83C\uDF19 En descanso');
             el.classList.remove('hv-badge-green');
             el.classList.add('hv-badge-amber');
           });
@@ -1897,7 +1915,7 @@
           var nextStopSeps = container.querySelectorAll('[data-hv="nextStopSep"]');
           nextStopSeps.forEach(function(el) { el.style.display = ''; });
           var nextStopLabels = container.querySelectorAll('[data-hv="nextStopLabel"]');
-          nextStopLabels.forEach(function(el) { el.textContent = _enRest ? 'Tomorrow:' : 'Domani:'; });
+          nextStopLabels.forEach(function(el) { el.textContent = _hvT('Domani:', 'Tomorrow:', 'Ma\u00f1ana:'); });
         } else if (container) {
           // Clear rest mode badge if restMode was removed
           container.querySelectorAll('[data-hv="statusBadge"]').forEach(function(el) {
@@ -1958,9 +1976,9 @@
     var overlay = document.createElement('div');
     overlay.className = 'diario-edit-overlay';
     var html = '<div class="diario-edit-modal" style="max-height:80vh;overflow-y:auto;max-width:420px;">';
-    html += '<h3>' + ((typeof isEN !== 'undefined' && isEN) ? '\ud83d\udca1 Trip Curiosities' : '\ud83d\udca1 Curiosit\u00e0 del Viaggio') + '</h3>';
+    html += '<h3>' + _hvT('\ud83d\udca1 Curiosit\u00e0 del Viaggio', '\ud83d\udca1 Trip Curiosities', '\ud83d\udca1 Curiosidades del Viaje') + '</h3>';
     if (items.length === 0) {
-      html += '<p style="color:#888;text-align:center;">' + ((typeof isEN !== 'undefined' && isEN) ? 'No curiosities received yet.<br>They will arrive every day at 9:00!' : 'Nessuna curiosit\u00e0 ancora ricevuta.<br>Arriveranno ogni giorno alle 9:00!') + '</p>';
+      html += '<p style="color:#888;text-align:center;">' + _hvT('Nessuna curiosit\u00e0 ancora ricevuta.<br>Arriveranno ogni giorno alle 9:00!', 'No curiosities received yet.<br>They will arrive every day at 9:00!', 'A\u00fan no se han recibido curiosidades.<br>\u00a1Llegar\u00e1n cada d\u00eda a las 9:00!') + '</p>';
     } else {
       html += '<div style="display:flex;flex-direction:column;gap:12px;">';
       items.forEach(function(item) {
@@ -1972,7 +1990,7 @@
       });
       html += '</div>';
     }
-    html += '<div class="diario-edit-actions" style="margin-top:16px;"><button class="diario-edit-cancel">' + ((typeof isEN !== 'undefined' && isEN) ? 'Close' : 'Chiudi') + '</button></div>';
+    html += '<div class="diario-edit-actions" style="margin-top:16px;"><button class="diario-edit-cancel">' + _hvT('Chiudi', 'Close', 'Cerrar') + '</button></div>';
     html += '</div>';
     overlay.innerHTML = html;
     document.body.appendChild(overlay);

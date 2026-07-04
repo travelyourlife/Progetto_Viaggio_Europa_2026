@@ -74,10 +74,10 @@
     <link rel="apple-touch-icon" sizes="167x167" href="./icon.png">
     <title>Quo Vadis — V4.80</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
-    <link rel="stylesheet" href="style.css?v=4.80">
-    <link rel="stylesheet" href="home-variants.css?v=4.80">
-    <link rel="stylesheet" href="unified-map.css?v=4.80">
-    <link rel="stylesheet" href="modern-pages.css?v=4.80">
+    <link rel="stylesheet" href="style.css?v=4.82">
+    <link rel="stylesheet" href="home-variants.css?v=4.82">
+    <link rel="stylesheet" href="unified-map.css?v=4.82">
+    <link rel="stylesheet" href="modern-pages.css?v=4.82">
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" crossorigin="">
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" crossorigin="">
 <!-- Firebase SDK (compat mode for single-file app) -->
@@ -162,14 +162,14 @@
 })();
 </script>
 <script src="data.js?v=4.80" defer></script>
-<script src="days-data.js?v=4.80" defer></script>
+<script src="days-data.js?v=4.82" defer></script>
 <script src="days-renderer.js?v=4.80" defer></script>
 <!-- wiki-links.js: lazy-loaded on first open of Culture/Activity tab (34KB) — parity with index.html -->
 <script src="weather-coords.js?v=4.80" defer></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
 <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js" crossorigin="" defer></script>
 <script src="poi-data.js?v=4.80" defer></script>
-<script src="app.js?v=4.80" defer></script>
+<script src="app.js?v=4.82" defer></script>
 <script src="curiosita-data.js?v=4.80" defer></script>
 <script>window.QV_CURIOSITA_SERVER_SIDE = true; window.QV_RECAP_SERVER_SIDE = true;</script>
 <script src="curiosita-scheduler.js?v=4.80" defer></script>
@@ -177,7 +177,7 @@
 <script src="unified-map.js?v=4.80" defer></script>
 <script src="city-itineraries.js?v=4.80" defer></script>
 <script src="city-itineraries-ui.js?v=4.80" defer></script>
-<script src="home-variants.js?v=4.80" defer></script>
+<script src="home-variants.js?v=4.82" defer></script>
 </head>
 <body class="on-home">
 
@@ -261,7 +261,14 @@
         <button type="button" class="home-action-btn" id="homeSearchOpen" aria-label="Search">🔍</button>
         <button type="button" class="home-action-btn notif-bell-home" id="homeNotifBell" aria-label="Notifications">🔔<span class="notif-badge" id="homeNotifBadge"></span></button>
         <button type="button" class="home-action-btn" id="homeAuthBtn" aria-label="Login" title="Sign in">👤</button>
-        <a href="./index_es.html" class="home-lang-switch" aria-label="Change language" title="EN → ES → IT">🇪🇸</a>
+        <div class="lang-dropdown" id="langDropdown">
+            <button type="button" class="home-action-btn lang-current" id="langDropdownBtn" aria-label="Language">🇬🇧</button>
+            <div class="lang-dropdown-menu" id="langDropdownMenu">
+                <a href="./index.html" class="lang-option">🇮🇹 Italiano</a>
+                <a href="./index_en.html" class="lang-option active">🇬🇧 English</a>
+                <a href="./index_es.html" class="lang-option">🇪🇸 Español</a>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -1670,7 +1677,7 @@ Centuries of pastoral use have created semi-natural grasslands rich in orchids, 
 In foothills and valleys, scattered fruit trees in meadows harbor cavity nesters (wryneck, hoopoe) and pollinators. Spring blooms are scenic; autumn brings apple and pear harvest festivals.</div>
 </div>
 <p>Traveler Practicalities: - Seasonality: late June–early September for alpine blooms and accessible high trails; May and October shoulder seasons with variable weather; winter for snow phenomena and wildlife tracking. - Safety: fast-changing mountain weather; map, compass/GPS, layers, water, and sun protection are essential; check avalanche and thunderstorm forecasts. - Conservation etiquette: stay on marked trails, respect wildlife buffers and breeding closures (especially for grouse and raptors), avoid picking flowers, and adhere to foraging regulations.</p>
-<p class="nature-sources"><em>Fonti e Riferimenti: Nationalpark Hohe Tauern visitor materials; Nationalpark Neusiedler See–Seewinkel guides; Nationalpark Donau-Auen field info; Austrian Alpine Club (ÖAV) safety bulletins; Austrian Mycological Society advisories; Geological Survey of Austria (GBA) overviews; peer-reviewed literature on Alpine ecology and geology.</em></p>
+<p class="nature-sources"><em>Sources and References: Nationalpark Hohe Tauern visitor materials; Nationalpark Neusiedler See–Seewinkel guides; Nationalpark Donau-Auen field info; Austrian Alpine Club (ÖAV) safety bulletins; Austrian Mycological Society advisories; Geological Survey of Austria (GBA) overviews; peer-reviewed literature on Alpine ecology and geology.</em></p>
 </div>
 </details>
 <h3 id="musica-arte-austria">🎵 Music & Art</h3>
@@ -2435,7 +2442,7 @@ In foothills and valleys, scattered fruit trees in meadows harbor cavity nesters
 <p>- Landscape: Small fields, orchards, and wet meadows interlaced with willows—ideal for storks, corncrakes, and pollinators. - Practices: Late hay-cutting preserves bird nests; stork platforms on poles. - Traveler Tips: Respect private land; observe from lanes; prime stork watching May–August.</p>
 <h4 class="nature-subsection">Safety and Practicalities for Nature Travelers</h4>
 <p>- Seasons: Spring (April–May) for birds and blooms; summer (June–August) for mushrooms/berries and alpine access; autumn (September–October) for ruts and colors; winter (December–February) for tracking and primeval silhouettes. - Gear: Waterproof boots for wetlands; insect repellent for ticks/mosquitoes; layers and rain shell in mountains; binoculars and field guide apps. - Ethics: Stay on marked trails; no foraging in national parks; pack out waste; maintain wildlife distances (bison 100 m, bears 200 m). - Health: Tick-borne diseases present—use repellents, perform checks; drink only treated water in the wild.</p>
-<p class="nature-sources"><em>Fonti e Riferimenti: Białowieża National Park management reports; Tatra National Park visitor and species data; Słowiński National Park geomorphology notes; Polish BirdLife (OTOP) species accounts; IUCN Red List assessments; Polish State Forests (Lasy Państwowe) statistics; academic literature on Biebrza fen management and Masurian postglacial geomorphology.</em></p>
+<p class="nature-sources"><em>Sources and References: Białowieża National Park management reports; Tatra National Park visitor and species data; Słowiński National Park geomorphology notes; Polish BirdLife (OTOP) species accounts; IUCN Red List assessments; Polish State Forests (Lasy Państwowe) statistics; academic literature on Biebrza fen management and Masurian postglacial geomorphology.</em></p>
 </div>
 </details>
 <h3 id="musica-arte-polonia">🎵 Music & Art</h3>
@@ -3097,7 +3104,7 @@ Tip: Look for oily spraints on bridge stones.</div>
 <p>- Habitat: Lithuania’s oldest reserve; shallow eutrophic lake, vast reedbeds, and surrounding wetlands.   - Highlights: Booming bitterns, white-tailed eagles, breeding whiskered terns; amphibian choruses in spring.   - Access: Visitor center and observation towers; some zones restricted for breeding.   - Tips: Bring spotting scope; mornings less windy for reedbed observations.</p>
 <p>Practical Wildlife Watching Tips: - Best Seasons:     - Spring (April–May): Migration, crane displays, frogs calling, fresh greens.     - Summer (June–July): White nights, dragonflies, orchids, dune flora.     - Late Summer–Autumn (Aug–Oct): Mushrooming in Dzūkija; stork and raptor migration; amber after storms.     - Winter (Dec–Feb): White-tailed eagles on ice edges; track mammals in snow; smelt fisheries in Klaipėda. - Safety and Ethics: Keep safe distances (100 m for large mammals and raptors), use binoculars/scopes, never feed wildlife, stick to trails in dunes and bogs, and check for ticks after forest visits. In wetlands, wear waterproof boots and carry insect repellent; in winter, verify ice safety with local authorities.</p>
 
-<p>Fonti e Riferimenti: UNESCO World Heritage Centre (Curonian Spit); Lithuanian State Forest Service; Nemunas Delta Regional Park; Žuvintas Biosphere Reserve Directorate; BirdLife International; IUCN Red List; Lithuanian Hydrometeorological Service; regional park visitor guides and interpretation panels.</p>
+<p>Sources and References: UNESCO World Heritage Centre (Curonian Spit); Lithuanian State Forest Service; Nemunas Delta Regional Park; Žuvintas Biosphere Reserve Directorate; BirdLife International; IUCN Red List; Lithuanian Hydrometeorological Service; regional park visitor guides and interpretation panels.</p>
 </div>
 </details>
 <h3 id="musica-arte-lituania">🎵 Music & Art</h3>
@@ -3672,7 +3679,7 @@ Tip: Look for oily spraints on bridge stones.</div>
 
 <p>- Composition: Quartz sand beaches, cobble stretches, erratic boulders, and low sandstone cliffs.   - Processes: Longshore drift moves sediments; storms carve scarps and expose amber-bearing layers.   - Key species: Ringed plover; sanderling (migrant); grey seal offshore; sea rocket and beach pea.   - Best places: Cape Kolka (migration and surf), Veczemju cliffs (scenic), Liepāja–Pāvilosta sands.   - Tips: After storms, hunt amber along wrack lines; use windproof layers; respect bird nesting zones March–July.</p>
 <p>Traveler safety and ethics across ecosystems: Dress in layers; carry map/GPS (mobile reception can be patchy); in spring check for ticks; in bogs and dunes stay on boardwalks and marked trails; maintain quiet near nests and leks; pack out all waste; consider local guides for sensitive species and off-the-beaten-path wetlands.</p>
-<p>Fonti e Riferimenti: Latvian Nature Conservation Agency (DAP), Gauja National Park resources, Ķemeri National Park materials, North Vidzeme Biosphere Reserve data, IUCN Red List, Baltic Sea hydrographic notes, regional botany and mycology field guides.</p>
+<p>Sources and References: Latvian Nature Conservation Agency (DAP), Gauja National Park resources, Ķemeri National Park materials, North Vidzeme Biosphere Reserve data, IUCN Red List, Baltic Sea hydrographic notes, regional botany and mycology field guides.</p>
 </div>
 </details>
 <h3 id="musica-arte-lettonia">🎵 Music & Art</h3>
@@ -4186,7 +4193,7 @@ Tip: Look for oily spraints on bridge stones.</div>
 <h4 class="nature-subsection">Human–Nature Interaction and Access</h4>
 <p>- Everyman’s Right (Igaüheõigus): You may walk, ski, pick mushrooms/berries on uncultivated land; avoid damage, keep distance from homes (150 m), close gates, leave no trace. - Safety: Ticks (May–Oct), bog pools, unstable cliffs; dress in layers, carry maps, and respect seasonal restrictions in protected areas. - Best Times: May–June for birds and flowers; July–August for white nights and berries; September–October for cranes, raptors, and mushrooms; March–April for Soomaa floods and early migrants.</p>
 <p>  </p>
-<p>Fonti e Riferimenti: Estonian Environment Agency (Keskkonnaagentuur); Estonian Environmental Board; Matsalu, Soomaa, Lahemaa, and Vilsandi National Park materials; Geological Survey of Estonia; published field guides to Baltic mushrooms and flora; HELCOM Baltic Sea assessments; local conservation NGOs and visitor center briefings.</p>
+<p>Sources and References: Estonian Environment Agency (Keskkonnaagentuur); Estonian Environmental Board; Matsalu, Soomaa, Lahemaa, and Vilsandi National Park materials; Geological Survey of Estonia; published field guides to Baltic mushrooms and flora; HELCOM Baltic Sea assessments; local conservation NGOs and visitor center briefings.</p>
 </div>
 </details>
 <h3 id="musica-arte-estonia">🎵 Music & Art</h3>
@@ -5568,7 +5575,7 @@ On cold, foggy winter mornings, reeds and hedges coat in delicate ice crystals, 
 <p>- Baltic islands: Small isles like Saltholm and Sejerø are bird sanctuaries; strict seasonal access rules protect colonies. - Bornholm: Unlike the rest of Denmark’s soft tills, Bornholm shows Precambrian granites, rocky coasts, and heaths; the Helligdomsklipperne sea cliffs and rift valleys add geologic contrast. Where/when: Year-round; spring flowers in Almindingen forest and autumn fungi bonanza.</p>
 
 <p>Practical Field Tips (general): - Seasonality: Spring (April–May) for forests and migrants; summer (June–August) for coasts and long days; autumn (September–October) for mushrooms, raptors, and Sort Sol; winter (November–February) for sea ducks and dramatic storms. - Gear: Binoculars (8x or 10x), scope for coastal birding, windproof layers, waterproof boots for marshes, tick protection April–October. - Safety: Cliffs and dunes can be unstable after rain; tides in the Wadden Sea are fast—book guided walks; seals and ground-nesting birds require distance (100–300 m for seals, obey signage). - Ethics: Stick to trails in sensitive dunes and heaths; keep dogs leashed March–July; leave no trace and take only photos (and loose beach fossils where permitted).</p>
-<p>Fonti e Riferimenti: Danish Nature Agency (Naturstyrelsen), Nationalpark Vadehavet and Wadden Sea Centre, GEUS (Geological Survey of Denmark and Greenland), UNESCO World Heritage Centre (Stevns Klint; Ancient and Primeval Beech Forests of Europe), DOF BirdLife Denmark, Aarhus University DCE reports on Danish wildlife populations, local site guides (Geocenter Møns Klint, Museum Stevns).</p>
+<p>Sources and References: Danish Nature Agency (Naturstyrelsen), Nationalpark Vadehavet and Wadden Sea Centre, GEUS (Geological Survey of Denmark and Greenland), UNESCO World Heritage Centre (Stevns Klint; Ancient and Primeval Beech Forests of Europe), DOF BirdLife Denmark, Aarhus University DCE reports on Danish wildlife populations, local site guides (Geocenter Møns Klint, Museum Stevns).</p>
 </div>
 </details>
 <h3 id="musica-arte-danimarca">🎵 Music & Art</h3>
@@ -6340,7 +6347,7 @@ On cold, foggy winter mornings, reeds and hedges coat in delicate ice crystals, 
 <p>- Seabird Strongholds: Granite stacks provide predator-reduced ledges for gannets, guillemots, razorbills, puffins; strong currents bring forage fish; marine reserve status restricts landings. Viewing: regulated boat tours Apr–Aug; bring layers—wind-chill significant even in summer; sea state dictates departure.</p>
 <p>- Seal and Dolphin Corridors: Tidal races around Ouessant concentrate plankton and fish; look for feeding frenzies (gannets diving, dolphins corralling). Safety: working waters—keep clear of fishing gear and navigation channels.</p>
 <p>Practical Travel Essentials: - Tides: Always check local tide tables and swell forecasts; plan out-and-back routes with a margin of safety; flat beaches can flood from behind. - Footwear: Non-slip soles for intertidal; ankle support on granite paths; avoid flip-flops on reefs. - Binoculars/Scopes: 8–10x binoculars for general use; 20–60x scope ideal for cliff birds and seals at haul-outs. - Seasons: Spring (Apr–Jun) for breeding seabirds and wildflowers; late summer (Jul–Sep) for calm seas, kelp snorkeling, bioluminescence; winter (Nov–Feb) for storm-watching and migratory waders. - Ethics: Observe wildlife distances (seals 100 m, cetaceans 100–300 m); no drones over colonies; take only photos and permitted shellfish within local limits.</p>
-<p>Fonti e Riferimenti: Office Français de la Biodiversité; Parc naturel marin d’Iroise; Réserve Naturelle des Sept-Îles (LPO); Ifremer (Institut français de recherche pour l’exploitation de la mer); SHOM tide tables; BRGM (Bureau de Recherches Géologiques et Minières) geology notes; IUCN Red List assessments (accessed 2023–2024); local park visitor centers and management plans.</p>
+<p>Sources and References: Office Français de la Biodiversité; Parc naturel marin d’Iroise; Réserve Naturelle des Sept-Îles (LPO); Ifremer (Institut français de recherche pour l’exploitation de la mer); SHOM tide tables; BRGM (Bureau de Recherches Géologiques et Minières) geology notes; IUCN Red List assessments (accessed 2023–2024); local park visitor centers and management plans.</p>
 </div>
 </details>
 <h3 id="musica-arte-francia">🎵 Music & Art</h3>
@@ -6982,7 +6989,7 @@ On cold, foggy winter mornings, reeds and hedges coat in delicate ice crystals, 
 <p>Two glacial tarns mirror limestone towers, fringed by alpine turf and gentians. Early mornings bring glassy reflections and chamois silhouettes; autumn cattle bells echo across the cirque.   Access: Road closures at peak times—use shuttle buses; bring layers year-round for wind-chill.  </p>
 
 <p>Practical wildlife-watching tips   - Optics: 8–10x binoculars; 20–60x spotting scope for bears/vultures; rain covers essential.   - Timing: Dawn/dusk for mammals; windy onshore days for seabirds; low tide for geology and waders.   - Ethics: Keep distances (bears 300+ m; nests 100+ m), avoid playback/calls, pack out waste, and never pick rare plants or collect fossils/artifacts.</p>
-<p>Fonti e Riferimenti: Somiedo NP and Picos de Europa official guides; Urdaibai BR ornithological reports; Spanish Cetacean Society (SEC) Biscay surveys; Geological heritage of the Basque Coast Geopark; MUJA (Museo del Jurásico de Asturias) materials; SEO/BirdLife species accounts; IUCN Red List; Spanish Ministry for the Ecological Transition (MITECO) fauna and habitat data.</p>
+<p>Sources and References: Somiedo NP and Picos de Europa official guides; Urdaibai BR ornithological reports; Spanish Cetacean Society (SEC) Biscay surveys; Geological heritage of the Basque Coast Geopark; MUJA (Museo del Jurásico de Asturias) materials; SEO/BirdLife species accounts; IUCN Red List; Spanish Ministry for the Ecological Transition (MITECO) fauna and habitat data.</p>
 </div>
 </details>
 <h3 id="musica-arte-spagna">🎵 Music & Art</h3>
@@ -10377,7 +10384,7 @@ Centuries of pastoral use have created semi-natural grasslands rich in orchids, 
 In foothills and valleys, scattered fruit trees in meadows harbor cavity nesters (wryneck, hoopoe) and pollinators. Spring blooms are scenic; autumn brings apple and pear harvest festivals.</div>
 </div>
 <p>Traveler Practicalities: - Seasonality: late June–early September for alpine blooms and accessible high trails; May and October shoulder seasons with variable weather; winter for snow phenomena and wildlife tracking. - Safety: fast-changing mountain weather; map, compass/GPS, layers, water, and sun protection are essential; check avalanche and thunderstorm forecasts. - Conservation etiquette: stay on marked trails, respect wildlife buffers and breeding closures (especially for grouse and raptors), avoid picking flowers, and adhere to foraging regulations.</p>
-<p class="nature-sources"><em>Fonti e Riferimenti: Nationalpark Hohe Tauern visitor materials; Nationalpark Neusiedler See–Seewinkel guides; Nationalpark Donau-Auen field info; Austrian Alpine Club (ÖAV) safety bulletins; Austrian Mycological Society advisories; Geological Survey of Austria (GBA) overviews; peer-reviewed literature on Alpine ecology and geology.</em></p>
+<p class="nature-sources"><em>Sources and References: Nationalpark Hohe Tauern visitor materials; Nationalpark Neusiedler See–Seewinkel guides; Nationalpark Donau-Auen field info; Austrian Alpine Club (ÖAV) safety bulletins; Austrian Mycological Society advisories; Geological Survey of Austria (GBA) overviews; peer-reviewed literature on Alpine ecology and geology.</em></p>
 </div>
 </details>
 </div>
@@ -10718,7 +10725,7 @@ In foothills and valleys, scattered fruit trees in meadows harbor cavity nesters
 <p>- Landscape: Small fields, orchards, and wet meadows interlaced with willows—ideal for storks, corncrakes, and pollinators. - Practices: Late hay-cutting preserves bird nests; stork platforms on poles. - Traveler Tips: Respect private land; observe from lanes; prime stork watching May–August.</p>
 <h4 class="nature-subsection">Safety and Practicalities for Nature Travelers</h4>
 <p>- Seasons: Spring (April–May) for birds and blooms; summer (June–August) for mushrooms/berries and alpine access; autumn (September–October) for ruts and colors; winter (December–February) for tracking and primeval silhouettes. - Gear: Waterproof boots for wetlands; insect repellent for ticks/mosquitoes; layers and rain shell in mountains; binoculars and field guide apps. - Ethics: Stay on marked trails; no foraging in national parks; pack out waste; maintain wildlife distances (bison 100 m, bears 200 m). - Health: Tick-borne diseases present—use repellents, perform checks; drink only treated water in the wild.</p>
-<p class="nature-sources"><em>Fonti e Riferimenti: Białowieża National Park management reports; Tatra National Park visitor and species data; Słowiński National Park geomorphology notes; Polish BirdLife (OTOP) species accounts; IUCN Red List assessments; Polish State Forests (Lasy Państwowe) statistics; academic literature on Biebrza fen management and Masurian postglacial geomorphology.</em></p>
+<p class="nature-sources"><em>Sources and References: Białowieża National Park management reports; Tatra National Park visitor and species data; Słowiński National Park geomorphology notes; Polish BirdLife (OTOP) species accounts; IUCN Red List assessments; Polish State Forests (Lasy Państwowe) statistics; academic literature on Biebrza fen management and Masurian postglacial geomorphology.</em></p>
 </div>
 </details>
 </div>
@@ -11161,7 +11168,7 @@ Tip: Look for oily spraints on bridge stones.</div>
 <p>- Habitat: Lithuania’s oldest reserve; shallow eutrophic lake, vast reedbeds, and surrounding wetlands.   - Highlights: Booming bitterns, white-tailed eagles, breeding whiskered terns; amphibian choruses in spring.   - Access: Visitor center and observation towers; some zones restricted for breeding.   - Tips: Bring spotting scope; mornings less windy for reedbed observations.</p>
 <p>Practical Wildlife Watching Tips: - Best Seasons:     - Spring (April–May): Migration, crane displays, frogs calling, fresh greens.     - Summer (June–July): White nights, dragonflies, orchids, dune flora.     - Late Summer–Autumn (Aug–Oct): Mushrooming in Dzūkija; stork and raptor migration; amber after storms.     - Winter (Dec–Feb): White-tailed eagles on ice edges; track mammals in snow; smelt fisheries in Klaipėda. - Safety and Ethics: Keep safe distances (100 m for large mammals and raptors), use binoculars/scopes, never feed wildlife, stick to trails in dunes and bogs, and check for ticks after forest visits. In wetlands, wear waterproof boots and carry insect repellent; in winter, verify ice safety with local authorities.</p>
 
-<p>Fonti e Riferimenti: UNESCO World Heritage Centre (Curonian Spit); Lithuanian State Forest Service; Nemunas Delta Regional Park; Žuvintas Biosphere Reserve Directorate; BirdLife International; IUCN Red List; Lithuanian Hydrometeorological Service; regional park visitor guides and interpretation panels.</p>
+<p>Sources and References: UNESCO World Heritage Centre (Curonian Spit); Lithuanian State Forest Service; Nemunas Delta Regional Park; Žuvintas Biosphere Reserve Directorate; BirdLife International; IUCN Red List; Lithuanian Hydrometeorological Service; regional park visitor guides and interpretation panels.</p>
 </div>
 </details>
 </div>
@@ -11519,7 +11526,7 @@ Tip: Look for oily spraints on bridge stones.</div>
 
 <p>- Composition: Quartz sand beaches, cobble stretches, erratic boulders, and low sandstone cliffs.   - Processes: Longshore drift moves sediments; storms carve scarps and expose amber-bearing layers.   - Key species: Ringed plover; sanderling (migrant); grey seal offshore; sea rocket and beach pea.   - Best places: Cape Kolka (migration and surf), Veczemju cliffs (scenic), Liepāja–Pāvilosta sands.   - Tips: After storms, hunt amber along wrack lines; use windproof layers; respect bird nesting zones March–July.</p>
 <p>Traveler safety and ethics across ecosystems: Dress in layers; carry map/GPS (mobile reception can be patchy); in spring check for ticks; in bogs and dunes stay on boardwalks and marked trails; maintain quiet near nests and leks; pack out all waste; consider local guides for sensitive species and off-the-beaten-path wetlands.</p>
-<p>Fonti e Riferimenti: Latvian Nature Conservation Agency (DAP), Gauja National Park resources, Ķemeri National Park materials, North Vidzeme Biosphere Reserve data, IUCN Red List, Baltic Sea hydrographic notes, regional botany and mycology field guides.</p>
+<p>Sources and References: Latvian Nature Conservation Agency (DAP), Gauja National Park resources, Ķemeri National Park materials, North Vidzeme Biosphere Reserve data, IUCN Red List, Baltic Sea hydrographic notes, regional botany and mycology field guides.</p>
 </div>
 </details>
 </div>
@@ -11808,7 +11815,7 @@ Tip: Look for oily spraints on bridge stones.</div>
 <h4 class="nature-subsection">Human–Nature Interaction and Access</h4>
 <p>- Everyman’s Right (Igaüheõigus): You may walk, ski, pick mushrooms/berries on uncultivated land; avoid damage, keep distance from homes (150 m), close gates, leave no trace. - Safety: Ticks (May–Oct), bog pools, unstable cliffs; dress in layers, carry maps, and respect seasonal restrictions in protected areas. - Best Times: May–June for birds and flowers; July–August for white nights and berries; September–October for cranes, raptors, and mushrooms; March–April for Soomaa floods and early migrants.</p>
 <p>  </p>
-<p>Fonti e Riferimenti: Estonian Environment Agency (Keskkonnaagentuur); Estonian Environmental Board; Matsalu, Soomaa, Lahemaa, and Vilsandi National Park materials; Geological Survey of Estonia; published field guides to Baltic mushrooms and flora; HELCOM Baltic Sea assessments; local conservation NGOs and visitor center briefings.</p>
+<p>Sources and References: Estonian Environment Agency (Keskkonnaagentuur); Estonian Environmental Board; Matsalu, Soomaa, Lahemaa, and Vilsandi National Park materials; Geological Survey of Estonia; published field guides to Baltic mushrooms and flora; HELCOM Baltic Sea assessments; local conservation NGOs and visitor center briefings.</p>
 </div>
 </details>
 </div>
@@ -12448,7 +12455,7 @@ On cold, foggy winter mornings, reeds and hedges coat in delicate ice crystals, 
 <p>- Baltic islands: Small isles like Saltholm and Sejerø are bird sanctuaries; strict seasonal access rules protect colonies. - Bornholm: Unlike the rest of Denmark’s soft tills, Bornholm shows Precambrian granites, rocky coasts, and heaths; the Helligdomsklipperne sea cliffs and rift valleys add geologic contrast. Where/when: Year-round; spring flowers in Almindingen forest and autumn fungi bonanza.</p>
 
 <p>Practical Field Tips (general): - Seasonality: Spring (April–May) for forests and migrants; summer (June–August) for coasts and long days; autumn (September–October) for mushrooms, raptors, and Sort Sol; winter (November–February) for sea ducks and dramatic storms. - Gear: Binoculars (8x or 10x), scope for coastal birding, windproof layers, waterproof boots for marshes, tick protection April–October. - Safety: Cliffs and dunes can be unstable after rain; tides in the Wadden Sea are fast—book guided walks; seals and ground-nesting birds require distance (100–300 m for seals, obey signage). - Ethics: Stick to trails in sensitive dunes and heaths; keep dogs leashed March–July; leave no trace and take only photos (and loose beach fossils where permitted).</p>
-<p>Fonti e Riferimenti: Danish Nature Agency (Naturstyrelsen), Nationalpark Vadehavet and Wadden Sea Centre, GEUS (Geological Survey of Denmark and Greenland), UNESCO World Heritage Centre (Stevns Klint; Ancient and Primeval Beech Forests of Europe), DOF BirdLife Denmark, Aarhus University DCE reports on Danish wildlife populations, local site guides (Geocenter Møns Klint, Museum Stevns).</p>
+<p>Sources and References: Danish Nature Agency (Naturstyrelsen), Nationalpark Vadehavet and Wadden Sea Centre, GEUS (Geological Survey of Denmark and Greenland), UNESCO World Heritage Centre (Stevns Klint; Ancient and Primeval Beech Forests of Europe), DOF BirdLife Denmark, Aarhus University DCE reports on Danish wildlife populations, local site guides (Geocenter Møns Klint, Museum Stevns).</p>
 </div>
 </details>
 </div>
@@ -12763,7 +12770,7 @@ On cold, foggy winter mornings, reeds and hedges coat in delicate ice crystals, 
 <p>- Seabird Strongholds: Granite stacks provide predator-reduced ledges for gannets, guillemots, razorbills, puffins; strong currents bring forage fish; marine reserve status restricts landings. Viewing: regulated boat tours Apr–Aug; bring layers—wind-chill significant even in summer; sea state dictates departure.</p>
 <p>- Seal and Dolphin Corridors: Tidal races around Ouessant concentrate plankton and fish; look for feeding frenzies (gannets diving, dolphins corralling). Safety: working waters—keep clear of fishing gear and navigation channels.</p>
 <p>Practical Travel Essentials: - Tides: Always check local tide tables and swell forecasts; plan out-and-back routes with a margin of safety; flat beaches can flood from behind. - Footwear: Non-slip soles for intertidal; ankle support on granite paths; avoid flip-flops on reefs. - Binoculars/Scopes: 8–10x binoculars for general use; 20–60x scope ideal for cliff birds and seals at haul-outs. - Seasons: Spring (Apr–Jun) for breeding seabirds and wildflowers; late summer (Jul–Sep) for calm seas, kelp snorkeling, bioluminescence; winter (Nov–Feb) for storm-watching and migratory waders. - Ethics: Observe wildlife distances (seals 100 m, cetaceans 100–300 m); no drones over colonies; take only photos and permitted shellfish within local limits.</p>
-<p>Fonti e Riferimenti: Office Français de la Biodiversité; Parc naturel marin d’Iroise; Réserve Naturelle des Sept-Îles (LPO); Ifremer (Institut français de recherche pour l’exploitation de la mer); SHOM tide tables; BRGM (Bureau de Recherches Géologiques et Minières) geology notes; IUCN Red List assessments (accessed 2023–2024); local park visitor centers and management plans.</p>
+<p>Sources and References: Office Français de la Biodiversité; Parc naturel marin d’Iroise; Réserve Naturelle des Sept-Îles (LPO); Ifremer (Institut français de recherche pour l’exploitation de la mer); SHOM tide tables; BRGM (Bureau de Recherches Géologiques et Minières) geology notes; IUCN Red List assessments (accessed 2023–2024); local park visitor centers and management plans.</p>
 </div>
 </details>
 </div>
@@ -13152,7 +13159,7 @@ On cold, foggy winter mornings, reeds and hedges coat in delicate ice crystals, 
 <p>Two glacial tarns mirror limestone towers, fringed by alpine turf and gentians. Early mornings bring glassy reflections and chamois silhouettes; autumn cattle bells echo across the cirque.   Access: Road closures at peak times—use shuttle buses; bring layers year-round for wind-chill.  </p>
 
 <p>Practical wildlife-watching tips   - Optics: 8–10x binoculars; 20–60x spotting scope for bears/vultures; rain covers essential.   - Timing: Dawn/dusk for mammals; windy onshore days for seabirds; low tide for geology and waders.   - Ethics: Keep distances (bears 300+ m; nests 100+ m), avoid playback/calls, pack out waste, and never pick rare plants or collect fossils/artifacts.</p>
-<p>Fonti e Riferimenti: Somiedo NP and Picos de Europa official guides; Urdaibai BR ornithological reports; Spanish Cetacean Society (SEC) Biscay surveys; Geological heritage of the Basque Coast Geopark; MUJA (Museo del Jurásico de Asturias) materials; SEO/BirdLife species accounts; IUCN Red List; Spanish Ministry for the Ecological Transition (MITECO) fauna and habitat data.</p>
+<p>Sources and References: Somiedo NP and Picos de Europa official guides; Urdaibai BR ornithological reports; Spanish Cetacean Society (SEC) Biscay surveys; Geological heritage of the Basque Coast Geopark; MUJA (Museo del Jurásico de Asturias) materials; SEO/BirdLife species accounts; IUCN Red List; Spanish Ministry for the Ecological Transition (MITECO) fauna and habitat data.</p>
 </div>
 </details>
 </div>

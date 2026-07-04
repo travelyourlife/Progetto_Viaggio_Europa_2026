@@ -469,7 +469,7 @@ window.writeCurrentLocation = function(lat, lng, optCity) {
   // Offline country detection (instant, no API)
   var countryObj = (typeof getCountryFromCoords === 'function') ? getCountryFromCoords(lat, lng) : null;
   var countryCode = countryObj ? countryObj.code : '';
-  var countryName = countryObj ? (isEN ? countryObj.name : countryObj.nameIt) : '';
+  var countryName = countryObj ? (LANG3 === 'es' ? (countryObj.nameEs || countryObj.name) : isEN ? countryObj.name : countryObj.nameIt) : '';
   var flag = '';
   if (countryCode && countryCode.length === 2) {
     flag = String.fromCodePoint(0x1F1E6 + countryCode.charCodeAt(0) - 65) + String.fromCodePoint(0x1F1E6 + countryCode.charCodeAt(1) - 65);
@@ -1267,21 +1267,21 @@ function renderTable() {
   const tbody = document.querySelector('.table-large tbody');
   if (!tbody) return;
 
-  const labelG = isEN ? 'D' : 'G';
-  const labelDate = isEN ? 'Date' : 'Data';
-  const labelRoute = isEN ? 'Route' : 'Tragitto';
+  const labelG = T('G', 'D', 'D');
+  const labelDate = T('Data', 'Date', 'Fecha');
+  const labelRoute = T('Tragitto', 'Route', 'Ruta');
   const labelKm = 'Km';
-  const labelHours = isEN ? 'Hours' : 'Ore';
-  const labelCountries = isEN ? 'Countries' : 'Paesi';
-  const labelNotes = isEN ? 'Exploration & notes 🛣️' : 'Esplorazione & note 🛣️';
+  const labelHours = T('Ore', 'Hours', 'Horas');
+  const labelCountries = T('Paesi', 'Countries', 'Pa\u00edses');
+  const labelNotes = T('Esplorazione & note 🛣️', 'Exploration & notes 🛣️', 'Exploraci\u00f3n & notas 🛣️');
   const labelMaps = '🔎 Maps';
   const labelIcons = '♨️/➕/🎣';
 
   tbody.innerHTML = itinerario.map(function(t) {
-    const label = isEN ? t.labelEn : t.label;
-    const route = isEN ? t.tragittoEn : t.tragitto;
-    const hours = isEN ? t.oreEn : t.ore;
-    const notes = isEN ? t.noteEn : t.note;
+    const label = LANG3 === 'es' ? (t.labelES || t.label) : isEN ? t.labelEn : t.label;
+    const route = LANG3 === 'es' ? (t.tragittoES || t.tragitto) : isEN ? t.tragittoEn : t.tragitto;
+    const hours = LANG3 === 'es' ? (t.oreES || t.ore) : isEN ? t.oreEn : t.ore;
+    const notes = LANG3 === 'es' ? (t.noteES || t.note) : isEN ? t.noteEn : t.note;
 
     // Build icons cell
     let iconsHtml = '—';
@@ -1333,10 +1333,10 @@ function renderTimeline() {
 
     for (let i = startIdx; i <= endIdx; i++) {
       const t = itinerario[i];
-      const label = isEN ? t.labelEn : t.label;
-      const route = isEN ? t.tragittoEn : t.tragitto;
+      const label = LANG3 === 'es' ? (t.labelES || t.label) : isEN ? t.labelEn : t.label;
+      const route = LANG3 === 'es' ? (t.tragittoES || t.tragitto) : isEN ? t.tragittoEn : t.tragitto;
       const desc = isEN ? t.descEn : t.desc;
-      const hours = isEN ? t.oreEn : t.ore;
+      const hours = LANG3 === 'es' ? (t.oreES || t.ore) : isEN ? t.oreEn : t.ore;
       const km = parseInt(t.km) || 0;
 
       // Build route line
@@ -5431,7 +5431,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                             var _lastPtGeo = todayPoints[todayPoints.length - 1];
                             var _offlineCountry = getCountryFromCoords(_lastPtGeo.lat, _lastPtGeo.lng);
                             if (_offlineCountry) {
-                                sumRef.update({ country: isEN ? _offlineCountry.name : _offlineCountry.nameIt, countryCode: _offlineCountry.code });
+                                sumRef.update({ country: LANG3 === 'es' ? (_offlineCountry.nameEs || _offlineCountry.name) : isEN ? _offlineCountry.name : _offlineCountry.nameIt, countryCode: _offlineCountry.code });
                             } else {
                                 var _geoUrl = 'https://nominatim.openstreetmap.org/reverse?format=json&lat=' + _lastPtGeo.lat + '&lon=' + _lastPtGeo.lng + '&zoom=5&accept-language=' + (isEN ? 'en' : 'it');
                                 fetch(_geoUrl).then(function(r) { return r.json(); }).then(function(data) {
@@ -7506,6 +7506,28 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
         homeLangBtn.addEventListener('click', function() {
             var targetLang = (homeLangBtn.href.indexOf('index_es') > -1) ? 'es' : (homeLangBtn.href.indexOf('index_en') > -1) ? 'en' : 'it';
             localStorage.setItem('quo-vadis-lang', targetLang);
+        });
+    }
+    // v4.81: Language dropdown toggle
+    var langDropdownBtn = document.getElementById('langDropdownBtn');
+    var langDropdownMenu = document.getElementById('langDropdownMenu');
+    if (langDropdownBtn && langDropdownMenu) {
+        langDropdownBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            langDropdownMenu.classList.toggle('open');
+        });
+        document.addEventListener('click', function(e) {
+            if (!langDropdownMenu.contains(e.target) && e.target !== langDropdownBtn) {
+                langDropdownMenu.classList.remove('open');
+            }
+        });
+        // Save lang preference on option click
+        langDropdownMenu.querySelectorAll('.lang-option').forEach(function(opt) {
+            opt.addEventListener('click', function() {
+                var href = opt.getAttribute('href');
+                var targetLang = (href.indexOf('index_es') > -1) ? 'es' : (href.indexOf('index_en') > -1) ? 'en' : 'it';
+                localStorage.setItem('quo-vadis-lang', targetLang);
+            });
         });
     }
     // v3.53: Altro page lang switch
@@ -12421,7 +12443,7 @@ window.injectAllWikiLinks = function() {
           var _dayCountry = getCountryFromCoords(_lastPtDay.lat, _lastPtDay.lng);
           if (_dayCountry) {
             var _cRef = db.ref('trips/' + FAMILY_ID + '/dailySummaries/' + date);
-            _cRef.update({ country: isEN ? _dayCountry.name : _dayCountry.nameIt, countryCode: _dayCountry.code });
+            _cRef.update({ country: LANG3 === 'es' ? (_dayCountry.nameEs || _dayCountry.name) : isEN ? _dayCountry.name : _dayCountry.nameIt, countryCode: _dayCountry.code });
           } else {
             // Nominatim fallback for unknown countries
             var _cRefFb = db.ref('trips/' + FAMILY_ID + '/dailySummaries/' + date);

@@ -61,10 +61,10 @@
 <link href="./icon.png" rel="apple-touch-icon" sizes="167x167"/>
 <title>Quo Vadis — V4.80</title>
 <link crossorigin="" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" rel="stylesheet"/>
-<link href="style.css?v=4.80" rel="stylesheet"/>
-<link href="home-variants.css?v=4.80" rel="stylesheet"/>
-<link href="unified-map.css?v=4.80" rel="stylesheet"/>
-<link href="modern-pages.css?v=4.80" rel="stylesheet"/>
+<link href="style.css?v=4.82" rel="stylesheet"/>
+<link href="home-variants.css?v=4.82" rel="stylesheet"/>
+<link href="unified-map.css?v=4.82" rel="stylesheet"/>
+<link href="modern-pages.css?v=4.82" rel="stylesheet"/>
 <link crossorigin="" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" rel="stylesheet"/>
 <link crossorigin="" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" rel="stylesheet"/>
 <!-- Firebase SDK (compat mode for single-file app) -->
@@ -149,14 +149,14 @@
 })();
 </script>
 <script defer="" src="data.js?v=4.80"></script>
-<script defer="" src="days-data.js?v=4.80"></script>
+<script defer="" src="days-data.js?v=4.82"></script>
 <script defer="" src="days-renderer.js?v=4.80"></script>
 <!-- wiki-links.js: lazy-loaded on first open of Culture/Activity tab (34KB) — parity with index.html -->
 <script defer="" src="weather-coords.js?v=4.80"></script>
 <script crossorigin="" defer="" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script crossorigin="" defer="" src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 <script defer="" src="poi-data.js?v=4.80"></script>
-<script defer="" src="app.js?v=4.80"></script>
+<script defer="" src="app.js?v=4.82"></script>
 <script defer="" src="curiosita-data.js?v=4.80"></script>
 <script>window.QV_CURIOSITA_SERVER_SIDE = true; window.QV_RECAP_SERVER_SIDE = true;</script>
 <script defer="" src="curiosita-scheduler.js?v=4.80"></script>
@@ -164,7 +164,7 @@
 <script defer="" src="unified-map.js?v=4.80"></script>
 <script defer="" src="city-itineraries.js?v=4.80"></script>
 <script defer="" src="city-itineraries-ui.js?v=4.80"></script>
-<script defer="" src="home-variants.js?v=4.80"></script>
+<script defer="" src="home-variants.js?v=4.82"></script>
 </head>
 <body class="on-home">
 <!-- ─── Splash Screen ─── -->
@@ -235,7 +235,14 @@
 <button aria-label="Buscar" class="home-action-btn" id="homeSearchOpen" type="button">🔍</button>
 <button aria-label="Notificaciones" class="home-action-btn notif-bell-home" id="homeNotifBell" type="button">🔔<span class="notif-badge" id="homeNotifBadge"></span></button>
 <button aria-label="Iniciar sesión" class="home-action-btn" id="homeAuthBtn" title="Iniciar sesión" type="button">👤</button>
-<a aria-label="Change language" title="ES → IT → EN" class="home-lang-switch" href="./index.html">🇮🇹</a>
+<div class="lang-dropdown" id="langDropdown">
+<button type="button" class="home-action-btn lang-current" id="langDropdownBtn" aria-label="Idioma">🇪🇸</button>
+<div class="lang-dropdown-menu" id="langDropdownMenu">
+<a href="./index.html" class="lang-option">🇮🇹 Italiano</a>
+<a href="./index_en.html" class="lang-option">🇬🇧 English</a>
+<a href="./index_es.html" class="lang-option active">🇪🇸 Español</a>
+</div>
+</div>
 </div>
 </div>
 <!-- ─── Hero Card ─── -->
@@ -643,24 +650,24 @@
 <p><strong>Conexiones:</strong> <a href="#g7">D7</a>, <a href="#g10">D10</a></p>
 <p>➕ <strong>Suomenlinna</strong> 🇫🇮: fortaleza en isla en Helsinki (15 min en ferry) <a href="https://maps.google.com/?q=60.1461,24.9782" rel="noopener noreferrer" target="_blank">📍 Mapas</a></p>
 <p>➕ <strong>Kierikki Stone Age Centre</strong> 🇫🇮: talleres para niños <a href="https://maps.google.com/?q=65.3606,25.9481" rel="noopener noreferrer" target="_blank">📍 Mapas</a></p>
-<h3 id="b4">Arctic Norway</h3>
+<h3 id="b4">Noruega Ártica</h3>
 <p><strong>Conexiones:</strong> <a href="#g17">D17</a>, <a href="#g18">D18</a>, <a href="#g25">D25</a> 🥾 🥾</p>
 <p>➕ <strong>Saltstraumen</strong> 🇳🇴 (near Bodø): el remolino más fuerte del mundo — ¡también un gran lugar para pescar! <a href="https://maps.google.com/?q=67.2325,14.7033" rel="noopener noreferrer" target="_blank">📍 Mapas</a></p>
 <p>➕ <strong>Nordkapp</strong> 🇳🇴 (+2-3 days): punto más septentrional de Europa. Solo si tienes días de sobra. <a href="https://maps.google.com/?q=71.1649,25.787" rel="noopener noreferrer" target="_blank">📍 Mapas</a></p>
-<h3 id="b5">Central Norway</h3>
+<h3 id="b5">Noruega Central</h3>
 <p><strong>Conexiones:</strong> <a href="#g29">D29</a>, <a href="#g30">D30</a> 🥾</p>
 <p>➕ <strong>Mirador Dalsnibba</strong> (+1h): vista aérea del fiordo desde 1,500 m <a href="https://maps.google.com/?q=62.04885,7.26931" rel="noopener noreferrer" target="_blank">📍 Mapas</a></p>
 <p>➕ <strong>Flåm Railway</strong> (1 day): uno de los trenes panorámicos más hermosos del mundo <a href="https://maps.google.com/?q=60.863,7.1138" rel="noopener noreferrer" target="_blank">📍 Mapas</a></p>
-<h3 id="b6">Denmark</h3>
+<h3 id="b6">Dinamarca</h3>
 <p><strong>Conexiones:</strong> <a href="#g34">D34</a>, <a href="#g37">D37</a></p>
 <p>➕ <strong>Oceanario Hirtshals</strong> 🇩🇰: el acuario más grande del norte de Europa <a href="https://maps.google.com/?q=57.5866903,9.9802239" rel="noopener noreferrer" target="_blank">📍 Mapas</a></p>
 <p>➕ <strong>Odense</strong> 🇩🇰: museo H.C. Andersen (parada de camino a Billund) <a href="https://maps.google.com/?q=55.39955352,10.39189909" rel="noopener noreferrer" target="_blank">📍 Mapas</a></p>
 <p>➕ <strong>Møns Klint</strong> 🇩🇰: acantilados blancos (desvío desde Copenhagen) <a href="https://maps.google.com/?q=54.9841,12.5437" rel="noopener noreferrer" target="_blank">📍 Mapas</a></p>
-<h3 id="b7">France</h3>
+<h3 id="b7">Francia</h3>
 <p><strong>Conexiones:</strong> <a href="#g43">D43</a></p>
 <p>➕ <strong>Chambord</strong> 🇫🇷: el castillo más grande de Loire Valley (pero menos apto para niños) <a href="https://maps.google.com/?q=47.616111,1.517222" rel="noopener noreferrer" target="_blank">📍 Mapas</a></p>
 <p>➕ <strong>Zoo de Beauval</strong> 🇫🇷: uno de los mejores zoológicos de Europa (¡pandas!) <a href="https://maps.google.com/?q=47.24754,1.35336" rel="noopener noreferrer" target="_blank">📍 Mapas</a></p>
-<h3 id="b8">Northern Spain</h3>
+<h3 id="b8">Norte de España</h3>
 <p><strong>Conexiones:</strong> <a href="#g46">D46</a>, <a href="#g47">D47</a> 🥾</p>
 <p>➕ <strong>Santillana del Mar + Altamira</strong> 🇪🇸: pueblo medieval + cuevas prehistóricas (réplica visitable). 30 km desde la ruta. <a href="https://maps.google.com/?q=43.3933,-4.1047" rel="noopener noreferrer" target="_blank">📍 Mapas</a></p>
 <p>➕ <strong>Burgos + Atapuerca</strong> 🇪🇸: Museo de la Evolución Humana (Unesco). +60 km. <a href="https://maps.google.com/?q=42.3391,-3.7471" rel="noopener noreferrer" target="_blank">📍 Mapas</a></p>
@@ -958,7 +965,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="danimarca-piano-pioggia-g33g39">Denmark — Plan de lluvia (D34–D40)</h3>
+<h3 id="danimarca-piano-pioggia-g33g39">Dinamarca — Plan de lluvia (D34–D40)</h3>
 <table class="no-responsive">
 <thead>
 <tr>
@@ -989,7 +996,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="francia-g40g42">France (D41–D43)</h3>
+<h3 id="francia-g40g42">Francia (D41–D43)</h3>
 <table class="no-responsive">
 <thead>
 <tr>
@@ -1704,7 +1711,7 @@ Rocas, hielo, líquenes, plantas pioneras en grietas; permafrost. Fauna escasa y
 </div>
 <h4 class="nature-subsection">Consejos prácticos para el viajero naturalista</h4>
 <p>- Mejor época: flora alpina (junio–julio), colores otoñales (octubre), aves migratorias en Neusiedler (marzo–abril y septiembre–noviembre).   - Seguridad: meteo rápida; lleve capas, mapa, agua, protección UV, y plan B. En alta montaña, casco en terrenos de caída de piedras; en invierno, material de avalanchas y formación previa.   - Ética: no recolectar plantas protegidas (edelweiss, arnica, gencianas); respetar cupos de setas y normativas locales; no entrar en cañaverales fuera de senderos.   - Salud: garrapatas hasta 1.500 m en temporada; vacunación TBE recomendada en zonas endémicas; potabilice agua de torrentes si no conoce su origen.   - Observación: madrugue; use prismáticos 8–10x y telescopio 20–60x para aves; evite drones en parques (prohibidos o restringidos).</p>
-<p class="nature-sources"><em>Fonti e Riferimenti: Hohe Tauern National Park; Nationalpark Donau-Auen; Nationalpark Neusiedler See–Seewinkel; Geologische Bundesanstalt (GBA); Österreichischer Alpenverein (boletines nivológicos); IUCN Red List; Literatur florística y faunística alpina; gestión forestal Bundesforschungszentrum für Wald (BFW); datos divulgativos de Eisriesenwelt.</em></p>
+<p class="nature-sources"><em>Fuentes y Referencias: Hohe Tauern National Park; Nationalpark Donau-Auen; Nationalpark Neusiedler See–Seewinkel; Geologische Bundesanstalt (GBA); Österreichischer Alpenverein (boletines nivológicos); IUCN Red List; Literatur florística y faunística alpina; gestión forestal Bundesforschungszentrum für Wald (BFW); datos divulgativos de Eisriesenwelt.</em></p>
 </div>
 </details>
 <h3 id="musica-arte-austria">🎵 Música y arte</h3>
@@ -2398,7 +2405,7 @@ Rocas, hielo, líquenes, plantas pioneras en grietas; permafrost. Fauna escasa y
 <h4 class="nature-subsection">Corredores urbanos-riparios (Vístula en Varsovia)</h4>
 <p>- Orillas sin canalizar con playas y islas; gaviotines, charranes, castores y zorros conviven con la ciudad. Observación segura desde pasarelas y hides; noche para castor.</p>
 <p>Consejos generales para el viajero naturalista: - Mejor época: primavera (mayo–junio) para cantos y floración; otoño (sept.–oct.) para migraciones y berreas; invierno para rastreo en nieve. - Equipo: prismáticos 8–10x, telescopio para rapaces, ropa por capas, impermeable, repelente y pinzas para garrapatas, apps/mapas offline. - Ética: mantén distancia a fauna, no reproducir cantos en zonas sensibles, no recolectar en parques, “no dejar rastro”. - Seguridad: avisar itinerario en montaña; meteorología cambiante; en humedales, pasarelas y guías locales; en costas, atención a vientos y marejadas.</p>
-<p>Fonti e Riferimenti: Parques Nacionales de Polonia (Białowieża, Tatra, Biebrza, Słowiński, Ojców, Wolin), Państwowe Gospodarstwo Leśne Lasy Państwowe (bosques estatales), BirdLife International (Aves de Polonia), IUCN Red List (estatus de especies), artículos y mapas geológicos del Państwowy Instytut Geologiczny, estadísticas de población de żubr del Białowieski Park Narodowy, comunicaciones científicas sobre dinámica de dunas de Słowiński.</p>
+<p>Fuentes y Referencias: Parques Nacionales de Polonia (Białowieża, Tatra, Biebrza, Słowiński, Ojców, Wolin), Państwowe Gospodarstwo Leśne Lasy Państwowe (bosques estatales), BirdLife International (Aves de Polonia), IUCN Red List (estatus de especies), artículos y mapas geológicos del Państwowy Instytut Geologiczny, estadísticas de población de żubr del Białowieski Park Narodowy, comunicaciones científicas sobre dinámica de dunas de Słowiński.</p>
 </div>
 </details>
 <h3 id="musica-arte-polonia">🎵 Música y arte</h3>
@@ -2959,7 +2966,7 @@ Lagos de caldera con orillas boscosas (Aukštaitija, Žemaitija), conectados por
 </div>
 <p>Consejos prácticos generales: - Mejor época global: mayo–junio (floraciones, aves en celo), agosto–octubre (setas, migraciones, colores). - Accesos y permisos: zonas estrictas (Čepkeliai, Kamanos) requieren guía/permiso; consulte centros de visitantes. - Equipo: botas impermeables, prismáticos 8–10x, repelente, mapa offline (cobertura variable), bolsa para basura. - Ética: “no dejar rastro”; no recolectar fuera de cupos ni en áreas protegidas; mantenga distancia de nidos/posaderos.</p>
 <p>Fuentes de observación recomendadas: - Ventės Ragas (anillamiento, migración); torres en Nemunas Delta; miradores en Parnidis y Nagliai; pasarelas de Žuvintas y Čepkeliai; centros en Nida y Palanga (ámbar).</p>
-<p class="nature-sources"><em>Fonti e Riferimenti: Servicio de Parques Nacionales de Lituania; UNESCO Curonian Spit; Nemunas Delta Regional Park; Žuvintas Biosphere Reserve; Atlas de Aves Nidificantes de Lituania; literatura micológica báltica; museos locales del Ámbar de Palanga.</em></p>
+<p class="nature-sources"><em>Fuentes y Referencias: Servicio de Parques Nacionales de Lituania; UNESCO Curonian Spit; Nemunas Delta Regional Park; Žuvintas Biosphere Reserve; Atlas de Aves Nidificantes de Lituania; literatura micológica báltica; museos locales del Ámbar de Palanga.</em></p>
 </div>
 </details>
 <h3 id="musica-arte-lituania">🎵 Música y arte</h3>
@@ -3456,7 +3463,7 @@ Lagos de caldera con orillas boscosas (Aukštaitija, Žemaitija), conectados por
 <h4 class="nature-subsection">Prácticos para el viajero naturalista</h4>
 <p>- Mejor época: mayo–junio (aves y orquídeas), septiembre–octubre (otoño dorado, hongos), invierno (rastros en nieve, águilas en costa). - Seguridad: garrapatas (Lyme, encefalitis): usar manga larga, repelente, revisar al regreso. En turberas, solo por pasarelas. En costa, atención a corrientes (especialmente Kolka). En bosques, respeto a caza (evita amaneceres de temporada de caza en zonas no protegidas; chaleco reflectante). - Ética: no divulgar ubicaciones de especies sensibles (cigüeña negra, orquídeas raras); observar a distancia; no alimentar fauna.</p>
 <p>Fuentes de observación recomendadas: - Torres de Engure, Ķemeri y Teiči; hides de Pape; miradores de acantilados del Gauja (Sigulda, Līgatne); pasarela de la Gran Turbera de Ķemeri; playas abiertas tras temporales para ámbar.</p>
-<p>Fonti e Riferimenti: Administración de Naturaleza de Letonia (DAP), Parques Nacionales de Gauja/Ķemeri/Slītere/Pape, Red Natura 2000 (UE), IUCN Red List (Lynx lynx, Canis lupus, Bison bonasus, Crex crex, Haliaeetus albicilla, Halichoerus grypus), Servicio Geológico de Letonia, Latvian Environment, Geology and Meteorology Centre, materiales interpretativos in situ (Ķemeri boardwalk, Gutmanis), y literatura botánica y ornitológica báltica reciente.</p>
+<p>Fuentes y Referencias: Administración de Naturaleza de Letonia (DAP), Parques Nacionales de Gauja/Ķemeri/Slītere/Pape, Red Natura 2000 (UE), IUCN Red List (Lynx lynx, Canis lupus, Bison bonasus, Crex crex, Haliaeetus albicilla, Halichoerus grypus), Servicio Geológico de Letonia, Latvian Environment, Geology and Meteorology Centre, materiales interpretativos in situ (Ķemeri boardwalk, Gutmanis), y literatura botánica y ornitológica báltica reciente.</p>
 </div>
 </details>
 <h3 id="musica-arte-lettonia">🎵 Música y arte</h3>
@@ -4062,7 +4069,7 @@ Unos días al año en abril, los machos de Rana arvalis viran a azul intenso: ef
 <p>— Seenelkäik responsable: aprende con guías locales y respeta el Igaüheõigus; deja el bosque como lo encontraste.</p>
 <p>Fuentes de información y centros: - Centros de visitantes: Lahemaa (Palmse), Soomaa (Tõrama), Matsalu (Penijõe), Vilsandi (Loona). - Mapas y alertas: RMK (Centro Forestal del Estado) y Protected Planet.</p>
 
-<p>Fonti e Riferimenti: RMK (State Forest Management Centre), Estonian Environment Agency, Matsalu National Park publications, Soomaa National Park guides, Lahemaa NP materials, Estonian Ornithological Society, IUCN Red List, UNESCO MAB West Estonian Archipelago documentation, Geological Survey of Estonia.</p>
+<p>Fuentes y Referencias: RMK (State Forest Management Centre), Estonian Environment Agency, Matsalu National Park publications, Soomaa National Park guides, Lahemaa NP materials, Estonian Ornithological Society, IUCN Red List, UNESCO MAB West Estonian Archipelago documentation, Geological Survey of Estonia.</p>
 </div>
 </details>
 <h3 id="musica-arte-estonia">🎵 Música y arte</h3>
@@ -5041,7 +5048,7 @@ Cada invierno (de noviembre a febrero), cientos de orcas y jorobadas siguen los 
 <p>🏛️ <strong>Jersey Marius</strong> — el clásico jersey noruego de patrones (caro pero dura toda la vida)</p>
 <p>🏛️ <strong>Stockfish</strong> — si te gusta el baccalà, cómpralo directamente en Lofoten</p>
 <hr/>
-<h2 id="danimarca-g35-g39">🇩🇰 Denmark (D35-D39)</h2>
+<h2 id="danimarca-g35-g39">🇩🇰 Dinamarca (D35-D39)</h2>
 <h3 id="timeline_8">⏳ Línea del tiempo</h3>
 <table class="no-responsive">
 <thead>
@@ -5059,12 +5066,12 @@ Cada invierno (de noviembre a febrero), cientos de orcas y jorobadas siguen los 
 </tr>
 <tr>
 <td data-label="Period">965</td>
-<td data-label="Event">Harald Bluetooth unifica Denmark e introduce el cristianismo</td>
+<td data-label="Event">Harald Bluetooth unifica Dinamarca e introduce el cristianismo</td>
 <td data-label="Where to see it">Las piedras rúnicas de Jelling (UNESCO)</td>
 </tr>
 <tr>
 <td data-label="Period">1397</td>
-<td data-label="Event">Kalmar Union — Denmark gobierna toda Escandinavia</td>
+<td data-label="Event">Kalmar Union — Dinamarca gobierna toda Escandinavia</td>
 <td data-label="Where to see it"></td>
 </tr>
 <tr>
@@ -5089,7 +5096,7 @@ Cada invierno (de noviembre a febrero), cientos de orcas y jorobadas siguen los 
 </tr>
 <tr>
 <td data-label="Period">1949</td>
-<td data-label="Event">Denmark funda NATO</td>
+<td data-label="Event">Dinamarca funda NATO</td>
 <td data-label="Where to see it"></td>
 </tr>
 <tr>
@@ -5099,13 +5106,13 @@ Cada invierno (de noviembre a febrero), cientos de orcas y jorobadas siguen los 
 </tr>
 <tr>
 <td data-label="Period">2000</td>
-<td data-label="Event">The Øresund Bridge se inaugura (Denmark-Sweden)</td>
+<td data-label="Event">The Øresund Bridge se inaugura (Dinamarca-Suecia)</td>
 <td data-label="Where to see it"></td>
 </tr>
 </tbody>
 </table>
 <h3 id="personaggi-da-conoscere_8">🧑‍🎨 Personas a conocer</h3>
-<p><strong>Hans Christian Andersen (1805-1875)</strong> — El escritor de cuentos de hadas más famoso del mundo: <em>The Little Mermaid</em>, <em>The Ugly Duckling</em>, <em>The Snow Queen</em> (¡que inspiró Frozen!), <em>Thumbelina</em>, <em>The Emperor's New Clothes</em>. Era danés, de Odense. La estatua de The Little Mermaid en el puerto de Copenhagen es el monumento más visitado de Denmark.</p>
+<p><strong>Hans Christian Andersen (1805-1875)</strong> — El escritor de cuentos de hadas más famoso del mundo: <em>The Little Mermaid</em>, <em>The Ugly Duckling</em>, <em>The Snow Queen</em> (¡que inspiró Frozen!), <em>Thumbelina</em>, <em>The Emperor's New Clothes</em>. Era danés, de Odense. La estatua de The Little Mermaid en el puerto de Copenhagen es el monumento más visitado de Dinamarca.</p>
 <p>📍 <a href="https://maps.google.com/?q=55.3960,10.3880(HC+Andersen+Museum+Odense)" rel="noopener noreferrer" target="_blank">H.C. Andersen Museum, Odense</a></p>
 <p>📍 <a href="https://hcandersen.dk/en/" rel="noopener noreferrer" target="_blank">hcandersen.dk</a></p>
 <p><strong>Ole Kirk Christiansen (1891-1958)</strong> — Carpintero de Billund que durante la Gran Depresión empezó a fabricar juguetes de madera. En 1949 creó los primeros ladrillos plásticos encajables. El nombre LEGO viene de "LEg GOdt" = "jugar bien" en danés. Hoy LEGO es el mayor fabricante de juguetes del mundo.</p>
@@ -5439,7 +5446,7 @@ Dónde: Tønder Marsk, Ribe. Llegar 1–2 h antes del ocaso; guías locales actu
 <p>Itinerarios sugeridos de naturaleza (3–5 días):   - Día 1: Stevns Klint (K–Pg) + Roskilde Fjord (pigargos).   - Día 2: Møns Klint (fósiles, hayedos calcáreos) + dunas con espino amarillo.   - Día 3: Wadden (focas, limícolas, marismas).   - Día 4: Thy (brezales, dunas, marsopas desde costa del norte).   - Día 5: Skagen (dos mares, migración) + atardecer “Sort Sol” en Tønder Marsk (en temporada).</p>
 <p>Reglas de oro para observación responsable:   - Distancia mínima: aves en playa >50 m; focas >100 m.   - No volar drones en reservas sin permiso.   - Traiga de vuelta sus residuos; deje solo huellas.</p>
 <p>- Fuentes útiles in situ: centros de visitantes (Geocenter Møns Klint; Wadden Sea Centre en Vester Vedsted), carteles de Naturstyrelsen y apps locales de mareas y aves.</p>
-<p class="nature-sources"><em>Fonti e Riferimenti: Naturstyrelsen (Agencia Danesa de Naturaleza), UNESCO World Heritage (Stevns Klint, Wadden Sea, Hayedos de Europa), Geocenter Møns Klint, BirdLife International (fichas UICN), VisitDenmark (recursos de senderismo y mareas), literatura de campo nórdica (Moss & Perring; Collins Bird Guide).</em></p>
+<p class="nature-sources"><em>Fuentes y Referencias: Naturstyrelsen (Agencia Danesa de Naturaleza), UNESCO World Heritage (Stevns Klint, Wadden Sea, Hayedos de Europa), Geocenter Møns Klint, BirdLife International (fichas UICN), VisitDenmark (recursos de senderismo y mareas), literatura de campo nórdica (Moss & Perring; Collins Bird Guide).</em></p>
 </div>
 </details>
 <h3 id="musica-arte-danimarca">🎵 Música y arte</h3>
@@ -5750,7 +5757,7 @@ Dónde: Tønder Marsk, Ribe. Llegar 1–2 h antes del ocaso; guías locales actu
 <p>🏛️ <strong>Bremer Klaben</strong> — dulce tradicional de Bremen (como un panettone con fruta seca)</p>
 <p>Un imán de <strong>Músicos de Bremen</strong> — el recuerdo más icónico <a href="https://maps.google.com/?q=53.0758,8.8072" rel="noopener noreferrer" target="_blank">📍 Mapas</a></p>
 <hr/>
-<h2 id="francia-g41-g43-g51-g54">🇫🇷 France (D41-D43, D51-D54)</h2>
+<h2 id="francia-g41-g43-g51-g54">🇫🇷 Francia (D41-D43, D51-D54)</h2>
 <h3 id="timeline_10">⏳ Línea del tiempo</h3>
 <table class="no-responsive">
 <thead>
@@ -5778,7 +5785,7 @@ Dónde: Tønder Marsk, Ribe. Llegar 1–2 h antes del ocaso; guías locales actu
 </tr>
 <tr>
 <td data-label="Period">1515</td>
-<td data-label="Event">Francis I invita a Leonardo da Vinci a France</td>
+<td data-label="Event">Francisco I invita a Leonardo da Vinci a Francia</td>
 <td data-label="Where to see it"><a href="https://maps.google.com/?q=47.4100,0.9920(Clos+Luce+Amboise)" rel="noopener noreferrer" target="_blank">📍 Clos Lucé, Amboise</a></td>
 </tr>
 <tr>
@@ -5814,11 +5821,11 @@ Dónde: Tønder Marsk, Ribe. Llegar 1–2 h antes del ocaso; guías locales actu
 </tbody>
 </table>
 <h3 id="personaggi-da-conoscere_10">🧑‍🎨 Personas a conocer</h3>
-<p><strong>Leonardo da Vinci (1452-1519)</strong> — Italiano, ¡pero murió en France! Francis I lo invitó a Amboise en 1516 y le otorgó Clos Lucé como residencia. Leonardo trajo la Mona Lisa consigo (¡que nunca volvió a Italy!). En Clos Lucé se pueden ver maquetas de sus inventos: el tanque, el helicóptero, el puente levadizo. ¡Los niños pueden tocar y poner en marcha las máquinas!</p>
+<p><strong>Leonardo da Vinci (1452-1519)</strong> — Italiano, ¡pero murió en Francia! Francisco I lo invitó a Amboise en 1516 y le otorgó Clos Lucé como residencia. Leonardo trajo la Mona Lisa consigo (¡que nunca volvió a Italia!). En Clos Lucé se pueden ver maquetas de sus inventos: el tanque, el helicóptero, el puente levadizo. ¡Los niños pueden tocar y poner en marcha las máquinas!</p>
 <p>📍 <a href="https://maps.google.com/?q=47.4100,0.9920" rel="noopener noreferrer" target="_blank">Clos Lucé</a> — las máquinas de Leonardo en el parque</p>
 <p>📍 <a href="https://maps.google.com/?q=47.4130,0.9850(Chateau+Amboise)" rel="noopener noreferrer" target="_blank">Château d'Amboise</a> — donde Leonardo está enterrado</p>
 <p>📍 <a href="https://www.vinci-closluce.com/en" rel="noopener noreferrer" target="_blank">vinci-closluce.com</a></p>
-<p><strong>Catherine de' Medici (1519-1589)</strong> — La reina italiana que gobernó France. Recibió Chenonceau y lo transformó: añadió la galería sobre el río Cher (el "puente" del castillo). También introdujo el tenedor en France (¡antes comían con las manos!).</p>
+<p><strong>Catherine de' Medici (1519-1589)</strong> — La reina italiana que gobernó France. Recibió Chenonceau y lo transformó: añadió la galería sobre el río Cher (el "puente" del castillo). También introdujo el tenedor en Francia (¡antes comían con las manos!).</p>
 <p>📍 <a href="https://maps.google.com/?q=47.3249,1.0703" rel="noopener noreferrer" target="_blank">Chenonceau</a> — ⚠️ ¡Reserva obligatoria!</p>
 <p><strong>Jules Verne (1828-1905)</strong> — El autor de <em>Twenty Thousand Leagues Under the Sea</em>, <em>Around the World in 80 Days</em>, <em>Journey to the Center of the Earth</em>. Nacido en Nantes pero vivió en <strong>Amiens</strong> ¡durante 34 años! Su casa es un museo.</p>
 <p>📍 <a href="https://maps.google.com/?q=49.8870,2.2970(Maison+Jules+Verne+Amiens)" rel="noopener noreferrer" target="_blank">Maison de Jules Verne, Amiens</a></p>
@@ -6198,7 +6205,7 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 <p>Consejos generales de campo: - Equipo: prismáticos 8×42, telescopio 20–60× para aves; calzado de agarre en roca; traje de neopreno para snorkel. - Ética: no recolectar organismos del intermareal; fotografiar sin flash a corta distancia de aves; seguir códigos de observación de cetáceos. - Seguridad: consultar mareas y coeficientes; llevar mapa/topo y teléfono con batería; respetar cierres por nidificación.</p>
 <p>Imagen adicional de referencia costera:</p>
 
-<p>Fonti e Riferimenti: IUCN Red List; IFREMER (ecosistemas marinos franceses); Parc naturel marin d’Iroise; Réserve des Sept-Îles (LPO); Muséum national d’Histoire naturelle; BRGM (geología de Francia); SHOM (mareas y coeficientes); Météo-France (boletines costeros).</p>
+<p>Fuentes y Referencias: IUCN Red List; IFREMER (ecosistemas marinos franceses); Parc naturel marin d’Iroise; Réserve des Sept-Îles (LPO); Muséum national d’Histoire naturelle; BRGM (geología de Francia); SHOM (mareas y coeficientes); Météo-France (boletines costeros).</p>
 </div>
 </details>
 <h3 id="musica-arte-francia">🎵 Música y arte</h3>
@@ -6253,7 +6260,7 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 <p>"¿Cuántas baguettes comen los franceses al día?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';" type="button">👀</button><span class="quiz-answer" style="display:none;"> → <strong>¡30 million! 🥖 Eso son unos 10 billion al año.</strong></span></p>
 </li>
 <li>
-<p>"¿Qué es el Tour de France?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';" type="button">👀</button><span class="quiz-answer" style="display:none;"> → <strong>¡La carrera ciclista más famosa del mundo! 🚴 Dura 3 weeks y cubre unos 3,500 km.</strong></span></p>
+<p>"¿Qué es el Tour de France?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';" type="button">👀</button><span class="quiz-answer" style="display:none;"> → <strong>¡La carrera ciclista más famosa del mundo! 🚴 Dura 3 semanas y cubre unos 3,500 km.</strong></span></p>
 </li>
 <li>
 <p>"¿Por qué el gallo es el símbolo de Francia?" <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='inline';this.style.display='none';" type="button">👀</button><span class="quiz-answer" style="display:none;"> → <strong>Porque en latín "gallus" significa tanto "gallo" como "galo" (la antigua Francia)! 🐓</strong></span></p>
@@ -6268,7 +6275,7 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 <p>¿Cuántos tipos de queso produce Francia? <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='block';this.style.display='none';" type="button">👀</button><span class="quiz-answer" style="display:none;"> ¡Más de 1,200! 🧀 Hay un queso distinto para cada día del año (y aún más).</span></p>
 </li>
 <li>
-<p>¿Qué es el Tour de France? <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='block';this.style.display='none';" type="button">👀</button><span class="quiz-answer" style="display:none;"> ¡La carrera ciclista más famosa del mundo! 🚴 Recorre unos 3,500 km en 3 weeks.</span></p>
+<p>¿Qué es el Tour de France? <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='block';this.style.display='none';" type="button">👀</button><span class="quiz-answer" style="display:none;"> ¡La carrera ciclista más famosa del mundo! 🚴 Recorre unos 3,500 km en 3 semanas.</span></p>
 </li>
 <li>
 <p>¿Qué es el Louvre? <button class="quiz-reveal-btn" onclick="this.nextElementSibling.style.display='block';this.style.display='none';" type="button">👀</button><span class="quiz-answer" style="display:none;"> ¡El museo de arte más grande del mundo! 🎨 Tiene la Mona Lisa y más de 380,000 objetos.</span></p>
@@ -6298,7 +6305,7 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 <p><strong>Gorges du Verdon</strong> (<a href="https://en.wikipedia.org/wiki/Verdon_Gorge" rel="noopener noreferrer" target="_blank">📚 Wikipedia</a>) — el "Gran Cañón" de Europa: 700m de profundidad, agua turquesa. <a href="https://maps.google.com/?q=43.7500,6.3200(Gorges+du+Verdon)" rel="noopener noreferrer" target="_blank">📍 Mapas</a></p>
 <p><strong>Camargue</strong> (<a href="https://en.wikipedia.org/wiki/Camargue" rel="noopener noreferrer" target="_blank">📚 Wikipedia</a>) — delta del Rhône: caballos blancos salvajes, toros negros, flamencos rosados! Paisaje único de marismas y salinas. <a href="https://maps.google.com/?q=43.5000,4.5000(Camargue)" rel="noopener noreferrer" target="_blank">📍 Mapas</a></p>
 <hr/>
-<h2 id="spagna-g44-g50">🇪🇸 Spain (D44-D50)</h2>
+<h2 id="spagna-g44-g50">🇪🇸 España (D44-D50)</h2>
 <h3 id="timeline_11">⏳ Línea del tiempo</h3>
 <table class="no-responsive">
 <thead>
@@ -6730,7 +6737,7 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 <p>Lagos glaciares someros con macrófitas sumergidas y aguas frías; praderas circundantes con narcisos tempranos. Buenos para ver rapaces en vuelo y rebecos en laderas cercanas. Ética: no alimentar ganado ni fauna; llevarse toda la basura.</p>
 <h4 class="nature-subsection">Plantaciones forestales y mosaico agrario</h4>
 <p>Matriz de eucaliptales/pinares alterna con prados de siega y setos de avellanos/espinos. Refugio para corzos, erizos y aves de borde; floraciones primaverales de prados ricos en polinizadores. Gestión recomendada: diversificar edades, bordes sinuosos y islas de frondosas nativas.</p>
-<p>Fonti e Riferimenti: Parque Nacional de los Picos de Europa; Fundación Oso Pardo; SEO/BirdLife; Sociedad de Ciencias Aranzadi; Geoparque de la Costa Vasca (UNESCO); MUJA (Museo del Jurásico de Asturias); IGME-CSIC; AEMET; Gobierno del Principado de Asturias; Gobierno Vasco.</p>
+<p>Fuentes y Referencias: Parque Nacional de los Picos de Europa; Fundación Oso Pardo; SEO/BirdLife; Sociedad de Ciencias Aranzadi; Geoparque de la Costa Vasca (UNESCO); MUJA (Museo del Jurásico de Asturias); IGME-CSIC; AEMET; Gobierno del Principado de Asturias; Gobierno Vasco.</p>
 </div>
 </details>
 <h3 id="musica-arte-spagna">🎵 Música y arte</h3>
@@ -9314,14 +9321,14 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 <tbody>
 <tr>
 <td data-label="Location"><strong>Møns Klint (GeoCenter)</strong></td>
-<td data-label="Country">🇩🇰 Denmark (Møn island)</td>
+<td data-label="Country">🇩🇰 Dinamarca (isla de Møn)</td>
 <td data-label="Day"><a href="#g35">D35</a>–<a href="#g36">D36</a> (desvío ~1.5h desde Copenhagen)</td>
 <td data-label="What">Fósiles marinos (erizos de mar, belemnites, conchas) en acantilados de tiza blanca</td>
 <td data-label="Info">Visitas guiadas ~1h, DKK 25 + entrada al GeoCenter. Playa libre para búsqueda independiente. <a href="https://moensklint.dk/en/fossil-hunting/" rel="noopener" target="_blank">moensklint.dk</a></td>
 </tr>
 <tr>
 <td data-label="Location"><strong>Gram Clay Pit (Lergrav)</strong></td>
-<td data-label="Country">🇩🇰 Denmark (South Jutland)</td>
+<td data-label="Country">🇩🇰 Dinamarca (Jutlandia del Sur)</td>
 <td data-label="Day"><a href="#g40">D40</a> (desvío ~45 min desde Billund→Bremen)</td>
 <td data-label="What">Fósiles marinos de 10 millones de años: dientes de tiburón, conchas, huesos de ballena</td>
 <td data-label="Info">Museo + excavación libre en la cantera. ~DKK 100 adultos. Quédate con los fósiles comunes. <a href="https://msj.dk/en/gram-lergrav-palaeontology/" rel="noopener" target="_blank">msj.dk</a></td>
@@ -10161,7 +10168,7 @@ Rocas, hielo, líquenes, plantas pioneras en grietas; permafrost. Fauna escasa y
 </div>
 <h4 class="nature-subsection">Consejos prácticos para el viajero naturalista</h4>
 <p>- Mejor época: flora alpina (junio–julio), colores otoñales (octubre), aves migratorias en Neusiedler (marzo–abril y septiembre–noviembre).   - Seguridad: meteo rápida; lleve capas, mapa, agua, protección UV, y plan B. En alta montaña, casco en terrenos de caída de piedras; en invierno, material de avalanchas y formación previa.   - Ética: no recolectar plantas protegidas (edelweiss, arnica, gencianas); respetar cupos de setas y normativas locales; no entrar en cañaverales fuera de senderos.   - Salud: garrapatas hasta 1.500 m en temporada; vacunación TBE recomendada en zonas endémicas; potabilice agua de torrentes si no conoce su origen.   - Observación: madrugue; use prismáticos 8–10x y telescopio 20–60x para aves; evite drones en parques (prohibidos o restringidos).</p>
-<p class="nature-sources"><em>Fonti e Riferimenti: Hohe Tauern National Park; Nationalpark Donau-Auen; Nationalpark Neusiedler See–Seewinkel; Geologische Bundesanstalt (GBA); Österreichischer Alpenverein (boletines nivológicos); IUCN Red List; Literatur florística y faunística alpina; gestión forestal Bundesforschungszentrum für Wald (BFW); datos divulgativos de Eisriesenwelt.</em></p>
+<p class="nature-sources"><em>Fuentes y Referencias: Hohe Tauern National Park; Nationalpark Donau-Auen; Nationalpark Neusiedler See–Seewinkel; Geologische Bundesanstalt (GBA); Österreichischer Alpenverein (boletines nivológicos); IUCN Red List; Literatur florística y faunística alpina; gestión forestal Bundesforschungszentrum für Wald (BFW); datos divulgativos de Eisriesenwelt.</em></p>
 </div>
 </details>
 </div>
@@ -10431,7 +10438,7 @@ Rocas, hielo, líquenes, plantas pioneras en grietas; permafrost. Fauna escasa y
 <h4 class="nature-subsection">Corredores urbanos-riparios (Vístula en Varsovia)</h4>
 <p>- Orillas sin canalizar con playas y islas; gaviotines, charranes, castores y zorros conviven con la ciudad. Observación segura desde pasarelas y hides; noche para castor.</p>
 <p>Consejos generales para el viajero naturalista: - Mejor época: primavera (mayo–junio) para cantos y floración; otoño (sept.–oct.) para migraciones y berreas; invierno para rastreo en nieve. - Equipo: prismáticos 8–10x, telescopio para rapaces, ropa por capas, impermeable, repelente y pinzas para garrapatas, apps/mapas offline. - Ética: mantén distancia a fauna, no reproducir cantos en zonas sensibles, no recolectar en parques, “no dejar rastro”. - Seguridad: avisar itinerario en montaña; meteorología cambiante; en humedales, pasarelas y guías locales; en costas, atención a vientos y marejadas.</p>
-<p>Fonti e Riferimenti: Parques Nacionales de Polonia (Białowieża, Tatra, Biebrza, Słowiński, Ojców, Wolin), Państwowe Gospodarstwo Leśne Lasy Państwowe (bosques estatales), BirdLife International (Aves de Polonia), IUCN Red List (estatus de especies), artículos y mapas geológicos del Państwowy Instytut Geologiczny, estadísticas de población de żubr del Białowieski Park Narodowy, comunicaciones científicas sobre dinámica de dunas de Słowiński.</p>
+<p>Fuentes y Referencias: Parques Nacionales de Polonia (Białowieża, Tatra, Biebrza, Słowiński, Ojców, Wolin), Państwowe Gospodarstwo Leśne Lasy Państwowe (bosques estatales), BirdLife International (Aves de Polonia), IUCN Red List (estatus de especies), artículos y mapas geológicos del Państwowy Instytut Geologiczny, estadísticas de población de żubr del Białowieski Park Narodowy, comunicaciones científicas sobre dinámica de dunas de Słowiński.</p>
 </div>
 </details>
 </div>
@@ -10773,7 +10780,7 @@ Lagos de caldera con orillas boscosas (Aukštaitija, Žemaitija), conectados por
 </div>
 <p>Consejos prácticos generales: - Mejor época global: mayo–junio (floraciones, aves en celo), agosto–octubre (setas, migraciones, colores). - Accesos y permisos: zonas estrictas (Čepkeliai, Kamanos) requieren guía/permiso; consulte centros de visitantes. - Equipo: botas impermeables, prismáticos 8–10x, repelente, mapa offline (cobertura variable), bolsa para basura. - Ética: “no dejar rastro”; no recolectar fuera de cupos ni en áreas protegidas; mantenga distancia de nidos/posaderos.</p>
 <p>Fuentes de observación recomendadas: - Ventės Ragas (anillamiento, migración); torres en Nemunas Delta; miradores en Parnidis y Nagliai; pasarelas de Žuvintas y Čepkeliai; centros en Nida y Palanga (ámbar).</p>
-<p class="nature-sources"><em>Fonti e Riferimenti: Servicio de Parques Nacionales de Lituania; UNESCO Curonian Spit; Nemunas Delta Regional Park; Žuvintas Biosphere Reserve; Atlas de Aves Nidificantes de Lituania; literatura micológica báltica; museos locales del Ámbar de Palanga.</em></p>
+<p class="nature-sources"><em>Fuentes y Referencias: Servicio de Parques Nacionales de Lituania; UNESCO Curonian Spit; Nemunas Delta Regional Park; Žuvintas Biosphere Reserve; Atlas de Aves Nidificantes de Lituania; literatura micológica báltica; museos locales del Ámbar de Palanga.</em></p>
 </div>
 </details>
 </div>
@@ -11053,7 +11060,7 @@ Lagos de caldera con orillas boscosas (Aukštaitija, Žemaitija), conectados por
 <h4 class="nature-subsection">Prácticos para el viajero naturalista</h4>
 <p>- Mejor época: mayo–junio (aves y orquídeas), septiembre–octubre (otoño dorado, hongos), invierno (rastros en nieve, águilas en costa). - Seguridad: garrapatas (Lyme, encefalitis): usar manga larga, repelente, revisar al regreso. En turberas, solo por pasarelas. En costa, atención a corrientes (especialmente Kolka). En bosques, respeto a caza (evita amaneceres de temporada de caza en zonas no protegidas; chaleco reflectante). - Ética: no divulgar ubicaciones de especies sensibles (cigüeña negra, orquídeas raras); observar a distancia; no alimentar fauna.</p>
 <p>Fuentes de observación recomendadas: - Torres de Engure, Ķemeri y Teiči; hides de Pape; miradores de acantilados del Gauja (Sigulda, Līgatne); pasarela de la Gran Turbera de Ķemeri; playas abiertas tras temporales para ámbar.</p>
-<p>Fonti e Riferimenti: Administración de Naturaleza de Letonia (DAP), Parques Nacionales de Gauja/Ķemeri/Slītere/Pape, Red Natura 2000 (UE), IUCN Red List (Lynx lynx, Canis lupus, Bison bonasus, Crex crex, Haliaeetus albicilla, Halichoerus grypus), Servicio Geológico de Letonia, Latvian Environment, Geology and Meteorology Centre, materiales interpretativos in situ (Ķemeri boardwalk, Gutmanis), y literatura botánica y ornitológica báltica reciente.</p>
+<p>Fuentes y Referencias: Administración de Naturaleza de Letonia (DAP), Parques Nacionales de Gauja/Ķemeri/Slītere/Pape, Red Natura 2000 (UE), IUCN Red List (Lynx lynx, Canis lupus, Bison bonasus, Crex crex, Haliaeetus albicilla, Halichoerus grypus), Servicio Geológico de Letonia, Latvian Environment, Geology and Meteorology Centre, materiales interpretativos in situ (Ķemeri boardwalk, Gutmanis), y literatura botánica y ornitológica báltica reciente.</p>
 </div>
 </details>
 </div>
@@ -11434,7 +11441,7 @@ Unos días al año en abril, los machos de Rana arvalis viran a azul intenso: ef
 <p>— Seenelkäik responsable: aprende con guías locales y respeta el Igaüheõigus; deja el bosque como lo encontraste.</p>
 <p>Fuentes de información y centros: - Centros de visitantes: Lahemaa (Palmse), Soomaa (Tõrama), Matsalu (Penijõe), Vilsandi (Loona). - Mapas y alertas: RMK (Centro Forestal del Estado) y Protected Planet.</p>
 
-<p>Fonti e Riferimenti: RMK (State Forest Management Centre), Estonian Environment Agency, Matsalu National Park publications, Soomaa National Park guides, Lahemaa NP materials, Estonian Ornithological Society, IUCN Red List, UNESCO MAB West Estonian Archipelago documentation, Geological Survey of Estonia.</p>
+<p>Fuentes y Referencias: RMK (State Forest Management Centre), Estonian Environment Agency, Matsalu National Park publications, Soomaa National Park guides, Lahemaa NP materials, Estonian Ornithological Society, IUCN Red List, UNESCO MAB West Estonian Archipelago documentation, Geological Survey of Estonia.</p>
 </div>
 </details>
 </div>
@@ -12069,7 +12076,7 @@ Dónde: Tønder Marsk, Ribe. Llegar 1–2 h antes del ocaso; guías locales actu
 <p>Itinerarios sugeridos de naturaleza (3–5 días):   - Día 1: Stevns Klint (K–Pg) + Roskilde Fjord (pigargos).   - Día 2: Møns Klint (fósiles, hayedos calcáreos) + dunas con espino amarillo.   - Día 3: Wadden (focas, limícolas, marismas).   - Día 4: Thy (brezales, dunas, marsopas desde costa del norte).   - Día 5: Skagen (dos mares, migración) + atardecer “Sort Sol” en Tønder Marsk (en temporada).</p>
 <p>Reglas de oro para observación responsable:   - Distancia mínima: aves en playa >50 m; focas >100 m.   - No volar drones en reservas sin permiso.   - Traiga de vuelta sus residuos; deje solo huellas.</p>
 <p>- Fuentes útiles in situ: centros de visitantes (Geocenter Møns Klint; Wadden Sea Centre en Vester Vedsted), carteles de Naturstyrelsen y apps locales de mareas y aves.</p>
-<p class="nature-sources"><em>Fonti e Riferimenti: Naturstyrelsen (Agencia Danesa de Naturaleza), UNESCO World Heritage (Stevns Klint, Wadden Sea, Hayedos de Europa), Geocenter Møns Klint, BirdLife International (fichas UICN), VisitDenmark (recursos de senderismo y mareas), literatura de campo nórdica (Moss & Perring; Collins Bird Guide).</em></p>
+<p class="nature-sources"><em>Fuentes y Referencias: Naturstyrelsen (Agencia Danesa de Naturaleza), UNESCO World Heritage (Stevns Klint, Wadden Sea, Hayedos de Europa), Geocenter Møns Klint, BirdLife International (fichas UICN), VisitDenmark (recursos de senderismo y mareas), literatura de campo nórdica (Moss & Perring; Collins Bird Guide).</em></p>
 </div>
 </details>
 </div>
@@ -12371,7 +12378,7 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 <p>Consejos generales de campo: - Equipo: prismáticos 8×42, telescopio 20–60× para aves; calzado de agarre en roca; traje de neopreno para snorkel. - Ética: no recolectar organismos del intermareal; fotografiar sin flash a corta distancia de aves; seguir códigos de observación de cetáceos. - Seguridad: consultar mareas y coeficientes; llevar mapa/topo y teléfono con batería; respetar cierres por nidificación.</p>
 <p>Imagen adicional de referencia costera:</p>
 
-<p>Fonti e Riferimenti: IUCN Red List; IFREMER (ecosistemas marinos franceses); Parc naturel marin d’Iroise; Réserve des Sept-Îles (LPO); Muséum national d’Histoire naturelle; BRGM (geología de Francia); SHOM (mareas y coeficientes); Météo-France (boletines costeros).</p>
+<p>Fuentes y Referencias: IUCN Red List; IFREMER (ecosistemas marinos franceses); Parc naturel marin d’Iroise; Réserve des Sept-Îles (LPO); Muséum national d’Histoire naturelle; BRGM (geología de Francia); SHOM (mareas y coeficientes); Météo-France (boletines costeros).</p>
 </div>
 </details>
 </div>
@@ -12650,7 +12657,7 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 <p>Lagos glaciares someros con macrófitas sumergidas y aguas frías; praderas circundantes con narcisos tempranos. Buenos para ver rapaces en vuelo y rebecos en laderas cercanas. Ética: no alimentar ganado ni fauna; llevarse toda la basura.</p>
 <h4 class="nature-subsection">Plantaciones forestales y mosaico agrario</h4>
 <p>Matriz de eucaliptales/pinares alterna con prados de siega y setos de avellanos/espinos. Refugio para corzos, erizos y aves de borde; floraciones primaverales de prados ricos en polinizadores. Gestión recomendada: diversificar edades, bordes sinuosos y islas de frondosas nativas.</p>
-<p>Fonti e Riferimenti: Parque Nacional de los Picos de Europa; Fundación Oso Pardo; SEO/BirdLife; Sociedad de Ciencias Aranzadi; Geoparque de la Costa Vasca (UNESCO); MUJA (Museo del Jurásico de Asturias); IGME-CSIC; AEMET; Gobierno del Principado de Asturias; Gobierno Vasco.</p>
+<p>Fuentes y Referencias: Parque Nacional de los Picos de Europa; Fundación Oso Pardo; SEO/BirdLife; Sociedad de Ciencias Aranzadi; Geoparque de la Costa Vasca (UNESCO); MUJA (Museo del Jurásico de Asturias); IGME-CSIC; AEMET; Gobierno del Principado de Asturias; Gobierno Vasco.</p>
 </div>
 </details>
 </div>
@@ -12763,7 +12770,7 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 <h3 id="licenze-pesca">🎣 Licencias de pesca</h3>
 <ul>
 <li class="task-item"><input data-idx="piano-fisheries-finlandia" type="checkbox"/> Tasa de gestión pesquera Finlandia (semana <a href="#g8">D8</a>–<a href="#g15">D15</a>) — <a href="https://www.eraluvat.fi/en" rel="noopener noreferrer" target="_blank">eraluvat.fi</a></li>
-<li class="task-item"><input data-idx="piano-fisketegn-danimarca" type="checkbox"/> Denmark Fisketegn (si pesca) — <a href="https://fisketegn.dk/en" rel="noopener noreferrer" target="_blank">fisketegn.dk</a> (DKK 46/día (~€6))</li>
+<li class="task-item"><input data-idx="piano-fisketegn-danimarca" type="checkbox"/> Dinamarca Fisketegn (si pesca) — <a href="https://fisketegn.dk/en" rel="noopener noreferrer" target="_blank">fisketegn.dk</a> (DKK 46/día (~€6))</li>
 <li class="task-item"><input data-idx="piano-licencia-pesca-spagna" type="checkbox"/> Licencia de pesca marítima en España — <a href="https://www.fishinglicensespain.com" rel="noopener noreferrer" target="_blank">fishinglicensespain.com</a> (~€43/3 años)</li>
 </ul>
 <hr/>
@@ -13230,12 +13237,12 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 <p><a href="https://ollesummer.ee" rel="noopener noreferrer" target="_blank">ollesummer.ee</a> — Õllesummer Tallinn (julio)</p>
 <p><a href="https://oulu2026.eu" rel="noopener noreferrer" target="_blank">oulu2026.eu</a> — Oulu Capital Europea de la Cultura 2026</p>
 <p><a href="https://www.semanagrande.eus" rel="noopener noreferrer" target="_blank">semanagrande.eus</a> — Semana Grande San Sebastián (agosto)</p>
-<p><a href="https://www.visitdenmark.com" rel="noopener noreferrer" target="_blank">visitdenmark.com/events</a> — eventos en Denmark</p>
+<p><a href="https://www.visitdenmark.com" rel="noopener noreferrer" target="_blank">visitdenmark.com/events</a> — eventos en Dinamarca</p>
 <p><a href="https://www.visitnorway.com" rel="noopener noreferrer" target="_blank">visitnorway.com/events</a> — eventos en Norway</p>
 <p><strong>Guías generales:</strong></p>
 <p><a href="https://www.visitfinland.com" rel="noopener noreferrer" target="_blank">visitfinland.com</a> — guía oficial de Finland</p>
 <p><a href="https://www.visitnorway.com" rel="noopener noreferrer" target="_blank">visitnorway.com</a> — guía oficial de Norway</p>
-<p><a href="https://www.visitdenmark.com" rel="noopener noreferrer" target="_blank">visitdenmark.com</a> — guía oficial de Denmark</p>
+<p><a href="https://www.visitdenmark.com" rel="noopener noreferrer" target="_blank">visitdenmark.com</a> — guía oficial de Dinamarca</p>
 <p><a href="https://www.spain.info" rel="noopener noreferrer" target="_blank">spain.info</a> — guía oficial de Spain</p>
 <p><a href="https://www.france.fr/en" rel="noopener noreferrer" target="_blank">france.fr</a> — guía oficial de France</p>
 <p><a href="https://www.italia.it/en" rel="noopener noreferrer" target="_blank">italia.it</a> — guía oficial de Italy</p>
@@ -13250,7 +13257,7 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 <p><a href="https://en.wikipedia.org/wiki/Lahemaa_National_Park" rel="noopener noreferrer" target="_blank">Lahemaa NP</a> — Estonia, turberas y casonas</p>
 <p><a href="https://en.wikipedia.org/wiki/Saimaa_ringed_seal" rel="noopener noreferrer" target="_blank">Foca anillada de Saimaa</a> — Finland, solo quedan 400</p>
 <p><a href="https://en.wikipedia.org/wiki/Fjord" rel="noopener noreferrer" target="_blank">Fiordos</a> — Norway, geología glaciar</p>
-<p><a href="https://en.wikipedia.org/wiki/Wadden_Sea" rel="noopener noreferrer" target="_blank">Mar de Wadden</a> — Denmark/Germany, Patrimonio UNESCO</p>
+<p><a href="https://en.wikipedia.org/wiki/Wadden_Sea" rel="noopener noreferrer" target="_blank">Mar de Wadden</a> — Dinamarca/Alemania, Patrimonio UNESCO</p>
 <p><a href="https://en.wikipedia.org/wiki/Mont-Saint-Michel" rel="noopener noreferrer" target="_blank">Mont Saint-Michel</a> — France, mareas de 14m</p>
 <p><a href="https://en.wikipedia.org/wiki/Picos_de_Europa" rel="noopener noreferrer" target="_blank">Picos de Europa</a> — Spain, primer parque nacional</p>
 <p><a href="https://en.wikipedia.org/wiki/Cinque_Terre" rel="noopener noreferrer" target="_blank">Cinque Terre</a> — Italy, pueblos UNESCO</p>

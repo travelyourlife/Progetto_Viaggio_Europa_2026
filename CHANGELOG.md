@@ -1,3 +1,21 @@
+## v4.82 — 5 Luglio 2026
+- **Fix completo stringhe dinamiche ES**: tutte le stringhe generate da JS ora mostrano spagnolo corretto
+- ON THE ROAD → EN RUTA, km driven → km recorridos, Tomorrow → Mañana, Must-see → Imperdible
+- Nomi paesi (Finland → Finlandia, Denmark → Dinamarca, etc.) in home hero e Firebase writes
+- Date in spagnolo (5 julio, hace 2 días, etc.)
+- Tracking: Seguimiento / Iniciar / Detener
+- Highlights: usa titleES da days-data.js (es. "Capital Europea de la Cultura 2026")
+- Itinerario: etichette tabella (Ruta, Horas, Países, Exploración & notas)
+- COUNTRY_BOUNDS: aggiunto nameEs per country detection offline
+- Pre-trip: Salida en X días, cervecería histórica, estimados
+
+## v4.81 — 5 Luglio 2026
+- **Language switcher redesign**: dropdown con flag attiva + menu a 3 opzioni (IT/EN/ES) — sostituisce il vecchio bottone ciclico
+- **CSS dropdown**: stili light/dark mode, responsive (nascosto su schermi <400px)
+- **JS handler**: toggle open/close con click esterno per chiudere, salvataggio preferenza lingua in localStorage
+- **Fix traduzioni ES**: 19 titoli inglesi tradotti (Arctic Norway→Noruega Ártica, Denmark→Dinamarca, France→Francia, Northern Spain→Norte de España, Spain→España), 16 "Fonti e Riferimenti"→"Fuentes y Referencias", 2 "weeks"→"semanas", Denmark/France nel corpo del testo
+- **Fix traduzioni EN**: 16 "Fonti e Riferimenti"→"Sources and References"
+
 ## v4.80 — 5 Luglio 2026
 - **FIX GPS tracker inflation**: jitter filter (speed < 3 km/h + dist < 100m = skip), ferry detection (OSRM no-route = skip km), gap > 1h = skip (deliberate stop)
 - **MIN_TRACK_DIST** raised from 50m to 100m to reduce jitter accumulation
