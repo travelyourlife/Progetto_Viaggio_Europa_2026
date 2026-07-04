@@ -1,0 +1,28 @@
+# Final Watermark Review (2026-07-03)
+
+## CLEAN - no replacement needed:
+- bilberry.jpg
+- brown-bear.jpg
+- porcini.jpg
+- ladys-slipper.jpg
+- lingonberry.jpg
+- moose.jpg
+- sundew.jpg
+- scots-pine.jpg
+- saimaa-seal.jpeg
+- white-nights.jpg
+- norway-spruce.jpg
+- noctilucent-clouds.jpg
+- rapakivi-granite.jpg
+- whooper-swan.jpg
+- peatland.jpg
+- silver-birch.jpg
+- lily-of-the-valley.webp
+
+## WATERMARKED - must replace (4 images):
+1. chanterelle.jpg - Dreamstime watermark
+2. cloudberry.jpg - Dreamstime watermark
+3. wolverine.jpg - Alamy watermark
+4. punkaharju-esker.jpg - Dreamstime watermark
+
+## ACTION: Search for clean replacements for these 4 images.

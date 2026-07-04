@@ -691,22 +691,35 @@
       data.kmBar = Math.min(100, Math.round((parseInt(data.totalKm.replace(/\./g, '')) || 0) / 12000 * 100));
       data.lastUpdate = '';
 
-      // v4.78: Distance = cumulative km from DAYS_DATA (sum of completed days only)
-      // Uses _di < currentDay so today's (not-yet-driven) km are excluded.
-      // Today's live km come from GPS tracking, not from DAYS_DATA.
-      var cumulativeKm = 0;
-      if (typeof DAYS_DATA !== 'undefined' && tripActive) {
+      // v4.80: Distance = computeTotalKm() from Firebase (single source of truth).
+      // This reads dailySummaries + live tracking, same as the bento widget.
+      // Falls back to DAYS_DATA cumulative if Firebase is unavailable.
+      data.distanceFromHome = ''; // placeholder, updated async below
+      if (typeof window.computeTotalKm === 'function' && tripActive) {
+        (function(_data, _en2, _container) {
+          window.computeTotalKm(function(totalKm) {
+            if (totalKm > 0) {
+              var kmStr = '~' + formatKmDistance(totalKm) + (_en2 ? ' driven \ud83d\ude90' : ' percorsi \ud83d\ude90');
+              // Update DOM directly (async callback)
+              if (_container) {
+                _container.querySelectorAll('[data-hv="distanceFromHome"]').forEach(function(el) {
+                  el.textContent = kmStr;
+                });
+              }
+            }
+          });
+        })(data, _en, document.getElementById('hv-container'));
+      } else if (typeof DAYS_DATA !== 'undefined' && tripActive) {
+        // Offline fallback: sum completed days from DAYS_DATA
+        var cumulativeKm = 0;
         for (var _di = 0; _di < currentDay; _di++) {
           if (DAYS_DATA[_di] && typeof DAYS_DATA[_di].km === 'number') {
             cumulativeKm += DAYS_DATA[_di].km;
           }
         }
-      }
-      if (cumulativeKm > 0) {
-        data.distanceFromHome = '~' + formatKmDistance(cumulativeKm) + (_en ? ' driven \ud83d\ude90' : ' percorsi \ud83d\ude90');
-        data.progressText += ' \u00b7 ' + data.distanceFromHome;
-      } else {
-        data.distanceFromHome = '';
+        if (cumulativeKm > 0) {
+          data.distanceFromHome = '~' + formatKmDistance(cumulativeKm) + (_en ? ' driven \ud83d\ude90' : ' percorsi \ud83d\ude90');
+        }
       }
     }
 

@@ -3585,7 +3585,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // ─── Constants & State ───
         var CI_KEY = KEYS.CHECKINS;
         var GEOFENCE_RADIUS = 0.5; // km — auto check-in radius
-        var MIN_TRACK_DIST = 0.05; // km — minimum distance between track points
+        var MIN_TRACK_DIST = 0.1; // km — v4.80: raised from 0.05 to reduce GPS jitter accumulation
         var IDLE_TIMEOUT = 10 * 60 * 1000; // 10 minutes for auto-stop
 // v2.70 FIX: GPS interval constants at global scope (were inside IIFE, out-of-scope at L4141)
 var ECO_INTERVAL    = 30000;  // 30s — risparmio batteria
@@ -3634,6 +3634,12 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             var timeDiff = Date.now() - (lastPt.time || 0);
             var straightDist = haversine(lastPt.lat, lastPt.lng, newLat, newLng);
             if (timeDiff < GAP_MIN_TIME || straightDist < GAP_MIN_DIST) return;
+            // v4.80 FIX: If gap > 1 hour, it's a deliberate stop (lunch, overnight,
+            // ferry), not a GPS suspension. Do NOT estimate km for long pauses.
+            if (timeDiff > 3600000) {
+                _qvLog.info('[GPS Gap] Skipped — gap > 1h (' + Math.round(timeDiff/60000) + ' min, ' + straightDist.toFixed(1) + ' km). Likely a stop/ferry.');
+                return;
+            }
             // Call OSRM for road-based distance estimate
             var url = 'https://router.project-osrm.org/route/v1/driving/' +
                 lastPt.lng + ',' + lastPt.lat + ';' + newLng + ',' + newLat + '?overview=full&geometries=geojson';
@@ -3664,9 +3670,9 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                         _qvLog.info('[GPS Gap] OSRM unreasonable, using straight-line: ' + straightDist.toFixed(1) + ' km');
                     }
                 } else {
-                    // v2.62 FIX BUG-07: OSRM no route (ferry, remote area, no road) — use straight ×1.15
-                    todayKm += straightDist * 1.15;
-                    console.warn('[GPS Gap] OSRM no route, using straight ×1.15:', (straightDist * 1.15).toFixed(1), 'km');
+                    // v4.80 FIX: OSRM no route = likely ferry/sea crossing. Do NOT add km.
+                    // (was: todayKm += straightDist * 1.15 — this inflated totals on ferries)
+                    _qvLog.info('[GPS Gap] OSRM no route — likely ferry. Skipping ' + straightDist.toFixed(1) + ' km.');
                 }
             }).catch(function(err) {
                 // Fallback: use straight-line if OSRM fails
@@ -4979,8 +4985,12 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                     var last = todayPoints[todayPoints.length - 1];
                     var timeSinceLast = Date.now() - (last.time || 0);
                     var dist = haversine(last.lat, last.lng, lat, lng);
-                    // Check for GPS gap (>2min, >500m) — estimate via OSRM
-                    if (timeSinceLast > GAP_MIN_TIME && dist > GAP_MIN_DIST) {
+                    // v4.80 FIX: Jitter filter — if speed < 3 km/h AND distance < 100m,
+                    // the vehicle is stationary and GPS is oscillating. Skip entirely.
+                    if (speed < 3 && dist < 0.1) {
+                        // GPS jitter while stationary — do not record or accumulate km
+                    // Check for GPS gap (>30s, >100m) — estimate via OSRM
+                    } else if (timeSinceLast > GAP_MIN_TIME && dist > GAP_MIN_DIST) {
                         estimateGapDistance(last, lat, lng);
                         pushTrackPoint(pt);
                     } else if (dist >= MIN_TRACK_DIST) {
@@ -5198,7 +5208,10 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                             var last = todayPoints[todayPoints.length - 1];
                             var timeSinceLast = _now - (last.time || 0);
                             var dist = haversine(last.lat, last.lng, lat, lng);
-                            if (timeSinceLast > GAP_MIN_TIME && dist > GAP_MIN_DIST) {
+                            // v4.80 FIX: Jitter filter (same as main handler)
+                            if (speed < 3 && dist < 0.1) {
+                                // Stationary jitter — skip
+                            } else if (timeSinceLast > GAP_MIN_TIME && dist > GAP_MIN_DIST) {
                                 estimateGapDistance(last, lat, lng);
                                 pushTrackPoint(pt);
                             } else if (dist >= MIN_TRACK_DIST) {
@@ -6508,8 +6521,10 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                     var last = todayPoints[todayPoints.length - 1];
                     var timeSinceLast = Date.now() - (last.time || 0);
                     var dist = haversine(last.lat, last.lng, lat, lng);
-                    // Check for GPS gap (>2min, >500m) — estimate via OSRM
-                    if (timeSinceLast > GAP_MIN_TIME && dist > GAP_MIN_DIST) {
+                    // v4.80 FIX: Jitter filter (same as main handler)
+                    if (speed < 3 && dist < 0.1) {
+                        // Stationary jitter — skip
+                    } else if (timeSinceLast > GAP_MIN_TIME && dist > GAP_MIN_DIST) {
                         estimateGapDistance(last, lat, lng);
                         pushTrackPoint(pt);
                     } else if (dist >= MIN_TRACK_DIST) {

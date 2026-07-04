@@ -936,6 +936,8 @@ exports.eveningRecapDispatcher = onSchedule(
   {
     schedule: '0 23 * * *',
     timeZone: 'Europe/Rome',
+    secrets: [openaiKey],
+    timeoutSeconds: 60,
   },
   async (event) => {
     const schedule = await getNotifSchedule();
@@ -963,7 +965,7 @@ exports.eveningRecapDispatcher = onSchedule(
       return null;
     }
 
-    // ─── Load all data (same paths as the client) ───
+    // ─── Load all data ───
     const dayKey = 'day-' + tripDay + '-';
     const [diarySnap, sumSnap, clSnap, weatherSnap, actSnap] = await Promise.all([
       db.ref(`trips/${FAMILY_ID}/diary`).orderByKey().startAt(dayKey).endAt(dayKey + '\uf8ff').limitToFirst(20).once('value'),
@@ -973,12 +975,12 @@ exports.eveningRecapDispatcher = onSchedule(
       db.ref(`trips/${FAMILY_ID}/activities`).once('value'),
     ]);
 
-    // ─── Parse diary entries ───
+    // ─── Parse diary entries (full text for LLM) ───
     const entriesRaw = diarySnap.val() || {};
     const photos = [];
-    const textPosts = [];
+    const fullTexts = [];
     let highlight = '';
-    Object.keys(entriesRaw).forEach((k) => {
+    Object.keys(entriesRaw).sort().forEach((k) => {
       if (k.indexOf(dayKey) !== 0) return;
       const entry = entriesRaw[k];
       if (!entry) return;
@@ -987,8 +989,8 @@ exports.eveningRecapDispatcher = onSchedule(
           if (p && p.url && photos.length < 5) photos.push(p.url);
         });
       }
-      if (entry.text) {
-        textPosts.push(entry.text.substring(0, 120) + (entry.text.length > 120 ? '\u2026' : ''));
+      if (entry.text && entry.text.trim()) {
+        fullTexts.push(entry.text.trim());
       }
       if (!highlight && entry.highlight) highlight = entry.highlight;
     });
@@ -1027,36 +1029,99 @@ exports.eveningRecapDispatcher = onSchedule(
       }
     });
 
-    // ─── Build chat message (identical format to client) ───
+    // ─── LLM Summary of diary posts ───
+    let aiSummary = '';
+    if (fullTexts.length > 0) {
+      try {
+        const allText = fullTexts.join('\n---\n');
+        const summaryPrompt = `Sei l'assistente di un diario di viaggio in camper per l'Europa con una famiglia. Riassumi la giornata in 2-3 frasi brevi e vivaci in italiano, basandoti sui post del diario qui sotto. Mantieni il tono informale e caloroso. Non aggiungere emoji. Non inventare nulla che non sia nei testi.\n\nPost del giorno:\n${allText.substring(0, 2000)}`;
+
+        const response = await fetchOpenAIWithRetry(async () => {
+          const ctrl = new AbortController();
+          const timeout = setTimeout(() => ctrl.abort(), 25000);
+          try {
+            return await fetch('https://api.openai.com/v1/chat/completions', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${openaiKey.value()}`,
+              },
+              body: JSON.stringify({
+                model: 'gpt-4o-mini',
+                messages: [
+                  { role: 'system', content: 'Rispondi SOLO con il riassunto richiesto, niente altro.' },
+                  { role: 'user', content: summaryPrompt },
+                ],
+                temperature: 0.5,
+                max_tokens: 200,
+              }),
+              signal: ctrl.signal,
+            });
+          } finally {
+            clearTimeout(timeout);
+          }
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          aiSummary = (result.choices?.[0]?.message?.content || '').trim();
+        } else {
+          logger.warn('[EveningRecap] LLM response not ok: ' + response.status);
+        }
+      } catch (err) {
+        logger.warn('[EveningRecap] LLM summary failed, using fallback: ' + err.message);
+      }
+    }
+
+    // ─── Build chat message (clean format with internal nav links) ───
     const g = 'G' + (tripDay + 1);
-    const appUrl = 'https://viaggio-europa-2026.web.app/';
     const msgParts = [];
-    let header = '\ud83d\udcf8 *Riepilogo serale \u2014 ' + g;
+
+    // Header
+    let header = '\ud83d\ude90 *' + g;
     if (cityName) header += ' \u00b7 ' + cityName;
     header += '*';
     if (flag) header += ' ' + flag;
     msgParts.push(header);
-    msgParts.push('');
-    if (km) {
-      let driveLine = '\ud83d\ude90 ' + km + ' km percorsi';
-      if (driveTime) driveLine += ' \u00b7 \u23f1\ufe0f ' + driveTime;
-      msgParts.push(driveLine);
-    }
-    if (weatherStr) msgParts.push(weatherStr);
-    if (todaySteps > 0) {
-      let stepsLine = '\ud83d\udc63 ' + todaySteps.toLocaleString('it-IT') + ' passi';
-      if (todayWalkKm > 0) stepsLine += ' (' + todayWalkKm.toFixed(1) + ' km)';
-      msgParts.push(stepsLine);
-    }
-    if (textPosts.length > 0 || highlight) msgParts.push('');
-    textPosts.forEach((snippet) => { msgParts.push('\ud83d\udcdd ' + snippet); });
-    if (textPosts.length > 0) msgParts.push('\u2192 ' + appUrl + '#tab-diario');
-    if (highlight) { msgParts.push(''); msgParts.push('\u2b50 ' + highlight); }
-    if (photos.length > 0) { msgParts.push(''); msgParts.push('\ud83d\uddbc\ufe0f ' + photos.length + ' foto nel diario'); }
+    msgParts.push('\u2500'.repeat(20));
 
-    // Nothing meaningful to report (no posts, no km, no photos): still claim the
-    // day so we don't retry endlessly, but skip posting an empty recap.
-    const hasContent = textPosts.length > 0 || photos.length > 0 || !!km || !!weatherStr || todaySteps > 0;
+    // Stats line
+    const statsItems = [];
+    if (km) {
+      let kmStr = '\ud83d\udee3\ufe0f ' + km + ' km';
+      if (driveTime) kmStr += ' \u00b7 ' + driveTime;
+      statsItems.push(kmStr);
+    }
+    if (weatherStr) statsItems.push(weatherStr);
+    if (todaySteps > 0) {
+      let stepsStr = '\ud83d\udc63 ' + todaySteps.toLocaleString('it-IT') + ' passi';
+      if (todayWalkKm > 0) stepsStr += ' (' + todayWalkKm.toFixed(1) + ' km)';
+      statsItems.push(stepsStr);
+    }
+    if (statsItems.length > 0) {
+      msgParts.push(statsItems.join('\n'));
+    }
+
+    // AI Summary or highlight
+    if (aiSummary) {
+      msgParts.push('');
+      msgParts.push(aiSummary);
+    } else if (highlight) {
+      msgParts.push('');
+      msgParts.push('\u2b50 ' + highlight);
+    }
+
+    // Photos + internal nav link
+    if (photos.length > 0 || fullTexts.length > 0) {
+      msgParts.push('');
+      const linkParts = [];
+      if (photos.length > 0) linkParts.push('\ud83d\udcf8 ' + photos.length + ' foto');
+      if (fullTexts.length > 0) linkParts.push('\ud83d\udcd6 ' + fullTexts.length + (fullTexts.length === 1 ? ' post' : ' post'));
+      msgParts.push(linkParts.join(' \u00b7 ') + ' \u2192 https://viaggio-europa-2026.web.app/#tab-diario');
+    }
+
+    // Nothing meaningful to report
+    const hasContent = fullTexts.length > 0 || photos.length > 0 || !!km || !!weatherStr || todaySteps > 0;
     if (!hasContent) {
       await recapMetaRef.update({ lastSentDate: todayStr, tripDay: tripDay, skippedEmpty: true });
       logger.log('[EveningRecap] No content for day ' + tripDay + ' — claimed, skipped empty post');
@@ -1089,10 +1154,9 @@ exports.eveningRecapDispatcher = onSchedule(
     };
     try {
       await db.ref(`chat/${FAMILY_ID}`).push(chatMsg);
-      logger.log('[EveningRecap] Sent for day ' + tripDay + ' (' + textPosts.length + ' posts, ' + photos.length + ' photos)');
+      logger.log('[EveningRecap] Sent for day ' + tripDay + ' (' + fullTexts.length + ' posts, ' + photos.length + ' photos, AI: ' + (aiSummary ? 'yes' : 'no') + ')');
     } catch (err) {
       logger.error('[EveningRecap] Send error:', err);
-      // Roll back the claim so a later run can retry.
       await recapMetaRef.transaction((cur) => {
         if (cur && cur.lastSentDate === todayStr) { cur.lastSentDate = null; return cur; }
         return cur;

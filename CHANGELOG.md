@@ -1,3 +1,11 @@
+## v4.80 — 5 Luglio 2026
+- **FIX GPS tracker inflation**: jitter filter (speed < 3 km/h + dist < 100m = skip), ferry detection (OSRM no-route = skip km), gap > 1h = skip (deliberate stop)
+- **MIN_TRACK_DIST** raised from 50m to 100m to reduce jitter accumulation
+- **Unified km source**: Home header now uses `computeTotalKm()` from Firebase (same as bento widget), with DAYS_DATA offline fallback
+- **All 3 GPS handlers** patched with same jitter filter
+- **Riepilogo serale migliorato**: riassunto AI (GPT-4o-mini) dei post del diario in 2-3 frasi, formato pulito con stats/riassunto/link, link interni che navigano dentro la PWA senza aprire il browser
+- **ZIP fix**: includes all directories (images/, icons/, screenshots/) that were missing in v4.79
+
 ## v4.79 — 5 Luglio 2026
 - FIX CRITICO Home GPS: fetchLiveDistanceFromHome() era definita ma mai chiamata — ora la Home mostra la città GPS reale (es. "Kuopio") invece della destinazione pianificata (es. "Oulu")
 - FIX km cumulativi: somma solo giorni completati (< currentDay, non <= currentDay) — non include più i km pianificati del giorno in corso
