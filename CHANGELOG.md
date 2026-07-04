@@ -1,6 +1,11 @@
 ## v4.72 — 4 Luglio 2025
 - Fix doppia traccia rossa sulla mappa Live: loadHistoricalTracks() ora viene chiamata UNA sola volta per init mappa (flag _historicalLoaded). Prima veniva rieseguita ad ogni aggiornamento posizione, causando polyline duplicate asincrone.
 
+## v4.73 — 4 Luglio 2025
+- Fix critico: EXPECTED_VERSION nei 3 file HTML era rimasto a "4.70" causando loop infinito di reload (version.json diceva 4.72 → mismatch → clear cache → reload → stesso mismatch → loop)
+- Allineata versione in tutti i file: version.json, sw.js, title, EXPECTED_VERSION, query strings
+- Zip ripulito da file intermedi (30 *-nature-*.html, .i18n_backup/, __pycache__/, ecc.)
+
 ## v4.71 — 4 Luglio 2025
 - Fix distanza: rimosso OSRM (dava percorsi sbagliati via Svezia per evitare il mare). Ora mostra km percorsi cumulativi dal days-data (coerente col tachimetro)
 - Etichetta cambiata da "km da casa 🏠" a "km percorsi 🚐"
