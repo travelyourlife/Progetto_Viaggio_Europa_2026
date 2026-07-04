@@ -15377,18 +15377,18 @@ window.injectAllWikiLinks = function() {
       }
 
       var html = '';
-      // v4.69: sort posts CHRONOLOGICALLY (oldest first, day 1 → day N).
-      // Primary: date ascending. Tiebreaker: dayNumber ascending, then createdAt ascending.
+      // v4.74 FIX: sort posts REVERSE-CHRONOLOGICALLY (newest first, day N → day 1).
+      // Primary: date descending. Tiebreaker: dayNumber descending, then createdAt descending.
       var sortedKeys = Object.keys(entries).sort(function(a, b) {
         var dateA = entries[a].date || '';
         var dateB = entries[b].date || '';
-        var dateDiff = dateA.localeCompare(dateB);
+        var dateDiff = dateB.localeCompare(dateA);
         if (dateDiff !== 0) return dateDiff;
-        // Tiebreaker 1: dayNumber ascending when dates are equal/missing
-        var diff = (entries[a].dayNumber || 0) - (entries[b].dayNumber || 0);
+        // Tiebreaker 1: dayNumber descending when dates are equal/missing
+        var diff = (entries[b].dayNumber || 0) - (entries[a].dayNumber || 0);
         if (diff !== 0) return diff;
-        // Tiebreaker 2: creation time ascending (earliest post first)
-        return window._entryCreatedTs(a, entries[a]) - window._entryCreatedTs(b, entries[b]);
+        // Tiebreaker 2: creation time descending (latest post first)
+        return window._entryCreatedTs(b, entries[b]) - window._entryCreatedTs(a, entries[a]);
       });
 
       sortedKeys.forEach(function(key) {
