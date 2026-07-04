@@ -688,25 +688,22 @@
       data.kmBar = Math.min(100, Math.round((parseInt(data.totalKm.replace(/\./g, '')) || 0) / 12000 * 100));
       data.lastUpdate = '';
 
-      // Distance from home (Selvazzano: 45.3833, 11.9833)
-      var HOME_LAT = 45.3833, HOME_LNG = 11.9833;
-      // v3.95 FIX: Use /currentLocation as primary (async). TRIP_COORDS only as instant placeholder.
-      var posLat = null, posLng = null;
-      if (typeof TRIP_COORDS !== 'undefined' && tripActive && TRIP_COORDS[currentDay]) {
-        posLat = TRIP_COORDS[currentDay].lat;
-        posLng = TRIP_COORDS[currentDay].lng;
+      // v4.70: Distance = cumulative km from DAYS_DATA (sum of daily km up to currentDay)
+      // This matches the campervan odometer reading.
+      var cumulativeKm = 0;
+      if (typeof DAYS_DATA !== 'undefined' && tripActive) {
+        for (var _di = 0; _di <= currentDay; _di++) {
+          if (DAYS_DATA[_di] && typeof DAYS_DATA[_di].km === 'number') {
+            cumulativeKm += DAYS_DATA[_di].km;
+          }
+        }
       }
-      if (posLat !== null && posLng !== null) {
-        // v4.00: Use Haversine×1.3 as instant placeholder (OSRM will overwrite async)
-        var distKm = Math.round(haversineKm(HOME_LAT, HOME_LNG, posLat, posLng) * 1.3);
-        data.distanceFromHome = '~' + formatKmDistance(distKm) + (_en ? ' from home \ud83c\udfe0' : ' da casa \ud83c\udfe0');
+      if (cumulativeKm > 0) {
+        data.distanceFromHome = '~' + formatKmDistance(cumulativeKm) + (_en ? ' driven \ud83d\ude90' : ' percorsi \ud83d\ude90');
         data.progressText += ' \u00b7 ' + data.distanceFromHome;
       } else {
         data.distanceFromHome = '';
       }
-
-      // Async: overwrite with real GPS from /currentLocation
-      fetchLiveDistanceFromHome(HOME_LAT, HOME_LNG);
     }
 
     // Diary/chat status
@@ -1844,75 +1841,8 @@
     var _en = (typeof isEN !== 'undefined' && isEN);
     var basePath = 'trips/' + familyId;
 
-    // Helper: once we have a real lat/lng, update distance from home.
-    // v4.00: Uses OSRM (road distance) with fallback to Haversine×1.3.
-    // City/country/flag come EXCLUSIVELY from /currentLocation (written by owner).
-    var _osrmCache = { lat: null, lng: null, distKm: null }; // cache to avoid repeated calls
-    var _osrmPending = false;
-
-    function _updateDistanceUI(distKm) {
-      var container = document.getElementById('hv-container');
-      if (!container) return;
-      var distText = '~' + formatKmDistance(distKm) + (_en ? ' from home \ud83c\udfe0' : ' da casa \ud83c\udfe0');
-      var distEls = container.querySelectorAll('[data-hv="distanceFromHome"]');
-      distEls.forEach(function(el) { el.textContent = distText; });
-      // Also update progressText
-      var progressEls = container.querySelectorAll('[data-hv="progressText"]');
-      progressEls.forEach(function(el) {
-        var current = el.textContent || '';
-        var pinDist = '\ud83d\udccd ~' + formatKmDistance(distKm) + ' da \ud83c\udfe0';
-        if (current.indexOf('\ud83d\udccd') >= 0) {
-          el.textContent = current.replace(/\ud83d\udccd[^·]+da \ud83c\udfe0/, pinDist);
-        } else if (current.indexOf('paesi') >= 0 || current.indexOf('countries') >= 0) {
-          el.textContent = current + ' \u00b7 ' + pinDist;
-        }
-      });
-    }
-
-    function _applyRealPosition(lat, lng) {
-      if (!lat || !lng) return;
-
-      // Check if position changed significantly (>10 km) from cached OSRM result
-      if (_osrmCache.lat !== null && _osrmCache.distKm !== null) {
-        var moved = haversineKm(_osrmCache.lat, _osrmCache.lng, lat, lng);
-        if (moved < 10) {
-          // Position hasn't changed much — reuse cached road distance
-          _updateDistanceUI(_osrmCache.distKm);
-          return;
-        }
-      }
-
-      // Immediate fallback: show Haversine × 1.3 while OSRM loads
-      var fallbackKm = Math.round(haversineKm(homeLat, homeLng, lat, lng) * 1.3);
-      _updateDistanceUI(fallbackKm);
-
-      // Avoid concurrent OSRM requests
-      if (_osrmPending) return;
-      _osrmPending = true;
-
-      // Call OSRM for real road distance
-      var osrmUrl = 'https://router.project-osrm.org/route/v1/driving/' +
-        homeLng + ',' + homeLat + ';' + lng + ',' + lat + '?overview=false';
-
-      fetch(osrmUrl, { signal: AbortSignal.timeout(8000) })
-        .then(function(res) { return res.json(); })
-        .then(function(data) {
-          _osrmPending = false;
-          if (data && data.routes && data.routes[0] && data.routes[0].distance) {
-            var roadKm = Math.round(data.routes[0].distance / 1000);
-            _osrmCache = { lat: lat, lng: lng, distKm: roadKm };
-            _updateDistanceUI(roadKm);
-          } else {
-            // OSRM returned no route — keep fallback
-            _osrmCache = { lat: lat, lng: lng, distKm: fallbackKm };
-          }
-        })
-        .catch(function() {
-          _osrmPending = false;
-          // OSRM failed — keep Haversine×1.3 fallback
-          _osrmCache = { lat: lat, lng: lng, distKm: fallbackKm };
-        });
-    }
+    // v4.70: OSRM removed (gave wrong results for sea crossings).
+    // Distance is now cumulative km from DAYS_DATA (set above in getTripData).
 
     // v3.98 FIX: LIVE listener on /currentLocation — updates Home hero in real-time.
     // Uses .on('value') so when tracking writes new position, Home updates immediately.
@@ -1961,8 +1891,7 @@
             }
           });
         }
-        // Always update distance from home (uses haversine, no API call) — even if stale
-        _applyRealPosition(cl.lat, cl.lng);
+        // v4.70: distance is now cumulative from DAYS_DATA, no live GPS update needed.
       }
     });
 
