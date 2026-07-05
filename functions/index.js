@@ -52,6 +52,9 @@ setGlobalOptions({ region: 'europe-west1', memory: '256MiB' });
 const db        = admin.database();
 const FAMILY_ID = 'viaggio-europa-2026';
 
+// v4.85 FIX: defineSecret must be at top level before any function that references it
+const openaiKey = defineSecret('OPENAI_API_KEY');
+
 // B2.1/B2.2 FIX: Centralized owner UIDs (previously hardcoded in database.rules.json)
 // These are used only in Cloud Functions for admin-level checks.
 const OWNER_UIDS = [
@@ -1459,7 +1462,7 @@ exports.dailyWeatherArchiver = onSchedule(
 // 11. AUTO-TRANSLATE DIARY ENTRIES (triggered on create/update)
 // ═══════════════════════════════════════════════════════════════════════════════
 
-const openaiKey = defineSecret('OPENAI_API_KEY');
+// openaiKey moved to top of file (before first usage at line 939)
 
 // v4.10 FIX (P2 #10): retry helper for OpenAI calls. Retries transient
 // failures (HTTP 429/500/502/503/504) with exponential backoff. The caller

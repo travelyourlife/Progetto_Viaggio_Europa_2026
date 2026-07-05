@@ -1,3 +1,9 @@
+## v4.86 — 5 Luglio 2026
+- **FIX deploy: openaiKey ReferenceError** — `defineSecret('OPENAI_API_KEY')` spostato in cima al file (riga 56) prima del primo utilizzo (riga 939 in `eveningRecapDispatcher`). Causa del fallimento deploy functions.
+- **Pulsante ✏️ Modifica inline** nel dettaglio giornaliero "A piedi" — tap sulla riga → modal pre-compilato con data/passi/km/nota, sovrascrive la stessa chiave Firebase senza creare duplicati
+- **node-fetch rimosso** da package.json (global fetch Node 20+)
+- **Version bump**: 4.85 → 4.86
+
 ## v4.85 — 5 Luglio 2026
 - **Fix critico ES city-itineraries**: `city-itineraries-ui.js` ora usa `lang3()` per selezionare campi ES (cityES, nameES, shortES, descES, tipsES) — prima gli utenti ES vedevano contenuti EN
 - **Fix critico ES unified-map**: `unified-map.js` ora usa `UMAP_LANG3` con fallback ES→EN→IT per nomi POI, descrizioni, orari, prezzi e label categorie filtro
