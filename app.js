@@ -14913,6 +14913,9 @@ window.injectAllWikiLinks = function() {
   var showConfirm = function(msg, onOk, onCancel) { return window.showConfirm ? window.showConfirm(msg, onOk, onCancel) : (confirm(msg) ? (onOk && onOk()) : (onCancel && onCancel())); };
   var showToast = function(msg, type, dur) { if (window.showToast) window.showToast(msg, type, dur); };
 
+  // v4.90 FIX: _lg at IIFE level so renderSocialBlock/renderPhotoSocial can access it
+  var _lg = (typeof LANG3 !== 'undefined') ? LANG3 : (isEN ? 'en' : 'it');
+
   var diarioRef = firebase.database().ref('trips/' + FAMILY_ID + '/diary');
   var approvedRef = firebase.database().ref('trips/' + FAMILY_ID + '/approvedUsers');
   var pendingRef = firebase.database().ref('trips/' + FAMILY_ID + '/pendingUsers');
@@ -15569,7 +15572,6 @@ window.injectAllWikiLinks = function() {
         // Determine entry type for badge
         var entryType = '';
         var entryTypeLabel = '';
-        var _lg = (typeof LANG3 !== 'undefined') ? LANG3 : (isEN ? 'en' : 'it');
         var CUSTOM_TYPE_MAP = {
           'checkin':   '\ud83d\udccd Check-in',
           'tappa':     '\ud83d\udea9 ' + (_lg === 'es' ? 'Etapa' : _lg === 'en' ? 'Stage' : 'Tappa'),
