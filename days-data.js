@@ -91,7 +91,7 @@ var DAYS_DATA = [
           "priceES": "desde €25/noche (todo incluido)"
         }
       ],
-      "fuel": "OMV, BP, Shell, Eni, diesel ~€1.95-2.00/L (IT) / ~€1.88-1.95/L (AT). Nessun tratto remoto senza carburante in autostrada.",
+      "fuel": "OMV, BP, Shell, Eni, diesel ~€1.85-1.95/L (IT) / ~€1.70-1.75/L (AT). Nessun tratto remoto senza carburante in autostrada.",
       "grocery": [
         {
           "name": "Interspar Leoben (LCS Leoben City Shopping)",
@@ -133,8 +133,8 @@ var DAYS_DATA = [
         "notesES": "Es necesaria la viñeta de autopista austriaca."
       },
       "budget": "~€100-140/giorno",
-      "fuelEN": "OMV, BP, Shell, Eni, diesel ~€1.95-2.00/L (IT) / ~€1.88-1.95/L (AT). No long stretches on the motorway without fuel.",
-      "fuelES": "OMV, BP, Shell, Eni, diésel ~€1.95-2.00/L (IT) / ~€1.88-1.95/L (AT). No hay tramos remotos sin combustible en la autopista.",
+      "fuelEN": "OMV, BP, Shell, Eni, diesel ~€1.85-1.95/L (IT) / ~€1.70-1.75/L (AT). No long stretches on the motorway without fuel.",
+      "fuelES": "OMV, BP, Shell, Eni, diésel ~€1.85-1.95/L (IT) / ~€1.70-1.75/L (AT). No hay tramos remotos sin combustible en la autopista.",
       "budgetEN": "~€100-140/day",
       "budgetES": "~€100-140/día"
     },
@@ -289,7 +289,7 @@ var DAYS_DATA = [
           "notesES": "Cerca del bosque, senderos, ideal para familias."
         }
       ],
-      "fuel": "OMV, BP, Shell, Eni, diesel ~€1.88-1.95/L. Nessun tratto senza carburante sulla S6/A2 da Leoben a Vienna.",
+      "fuel": "OMV, BP, Shell, Eni, diesel ~€1.70-1.75/L. Nessun tratto senza carburante sulla S6/A2 da Leoben a Vienna.",
       "grocery": [
         {
           "name": "Spar, Billa, Hofer, Lidl",
@@ -320,8 +320,8 @@ var DAYS_DATA = [
         "nameES": "Vienna General Hospital (AKH Wien)"
       },
       "budget": "~€130-160/giorno",
-      "fuelEN": "OMV, BP, Shell, Eni, diesel ~€1.88-1.95/L. No stretches without fuel on the S6/A2 from Leoben to Vienna.",
-      "fuelES": "OMV, BP, Shell, Eni, diesel ~€1.88-1.95/L. No hay tramos sin combustible en la S6/A2 de Leoben a Vienna.",
+      "fuelEN": "OMV, BP, Shell, Eni, diesel ~€1.70-1.75/L. No stretches without fuel on the S6/A2 from Leoben to Vienna.",
+      "fuelES": "OMV, BP, Shell, Eni, diesel ~€1.70-1.75/L. No hay tramos sin combustible en la S6/A2 de Leoben a Vienna.",
       "budgetEN": "~€130-160/day",
       "budgetES": "~€130-160/día"
     },
@@ -1035,7 +1035,7 @@ var DAYS_DATA = [
           "priceES": "~€30-35/noche"
         }
       ],
-      "fuel": "Circle K, Neste, Viada, Orlen, diesel ~€1.69-1.80/L. Nessun tratto isolato senza carburante sulla A2/A7.",
+      "fuel": "Circle K, Neste, Viada, Orlen, diesel ~€1.65-1.72/L. Nessun tratto isolato senza carburante sulla A2/A7.",
       "grocery": [
         {
           "name": "Maxima XXX o Rimi Hypermarket",
@@ -1068,8 +1068,8 @@ var DAYS_DATA = [
         "nameES": "Riga East Clinical University Hospital"
       },
       "budget": "~€120-150/giorno",
-      "fuelEN": "Circle K, Neste, Viada, Orlen, diesel ~€1.69-1.80/L. No stretches without fuel on the A2/A7.",
-      "fuelES": "Circle K, Neste, Viada, Orlen, diésel ~€1.85-1.92/L. Ningún tramo aislado sin combustible en la A2/A7.",
+      "fuelEN": "Circle K, Neste, Viada, Orlen, diesel ~€1.65-1.72/L. No stretches without fuel on the A2/A7.",
+      "fuelES": "Circle K, Neste, Viada, Orlen, diésel ~€1.65-1.72/L. Ningún tramo aislado sin combustible en la A2/A7.",
       "budgetEN": "~€120-150/day",
       "budgetES": "~€120-150/día"
     },
@@ -1201,7 +1201,7 @@ var DAYS_DATA = [
           "priceES": "~€35/noche"
         }
       ],
-      "fuel": "Circle K, Neste, Alexela — diesel ~€1.72-1.82/L lungo la E67 / Via Baltica.",
+      "fuel": "Circle K, Neste, Alexela — diesel ~€1.55-1.62/L lungo la E67 / Via Baltica.",
       "grocery": [
         {
           "name": "Selver o Rimi",
@@ -1237,8 +1237,8 @@ var DAYS_DATA = [
       },
       "budgetEN": "~€100-140/giorno (guide + night in Tallinn)",
       "budgetES": "~€100-140/giorno (guía + noche en Tallinn)",
-      "fuelEN": "Circle K, Neste, Alexela — diesel ~€1.72-1.82/L along the E67 / Via Baltica.",
-      "fuelES": "Circle K, Neste, Alexela — diésel ~€1.77-1.92/L a lo largo de la E67 / Via Baltica."
+      "fuelEN": "Circle K, Neste, Alexela — diesel ~€1.55-1.62/L along the E67 / Via Baltica.",
+      "fuelES": "Circle K, Neste, Alexela — diésel ~€1.55-1.62/L a lo largo de la E67 / Via Baltica."
     },
     "meteo": {
       "high": 21,
@@ -1503,7 +1503,7 @@ var DAYS_DATA = [
           "priceES": "~€29/noche"
         }
       ],
-      "fuel": "Circle K, Neste, Alexela, Jetoil, diesel ~€1.72-1.82/L. Nessun tratto isolato senza carburante sulla Via Baltica (E67).",
+      "fuel": "Circle K, Neste, Alexela, Jetoil, diesel ~€1.55-1.62/L. Nessun tratto isolato senza carburante sulla Via Baltica (E67).",
       "grocery": [
         {
           "name": "Selver",
@@ -1538,8 +1538,8 @@ var DAYS_DATA = [
         "notesES": "(Ravi 18, Tallinn) Atención a la fauna silvestre en la Via Baltica."
       },
       "budget": "~€120-150/giorno",
-      "fuelEN": "Circle K, Neste, Alexela, Jetoil, diesel ~€1.72-1.82/L. No isolated stretches without fuel on the Via Baltica (E67).",
-      "fuelES": "Circle K, Neste, Alexela, Jetoil, diésel ~€1.77-1.83/L. Ningún tramo aislado sin combustible en la Via Baltica (E67).",
+      "fuelEN": "Circle K, Neste, Alexela, Jetoil, diesel ~€1.55-1.62/L. No isolated stretches without fuel on the Via Baltica (E67).",
+      "fuelES": "Circle K, Neste, Alexela, Jetoil, diésel ~€1.55-1.62/L. Ningún tramo aislado sin combustible en la Via Baltica (E67).",
       "budgetEN": "~€120-150/day",
       "budgetES": "~€120-150/día"
     },
@@ -2545,7 +2545,7 @@ var DAYS_DATA = [
           "priceES": "~€50/noche"
         }
       ],
-      "fuel": "ABC, Neste, Teboil, Shell, diesel ~€2.35-2.50/L. Consigliato fare rifornimento a Oulu o Pudasjärvi prima di entrare in Lapponia.",
+      "fuel": "ABC, Neste, Teboil, Shell, diesel ~€2.15-2.25/L. Consigliato fare rifornimento a Oulu o Pudasjärvi prima di entrare in Lapponia.",
       "grocery": [
         {
           "name": "S-Market e K-Market",
@@ -2578,8 +2578,8 @@ var DAYS_DATA = [
         "notesES": "Atención a renos y alces en las carreteras."
       },
       "budget": "~€170-200/giorno",
-      "fuelEN": "ABC, Neste, Teboil, Shell, diesel ~€2.35-2.50/L. Recommended to refuel in Oulu or Pudasjärvi before entering Lapland.",
-      "fuelES": "ABC, Neste, Teboil, Shell, diésel ~€2.35-2.50/L. Se recomienda repostar en Oulu o Pudasjärvi antes de entrar en Laponia.",
+      "fuelEN": "ABC, Neste, Teboil, Shell, diesel ~€2.15-2.25/L. Recommended to refuel in Oulu or Pudasjärvi before entering Lapland.",
+      "fuelES": "ABC, Neste, Teboil, Shell, diésel ~€2.15-2.25/L. Se recomienda repostar en Oulu o Pudasjärvi antes de entrar en Laponia.",
       "budgetEN": "~€170-200/day",
       "budgetES": "~€170-200/día"
     },
@@ -2607,11 +2607,11 @@ var DAYS_DATA = [
       "high": 21,
       "low": 11,
       "cond": "Variabile",
-      "daylight": "22h+ di luce",
+      "daylight": "24h di luce \u2600\ufe0f (sole di mezzanotte)",
       "condEN": "Variable",
       "condES": "Variable",
-      "daylightEN": "22h+ of daylight",
-      "daylightES": "22h+ de luz"
+      "daylightEN": "24h of daylight \u2600\ufe0f (midnight sun)",
+      "daylightES": "24h de luz \u2600\ufe0f (sol de medianoche)"
     },
     "narrative": "Primo assaggio di Rovaniemi",
     "highlights": [
@@ -2706,7 +2706,7 @@ var DAYS_DATA = [
           "priceES": "~€35-45/noche"
         }
       ],
-      "fuel": "Neste, ABC, Shell, Teboil, diesel ~€2.40-2.55/L. Molte stazioni a Rovaniemi, nessun tratto isolato senza carburante.",
+      "fuel": "Neste, ABC, Shell, Teboil, diesel ~€2.15-2.25/L. Molte stazioni a Rovaniemi, nessun tratto isolato senza carburante.",
       "grocery": [
         {
           "name": "Minimani e K-Supermarket Rinteenkulma",
@@ -2739,8 +2739,8 @@ var DAYS_DATA = [
         "nameES": "Lapland Central Hospital"
       },
       "budget": "~€120-160/giorno",
-      "fuelEN": "Neste, ABC, Shell, Teboil, diesel ~€2.40-2.55/L. Many stations in Rovaniemi, no long stretches without fuel.",
-      "fuelES": "Neste, ABC, Shell, Teboil, diésel ~€2.40-2.55/L. Muchas estaciones en Rovaniemi, no hay tramos aislados sin combustible.",
+      "fuelEN": "Neste, ABC, Shell, Teboil, diesel ~€2.15-2.25/L. Many stations in Rovaniemi, no long stretches without fuel.",
+      "fuelES": "Neste, ABC, Shell, Teboil, diésel ~€2.15-2.25/L. Muchas estaciones en Rovaniemi, no hay tramos aislados sin combustible.",
       "budgetEN": "~€120-160/day",
       "budgetES": "~€120-160/día"
     },
@@ -2878,7 +2878,7 @@ var DAYS_DATA = [
           "priceES": "~€40/noche"
         }
       ],
-      "fuel": "ABC, Neste, Teboil, Shell, diesel ~€2.45-2.65/L. In Lapponia i distributori sono rari, fare il pieno quando possibile.",
+      "fuel": "ABC, Neste, Teboil, Shell, diesel ~€2.20-2.30/L. In Lapponia i distributori sono rari, fare il pieno quando possibile.",
       "grocery": [
         {
           "name": "Prisma o K-Citymarket (Rovaniemi)",
@@ -2913,8 +2913,8 @@ var DAYS_DATA = [
         "notesES": "Atención a los renos en las carreteras."
       },
       "budget": "~€120-150/giorno",
-      "fuelEN": "ABC, Neste, Teboil, Shell, diesel ~€2.45-2.65/L. In Lapponia petrol stations are rare; fill up when possible.",
-      "fuelES": "ABC, Neste, Teboil, Shell, diésel ~€2.45-2.65/L. En Lapponia las gasolineras son escasas; llena el depósito cuando sea posible.",
+      "fuelEN": "ABC, Neste, Teboil, Shell, diesel ~€2.20-2.30/L. In Lapponia petrol stations are rare; fill up when possible.",
+      "fuelES": "ABC, Neste, Teboil, Shell, diésel ~€2.20-2.30/L. En Lapponia las gasolineras son escasas; llena el depósito cuando sea posible.",
       "budgetEN": "~€120-150/day",
       "budgetES": "~€120-150/día"
     },
@@ -3140,7 +3140,7 @@ var DAYS_DATA = [
           "priceES": "~€35-45/noche"
         }
       ],
-      "fuel": "ABC, Neste, Teboil, St1, diesel ~€2.45-2.65/L. Consigliato fare rifornimento a Sodankylä o Ivalo.",
+      "fuel": "ABC, Neste, Teboil, St1, diesel ~€2.20-2.30/L. Consigliato fare rifornimento a Sodankylä o Ivalo.",
       "grocery": [
         {
           "name": "K-Market Inari",
@@ -3171,8 +3171,8 @@ var DAYS_DATA = [
         "nameES": "Ivalon terveyskeskus"
       },
       "budget": "~€120-150/giorno",
-      "fuelEN": "ABC, Neste, Teboil, St1, diesel ~€2.45-2.65/L. Recommended to refuel in Sodankylä or Ivalo.",
-      "fuelES": "ABC, Neste, Teboil, St1, diesel ~€2.45-2.65/L. Se recomienda repostar en Sodankylä o Ivalo.",
+      "fuelEN": "ABC, Neste, Teboil, St1, diesel ~€2.20-2.30/L. Recommended to refuel in Sodankylä or Ivalo.",
+      "fuelES": "ABC, Neste, Teboil, St1, diesel ~€2.20-2.30/L. Se recomienda repostar en Sodankylä o Ivalo.",
       "budgetEN": "~€120-150/day",
       "budgetES": "~€120-150/día"
     },
@@ -3336,7 +3336,7 @@ var DAYS_DATA = [
           "priceES": "~€40/noche"
         }
       ],
-      "fuel": "Neste, ABC, Teboil, diesel ~€2.50-2.65/L. Fare rifornimento a Inari o Enontekiö prima del tratto finale.",
+      "fuel": "Neste, ABC, Teboil, diesel ~€2.20-2.30/L. Fare rifornimento a Inari o Enontekiö prima del tratto finale.",
       "grocery": [
         {
           "name": "K-Market Kilpishalli",
@@ -3371,8 +3371,8 @@ var DAYS_DATA = [
         "notesES": "Cuidado con los renos."
       },
       "budget": "~€120-150/giorno",
-      "fuelEN": "Neste, ABC, Teboil, diesel ~€2.50-2.65/L. Refuel in Inari or Enontekiö before the final stretch.",
-      "fuelES": "Neste, ABC, Teboil, diesel ~€2.50-2.65/L. Repostar en Inari o Enontekiö antes del tramo final.",
+      "fuelEN": "Neste, ABC, Teboil, diesel ~€2.20-2.30/L. Refuel in Inari or Enontekiö before the final stretch.",
+      "fuelES": "Neste, ABC, Teboil, diesel ~€2.20-2.30/L. Repostar en Inari o Enontekiö antes del tramo final.",
       "budgetEN": "~€120-150/day",
       "budgetES": "~€120-150/día"
     },
@@ -3552,7 +3552,7 @@ var DAYS_DATA = [
           "priceES": "~€35-45/noche"
         }
       ],
-      "fuel": "Circle K, Shell, Esso, YX, diesel ~€1.90-2.15/L. Consiglio: fare rifornimento a Kilpisjärvi prima del confine.",
+      "fuel": "Circle K, Shell, Esso, YX, diesel ~€2.30-2.50/L. Consiglio: fare rifornimento a Kilpisjärvi prima del confine.",
       "grocery": [
         {
           "name": "K-Market a Kilpisjärvi o REMA 1000 a Tromsø",
@@ -3583,8 +3583,8 @@ var DAYS_DATA = [
         "nameES": "University Hospital of North Norway (UNN)"
       },
       "budget": "~€150-200/giorno",
-      "fuelEN": "Circle K, Shell, Esso, YX, diesel ~€1.90-2.15/L. Tip: refuel at Kilpisjärvi before the border.",
-      "fuelES": "Circle K, Shell, Esso, YX, diesel ~€1.90-2.15/L. Consejo: reposta en Kilpisjärvi antes de la frontera.",
+      "fuelEN": "Circle K, Shell, Esso, YX, diesel ~€2.30-2.50/L. Tip: refuel at Kilpisjärvi before the border.",
+      "fuelES": "Circle K, Shell, Esso, YX, diesel ~€2.30-2.50/L. Consejo: reposta en Kilpisjärvi antes de la frontera.",
       "budgetEN": "~€150-200/day",
       "budgetES": "~€150-200/día"
     },
@@ -3872,7 +3872,7 @@ var DAYS_DATA = [
           "priceES": "~€30-40/noche"
         }
       ],
-      "fuel": "Circle K, Shell, Bunker Oil, diesel ~€1.90-2.15/L. Consigliato fare il pieno a Tromsø o Finnsnes prima di esplorare la costa ovest di Senja.",
+      "fuel": "Circle K, Shell, Bunker Oil, diesel ~€2.30-2.50/L. Consigliato fare il pieno a Tromsø o Finnsnes prima di esplorare la costa ovest di Senja.",
       "grocery": [
         {
           "name": "Rema 1000, Extra, Eurospar a Tromsø o Finnsnes",
@@ -3903,8 +3903,8 @@ var DAYS_DATA = [
         "nameES": "University Hospital of North Norway (UNN)"
       },
       "budget": "~€130-180/giorno",
-      "fuelEN": "Circle K, Shell, Bunker Oil, diesel ~€1.90-2.15/L. Recommended to fill up in Tromsø or Finnsnes before exploring the west coast of Senja.",
-      "fuelES": "Circle K, Shell, Bunker Oil, diésel ~€1.90-2.15/L. Se recomienda repostar en Tromsø o Finnsnes antes de explorar la costa oeste de Senja.",
+      "fuelEN": "Circle K, Shell, Bunker Oil, diesel ~€2.30-2.50/L. Recommended to fill up in Tromsø or Finnsnes before exploring the west coast of Senja.",
+      "fuelES": "Circle K, Shell, Bunker Oil, diésel ~€2.30-2.50/L. Se recomienda repostar en Tromsø o Finnsnes antes de explorar la costa oeste de Senja.",
       "budgetEN": "~€130-180/day",
       "budgetES": "~€130-180/día"
     },
@@ -4089,7 +4089,7 @@ var DAYS_DATA = [
           "priceES": "~€25-40/noche"
         }
       ],
-      "fuel": "Circle K, Shell, Esso, Uno-X, diesel ~€1.90-2.15/L. Consigliato fare il pieno prima dei lunghi tratti isolati su Senja.",
+      "fuel": "Circle K, Shell, Esso, Uno-X, diesel ~€2.30-2.50/L. Consigliato fare il pieno prima dei lunghi tratti isolati su Senja.",
       "grocery": [
         {
           "name": "REMA 1000 e Coop Extra",
@@ -4122,8 +4122,8 @@ var DAYS_DATA = [
         "nameES": "Vesterålen Hospital"
       },
       "budget": "~€180-230/giorno",
-      "fuelEN": "Circle K, Shell, Esso, Uno-X, diesel ~€1.90-2.15/L. Recommended to fill up before the long isolated stretches on Senja.",
-      "fuelES": "Circle K, Shell, Esso, Uno-X, diésel ~€1.90-2.15/L. Se recomienda repostar antes de los largos tramos aislados en Senja.",
+      "fuelEN": "Circle K, Shell, Esso, Uno-X, diesel ~€2.30-2.50/L. Recommended to fill up before the long isolated stretches on Senja.",
+      "fuelES": "Circle K, Shell, Esso, Uno-X, diésel ~€2.30-2.50/L. Se recomienda repostar antes de los largos tramos aislados en Senja.",
       "budgetEN": "~€180-230/day",
       "budgetES": "~€180-230/día"
     },
@@ -4284,7 +4284,7 @@ var DAYS_DATA = [
           "priceES": "~€35/noche"
         }
       ],
-      "fuel": "Circle K, Shell, Esso, diesel ~€1.90-2.15/L. Fai il pieno prima dei lunghi tratti isolati nel nord della Norvegia.",
+      "fuel": "Circle K, Shell, Esso, diesel ~€2.30-2.50/L. Fai il pieno prima dei lunghi tratti isolati nel nord della Norvegia.",
       "grocery": [
         {
           "name": "Coop Prix e Bunnpris Andenes",
@@ -4317,8 +4317,8 @@ var DAYS_DATA = [
         "nameES": "Hospitales en Stokmarknes o Tromsø, Legevakt local"
       },
       "budget": "~€180-250/giorno",
-      "fuelEN": "Circle K, Shell, Esso, diesel ~€1.90-2.15/L. Fill up before the long isolated stretches in northern Norway.",
-      "fuelES": "Circle K, Shell, Esso, diésel ~€1.90-2.15/L. Haz el depósito antes de los largos tramos aislados en el norte de Noruega.",
+      "fuelEN": "Circle K, Shell, Esso, diesel ~€2.30-2.50/L. Fill up before the long isolated stretches in northern Norway.",
+      "fuelES": "Circle K, Shell, Esso, diésel ~€2.30-2.50/L. Haz el depósito antes de los largos tramos aislados en el norte de Noruega.",
       "budgetEN": "~€180-250/day",
       "budgetES": "~€180-250/día"
     },
@@ -4379,11 +4379,11 @@ var DAYS_DATA = [
       "high": 15,
       "low": 11,
       "cond": "Variabile",
-      "daylight": "22h+ di luce",
+      "daylight": "24h di luce \u2600\ufe0f (sole di mezzanotte)",
       "condEN": "Variable",
       "condES": "Variable",
-      "daylightEN": "22h+ of daylight",
-      "daylightES": "22h+ de luz"
+      "daylightEN": "24h of daylight \u2600\ufe0f (midnight sun)",
+      "daylightES": "24h de luz \u2600\ufe0f (sol de medianoche)"
     },
     "narrative": "Discesa verso le Lofoten lungo la litoranea: ponti spettacolari tra le isole e i primi villaggi di pescatori con i <em>rorbuer</em> rossi.",
     "highlights": [
@@ -4494,7 +4494,7 @@ var DAYS_DATA = [
           "priceES": "~€43/noche"
         }
       ],
-      "fuel": "Circle K, Shell, Esso, diesel ~18-19 NOK/L (~€1.55-1.65/L). Consigliato fare il pieno ad Andenes o Sortland prima delle zone remote.",
+      "fuel": "Circle K, Shell, Esso, diesel ~27-29 NOK/L (~€2.35-2.55/L). Consigliato fare il pieno ad Andenes o Sortland prima delle zone remote.",
       "grocery": [
         {
           "name": "REMA 1000, Kiwi, Extra",
@@ -4527,8 +4527,8 @@ var DAYS_DATA = [
         "nameES": "Clínica de urgencias (Legevakt), Gravdal"
       },
       "budget": "~€120-150/giorno",
-      "fuelEN": "Circle K, Shell, Esso, diesel ~18-19 NOK/L (~€1.55-1.65/L). Recommended to fill up in Andenes or Sortland before remote areas.",
-      "fuelES": "Circle K, Shell, Esso, diesel ~18-19 NOK/L (~€1.55-1.65/L). Se recomienda repostar en Andenes o Sortland antes de las zonas remotas.",
+      "fuelEN": "Circle K, Shell, Esso, diesel ~27-29 NOK/L (~€2.35-2.55/L). Recommended to fill up in Andenes or Sortland before remote areas.",
+      "fuelES": "Circle K, Shell, Esso, diesel ~27-29 NOK/L (~€2.35-2.55/L). Se recomienda repostar en Andenes o Sortland antes de las zonas remotas.",
       "budgetEN": "~€120-150/day",
       "budgetES": "~€120-150/día"
     },
@@ -4601,11 +4601,11 @@ var DAYS_DATA = [
       "high": 15,
       "low": 11,
       "cond": "Variabile",
-      "daylight": "22h+ di luce",
+      "daylight": "24h di luce \u2600\ufe0f (sole di mezzanotte)",
       "condEN": "Variable",
       "condES": "Variable",
-      "daylightEN": "22h+ of daylight",
-      "daylightES": "22h+ de luz"
+      "daylightEN": "24h of daylight \u2600\ufe0f (midnight sun)",
+      "daylightES": "24h de luz \u2600\ufe0f (sol de medianoche)"
     },
     "narrative": "",
     "highlights": [
@@ -4687,7 +4687,7 @@ var DAYS_DATA = [
           "priceES": "~€45-50/noche"
         }
       ],
-      "fuel": "Circle K, Shell, Firma Lyder Berntsen, diesel ~18-19 NOK/L (~€1.55-1.65/L). Nessun tratto remoto senza carburante in questo breve percorso.",
+      "fuel": "Circle K, Shell, Firma Lyder Berntsen, diesel ~27-29 NOK/L (~€2.35-2.55/L). Nessun tratto remoto senza carburante in questo breve percorso.",
       "grocery": [
         {
           "name": "REMA 1000, Coop Extra, Kiwi a Svolvær",
@@ -4720,8 +4720,8 @@ var DAYS_DATA = [
         "nameES": "Nordland Hospital"
       },
       "budget": "~€130-160/giorno",
-      "fuelEN": "Circle K, Shell, Firma Lyder Berntsen, diesel ~18-19 NOK/L (~€1.55-1.65/L). No remote sections without fuel on this short route.",
-      "fuelES": "Circle K, Shell, Firma Lyder Berntsen, diésel ~€1.95-2.20/L. Ningún tramo remoto sin combustible en este corto recorrido.",
+      "fuelEN": "Circle K, Shell, Firma Lyder Berntsen, diesel ~27-29 NOK/L (~€2.35-2.55/L). No remote sections without fuel on this short route.",
+      "fuelES": "Circle K, Shell, Firma Lyder Berntsen, diésel ~€2.35-2.55/L. Ningún tramo remoto sin combustible en este corto recorrido.",
       "budgetEN": "~€130-160/day",
       "budgetES": "~€130-160/día"
     },
@@ -4814,11 +4814,11 @@ var DAYS_DATA = [
       "high": 15,
       "low": 11,
       "cond": "Pioggia 1 giorno su 2",
-      "daylight": "22h di luce",
+      "daylight": "24h di luce \u2600\ufe0f (sole di mezzanotte)",
       "condEN": "Rain 1 day out of 2",
       "condES": "Lluvia 1 día de cada 2",
-      "daylightEN": "22h of daylight",
-      "daylightES": "22h de luz"
+      "daylightEN": "24h of daylight \u2600\ufe0f (midnight sun)",
+      "daylightES": "24h de luz \u2600\ufe0f (sol de medianoche)"
     },
     "narrative": "<strong>⚠️ Abbigliamento:</strong> giacca impermeabile antivento, scarpe trek. Acqua mare 10-13°C: bagni brevi!",
     "highlights": [
@@ -4927,7 +4927,7 @@ var DAYS_DATA = [
           "priceES": "~€38-51/noche"
         }
       ],
-      "fuel": "Circle K, Shell, Esso, diesel ~18-19 NOK/L (~€1.55-1.65/L). Stazioni a Leknes e Ramberg, consigliato fare il pieno a Leknes.",
+      "fuel": "Circle K, Shell, Esso, diesel ~27-29 NOK/L (~€2.35-2.55/L). Stazioni a Leknes e Ramberg, consigliato fare il pieno a Leknes.",
       "grocery": [
         {
           "name": "REMA 1000",
@@ -4960,8 +4960,8 @@ var DAYS_DATA = [
         "nameES": "Nordland Hospital Lofoten"
       },
       "budget": "~€150-200/giorno",
-      "fuelEN": "Circle K, Shell, Esso, diesel ~18-19 NOK/L (~€1.55-1.65/L). Stations in Leknes and Ramberg, recommended to fill up in Leknes.",
-      "fuelES": "Circle K, Shell, Esso, diésel ~€1.95-2.20/L. Estaciones en Leknes y Ramberg, se recomienda repostar en Leknes.",
+      "fuelEN": "Circle K, Shell, Esso, diesel ~27-29 NOK/L (~€2.35-2.55/L). Stations in Leknes and Ramberg, recommended to fill up in Leknes.",
+      "fuelES": "Circle K, Shell, Esso, diésel ~€2.35-2.55/L. Estaciones en Leknes y Ramberg, se recomienda repostar en Leknes.",
       "budgetEN": "~€150-200/day",
       "budgetES": "~€150-200/día"
     },
@@ -5110,7 +5110,7 @@ var DAYS_DATA = [
           "priceES": "~€32/noche"
         }
       ],
-      "fuel": "Circle K, Shell, Esso, diesel ~18-19 NOK/L (~€1.55-1.65/L). Fare rifornimento a Leknes o Svolvær, scarsi nei piccoli villaggi.",
+      "fuel": "Circle K, Shell, Esso, diesel ~27-29 NOK/L (~€2.35-2.55/L). Fare rifornimento a Leknes o Svolvær, scarsi nei piccoli villaggi.",
       "grocery": [
         {
           "name": "Coop Marked a Reine",
@@ -5145,8 +5145,8 @@ var DAYS_DATA = [
         "notesES": "Atención: la E10 muy estrecha."
       },
       "budget": "~€120-150/giorno",
-      "fuelEN": "Circle K, Shell, Esso, diesel ~18-19 NOK/L (~€1.55-1.65/L). Fill up at Leknes or Svolvær, scarce in the small villages.",
-      "fuelES": "Circle K, Shell, Esso, diesel ~18-19 NOK/L (~€1.55-1.65/L). Repostar en Leknes o Svolvær, escasos en los pueblos pequeños.",
+      "fuelEN": "Circle K, Shell, Esso, diesel ~27-29 NOK/L (~€2.35-2.55/L). Fill up at Leknes or Svolvær, scarce in the small villages.",
+      "fuelES": "Circle K, Shell, Esso, diesel ~27-29 NOK/L (~€2.35-2.55/L). Repostar en Leknes o Svolvær, escasos en los pueblos pequeños.",
       "budgetEN": "~€120-150/day",
       "budgetES": "~€120-150/día"
     },
@@ -5311,7 +5311,7 @@ var DAYS_DATA = [
           "priceES": "~€30-35/noche"
         }
       ],
-      "fuel": "Circle K, Shell, Esso, diesel ~18-19 NOK/L (~€1.55-1.65/L). Le stazioni sono frequenti, ma è saggio fare il pieno quando se ne vede una.",
+      "fuel": "Circle K, Shell, Esso, diesel ~27-29 NOK/L (~€2.35-2.55/L). Le stazioni sono frequenti, ma è saggio fare il pieno quando se ne vede una.",
       "grocery": [
         {
           "name": "REMA 1000, Kiwi, Coop Extra, Spar (Leknes o Svolvær)",
@@ -5344,8 +5344,8 @@ var DAYS_DATA = [
         "nameES": "Nordlandssykehuset Lofoten"
       },
       "budget": "~€120-150/giorno",
-      "fuelEN": "Circle K, Shell, Esso, diesel ~18-19 NOK/L (~€1.55-1.65/L). Stations are frequent, but it's wise to fill up when you see one.",
-      "fuelES": "Circle K, Shell, Esso, diésel ~€1.95-2.20/L. Las estaciones son frecuentes, pero es prudente llenar el depósito cuando veas una.",
+      "fuelEN": "Circle K, Shell, Esso, diesel ~27-29 NOK/L (~€2.35-2.55/L). Stations are frequent, but it's wise to fill up when you see one.",
+      "fuelES": "Circle K, Shell, Esso, diésel ~€2.35-2.55/L. Las estaciones son frecuentes, pero es prudente llenar el depósito cuando veas una.",
       "budgetEN": "~€120-150/day",
       "budgetES": "~€120-150/día"
     },
@@ -5494,7 +5494,7 @@ var DAYS_DATA = [
           "priceES": "~€38/noche"
         }
       ],
-      "fuel": "Circle K, Shell, Esso, YX, diesel ~18-19 NOK/L (~€1.55-1.65/L). Consigliato fare rifornimento a Bodø prima di dirigersi a sud.",
+      "fuel": "Circle K, Shell, Esso, YX, diesel ~27-29 NOK/L (~€2.35-2.55/L). Consigliato fare rifornimento a Bodø prima di dirigersi a sud.",
       "grocery": [
         {
           "name": "REMA 1000, Extra",
@@ -5527,8 +5527,8 @@ var DAYS_DATA = [
         "nameES": "Helgelandssykehuset Mo i Rana"
       },
       "budget": "~€140-180/giorno",
-      "fuelEN": "Circle K, Shell, Esso, YX, diesel ~18-19 NOK/L (~€1.55-1.65/L). Recommended to refuel in Bodø before heading south.",
-      "fuelES": "Circle K, Shell, Esso, YX, diésel ~€1.88-2.05/L. Se recomienda repostar en Bodø antes de dirigirse al sur.",
+      "fuelEN": "Circle K, Shell, Esso, YX, diesel ~27-29 NOK/L (~€2.35-2.55/L). Recommended to refuel in Bodø before heading south.",
+      "fuelES": "Circle K, Shell, Esso, YX, diésel ~€2.35-2.55/L. Se recomienda repostar en Bodø antes de dirigirse al sur.",
       "budgetEN": "~€140-180/day",
       "budgetES": "~€140-180/día"
     },
@@ -5663,7 +5663,7 @@ var DAYS_DATA = [
           "priceES": "~€48/noche"
         }
       ],
-      "fuel": "Circle K, Shell, Esso, Uno-X, diesel ~18-19 NOK/L (~€1.55-1.65/L). Consigliato rifornirsi a Mosjøen o Steinkjer.",
+      "fuel": "Circle K, Shell, Esso, Uno-X, diesel ~27-29 NOK/L (~€2.35-2.55/L). Consigliato rifornirsi a Mosjøen o Steinkjer.",
       "grocery": [
         {
           "name": "Rema 1000, Kiwi, Coop Extra, Spar (Trondheim)",
@@ -5694,8 +5694,8 @@ var DAYS_DATA = [
         "nameES": "St. Olav's University Hospital, Trondheim"
       },
       "budget": "~€130-160/giorno",
-      "fuelEN": "Circle K, Shell, Esso, Uno-X, diesel ~18-19 NOK/L (~€1.55-1.65/L). Recommended to refuel in Mosjøen or Steinkjer.",
-      "fuelES": "Circle K, Shell, Esso, Uno-X, diésel ~€1.88-2.05/L. Se recomienda repostar en Mosjøen o Steinkjer.",
+      "fuelEN": "Circle K, Shell, Esso, Uno-X, diesel ~27-29 NOK/L (~€2.35-2.55/L). Recommended to refuel in Mosjøen or Steinkjer.",
+      "fuelES": "Circle K, Shell, Esso, Uno-X, diésel ~€2.35-2.55/L. Se recomienda repostar en Mosjøen o Steinkjer.",
       "budgetEN": "~€130-160/day",
       "budgetES": "~€130-160/día"
     },
@@ -5877,7 +5877,7 @@ var DAYS_DATA = [
           "priceES": "~NOK 400 (€35)/noche"
         }
       ],
-      "fuel": "Circle K, Shell, Esso, Uno-X, diesel ~18-19 NOK/L (~€1.55-1.65/L). Nessun tratto isolato intorno a Trondheim.",
+      "fuel": "Circle K, Shell, Esso, Uno-X, diesel ~27-29 NOK/L (~€2.35-2.55/L). Nessun tratto isolato intorno a Trondheim.",
       "grocery": [
         {
           "name": "Rema 1000, Kiwi, Bunnpris, Extra, Trondheim",
@@ -5908,8 +5908,8 @@ var DAYS_DATA = [
         "nameES": "St. Olav's University Hospital"
       },
       "budget": "~€120-150/giorno",
-      "fuelEN": "Circle K, Shell, Esso, Uno-X, diesel ~18-19 NOK/L (~€1.55-1.65/L). No isolated stretches around Trondheim.",
-      "fuelES": "Circle K, Shell, Esso, Uno-X, diesel ~18-19 NOK/L (~€1.55-1.65/L). No hay tramos aislados alrededor de Trondheim.",
+      "fuelEN": "Circle K, Shell, Esso, Uno-X, diesel ~27-29 NOK/L (~€2.35-2.55/L). No isolated stretches around Trondheim.",
+      "fuelES": "Circle K, Shell, Esso, Uno-X, diesel ~27-29 NOK/L (~€2.35-2.55/L). No hay tramos aislados alrededor de Trondheim.",
       "budgetEN": "~€120-150/day",
       "budgetES": "~€120-150/día"
     },
@@ -6111,7 +6111,7 @@ var DAYS_DATA = [
           "priceES": "~€30-40/noche"
         }
       ],
-      "fuel": "Circle K, Shell, Esso, YX, diesel ~18-19 NOK/L (~€1.55-1.65/L). Consigliabile fare rifornimento a Trondheim o Kristiansund.",
+      "fuel": "Circle K, Shell, Esso, YX, diesel ~27-29 NOK/L (~€2.35-2.55/L). Consigliabile fare rifornimento a Trondheim o Kristiansund.",
       "grocery": [
         {
           "name": "REMA 1000, Kiwi, Extra, Spar",
@@ -6144,8 +6144,8 @@ var DAYS_DATA = [
         "nameES": "Molde Sjukehus"
       },
       "budget": "~€180-200/giorno",
-      "fuelEN": "Circle K, Shell, Esso, YX, diesel ~18-19 NOK/L (~€1.55-1.65/L). It's advisable to refuel in Trondheim or Kristiansund.",
-      "fuelES": "Circle K, Shell, Esso, YX, diésel ~€1.88-2.05/L. Es recomendable repostar en Trondheim o Kristiansund.",
+      "fuelEN": "Circle K, Shell, Esso, YX, diesel ~27-29 NOK/L (~€2.35-2.55/L). It's advisable to refuel in Trondheim or Kristiansund.",
+      "fuelES": "Circle K, Shell, Esso, YX, diésel ~€2.35-2.55/L. Es recomendable repostar en Trondheim o Kristiansund.",
       "budgetEN": "~€180-200/day",
       "budgetES": "~€180-200/día"
     },
@@ -6326,7 +6326,7 @@ var DAYS_DATA = [
           "priceES": "~€35-43/noche"
         }
       ],
-      "fuel": "Circle K, YX, Shell, Esso, diesel ~18-19 NOK/L (~€1.55-1.65/L). Fare rifornimento a Molde o Åndalsnes prima del Trollstigen.",
+      "fuel": "Circle K, YX, Shell, Esso, diesel ~27-29 NOK/L (~€2.35-2.55/L). Fare rifornimento a Molde o Åndalsnes prima del Trollstigen.",
       "grocery": [
         {
           "name": "Supermercati a Molde e Åndalsnes",
@@ -6371,8 +6371,8 @@ var DAYS_DATA = [
         "nameES": "Ålesund Sjukehus / Molde Hospital"
       },
       "budget": "~€130-180/giorno",
-      "fuelEN": "Circle K, YX, Shell, Esso, diesel ~18-19 NOK/L (~€1.55-1.65/L). Refuel in Molde or Åndalsnes before Trollstigen.",
-      "fuelES": "Circle K, YX, Shell, Esso, diesel ~18-19 NOK/L (~€1.55-1.65/L). Haz el repostaje en Molde o Åndalsnes antes de Trollstigen.",
+      "fuelEN": "Circle K, YX, Shell, Esso, diesel ~27-29 NOK/L (~€2.35-2.55/L). Refuel in Molde or Åndalsnes before Trollstigen.",
+      "fuelES": "Circle K, YX, Shell, Esso, diesel ~27-29 NOK/L (~€2.35-2.55/L). Haz el repostaje en Molde o Åndalsnes antes de Trollstigen.",
       "budgetEN": "~€130-180/day",
       "budgetES": "~€130-180/día"
     },
@@ -6574,7 +6574,7 @@ var DAYS_DATA = [
           "priceES": "~€32/noche"
         }
       ],
-      "fuel": "Circle K, Shell, Esso, YX, diesel ~18-19 NOK/L (~€1.55-1.65/L). Consigliato fare rifornimento nei centri più grandi come Stryn o Førde.",
+      "fuel": "Circle K, Shell, Esso, YX, diesel ~27-29 NOK/L (~€2.35-2.55/L). Consigliato fare rifornimento nei centri più grandi come Stryn o Førde.",
       "grocery": [
         {
           "name": "REMA 1000 Bergen",
@@ -6605,8 +6605,8 @@ var DAYS_DATA = [
         "nameES": "Haukeland University Hospital"
       },
       "budget": "~€180-250/giorno",
-      "fuelEN": "Circle K, Shell, Esso, YX, diesel ~18-19 NOK/L (~€1.55-1.65/L). It's recommended to refuel in larger centres like Stryn or Førde.",
-      "fuelES": "Circle K, Shell, Esso, YX, diésel ~€1.88-2.05/L. Se recomienda repostar en centros más grandes como Stryn o Førde.",
+      "fuelEN": "Circle K, Shell, Esso, YX, diesel ~27-29 NOK/L (~€2.35-2.55/L). It's recommended to refuel in larger centres like Stryn or Førde.",
+      "fuelES": "Circle K, Shell, Esso, YX, diésel ~€2.35-2.55/L. Se recomienda repostar en centros más grandes como Stryn o Førde.",
       "budgetEN": "~€180-250/day",
       "budgetES": "~€180-250/día"
     },
@@ -6781,7 +6781,7 @@ var DAYS_DATA = [
           "priceES": "~€35-45/noche"
         }
       ],
-      "fuel": "Circle K, Shell, Esso, Uno-X, diesel ~18-19 NOK/L (~€1.55-1.65/L). Stazioni abbondanti nell'area di Bergen.",
+      "fuel": "Circle K, Shell, Esso, Uno-X, diesel ~27-29 NOK/L (~€2.35-2.55/L). Stazioni abbondanti nell'area di Bergen.",
       "grocery": [
         {
           "name": "Rema 1000, Kiwi, Coop, Meny a Bergen",
@@ -6814,8 +6814,8 @@ var DAYS_DATA = [
         "nameES": "Haukeland University Hospital"
       },
       "budget": "~€130-180/giorno",
-      "fuelEN": "Circle K, Shell, Esso, Uno-X, diesel ~18-19 NOK/L (~€1.55-1.65/L). Stations abundant in the Bergen area.",
-      "fuelES": "Circle K, Shell, Esso, Uno-X, diésel ~€1.88-2.05/L. Estaciones abundantes en el área de Bergen.",
+      "fuelEN": "Circle K, Shell, Esso, Uno-X, diesel ~27-29 NOK/L (~€2.35-2.55/L). Stations abundant in the Bergen area.",
+      "fuelES": "Circle K, Shell, Esso, Uno-X, diésel ~€2.35-2.55/L. Estaciones abundantes en el área de Bergen.",
       "budgetEN": "~€130-180/day",
       "budgetES": "~€130-180/día"
     },
@@ -7055,7 +7055,7 @@ var DAYS_DATA = [
           "priceES": "~€38/noche"
         }
       ],
-      "fuel": "Circle K, Shell, Esso, YX, diesel ~18-19 NOK/L (~€1.55-1.65/L). Nessun tratto isolato senza carburante su questo percorso.",
+      "fuel": "Circle K, Shell, Esso, YX, diesel ~27-29 NOK/L (~€2.35-2.55/L). Nessun tratto isolato senza carburante su questo percorso.",
       "grocery": [
         {
           "name": "REMA 1000, Kiwi, Coop Extra",
@@ -7088,8 +7088,8 @@ var DAYS_DATA = [
         "nameES": "Stavanger University Hospital"
       },
       "budget": "~€250-280/giorno",
-      "fuelEN": "Circle K, Shell, Esso, YX, diesel ~18-19 NOK/L (~€1.55-1.65/L). No isolated stretches without fuel on this route.",
-      "fuelES": "Circle K, Shell, Esso, YX, diesel ~18-19 NOK/L (~€1.55-1.65/L). Ningún tramo aislado sin combustible en esta ruta.",
+      "fuelEN": "Circle K, Shell, Esso, YX, diesel ~27-29 NOK/L (~€2.35-2.55/L). No isolated stretches without fuel on this route.",
+      "fuelES": "Circle K, Shell, Esso, YX, diesel ~27-29 NOK/L (~€2.35-2.55/L). Ningún tramo aislado sin combustible en esta ruta.",
       "budgetEN": "~€250-280/day",
       "budgetES": "~€250-280/día"
     },
@@ -7271,7 +7271,7 @@ var DAYS_DATA = [
           "priceES": "~€30-40/noche"
         }
       ],
-      "fuel": "Circle K, Shell, Esso, YX, diesel ~18-19 NOK/L (~€1.55-1.65/L). Nessun tratto remoto senza carburante sulla E39.",
+      "fuel": "Circle K, Shell, Esso, YX, diesel ~27-29 NOK/L (~€2.35-2.55/L). Nessun tratto remoto senza carburante sulla E39.",
       "grocery": [
         {
           "name": "REMA 1000 e Kiwi a Kristiansand",
@@ -7302,8 +7302,8 @@ var DAYS_DATA = [
         "nameES": "Sørlandet Hospital Kristiansand"
       },
       "budget": "~€130-160/giorno",
-      "fuelEN": "Circle K, Shell, Esso, YX, diesel ~18-19 NOK/L (~€1.55-1.65/L). No remote stretches without fuel on the E39.",
-      "fuelES": "Circle K, Shell, Esso, YX, diésel ~€1.85-2.00/L. Ningún tramo remoto sin combustible en la E39.",
+      "fuelEN": "Circle K, Shell, Esso, YX, diesel ~27-29 NOK/L (~€2.35-2.55/L). No remote stretches without fuel on the E39.",
+      "fuelES": "Circle K, Shell, Esso, YX, diésel ~€2.35-2.55/L. Ningún tramo remoto sin combustible en la E39.",
       "budgetEN": "~€130-160/day",
       "budgetES": "~€130-160/día"
     },
@@ -7491,7 +7491,7 @@ var DAYS_DATA = [
           "priceES": "~€39/noche"
         }
       ],
-      "fuel": "OK, Circle K, Q8, Shell, diesel ~€1.90-2.00/L. Distributori frequenti lungo l'autostrada.",
+      "fuel": "OK, Circle K, Q8, Shell, diesel ~€1.85-1.95/L. Distributori frequenti lungo l'autostrada.",
       "grocery": [
         {
           "name": "REMA 1000, Netto, Lidl, Føtex, Coop 365",
@@ -7524,8 +7524,8 @@ var DAYS_DATA = [
         "nameES": "Rigshospitalet"
       },
       "budget": "~€180-250/giorno",
-      "fuelEN": "OK, Circle K, Q8, Shell, diesel ~€1.90-2.00/L. Frequent petrol stations along the highway.",
-      "fuelES": "OK, Circle K, Q8, Shell, diésel ~€1.90-2.00/L. Surtidores frecuentes a lo largo de la autopista.",
+      "fuelEN": "OK, Circle K, Q8, Shell, diesel ~€1.85-1.95/L. Frequent petrol stations along the highway.",
+      "fuelES": "OK, Circle K, Q8, Shell, diésel ~€1.95-2.05/L. Surtidores frecuentes a lo largo de la autopista.",
       "budgetEN": "~€180-250/day",
       "budgetES": "~€180-250/día"
     },
@@ -7709,7 +7709,7 @@ var DAYS_DATA = [
           "addressES": "Copenhagen"
         }
       ],
-      "fuel": "OK, Circle K, Q8, Shell, INGO, diesel ~€1.90-2.00/L. Rete molto fitta.",
+      "fuel": "OK, Circle K, Q8, Shell, INGO, diesel ~€1.85-1.95/L. Rete molto fitta.",
       "grocery": [
         {
           "name": "Netto, Rema 1000, Føtex, SuperBrugsen, Lidl",
@@ -7744,8 +7744,8 @@ var DAYS_DATA = [
         "notesES": "Atención a los numerosos ciclistas."
       },
       "budget": "~€180-250/giorno",
-      "fuelEN": "OK, Circle K, Q8, Shell, INGO, diesel ~€1.90-2.00/L. Very dense network.",
-      "fuelES": "OK, Circle K, Q8, Shell, INGO, diésel ~€1.90-2.00/L. Red muy densa.",
+      "fuelEN": "OK, Circle K, Q8, Shell, INGO, diesel ~€1.85-1.95/L. Very dense network.",
+      "fuelES": "OK, Circle K, Q8, Shell, INGO, diésel ~€1.95-2.05/L. Red muy densa.",
       "budgetEN": "~€180-250/day",
       "budgetES": "~€180-250/día"
     },
@@ -7990,7 +7990,7 @@ var DAYS_DATA = [
           "priceES": "~€37/noche"
         }
       ],
-      "fuel": "Circle K, OK, Q8, Shell, diesel ~€2.18-2.28/L. Nessun tratto isolato senza carburante vicino a Copenaghen.",
+      "fuel": "Circle K, OK, Q8, Shell, diesel ~€1.85-1.95/L. Nessun tratto isolato senza carburante vicino a Copenaghen.",
       "grocery": [
         {
           "name": "Netto, Rema 1000, Føtex, SuperBrugsen, Lidl",
@@ -8023,8 +8023,8 @@ var DAYS_DATA = [
         "nameES": "Rigshospitalet o Bispebjerg Hospital"
       },
       "budget": "~€150-200/giorno",
-      "fuelEN": "Circle K, OK, Q8, Shell, diesel ~€2.18-2.28/L. No isolated stretches without fuel near Copenaghen.",
-      "fuelES": "Circle K, OK, Q8, Shell, diésel ~€2.18-2.28/L. No hay tramos aislados sin combustible cerca de Copenaghen.",
+      "fuelEN": "Circle K, OK, Q8, Shell, diesel ~€1.85-1.95/L. No isolated stretches without fuel near Copenaghen.",
+      "fuelES": "Circle K, OK, Q8, Shell, diésel ~€1.95-2.05/L. No hay tramos aislados sin combustible cerca de Copenaghen.",
       "budgetEN": "~€150-200/day",
       "budgetES": "~€150-200/día"
     },
@@ -8173,7 +8173,7 @@ var DAYS_DATA = [
           "priceES": "Gratuito/Bajo costo"
         }
       ],
-      "fuel": "OK, Circle K, Q8, Ingo, diesel ~€2.18-2.28/L. Nessun tratto isolato senza carburante, segue l'autostrada principale (E20).",
+      "fuel": "OK, Circle K, Q8, Ingo, diesel ~€1.85-1.95/L. Nessun tratto isolato senza carburante, segue l'autostrada principale (E20).",
       "grocery": [
         {
           "name": "Netto, Føtex, SuperBrugsen, Rema 1000, Bilka a Billund",
@@ -8206,8 +8206,8 @@ var DAYS_DATA = [
         "notesES": "Atención a los fuertes vientos laterales en el puente del Grande Belt."
       },
       "budget": "~€180-250/giorno",
-      "fuelEN": "OK, Circle K, Q8, Ingo, diesel ~€2.18-2.28/L. No isolated stretches without fuel; stick to the main motorway (E20).",
-      "fuelES": "OK, Circle K, Q8, Ingo, diésel ~€2.18-2.28/L. Ningún tramo aislado sin combustible; sigue la autopista principal (E20).",
+      "fuelEN": "OK, Circle K, Q8, Ingo, diesel ~€1.85-1.95/L. No isolated stretches without fuel; stick to the main motorway (E20).",
+      "fuelES": "OK, Circle K, Q8, Ingo, diésel ~€1.95-2.05/L. Ningún tramo aislado sin combustible; sigue la autopista principal (E20).",
       "budgetEN": "~€180-250/day",
       "budgetES": "~€180-250/día"
     },
@@ -8355,7 +8355,7 @@ var DAYS_DATA = [
           "priceES": "gratuito/económico"
         }
       ],
-      "fuel": "Circle K, OK, Q8, Shell, diesel ~€2.18-2.28/L. Nessun tratto isolato senza carburante in questa zona.",
+      "fuel": "Circle K, OK, Q8, Shell, diesel ~€1.85-1.95/L. Nessun tratto isolato senza carburante in questa zona.",
       "grocery": [
         {
           "name": "SuperBrugsen",
@@ -8388,8 +8388,8 @@ var DAYS_DATA = [
         "nameES": "Vejle Hospital"
       },
       "budget": "~€200-250/giorno",
-      "fuelEN": "Circle K, OK, Q8, Shell, diesel ~€2.18-2.28/L. No isolated stretches without fuel in this area.",
-      "fuelES": "Circle K, OK, Q8, Shell, diésel ~€2.18-2.28/L. No hay tramos aislados sin combustible en esta zona.",
+      "fuelEN": "Circle K, OK, Q8, Shell, diesel ~€1.85-1.95/L. No isolated stretches without fuel in this area.",
+      "fuelES": "Circle K, OK, Q8, Shell, diésel ~€1.95-2.05/L. No hay tramos aislados sin combustible en esta zona.",
       "budgetEN": "~€200-250/day",
       "budgetES": "~€200-250/día"
     },
@@ -8491,7 +8491,7 @@ var DAYS_DATA = [
           "priceES": "~€50-70/noche"
         }
       ],
-      "fuel": "Circle K, OK, Q8, Shell, diesel ~€2.18-2.28/L. Nessun tratto isolato senza carburante in questa zona.",
+      "fuel": "Circle K, OK, Q8, Shell, diesel ~€1.85-1.95/L. Nessun tratto isolato senza carburante in questa zona.",
       "grocery": [
         {
           "name": "SuperBrugsen, Netto, REMA 1000 (Billund)",
@@ -8522,8 +8522,8 @@ var DAYS_DATA = [
         "nameES": "Hospital en Vejle o Kolding"
       },
       "budget": "~€200-250/giorno",
-      "fuelEN": "Circle K, OK, Q8, Shell, diesel ~€2.18-2.28/L. No isolated stretches without fuel in this area.",
-      "fuelES": "Circle K, OK, Q8, Shell, diésel ~€2.18-2.28/L. No hay tramos aislados sin combustible en esta zona.",
+      "fuelEN": "Circle K, OK, Q8, Shell, diesel ~€1.85-1.95/L. No isolated stretches without fuel in this area.",
+      "fuelES": "Circle K, OK, Q8, Shell, diésel ~€1.95-2.05/L. No hay tramos aislados sin combustible en esta zona.",
       "budgetEN": "~€200-250/day",
       "budgetES": "~€200-250/día"
     },
@@ -8675,7 +8675,7 @@ var DAYS_DATA = [
           "priceES": "~€18/noche"
         }
       ],
-      "fuel": "OK, Circle K, Q8 (DK), Aral, Shell, Esso, Total (DE), diesel ~€1.90-1.98/L (DE) / ~€2.18-2.28/L (DK). Fai rifornimento in Germania.",
+      "fuel": "OK, Circle K, Q8 (DK), Aral, Shell, Esso, Total (DE), diesel ~€1.75-1.80/L (DE) / ~€1.95-2.05/L (DK). Fai rifornimento in Germania.",
       "grocery": [
         {
           "name": "Rema 1000, Netto, Føtex (DK) / Aldi, Lidl, Rewe, Edeka (DE)",
@@ -8706,8 +8706,8 @@ var DAYS_DATA = [
         "nameES": "Klinikum Bremen-Mitte"
       },
       "budget": "~€180-200/giorno",
-      "fuelEN": "OK, Circle K, Q8 (DK), Aral, Shell, Esso, Total (DE), diesel ~€1.90-1.98/L (DE) / ~€2.18-2.28/L (DK). Refuel in Germania.",
-      "fuelES": "OK, Circle K, Q8 (DK), Aral, Shell, Esso, Total (DE), diesel ~€1.90-1.98/L (DE) / ~€2.18-2.28/L (DK). Repostar en Germania.",
+      "fuelEN": "OK, Circle K, Q8 (DK), Aral, Shell, Esso, Total (DE), diesel ~€1.75-1.80/L (DE) / ~€1.95-2.05/L (DK). Refuel in Germania.",
+      "fuelES": "OK, Circle K, Q8 (DK), Aral, Shell, Esso, Total (DE), diesel ~€1.75-1.80/L (DE) / ~€1.95-2.05/L (DK). Repostar en Germania.",
       "budgetEN": "~€180-200/day",
       "budgetES": "~€180-200/día"
     },
@@ -8935,7 +8935,7 @@ var DAYS_DATA = [
           "priceES": "~€20-25/noche"
         }
       ],
-      "fuel": "Aral, Shell, Esso, Total (Germania), TotalEnergies, Esso, Carrefour, Leclerc, Super U (Francia), diesel ~€1.90-1.98/L (DE) / ~€1.98-2.10/L (FR, supermercati). Le stazioni dei supermercati sono solitamente più economiche.",
+      "fuel": "Aral, Shell, Esso, Total (Germania), TotalEnergies, Esso, Carrefour, Leclerc, Super U (Francia), diesel ~€1.75-1.80/L (DE) / ~€1.80-1.88/L (FR, supermercati). Le stazioni dei supermercati sono solitamente più economiche.",
       "grocery": [
         {
           "name": "Carrefour Market",
@@ -8970,8 +8970,8 @@ var DAYS_DATA = [
         "notesES": "1 Rond-Point du Professeur Christian Cabrol, 80054 Amiens"
       },
       "budget": "~€130-160/giorno",
-      "fuelEN": "Aral, Shell, Esso, Total (Germania), TotalEnergies, Esso, Carrefour, Leclerc, Super U (Francia), diesel ~€1.90-1.98/L (DE) / ~€1.98-2.10/L (FR, supermarkets). Supermarket stations are usually cheaper.",
-      "fuelES": "Aral, Shell, Esso, Total (Germania), TotalEnergies, Esso, Carrefour, Leclerc, Super U (Francia), diesel ~€1.90-1.98/L (DE) / ~€1.98-2.10/L (FR, supermercados). Las estaciones de los supermercados suelen ser más baratas.",
+      "fuelEN": "Aral, Shell, Esso, Total (Germania), TotalEnergies, Esso, Carrefour, Leclerc, Super U (Francia), diesel ~€1.75-1.80/L (DE) / ~€1.80-1.88/L (FR, supermarkets). Supermarket stations are usually cheaper.",
+      "fuelES": "Aral, Shell, Esso, Total (Germania), TotalEnergies, Esso, Carrefour, Leclerc, Super U (Francia), diesel ~€1.75-1.80/L (DE) / ~€1.80-1.88/L (FR, supermercados). Las estaciones de los supermercados suelen ser más baratas.",
       "budgetEN": "~€130-160/day",
       "budgetES": "~€130-160/día"
     },
@@ -9141,7 +9141,7 @@ var DAYS_DATA = [
           "priceES": "~€17.20/noche"
         }
       ],
-      "fuel": "TotalEnergies, BP, Esso, Leclerc, Carrefour, Intermarché, diesel ~€2.08-2.15/L. Le stazioni dei supermercati sono solitamente più economiche.",
+      "fuel": "TotalEnergies, BP, Esso, Leclerc, Carrefour, Intermarché, diesel ~€1.85-1.92/L. Le stazioni dei supermercati sono solitamente più economiche.",
       "grocery": [
         {
           "name": "E.Leclerc e Intermarché Super ad Amboise",
@@ -9174,8 +9174,8 @@ var DAYS_DATA = [
         "nameES": "Centre Hospitalier Intercommunal Amboise/Château-Renault"
       },
       "budget": "~€120-150/giorno",
-      "fuelEN": "TotalEnergies, BP, Esso, Leclerc, Carrefour, Intermarché, diesel ~€2.08-2.15/L. Supermarket stations are usually cheaper.",
-      "fuelES": "TotalEnergies, BP, Esso, Leclerc, Carrefour, Intermarché, diésel ~€2.08-2.15/L. Las estaciones de los supermercados suelen ser más económicas.",
+      "fuelEN": "TotalEnergies, BP, Esso, Leclerc, Carrefour, Intermarché, diesel ~€1.85-1.92/L. Supermarket stations are usually cheaper.",
+      "fuelES": "TotalEnergies, BP, Esso, Leclerc, Carrefour, Intermarché, diésel ~€1.85-1.92/L. Las estaciones de los supermercados suelen ser más económicas.",
       "budgetEN": "~€120-150/day",
       "budgetES": "~€120-150/día"
     },
@@ -9338,7 +9338,7 @@ var DAYS_DATA = [
           "priceES": "~€11/noche"
         }
       ],
-      "fuel": "TotalEnergies, Esso, Shell, E.Leclerc, Carrefour, diesel ~€2.08-2.15/L. I distributori dei supermercati sono più economici.",
+      "fuel": "TotalEnergies, Esso, Shell, E.Leclerc, Carrefour, diesel ~€1.85-1.92/L. I distributori dei supermercati sono più economici.",
       "grocery": [
         {
           "name": "E.Leclerc, Carrefour, Super U (Amboise, Blois, Tours)",
@@ -9369,8 +9369,8 @@ var DAYS_DATA = [
         "nameES": "CHRU de Tours o Centre Hospitalier de Blois"
       },
       "budget": "~€170-190/giorno",
-      "fuelEN": "TotalEnergies, Esso, Shell, E.Leclerc, Carrefour, diesel ~€2.08-2.15/L. Supermarket pumps are cheaper.",
-      "fuelES": "TotalEnergies, Esso, Shell, E.Leclerc, Carrefour, diésel ~€2.08-2.15/L. Las estaciones de los supermercados son más baratas.",
+      "fuelEN": "TotalEnergies, Esso, Shell, E.Leclerc, Carrefour, diesel ~€1.85-1.92/L. Supermarket pumps are cheaper.",
+      "fuelES": "TotalEnergies, Esso, Shell, E.Leclerc, Carrefour, diésel ~€1.85-1.92/L. Las estaciones de los supermercados son más baratas.",
       "budgetEN": "~€170-190/day",
       "budgetES": "~€170-190/día"
     },
@@ -9557,7 +9557,7 @@ var DAYS_DATA = [
           "priceES": "~€12/noche"
         }
       ],
-      "fuel": "TotalEnergies, BP, Leclerc, Carrefour, Repsol, Cepsa, diesel ~€1.65-1.72/L (ES). Consigliato fare rifornimento in Spagna dove costa meno.",
+      "fuel": "TotalEnergies, BP, Leclerc, Carrefour, Repsol, Cepsa, diesel ~€1.48-1.55/L (ES). Consigliato fare rifornimento in Spagna dove costa meno.",
       "grocery": [
         {
           "name": "Eroski, Super Amara, Lidl",
@@ -9590,8 +9590,8 @@ var DAYS_DATA = [
         "nameES": "Hospital Universitario Donostia"
       },
       "budget": "~€110-140/giorno",
-      "fuelEN": "TotalEnergies, BP, Leclerc, Carrefour, Repsol, Cepsa, diesel ~€1.65-1.72/L (ES). Recommended to refuel in Spain where it's cheaper.",
-      "fuelES": "TotalEnergies, BP, Leclerc, Carrefour, Repsol, Cepsa, diesel ~€1.65-1.72/L (ES). Recomendado repostar en España donde cuesta menos.",
+      "fuelEN": "TotalEnergies, BP, Leclerc, Carrefour, Repsol, Cepsa, diesel ~€1.48-1.55/L (ES). Recommended to refuel in Spain where it's cheaper.",
+      "fuelES": "TotalEnergies, BP, Leclerc, Carrefour, Repsol, Cepsa, diesel ~€1.48-1.55/L (ES). Recomendado repostar en España donde cuesta menos.",
       "budgetEN": "~€110-140/day",
       "budgetES": "~€110-140/día"
     },
@@ -9860,7 +9860,7 @@ var DAYS_DATA = [
           "priceES": "~€15-20/noche"
         }
       ],
-      "fuel": "Repsol, Cepsa, Petronor, Avia, diesel ~€1.65-1.72/L. Il percorso è ben popolato senza tratti isolati.",
+      "fuel": "Repsol, Cepsa, Petronor, Avia, diesel ~€1.48-1.55/L. Il percorso è ben popolato senza tratti isolati.",
       "grocery": [
         {
           "name": "Eroski, Mercadona, BM Supermercados (Paesi Baschi)",
@@ -9891,8 +9891,8 @@ var DAYS_DATA = [
         "nameES": "Hospital Universitario Basurto"
       },
       "budget": "~€130-160/giorno",
-      "fuelEN": "Repsol, Cepsa, Petronor, Avia, diesel ~€1.65-1.72/L. The route is well populated with no isolated stretches.",
-      "fuelES": "Repsol, Cepsa, Petronor, Avia, diesel ~€1.65-1.72/L. El recorrido está bien poblado sin tramos aislados.",
+      "fuelEN": "Repsol, Cepsa, Petronor, Avia, diesel ~€1.48-1.55/L. The route is well populated with no isolated stretches.",
+      "fuelES": "Repsol, Cepsa, Petronor, Avia, diesel ~€1.48-1.55/L. El recorrido está bien poblado sin tramos aislados.",
       "budgetEN": "~€130-160/day",
       "budgetES": "~€130-160/día"
     },
@@ -10132,7 +10132,7 @@ var DAYS_DATA = [
           "priceES": "~€40-50/noche"
         }
       ],
-      "fuel": "Repsol, Cepsa, BP, Petronor, diesel ~€1.65-1.72/L. Fare rifornimento a Bilbao o lungo la A-8 prima di salire in montagna.",
+      "fuel": "Repsol, Cepsa, BP, Petronor, diesel ~€1.48-1.55/L. Fare rifornimento a Bilbao o lungo la A-8 prima di salire in montagna.",
       "grocery": [
         {
           "name": "Eroski o Mercadona",
@@ -10167,8 +10167,8 @@ var DAYS_DATA = [
         "notesES": "Atención a las carreteras de montaña estrechas (N-621)."
       },
       "budget": "~€130-160/giorno",
-      "fuelEN": "Repsol, Cepsa, BP, Petronor, diesel ~€1.65-1.72/L. Refuel in Bilbao or along the A-8 before heading up into the mountains.",
-      "fuelES": "Repsol, Cepsa, BP, Petronor, diésel ~€1.65-1.72/L. Repone combustible en Bilbao o a lo largo de la A-8 antes de subir a la montaña.",
+      "fuelEN": "Repsol, Cepsa, BP, Petronor, diesel ~€1.48-1.55/L. Refuel in Bilbao or along the A-8 before heading up into the mountains.",
+      "fuelES": "Repsol, Cepsa, BP, Petronor, diésel ~€1.48-1.55/L. Repone combustible en Bilbao o a lo largo de la A-8 antes de subir a la montaña.",
       "budgetEN": "~€130-160/day",
       "budgetES": "~€130-160/día"
     },
@@ -10394,7 +10394,7 @@ var DAYS_DATA = [
           "priceES": "~€Gratis/noche"
         }
       ],
-      "fuel": "Repsol, Cepsa, Galp, diesel ~€1.65-1.72/L. Facilmente reperibile lungo l'autostrada A-67 e a Palencia.",
+      "fuel": "Repsol, Cepsa, Galp, diesel ~€1.48-1.55/L. Facilmente reperibile lungo l'autostrada A-67 e a Palencia.",
       "grocery": [
         {
           "name": "Mercadona, Carrefour, Día, Eroski, Lidl, Aldi (Palencia)",
@@ -10425,8 +10425,8 @@ var DAYS_DATA = [
         "nameES": "Hospital Río Carrión o Hospital San Telmo"
       },
       "budget": "~€80-110/giorno",
-      "fuelEN": "Repsol, Cepsa, Galp, diesel ~€1.65-1.72/L. Easily found along the A-67 motorway and in Palencia.",
-      "fuelES": "Repsol, Cepsa, Galp, diesel ~€1.65-1.72/L. Fácilmente disponible a lo largo de la autopista A-67 y en Palencia.",
+      "fuelEN": "Repsol, Cepsa, Galp, diesel ~€1.48-1.55/L. Easily found along the A-67 motorway and in Palencia.",
+      "fuelES": "Repsol, Cepsa, Galp, diesel ~€1.48-1.55/L. Fácilmente disponible a lo largo de la autopista A-67 y en Palencia.",
       "budgetEN": "~€80-110/day",
       "budgetES": "~€80-110/día"
     },
@@ -10533,7 +10533,7 @@ var DAYS_DATA = [
           "priceES": "~€Gratis/noche"
         }
       ],
-      "fuel": "Repsol, Cepsa, Galp, Shell, diesel ~€1.65-1.75/L. Molte stazioni intorno a Palencia, improbabili lunghi tratti senza carburante.",
+      "fuel": "Repsol, Cepsa, Galp, Shell, diesel ~€1.48-1.55/L. Molte stazioni intorno a Palencia, improbabili lunghi tratti senza carburante.",
       "grocery": [
         {
           "name": "Mercadona, Carrefour, Lidl, Aldi, Dia, Palencia",
@@ -10564,8 +10564,8 @@ var DAYS_DATA = [
         "nameES": "Hospital Río Carrión"
       },
       "budget": "~€120-150/giorno",
-      "fuelEN": "Repsol, Cepsa, Galp, Shell, diesel ~€1.65-1.75/L. Many stations around Palencia; long stretches without fuel are unlikely.",
-      "fuelES": "Repsol, Cepsa, Galp, Shell, diesel ~€1.65-1.75/L. Muchas estaciones alrededor de Palencia; es improbable tramos largos sin carburante.",
+      "fuelEN": "Repsol, Cepsa, Galp, Shell, diesel ~€1.48-1.55/L. Many stations around Palencia; long stretches without fuel are unlikely.",
+      "fuelES": "Repsol, Cepsa, Galp, Shell, diesel ~€1.48-1.55/L. Muchas estaciones alrededor de Palencia; es improbable tramos largos sin carburante.",
       "budgetEN": "~€120-150/day",
       "budgetES": "~€120-150/día"
     },
@@ -10686,7 +10686,7 @@ var DAYS_DATA = [
           "priceES": "~€15-20/noche"
         }
       ],
-      "fuel": "Repsol, Cepsa, BP, Galp, diesel ~€1.65-1.72/L. Nessun tratto isolato senza carburante su questo percorso principale.",
+      "fuel": "Repsol, Cepsa, BP, Galp, diesel ~€1.48-1.55/L. Nessun tratto isolato senza carburante su questo percorso principale.",
       "grocery": [
         {
           "name": "Mercadona, Consum, Lidl, Aldi, Carrefour (Costa Brava)",
@@ -10721,8 +10721,8 @@ var DAYS_DATA = [
         "notesES": "Atención al tráfico en la AP-7 en verano; guarda los objetos de valor en las áreas de descanso."
       },
       "budget": "~€250-300/giorno",
-      "fuelEN": "Repsol, Cepsa, BP, Galp, diesel ~€1.65-1.72/L. No isolated stretches without fuel on this main route.",
-      "fuelES": "Repsol, Cepsa, BP, Galp, diesel ~€1.65-1.72/L. No hay tramos aislados sin combustible en esta ruta principal.",
+      "fuelEN": "Repsol, Cepsa, BP, Galp, diesel ~€1.48-1.55/L. No isolated stretches without fuel on this main route.",
+      "fuelES": "Repsol, Cepsa, BP, Galp, diesel ~€1.48-1.55/L. No hay tramos aislados sin combustible en esta ruta principal.",
       "budgetEN": "~€250-300/day",
       "budgetES": "~€250-300/día"
     },
@@ -10858,7 +10858,7 @@ var DAYS_DATA = [
           "priceES": "~€45-90/noche"
         }
       ],
-      "fuel": "Repsol, Cepsa, BP, diesel ~€1.65-1.75/L. Fai il pieno a Roses o Figueres prima della strada tortuosa per Cadaqués.",
+      "fuel": "Repsol, Cepsa, BP, diesel ~€1.48-1.55/L. Fai il pieno a Roses o Figueres prima della strada tortuosa per Cadaqués.",
       "grocery": [
         {
           "name": "Spar o Condis a Cadaqués (Bonpreu/Esclat, Caprabo, Mercadona a Figueres/Roses)",
@@ -10891,8 +10891,8 @@ var DAYS_DATA = [
         "nameES": "Hospital Universitari Dr. Josep Trueta en Girona"
       },
       "budget": "~€130-160/giorno",
-      "fuelEN": "Repsol, Cepsa, BP, diesel ~€1.65-1.75/L. Fill up in Roses or Figueres before the winding road to Cadaqués.",
-      "fuelES": "Repsol, Cepsa, BP, diésel ~€1.65-1.75/L. Llena el depósito en Roses o Figueres antes de la carretera sinuosa hacia Cadaqués.",
+      "fuelEN": "Repsol, Cepsa, BP, diesel ~€1.48-1.55/L. Fill up in Roses or Figueres before the winding road to Cadaqués.",
+      "fuelES": "Repsol, Cepsa, BP, diésel ~€1.48-1.55/L. Llena el depósito en Roses o Figueres antes de la carretera sinuosa hacia Cadaqués.",
       "budgetEN": "~€130-160/day",
       "budgetES": "~€130-160/día"
     },
@@ -11042,7 +11042,7 @@ var DAYS_DATA = [
           "priceES": "~€60/noche"
         }
       ],
-      "fuel": "Repsol, Cepsa (Spagna), TotalEnergies, Esso, Carrefour, E.Leclerc (Francia), diesel ~€1.65-1.72/L (ES) / ~€2.08-2.15/L (FR). Fai il pieno in Spagna prima del confine, il diesel è più economico. Nessun tratto isolato.",
+      "fuel": "Repsol, Cepsa (Spagna), TotalEnergies, Esso, Carrefour, E.Leclerc (Francia), diesel ~€1.48-1.55/L (ES) / ~€1.85-1.92/L (FR). Fai il pieno in Spagna prima del confine, il diesel è più economico. Nessun tratto isolato.",
       "grocery": [
         {
           "name": "Carrefour, E.Leclerc, Auchan, Casino, Lidl",
@@ -11077,8 +11077,8 @@ var DAYS_DATA = [
         "notesES": "Atención: tráfico muy intenso en la A8 durante las fiestas. Asegúrate de que la autocaravana esté bien cerrada en las áreas de descanso para evitar robos."
       },
       "budget": "~€250-300/giorno",
-      "fuelEN": "Repsol, Cepsa (Spain), TotalEnergies, Esso, Carrefour, E.Leclerc (France), diesel ~€1.65-1.72/L (ES) / ~€2.08-2.15/L (FR). Fill up in Spain before the border, diesel is cheaper. No isolated stretches.",
-      "fuelES": "Repsol, Cepsa (España), TotalEnergies, Esso, Carrefour, E.Leclerc (Francia), diesel ~€1.65-1.72/L (ES) / ~€2.08-2.15/L (FR). Haz el depósito en España antes de la frontera, el diésel es más barato. Ningún tramo aislado.",
+      "fuelEN": "Repsol, Cepsa (Spain), TotalEnergies, Esso, Carrefour, E.Leclerc (France), diesel ~€1.48-1.55/L (ES) / ~€1.85-1.92/L (FR). Fill up in Spain before the border, diesel is cheaper. No isolated stretches.",
+      "fuelES": "Repsol, Cepsa (España), TotalEnergies, Esso, Carrefour, E.Leclerc (Francia), diesel ~€1.48-1.55/L (ES) / ~€1.85-1.92/L (FR). Haz el depósito en España antes de la frontera, el diésel es más barato. Ningún tramo aislado.",
       "budgetEN": "~€250-300/giorno",
       "budgetES": "~€250-300/giorno"
     },
@@ -11255,7 +11255,7 @@ var DAYS_DATA = [
           "priceES": "~€24/noche"
         }
       ],
-      "fuel": "Eni, Q8, IP, Esso, diesel ~€1.95-2.05/L. Molte stazioni lungo la A10.",
+      "fuel": "Eni, Q8, IP, Esso, diesel ~€1.85-1.95/L. Molte stazioni lungo la A10.",
       "grocery": [
         {
           "name": "Coop, Carrefour, Esselunga, Lidl",
@@ -11288,8 +11288,8 @@ var DAYS_DATA = [
         "nameES": "Ospedale Policlinico San Martino"
       },
       "budget": "~€140-180/giorno",
-      "fuelEN": "Eni, Q8, IP, Esso, diesel ~€1.95-2.05/L. Many stations along the A10.",
-      "fuelES": "Eni, Q8, IP, Esso, diésel ~€1.95-2.05/L. Muchas estaciones a lo largo de la A10.",
+      "fuelEN": "Eni, Q8, IP, Esso, diesel ~€1.85-1.95/L. Many stations along the A10.",
+      "fuelES": "Eni, Q8, IP, Esso, diésel ~€1.85-1.95/L. Muchas estaciones a lo largo de la A10.",
       "budgetEN": "~€140-180/day",
       "budgetES": "~€140-180/día"
     },
@@ -11443,7 +11443,7 @@ var DAYS_DATA = [
           "nameES": "Caravan Park La Vesima"
         }
       ],
-      "fuel": "Eni, Q8, IP, Esso, diesel ~€2.00-2.10/L. Nessun tratto isolato senza carburante nella regione di Genova.",
+      "fuel": "Eni, Q8, IP, Esso, diesel ~€1.85-1.95/L. Nessun tratto isolato senza carburante nella regione di Genova.",
       "grocery": [
         {
           "name": "Coop, Carrefour, Lidl, Doro a Genova",
@@ -11474,8 +11474,8 @@ var DAYS_DATA = [
         "nameES": "Ospedale San Martino, Genova"
       },
       "budget": "~€120-150/giorno",
-      "fuelEN": "Eni, Q8, IP, Esso, diesel ~€2.00-2.10/L. No isolated stretches without fuel in the Genova region.",
-      "fuelES": "Eni, Q8, IP, Esso, diesel ~€2.00-2.10/L. No hay tramos aislados sin combustible en la región de Genova.",
+      "fuelEN": "Eni, Q8, IP, Esso, diesel ~€1.85-1.95/L. No isolated stretches without fuel in the Genova region.",
+      "fuelES": "Eni, Q8, IP, Esso, diesel ~€1.85-1.95/L. No hay tramos aislados sin combustible en la región de Genova.",
       "budgetEN": "~€120-150/day",
       "budgetES": "~€120-150/día"
     },
@@ -11637,7 +11637,7 @@ var DAYS_DATA = [
           "priceES": "€0/noche"
         }
       ],
-      "fuel": "Eni, Q8, IP, Tamoil, diesel ~€1.95-2.05/L. Molte stazioni di servizio lungo le autostrade A7, A21 e A4.",
+      "fuel": "Eni, Q8, IP, Tamoil, diesel ~€1.85-1.95/L. Molte stazioni di servizio lungo le autostrade A7, A21 e A4.",
       "grocery": [
         {
           "name": "Alì o Pam",
@@ -11670,8 +11670,8 @@ var DAYS_DATA = [
         "nameES": "Azienda Ospedale Università Padova"
       },
       "budget": "~€100-130/giorno",
-      "fuelEN": "Eni, Q8, IP, Tamoil, diesel ~€1.95-2.05/L. Many service stations along the A7, A21 and A4 motorways.",
-      "fuelES": "Eni, Q8, IP, Tamoil, diesel ~€1.95-2.05/L. Muchas estaciones de servicio a lo largo de las autopistas A7, A21 y A4.",
+      "fuelEN": "Eni, Q8, IP, Tamoil, diesel ~€1.85-1.95/L. Many service stations along the A7, A21 and A4 motorways.",
+      "fuelES": "Eni, Q8, IP, Tamoil, diesel ~€1.85-1.95/L. Muchas estaciones de servicio a lo largo de las autopistas A7, A21 y A4.",
       "budgetEN": "~€100-130/day",
       "budgetES": "~€100-130/día"
     },

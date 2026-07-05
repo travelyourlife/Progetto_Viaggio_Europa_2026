@@ -1,5 +1,13 @@
+## v4.88 — 2026-07-05
+- Fix: Sole di mezzanotte (24h) per g13 Rovaniemi, g21-g23 Lofoten (era "22h+ di luce")
+- Fix: Dati natura aggiornati — Finlandia (30 specie alberi, orchidea 6-8cm), Polonia (bisonte ~3.000), Spagna (orso ~400), Norvegia (alci 120-150k)
+- Fix: Home hs-countries allineato con stat-countries (merge check-ins + dailySummaries + countriesVisited)
+
 ## v4.87 — 5 Luglio 2026
-- **FIX Mappa Live: tracciato futuro visibile** — aggiunta polyline tratteggiata blu per il percorso pianificato rimanente (Norvegia→Danimarca→Francia→Spagna)
+- **Diario: traduzione automatica ES** — `autoTranslateDiary` ora produce `textEs`/`titleEs`/`highlightEs` oltre a EN. Frontend mostra il testo nella lingua corretta con disclaimer "Traducido automáticamente"
+- **Diario: UI labels ES** — Etapa, Destacado, Resumen, Comentarios, Día N, Pre-viaje, Ordenar por fecha
+- **translatePost: targetLang** — il pulsante 🌐 ora traduce in ES se la lingua è spagnola
+- **FIX Mappa Live: tracciato futuro visibile** — aggiunta polyline tratteggiata blu per il percorso pianificato rimanente
 - **FIX deploy: openaiKey ReferenceError** — `defineSecret('OPENAI_API_KEY')` spostato a riga 56
 - **Pulsante ✏️ Modifica inline** nel dettaglio giornaliero "A piedi"
 - Include tutte le fix v4.85 (ES i18n, GPS jitter, Strava OAuth B)

@@ -328,9 +328,12 @@ exports.translatePost = onCall(
     try {
       const { Translate } = require('@google-cloud/translate').v2;
       const translate = new Translate();
-      const [translation] = await translate.translate(text, 'en');
-      await db.ref(`trips/${familyId}/diary/${key}`).update({ textEn: translation });
-      return { textEn: translation };
+      // v4.87: support target language (default EN, also ES)
+      const targetLang = request.data.targetLang || 'en';
+      const [translation] = await translate.translate(text, targetLang);
+      const fieldName = targetLang === 'es' ? 'textEs' : 'textEn';
+      await db.ref(`trips/${familyId}/diary/${key}`).update({ [fieldName]: translation });
+      return { [fieldName]: translation };
     } catch (err) {
       throw new HttpsError('internal', 'Translation failed: ' + err.message);
     }
@@ -1539,10 +1542,58 @@ async function translateToEnglish(text, apiKey) {
   }
 }
 
+// v4.87: Translate Italian text to Spanish (same approach as EN)
+async function translateToSpanish(text, apiKey) {
+  if (!text || !text.trim()) return null;
+
+  try {
+    const response = await fetchOpenAIWithRetry(async () => {
+      const translateCtrl = new AbortController();
+      const translateTimeout = setTimeout(() => translateCtrl.abort(), 30000);
+      try {
+        return await fetch('https://api.openai.com/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`,
+          },
+          body: JSON.stringify({
+            model: 'gpt-4o-mini',
+            messages: [
+              {
+                role: 'system',
+                content: 'You are a translator for a family travel blog about a camper van trip across Europe. Translate the following Italian text to Spanish. Keep the same tone (informal, enthusiastic). Preserve all emoji and formatting exactly as they are. Return ONLY the translated text, nothing else.',
+              },
+              { role: 'user', content: text },
+            ],
+            temperature: 0.3,
+            max_tokens: 1000,
+          }),
+          signal: translateCtrl.signal,
+        });
+      } finally {
+        clearTimeout(translateTimeout);
+      }
+    });
+
+    if (!response.ok) {
+      const err = await response.text();
+      logger.error('[AutoTranslate-ES] OpenAI error:', err);
+      return null;
+    }
+
+    const result = await response.json();
+    return result.choices?.[0]?.message?.content?.trim() || null;
+  } catch (error) {
+    logger.error('[AutoTranslate-ES] Fetch error:', error.message);
+    return null;
+  }
+}
+
 exports.autoTranslateDiary = onValueWritten(
   {
     ref: `trips/${FAMILY_ID}/diary/{entryId}`,
-    timeoutSeconds: 60,
+    timeoutSeconds: 120,
     secrets: [openaiKey],
   },
   async (event) => {
@@ -1556,21 +1607,22 @@ exports.autoTranslateDiary = onValueWritten(
       return null;
     }
 
-    const fieldsToTranslate = [];
+    const fieldsToTranslateEn = [];
+    const fieldsToTranslateEs = [];
 
     const labelChanged = (before?.customLabel || '') !== (after.customLabel || '');
-    const labelNeedsTranslation = after.customLabel && (labelChanged || !after.titleEn);
-    if (labelNeedsTranslation) fieldsToTranslate.push('customLabel');
+    if (after.customLabel && (labelChanged || !after.titleEn)) fieldsToTranslateEn.push('customLabel');
+    if (after.customLabel && (labelChanged || !after.titleEs)) fieldsToTranslateEs.push('customLabel');
 
     const textChanged = (before?.text || '') !== (after.text || '');
-    const textNeedsTranslation = after.text && (textChanged || !after.textEn);
-    if (textNeedsTranslation) fieldsToTranslate.push('text');
+    if (after.text && (textChanged || !after.textEn)) fieldsToTranslateEn.push('text');
+    if (after.text && (textChanged || !after.textEs)) fieldsToTranslateEs.push('text');
 
     const highlightChanged = (before?.highlight || '') !== (after.highlight || '');
-    const highlightNeedsTranslation = after.highlight && (highlightChanged || !after.highlightEn);
-    if (highlightNeedsTranslation) fieldsToTranslate.push('highlight');
+    if (after.highlight && (highlightChanged || !after.highlightEn)) fieldsToTranslateEn.push('highlight');
+    if (after.highlight && (highlightChanged || !after.highlightEs)) fieldsToTranslateEs.push('highlight');
 
-    if (fieldsToTranslate.length === 0) {
+    if (fieldsToTranslateEn.length === 0 && fieldsToTranslateEs.length === 0) {
       logger.log('[AutoTranslate] No fields need translation — skipping');
       return null;
     }
@@ -1581,11 +1633,12 @@ exports.autoTranslateDiary = onValueWritten(
       return null;
     }
 
-    logger.log(`[AutoTranslate] Translating fields: ${fieldsToTranslate.join(', ')} for entry ${event.params.entryId}`);
+    logger.log(`[AutoTranslate] Translating EN:[${fieldsToTranslateEn.join(',')}] ES:[${fieldsToTranslateEs.join(',')}] for entry ${event.params.entryId}`);
 
     const updates = {};
 
-    for (const field of fieldsToTranslate) {
+    // Translate to English
+    for (const field of fieldsToTranslateEn) {
       const sourceText = after[field];
       const translated = await translateToEnglish(sourceText, apiKey);
       if (translated) {
@@ -1595,9 +1648,20 @@ exports.autoTranslateDiary = onValueWritten(
       }
     }
 
-    if (!after.customLabel && before?.customLabel) updates['titleEn'] = null;
-    if (!after.text && before?.text) updates['textEn'] = null;
-    if (!after.highlight && before?.highlight) updates['highlightEn'] = null;
+    // v4.87: Translate to Spanish
+    for (const field of fieldsToTranslateEs) {
+      const sourceText = after[field];
+      const translated = await translateToSpanish(sourceText, apiKey);
+      if (translated) {
+        if (field === 'customLabel') updates['titleEs'] = translated;
+        else if (field === 'text') updates['textEs'] = translated;
+        else if (field === 'highlight') updates['highlightEs'] = translated;
+      }
+    }
+
+    if (!after.customLabel && before?.customLabel) { updates['titleEn'] = null; updates['titleEs'] = null; }
+    if (!after.text && before?.text) { updates['textEn'] = null; updates['textEs'] = null; }
+    if (!after.highlight && before?.highlight) { updates['highlightEn'] = null; updates['highlightEs'] = null; }
 
     if (Object.keys(updates).length === 0) {
       logger.log('[AutoTranslate] No successful translations');

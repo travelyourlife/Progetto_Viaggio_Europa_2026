@@ -1,3 +1,0 @@
-User-agent: *
-Allow: /
-Sitemap: https://travelyourlife.github.io/Progetto_Viaggio_Europa_2026/

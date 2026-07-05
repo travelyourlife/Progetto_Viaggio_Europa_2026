@@ -9293,7 +9293,7 @@ async function fetchForecast(lat, lon, date, _retry) {
             hsKm.textContent = Math.round(totalKm).toLocaleString('it-IT');
         });
 
-        // Countries visited + check-ins from Firebase
+        // v4.88: Countries visited — merge check-ins + dailySummaries + countriesVisited (aligned with stat-countries)
         if (typeof db !== 'undefined' && db && FAMILY_ID) {
             var ciRef = db.ref('trips/' + FAMILY_ID + '/checkins');
             ciRef.once('value', function(snap) {
@@ -9306,9 +9306,40 @@ async function fetchForecast(lat, lon, date, _retry) {
                         if (flags) flags.forEach(function(f) { visitedCountries.add(f); });
                     }
                 });
-                hsCountries.textContent = (visitedCountries.size || '0');
                 var totalCheckins = Object.keys(checkins).filter(function(k) { return checkins[k]; }).length;
                 hsCheckins.textContent = totalCheckins;
+
+                // Merge with dailySummaries + countriesVisited (same logic as stat-countries)
+                var _hsPending = 0;
+                var _hsCheckDone = function() {
+                    _hsPending--;
+                    if (_hsPending <= 0) hsCountries.textContent = (visitedCountries.size || '0');
+                };
+                var _dsRef = db.ref('trips/' + FAMILY_ID + '/dailySummaries');
+                var _cvRef = db.ref('trips/' + FAMILY_ID + '/countriesVisited');
+                _hsPending++;
+                _dsRef.once('value', function(dsSnap) {
+                    var ds = dsSnap.val() || {};
+                    Object.keys(ds).forEach(function(dateKey) {
+                        var entry = ds[dateKey];
+                        if (entry && entry.countryCode) {
+                            var cc = entry.countryCode;
+                            var flag = String.fromCodePoint(0x1F1E6 + cc.charCodeAt(0) - 65) + String.fromCodePoint(0x1F1E6 + cc.charCodeAt(1) - 65);
+                            visitedCountries.add(flag);
+                        }
+                    });
+                    _hsCheckDone();
+                });
+                _hsPending++;
+                _cvRef.once('value', function(cvSnap) {
+                    var cv = cvSnap.val() || {};
+                    Object.keys(cv).forEach(function(cc) {
+                        var flag = String.fromCodePoint(0x1F1E6 + cc.charCodeAt(0) - 65) + String.fromCodePoint(0x1F1E6 + cc.charCodeAt(1) - 65);
+                        visitedCountries.add(flag);
+                    });
+                    _hsCheckDone();
+                });
+                if (_hsPending === 0) hsCountries.textContent = (visitedCountries.size || '0');
             });
         } else {
             // Fallback to localStorage
@@ -15520,11 +15551,15 @@ window.injectAllWikiLinks = function() {
         var dn = entry.dayNumber;
         var dayLabel;
         if (entry.customLabel) {
-          dayLabel = (isEN && entry.titleEn) ? entry.titleEn : entry.customLabel;
+          // v4.87: 3-language title
+          if (typeof LANG3 !== 'undefined' && LANG3 === 'es' && entry.titleEs) dayLabel = entry.titleEs;
+          else if (isEN && entry.titleEn) dayLabel = entry.titleEn;
+          else dayLabel = entry.customLabel;
         } else if (dn < 0) {
-          dayLabel = isEN ? 'Pre-trip' : 'Pre-viaggio';
+          dayLabel = (typeof LANG3 !== 'undefined' && LANG3 === 'es') ? 'Pre-viaje' : isEN ? 'Pre-trip' : 'Pre-viaggio';
         } else {
-          dayLabel = (isEN ? 'Day ' : 'G') + ( typeof dn === 'number' ? (dn + 1) : '?');
+          var dayPrefix = (typeof LANG3 !== 'undefined' && LANG3 === 'es') ? 'Día ' : isEN ? 'Day ' : 'G';
+          dayLabel = dayPrefix + ( typeof dn === 'number' ? (dn + 1) : '?');
         }
         var dateStr = entry.date || '';
         var country = entry.country || '';
@@ -15534,18 +15569,19 @@ window.injectAllWikiLinks = function() {
         // Determine entry type for badge
         var entryType = '';
         var entryTypeLabel = '';
+        var _lg = (typeof LANG3 !== 'undefined') ? LANG3 : (isEN ? 'en' : 'it');
         var CUSTOM_TYPE_MAP = {
           'checkin':   '\ud83d\udccd Check-in',
-          'tappa':     '\ud83d\udea9 ' + (isEN ? 'Stage' : 'Tappa'),
-          'highlight': '\u2b50 Highlight',
-          'photo':     '\ud83d\udcf7 ' + (isEN ? 'Photo' : 'Foto'),
+          'tappa':     '\ud83d\udea9 ' + (_lg === 'es' ? 'Etapa' : _lg === 'en' ? 'Stage' : 'Tappa'),
+          'highlight': '\u2b50 ' + (_lg === 'es' ? 'Destacado' : 'Highlight'),
+          'photo':     '\ud83d\udcf7 ' + (_lg === 'es' ? 'Foto' : _lg === 'en' ? 'Photo' : 'Foto'),
           'video':     '\ud83c\udfac Video',
           'audio':     '\ud83c\udfa4 Audio',
-          'recap':     '\ud83d\udcdd ' + (isEN ? 'Recap' : 'Riepilogo'),
-          'message':   '\ud83d\udcac ' + (isEN ? 'Message' : 'Messaggio'),
-          'cibo':      '\ud83c\udf5d ' + (isEN ? 'Food' : 'Cibo'),
-          'cultura':   '\ud83c\udfdb\ufe0f ' + (isEN ? 'Culture' : 'Cultura'),
-          'attivita':  '\ud83e\udd7e ' + (isEN ? 'Activity' : 'Attivit\u00e0'),
+          'recap':     '\ud83d\udcdd ' + (_lg === 'es' ? 'Resumen' : _lg === 'en' ? 'Recap' : 'Riepilogo'),
+          'message':   '\ud83d\udcac ' + (_lg === 'es' ? 'Mensaje' : _lg === 'en' ? 'Message' : 'Messaggio'),
+          'cibo':      '\ud83c\udf5d ' + (_lg === 'es' ? 'Comida' : _lg === 'en' ? 'Food' : 'Cibo'),
+          'cultura':   '\ud83c\udfdb\ufe0f ' + (_lg === 'es' ? 'Cultura' : _lg === 'en' ? 'Culture' : 'Cultura'),
+          'attivita':  '\ud83e\udd7e ' + (_lg === 'es' ? 'Actividad' : _lg === 'en' ? 'Activity' : 'Attivit\u00e0'),
         };
         if (entry.customType && CUSTOM_TYPE_MAP[entry.customType]) {
           entryType = entry.customType;
@@ -15612,8 +15648,8 @@ window.injectAllWikiLinks = function() {
           // v4.43: owner toolbar — "Sort by date" shortcut for the whole post.
           if (_photoOwner && _orderedKeys.length > 1) {
             html += '    <div class="diario-photos-toolbar">';
-            html += '      <button class="diario-photo-sortdate" data-entry-key="' + key + '" title="' + (isEN ? 'Sort photos by date' : 'Ordina le foto per data') + '">🕒 ' + (isEN ? 'Sort by date' : 'Ordina per data') + '</button>';
-            html += '      <span class="diario-photos-hint">' + (isEN ? 'Drag ☰ to reorder' : 'Trascina ☰ per riordinare') + '</span>';
+            html += '      <button class="diario-photo-sortdate" data-entry-key="' + key + '" title="' + (_lg === 'es' ? 'Ordenar fotos por fecha' : isEN ? 'Sort photos by date' : 'Ordina le foto per data') + '">🕒 ' + (_lg === 'es' ? 'Ordenar por fecha' : isEN ? 'Sort by date' : 'Ordina per data') + '</button>';
+            html += '      <span class="diario-photos-hint">' + (_lg === 'es' ? 'Arrastra ☰ para reordenar' : isEN ? 'Drag ☰ to reorder' : 'Trascina ☰ per riordinare') + '</span>';
             html += '    </div>';
           }
           html += '    <div class="diario-photos">';
@@ -15624,7 +15660,7 @@ window.injectAllWikiLinks = function() {
             html += '        <img src="' + safeUrl + '" alt="' + escapeHtml(photo.caption || '') + '" class="diario-photo" loading="lazy" data-entry-key="' + key + '" data-photo-key="' + photoKey + '">';
             // v4.43: drag handle (owner, multi-photo only) to start touch/mouse reorder.
             if (_photoOwner && _orderedKeys.length > 1) {
-              html += '        <div class="diario-photo-draghandle" title="' + (isEN ? 'Drag to reorder' : 'Trascina per riordinare') + '" aria-label="' + (isEN ? 'Drag to reorder' : 'Trascina per riordinare') + '">☰</div>';
+              html += '        <div class="diario-photo-draghandle" title="' + (_lg === 'es' ? 'Arrastra para reordenar' : isEN ? 'Drag to reorder' : 'Trascina per riordinare') + '" aria-label="' + (_lg === 'es' ? 'Arrastra para reordenar' : isEN ? 'Drag to reorder' : 'Trascina per riordinare') + '">☰</div>';
             }
             // v4.25: reaction/comment summary badge (❤ n · 💬 n)
             var _reactN = (photo.reactions && typeof photo.reactions === 'object') ? Object.keys(photo.reactions).length : 0;
@@ -15686,21 +15722,33 @@ window.injectAllWikiLinks = function() {
 
         // Text
         if (entry.text) {
-          var displayText = (isEN && entry.textEn) ? entry.textEn : entry.text;
+          // v4.87: 3-language diary text (IT original, EN, ES)
+          var displayText = entry.text;
+          var isTranslated = false;
+          if (typeof LANG3 !== 'undefined' && LANG3 === 'es' && entry.textEs) { displayText = entry.textEs; isTranslated = true; }
+          else if (isEN && entry.textEn) { displayText = entry.textEn; isTranslated = true; }
           html += '    <p class="diario-text" data-entry-key="' + key + '">' + escapeHtml(displayText) + '</p>';
           // v2.21: Auto-translation disclaimer with toggle to see original
-          if (isEN && entry.textEn) {
-            html += '    <span class="diario-auto-tl" data-key="' + key + '">Translated automatically · <a href="#" class="diario-see-original" data-original="' + escapeHtml(entry.text).replace(/"/g, '&quot;') + '" data-translated="' + escapeHtml(entry.textEn).replace(/"/g, '&quot;') + '">See original</a></span>';
+          if (isTranslated) {
+            var translatedText = (typeof LANG3 !== 'undefined' && LANG3 === 'es') ? (entry.textEs || '') : (entry.textEn || '');
+            var seeOrigLabel = (typeof LANG3 !== 'undefined' && LANG3 === 'es') ? 'Traducido automáticamente · <a href="#" class="diario-see-original" data-original="' + escapeHtml(entry.text).replace(/"/g, '&quot;') + '" data-translated="' + escapeHtml(translatedText).replace(/"/g, '&quot;') + '">Ver original</a>' : 'Translated automatically · <a href="#" class="diario-see-original" data-original="' + escapeHtml(entry.text).replace(/"/g, '&quot;') + '" data-translated="' + escapeHtml(translatedText).replace(/"/g, '&quot;') + '">See original</a>';
+            html += '    <span class="diario-auto-tl" data-key="' + key + '">' + seeOrigLabel + '</span>';
           }
-          // Translate button: show only if EN and no auto-translation available
+          // Translate button: show only if non-IT and no auto-translation available
           if (isEN && !entry.textEn) {
             html += '    <button class="diario-translate-btn" data-key="' + key + '" data-text="' + escapeHtml(entry.text).replace(/"/g, '&quot;') + '" title="Translate to English">\uD83C\uDF10</button>';
+          }
+          if (typeof LANG3 !== 'undefined' && LANG3 === 'es' && !entry.textEs) {
+            html += '    <button class="diario-translate-btn" data-key="' + key + '" data-text="' + escapeHtml(entry.text).replace(/"/g, '&quot;') + '" title="Traducir al español">\uD83C\uDF10</button>';
           }
         }
 
         // Highlight
         if (entry.highlight) {
-          var displayHighlight = (isEN && entry.highlightEn) ? entry.highlightEn : entry.highlight;
+          // v4.87: 3-language highlight
+          var displayHighlight = entry.highlight;
+          if (typeof LANG3 !== 'undefined' && LANG3 === 'es' && entry.highlightEs) displayHighlight = entry.highlightEs;
+          else if (isEN && entry.highlightEn) displayHighlight = entry.highlightEn;
           html += '    <div class="diario-highlight">\u2b50 ' + escapeHtml(displayHighlight) + '</div>';
         }
 
@@ -15943,7 +15991,7 @@ window.injectAllWikiLinks = function() {
            emoji + (c > 0 ? '<span class="diario-react-count">' + c + '</span>' : '') + '</button>';
     });
     h += '<button type="button" class="diario-comments-toggle" data-key="' + key + '">\uD83D\uDCAC ' +
-         (commentCount > 0 ? commentCount + ' ' : '') + (isEN ? 'Comments' : 'Commenti') + '</button>';
+         (commentCount > 0 ? commentCount + ' ' : '') + (_lg === 'es' ? 'Comentarios' : isEN ? 'Comments' : 'Commenti') + '</button>';
     h += '</div>';
 
     // v4.18: "Ci sono stato!" / "I was there!" toggle removed per user request
@@ -16369,14 +16417,15 @@ window.injectAllWikiLinks = function() {
         // Call translatePost Cloud Function
         var functions = firebase.app().functions('europe-west1');
         var translateFn = functions.httpsCallable('translatePost');
-        // CONTRATTO translatePost: { text, key, familyId } → { textEn }
-            // Vedi functions/index.js per dettagli. Se cambi qui, aggiorna anche lì.
-            translateFn({ text: originalText, key: key, familyId: (typeof FAMILY_ID !== 'undefined' ? FAMILY_ID : 'viaggio-europa-2026') }).then(function(result) {
-          if (result.data && result.data.textEn) {
-            textEl.textContent = result.data.textEn;
+        // v4.87: pass targetLang based on current language
+        var _targetLang = (typeof LANG3 !== 'undefined' && LANG3 === 'es') ? 'es' : 'en';
+        translateFn({ text: originalText, key: key, familyId: (typeof FAMILY_ID !== 'undefined' ? FAMILY_ID : 'viaggio-europa-2026'), targetLang: _targetLang }).then(function(result) {
+          var translatedField = _targetLang === 'es' ? 'textEs' : 'textEn';
+          if (result.data && result.data[translatedField]) {
+            textEl.textContent = result.data[translatedField];
             btn.dataset.translated = '1';
             btn.textContent = '\uD83C\uDDEE\uD83C\uDDF9';
-            btn.title = 'Show original';
+            btn.title = _targetLang === 'es' ? 'Ver original' : 'Show original';
           }
         }).catch(function(err) {
           console.warn('[Translate]', err);
@@ -16534,7 +16583,7 @@ window.injectAllWikiLinks = function() {
              emoji + (c > 0 ? '<span class="diario-react-count">' + c + '</span>' : '') + '</button>';
       });
       h += '<button type="button" class="diario-comments-toggle photo-comments-toggle">💬 ' +
-           (commentCount > 0 ? commentCount + ' ' : '') + (isEN ? 'Comments' : 'Commenti') + '</button>';
+           (commentCount > 0 ? commentCount + ' ' : '') + (_lg === 'es' ? 'Comentarios' : isEN ? 'Comments' : 'Commenti') + '</button>';
       h += '</div>';
       // Who reacted (names)
       var reactorNames = [];
