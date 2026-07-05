@@ -1,0 +1,95 @@
+{
+    "name": "Quo Vadis",
+    "short_name": "Quo Vadis",
+    "description": "Guida interattiva per il viaggio in camper attraverso 13 paesi europei · Interactive travel companion for a 13-country European road trip",
+    "start_url": "./index.html",
+    "scope": "./",
+    "id": "viaggio-europa-2026",
+    "display": "standalone",
+    "display_override": ["standalone", "minimal-ui"],
+    "orientation": "portrait",
+    "background_color": "#ffffff",
+    "theme_color": "#1a3a5c",
+    "lang": "it",
+    "dir": "ltr",
+    "categories": ["travel", "lifestyle"],
+    "iarc_rating_id": "",
+    "launch_handler": {
+        "client_mode": "navigate-existing"
+    },
+    "shortcuts": [
+        {
+            "name": "Itinerario / Itinerary",
+            "short_name": "Itinerario",
+            "url": "./index.html#tab-itinerary",
+            "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
+        },
+        {
+            "name": "Mappa Live / Live Map",
+            "short_name": "Live",
+            "url": "./index.html#tab-live",
+            "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
+        },
+        {
+            "name": "Chat",
+            "short_name": "Chat",
+            "url": "./index.html#tab-chat",
+            "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "screenshots/home.png",
+            "sizes": "1080x1920",
+            "type": "image/png",
+            "form_factor": "narrow",
+            "label": "Home — Countdown e panoramica viaggio / Trip overview"
+        },
+        {
+            "src": "screenshots/itinerary.png",
+            "sizes": "1080x1920",
+            "type": "image/png",
+            "form_factor": "narrow",
+            "label": "Itinerario — Dettagli giorno per giorno / Day-by-day details"
+        },
+        {
+            "src": "screenshots/map.png",
+            "sizes": "1080x1920",
+            "type": "image/png",
+            "form_factor": "narrow",
+            "label": "Mappa Live — Posizione e statistiche / Live position & stats"
+        }
+    ],
+    "icons": [
+        {
+            "src": "icon.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "icon-maskable-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "icon-maskable-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "icon-maskable-180.png",
+            "sizes": "180x180",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ]
+}

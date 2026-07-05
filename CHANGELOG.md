@@ -1,3 +1,19 @@
+## v4.89 — 2026-07-05
+- Fix prezzi diesel da EU Oil Bulletin (29 giu 2026) per tutti i 13 Paesi
+- Fix sole di mezzanotte: g13, g21, g22, g23 → "24h di luce ☀️"
+- Fix dati natura: bisonte Polonia ~3.000, orso Spagna ~400, alci Norvegia 120-150k, orchidea Finlandia 6-8 cm
+- Fix hs-countries Home: merge check-ins + dailySummaries + countriesVisited
+- Diario ES: auto-traduzione spagnolo (textEs, titleEs, highlightEs)
+- Diario UI ES: Destacado, Resumen, Comentarios, Día, Pre-viaje
+- Mappa Live: tracciato futuro visibile (blu tratteggiato)
+- Edit walking inline (pulsante ✏️ nel dettaglio giornaliero)
+- Strava OAuth B: endpoint stravaOAuthCallback
+- Fix openaiKey ReferenceError (defineSecret spostato in alto)
+- Rimosso node-fetch (global fetch Node 20+)
+- ES i18n: city-itineraries, unified-map, route popups, giorniTabIndex
+- Fix hardRefresh, Today/Hoy, quiz dark mode, startLive guard, GPS jitter 100m
+- Fonti e Riferimenti tradotto in EN/ES
+
 ## v4.88 — 2026-07-05
 - Fix: Sole di mezzanotte (24h) per g13 Rovaniemi, g21-g23 Lofoten (era "22h+ di luce")
 - Fix: Dati natura aggiornati — Finlandia (30 specie alberi, orchidea 6-8cm), Polonia (bisonte ~3.000), Spagna (orso ~400), Norvegia (alci 120-150k)
