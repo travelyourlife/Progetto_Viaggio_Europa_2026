@@ -236,7 +236,7 @@
       // Calculate distance
       if (bgLastLat !== null && bgLastLng !== null) {
         var dist = haversineKm(bgLastLat, bgLastLng, lat, lng);
-        if (dist > 0.005 && dist < 5) { // filter noise (5m-5km)
+        if (dist > 0.1 && dist < 5) { // filter noise (100m-5km) — v4.85: raised from 5m to match app.js MIN_TRACK_DIST
           bgTodayKm += dist;
         }
       }

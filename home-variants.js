@@ -1862,8 +1862,9 @@
   }
 
   function formatKmDistance(km) {
+    km = Math.round(km);
     if (km >= 1000) {
-      return km.toLocaleString('it-IT') + ' km';
+      return km.toLocaleString('it-IT', {maximumFractionDigits: 0}) + ' km';
     }
     return km + ' km';
   }

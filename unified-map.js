@@ -9,16 +9,22 @@
 
   // ─── Configuration ───
   var POI_CATEGORIES = {
-    star:        { label: '⭐ Imperdibili',       color: '#d69e2e', size: 36, defaultOn: true },
-    cultura:     { label: '🏛️ Cultura',           color: '#6b46c1', size: 36, defaultOn: true },
-    natura:      { label: '🌲 Natura',             color: '#276749', size: 36, defaultOn: true },
-    sport:       { label: '🥾 Sport',             color: '#2b6cb0', size: 36, defaultOn: false },
-    attivita:    { label: '🎭 Attività',          color: '#9b59b6', size: 36, defaultOn: false },
-    monopattino: { label: '🛴 Monopattino',       color: '#84cc16', size: 36, defaultOn: false },
-    cibo:        { label: '🍽️ Cibo',              color: '#dd6b20', size: 36, defaultOn: false },
-    parking:     { label: '🅿️ Aree sosta',        color: '#718096', size: 36, defaultOn: false },
-    kids:        { label: '👶 Kids',              color: '#d53f8c', size: 36, defaultOn: false }
+    star:        { label: '⭐ Imperdibili',       labelEN: '⭐ Must-see',        labelES: '⭐ Imprescindibles', color: '#d69e2e', size: 36, defaultOn: true },
+    cultura:     { label: '🏛️ Cultura',           labelEN: '🏛️ Culture',        labelES: '🏛️ Cultura',        color: '#6b46c1', size: 36, defaultOn: true },
+    natura:      { label: '🌲 Natura',             labelEN: '🌲 Nature',         labelES: '🌲 Naturaleza',     color: '#276749', size: 36, defaultOn: true },
+    sport:       { label: '🥾 Sport',             labelEN: '🥾 Sport',          labelES: '🥾 Deporte',        color: '#2b6cb0', size: 36, defaultOn: false },
+    attivita:    { label: '🎭 Attività',          labelEN: '🎭 Activities',     labelES: '🎭 Actividades',    color: '#9b59b6', size: 36, defaultOn: false },
+    monopattino: { label: '🛴 Monopattino',       labelEN: '🛴 Scooter',        labelES: '🛴 Patinete',       color: '#84cc16', size: 36, defaultOn: false },
+    cibo:        { label: '🍽️ Cibo',              labelEN: '🍽️ Food',           labelES: '🍽️ Comida',         color: '#dd6b20', size: 36, defaultOn: false },
+    parking:     { label: '🅿️ Aree sosta',        labelEN: '🅿️ Parking',        labelES: '🅿️ Aparcamiento',  color: '#718096', size: 36, defaultOn: false },
+    kids:        { label: '👶 Kids',              labelEN: '👶 Kids',           labelES: '👶 Niños',          color: '#d53f8c', size: 36, defaultOn: false }
   };
+  // Helper to get localized category label
+  function catLabel(catObj) {
+    if (UMAP_LANG3 === 'es') return catObj.labelES || catObj.labelEN || catObj.label;
+    if (UMAP_LANG3 === 'en') return catObj.labelEN || catObj.label;
+    return catObj.label;
+  }
 
   // ─── State (for pos-map) ───
   var unifiedMapReady = false;
@@ -78,14 +84,24 @@
   }
 
   // ─── Create popup content ───
-  // v2.82: language detection (IT default, EN on index_en / lang=en).
-  var UMAP_IS_EN = (document.documentElement.lang === 'en') ||
-                   (location.pathname.indexOf('_en') !== -1);
+  // v4.85: 3-language detection (it | en | es).
+  var UMAP_LANG3 = (function() {
+    if (typeof window.LANG3 === 'string') return window.LANG3;
+    var l = (document.documentElement.lang || '').toLowerCase();
+    var p = (location.pathname || '').toLowerCase();
+    if (l === 'es' || p.indexOf('_es') !== -1) return 'es';
+    if (l === 'en' || p.indexOf('_en') !== -1) return 'en';
+    return 'it';
+  }());
 
-  // v2.82: pick the localized variant of a field, falling back to the base
-  // (Italian) value when the EN string has not been provided.
+  // v4.85: pick the localized variant of a field (ES→EN→IT fallback).
   function poiField(poi, base) {
-    if (UMAP_IS_EN) {
+    if (UMAP_LANG3 === 'es') {
+      var es = poi[base + 'ES'];
+      if (es !== undefined && es !== null && String(es).trim() !== '') return es;
+      var en2 = poi[base + 'EN'];
+      if (en2 !== undefined && en2 !== null && String(en2).trim() !== '') return en2;
+    } else if (UMAP_LANG3 === 'en') {
       var en = poi[base + 'EN'];
       if (en !== undefined && en !== null && String(en).trim() !== '') return en;
     }
@@ -93,19 +109,23 @@
   }
 
   function createPopupContent(poi) {
-    var lbl = UMAP_IS_EN
+    var lbl = UMAP_LANG3 === 'es'
+      ? { star: '⭐ Imprescindible', maps: '🗺️ Google Maps', hours: 'Horario', price: 'Precio' }
+      : UMAP_LANG3 === 'en'
       ? { star: '⭐ Must-see', maps: '🗺️ Google Maps', hours: 'Hours', price: 'Price' }
       : { star: '⭐ Imperdibile', maps: '🗺️ Google Maps', hours: 'Orari', price: 'Prezzo' };
     var starBadge = poi.star ? ' <span style="color:#d69e2e;font-size:12px;">' + lbl.star + '</span>' : '';
     var desc  = poiField(poi, 'desc');
     var hours = poiField(poi, 'hours');
     var price = poiField(poi, 'price');
+    var nm    = poiField(poi, 'name');
+    var city  = poiField(poi, 'city');
     var html = '<div class="umap-popup">' +
       '<div class="umap-popup-header">' +
         '<span class="umap-popup-icon">' + (poi.icon || '📍') + '</span>' +
-        '<strong>' + escapeHtml(poi.name) + '</strong>' + starBadge +
+        '<strong>' + escapeHtml(nm) + '</strong>' + starBadge +
       '</div>' +
-      '<div class="umap-popup-city">📍 ' + escapeHtml(poi.city || '') + ' · ' + (poi.day || '').toUpperCase() + '</div>' +
+      '<div class="umap-popup-city">📍 ' + escapeHtml(city || '') + ' · ' + (poi.day || '').toUpperCase() + '</div>' +
       (desc ? '<div class="umap-popup-desc">' + escapeHtml(desc) + '</div>' : '') +
       (hours ? '<div class="umap-popup-meta"><span class="umap-popup-meta-ico">🕐</span><span class="umap-popup-meta-lbl">' + lbl.hours + ':</span> ' + escapeHtml(hours) + '</div>' : '') +
       (price ? '<div class="umap-popup-meta"><span class="umap-popup-meta-ico">💶</span><span class="umap-popup-meta-lbl">' + lbl.price + ':</span> ' + escapeHtml(price) + '</div>' : '') +
@@ -290,7 +310,7 @@
 
       var marker = L.marker(pos, {
         icon: createPoiIcon(poi, iconCfg),
-        title: poi.name
+        title: poiField(poi, 'name')
       }).bindPopup(createPopupContent(poi), { maxWidth: 250, closeButton: true });
       // Remember the category colour so the cluster icon can show a mix.
       marker._catColor = (POI_CATEGORIES[bucket] || catConfig).color;
@@ -414,7 +434,7 @@
 
       var label = document.createElement('span');
       label.className = 'umap-filter-label';
-      label.textContent = config.label;
+      label.textContent = catLabel(config);
 
       var count = document.createElement('span');
       count.className = 'umap-filter-count';

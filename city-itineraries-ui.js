@@ -302,7 +302,7 @@
       var c = data[k];
       var todayDot = isTodayCity(k) ? ' \u25CF' : '';
       html += '<button type="button" class="ci-chip' + (k === initialKey ? ' active' : '') + '" data-city="' + esc(k) + '">' +
-              esc(c.flag || '') + ' ' + esc(isEN() ? (c.cityEN || c.city) : c.city) + todayDot + '</button>';
+              esc(c.flag || '') + ' ' + esc(lang3()==='es' ? (c.cityES || c.cityEN || c.city) : lang3()==='en' ? (c.cityEN || c.city) : c.city) + todayDot + '</button>';
     });
     html += '</div>';
 
@@ -452,16 +452,16 @@
     // Tear down any open map when switching city
     destroyMap();
 
-    var en = isEN();
+    var lg = lang3();
     var html = '';
     html += '<div class="ci-city">';
     html += '<div class="ci-city-head">';
     var todayBadge = isTodayCity(cityKey)
-      ? ' <span class="ci-today-badge">' + (en ? 'TODAY' : 'OGGI') + '</span>'
+      ? ' <span class="ci-today-badge">' + (lg==='es' ? 'HOY' : lg==='en' ? 'TODAY' : 'OGGI') + '</span>'
       : '';
-    html += '<h3 class="ci-city-name">' + esc(c.flag || '') + ' ' + esc(en ? (c.cityEN || c.city) : c.city) +
-            ' <span class="ci-city-country">' + esc(en ? (c.countryEN || c.country) : c.country) + '</span>' + todayBadge + '</h3>';
-    html += '<p class="ci-city-intro">' + esc(en ? (c.introEN || c.intro) : c.intro) + '</p>';
+    html += '<h3 class="ci-city-name">' + esc(c.flag || '') + ' ' + esc(lg==='es' ? (c.cityES || c.cityEN || c.city) : lg==='en' ? (c.cityEN || c.city) : c.city) +
+            ' <span class="ci-city-country">' + esc(lg==='es' ? (c.countryES || c.countryEN || c.country) : lg==='en' ? (c.countryEN || c.country) : c.country) + '</span>' + todayBadge + '</h3>';
+    html += '<p class="ci-city-intro">' + esc(lg==='es' ? (c.introES || c.introEN || c.intro) : lg==='en' ? (c.introEN || c.intro) : c.intro) + '</p>';
     html += '<button type="button" class="ci-map-btn" id="ciOpenMap">' + esc(t('openMap')) + '</button>';
     html += '</div>';
 
@@ -481,10 +481,10 @@
     (c.stops || []).forEach(function (s, idx) {
       var m = catMeta(s.cat);
       var n = idx + 1;
-      var shortTxt = en ? (s.shortEN || s.short || '') : (s.short || '');
-      var longTxt  = en ? (s.descEN || s.desc || '') : (s.desc || '');
-      var tipsTxt  = en ? (s.tipsEN || s.tips || '') : (s.tips || '');
-      var nm       = en ? (s.nameEN || s.name) : s.name;
+      var shortTxt = lg==='es' ? (s.shortES || s.shortEN || s.short || '') : lg==='en' ? (s.shortEN || s.short || '') : (s.short || '');
+      var longTxt  = lg==='es' ? (s.descES || s.descEN || s.desc || '') : lg==='en' ? (s.descEN || s.desc || '') : (s.desc || '');
+      var tipsTxt  = lg==='es' ? (s.tipsES || s.tipsEN || s.tips || '') : lg==='en' ? (s.tipsEN || s.tips || '') : (s.tips || '');
+      var nm       = lg==='es' ? (s.nameES || s.nameEN || s.name) : lg==='en' ? (s.nameEN || s.name) : s.name;
 
       var tier = stopTier(s);
       var numColor = tierMarkerColor(tier, m.color);
@@ -564,11 +564,11 @@
 
   // ---- Map popup HTML (expandable) ---------------------------------------
   function popupHtml(stop, idx) {
-    var en = isEN();
-    var nm = en ? (stop.nameEN || stop.name) : stop.name;
-    var shortTxt = en ? (stop.shortEN || stop.short || '') : (stop.short || '');
-    var longTxt  = en ? (stop.descEN || stop.desc || '') : (stop.desc || '');
-    var tipsTxt  = en ? (stop.tipsEN || stop.tips || '') : (stop.tips || '');
+    var lg = lang3();
+    var nm = lg==='es' ? (stop.nameES || stop.nameEN || stop.name) : lg==='en' ? (stop.nameEN || stop.name) : stop.name;
+    var shortTxt = lg==='es' ? (stop.shortES || stop.shortEN || stop.short || '') : lg==='en' ? (stop.shortEN || stop.short || '') : (stop.short || '');
+    var longTxt  = lg==='es' ? (stop.descES || stop.descEN || stop.desc || '') : lg==='en' ? (stop.descEN || stop.desc || '') : (stop.desc || '');
+    var tipsTxt  = lg==='es' ? (stop.tipsES || stop.tipsEN || stop.tips || '') : lg==='en' ? (stop.tipsEN || stop.tips || '') : (stop.tips || '');
     var pid = 'cipop-' + stop.id;
     // v4.27: richer popup — title + short teaser + full description + practical
     // info, all inside a scrollable, height-capped body so it adapts to small
@@ -688,8 +688,8 @@
 
     var overlay = document.createElement('div');
     overlay.className = 'map-fs-overlay ci-map-fs-overlay';
-    var en = isEN();
-    var cityName = esc((city.flag ? city.flag + ' ' : '') + (en ? (city.cityEN || city.city) : city.city));
+    var lg = lang3();
+    var cityName = esc((city.flag ? city.flag + ' ' : '') + (lg==='es' ? (city.cityES || city.cityEN || city.city) : lg==='en' ? (city.cityEN || city.city) : city.city));
     overlay.innerHTML =
       '<div class="map-fs-header">' +
         '<h3>🧭 ' + cityName + '</h3>' +

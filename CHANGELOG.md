@@ -1,3 +1,19 @@
+## v4.85 — 5 Luglio 2026
+- **Fix critico ES city-itineraries**: `city-itineraries-ui.js` ora usa `lang3()` per selezionare campi ES (cityES, nameES, shortES, descES, tipsES) — prima gli utenti ES vedevano contenuti EN
+- **Fix critico ES unified-map**: `unified-map.js` ora usa `UMAP_LANG3` con fallback ES→EN→IT per nomi POI, descrizioni, orari, prezzi e label categorie filtro
+- **Fix Today/Hoy concatenazione**: riga 2190 app.js — usava ternario rotto che mostrava solo "Oggi:" per tutti; ora usa `T('Oggi: ','Today: ','Hoy: ')`
+- **Fix hardRefresh ignora ES**: ora controlla `index_es` prima di `index_en` nel redirect post-refresh
+- **Fix quiz dark mode**: aggiunto `.quiz-header h3, .quiz-question { color: #e2e8f0 }` nel blocco dark mode
+- **Fix setInterval leak**: `startLive()` ora esce subito se `liveActive` è già true (previene timer duplicati)
+- **Fix GPS jitter capacitor-gps-bridge**: soglia alzata da 0.005km (5m) a 0.1km (100m) — allineata con app.js MIN_TRACK_DIST
+- **labelEs in giorniTabIndex**: aggiunte 12 etichette spagnole per le pill di navigazione tab Giorni
+- **Fonti e Riferimenti tradotte**: 8 occorrenze in tab-natura-section-en.html → "Sources and References", 9 in tab-natura-section-es.html → "Fuentes y Referencias"
+- **ES in route popups**: dayLabel, dayDesc, dayRoute ora usano campi ES in tutte le 4 sezioni di app.js
+- **Strava OAuth Option B**: nuovo endpoint HTTP `stravaOAuthCallback` in Cloud Functions — scambia codice autorizzazione per token e li salva in RTDB
+- **node-fetch rimosso**: tutte le funzioni Strava ora usano `fetch()` globale (Node 20+); rimosso da package.json
+- **POI filter labels localizzati**: categorie mappa (Imperdibili/Must-see/Imprescindibles, Natura/Nature/Naturaleza, etc.)
+- **Version bump**: 4.84 → 4.85 in version.json, sw.js CACHE_NAME, tutti i ?v= query string, EXPECTED_VERSION
+
 ## v4.83 — 5 Luglio 2026
 - **Fix versioning**: consistenza versione in tutti i file (version.json, sw.js, HTML title, EXPECTED_VERSION, tutti i query string `?v=`)
 - Include tutte le fix di v4.81 e v4.82 (language dropdown + stringhe dinamiche ES)

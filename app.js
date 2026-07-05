@@ -1324,7 +1324,7 @@ function renderTimeline() {
 
   let html = '';
   regioni.forEach(function(reg) {
-    const regionLabel = isEN ? reg.labelEn : reg.label;
+    const regionLabel = LANG3 === 'es' ? (reg.labelEs || reg.labelEn || reg.label) : isEN ? reg.labelEn : reg.label;
     html += '<div class="mt-region">' + regionLabel + '</div>\n';
 
     // Find items for this region
@@ -1335,7 +1335,7 @@ function renderTimeline() {
       const t = itinerario[i];
       const label = LANG3 === 'es' ? (t.labelES || t.label) : isEN ? t.labelEn : t.label;
       const route = LANG3 === 'es' ? (t.tragittoES || t.tragitto) : isEN ? t.tragittoEn : t.tragitto;
-      const desc = isEN ? t.descEn : t.desc;
+      const desc = LANG3 === 'es' ? (t.descES || t.descEn || t.desc) : isEN ? t.descEn : t.desc;
       const hours = LANG3 === 'es' ? (t.oreES || t.ore) : isEN ? t.oreEn : t.ore;
       const km = parseInt(t.km) || 0;
 
@@ -1401,9 +1401,9 @@ function renderTimeline() {
 // ─── Build tripDays and places from itinerario (for countdown + map) ───
 const tripDays = itinerario.map(function(t) {
   return {
-    day: isEN ? t.labelEn : t.label,
+    day: LANG3 === 'es' ? (t.labelES || t.labelEn || t.label) : isEN ? t.labelEn : t.label,
     date: t.data,
-    title: (isEN ? t.tragittoEn : t.tragitto) + ' ' + t.paesi
+    title: (LANG3 === 'es' ? (t.tragittoES || t.tragittoEn || t.tragitto) : isEN ? t.tragittoEn : t.tragitto) + ' ' + t.paesi
   };
 });
 
@@ -1421,10 +1421,10 @@ function _ddmmToSortKey(ddmm) {
 
 const places = itinerario.map(function(t) {
   return {
-    day: isEN ? t.labelEn : t.label,
+    day: LANG3 === 'es' ? (t.labelES || t.labelEn || t.label) : isEN ? t.labelEn : t.label,
     date: t.data,
     sortKey: _ddmmToSortKey(t.data),
-    title: isEN ? t.tragittoEn : t.tragitto,
+    title: LANG3 === 'es' ? (t.tragittoES || t.tragittoEn || t.tragitto) : isEN ? t.tragittoEn : t.tragitto,
     place: t.mapsLabel.replace('📍 ', '')
   };
 });
@@ -1510,14 +1510,14 @@ window.openMapFullscreen = function openMapFullscreen(mapInstance, title) {
                     if (stop.days.length > 1) {
                         var firstDay = itinerario[stop.startIdx];
                         var lastDay = itinerario[stop.endIdx];
-                        dayLabel = (typeof isEN !== 'undefined' && isEN ? firstDay.labelEn : firstDay.label) + '\u2013' + (typeof isEN !== 'undefined' && isEN ? lastDay.labelEn : lastDay.label);
-                        dayDesc = (typeof isEN !== 'undefined' && isEN ? firstDay.descEn : firstDay.desc);
+                        dayLabel = (LANG3 === 'es' ? (firstDay.labelES || firstDay.labelEn || firstDay.label) : isEN ? firstDay.labelEn : firstDay.label) + '\u2013' + (LANG3 === 'es' ? (lastDay.labelES || lastDay.labelEn || lastDay.label) : isEN ? lastDay.labelEn : lastDay.label);
+                        dayDesc = (LANG3 === 'es' ? (firstDay.descES || firstDay.descEn || firstDay.desc) : isEN ? firstDay.descEn : firstDay.desc);
                         if (stop.days.length > 2) dayDesc += ' ...';
                         dayFlags = firstDay.paesi;
                     } else {
                         var day = itinerario[dayIdx];
-                        dayLabel = typeof isEN !== 'undefined' && isEN ? day.labelEn : day.label;
-                        dayDesc = typeof isEN !== 'undefined' && isEN ? day.descEn : day.desc;
+                        dayLabel = LANG3 === 'es' ? (day.labelES || day.labelEn || day.label) : isEN ? day.labelEn : day.label;
+                        dayDesc = LANG3 === 'es' ? (day.descES || day.descEn || day.desc) : isEN ? day.descEn : day.desc;
                         dayFlags = day.paesi;
                     }
                     // v4.40: smart title — "Origin ➔ Destination" on driving days, plain city on rest days.
@@ -1874,17 +1874,17 @@ function initRouteMap() {
             if (stop.days.length > 1) {
                 var firstDay = itinerario[stop.startIdx];
                 var lastDay = itinerario[stop.endIdx];
-                dayLabel = (isEN ? firstDay.labelEn : firstDay.label) + '\u2013' + (isEN ? lastDay.labelEn : lastDay.label);
+                dayLabel = (LANG3 === 'es' ? (firstDay.labelES || firstDay.labelEn || firstDay.label) : isEN ? firstDay.labelEn : firstDay.label) + '\u2013' + (LANG3 === 'es' ? (lastDay.labelES || lastDay.labelEn || lastDay.label) : isEN ? lastDay.labelEn : lastDay.label);
                 dayRoute = city;
-                dayDesc = (isEN ? firstDay.descEn : firstDay.desc);
+                dayDesc = (LANG3 === 'es' ? (firstDay.descES || firstDay.descEn || firstDay.desc) : isEN ? firstDay.descEn : firstDay.desc);
                 if (stop.days.length > 2) dayDesc += ' ...';
                 dayFlags = firstDay.paesi;
             } else {
                 var day = itinerario[dayIdx];
                 if (!day) return;
-                dayLabel = isEN ? day.labelEn : day.label;
-                dayRoute = isEN ? day.tragittoEn : day.tragitto;
-                dayDesc = isEN ? day.descEn : day.desc;
+                dayLabel = LANG3 === 'es' ? (day.labelES || day.labelEn || day.label) : isEN ? day.labelEn : day.label;
+                dayRoute = LANG3 === 'es' ? (day.tragittoES || day.tragittoEn || day.tragitto) : isEN ? day.tragittoEn : day.tragitto;
+                dayDesc = LANG3 === 'es' ? (day.descES || day.descEn || day.desc) : isEN ? day.descEn : day.desc;
                 dayFlags = day.paesi;
             }
 
@@ -2141,7 +2141,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // ─── Hard Refresh Utility ───
     function hardRefresh() {
-        var freshUrl = (window.location.pathname.indexOf('index_en') > -1 ? 'index_en.html' : 'index.html') + '?_v=' + Date.now();
+        var freshUrl = (window.location.pathname.indexOf('index_es') > -1 ? 'index_es.html' : window.location.pathname.indexOf('index_en') > -1 ? 'index_en.html' : 'index.html') + '?_v=' + Date.now();
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.getRegistrations().then(function(registrations) {
                 var promises = registrations.map(function(r) { return r.unregister(); });
@@ -2187,7 +2187,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (tripDay < tripDays.length) {
                 var td = tripDays[tripDay];
                 dayEl.textContent = td.day;
-                infoEl.innerHTML = isEN ? '<strong>Today: ' : '<strong>Oggi: ' + td.date + '</strong><br>' + td.title;
+                infoEl.innerHTML = '<strong>' + T('Oggi: ','Today: ','Hoy: ') + td.date + '</strong><br>' + td.title;
                 var pct = ((tripDay + 1) / TRIP_DAYS * 100).toFixed(0);
                 if (progressFill) progressFill.style.width = pct + '%';
                 if (progressText) progressText.textContent = isEN ? 'Day ' + (tripDay + 1) + ' of ' + TRIP_DAYS + ' (' + pct + '%)' : 'Giorno ' + (tripDay + 1) + ' di ' + TRIP_DAYS + ' (' + pct + '%)';
@@ -2493,8 +2493,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         // v4.61: itemized breakdown string (road + ferry)
         function formatKmBreakdown() {
-            var road = totalRoadKm.toLocaleString('it-IT');
-            var ferry = totalFerryKm.toLocaleString('it-IT');
+            var road = Math.round(totalRoadKm).toLocaleString('it-IT', {maximumFractionDigits: 0});
+            var ferry = Math.round(totalFerryKm).toLocaleString('it-IT', {maximumFractionDigits: 0});
             if (isEN) {
                 return '\uD83D\uDE90 ' + road + ' km on road + \u26F4\uFE0F ' + ferry + ' km by ferry';
             }
@@ -4853,6 +4853,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
         }
 
         function startLive() {
+            if (liveActive) return;
             if (!navigator.geolocation) { showToast(isEN ? 'GPS not supported.' : 'GPS non supportato.', 'error'); return; }
             if (!isOwner) { showToast(isEN ? '🔒 Only organizers.' : '🔒 Solo organizzatori.', 'info'); return; }
 
@@ -14501,6 +14502,9 @@ window.injectAllWikiLinks = function() {
       html += '  </span>';
       if (isOwner) {
         entries.forEach(function(e) {
+          if (e.act.type === 'daily_walk') {
+            html += '<button class="pos-del-btn act-edit" data-actkey="' + e.key + '" data-date="' + (e.act.date || '') + '" data-steps="' + (e.act.steps || 0) + '" data-distance="' + (e.act.distance || 0) + '" data-name="' + (e.act.name || '').replace(/"/g, '&quot;') + '" title="' + (isEN ? 'Edit' : 'Modifica') + '" style="font-size:11px;margin-left:4px;">✏️</button>';
+          }
           html += '<button class="pos-del-btn act-del" data-actkey="' + e.key + '" title="' + (isEN ? 'Delete' : 'Elimina') + '" style="font-size:11px;margin-left:4px;">🗑️</button>';
         });
       }
@@ -14508,6 +14512,18 @@ window.injectAllWikiLinks = function() {
     });
 
     bodyEl.innerHTML = html;
+    bodyEl.querySelectorAll('.act-edit[data-actkey]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var actkey = btn.getAttribute('data-actkey');
+        var prefill = {
+          date: btn.getAttribute('data-date'),
+          steps: parseInt(btn.getAttribute('data-steps')) || 0,
+          distance: parseFloat(btn.getAttribute('data-distance')) || 0,
+          name: btn.getAttribute('data-name') || ''
+        };
+        _showWalkingInputModal(actkey, prefill);
+      });
+    });
     bodyEl.querySelectorAll('.act-del[data-actkey]').forEach(function(btn) {
       btn.addEventListener('click', function() {
         var actkey = btn.getAttribute('data-actkey');
@@ -14536,24 +14552,28 @@ window.injectAllWikiLinks = function() {
     _showWalkingInputModal();
   });
 
-  function _showWalkingInputModal() {
-    var today = window.localDateStr();
+  function _showWalkingInputModal(editKey, prefill) {
+    var isEdit = !!editKey;
+    var today = (prefill && prefill.date) ? prefill.date : window.localDateStr();
+    var prefillSteps = (prefill && prefill.steps) ? prefill.steps : '';
+    var prefillKm = (prefill && prefill.distance) ? prefill.distance : '';
+    var prefillName = (prefill && prefill.name) ? prefill.name : '';
     var overlay = document.createElement('div');
     overlay.className = 'manual-km-overlay';
     overlay.innerHTML = '<div class="manual-km-modal">' +
-      '<h3>' + (isEN ? '🚶 Add walking day' : '🚶 Aggiungi giorno a piedi') + '</h3>' +
+      '<h3>' + (isEdit ? (isEN ? '✏️ Edit walking day' : '✏️ Modifica giorno a piedi') : (isEN ? '🚶 Add walking day' : '🚶 Aggiungi giorno a piedi')) + '</h3>' +
       '<label>' + (isEN ? 'Date' : 'Data') + '</label>' +
       '<input type="date" id="manual-km-date" value="' + today + '">' +
       '<label>' + (isEN ? 'Steps (from Garmin)' : 'Passi (da Garmin)') + '</label>' +
-      '<input type="number" id="manual-km-steps" step="1" min="0" max="99999" placeholder="es. 12500">' +
+      '<input type="number" id="manual-km-steps" step="1" min="0" max="99999" placeholder="es. 12500" value="' + prefillSteps + '">' +
       '<label>' + (isEN ? 'Km walked' : 'Km a piedi') + '</label>' +
-      '<input type="number" id="manual-km-value" step="0.1" min="0" max="999" placeholder="es. 8.5">' +
+      '<input type="number" id="manual-km-value" step="0.1" min="0" max="999" placeholder="es. 8.5" value="' + prefillKm + '">' +
       '<p style="font-size:11px;color:var(--text-muted);margin:4px 0 0;">' + (isEN ? 'Leave km empty to auto-estimate from steps (×0.0007)' : 'Lascia km vuoto per stima automatica dai passi (×0,0007)') + '</p>' +
       '<label>' + (isEN ? 'Note (optional)' : 'Nota (opzionale)') + '</label>' +
-      '<input type="text" id="manual-km-note" placeholder="' + (isEN ? 'e.g. Walking in Oslo' : 'es. Passeggiata a Oslo') + '" maxlength="60">' +
+      '<input type="text" id="manual-km-note" placeholder="' + (isEN ? 'e.g. Walking in Oslo' : 'es. Passeggiata a Oslo') + '" maxlength="60" value="' + prefillName.replace(/"/g, '&quot;') + '">' +
       '<div class="manual-km-actions">' +
       '  <button class="manual-km-cancel">' + (isEN ? 'Cancel' : 'Annulla') + '</button>' +
-      '  <button class="manual-km-save">' + (isEN ? 'Save' : 'Salva') + '</button>' +
+      '  <button class="manual-km-save">' + (isEdit ? (isEN ? 'Update' : 'Aggiorna') : (isEN ? 'Save' : 'Salva')) + '</button>' +
       '</div>' +
       '</div>';
     document.body.appendChild(overlay);
@@ -14578,7 +14598,7 @@ window.injectAllWikiLinks = function() {
       }
 
       var entry = {
-        stravaId: 'garmin_' + Date.now(),
+        stravaId: isEdit ? (prefill.stravaId || editKey) : ('garmin_' + Date.now()),
         type: 'daily_walk',
         category: 'foot',
         name: note || (isEN ? 'Daily walking' : 'Camminata giornaliera'),
@@ -14589,9 +14609,9 @@ window.injectAllWikiLinks = function() {
         ts: firebase.database.ServerValue.TIMESTAMP
       };
 
-      var newKey = 'garmin_' + date.replace(/-/g, '') + '_' + Date.now();
-      activitiesRef.child(newKey).set(entry).then(function() {
-        if (window.showToast) showToast(isEN ? '👣 Saved!' : '👣 Salvato!', 'success');
+      var targetKey = isEdit ? editKey : ('garmin_' + date.replace(/-/g, '') + '_' + Date.now());
+      activitiesRef.child(targetKey).set(entry).then(function() {
+        if (window.showToast) showToast(isEdit ? (isEN ? '✏️ Updated!' : '✏️ Aggiornato!') : (isEN ? '👣 Saved!' : '👣 Salvato!'), 'success');
         overlay.remove();
       }).catch(function(err) {
         console.error('Walking entry save error:', err);

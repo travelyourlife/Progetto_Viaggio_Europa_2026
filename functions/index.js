@@ -38,7 +38,7 @@
 
 const { onValueCreated, onValueWritten } = require('firebase-functions/v2/database');
 const { onSchedule }       = require('firebase-functions/v2/scheduler');
-const { onCall, HttpsError } = require('firebase-functions/v2/https');
+const { onCall, onRequest, HttpsError } = require('firebase-functions/v2/https');
 const { setGlobalOptions, params } = require('firebase-functions/v2');
 const { defineSecret } = require('firebase-functions/params');
 const logger = require('firebase-functions/logger');
@@ -2016,7 +2016,7 @@ async function refreshStravaToken() {
 
   // Token expired — refresh it
   logger.log('[Strava] Token expired, refreshing...');
-  const fetch = (await import('node-fetch')).default;
+  // v4.85: use global fetch() (Node 20+) instead of node-fetch
   const resp = await fetch('https://www.strava.com/oauth/token', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -2053,7 +2053,7 @@ async function refreshStravaToken() {
  */
 async function syncStravaActivities() {
   const accessToken = await refreshStravaToken();
-  const fetch = (await import('node-fetch')).default;
+  // v4.85: use global fetch() (Node 20+) instead of node-fetch
 
   // Fetch activities from trip start (June 25, 2026)
   const tripStartEpoch = Math.floor(new Date('2026-06-25T00:00:00Z').getTime() / 1000);
@@ -2145,5 +2145,86 @@ exports.stravaSyncManual = onCall({
   } catch (error) {
     logger.error('[Strava] Manual sync error:', error.message);
     throw new HttpsError('internal', 'Strava sync failed: ' + error.message);
+  }
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 17. STRAVA OAuth CALLBACK (Option B — server-side token exchange)
+// ─────────────────────────────────────────────────────────────────────────────
+// The user is redirected here by Strava after granting authorization.
+// URL: https://europe-west1-viaggio-europa-2026.cloudfunctions.net/stravaOAuthCallback?code=XXX&scope=...
+// This endpoint exchanges the authorization code for tokens and stores them in RTDB.
+// ─────────────────────────────────────────────────────────────────────────────
+
+exports.stravaOAuthCallback = onRequest({
+  region: 'europe-west1',
+  memory: '256MiB',
+  cors: false,
+}, async (req, res) => {
+  try {
+    const code = req.query.code;
+    const error = req.query.error;
+
+    if (error) {
+      logger.warn('[Strava OAuth] User denied access:', error);
+      res.status(400).send('<html><body><h2>Strava authorization denied.</h2><p>You can close this window.</p></body></html>');
+      return;
+    }
+
+    if (!code) {
+      res.status(400).send('<html><body><h2>Missing authorization code.</h2></body></html>');
+      return;
+    }
+
+    // Exchange authorization code for tokens
+    const tokenResp = await fetch('https://www.strava.com/oauth/token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        client_id: STRAVA_CLIENT_ID,
+        client_secret: STRAVA_CLIENT_SECRET,
+        code: code,
+        grant_type: 'authorization_code',
+      }),
+    });
+
+    if (!tokenResp.ok) {
+      const errText = await tokenResp.text();
+      logger.error('[Strava OAuth] Token exchange failed:', tokenResp.status, errText);
+      res.status(500).send(`<html><body><h2>Token exchange failed</h2><pre>${tokenResp.status}</pre></body></html>`);
+      return;
+    }
+
+    const data = await tokenResp.json();
+
+    // Store tokens in RTDB: stravaTokens/{FAMILY_ID}/
+    const tokenRef = db.ref(`stravaTokens/${FAMILY_ID}`);
+    await tokenRef.set({
+      access_token: data.access_token,
+      refresh_token: data.refresh_token,
+      expires_at: data.expires_at,
+      athlete_id: data.athlete ? data.athlete.id : null,
+      athlete_name: data.athlete ? `${data.athlete.firstname} ${data.athlete.lastname}` : null,
+      authorized_at: Date.now(),
+      updated_at: Date.now(),
+    });
+
+    logger.log('[Strava OAuth] Authorization successful for athlete:', data.athlete ? data.athlete.id : 'unknown');
+
+    // Return a success page that auto-closes
+    res.status(200).send(`
+      <html>
+      <head><meta charset="utf-8"><title>Strava Connected</title></head>
+      <body style="font-family:system-ui;text-align:center;padding:40px;">
+        <h2>✅ Strava connected successfully!</h2>
+        <p>Athlete: <strong>${data.athlete ? data.athlete.firstname + ' ' + data.athlete.lastname : 'Unknown'}</strong></p>
+        <p>You can close this window and return to Quo Vadis.</p>
+        <script>setTimeout(function(){ window.close(); }, 3000);</script>
+      </body>
+      </html>
+    `);
+  } catch (err) {
+    logger.error('[Strava OAuth] Unexpected error:', err);
+    res.status(500).send('<html><body><h2>Internal error</h2><p>' + err.message + '</p></body></html>');
   }
 });

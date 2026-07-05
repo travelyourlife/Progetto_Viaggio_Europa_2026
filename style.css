@@ -630,6 +630,7 @@
         background: #48bb78 !important;
         color: #fff !important;
     }
+    .quiz-header h3, .quiz-question { color: #e2e8f0 !important; }
 
     /* ─── v1.64: Rimozione effetto Neumorfico Chiaro ─── */
     .home-hero-card, .home-lang-switch, .home-action-btn, .lang-current {

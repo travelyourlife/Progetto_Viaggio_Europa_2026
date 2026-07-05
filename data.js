@@ -115,18 +115,18 @@ var regioni = [
 
 // ─── Tab-index per il tab Giorni ───
 var giorniTabIndex = [
-  {"href": "#g0", "region": "central", "label": "G0–G10 Europa Centrale", "labelEn": "D0–D10 Central Europe"},
-  {"href": "#g11", "region": "finland", "label": "G11–G15 Finlandia/Tromsø", "labelEn": "D11–D15 Finland/Tromsø"},
-  {"href": "#g16", "region": "lofoten", "label": "G16–G23 Senja/Lofoten", "labelEn": "D16–D23 Senja/Lofoten"},
-  {"href": "#g24", "region": "norway-south", "label": "G24–G33 Norvegia Sud", "labelEn": "D24–D33 South Norway"},
-  {"href": "#g33", "region": "denmark", "label": "G33–G39 Danimarca", "labelEn": "D33–D39 Denmark"},
-  {"href": "#g40", "region": "france", "label": "G40–G42 Francia", "labelEn": "D40–D42 France"},
-  {"href": "#g43", "region": "spain", "label": "G43–G49 Spagna", "labelEn": "D43–D49 Spain"},
-  {"href": "#g50", "region": "return", "label": "G50–G53 Rientro", "labelEn": "D50–D53 Return"},
-  {"href": "#meteo", "region": "weather", "label": "☀️ Meteo", "labelEn": "☀️ Weather"},
-  {"href": "#secB", "region": "alt", "label": "🗺️ Alternative", "labelEn": "🗺️ Alternatives"},
-  {"href": "#pioggia", "region": "rain", "label": "☔ Piano Pioggia", "labelEn": "☔ Rain Plan"},
-  {"href": "#feste", "region": "events", "label": "🎉 Feste ed Eventi", "labelEn": "🎉 Festivals & Events"}
+  {"href": "#g0", "region": "central", "label": "G0–G10 Europa Centrale", "labelEn": "D0–D10 Central Europe", "labelEs": "D0–D10 Europa Central"},
+  {"href": "#g11", "region": "finland", "label": "G11–G15 Finlandia/Tromsø", "labelEn": "D11–D15 Finland/Tromsø", "labelEs": "D11–D15 Finlandia/Tromsø"},
+  {"href": "#g16", "region": "lofoten", "label": "G16–G23 Senja/Lofoten", "labelEn": "D16–D23 Senja/Lofoten", "labelEs": "D16–D23 Senja/Lofoten"},
+  {"href": "#g24", "region": "norway-south", "label": "G24–G33 Norvegia Sud", "labelEn": "D24–D33 South Norway", "labelEs": "D24–D33 Noruega Sur"},
+  {"href": "#g33", "region": "denmark", "label": "G33–G39 Danimarca", "labelEn": "D33–D39 Denmark", "labelEs": "D33–D39 Dinamarca"},
+  {"href": "#g40", "region": "france", "label": "G40–G42 Francia", "labelEn": "D40–D42 France", "labelEs": "D40–D42 Francia"},
+  {"href": "#g43", "region": "spain", "label": "G43–G49 Spagna", "labelEn": "D43–D49 Spain", "labelEs": "D43–D49 España"},
+  {"href": "#g50", "region": "return", "label": "G50–G53 Rientro", "labelEn": "D50–D53 Return", "labelEs": "D50–D53 Regreso"},
+  {"href": "#meteo", "region": "weather", "label": "☀️ Meteo", "labelEn": "☀️ Weather", "labelEs": "☀️ Clima"},
+  {"href": "#secB", "region": "alt", "label": "🗺️ Alternative", "labelEn": "🗺️ Alternatives", "labelEs": "🗺️ Alternativas"},
+  {"href": "#pioggia", "region": "rain", "label": "☔ Piano Pioggia", "labelEn": "☔ Rain Plan", "labelEs": "☔ Plan Lluvia"},
+  {"href": "#feste", "region": "events", "label": "🎉 Feste ed Eventi", "labelEn": "🎉 Festivals & Events", "labelEs": "🎉 Fiestas y Eventos"}
 ];
 
 // ─── Codici meteo (Open-Meteo WMO) ───
