@@ -1,3 +1,9 @@
+## v4.87 — 5 Luglio 2026
+- **FIX Mappa Live: tracciato futuro visibile** — aggiunta polyline tratteggiata blu per il percorso pianificato rimanente (Norvegia→Danimarca→Francia→Spagna)
+- **FIX deploy: openaiKey ReferenceError** — `defineSecret('OPENAI_API_KEY')` spostato a riga 56
+- **Pulsante ✏️ Modifica inline** nel dettaglio giornaliero "A piedi"
+- Include tutte le fix v4.85 (ES i18n, GPS jitter, Strava OAuth B)
+
 ## v4.86 — 5 Luglio 2026
 - **FIX deploy: openaiKey ReferenceError** — `defineSecret('OPENAI_API_KEY')` spostato in cima al file (riga 56) prima del primo utilizzo (riga 939 in `eveningRecapDispatcher`). Causa del fallimento deploy functions.
 - **Pulsante ✏️ Modifica inline** nel dettaglio giornaliero "A piedi" — tap sulla riga → modal pre-compilato con data/passi/km/nota, sovrascrive la stessa chiave Firebase senza creare duplicati

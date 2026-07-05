@@ -4264,11 +4264,16 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                     // Trip completed: all solid green
                     L.polyline(routeCoords, { color: '#38a169', weight: 2.5, opacity: 0.7, lineJoin: 'round' }).addTo(map);
                 } else if (currentDay >= 0) {
-                    // During trip: only show past route (solid green)
+                    // During trip: past route (solid green) + future route (dashed blue)
                     var splitIdx = Math.min(currentDay + 2, routeCoords.length);
                     var pastCoords = routeCoords.slice(0, splitIdx);
                     if (pastCoords.length > 1) {
                         L.polyline(pastCoords, { color: '#38a169', weight: 2.5, opacity: 0.7, lineJoin: 'round' }).addTo(map);
+                    }
+                    // v4.86: show future planned route (dashed blue)
+                    var futureCoords = routeCoords.slice(splitIdx - 1);
+                    if (futureCoords.length > 1) {
+                        L.polyline(futureCoords, { color: '#2c5282', weight: 2, opacity: 0.45, dashArray: '8,6', lineJoin: 'round' }).addTo(map);
                     }
                 }
                 // Before trip: no route line on pos-map (nothing to show yet)
