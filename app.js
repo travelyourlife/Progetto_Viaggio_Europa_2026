@@ -14990,66 +14990,154 @@ window.injectAllWikiLinks = function() {
     var db = firebase.database();
     db.ref('trips/' + familyId + '/diary').once('value', function(snap) {
       var entries = snap.val() || {};
-      var allPhotos = [];
-      // Collect all photos with their date for sorting
-      // v3.48 FIX: skip draft/scheduled entries for non-owners
+      // v4.91: Gallery grouped by day with country flag and editable locality
       var _effectiveOwnerGallery = isOwner && !window._simRole;
+      // Build a map: date → { photos:[], countryCode, country, customStops, dayNumber, entryKeys[] }
+      var dayMap = {};
       Object.keys(entries).forEach(function(entryKey) {
         var entry = entries[entryKey];
         if (!entry || !entry.photos) return;
         if (entry.draft && !_effectiveOwnerGallery) return;
         var entryDate = entry.date || '1970-01-01';
+        if (!dayMap[entryDate]) {
+          dayMap[entryDate] = {
+            photos: [],
+            countryCode: entry.countryCode || '',
+            country: entry.country || '',
+            customStops: entry.customStops || [],
+            galleryLocality: entry.galleryLocality || '',
+            dayNumber: entry.dayNumber,
+            entryKeys: []
+          };
+        }
+        dayMap[entryDate].entryKeys.push(entryKey);
+        // Merge customStops from multiple entries on same day
+        if (entry.customStops && Array.isArray(entry.customStops)) {
+          entry.customStops.forEach(function(s) {
+            var exists = dayMap[entryDate].customStops.some(function(ex) { return ex.name === s.name; });
+            if (!exists) dayMap[entryDate].customStops.push(s);
+          });
+        }
+        // Prefer countryCode from entry that has one
+        if (!dayMap[entryDate].countryCode && entry.countryCode) {
+          dayMap[entryDate].countryCode = entry.countryCode;
+          dayMap[entryDate].country = entry.country || '';
+        }
+        // Use galleryLocality if set on any entry for this day
+        if (!dayMap[entryDate].galleryLocality && entry.galleryLocality) {
+          dayMap[entryDate].galleryLocality = entry.galleryLocality;
+        }
         Object.keys(entry.photos).forEach(function(photoKey) {
           var photo = entry.photos[photoKey];
           if (photo && photo.url && /^https:\/\//.test(photo.url)) {
-            // v4.47: derive a reliable chronological timestamp.
-            // Prefer the EXIF capture date (takenAt); else uploadedAt; else the
-            // legacy Date.now()+idx key; else the firebase push() key timestamp
-            // (push keys are time-ordered) so every photo gets a sensible order.
             var ts = photo.takenAt || photo.uploadedAt || 0;
             if (!ts) {
-              var m = String(photoKey).match(/^(\d{13})/); // legacy "<ms>_<idx>"
+              var m = String(photoKey).match(/^(\d{13})/);
               if (m) ts = parseInt(m[1], 10);
             }
-            allPhotos.push({
+            dayMap[entryDate].photos.push({
               url: photo.url,
               caption: photo.caption || '',
               entryKey: entryKey,
               photoKey: photoKey,
-              date: entryDate,
               ts: ts,
               order: (typeof photo.order === 'number') ? photo.order : null
             });
           }
         });
       });
-      // v4.69: Gallery reverse-chronological. Uses photo timestamp (EXIF takenAt →
-      // uploadedAt → push-key); falls back to entry date when ts=0 so photos without
-      // EXIF still appear in the correct day order. Newest photo first.
-      allPhotos.sort(function(a, b) {
-        var tsA = a.ts || 0;
-        var tsB = b.ts || 0;
-        // Fallback: use entry date as midnight timestamp when ts is missing
-        if (!tsA && a.date) tsA = new Date(a.date + 'T12:00:00').getTime() || 0;
-        if (!tsB && b.date) tsB = new Date(b.date + 'T12:00:00').getTime() || 0;
-        if (tsB !== tsA) return tsB - tsA;
-        return String(b.photoKey).localeCompare(String(a.photoKey));
-      });
-      if (allPhotos.length === 0) {
+
+      // Sort days reverse-chronological
+      var sortedDates = Object.keys(dayMap).sort(function(a, b) { return b.localeCompare(a); });
+
+      if (sortedDates.length === 0) {
         if (galleryEmpty) galleryEmpty.style.display = '';
         return;
       }
       if (galleryEmpty) galleryEmpty.style.display = 'none';
-      allPhotos.forEach(function(p) {
-        var img = document.createElement('img');
-        img.src = p.url;
-        img.alt = escapeHtml(p.caption);
-        img.loading = 'lazy';
-        img.dataset.entryKey = p.entryKey;
-        img.dataset.photoKey = p.photoKey;
-        img.style.cssText = 'width:100%;aspect-ratio:1;object-fit:cover;border-radius:4px;cursor:pointer;';
-        img.addEventListener('click', function() { showPhotoLightbox(p.url, p.entryKey, p.photoKey); });
-        galleryGrid.appendChild(img);
+
+      // Month names for date formatting
+      var _monthsIT = ['gen','feb','mar','apr','mag','giu','lug','ago','set','ott','nov','dic'];
+      var _monthsEN = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      var _monthsES = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+
+      sortedDates.forEach(function(dateStr) {
+        var dayData = dayMap[dateStr];
+        if (dayData.photos.length === 0) return;
+
+        // Sort photos within day: newest first
+        dayData.photos.sort(function(a, b) {
+          var tsA = a.ts || 0;
+          var tsB = b.ts || 0;
+          if (tsB !== tsA) return tsB - tsA;
+          return String(b.photoKey).localeCompare(String(a.photoKey));
+        });
+
+        // Build day header
+        var flag = dayData.countryCode ? countryCodeToFlag(dayData.countryCode) : '';
+        var dn = dayData.dayNumber;
+        var dayPrefix = (typeof LANG3 !== 'undefined' && LANG3 === 'es') ? 'Día ' : isEN ? 'Day ' : 'Giorno ';
+        var dayLabel = (typeof dn === 'number' && dn >= 0) ? (dayPrefix + (dn + 1)) : '';
+
+        // Format date: "7 lug 2026"
+        var parts = dateStr.split('-');
+        var dateObj = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+        var months = (typeof LANG3 !== 'undefined' && LANG3 === 'es') ? _monthsES : isEN ? _monthsEN : _monthsIT;
+        var formattedDate = dateObj.getDate() + ' ' + months[dateObj.getMonth()] + ' ' + dateObj.getFullYear();
+
+        // Locality: galleryLocality override > customStops joined > country
+        var locality = dayData.galleryLocality || '';
+        if (!locality && dayData.customStops && dayData.customStops.length > 0) {
+          locality = dayData.customStops.map(function(s) { return s.name; }).join(', ');
+        }
+        if (!locality) locality = dayData.country || '';
+
+        // Create header element
+        var header = document.createElement('div');
+        header.style.cssText = 'display:flex;align-items:center;gap:8px;padding:12px 0 6px;border-bottom:1px solid var(--border-color,#e2e8f0);margin-bottom:6px;' + (sortedDates.indexOf(dateStr) > 0 ? 'margin-top:16px;' : '');
+        var headerLeft = '<span style="font-size:20px;">' + flag + '</span>';
+        var headerText = '<span style="font-weight:600;font-size:14px;color:var(--text-primary,#1a202c);">' + dayLabel + (dayLabel ? ' — ' : '') + formattedDate + '</span>';
+        var localitySpan = '<span class="gallery-day-locality" data-date="' + dateStr + '" style="font-size:13px;color:var(--text-muted,#718096);margin-left:4px;' + (_effectiveOwnerGallery ? 'cursor:pointer;border-bottom:1px dashed var(--text-muted,#718096);' : '') + '">' + escapeHtml(locality) + '</span>';
+        header.innerHTML = headerLeft + '<div style="display:flex;flex-direction:column;">' + headerText + localitySpan + '</div>';
+
+        // Owner can edit locality
+        if (_effectiveOwnerGallery) {
+          var locEl = header.querySelector('.gallery-day-locality');
+          if (locEl) {
+            locEl.addEventListener('click', function() {
+              var currentVal = locEl.textContent;
+              var promptLabel = isEN ? 'Edit locality for this day:' : (typeof LANG3 !== 'undefined' && LANG3 === 'es') ? 'Editar localidad de este día:' : 'Modifica località per questo giorno:';
+              var newVal = prompt(promptLabel, currentVal);
+              if (newVal !== null && newVal.trim() !== currentVal) {
+                var trimmed = newVal.trim();
+                locEl.textContent = trimmed;
+                // Save to first entry of this day
+                var firstEntryKey = dayData.entryKeys[0];
+                if (firstEntryKey) {
+                  diarioRef.child(firstEntryKey + '/galleryLocality').set(trimmed || null);
+                }
+              }
+            });
+          }
+        }
+
+        galleryGrid.appendChild(header);
+
+        // Create photo grid for this day
+        var grid = document.createElement('div');
+        grid.style.cssText = 'display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-bottom:4px;';
+        dayData.photos.forEach(function(p) {
+          var img = document.createElement('img');
+          img.src = p.url;
+          img.alt = escapeHtml(p.caption);
+          img.loading = 'lazy';
+          img.dataset.entryKey = p.entryKey;
+          img.dataset.photoKey = p.photoKey;
+          img.style.cssText = 'width:100%;aspect-ratio:1;object-fit:cover;border-radius:4px;cursor:pointer;';
+          img.addEventListener('click', function() { showPhotoLightbox(p.url, p.entryKey, p.photoKey); });
+          grid.appendChild(img);
+        });
+        galleryGrid.appendChild(grid);
       });
     });
   }
@@ -19528,7 +19616,8 @@ window.injectAllWikiLinks = function() {
   var SUBCATEGORIES = {
     carburante: ['diesel', 'adblue', 'gpl', 'benzina'],
     pedaggi_traghetti: ['autostrada', 'traghetto', 'tunnel', 'parcheggio'],
-    cibo: ['supermercato', 'ristorante', 'bar', 'fast_food'],
+    cibo: ['ristorante', 'bar', 'fast_food', 'takeaway'],
+    supermercato: ['spesa', 'acqua_bevande', 'snack', 'altro'],
     campeggio: ['campeggio', 'area_sosta', 'parcheggio_notte'],
     attivita: ['biglietti', 'escursioni', 'musei', 'parchi'],
     shopping: ['souvenir', 'abbigliamento', 'elettronica', 'altro'],
@@ -19538,8 +19627,8 @@ window.injectAllWikiLinks = function() {
 
   var CATEGORY_ICONS = {
     carburante: '⛽', pedaggi_traghetti: '🚢', cibo: '🍕',
-    campeggio: '⛺', attivita: '🎢', shopping: '🛍️',
-    veicolo: '🔧', altro: '📦'
+    supermercato: '🛒', campeggio: '⛺', attivita: '🎢',
+    shopping: '🛍️', veicolo: '🔧', altro: '📦'
   };
 
   var expensesCache = [];
@@ -20017,7 +20106,7 @@ window.injectAllWikiLinks = function() {
       return { category: 'carburante', subcategory: 'diesel' };
     // Supermarket
     if (/rema|coop|kiwi|lidl|aldi|ica |s-market|netto|penny|billa|spar|kaufland|rewe|edeka|carrefour|esselunga|eurospin|mercadona|supermercato/.test(d))
-      return { category: 'cibo', subcategory: 'supermercato' };
+      return { category: 'supermercato', subcategory: 'spesa' };
     // Restaurant
     if (/restaurant|ristorante|pizz|burger|mcdonald|kebab|trattoria|gasthaus|cafe|caff|bakery|bäckerei/.test(d))
       return { category: 'cibo', subcategory: 'ristorante' };
@@ -20284,6 +20373,16 @@ window.injectAllWikiLinks = function() {
     var countryOptionsHtml = countryOptions.map(function(o) {
       return '<option value="' + o.v + '"' + (exp.country === o.v ? ' selected' : '') + '>' + o.l + '</option>';
     }).join('');
+    // Build category dropdown options
+    var catKeys = Object.keys(CATEGORY_ICONS);
+    var categoryOptionsHtml = catKeys.map(function(cat) {
+      return '<option value="' + cat + '"' + (exp.category === cat ? ' selected' : '') + '>' + (CATEGORY_ICONS[cat] || '') + ' ' + cat.replace(/_/g, ' ') + '</option>';
+    }).join('');
+    // Build subcategory dropdown options for current category
+    var _editSubOpts = SUBCATEGORIES[exp.category] || ['altro'];
+    var subcategoryOptionsHtml = '<option value="">\u2014 ' + (isEN ? 'select' : 'seleziona') + ' \u2014</option>' + _editSubOpts.map(function(s) {
+      return '<option value="' + s + '"' + (exp.subcategory === s ? ' selected' : '') + '>' + s.replace(/_/g, ' ') + '</option>';
+    }).join('');
 
     var modal = document.createElement('div');
     modal.id = 'expense-edit-modal';
@@ -20296,8 +20395,8 @@ window.injectAllWikiLinks = function() {
       '<div style="grid-column:1/-1;"><label style="font-size:11px;color:var(--text-muted);">' + (isEN ? 'Date' : 'Data') + '</label><input type="date" id="exp-edit-date" value="' + (exp.date || '') + '" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:6px;font-size:14px;"></div>' +
       '<div style="grid-column:1/-1;"><label style="font-size:11px;color:var(--text-muted);">' + (isEN ? 'Note' : 'Nota') + '</label><input type="text" id="exp-edit-note" value="' + escapeHtml(exp.note || exp.merchant || '') + '" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:6px;font-size:14px;"></div>' +
       '<div><label style="font-size:11px;color:var(--text-muted);">' + (isEN ? 'Country' : 'Paese') + '</label><select id="exp-edit-country" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:6px;font-size:14px;">' + countryOptionsHtml + '</select></div>' +
-      '<div><label style="font-size:11px;color:var(--text-muted);">' + (isEN ? 'Category' : 'Categoria') + '</label><input type="text" id="exp-edit-category" value="' + escapeHtml(exp.category || '') + '" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:6px;font-size:14px;"></div>' +
-      '<div><label style="font-size:11px;color:var(--text-muted);">' + (isEN ? 'Subcategory' : 'Sottocategoria') + '</label><input type="text" id="exp-edit-subcategory" value="' + escapeHtml(exp.subcategory || '') + '" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:6px;font-size:14px;"></div>' +
+      '<div><label style="font-size:11px;color:var(--text-muted);">' + (isEN ? 'Category' : 'Categoria') + '</label><select id="exp-edit-category" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:6px;font-size:14px;">' + categoryOptionsHtml + '</select></div>' +
+      '<div style="grid-column:1/-1;"><label style="font-size:11px;color:var(--text-muted);">' + (isEN ? 'Subcategory' : 'Sottocategoria') + '</label><select id="exp-edit-subcategory" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:6px;font-size:14px;">' + subcategoryOptionsHtml + '</select></div>' +
       '</div>' +
       '<div style="display:flex;gap:8px;margin-top:14px;">' +
       '<button id="exp-edit-save" class="pos-btn pos-btn-green" style="flex:1;">💾 ' + (isEN ? 'Save' : 'Salva') + '</button>' +
@@ -20305,7 +20404,14 @@ window.injectAllWikiLinks = function() {
       '</div></div>';
 
     document.body.appendChild(modal);
-
+    // Dynamic subcategory update on category change in edit modal
+    var _editCatSel = document.getElementById('exp-edit-category');
+    var _editSubSel = document.getElementById('exp-edit-subcategory');
+    if (_editCatSel && _editSubSel) {
+      _editCatSel.addEventListener('change', function() {
+        updateSubcategories(_editCatSel.value, _editSubSel);
+      });
+    }
     modal.addEventListener('click', function(ev) { if (ev.target === modal) modal.remove(); });
     document.getElementById('exp-edit-cancel').addEventListener('click', function() { modal.remove(); });
     document.getElementById('exp-edit-save').addEventListener('click', function() {
@@ -20365,7 +20471,7 @@ window.injectAllWikiLinks = function() {
     if (cats.length === 0) return;
 
     var total = cats.reduce(function(s, c) { return s + catTotals[c]; }, 0);
-    var colors = ['#3182ce', '#38a169', '#d69e2e', '#e53e3e', '#805ad5', '#dd6b20', '#319795', '#718096'];
+    var colors = ['#3182ce', '#38a169', '#d69e2e', '#e53e3e', '#805ad5', '#dd6b20', '#319795', '#718096', '#e91e63'];
     var barHeight = 28;
     var gap = 6;
     var labelMargin = 200; // v3.74: increased from 100 to prevent label clipping
