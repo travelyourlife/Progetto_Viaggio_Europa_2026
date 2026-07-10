@@ -15801,30 +15801,34 @@ window.injectAllWikiLinks = function() {
             html += '      <button class="diario-photo-sortdate" data-entry-key="' + key + '" title="' + (_lg === 'es' ? 'Ordenar fotos por fecha' : isEN ? 'Sort photos by date' : 'Ordina le foto per data') + '">🕒 ' + (_lg === 'es' ? 'Ordenar por fecha' : isEN ? 'Sort by date' : 'Ordina per data') + '</button>';
             html += '    </div>';
           }
-          // v4.97.3: Grid 2x2 layout — max 4 photos for ALL users, "+N" overlay on last
+          // v4.97.4: Grid 2x2 layout — max 4 photos visible, "+N" overlay on last
           var _totalPhotos = _orderedKeys.length;
           html += '    <div class="diario-photos" data-count="' + (_totalPhotos === 1 ? '1' : _totalPhotos === 2 ? '2' : _totalPhotos === 3 ? '3' : '4') + '">';
           _orderedKeys.forEach(function(photoKey, _pi) {
-            // Skip photos beyond 4th for everyone in grid view
-            if (_pi >= 4) return;
             var photo = entry.photos[photoKey];
             var safeUrl = (photo.url && /^https:\/\//.test(photo.url)) ? escapeHtml(photo.url) : '';
-            html += '      <div class="diario-photo-wrap" style="position:relative;">';
-            html += '        <img src="' + safeUrl + '" alt="' + escapeHtml(photo.caption || '') + '" class="diario-photo" loading="lazy" data-entry-key="' + key + '" data-photo-key="' + photoKey + '">';
-            // "+N more" overlay on 4th photo when total > 4
-            if (_pi === 3 && _totalPhotos > 4) {
-              html += '        <div class="diario-photo-more-overlay">+' + (_totalPhotos - 4) + '</div>';
+            if (_pi < 4) {
+              // Visible photos in grid
+              html += '      <div class="diario-photo-wrap" style="position:relative;">';
+              html += '        <img src="' + safeUrl + '" alt="' + escapeHtml(photo.caption || '') + '" class="diario-photo" loading="lazy" data-entry-key="' + key + '" data-photo-key="' + photoKey + '">';
+              // "+N more" overlay on 4th photo when total > 4
+              if (_pi === 3 && _totalPhotos > 4) {
+                html += '        <div class="diario-photo-more-overlay">+' + (_totalPhotos - 4) + '</div>';
+              }
+              // v4.25: reaction/comment summary badge (❤ n · 💬 n)
+              var _reactN = (photo.reactions && typeof photo.reactions === 'object') ? Object.keys(photo.reactions).length : 0;
+              var _commN = (photo.comments && typeof photo.comments === 'object') ? Object.keys(photo.comments).length : 0;
+              if (_reactN > 0 || _commN > 0) {
+                html += '        <div class="diario-photo-badge">' +
+                        (_reactN > 0 ? '<span>❤️ ' + _reactN + '</span>' : '') +
+                        (_commN > 0 ? '<span>💬 ' + _commN + '</span>' : '') +
+                        '</div>';
+              }
+              html += '      </div>';
+            } else {
+              // Hidden photos (beyond 4th) — invisible in grid but available for lightbox
+              html += '      <img src="' + safeUrl + '" alt="' + escapeHtml(photo.caption || '') + '" class="diario-photo" data-entry-key="' + key + '" data-photo-key="' + photoKey + '" style="display:none;">';
             }
-            // v4.25: reaction/comment summary badge (❤ n · 💬 n)
-            var _reactN = (photo.reactions && typeof photo.reactions === 'object') ? Object.keys(photo.reactions).length : 0;
-            var _commN = (photo.comments && typeof photo.comments === 'object') ? Object.keys(photo.comments).length : 0;
-            if (_reactN > 0 || _commN > 0) {
-              html += '        <div class="diario-photo-badge">' +
-                      (_reactN > 0 ? '<span>❤️ ' + _reactN + '</span>' : '') +
-                      (_commN > 0 ? '<span>💬 ' + _commN + '</span>' : '') +
-                      '</div>';
-            }
-            html += '      </div>';
           });
           html += '    </div>';
         }
