@@ -4544,34 +4544,9 @@ html[lang="en"] .notif-drawer-list:empty::after {
 .diario-photo:active {
   transform: scale(0.97);
 }
-/* v4.22: photo reorder arrows (owner only) */
+/* v4.97.1: reorder arrows hidden — drag handle (☰) is the primary reorder UX */
 .diario-photo-reorder {
-  position: absolute;
-  left: 0; right: 0; bottom: 6px;
-  display: flex;
-  justify-content: space-between;
-  padding: 0 6px;
-  pointer-events: none;
-}
-.diario-photo-move {
-  pointer-events: auto;
-  width: 32px; height: 32px;
-  border: none;
-  border-radius: 50%;
-  background: rgba(0,0,0,0.55);
-  color: #fff;
-  font-size: 14px;
-  line-height: 32px;
-  text-align: center;
-  cursor: pointer;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
-}
-.diario-photo-move:disabled {
-  opacity: 0.25;
-  cursor: default;
-}
-.diario-photo-move:not(:disabled):active {
-  background: var(--accent, #1976d2);
+  display: none;
 }
 
 /* v4.43: per-post photo toolbar (Sort by date + drag hint), owner only */

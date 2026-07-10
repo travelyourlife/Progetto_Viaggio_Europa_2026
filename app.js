@@ -1656,9 +1656,45 @@ window.openMapFullscreen = function openMapFullscreen(mapInstance, title) {
                     hl._isHistoricalTrack = true;
                 }
             }).catch(function(e) { if (window._qvLog) window._qvLog.warn('[FS] historical tracks error', e); });
-        } catch (e) { if (window._qvLog) window._qvLog.warn('[FS] historical tracks setup error', e); }
+                } catch (e) { if (window._qvLog) window._qvLog.warn('[FS] historical tracks setup error', e); }
     })();
-
+    // v4.97 FIX: Load TODAY's track in standalone fullscreen map (was missing)
+    (function _fsLoadTodayTrack() {
+        try {
+            if (!window.FAMILY_ID || !window.db || !window.localDateStr) return;
+            var todayKey = window.localDateStr();
+            var ref = window.db.ref('trips/' + window.FAMILY_ID + '/tracks/' + todayKey + '/points');
+            ref.once('value', function(snap) {
+                var raw = snap.val(), pts = [];
+                if (Array.isArray(raw)) pts = raw;
+                else if (raw && typeof raw === 'object') pts = Object.values(raw);
+                if (!fsMap || !fsMap._container) return;
+                if (pts.length > 1) {
+                    var latlngs = pts.map(function(p) { return [p.lat, p.lng]; });
+                    var todayLine = L.polyline(latlngs, {
+                        color: '#e53e3e', weight: 4, opacity: 0.9
+                    }).addTo(fsMap);
+                    // Re-fit bounds to include today's track
+                    var allLatLngs = [];
+                    fsMap.eachLayer(function(layer) {
+                        if (layer instanceof L.Polyline) {
+                            (function flatten(arr) {
+                                arr.forEach(function(item) {
+                                    if (Array.isArray(item)) flatten(item);
+                                    else if (item.lat !== undefined) allLatLngs.push(item);
+                                });
+                            })(layer.getLatLngs());
+                        } else if (layer instanceof L.CircleMarker || layer instanceof L.Marker) {
+                            allLatLngs.push(layer.getLatLng());
+                        }
+                    });
+                    if (allLatLngs.length > 1) {
+                        fsMap.fitBounds(L.latLngBounds(allLatLngs), { padding: [30, 30], animate: false });
+                    }
+                }
+            }, function(e) { if (window._qvLog) window._qvLog.warn('[FS] today track error', e); });
+        } catch (e) { if (window._qvLog) window._qvLog.warn('[FS] today track setup error', e); }
+    })();
     // Auto-zoom to fit all route content
     setTimeout(function() {
         fsMap.invalidateSize();
@@ -2031,11 +2067,29 @@ function initRouteMap() {
                         routeMapInstance.fitBounds(extended, { padding: [15, 15], animate: false });
                     } catch (e) { /* keep planned bounds on any error */ }
                 }
-            }).catch(function(e) {
+                        }).catch(function(e) {
                 if (typeof console !== 'undefined') console.warn('[Route map historical tracks] load error:', e);
             });
         })();
-
+        // v4.97 FIX: Also load TODAY's track on the route map
+        (function _rmLoadTodayTrack() {
+            if (typeof db === 'undefined' || !db || typeof FAMILY_ID === 'undefined' || !FAMILY_ID || typeof firebaseUser === 'undefined' || !firebaseUser) return;
+            var todayKey = window.localDateStr();
+            db.ref('trips/' + FAMILY_ID + '/tracks/' + todayKey + '/points').once('value', function(snap) {
+                var raw = snap.val(), pts = [];
+                if (Array.isArray(raw)) pts = raw;
+                else if (raw && typeof raw === 'object') pts = Object.values(raw);
+                if (!routeMapInstance || pts.length < 2) return;
+                var latlngs = pts.map(function(p) { return [p.lat, p.lng]; });
+                var todayLine = L.polyline(latlngs, { color: '#e53e3e', weight: 4, opacity: 0.9, lineJoin: 'round' }).addTo(routeMapInstance);
+                window._routeMapTrackLines.push(todayLine);
+                // Extend bounds to include today
+                try {
+                    var trackGroup = L.featureGroup(window._routeMapTrackLines);
+                    routeMapInstance.fitBounds(trackGroup.getBounds().pad(0.1), { animate: false });
+                } catch (e) { /* noop */ }
+            });
+        })();
         // ─── POI Layer via UnifiedMap (same as Mappa Live) ───
         if (typeof window.UnifiedMap !== 'undefined' && window.UnifiedMap.initForFullscreen) {
             window.UnifiedMap.initForFullscreen(routeMapInstance, mapDiv);
@@ -15065,12 +15119,12 @@ window.injectAllWikiLinks = function() {
         var dayData = dayMap[dateStr];
         if (dayData.photos.length === 0) return;
 
-        // Sort photos within day: newest first
+        // Sort photos within day: chronological (oldest first)
         dayData.photos.sort(function(a, b) {
           var tsA = a.ts || 0;
           var tsB = b.ts || 0;
-          if (tsB !== tsA) return tsB - tsA;
-          return String(b.photoKey).localeCompare(String(a.photoKey));
+          if (tsA !== tsB) return tsA - tsB;
+          return String(a.photoKey).localeCompare(String(b.photoKey));
         });
 
         // Build day header
@@ -15741,32 +15795,25 @@ window.injectAllWikiLinks = function() {
             if (ta !== tb) return ta - tb; // chronological within a post (oldest first)
             return String(ka).localeCompare(String(kb));
           });
-          // v4.43: owner toolbar — "Sort by date" shortcut for the whole post.
+          // v4.97.3: owner toolbar — "Sort by date" only (drag removed from grid view)
           if (_photoOwner && _orderedKeys.length > 1) {
             html += '    <div class="diario-photos-toolbar">';
             html += '      <button class="diario-photo-sortdate" data-entry-key="' + key + '" title="' + (_lg === 'es' ? 'Ordenar fotos por fecha' : isEN ? 'Sort photos by date' : 'Ordina le foto per data') + '">🕒 ' + (_lg === 'es' ? 'Ordenar por fecha' : isEN ? 'Sort by date' : 'Ordina per data') + '</button>';
-            html += '      <span class="diario-photos-hint">' + (_lg === 'es' ? 'Arrastra ☰ para reordenar' : isEN ? 'Drag ☰ to reorder' : 'Trascina ☰ per riordinare') + '</span>';
             html += '    </div>';
           }
-          // v4.96: Grid 2x2 layout — show max 4 photos, "+N" overlay on last
+          // v4.97.3: Grid 2x2 layout — max 4 photos for ALL users, "+N" overlay on last
           var _totalPhotos = _orderedKeys.length;
-          var _maxVisible = _photoOwner ? _totalPhotos : Math.min(_totalPhotos, 4);
-          var _gridCount = Math.min(_totalPhotos, 4); // for data-count attribute
           html += '    <div class="diario-photos" data-count="' + (_totalPhotos === 1 ? '1' : _totalPhotos === 2 ? '2' : _totalPhotos === 3 ? '3' : '4') + '">';
           _orderedKeys.forEach(function(photoKey, _pi) {
-            // Non-owner: skip photos beyond 4th
-            if (!_photoOwner && _pi >= 4) return;
+            // Skip photos beyond 4th for everyone in grid view
+            if (_pi >= 4) return;
             var photo = entry.photos[photoKey];
             var safeUrl = (photo.url && /^https:\/\//.test(photo.url)) ? escapeHtml(photo.url) : '';
             html += '      <div class="diario-photo-wrap" style="position:relative;">';
             html += '        <img src="' + safeUrl + '" alt="' + escapeHtml(photo.caption || '') + '" class="diario-photo" loading="lazy" data-entry-key="' + key + '" data-photo-key="' + photoKey + '">';
-            // v4.96: "+N more" overlay on 4th photo when total > 4 (non-owner view)
-            if (!_photoOwner && _pi === 3 && _totalPhotos > 4) {
+            // "+N more" overlay on 4th photo when total > 4
+            if (_pi === 3 && _totalPhotos > 4) {
               html += '        <div class="diario-photo-more-overlay">+' + (_totalPhotos - 4) + '</div>';
-            }
-            // v4.43: drag handle (owner, multi-photo only) to start touch/mouse reorder.
-            if (_photoOwner && _orderedKeys.length > 1) {
-              html += '        <div class="diario-photo-draghandle" title="' + (_lg === 'es' ? 'Arrastra para reordenar' : isEN ? 'Drag to reorder' : 'Trascina per riordinare') + '" aria-label="' + (_lg === 'es' ? 'Arrastra para reordenar' : isEN ? 'Drag to reorder' : 'Trascina per riordinare') + '">☰</div>';
             }
             // v4.25: reaction/comment summary badge (❤ n · 💬 n)
             var _reactN = (photo.reactions && typeof photo.reactions === 'object') ? Object.keys(photo.reactions).length : 0;
@@ -15776,12 +15823,6 @@ window.injectAllWikiLinks = function() {
                       (_reactN > 0 ? '<span>❤️ ' + _reactN + '</span>' : '') +
                       (_commN > 0 ? '<span>💬 ' + _commN + '</span>' : '') +
                       '</div>';
-            }
-            if (_photoOwner && _orderedKeys.length > 1) {
-              html += '        <div class="diario-photo-reorder">';
-              html += '          <button class="diario-photo-move" data-entry-key="' + key + '" data-photo-key="' + photoKey + '" data-dir="-1"' + (_pi === 0 ? ' disabled' : '') + ' title="' + (isEN ? 'Move left' : 'Sposta a sinistra') + '">◀</button>';
-              html += '          <button class="diario-photo-move" data-entry-key="' + key + '" data-photo-key="' + photoKey + '" data-dir="1"' + (_pi === _orderedKeys.length - 1 ? ' disabled' : '') + ' title="' + (isEN ? 'Move right' : 'Sposta a destra') + '">▶</button>';
-              html += '        </div>';
             }
             html += '      </div>';
           });
