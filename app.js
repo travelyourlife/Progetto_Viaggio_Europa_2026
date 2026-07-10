@@ -15701,7 +15701,7 @@ window.injectAllWikiLinks = function() {
         html += '  <div class="diario-entry-marker"></div>';
         html += '  <div class="diario-entry-card' + (isDraft ? ' diario-card-draft' : '') + '">';
         html += '    <div class="diario-entry-header">';
-        html += '      <div><div class="diario-day">' + dayLabel + '</div><div class="diario-date">' + dateStr + '</div></div>';
+        html += '      <div><div class="diario-day" data-entry-key="' + key + '">' + dayLabel + '</div><div class="diario-date">' + dateStr + '</div></div>';
         if (isDraft && isOwner && entry.publishAt) {
           var schedDate = window.localDateStr(new Date(entry.publishAt)); // v2.96: LOCAL
           html += '      <span class="diario-draft-badge" style="background:var(--bg-secondary,#e8f4fd);color:var(--accent,#1976d2);">\ud83d\udd52 ' + (isEN ? 'Scheduled: ' : 'Programmato: ') + schedDate + '</span>';
@@ -15825,11 +15825,13 @@ window.injectAllWikiLinks = function() {
             html += '    <span class="diario-auto-tl" data-key="' + key + '">' + seeOrigLabel + '</span>';
           }
           // Translate button: show only if non-IT and no auto-translation available
+          // v4.94: also pass data-title for title translation
+          var _origTitle = entry.customLabel || '';
           if (isEN && !entry.textEn) {
-            html += '    <button class="diario-translate-btn" data-key="' + key + '" data-text="' + escapeHtml(entry.text).replace(/"/g, '&quot;') + '" title="Translate to English">\uD83C\uDF10</button>';
+            html += '    <button class="diario-translate-btn" data-key="' + key + '" data-text="' + escapeHtml(entry.text).replace(/"/g, '&quot;') + '" data-title="' + escapeHtml(_origTitle).replace(/"/g, '&quot;') + '" title="Translate to English">\uD83C\uDF10</button>';
           }
           if (typeof LANG3 !== 'undefined' && LANG3 === 'es' && !entry.textEs) {
-            html += '    <button class="diario-translate-btn" data-key="' + key + '" data-text="' + escapeHtml(entry.text).replace(/"/g, '&quot;') + '" title="Traducir al español">\uD83C\uDF10</button>';
+            html += '    <button class="diario-translate-btn" data-key="' + key + '" data-text="' + escapeHtml(entry.text).replace(/"/g, '&quot;') + '" data-title="' + escapeHtml(_origTitle).replace(/"/g, '&quot;') + '" title="Traducir al español">\uD83C\uDF10</button>';
           }
         }
 
@@ -16496,26 +16498,52 @@ window.injectAllWikiLinks = function() {
         // If already translated, toggle back
         if (btn.dataset.translated === '1') {
           textEl.textContent = btn.dataset.original;
+          // v4.94: also toggle title back
+          var titleEl = timelineEl.querySelector('.diario-day[data-entry-key="' + key + '"]');
+          if (titleEl && btn.dataset.originalTitle) titleEl.textContent = btn.dataset.originalTitle;
           btn.dataset.translated = '0';
           btn.textContent = '\uD83C\uDF10';
           return;
         }
         var originalText = textEl.textContent;
         btn.dataset.original = originalText;
+        // v4.94: save original title for toggle-back
+        var titleEl = timelineEl.querySelector('.diario-day[data-entry-key="' + key + '"]');
+        if (titleEl) btn.dataset.originalTitle = titleEl.textContent;
         btn.disabled = true;
         btn.textContent = '\u23F3';
         // Call translatePost Cloud Function
         var functions = firebase.app().functions('europe-west1');
         var translateFn = functions.httpsCallable('translatePost');
-        // v4.87: pass targetLang based on current language
+        // v4.94: pass targetLang and title for combined translation
         var _targetLang = (typeof LANG3 !== 'undefined' && LANG3 === 'es') ? 'es' : 'en';
-        translateFn({ text: originalText, key: key, familyId: (typeof FAMILY_ID !== 'undefined' ? FAMILY_ID : 'viaggio-europa-2026'), targetLang: _targetLang }).then(function(result) {
+        var _origTitle = btn.dataset.title || '';
+        translateFn({ text: originalText, title: _origTitle, key: key, familyId: (typeof FAMILY_ID !== 'undefined' ? FAMILY_ID : 'viaggio-europa-2026'), targetLang: _targetLang }).then(function(result) {
           var translatedField = _targetLang === 'es' ? 'textEs' : 'textEn';
+          var titleField = _targetLang === 'es' ? 'titleEs' : 'titleEn';
           if (result.data && result.data[translatedField]) {
             textEl.textContent = result.data[translatedField];
             btn.dataset.translated = '1';
             btn.textContent = '\uD83C\uDDEE\uD83C\uDDF9';
             btn.title = _targetLang === 'es' ? 'Ver original' : 'Show original';
+          }
+          // v4.94: update title in DOM if translated
+          if (result.data && result.data[titleField] && titleEl) {
+            titleEl.textContent = result.data[titleField];
+          }
+          // v4.94: if CF didn't return titleField but we have a title, translate it separately
+          if (_origTitle && !(result.data && result.data[titleField])) {
+            translateFn({ text: _origTitle, key: key + '__title', familyId: (typeof FAMILY_ID !== 'undefined' ? FAMILY_ID : 'viaggio-europa-2026'), targetLang: _targetLang }).then(function(r2) {
+              var tTitle = r2.data && (r2.data[translatedField] || r2.data[titleField]);
+              if (tTitle && titleEl) {
+                titleEl.textContent = tTitle;
+                // Save titleEs/titleEn to Firebase on the diary entry
+                var _fid = typeof FAMILY_ID !== 'undefined' ? FAMILY_ID : 'viaggio-europa-2026';
+                var updates = {};
+                updates[titleField] = tTitle;
+                firebase.database().ref('trips/' + _fid + '/diary/' + key).update(updates);
+              }
+            }).catch(function() { /* title translation failed, body still OK */ });
           }
         }).catch(function(err) {
           console.warn('[Translate]', err);
@@ -19733,6 +19761,8 @@ window.injectAllWikiLinks = function() {
 
     // Load data from Firebase
     // v3.58 FIX: Register via managed listener system for proper cleanup
+    // v4.93: one-time migration — fix old expenses saved as category="cibo" + subcategory="supermercato"
+    var _migrationDone = false;
     var _expenseCb = function(snap) {
       var data = snap.val() || {};
       expensesCache = Object.keys(data).map(function(k) {
@@ -19742,6 +19772,17 @@ window.injectAllWikiLinks = function() {
       }).sort(function(a, b) {
         return (b.date || '').localeCompare(a.date || '') || (b.createdAt || 0) - (a.createdAt || 0);
       });
+      // v4.93: migrate old cibo+supermercato → supermercato+spesa (once)
+      if (!_migrationDone) {
+        _migrationDone = true;
+        expensesCache.forEach(function(e) {
+          if (e.category === 'cibo' && e.subcategory === 'supermercato') {
+            expenseRef.child(e._key).update({ category: 'supermercato', subcategory: 'spesa' });
+            e.category = 'supermercato';
+            e.subcategory = 'spesa';
+          }
+        });
+      }
       renderExpenseStats();
       renderExpenseList();
       renderExpenseCharts();
@@ -20447,6 +20488,12 @@ window.injectAllWikiLinks = function() {
       if (dailyCanvas) dailyCanvas.style.display = 'none';
       return;
     }
+    // v4.93 FIX: if canvas not visible (accordion/tab closed), hide and defer
+    if (catCanvas && catCanvas.offsetWidth === 0) {
+      catCanvas.style.display = 'none';
+      if (dailyCanvas) dailyCanvas.style.display = 'none';
+      return;
+    }
     if (catCanvas) catCanvas.style.display = '';
     if (dailyCanvas) dailyCanvas.style.display = '';
     renderCategoryChart();
@@ -20575,6 +20622,19 @@ window.injectAllWikiLinks = function() {
     a.click();
     URL.revokeObjectURL(url);
   }
+
+  // v4.93 FIX: re-render charts when the Spese accordion is opened
+  (function() {
+    var speseSec = document.getElementById('admin-sec-spese');
+    if (!speseSec) return;
+    var details = speseSec.closest('details');
+    if (!details) return;
+    details.addEventListener('toggle', function() {
+      if (details.open && expensesCache && expensesCache.length > 0) {
+        setTimeout(renderExpenseCharts, 50);
+      }
+    });
+  })();
 
   // ─── Init on auth ───
   var _expenseInited = false;
