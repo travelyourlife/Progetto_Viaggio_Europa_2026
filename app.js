@@ -13415,9 +13415,9 @@ window.injectAllWikiLinks = function() {
       return;
     }
 
-    // Check file size (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      if (window.showToast) showToast(isEN ? 'File too large (max 5MB)' : 'File troppo grande (max 5MB)', 'error');
+    // Check file size (max 13MB)
+    if (file.size > 13 * 1024 * 1024) {
+      if (window.showToast) showToast(isEN ? 'File too large (max 13MB)' : 'File troppo grande (max 13MB)', 'error');
       chatFileInput.value = '';
       return;
     }
@@ -15094,11 +15094,12 @@ window.injectAllWikiLinks = function() {
 
         // Create header element
         var header = document.createElement('div');
-        header.style.cssText = 'display:flex;align-items:center;gap:8px;padding:12px 0 6px;border-bottom:1px solid var(--border-color,#e2e8f0);margin-bottom:6px;' + (sortedDates.indexOf(dateStr) > 0 ? 'margin-top:16px;' : '');
-        var headerLeft = '<span style="font-size:20px;">' + flag + '</span>';
-        var headerText = '<span style="font-weight:600;font-size:14px;color:var(--text-primary,#1a202c);">' + dayLabel + (dayLabel ? ' — ' : '') + formattedDate + '</span>';
-        var localitySpan = '<span class="gallery-day-locality" data-date="' + dateStr + '" style="font-size:13px;color:var(--text-muted,#718096);margin-left:4px;' + (_effectiveOwnerGallery ? 'cursor:pointer;border-bottom:1px dashed var(--text-muted,#718096);' : '') + '">' + escapeHtml(locality) + '</span>';
-        header.innerHTML = headerLeft + '<div style="display:flex;flex-direction:column;">' + headerText + localitySpan + '</div>';
+        header.style.cssText = 'display:flex;align-items:center;gap:10px;padding:14px 0 8px;border-bottom:1px solid var(--border-color,#e2e8f0);margin-bottom:8px;' + (sortedDates.indexOf(dateStr) > 0 ? 'margin-top:20px;' : '');
+        var headerLeft = '<span style="font-size:22px;">' + flag + '</span>';
+        var headerText = '<span style="font-weight:600;font-size:15px;color:var(--text-primary,#1a202c);">' + dayLabel + (dayLabel ? ' \u2014 ' : '') + formattedDate + '</span>';
+        var localitySpan = '<span class="gallery-day-locality" data-date="' + dateStr + '" style="font-size:13px;color:var(--text-muted,#718096);' + (_effectiveOwnerGallery ? 'cursor:pointer;border-bottom:1px dashed var(--text-muted,#718096);' : '') + '">' + escapeHtml(locality) + '</span>';
+        var photoCountBadge = '<span style="font-size:11px;color:var(--text-muted,#718096);background:var(--bg-alt,#edf2f7);padding:2px 8px;border-radius:10px;margin-left:auto;white-space:nowrap;">' + dayData.photos.length + ' foto</span>';
+        header.innerHTML = headerLeft + '<div style="display:flex;flex-direction:column;flex:1;">' + headerText + localitySpan + '</div>' + photoCountBadge;
 
         // Owner can edit locality
         if (_effectiveOwnerGallery) {
@@ -15121,21 +15122,26 @@ window.injectAllWikiLinks = function() {
           }
         }
 
-        galleryGrid.appendChild(header);
-
-        // Create photo grid for this day
+                galleryGrid.appendChild(header);
+        // v4.97: Create photo grid for this day — adaptive columns based on count
+        var _nPhotos = dayData.photos.length;
         var grid = document.createElement('div');
-        grid.style.cssText = 'display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-bottom:4px;';
-        dayData.photos.forEach(function(p) {
+        // Adaptive grid: 1 photo=full width, 2=2 cols, 3+=3 cols
+        var _gridCols = _nPhotos === 1 ? '1fr' : _nPhotos === 2 ? '1fr 1fr' : 'repeat(3,1fr)';
+        grid.style.cssText = 'display:grid;grid-template-columns:' + _gridCols + ';gap:3px;margin-bottom:8px;border-radius:12px;overflow:hidden;';
+        dayData.photos.forEach(function(p, _idx) {
+          var wrap = document.createElement('div');
+          wrap.style.cssText = 'position:relative;overflow:hidden;' + (_nPhotos === 1 ? 'aspect-ratio:16/9;' : 'aspect-ratio:1;');
           var img = document.createElement('img');
           img.src = p.url;
           img.alt = escapeHtml(p.caption);
           img.loading = 'lazy';
           img.dataset.entryKey = p.entryKey;
           img.dataset.photoKey = p.photoKey;
-          img.style.cssText = 'width:100%;aspect-ratio:1;object-fit:cover;border-radius:4px;cursor:pointer;';
+          img.style.cssText = 'width:100%;height:100%;object-fit:cover;cursor:pointer;transition:transform 0.15s ease;';
           img.addEventListener('click', function() { showPhotoLightbox(p.url, p.entryKey, p.photoKey); });
-          grid.appendChild(img);
+          wrap.appendChild(img);
+          grid.appendChild(wrap);
         });
         galleryGrid.appendChild(grid);
       });
@@ -15742,12 +15748,22 @@ window.injectAllWikiLinks = function() {
             html += '      <span class="diario-photos-hint">' + (_lg === 'es' ? 'Arrastra ☰ para reordenar' : isEN ? 'Drag ☰ to reorder' : 'Trascina ☰ per riordinare') + '</span>';
             html += '    </div>';
           }
-          html += '    <div class="diario-photos">';
+          // v4.96: Grid 2x2 layout — show max 4 photos, "+N" overlay on last
+          var _totalPhotos = _orderedKeys.length;
+          var _maxVisible = _photoOwner ? _totalPhotos : Math.min(_totalPhotos, 4);
+          var _gridCount = Math.min(_totalPhotos, 4); // for data-count attribute
+          html += '    <div class="diario-photos" data-count="' + (_totalPhotos === 1 ? '1' : _totalPhotos === 2 ? '2' : _totalPhotos === 3 ? '3' : '4') + '">';
           _orderedKeys.forEach(function(photoKey, _pi) {
+            // Non-owner: skip photos beyond 4th
+            if (!_photoOwner && _pi >= 4) return;
             var photo = entry.photos[photoKey];
             var safeUrl = (photo.url && /^https:\/\//.test(photo.url)) ? escapeHtml(photo.url) : '';
             html += '      <div class="diario-photo-wrap" style="position:relative;">';
             html += '        <img src="' + safeUrl + '" alt="' + escapeHtml(photo.caption || '') + '" class="diario-photo" loading="lazy" data-entry-key="' + key + '" data-photo-key="' + photoKey + '">';
+            // v4.96: "+N more" overlay on 4th photo when total > 4 (non-owner view)
+            if (!_photoOwner && _pi === 3 && _totalPhotos > 4) {
+              html += '        <div class="diario-photo-more-overlay">+' + (_totalPhotos - 4) + '</div>';
+            }
             // v4.43: drag handle (owner, multi-photo only) to start touch/mouse reorder.
             if (_photoOwner && _orderedKeys.length > 1) {
               html += '        <div class="diario-photo-draghandle" title="' + (_lg === 'es' ? 'Arrastra para reordenar' : isEN ? 'Drag to reorder' : 'Trascina per riordinare') + '" aria-label="' + (_lg === 'es' ? 'Arrastra para reordenar' : isEN ? 'Drag to reorder' : 'Trascina per riordinare') + '">☰</div>';
@@ -16267,8 +16283,8 @@ window.injectAllWikiLinks = function() {
       if (window.showToast) showToast(isEN ? 'Storage not available' : 'Storage non disponibile', 'error');
       return;
     }
-    if (file.size > 5 * 1024 * 1024) {
-      if (window.showToast) showToast(isEN ? 'Photo too large (max 5 MB)' : 'Foto troppo grande (max 5 MB)', 'error');
+    if (file.size > 13 * 1024 * 1024) {
+      if (window.showToast) showToast(isEN ? 'Photo too large (max 13 MB)' : 'Foto troppo grande (max 13 MB)', 'error');
       return;
     }
     var commentId = Date.now() + '_' + user.uid.substring(0, 6);
@@ -16944,9 +16960,13 @@ window.injectAllWikiLinks = function() {
     }
     bindActions();
 
-    // Close on overlay background click
+    // Close on overlay background click (including the black area around the photo)
     overlay.addEventListener('click', function(e) {
-      if (e.target === overlay) closeLightbox();
+      if (e.target === overlay) { closeLightbox(); return; }
+      // v4.95: also close when tapping the black background of .diario-lightbox-content
+      var t = e.target;
+      if (t.classList && t.classList.contains('diario-lightbox-content')) { closeLightbox(); return; }
+      // Ignore clicks on interactive elements
     });
 
     // v3.48: Swipe gesture support
@@ -20488,14 +20508,15 @@ window.injectAllWikiLinks = function() {
       if (dailyCanvas) dailyCanvas.style.display = 'none';
       return;
     }
-    // v4.93 FIX: if canvas not visible (accordion/tab closed), hide and defer
+    // v4.95 FIX: show canvas first, then check if parent is actually visible
+    if (catCanvas) catCanvas.style.display = '';
+    if (dailyCanvas) dailyCanvas.style.display = '';
     if (catCanvas && catCanvas.offsetWidth === 0) {
+      // Parent still hidden — hide canvases and bail
       catCanvas.style.display = 'none';
       if (dailyCanvas) dailyCanvas.style.display = 'none';
       return;
     }
-    if (catCanvas) catCanvas.style.display = '';
-    if (dailyCanvas) dailyCanvas.style.display = '';
     renderCategoryChart();
     renderDailyChart();
   }

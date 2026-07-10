@@ -66,13 +66,14 @@ const OWNER_UIDS = [
 // ═══════════════════════════════════════════════════════════
 // SHARED: Expense categories (v4.08 — deduplicated from parseExpenseScreenshot + parseExpensePdf)
 const EXPENSE_CATEGORIES = [
-  'carburante', 'pedaggi_traghetti', 'cibo', 'campeggio',
+  'carburante', 'pedaggi_traghetti', 'cibo', 'supermercato', 'campeggio',
   'attivita', 'shopping', 'veicolo', 'altro'
 ];
 const EXPENSE_SUBCATEGORIES = {
   carburante: ['diesel', 'adblue', 'gpl', 'benzina'],
   pedaggi_traghetti: ['autostrada', 'traghetto', 'tunnel', 'parcheggio'],
-  cibo: ['supermercato', 'ristorante', 'bar', 'fast_food'],
+  cibo: ['ristorante', 'bar', 'fast_food', 'pizzeria', 'gelateria'],
+  supermercato: ['spesa', 'acqua', 'snack', 'altro'],
   campeggio: ['campeggio', 'area_sosta', 'parcheggio_notte'],
   attivita: ['biglietti', 'escursioni', 'musei', 'parchi'],
   shopping: ['souvenir', 'abbigliamento', 'elettronica', 'altro'],
@@ -329,11 +330,20 @@ exports.translatePost = onCall(
       const { Translate } = require('@google-cloud/translate').v2;
       const translate = new Translate();
       // v4.87: support target language (default EN, also ES)
+      // v4.94: also translate title if provided
       const targetLang = request.data.targetLang || 'en';
+      const title = request.data.title || '';
       const [translation] = await translate.translate(text, targetLang);
       const fieldName = targetLang === 'es' ? 'textEs' : 'textEn';
-      await db.ref(`trips/${familyId}/diary/${key}`).update({ [fieldName]: translation });
-      return { [fieldName]: translation };
+      const titleField = targetLang === 'es' ? 'titleEs' : 'titleEn';
+      const updates = { [fieldName]: translation };
+      // Translate title if provided and key doesn't contain '__title' (avoid double-save)
+      if (title && !key.includes('__title')) {
+        const [titleTranslation] = await translate.translate(title, targetLang);
+        updates[titleField] = titleTranslation;
+      }
+      await db.ref(`trips/${familyId}/diary/${key}`).update(updates);
+      return { [fieldName]: translation, ...(updates[titleField] ? { [titleField]: updates[titleField] } : {}) };
     } catch (err) {
       throw new HttpsError('internal', 'Translation failed: ' + err.message);
     }
@@ -1040,7 +1050,7 @@ exports.eveningRecapDispatcher = onSchedule(
     if (fullTexts.length > 0) {
       try {
         const allText = fullTexts.join('\n---\n');
-        const summaryPrompt = `Sei l'assistente di un diario di viaggio in camper per l'Europa con una famiglia. Riassumi la giornata in 2-3 frasi brevi e vivaci in italiano, basandoti sui post del diario qui sotto. Mantieni il tono informale e caloroso. Non aggiungere emoji. Non inventare nulla che non sia nei testi.\n\nPost del giorno:\n${allText.substring(0, 2000)}`;
+        const summaryPrompt = `Riassumi SOLO il contenuto dei post qui sotto in 2-3 frasi brevi in italiano. REGOLE TASSATIVE: 1) NON aggiungere fatti, numeri, km, luoghi o informazioni che NON sono esplicitamente scritte nei testi. 2) NON inventare nulla. 3) Se un'informazione non è nei post, non menzionarla. 4) Tono informale e caloroso, senza emoji.\n\nPost del giorno:\n${allText.substring(0, 2000)}`;
 
         const response = await fetchOpenAIWithRetry(async () => {
           const ctrl = new AbortController();
@@ -1058,7 +1068,7 @@ exports.eveningRecapDispatcher = onSchedule(
                   { role: 'system', content: 'Rispondi SOLO con il riassunto richiesto, niente altro.' },
                   { role: 'user', content: summaryPrompt },
                 ],
-                temperature: 0.5,
+                temperature: 0.2,
                 max_tokens: 200,
               }),
               signal: ctrl.signal,
