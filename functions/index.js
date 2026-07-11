@@ -1133,7 +1133,7 @@ exports.eveningRecapDispatcher = onSchedule(
       const linkParts = [];
       if (photos.length > 0) linkParts.push('\ud83d\udcf8 ' + photos.length + ' foto');
       if (fullTexts.length > 0) linkParts.push('\ud83d\udcd6 ' + fullTexts.length + (fullTexts.length === 1 ? ' post' : ' post'));
-      msgParts.push(linkParts.join(' \u00b7 ') + ' \u2192 https://viaggio-europa-2026.web.app/#tab-diario');
+      msgParts.push(linkParts.join(' \u00b7 ') + ' \u2192 https://travelyourlife.github.io/Progetto_Viaggio_Europa_2026/#tab-diario');
     }
 
     // Nothing meaningful to report

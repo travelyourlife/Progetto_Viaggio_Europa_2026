@@ -413,7 +413,7 @@
 
           // ─── Build chat message ───
           var g = 'G' + (tripDay + 1);
-          var appUrl = 'https://viaggio-europa-2026.web.app/';
+          var appUrl = 'https://travelyourlife.github.io/Progetto_Viaggio_Europa_2026/';
           var msgParts = [];
 
           // Header: 📸 *Riepilogo serale — G3 · Marki* 🇵🇱

@@ -710,7 +710,7 @@ window.Platform = Platform;
         _qvLog.warn('[Auth] getRedirectResult error', err.code || err.message);
         try { localStorage.removeItem('firebase_redirect_pending'); } catch(e) {}
         if (err.code === 'auth/web-storage-unsupported') {
-          if (window.showToast) showToast(isEN ? 'Enable cookies to sign in' : 'Abilita i cookie per accedere', 'error');
+          if (window.showToast) showToast(LANG3 === 'es' ? 'Activa las cookies para iniciar sesión' : isEN ? 'Enable cookies to sign in' : 'Abilita i cookie per accedere', 'error');
         }
       });
   } catch(e) { console.warn('[Auth] getRedirectResult exception:', e); }
@@ -745,7 +745,7 @@ var _gisSuccessCb = null;
 
 function doGoogleSignIn(successCb) {
   if (typeof firebase === 'undefined' || !firebase.auth) {
-    if (window.showToast) showToast(isEN ? 'Firebase unavailable' : 'Firebase non disponibile', 'error');
+    if (window.showToast) showToast(LANG3 === 'es' ? 'Firebase no disponible' : isEN ? 'Firebase unavailable' : 'Firebase non disponibile', 'error');
     return;
   }
 
@@ -762,11 +762,11 @@ function doGoogleSignIn(successCb) {
       // v2.45 FIX: Under Capacitor native, signInWithRedirect causes infinite loops
       // (WebView loses context on redirect). Show error instead of attempting redirect.
       console.error('[Auth] FirebaseAuthentication plugin not available under Capacitor native.');
-      if (window.showToast) showToast(isEN ? '❌ Login plugin not available. Please reinstall the app.' : '❌ Plugin login non disponibile. Reinstalla l\'app.', 'error');
+      if (window.showToast) showToast(LANG3 === 'es' ? '❌ Plugin de login no disponible. Reinstala la app.' : isEN ? '❌ Login plugin not available. Please reinstall the app.' : '❌ Plugin login non disponibile. Reinstalla l\'app.', 'error');
       return;
     }
     _qvLog.info('[Auth] Using Capacitor FirebaseAuthentication.signInWithGoogle()');
-    if (window.showToast) showToast(isEN ? '⏳ Opening Google login...' : '⏳ Apertura login Google...', 'info');
+    if (window.showToast) showToast(LANG3 === 'es' ? '⏳ Abriendo login de Google...' : isEN ? '⏳ Opening Google login...' : '⏳ Apertura login Google...', 'info');
     FirebaseAuth.signInWithGoogle().then(function(result) {
       _qvLog.info('[Auth] Capacitor signInWithGoogle success:', result.user && result.user.email);
       // The plugin signs in on the native layer. We need to also sign in on the
@@ -822,13 +822,13 @@ function doGoogleSignIn(successCb) {
       if (successCb) {
         successCb(user);
       } else {
-        if (window.showToast) showToast((isEN ? 'Welcome, ' : 'Benvenuto, ') + (user.displayName || user.email), 'success');
+        if (window.showToast) showToast((LANG3 === 'es' ? 'Bienvenido, ' : isEN ? 'Welcome, ' : 'Benvenuto, ') + (user.displayName || user.email), 'success');
       }
     }).catch(function(err) {
       console.error('[Auth] Capacitor Google Sign-In error:', err);
       var msg = err.message || String(err);
       if (msg.indexOf('canceled') === -1 && msg.indexOf('cancelled') === -1 && msg.indexOf('popup_closed') === -1) {
-        if (window.showToast) showToast((isEN ? 'Login error: ' : 'Errore login: ') + msg, 'error');
+        if (window.showToast) showToast((LANG3 === 'es' ? 'Error de inicio de sesión: ' : isEN ? 'Login error: ' : 'Errore login: ') + msg, 'error');
       }
     });
     return;
@@ -840,12 +840,12 @@ function doGoogleSignIn(successCb) {
     // Only attempt redirect on the web (non-Capacitor) platform.
     if (window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()) {
       console.error('[Auth] GIS not available under Capacitor and native plugin was not found.');
-      if (window.showToast) showToast(isEN ? '❌ Login not available. Reinstall the app.' : '❌ Login non disponibile. Reinstalla l\'app.', 'error');
+      if (window.showToast) showToast(LANG3 === 'es' ? '❌ Login no disponible. Reinstala la app.' : isEN ? '❌ Login not available. Reinstall the app.' : '❌ Login non disponibile. Reinstalla l\'app.', 'error');
       return;
     }
     // v2.11 FIX: GIS not loaded — show feedback + wait briefly before fallback
     console.warn('[Auth] GIS not loaded, attempting delayed retry...');
-    if (window.showToast) showToast(isEN ? '⏳ Loading login...' : '⏳ Caricamento login...', 'info');
+    if (window.showToast) showToast(LANG3 === 'es' ? '⏳ Cargando login...' : isEN ? '⏳ Loading login...' : '⏳ Caricamento login...', 'info');
 
     // Wait up to 3 seconds for GIS to load before falling back
     var _gisRetries = 0;
@@ -857,7 +857,7 @@ function doGoogleSignIn(successCb) {
       } else if (_gisRetries >= 15) {
         clearInterval(_gisWait);
         // v2.11: Show explicit feedback that we're using redirect fallback
-        if (window.showToast) showToast(isEN ? '🔄 Redirecting to Google...' : '🔄 Reindirizzamento a Google...', 'info');
+        if (window.showToast) showToast(LANG3 === 'es' ? '🔄 Redirigiendo a Google...' : isEN ? '🔄 Redirecting to Google...' : '🔄 Reindirizzamento a Google...', 'info');
         var provider = new firebase.auth.GoogleAuthProvider();
         try { localStorage.setItem('firebase_redirect_pending', '1'); } catch(e) {}
         firebase.auth().signInWithRedirect(provider);
@@ -878,11 +878,11 @@ function doGoogleSignIn(successCb) {
           if (_gisSuccessCb) {
             _gisSuccessCb(result.user);
           } else {
-            if (window.showToast) showToast((isEN ? 'Welcome, ' : 'Benvenuto, ') + (result.user.displayName || result.user.email), 'success');
+            if (window.showToast) showToast((LANG3 === 'es' ? 'Bienvenido, ' : isEN ? 'Welcome, ' : 'Benvenuto, ') + (result.user.displayName || result.user.email), 'success');
           }
         }).catch(function(err) {
           console.error('[Auth] signInWithCredential error:', err);
-          if (window.showToast) showToast((isEN ? 'Login error: ' : 'Errore login: ') + err.message, 'error');
+          if (window.showToast) showToast((LANG3 === 'es' ? 'Error de inicio de sesión: ' : isEN ? 'Login error: ' : 'Errore login: ') + err.message, 'error');
         });
       },
       auto_select: false,
@@ -894,9 +894,9 @@ function doGoogleSignIn(successCb) {
         console.warn('[Auth] GIS prompt blocked:', notification.getNotDisplayedReason());
         // v2.45 FIX: Do NOT use signInWithRedirect under Capacitor native
         if (window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()) {
-          if (window.showToast) showToast(isEN ? '❌ Login blocked. Reinstall the app.' : '❌ Login bloccato. Reinstalla l\'app.', 'error');
+          if (window.showToast) showToast(LANG3 === 'es' ? '❌ Login bloqueado. Reinstala la app.' : isEN ? '❌ Login blocked. Reinstall the app.' : '❌ Login bloccato. Reinstalla l\'app.', 'error');
         } else {
-          if (window.showToast) showToast(isEN ? '⚠️ Popup blocked. Redirecting...' : '⚠️ Popup bloccato. Reindirizzamento...', 'warning');
+          if (window.showToast) showToast(LANG3 === 'es' ? '⚠️ Popup bloqueado. Redirigiendo...' : isEN ? '⚠️ Popup blocked. Redirecting...' : '⚠️ Popup bloccato. Reindirizzamento...', 'warning');
           // Fallback to redirect (web only)
           var provider = new firebase.auth.GoogleAuthProvider();
           try { localStorage.setItem('firebase_redirect_pending', '1'); } catch(e) {}
@@ -914,9 +914,9 @@ function doGoogleSignIn(successCb) {
     console.error('[Auth] GIS initialization error:', gisErr);
     // v2.45 FIX: Do NOT use signInWithRedirect under Capacitor native
     if (window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()) {
-      if (window.showToast) showToast(isEN ? '❌ Login service error.' : '❌ Errore servizio login.', 'error');
+      if (window.showToast) showToast(LANG3 === 'es' ? '❌ Error del servicio de login.' : isEN ? '❌ Login service error.' : '❌ Errore servizio login.', 'error');
     } else {
-      if (window.showToast) showToast(isEN ? '⚠️ Login service error. Redirecting...' : '⚠️ Errore servizio login. Reindirizzamento...', 'warning');
+      if (window.showToast) showToast(LANG3 === 'es' ? '⚠️ Error servicio de login. Redirigiendo...' : isEN ? '⚠️ Login service error. Redirecting...' : '⚠️ Errore servizio login. Reindirizzamento...', 'warning');
       var provider = new firebase.auth.GoogleAuthProvider();
       try { localStorage.setItem('firebase_redirect_pending', '1'); } catch(e) {}
       firebase.auth().signInWithRedirect(provider);
@@ -931,8 +931,8 @@ function showGlobalBanScreen() {
   overlay.id = 'global-ban-overlay';
   overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;z-index:99999;background:var(--bg-main,#f0f4f8);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;text-align:center;';
   overlay.innerHTML = '<div style="font-size:64px;margin-bottom:16px;">🚫</div>'
-    + '<h2 style="margin:0 0 12px;color:var(--text-color,#1a1a2e);">' + (isEN ? 'Access Revoked' : 'Accesso revocato') + '</h2>'
-    + '<p style="color:var(--text-muted,#64748b);max-width:320px;">' + (isEN ? 'Your access to this app has been revoked by the organizers. If you think this is a mistake, contact the trip organizers.' : 'Il tuo accesso a questa app \u00e8 stato revocato dagli organizzatori. Se pensi sia un errore, contatta gli organizzatori del viaggio.') + '</p>';
+    + '<h2 style="margin:0 0 12px;color:var(--text-color,#1a1a2e);">' + (LANG3 === 'es' ? 'Acceso revocado' : isEN ? 'Access Revoked' : 'Accesso revocato') + '</h2>'
+    + '<p style="color:var(--text-muted,#64748b);max-width:320px;">' + (LANG3 === 'es' ? 'El acceso a esta app ha sido revocado por los organizadores. Si crees que es un error, contacta a los organizadores del viaje.' : isEN ? 'Your access to this app has been revoked by the organizers. If you think this is a mistake, contact the trip organizers.' : 'Il tuo accesso a questa app \u00e8 stato revocato dagli organizzatori. Se pensi sia un errore, contatta gli organizzatori del viaggio.') + '</p>';
   document.body.appendChild(overlay);
   // Hide everything else
   var main = document.querySelector('main');
@@ -1453,7 +1453,7 @@ window.openMapFullscreen = function openMapFullscreen(mapInstance, title) {
         var overlay = document.createElement('div');
         overlay.className = 'map-fs-overlay';
         overlay.innerHTML = '<div class="map-fs-header">' +
-            '<h3>' + (title || (typeof isEN !== 'undefined' && isEN ? 'Map' : 'Mappa')) + '</h3>' +
+            '<h3>' + (title || (typeof isEN !== 'undefined' && LANG3 === 'es' ? 'Mapa' : isEN ? 'Map' : 'Mappa')) + '</h3>' +
             '<button class="map-fs-close" aria-label="Close">&times;</button>' +
         '</div>' +
         '<div class="map-fs-body"><div id="map-fs-container" style="width:100%;height:100%;"></div></div>';
@@ -1563,7 +1563,7 @@ window.openMapFullscreen = function openMapFullscreen(mapInstance, title) {
     var overlay = document.createElement('div');
     overlay.className = 'map-fs-overlay';
     overlay.innerHTML = '<div class="map-fs-header">' +
-        '<h3>' + (title || (isEN ? 'Map' : 'Mappa')) + '</h3>' +
+        '<h3>' + (title || (LANG3 === 'es' ? 'Mapa' : isEN ? 'Map' : 'Mappa')) + '</h3>' +
         '<button class="map-fs-close" aria-label="Close">&times;</button>' +
     '</div>' +
     '<div class="map-fs-body"><div id="map-fs-container" style="width:100%;height:100%;"></div></div>';
@@ -1950,14 +1950,14 @@ function initRouteMap() {
         var fsBtn = document.createElement('button');
         fsBtn.className = 'map-fullscreen-btn';
         fsBtn.innerHTML = '\u26F6';
-        fsBtn.title = isEN ? 'Fullscreen' : 'Schermo intero';
+        fsBtn.title = LANG3 === 'es' ? 'Pantalla completa' : isEN ? 'Fullscreen' : 'Schermo intero';
         fsBtn.setAttribute('aria-label', fsBtn.title);
         fsBtn.style.position = 'absolute';
         mapDiv.style.position = 'relative';
         mapDiv.appendChild(fsBtn);
         fsBtn.addEventListener('click', function(e) {
             e.stopPropagation();
-            window.openMapFullscreen(routeMapInstance, isEN ? 'Route Map' : 'Mappa Percorso');
+            window.openMapFullscreen(routeMapInstance, LANG3 === 'es' ? 'Mapa de ruta' : isEN ? 'Route Map' : 'Mappa Percorso');
         });
 
         // ─── v4.26: Real GPS historical tracks on route map ───
@@ -2133,7 +2133,7 @@ document.addEventListener('DOMContentLoaded', function() {
         var hint = document.createElement('div');
         hint.className = 'timeline-hint';
         hint.innerHTML = '<span class="hint-icon">\uD83D\uDC46</span> ' +
-            (isEN ? 'Tap a day to see its details' : 'Tocca un giorno per vedere i dettagli');
+            (LANG3 === 'es' ? 'Toca un día para ver sus detalles' : isEN ? 'Tap a day to see its details' : 'Tocca un giorno per vedere i dettagli');
         timeline.parentNode.insertBefore(hint, timeline);
         function dismissHint() {
             if (hint.parentNode) hint.parentNode.removeChild(hint);
@@ -2233,9 +2233,9 @@ document.addEventListener('DOMContentLoaded', function() {
         var diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
         if (diffDays > 0) {
             dayEl.textContent = '-' + diffDays;
-            infoEl.innerHTML = isEN ? '<strong>' + diffDays + ' days</strong> until departure<br>' + tripDays[0].title : 'Mancano <strong>' + diffDays + ' giorni</strong> alla partenza<br>' + tripDays[0].title;
+            infoEl.innerHTML = LANG3 === 'es' ? '<strong>' + diffDays + ' días</strong> para la salida<br>' + tripDays[0].title : isEN ? '<strong>' + diffDays + ' days</strong> until departure<br>' + tripDays[0].title : 'Mancano <strong>' + diffDays + ' giorni</strong> alla partenza<br>' + tripDays[0].title;
             if (progressFill) progressFill.style.width = '0%';
-            if (progressText) progressText.textContent = (typeof window.TRIP_META !== 'undefined') ? (isEN ? 'Departure: ' + window.TRIP_META.startEN : 'Partenza: ' + window.TRIP_META.startIT) : (isEN ? 'Departure: 25 June 2026' : 'Partenza: 25 giugno 2026');
+            if (progressText) progressText.textContent = (typeof window.TRIP_META !== 'undefined') ? (isEN ? 'Departure: ' + window.TRIP_META.startEN : 'Partenza: ' + window.TRIP_META.startIT) : (LANG3 === 'es' ? 'Salida: 25 de junio de 2026' : isEN ? 'Departure: 25 June 2026' : 'Partenza: 25 giugno 2026');
         } else if (diffDays <= 0 && today <= endDate) {
             var tripDay = Math.abs(diffDays);
             if (tripDay < tripDays.length) {
@@ -2244,13 +2244,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 infoEl.innerHTML = '<strong>' + T('Oggi: ','Today: ','Hoy: ') + td.date + '</strong><br>' + td.title;
                 var pct = ((tripDay + 1) / TRIP_DAYS * 100).toFixed(0);
                 if (progressFill) progressFill.style.width = pct + '%';
-                if (progressText) progressText.textContent = isEN ? 'Day ' + (tripDay + 1) + ' of ' + TRIP_DAYS + ' (' + pct + '%)' : 'Giorno ' + (tripDay + 1) + ' di ' + TRIP_DAYS + ' (' + pct + '%)';
+                if (progressText) progressText.textContent = LANG3 === 'es' ? 'Día ' + (tripDay + 1) + ' de ' + TRIP_DAYS + ' (' + pct + '%)' : isEN ? 'Day ' + (tripDay + 1) + ' of ' + TRIP_DAYS + ' (' + pct + '%)' : 'Giorno ' + (tripDay + 1) + ' di ' + TRIP_DAYS + ' (' + pct + '%)';
             }
         } else {
             dayEl.textContent = '✅';
-            infoEl.innerHTML = isEN ? '<strong>Trip completed!</strong><br>' + TRIP_DAYS + ' days · 13 countries · 12,000 km' : '<strong>Viaggio completato!</strong><br>' + TRIP_DAYS + ' giorni · 13 paesi · 12.000 km';
+            infoEl.innerHTML = LANG3 === 'es' ? '<strong>¡Viaje completado!</strong><br>' + TRIP_DAYS + ' días · 13 países · 12.000 km' : isEN ? '<strong>Trip completed!</strong><br>' + TRIP_DAYS + ' days · 13 countries · 12,000 km' : '<strong>Viaggio completato!</strong><br>' + TRIP_DAYS + ' giorni · 13 paesi · 12.000 km';
             if (progressFill) progressFill.style.width = '100%';
-            if (progressText) progressText.textContent = isEN ? 'Completed!' : 'Completato!';
+            if (progressText) progressText.textContent = LANG3 === 'es' ? '¡Completado!' : isEN ? 'Completed!' : 'Completato!';
         }
     })();
 
@@ -2338,12 +2338,12 @@ document.addEventListener('DOMContentLoaded', function() {
         if (miniLabel) {
             if (currentDay < 0) {
                 var dLeft = Math.ceil((tripStart - today) / 86400000);
-                miniLabel.textContent = isEN ? 'Departure in ' + dLeft + (dLeft === 1 ? ' day' : ' days')
+                miniLabel.textContent = LANG3 === 'es' ? 'Salida en ' + dLeft + (dLeft === 1 ? ' día' : ' días') : isEN ? 'Departure in ' + dLeft + (dLeft === 1 ? ' day' : ' days')
                                               : 'Partenza tra ' + dLeft + (dLeft === 1 ? ' giorno' : ' giorni');
             } else if (currentDay < days.length) {
-                miniLabel.textContent = (isEN ? 'Day ' : 'Giorno ') + (currentDay + 1) + '/' + totalDays + ' — ' + days[currentDay].title;
+                miniLabel.textContent = (LANG3 === 'es' ? 'Día ' : isEN ? 'Day ' : 'Giorno ') + (currentDay + 1) + '/' + totalDays + ' — ' + days[currentDay].title;
             } else {
-                miniLabel.textContent = isEN ? '🏁 Trip completed!' : '🏁 Viaggio completato!';
+                miniLabel.textContent = LANG3 === 'es' ? '🏁 Viaje completado!' : isEN ? '🏁 Trip completed!' : '🏁 Viaggio completato!';
             }
         }
 
@@ -2367,11 +2367,11 @@ document.addEventListener('DOMContentLoaded', function() {
             miniDetail.setAttribute('data-trip-meta', ''); // disabilita TRIP_META
             var kmToday = days[currentDay] && days[currentDay].km ? days[currentDay].km : 0;
             if (kmToday > 0) {
-                miniDetail.textContent = isEN ? kmToday + ' km today' : kmToday + ' km oggi';
+                miniDetail.textContent = LANG3 === 'es' ? kmToday + ' km hoy' : isEN ? kmToday + ' km today' : kmToday + ' km oggi';
                 if (miniSep) miniSep.style.display = '';
             } else {
                 // Giorno di sosta o senza km: nascondi dettaglio e separatore per non lasciare "·" appeso
-                miniDetail.textContent = isEN ? 'rest day' : 'giorno di sosta';
+                miniDetail.textContent = LANG3 === 'es' ? 'día de descanso' : isEN ? 'rest day' : 'giorno di sosta';
                 if (miniSep) miniSep.style.display = '';
             }
         } else if (miniDetail && currentDay >= days.length) {
@@ -2425,9 +2425,9 @@ document.addEventListener('DOMContentLoaded', function() {
             ].join(';');
             seg.appendChild(bar);
 
-            var tipText = (isEN ? 'D' : 'G') + (idx + 1) + ' ' + d.date + ' · ' + d.title + (km ? ' · ' + km + 'km' : (isEN ? ' · rest' : ' · sosta'));
+            var tipText = (LANG3 === 'es' ? 'D' : isEN ? 'D' : 'G') + (idx + 1) + ' ' + d.date + ' · ' + d.title + (km ? ' · ' + km + 'km' : (LANG3 === 'es' ? ' · descanso' : isEN ? ' · rest' : ' · sosta'));
             // v2.85: hint that the caption is tappable to open the day.
-            var tapHint = isEN ? '  → tap to open' : '  → tocca per aprire';
+            var tapHint = LANG3 === 'es' ? '  → toca para abrir' : isEN ? '  → tap to open' : '  → tocca per aprire';
             function showFor() {
                 // v2.81: write the day detail into the fixed caption row (and the
                 // legacy overlay as a fallback) before revealing it.
@@ -2542,7 +2542,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Show rounded grand total in thousands, kept as before
                 return totalKm >= 1000 ? (Math.round(totalKm / 1000) + '.000 km') : (totalKm + ' km');
             } else {
-                return '~' + Math.round(totalHours) + (isEN ? 'h driving' : 'h guida');
+                return '~' + Math.round(totalHours) + (LANG3 === 'es' ? 'h conduciendo' : isEN ? 'h driving' : 'h guida');
             }
         }
         // v4.61: itemized breakdown string (road + ferry)
@@ -2604,15 +2604,15 @@ document.addEventListener('DOMContentLoaded', function() {
             var items = minibarLegend.children; // 4 span items
             if (items.length < 4) return;
             if (currentUnit === 'km') {
-                items[0].lastChild.textContent = isEN ? 'critical \u2265500km' : 'critico \u2265500km';
-                items[1].lastChild.textContent = isEN ? 'heavy \u2265300km' : 'pesante \u2265300km';
-                items[2].lastChild.textContent = isEN ? 'normal' : 'normale';
-                items[3].lastChild.textContent = isEN ? 'rest' : 'sosta';
+                items[0].lastChild.textContent = LANG3 === 'es' ? 'crítico \\u2265500km' : isEN ? 'critical \u2265500km' : 'critico \u2265500km';
+                items[1].lastChild.textContent = LANG3 === 'es' ? 'pesado \\u2265300km' : isEN ? 'heavy \u2265300km' : 'pesante \u2265300km';
+                items[2].lastChild.textContent = LANG3 === 'es' ? 'normal' : isEN ? 'normal' : 'normale';
+                items[3].lastChild.textContent = LANG3 === 'es' ? 'descanso' : isEN ? 'rest' : 'sosta';
             } else {
-                items[0].lastChild.textContent = isEN ? 'critical \u22656h' : 'critico \u22656h';
-                items[1].lastChild.textContent = isEN ? 'heavy \u22654h' : 'pesante \u22654h';
-                items[2].lastChild.textContent = isEN ? 'normal' : 'normale';
-                items[3].lastChild.textContent = isEN ? 'rest' : 'sosta';
+                items[0].lastChild.textContent = LANG3 === 'es' ? 'crítico \\u22656h' : isEN ? 'critical \u22656h' : 'critico \u22656h';
+                items[1].lastChild.textContent = LANG3 === 'es' ? 'pesado \\u22654h' : isEN ? 'heavy \u22654h' : 'pesante \u22654h';
+                items[2].lastChild.textContent = LANG3 === 'es' ? 'normal' : isEN ? 'normal' : 'normale';
+                items[3].lastChild.textContent = LANG3 === 'es' ? 'descanso' : isEN ? 'rest' : 'sosta';
             }
         }
 
@@ -2673,7 +2673,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 weekHrs += hoursData[i];
             }
             var titleVal = currentUnit === 'km' ? (weekKm + ' km') : ('~' + Math.round(weekHrs) + 'h');
-            if (weekTitle) weekTitle.textContent = (isEN ? 'Week ' : 'Settimana ') + (weekIdx + 1) + ' \u00B7 ' + titleVal;
+            if (weekTitle) weekTitle.textContent = (LANG3 === 'es' ? 'Semana ' : isEN ? 'Week ' : 'Settimana ') + (weekIdx + 1) + ' \u00B7 ' + titleVal;
 
             // v3.46: Weekday abbreviations
             var _wdIT = ['Lun','Mar','Mer','Gio','Ven','Sab','Dom'];
@@ -2736,7 +2736,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         var _prevTc = (j > 0) ? TRIP_COORDS[j - 1] : null;
                         var _isCrossing = _prevTc && _prevTc.country !== _tc.country;
                         var _cityName = (isEN ? (_tc.cityEn || _tc.city) : _tc.city) || '';
-                        var _titleTxt = _cityName + (_isCrossing ? (isEN ? ' — entering ' + _tc.country : ' — ingresso in ' + _tc.country) : '');
+                        var _titleTxt = _cityName + (_isCrossing ? (LANG3 === 'es' ? ' — entrando en ' + _tc.country : isEN ? ' — entering ' + _tc.country : ' — ingresso in ' + _tc.country) : '');
                         if (_tc.flag) {
                             _flagHtml = '<br><span title="' + _titleTxt.replace(/"/g, '') + '" style="font-size:13px;line-height:1;' + (_isCrossing ? 'filter:drop-shadow(0 0 1px #3b82f6);' : '') + '">' + _tc.flag + (_isCrossing ? '<span style="color:#3b82f6;font-weight:700;">•</span>' : '') + '</span>';
                         }
@@ -3027,14 +3027,14 @@ document.addEventListener('DOMContentLoaded', function() {
     function switchTab(tabId, scrollToId) {
         // Block access to protected tabs for non-authenticated users
         if (PROTECTED_TABS.indexOf(tabId) !== -1 && !firebaseUser) {
-            showToast(isEN ? '🔒 Sign in to access this section' : '🔒 Accedi per visualizzare questa sezione', 'info');
+            showToast(LANG3 === 'es' ? '🔒 Inicia sesión para acceder a esta sección' : isEN ? '🔒 Sign in to access this section' : '🔒 Accedi per visualizzare questa sezione', 'info');
             // Trigger login
             if (typeof doGoogleSignIn === 'function') doGoogleSignIn();
             return;
         }
         // v2.11 FIX: Admin tab requires Owner status, not just authentication
         if (tabId === 'admin' && !isOwner) {
-            showToast(isEN ? '🔒 Admin area — owners only' : '🔒 Area Admin — solo organizzatori', 'error');
+            showToast(LANG3 === 'es' ? '🔒 Área Admin — solo organizadores' : isEN ? '🔒 Admin area — owners only' : '🔒 Area Admin — solo organizzatori', 'error');
             return;
         }
         // NOTE: Each protected tab (diario, chat, posizione) has its own internal
@@ -3408,28 +3408,28 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Thematic sections index — priority order
         var THEMATIC_SECTIONS = [
-            { keywords: ['campeggio','camper','sosta','parcheggio notte','wild camping','camping','dormire'], icon: '\u{1F690}', label: isEN ? 'Wild Camping' : 'Campeggio Libero', tab: 'attivita', anchor: 'campeggio', priority: 1 },
-            { keywords: ['cibo','ristorante','mangiare','street food','cucina','piatto','birra','food','gastronomia'], icon: '\u{1F35D}', label: isEN ? 'Food Guide' : 'Cibo \u2014 Guida Gastronomica', tab: 'cibo', anchor: null, priority: 1 },
+            { keywords: ['campeggio','camper','sosta','parcheggio notte','wild camping','camping','dormire'], icon: '\u{1F690}', label: LANG3 === 'es' ? 'Acampada libre' : isEN ? 'Wild Camping' : 'Campeggio Libero', tab: 'attivita', anchor: 'campeggio', priority: 1 },
+            { keywords: ['cibo','ristorante','mangiare','street food','cucina','piatto','birra','food','gastronomia'], icon: '\u{1F35D}', label: LANG3 === 'es' ? 'Guía gastronómica' : isEN ? 'Food Guide' : 'Cibo \u2014 Guida Gastronomica', tab: 'cibo', anchor: null, priority: 1 },
             { keywords: ['trekking','escursione','sentiero','hiking','camminata','passeggiata','montagna'], icon: '\u{1F97E}', label: 'Trekking', tab: 'attivita', anchor: 'trekking', priority: 1 },
-            { keywords: ['pesca','pescare','fishing','licenza','canna','pesce'], icon: '\u{1F3A3}', label: isEN ? 'Fishing' : 'Pesca', tab: 'attivita', anchor: 'pesca', priority: 1 },
-            { keywords: ['meteo','tempo','pioggia','previsioni','weather','sole','vento'], icon: '\u{1F324}\uFE0F', label: isEN ? 'Trip Weather' : 'Meteo del Viaggio', tab: 'riepilogo', anchor: 'meteo-viaggio', priority: 1 },
-            { keywords: ['museo','musei','attrazioni','visitare','museum'], icon: '\u{1F3DB}\uFE0F', label: isEN ? 'Museums & Attractions' : 'Musei & Attrazioni', tab: 'luoghi', anchor: 'musei-attrazioni', priority: 1 },
-            { keywords: ['terme','spa','termale','piscina','relax'], icon: '\u2668\uFE0F', label: isEN ? 'Spas' : 'Terme', tab: 'luoghi', anchor: 'secA', priority: 1 },
-            { keywords: ['parco','parchi','nazionale','natura','riserva'], icon: '\u{1F332}', label: isEN ? 'National Parks' : 'Parchi Nazionali', tab: 'luoghi', anchor: 'poi-parchi-nazionali', priority: 1 },
-            { keywords: ['mercato','mercati','shopping','comprare','souvenir'], icon: '\u{1F6D2}', label: isEN ? 'Markets' : 'Mercati', tab: 'luoghi', anchor: 'poi-mercati', priority: 1 },
-            { keywords: ['festival','festa','evento','concerti','feste'], icon: '\u{1F389}', label: isEN ? 'Festivals & Events' : 'Festival & Eventi', tab: 'luoghi', anchor: 'feste', priority: 1 },
+            { keywords: ['pesca','pescare','fishing','licenza','canna','pesce'], icon: '\u{1F3A3}', label: LANG3 === 'es' ? 'Pesca' : isEN ? 'Fishing' : 'Pesca', tab: 'attivita', anchor: 'pesca', priority: 1 },
+            { keywords: ['meteo','tempo','pioggia','previsioni','weather','sole','vento'], icon: '\u{1F324}\uFE0F', label: LANG3 === 'es' ? 'Tiempo del viaje' : isEN ? 'Trip Weather' : 'Meteo del Viaggio', tab: 'riepilogo', anchor: 'meteo-viaggio', priority: 1 },
+            { keywords: ['museo','musei','attrazioni','visitare','museum'], icon: '\u{1F3DB}\uFE0F', label: LANG3 === 'es' ? 'Museos & Atracciones' : isEN ? 'Museums & Attractions' : 'Musei & Attrazioni', tab: 'luoghi', anchor: 'musei-attrazioni', priority: 1 },
+            { keywords: ['terme','spa','termale','piscina','relax'], icon: '\u2668\uFE0F', label: LANG3 === 'es' ? 'Termas' : isEN ? 'Spas' : 'Terme', tab: 'luoghi', anchor: 'secA', priority: 1 },
+            { keywords: ['parco','parchi','nazionale','natura','riserva'], icon: '\u{1F332}', label: LANG3 === 'es' ? 'Parques Nacionales' : isEN ? 'National Parks' : 'Parchi Nazionali', tab: 'luoghi', anchor: 'poi-parchi-nazionali', priority: 1 },
+            { keywords: ['mercato','mercati','shopping','comprare','souvenir'], icon: '\u{1F6D2}', label: LANG3 === 'es' ? 'Mercados' : isEN ? 'Markets' : 'Mercati', tab: 'luoghi', anchor: 'poi-mercati', priority: 1 },
+            { keywords: ['festival','festa','evento','concerti','feste'], icon: '\u{1F389}', label: LANG3 === 'es' ? 'Festivales & Eventos' : isEN ? 'Festivals & Events' : 'Festival & Eventi', tab: 'luoghi', anchor: 'feste', priority: 1 },
             { keywords: ['viewpoint','panorama','vista','belvedere','tramonto'], icon: '\u{1F305}', label: 'Viewpoint', tab: 'luoghi', anchor: 'viewpoint', priority: 1 },
-            { keywords: ['monopattino','bici','noleggio','kayak','canoa','outdoor','bike'], icon: '\u{1F6B4}', label: isEN ? 'Outdoor Rentals' : 'Noleggi Outdoor', tab: 'attivita', anchor: 'noleggi', priority: 2 },
-            { keywords: ['zaino','cosa portare','checklist','valigia','bagaglio','preparare'], icon: '\u{1F392}', label: isEN ? 'Packing List' : 'Zaino \u2014 Cosa Portare', tab: 'zaino', anchor: null, priority: 2 },
+            { keywords: ['monopattino','bici','noleggio','kayak','canoa','outdoor','bike'], icon: '\u{1F6B4}', label: LANG3 === 'es' ? 'Alquileres al aire libre' : isEN ? 'Outdoor Rentals' : 'Noleggi Outdoor', tab: 'attivita', anchor: 'noleggi', priority: 2 },
+            { keywords: ['zaino','cosa portare','checklist','valigia','bagaglio','preparare'], icon: '\u{1F392}', label: LANG3 === 'es' ? 'Lista de empaque' : isEN ? 'Packing List' : 'Zaino \u2014 Cosa Portare', tab: 'zaino', anchor: null, priority: 2 },
             { keywords: ['budget','soldi','costo','quanto costa','spesa','prezzo','euro'], icon: '\u{1F4B6}', label: 'Budget', tab: 'piano', anchor: 'budget', priority: 2 },
             { keywords: ['drone','volare','regole drone','dji','riprese aeree'], icon: '\u{1F6F8}', label: 'Drone', tab: 'attivita', anchor: 'drone', priority: 2 },
-            { keywords: ['minerali','fossili','cristalli','geologia','rocce'], icon: '\u26CF\uFE0F', label: isEN ? 'Minerals & Fossils' : 'Minerali & Fossili', tab: 'attivita', anchor: 'minerali-fossili', priority: 2 },
-            { keywords: ['cultura','storia','tradizioni','folklore','usanze'], icon: '\u{1F3DB}\uFE0F', label: isEN ? 'Culture \u2014 History & Traditions' : 'Cultura \u2014 Storia e Tradizioni', tab: 'cultura', anchor: null, priority: 3 },
+            { keywords: ['minerali','fossili','cristalli','geologia','rocce'], icon: '\u26CF\uFE0F', label: LANG3 === 'es' ? 'Minerales & Fósiles' : isEN ? 'Minerals & Fossils' : 'Minerali & Fossili', tab: 'attivita', anchor: 'minerali-fossili', priority: 2 },
+            { keywords: ['cultura','storia','tradizioni','folklore','usanze'], icon: '\u{1F3DB}\uFE0F', label: LANG3 === 'es' ? 'Cultura \\u2014 Historia y Tradiciones' : isEN ? 'Culture \u2014 History & Traditions' : 'Cultura \u2014 Storia e Tradizioni', tab: 'cultura', anchor: null, priority: 3 },
             { keywords: ['garmin','inreach','emergenza','sos','satellite'], icon: '\u{1F4E1}', label: 'Garmin inReach', tab: 'attivita', anchor: 'inreach', priority: 3 },
-            { keywords: ['valute','cambio','corona','zloty','moneta'], icon: '\u{1F4B1}', label: isEN ? 'Currencies' : 'Valute', tab: 'piano', anchor: 'valute', priority: 2 },
-            { keywords: ['card','tessera','vignetta','pedaggio','autostrada'], icon: '\u{1F3AB}', label: isEN ? 'Cards & Tolls' : 'Cards & Pedaggi', tab: 'piano', anchor: 'cards', priority: 2 },
-            { keywords: ['bambini','bambino','kids','famiglia','giochi','parco giochi'], icon: '\u{1F476}', label: isEN ? 'Kids Activities (by day)' : 'Attivit\u00e0 Bambini (per giorno)', tab: 'luoghi', anchor: null, priority: 1 },
-            { keywords: ['curiosit\u00e0','curiosita','sapevi','fun fact'], icon: '\u{1F4A1}', label: isEN ? 'Trip Fun Facts' : 'Curiosit\u00e0 del Viaggio', tab: 'riepilogo', anchor: 'curiosita-viaggio', priority: 2 }
+            { keywords: ['valute','cambio','corona','zloty','moneta'], icon: '\u{1F4B1}', label: LANG3 === 'es' ? 'Monedas' : isEN ? 'Currencies' : 'Valute', tab: 'piano', anchor: 'valute', priority: 2 },
+            { keywords: ['card','tessera','vignetta','pedaggio','autostrada'], icon: '\u{1F3AB}', label: LANG3 === 'es' ? 'Tarjetas y peajes' : isEN ? 'Cards & Tolls' : 'Cards & Pedaggi', tab: 'piano', anchor: 'cards', priority: 2 },
+            { keywords: ['bambini','bambino','kids','famiglia','giochi','parco giochi'], icon: '\u{1F476}', label: LANG3 === 'es' ? 'Actividades niños (por día)' : isEN ? 'Kids Activities (by day)' : 'Attivit\u00e0 Bambini (per giorno)', tab: 'luoghi', anchor: null, priority: 1 },
+            { keywords: ['curiosit\u00e0','curiosita','sapevi','fun fact'], icon: '\u{1F4A1}', label: LANG3 === 'es' ? 'Curiosidades del viaje' : isEN ? 'Trip Fun Facts' : 'Curiosit\u00e0 del Viaggio', tab: 'riepilogo', anchor: 'curiosita-viaggio', priority: 2 }
         ];
 
         // Build day search index from DAYS_DATA
@@ -3717,7 +3717,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                         if (sessKmRef) sessKmRef.set(todayKm);
                         var trackRef = getFamilyRef('tracks/' + todayStr() + '/points');
                         if (trackRef) trackRef.set(todayPoints).catch(function(e) { console.warn("[Track] set failed:", e.message); });
-                        showToast((isEN ? '🛣️ Estimated ' : '🛣️ Stimati ') + gapKm.toFixed(1) + ' km ' + (isEN ? 'for GPS gap' : 'per buco GPS'), 'info');
+                        showToast((LANG3 === 'es' ? '🛣️ Estimado ' : isEN ? '🛣️ Estimated ' : '🛣️ Stimati ') + gapKm.toFixed(1) + ' km ' + (LANG3 === 'es' ? 'por hueco de GPS' : isEN ? 'for GPS gap' : 'per buco GPS'), 'info');
                     } else {
                         // Fallback: use straight-line distance
                         todayKm += straightDist;
@@ -3893,12 +3893,12 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                     var html = '<div class="pos-card-header">';
                     html += '<label><input type="checkbox" class="pos-cb" data-idx="' + idx + '"' + (checked ? ' checked' : '') + '> ';
                     html += '<strong>' + p.day + '</strong> · ' + p.date + ' · ' + p.place + '</label>';
-                    html += '<button class="pos-nav-btn" data-place="' + encodeURIComponent(p.place) + '" title="' + (isEN ? 'Navigate' : 'Naviga') + '">🧭</button>';
+                    html += '<button class="pos-nav-btn" data-place="' + encodeURIComponent(p.place) + '" title="' + (LANG3 === 'es' ? 'Navegar' : isEN ? 'Navigate' : 'Naviga') + '">🧭</button>';
                     html += '</div>';
                     if (ci) {
                         html += '<div class="pos-card-info">✅ ' + ci.time;
                         if (ci.lat) html += ' · <a href="https://maps.google.com/?q=' + ci.lat + ',' + ci.lng + '" target="_blank">📍</a>';
-                        if (isOwner) html += ' <button class="pos-del-btn ci-del" data-ciidx="' + idx + '" title="' + (isEN ? 'Uncheck' : 'Rimuovi') + '">🗑️</button>';
+                        if (isOwner) html += ' <button class="pos-del-btn ci-del" data-ciidx="' + idx + '" title="' + (LANG3 === 'es' ? 'Quitar' : isEN ? 'Uncheck' : 'Rimuovi') + '">🗑️</button>';
                         html += '</div>';
                     }
                     card.innerHTML = html;
@@ -3917,11 +3917,11 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                         _dlabel = item.date.slice(8,10) + '/' + item.date.slice(5,7) + ' · ';
                     }
                     chtml += _dlabel + escapeHtml(item.name || '—') + '</label>';
-                    if (item.lat) chtml += '<a class="pos-nav-btn" href="https://maps.google.com/?q=' + item.lat + ',' + item.lng + '" target="_blank" rel="noopener" title="' + (isEN ? 'Open in Google Maps' : 'Apri in Google Maps') + '" style="text-decoration:none;">🗺️</a>';
+                    if (item.lat) chtml += '<a class="pos-nav-btn" href="https://maps.google.com/?q=' + item.lat + ',' + item.lng + '" target="_blank" rel="noopener" title="' + (LANG3 === 'es' ? 'Abrir en Google Maps' : isEN ? 'Open in Google Maps' : 'Apri in Google Maps') + '" style="text-decoration:none;">🗺️</a>';
                     chtml += '</div>';
                     chtml += '<div class="pos-card-info">' + escapeHtml(item.time || item.date || '');
                     if (item.lat) chtml += ' · <a href="https://maps.google.com/?q=' + item.lat + ',' + item.lng + '" target="_blank" style="text-decoration:none;">📍</a>';
-                    if (isOwner) chtml += ' <button class="pos-del-btn cc-del" data-ckey="' + ckey + '" title="' + (isEN ? 'Delete' : 'Elimina') + '">🗑️</button>';
+                    if (isOwner) chtml += ' <button class="pos-del-btn cc-del" data-ckey="' + ckey + '" title="' + (LANG3 === 'es' ? 'Eliminar' : isEN ? 'Delete' : 'Elimina') + '">🗑️</button>';
                     chtml += '</div>';
                     ccard.innerHTML = chtml;
                     listContainer.appendChild(ccard);
@@ -3933,7 +3933,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                     e.preventDefault();
                     e.stopPropagation();
                     var cidx = btn.getAttribute('data-ciidx');
-                    showConfirm(isEN ? 'Remove this check-in?' : 'Rimuovere questo check-in?', function() {
+                    showConfirm(LANG3 === 'es' ? '¿Eliminar este check-in?' : isEN ? 'Remove this check-in?' : 'Rimuovere questo check-in?', function() {
                         saveCheckin(cidx, null);
                         renderPlaces(document.getElementById('pos-search') ? document.getElementById('pos-search').value : '');
                     });
@@ -3945,7 +3945,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                     e.preventDefault();
                     e.stopPropagation();
                     var ckey = btn.getAttribute('data-ckey');
-                    showConfirm(isEN ? 'Delete this stop?' : 'Eliminare questa tappa?', function() {
+                    showConfirm(LANG3 === 'es' ? '¿Eliminar esta parada?' : isEN ? 'Delete this stop?' : 'Eliminare questa tappa?', function() {
                         var cRef = getFamilyRef('customCheckins/' + ckey);
                         if (cRef) cRef.remove();
                         var local = loadLocal(KEYS.CUSTOM_CHECKINS, {});
@@ -3979,7 +3979,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
         // Check-in handlers (manual)
         listContainer.addEventListener('change', function(e) {
             if (e.target.classList.contains('pos-cb')) {
-                if (!isOwner) { e.target.checked = !e.target.checked; showToast(isEN ? '🔒 Only organizers can use this.' : '🔒 Solo gli organizzatori.', 'info'); return; }
+                if (!isOwner) { e.target.checked = !e.target.checked; showToast(LANG3 === 'es' ? '🔒 Solo los organizadores pueden usar esto.' : isEN ? '🔒 Only organizers can use this.' : '🔒 Solo gli organizzatori.', 'info'); return; }
                 var idx = parseInt(e.target.getAttribute('data-idx'));
                 if (e.target.checked) {
                     // v3.41 FIX: Use itinerary place coordinates when available
@@ -4037,12 +4037,12 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                     saveCheckin(idx, { time: new Date().toLocaleString('it-IT'), lat: lat, lng: lng, auto: true });
                     renderPlaces(posSearch ? posSearch.value : '');
                     updateStats(); updateMapMarkers();
-                    showToast((isEN ? '📍 Arrived at ' : '📍 Arrivati a ') + placeName + '!', 'success');
+                    showToast((LANG3 === 'es' ? '📍 Llegamos a ' : isEN ? '📍 Arrived at ' : '📍 Arrivati a ') + placeName + '!', 'success');
                     if(window.haptic) window.haptic(20);
                     // Trigger push notification for family
                     if (window.queuePushNotification) window.queuePushNotification('checkin_itinerary', {
-                        title: (isEN ? '📍 Arrived at ' : '📍 Arrivati a ') + placeName + '!',
-                        body: (isEN ? 'Day ' : 'Giorno ') + (getCurrentTripDay() + 1) + ' — ' + placeName,
+                        title: (LANG3 === 'es' ? '📍 Llegamos a ' : isEN ? '📍 Arrived at ' : '📍 Arrivati a ') + placeName + '!',
+                        body: (LANG3 === 'es' ? 'Día ' : isEN ? 'Day ' : 'Giorno ') + (getCurrentTripDay() + 1) + ' — ' + placeName,
                         target: 'family'
                     });
                 }
@@ -4103,7 +4103,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                         _displayCountry(data.cc, data.name);
                         return;
                     }
-                    window._nominatimFetch('https://nominatim.openstreetmap.org/reverse?lat=' + lat + '&lon=' + lng + '&format=json&zoom=3&accept-language=' + (isEN ? 'en' : 'it')).then(function(data) {
+                    window._nominatimFetch('https://nominatim.openstreetmap.org/reverse?lat=' + lat + '&lon=' + lng + '&format=json&zoom=3&accept-language=' + (LANG3 === 'es' ? 'es' : isEN ? 'en' : 'it')).then(function(data) {
                         if (data && data.address && data.address.country_code) {
                             var cc = data.address.country_code.toUpperCase();
                             var name = countryCodeToName[cc] || data.address.country || cc;
@@ -4253,14 +4253,14 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                 });
                 var avgMax = Math.round(sumMax / days.length);
                 var avgMin = Math.round(sumMin / days.length);
-                var html = '<h3 style="margin:0 0 12px 0;font-size:16px;font-weight:600;color:var(--text-color,#1a1a2e);">' + (isEN ? '\u2600\uFE0F Trip weather' : '\u2600\uFE0F Meteo del viaggio') + ' <span style="font-weight:400;font-size:13px;color:#64748b;">(' + days.length + (isEN ? ' days)' : ' giorni)') + '</span></h3>';
+                var html = '<h3 style="margin:0 0 12px 0;font-size:16px;font-weight:600;color:var(--text-color,#1a1a2e);">' + (LANG3 === 'es' ? '\\u2600\\uFE0F Clima del viaje' : isEN ? '\u2600\uFE0F Trip weather' : '\u2600\uFE0F Meteo del viaggio') + ' <span style="font-weight:400;font-size:13px;color:#64748b;">(' + days.length + (LANG3 === 'es' ? ' días)' : isEN ? ' days)' : ' giorni)') + '</span></h3>';
                 html += '<div class="pos-weather-stats-grid">';
-                html += '<div class="pos-ws-item"><span class="pos-ws-icon">\u{1F321}\uFE0F</span><span class="pos-ws-val">' + avgMax + '\u00b0/' + avgMin + '\u00b0</span><span class="pos-ws-label">' + (isEN ? 'Avg temp' : 'Media') + '</span></div>';
-                html += '<div class="pos-ws-item"><span class="pos-ws-icon">\u{1F525}</span><span class="pos-ws-val">' + hottest.tempMax + '\u00b0</span><span class="pos-ws-label">' + (isEN ? 'Hottest' : 'Pi\u00f9 caldo') + '</span></div>';
-                html += '<div class="pos-ws-item"><span class="pos-ws-icon">\u{2744}\uFE0F</span><span class="pos-ws-val">' + coldest.tempMin + '\u00b0</span><span class="pos-ws-label">' + (isEN ? 'Coldest' : 'Pi\u00f9 freddo') + '</span></div>';
-                html += '<div class="pos-ws-item"><span class="pos-ws-icon">\u2600\uFE0F</span><span class="pos-ws-val">' + sunnyDays + '</span><span class="pos-ws-label">' + (isEN ? 'Sunny days' : 'Giorni sole') + '</span></div>';
-                html += '<div class="pos-ws-item"><span class="pos-ws-icon">\u{1F327}\uFE0F</span><span class="pos-ws-val">' + rainyDays + '</span><span class="pos-ws-label">' + (isEN ? 'Rainy days' : 'Giorni pioggia') + '</span></div>';
-                html += '<div class="pos-ws-item"><span class="pos-ws-icon">\u{1F4A7}</span><span class="pos-ws-val">' + totalRain.toFixed(0) + 'mm</span><span class="pos-ws-label">' + (isEN ? 'Total rain' : 'Pioggia tot.') + '</span></div>';
+                html += '<div class="pos-ws-item"><span class="pos-ws-icon">\u{1F321}\uFE0F</span><span class="pos-ws-val">' + avgMax + '\u00b0/' + avgMin + '\u00b0</span><span class="pos-ws-label">' + (LANG3 === 'es' ? 'Temp. media' : isEN ? 'Avg temp' : 'Media') + '</span></div>';
+                html += '<div class="pos-ws-item"><span class="pos-ws-icon">\u{1F525}</span><span class="pos-ws-val">' + hottest.tempMax + '\u00b0</span><span class="pos-ws-label">' + (LANG3 === 'es' ? 'Lo más popular' : isEN ? 'Hottest' : 'Pi\u00f9 caldo') + '</span></div>';
+                html += '<div class="pos-ws-item"><span class="pos-ws-icon">\u{2744}\uFE0F</span><span class="pos-ws-val">' + coldest.tempMin + '\u00b0</span><span class="pos-ws-label">' + (LANG3 === 'es' ? 'Más frío' : isEN ? 'Coldest' : 'Pi\u00f9 freddo') + '</span></div>';
+                html += '<div class="pos-ws-item"><span class="pos-ws-icon">\u2600\uFE0F</span><span class="pos-ws-val">' + sunnyDays + '</span><span class="pos-ws-label">' + (LANG3 === 'es' ? 'Días soleados' : isEN ? 'Sunny days' : 'Giorni sole') + '</span></div>';
+                html += '<div class="pos-ws-item"><span class="pos-ws-icon">\u{1F327}\uFE0F</span><span class="pos-ws-val">' + rainyDays + '</span><span class="pos-ws-label">' + (LANG3 === 'es' ? 'Días lluviosos' : isEN ? 'Rainy days' : 'Giorni pioggia') + '</span></div>';
+                html += '<div class="pos-ws-item"><span class="pos-ws-icon">\u{1F4A7}</span><span class="pos-ws-val">' + totalRain.toFixed(0) + 'mm</span><span class="pos-ws-label">' + (LANG3 === 'es' ? 'Lluvia tot.' : isEN ? 'Total rain' : 'Pioggia tot.') + '</span></div>';
                 html += '</div>';
                 weatherStatsEl.innerHTML = html;
                 weatherStatsEl.style.display = '';
@@ -4292,7 +4292,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                 var mapEl = document.getElementById('pos-map');
                 var hint = document.createElement('div');
                 hint.className = 'map-touch-hint';
-                hint.textContent = isEN ? 'Use two fingers to move the map' : 'Usa due dita per spostare la mappa';
+                hint.textContent = LANG3 === 'es' ? 'Usa dos dedos para mover el mapa' : isEN ? 'Use two fingers to move the map' : 'Usa due dita per spostare la mappa';
                 hint.style.cssText = 'position:absolute;top:0;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.5);color:white;font-size:14px;font-weight:600;z-index:800;pointer-events:none;opacity:0;transition:opacity 0.3s;border-radius:8px;';
                 mapEl.style.position = 'relative';
                 mapEl.appendChild(hint);
@@ -4420,7 +4420,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                     // v4.01: Owner or author can delete
                     var canDelete = (firebaseUser && (t.uid === firebaseUser.uid || t.authorUid === firebaseUser.uid || isOwner));
                     if (canDelete) {
-                        popup += '<br><a href="#" class="map-tip-delete" data-tip-key="' + k + '" style="color:#dc2626;font-size:11px;">' + (isEN ? 'Delete' : 'Elimina') + '</a>';
+                        popup += '<br><a href="#" class="map-tip-delete" data-tip-key="' + k + '" style="color:#dc2626;font-size:11px;">' + (LANG3 === 'es' ? 'Eliminar' : isEN ? 'Delete' : 'Elimina') + '</a>';
                     }
                     var m = L.marker([t.lat, t.lng], {icon: tipIcon}).bindPopup(popup);
                     m.on('popupopen', function() {
@@ -4430,7 +4430,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                                 ev.preventDefault();
                                 firebase.database().ref('trips/' + FAMILY_ID + '/mapTips/' + k).remove();
                                 map.closePopup();
-                                if (window.showToast) showToast(isEN ? 'Tip deleted' : 'Tip eliminato', 'info');
+                                if (window.showToast) showToast(LANG3 === 'es' ? 'Tip eliminado' : isEN ? 'Tip deleted' : 'Tip eliminato', 'info');
                             });
                         }
                     });
@@ -4450,14 +4450,14 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             var toggleBtn = document.getElementById('pos-toggle-tips-btn');
             if (toggleBtn) {
                 toggleBtn.classList.toggle('active', _mapTipsVisible);
-                toggleBtn.textContent = _mapTipsVisible ? (isEN ? '\uD83D\uDCA1 Tips ON' : '\uD83D\uDCA1 Tips ON') : (isEN ? '\uD83D\uDCA1 Tips OFF' : '\uD83D\uDCA1 Tips OFF');
+                toggleBtn.textContent = _mapTipsVisible ? (LANG3 === 'es' ? '\\uD83D\\uDCA1 Tips ON' : isEN ? '\uD83D\uDCA1 Tips ON' : '\uD83D\uDCA1 Tips ON') : (LANG3 === 'es' ? '\\uD83D\\uDCA1 Tips OFF' : isEN ? '\uD83D\uDCA1 Tips OFF' : '\uD83D\uDCA1 Tips OFF');
             }
         }
 
         // Map tip submission (button or long-press)
         function addMapTipAtLocation(lat, lng) {
             if (!firebaseUser) {
-                if (window.showToast) showToast(isEN ? 'Sign in first' : 'Accedi prima', 'info');
+                if (window.showToast) showToast(LANG3 === 'es' ? 'Inicia sesión primero' : isEN ? 'Sign in first' : 'Accedi prima', 'info');
                 return;
             }
             // v4.01: Use custom modal instead of prompt() for iOS PWA compatibility
@@ -4472,7 +4472,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                     timestamp: firebase.database.ServerValue.TIMESTAMP,
                     authorName: firebaseUser.displayName || firebaseUser.email || ''
                 });
-                if (window.showToast) showToast(isEN ? 'Tip added!' : 'Tip aggiunto!', 'success');
+                if (window.showToast) showToast(LANG3 === 'es' ? '¡Tip añadido!' : isEN ? 'Tip added!' : 'Tip aggiunto!', 'success');
             });
         }
 
@@ -4484,12 +4484,12 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             card.style.cssText = 'background:var(--card-bg,#fff);border-radius:16px;padding:24px;width:100%;max-width:320px;box-shadow:0 20px 60px rgba(0,0,0,0.3);';
             var title = document.createElement('div');
             title.style.cssText = 'font-size:16px;font-weight:700;margin-bottom:12px;color:var(--text-color,#1a1a2e);';
-            title.textContent = isEN ? '\uD83D\uDCA1 Add a tip' : '\uD83D\uDCA1 Aggiungi consiglio';
+            title.textContent = LANG3 === 'es' ? '\\uD83D\\uDCA1 Añadir un consejo' : isEN ? '\uD83D\uDCA1 Add a tip' : '\uD83D\uDCA1 Aggiungi consiglio';
             var input = document.createElement('input');
             input.type = 'text';
             input.maxLength = 120;
             input.style.cssText = 'width:100%;border:1px solid var(--border-color,#e2e8f0);border-radius:10px;padding:12px;font-size:14px;font-family:inherit;box-sizing:border-box;background:var(--bg-color,#fff);color:var(--text-color,#1a1a2e);';
-            input.placeholder = isEN ? 'e.g. Great pizza here! (max 120 chars)' : 'es. Ottima pizza qui! (max 120 caratteri)';
+            input.placeholder = LANG3 === 'es' ? 'p. ej. ¡Excelente pizza aquí! (máx. 120 caracteres)' : isEN ? 'e.g. Great pizza here! (max 120 chars)' : 'es. Ottima pizza qui! (max 120 caratteri)';
             var counter = document.createElement('div');
             counter.style.cssText = 'font-size:11px;color:var(--text-muted,#6b7280);text-align:right;margin-top:4px;';
             counter.textContent = '0/120';
@@ -4499,11 +4499,11 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             var cancelBtn = document.createElement('button');
             cancelBtn.type = 'button';
             cancelBtn.style.cssText = 'flex:1;padding:12px;border-radius:10px;border:none;background:var(--border-color,#e2e8f0);font-size:14px;font-weight:600;cursor:pointer;color:var(--text-color,#1a1a2e);';
-            cancelBtn.textContent = isEN ? 'Cancel' : 'Annulla';
+            cancelBtn.textContent = LANG3 === 'es' ? 'Cancelar' : isEN ? 'Cancel' : 'Annulla';
             var addBtn = document.createElement('button');
             addBtn.type = 'button';
             addBtn.style.cssText = 'flex:1;padding:12px;border-radius:10px;border:none;background:#f59e0b;color:#fff;font-size:14px;font-weight:600;cursor:pointer;';
-            addBtn.textContent = isEN ? 'Add' : 'Aggiungi';
+            addBtn.textContent = LANG3 === 'es' ? 'Añadir' : isEN ? 'Add' : 'Aggiungi';
             btnRow.appendChild(cancelBtn);
             btnRow.appendChild(addBtn);
             card.appendChild(title);
@@ -4704,12 +4704,12 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                         var d = liveData[_latestUid];
                         if (!vanMarker) {
                             vanMarker = L.marker([d.lat, d.lng], { icon: createVanIcon(d.heading || 0), zIndexOffset: 2000 })
-                                .bindPopup('<strong>🚐 ' + (d.name || 'Furgone') + '</strong><br>' + (isEN ? 'Speed: ' : 'Velocità: ') + (d.speed || 0).toFixed(0) + ' km/h')
+                                .bindPopup('<strong>🚐 ' + (d.name || 'Furgone') + '</strong><br>' + (LANG3 === 'es' ? 'Velocidad: ' : isEN ? 'Speed: ' : 'Velocità: ') + (d.speed || 0).toFixed(0) + ' km/h')
                                 .addTo(map);
                         } else {
                             vanMarker.setLatLng([d.lat, d.lng]);
                             vanMarker.setIcon(createVanIcon(d.heading || 0));
-                            vanMarker.setPopupContent('<strong>🚐 ' + (d.name || 'Furgone') + '</strong><br>' + (isEN ? 'Speed: ' : 'Velocità: ') + (d.speed || 0).toFixed(0) + ' km/h');
+                            vanMarker.setPopupContent('<strong>🚐 ' + (d.name || 'Furgone') + '</strong><br>' + (LANG3 === 'es' ? 'Velocidad: ' : isEN ? 'Speed: ' : 'Velocità: ') + (d.speed || 0).toFixed(0) + ' km/h');
                         }
                         // v3.69: center map on van once per map initialization
                         if (!_mapCenteredOnVan) {
@@ -4736,8 +4736,8 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                                 var ageMs = Date.now() - (cl.updatedAt || cl.ts || 0);
                                 var ageMin = Math.round(ageMs / 60000);
                                 var ageStr = ageMin < 60
-                                    ? ageMin + (isEN ? ' min ago' : ' min fa')
-                                    : Math.round(ageMin/60) + (isEN ? 'h ago' : 'h fa');
+                                    ? ageMin + (LANG3 === 'es' ? ' min. atrás' : isEN ? ' min ago' : ' min fa')
+                                    : Math.round(ageMin/60) + (LANG3 === 'es' ? 'h hace' : isEN ? 'h ago' : 'h fa');
                                 // Show van marker on map
                                 var icon = L.divIcon({
                                     className: '',
@@ -4746,12 +4746,12 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                                 });
                                 if (!vanMarker) {
                                     vanMarker = L.marker([cl.lat, cl.lng], { icon: icon, zIndexOffset: 1500 })
-                                        .bindPopup('<strong>🚐 ' + (isEN ? 'Last position' : 'Ultima posizione') + '</strong><br>' + ageStr)
+                                        .bindPopup('<strong>🚐 ' + (LANG3 === 'es' ? 'Última posición' : isEN ? 'Last position' : 'Ultima posizione') + '</strong><br>' + ageStr)
                                         .addTo(map);
                                 } else {
                                     vanMarker.setLatLng([cl.lat, cl.lng]);
                                     vanMarker.setIcon(icon);
-                                    vanMarker.setPopupContent('<strong>🚐 ' + (isEN ? 'Last position' : 'Ultima posizione') + '</strong><br>' + ageStr);
+                                    vanMarker.setPopupContent('<strong>🚐 ' + (LANG3 === 'es' ? 'Última posición' : isEN ? 'Last position' : 'Ultima posizione') + '</strong><br>' + ageStr);
                                 }
                                 updateInfoCard({ lat: cl.lat, lng: cl.lng, time: cl.updatedAt || cl.ts || Date.now(), status: 'stopped' });
                             }
@@ -4769,9 +4769,9 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             var lastUpdateEl = document.getElementById('pos-last-update');
             if (lastUpdateEl && (d.time || d.ts)) {
                 var ago = Math.round((Date.now() - (d.time || d.ts)) / 60000);
-                if (ago < 1) lastUpdateEl.textContent = isEN ? 'Just now' : 'Adesso';
-                else if (ago < 60) lastUpdateEl.textContent = ago + (isEN ? ' min ago' : ' min fa');
-                else lastUpdateEl.textContent = Math.round(ago/60) + (isEN ? 'h ago' : 'h fa');
+                if (ago < 1) lastUpdateEl.textContent = LANG3 === 'es' ? 'Ahora mismo' : isEN ? 'Just now' : 'Adesso';
+                else if (ago < 60) lastUpdateEl.textContent = ago + (LANG3 === 'es' ? ' min. atrás' : isEN ? ' min ago' : ' min fa');
+                else lastUpdateEl.textContent = Math.round(ago/60) + (LANG3 === 'es' ? 'h hace' : isEN ? 'h ago' : 'h fa');
             }
             // v3.74 FIX: "Km oggi" in info card — show today's km from dailySummaries
             // (was incorrectly mirroring stat-total-km which is TOTAL km across all days)
@@ -4841,15 +4841,15 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             if (dot && isRecent) {
                 if (d.status === 'moving' || d.speed > 3) {
                     dot.className = 'pos-live-indicator pos-live-on';
-                    if (label) label.textContent = isEN ? 'Travelling' : 'In viaggio';
+                    if (label) label.textContent = LANG3 === 'es' ? 'En viaje' : isEN ? 'Travelling' : 'In viaggio';
                 } else if (d.status === 'stopped') {
                     dot.className = 'pos-live-indicator pos-live-on';
-                    if (label) label.textContent = isEN ? 'Trip active (stopped)' : 'Viaggio attivo (fermo)';
+                    if (label) label.textContent = LANG3 === 'es' ? 'Viaje activo (detenido)' : isEN ? 'Trip active (stopped)' : 'Viaggio attivo (fermo)';
                 }
                 if (liveTabDotEl) liveTabDotEl.classList.add('active');
             } else if (dot && !isRecent) {
                 dot.className = 'pos-live-indicator pos-live-off';
-                if (label) label.textContent = isEN ? 'Trip not active' : 'Viaggio non attivo';
+                if (label) label.textContent = LANG3 === 'es' ? 'Viaje no activo' : isEN ? 'Trip not active' : 'Viaggio non attivo';
                 if (liveTabDotEl) liveTabDotEl.classList.remove('active');
             }
         }
@@ -4901,20 +4901,20 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             // Status badge
             if (status === 'moving') {
                 statusBadge.className = 'pos-status-badge pos-status-moving';
-                statusBadge.textContent = '🚗 ' + (isEN ? 'Driving' : 'In viaggio') + ' · ' + Math.round(speed) + ' km/h';
+                statusBadge.textContent = '🚗 ' + (LANG3 === 'es' ? 'Conduciendo' : isEN ? 'Driving' : 'In viaggio') + ' · ' + Math.round(speed) + ' km/h';
             } else if (status === 'stopped') {
                 statusBadge.className = 'pos-status-badge pos-status-stopped';
-                statusBadge.textContent = '🅿️ ' + (isEN ? 'Stopped' : 'Fermo');
+                statusBadge.textContent = '🅿️ ' + (LANG3 === 'es' ? 'Detenido' : isEN ? 'Stopped' : 'Fermo');
             } else {
                 statusBadge.className = 'pos-status-badge pos-status-off';
-                statusBadge.textContent = '⏸️ ' + (isEN ? 'Not active' : 'Non attivo');
+                statusBadge.textContent = '⏸️ ' + (LANG3 === 'es' ? 'Inactivo' : isEN ? 'Not active' : 'Non attivo');
             }
         }
 
         function startLive() {
             if (liveActive) return;
-            if (!navigator.geolocation) { showToast(isEN ? 'GPS not supported.' : 'GPS non supportato.', 'error'); return; }
-            if (!isOwner) { showToast(isEN ? '🔒 Only organizers.' : '🔒 Solo organizzatori.', 'info'); return; }
+            if (!navigator.geolocation) { showToast(LANG3 === 'es' ? 'GPS no compatible.' : isEN ? 'GPS not supported.' : 'GPS non supportato.', 'error'); return; }
+            if (!isOwner) { showToast(LANG3 === 'es' ? '🔒 Solo organizadores.' : isEN ? '🔒 Only organizers.' : '🔒 Solo organizzatori.', 'info'); return; }
 
             // v2.16: Check if another Owner already has tracking active
             var liveSessionRef = getFamilyRef('liveSession');
@@ -4931,7 +4931,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                     if (otherActive) {
                         // Another owner has tracking active — block with info
                         var otherName = otherActive.name || otherActive.uid.substring(0, 8);
-                        showToast(isEN ? '🚐 Tracking already active by ' + otherName + '. Stop theirs first.' : '🚐 Tracking già attivo da ' + otherName + '. Fermalo prima di avviare il tuo.', 'info', 5000);
+                        showToast(LANG3 === 'es' ? '🚐 Tracking ya activo por ' + otherName + '. Detén el suyo primero.' : isEN ? '🚐 Tracking already active by ' + otherName + '. Stop theirs first.' : '🚐 Tracking già attivo da ' + otherName + '. Fermalo prima di avviare il tuo.', 'info', 5000);
                         return;
                     }
                     // No conflict — proceed with start
@@ -5003,7 +5003,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             if (startBtn) startBtn.style.display = 'none';
             if (stopBtn) stopBtn.style.display = '';
             if (liveDot) { liveDot.className = 'pos-live-indicator pos-live-on'; }
-            if (liveLabel) liveLabel.textContent = isEN ? 'Trip active' : 'Viaggio attivo';
+            if (liveLabel) liveLabel.textContent = LANG3 === 'es' ? 'Viaje activo' : isEN ? 'Trip active' : 'Viaggio attivo';
             var _ltd = document.getElementById('liveTabDot'); if (_ltd) _ltd.classList.add('active');
 
             initMap();
@@ -5137,11 +5137,11 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                 // v3.50 Patch 3: make GPS errors visible to user
                 // v4.08 FIX: Auto-stop tracking on permission denied to prevent phantom sessions
                 if (err.code === 1) {
-                    showToast(isEN ? '\u26a0\ufe0f Location permission denied. Tracking stopped.' : '\u26a0\ufe0f Permesso posizione negato. Tracking fermato.', 'error', 8000);
+                    showToast(LANG3 === 'es' ? '\\u26a0\\ufe0f Permiso de ubicación denegado. Seguimiento detenido.' : isEN ? '\u26a0\ufe0f Location permission denied. Tracking stopped.' : '\u26a0\ufe0f Permesso posizione negato. Tracking fermato.', 'error', 8000);
                     // Auto-stop to prevent user thinking tracking is active
                     if (typeof stopLive === 'function') stopLive();
                 } else if (err.code === 2) {
-                    showToast(isEN ? '\u26a0\ufe0f GPS unavailable: ' + err.message : '\u26a0\ufe0f GPS non disponibile: ' + err.message, 'error', 5000);
+                    showToast(LANG3 === 'es' ? '\u26a0\ufe0f GPS no disponible: ' + err.message : isEN ? '\u26a0\ufe0f GPS unavailable: ' + err.message : '\u26a0\ufe0f GPS non disponibile: ' + err.message, 'error', 5000);
                 } else if (err.code === 3) {
                     // Timeout — less critical, log only
                     _qvLog.warn('[GPS] Timeout — waiting for fix...');
@@ -5195,12 +5195,12 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                 }
             }, 30 * 60 * 1000);
 
-            showToast(todayKm > 0 ? (isEN ? '🔄 Trip resumed! (' + todayKm.toFixed(1) + ' km today)' : '🔄 Viaggio ripreso! (' + todayKm.toFixed(1) + ' km oggi)') : (isEN ? '▶️ Trip started!' : '▶️ Viaggio avviato!'), 'success');
+            showToast(todayKm > 0 ? (isEN ? '🔄 Trip resumed! (' + todayKm.toFixed(1) + ' km today)' : '🔄 Viaggio ripreso! (' + todayKm.toFixed(1) + ' km oggi)') : (LANG3 === 'es' ? '▶️ ¡Viaje iniciado!' : isEN ? '▶️ Trip started!' : '▶️ Viaggio avviato!'), 'success');
             if(window.haptic) window.haptic(15);
             updatePosAuthUI();
             // v3.50: GPSLogger reminder (was only in Home card — now also here)
             setTimeout(function() {
-                showToast(isEN ? '\ud83d\udef0\ufe0f Remember to also start GPSLogger!' : '\ud83d\udef0\ufe0f Ricordati di avviare anche GPSLogger!', 'info', 5000);
+                showToast(LANG3 === 'es' ? '\\ud83d\\udef0\\ufe0f ¡Recuerda iniciar también GPSLogger!' : isEN ? '\ud83d\udef0\ufe0f Remember to also start GPSLogger!' : '\ud83d\udef0\ufe0f Ricordati di avviare anche GPSLogger!', 'info', 5000);
             }, 1200);
         }
 
@@ -5323,13 +5323,13 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                         // v4.10 FIX (P1 #4): mirror the primary handler — auto-stop on
                         // permission denied so the resume path can't leave a phantom session.
                         if (err.code === 1) {
-                            showToast(isEN ? '⚠️ Location permission denied. Tracking stopped.' : '⚠️ Permesso posizione negato. Tracking fermato.', 'error', 8000);
+                            showToast(LANG3 === 'es' ? '⚠️ Permiso de ubicación denegado. Tracking detenido.' : isEN ? '⚠️ Location permission denied. Tracking stopped.' : '⚠️ Permesso posizione negato. Tracking fermato.', 'error', 8000);
                             if (typeof stopLive === 'function') stopLive();
                         } else if (err.code === 2) {
-                            showToast(isEN ? '⚠️ GPS unavailable: ' + err.message : '⚠️ GPS non disponibile: ' + err.message, 'error', 5000);
+                            showToast(LANG3 === 'es' ? '⚠️ GPS no disponible: ' + err.message : isEN ? '⚠️ GPS unavailable: ' + err.message : '⚠️ GPS non disponibile: ' + err.message, 'error', 5000);
                         }
                     }, _reOpts);
-                    showToast(isEN ? '\ud83d\udd04 GPS resumed after background' : '\ud83d\udd04 GPS ripreso dopo background', 'info', 3000);
+                    showToast(LANG3 === 'es' ? '\\ud83d\\udd04 GPS reanudado tras background' : isEN ? '\ud83d\udd04 GPS resumed after background' : '\ud83d\udd04 GPS ripreso dopo background', 'info', 3000);
                 }
             }
         });
@@ -5377,11 +5377,11 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             var box = document.createElement('div');
             box.style.cssText = 'background:var(--card-bg,#fff);border-radius:16px;padding:24px;max-width:320px;width:90%;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,0.3);color:var(--text-color,#333);';
             box.innerHTML = '<div style="font-size:32px;margin-bottom:12px;">⏹️</div>' +
-                '<h3 style="margin:0 0 8px;font-size:18px;color:var(--text-color,#333);">' + (isEN ? 'Idle for 10 minutes' : 'Fermo da 10 minuti') + '</h3>' +
-                '<p style="margin:0 0 20px;color:var(--text-muted,#666);font-size:14px;">' + (isEN ? 'Stop tracking? (auto-stop in 2 min)' : 'Fermare il tracking? (auto-stop tra 2 min)') + '</p>' +
+                '<h3 style="margin:0 0 8px;font-size:18px;color:var(--text-color,#333);">' + (LANG3 === 'es' ? 'Inactivo durante 10 minutos' : isEN ? 'Idle for 10 minutes' : 'Fermo da 10 minuti') + '</h3>' +
+                '<p style="margin:0 0 20px;color:var(--text-muted,#666);font-size:14px;">' + (LANG3 === 'es' ? '¿Detener el seguimiento? (parada automática en 2 min)' : isEN ? 'Stop tracking? (auto-stop in 2 min)' : 'Fermare il tracking? (auto-stop tra 2 min)') + '</p>' +
                 '<div style="display:flex;gap:12px;justify-content:center;">' +
-                    '<button id="autostop-continue" style="flex:1;padding:12px;border:2px solid var(--accent,#2196F3);background:var(--card-bg,#fff);color:var(--accent,#2196F3);border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;">' + (isEN ? 'Continue' : 'Continua') + '</button>' +
-                    '<button id="autostop-stop" style="flex:1;padding:12px;border:none;background:#f44336;color:#fff;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;">' + (isEN ? 'Stop' : 'Ferma') + '</button>' +
+                    '<button id="autostop-continue" style="flex:1;padding:12px;border:2px solid var(--accent,#2196F3);background:var(--card-bg,#fff);color:var(--accent,#2196F3);border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;">' + (LANG3 === 'es' ? 'Continuar' : isEN ? 'Continue' : 'Continua') + '</button>' +
+                    '<button id="autostop-stop" style="flex:1;padding:12px;border:none;background:#f44336;color:#fff;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;">' + (LANG3 === 'es' ? 'Detener' : isEN ? 'Stop' : 'Ferma') + '</button>' +
                 '</div>';
             overlay.appendChild(box);
             document.body.appendChild(overlay);
@@ -5390,7 +5390,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             _autoStopForceTimer = setTimeout(function() {
                 _autoStopConfirmShown = false;
                 if (overlay.parentNode) overlay.remove();
-                showToast(isEN ? '⏹️ Auto-stopped (no response)' : '⏹️ Auto-stop (nessuna risposta)', 'info');
+                showToast(LANG3 === 'es' ? '⏹️ Auto-stop (sin respuesta)' : isEN ? '⏹️ Auto-stopped (no response)' : '⏹️ Auto-stop (nessuna risposta)', 'info');
                 stopLive();
             }, 2 * 60 * 1000);
             // Continue button
@@ -5406,14 +5406,14 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                         showAutoStopConfirm();
                     }
                 }, 30000);
-                showToast(isEN ? '▶️ Tracking continues' : '▶️ Tracking continua', 'success');
+                showToast(LANG3 === 'es' ? '▶️ Tracking continúa' : isEN ? '▶️ Tracking continues' : '▶️ Tracking continua', 'success');
             });
             // Stop button
             overlay.querySelector('#autostop-stop').addEventListener('click', function() {
                 _autoStopConfirmShown = false;
                 if (_autoStopForceTimer) { clearTimeout(_autoStopForceTimer); _autoStopForceTimer = null; }
                 overlay.remove();
-                showToast(isEN ? '⏹️ Tracking stopped' : '⏹️ Tracking fermato', 'info');
+                showToast(LANG3 === 'es' ? '⏹️ Tracking detenido' : isEN ? '⏹️ Tracking stopped' : '⏹️ Tracking fermato', 'info');
                 stopLive();
             });
         }
@@ -5443,7 +5443,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             if (startBtn) startBtn.style.display = '';
             if (stopBtn) stopBtn.style.display = 'none';
             if (liveDot) liveDot.className = 'pos-live-indicator pos-live-off';
-            if (liveLabel) liveLabel.textContent = isEN ? 'Trip not active' : 'Viaggio non attivo';
+            if (liveLabel) liveLabel.textContent = LANG3 === 'es' ? 'Viaje no activo' : isEN ? 'Trip not active' : 'Viaggio non attivo';
             var _ltd = document.getElementById('liveTabDot'); if (_ltd) _ltd.classList.remove('active');
             updateLiveUI(0, 0, todayKm, formatTime(_prevElapsed + (Date.now() - (liveStartTime || Date.now()))), 'off');
 
@@ -5493,7 +5493,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                             if (_offlineCountry) {
                                 sumRef.update({ country: LANG3 === 'es' ? (_offlineCountry.nameEs || _offlineCountry.name) : isEN ? _offlineCountry.name : _offlineCountry.nameIt, countryCode: _offlineCountry.code });
                             } else {
-                                var _geoUrl = 'https://nominatim.openstreetmap.org/reverse?format=json&lat=' + _lastPtGeo.lat + '&lon=' + _lastPtGeo.lng + '&zoom=5&accept-language=' + (isEN ? 'en' : 'it');
+                                var _geoUrl = 'https://nominatim.openstreetmap.org/reverse?format=json&lat=' + _lastPtGeo.lat + '&lon=' + _lastPtGeo.lng + '&zoom=5&accept-language=' + (LANG3 === 'es' ? 'es' : isEN ? 'en' : 'it');
                                 fetch(_geoUrl).then(function(r) { return r.json(); }).then(function(data) {
                                     if (data && data.address) {
                                         var cc = (data.address.country_code || '').toUpperCase();
@@ -5526,22 +5526,22 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
 
             // v3.50: GPSLogger stop reminder (was only in Home card — now also here)
             setTimeout(function() {
-                showToast(isEN ? '\u23f9 Remember to stop GPSLogger too!' : '\u23f9 Ricordati di fermare anche GPSLogger!', 'info', 5000);
+                showToast(LANG3 === 'es' ? '\\u23f9 Recuerda detener también GPSLogger!' : isEN ? '\u23f9 Remember to stop GPSLogger too!' : '\u23f9 Ricordati di fermare anche GPSLogger!', 'info', 5000);
             }, 600);
 
             // Parking prompt (restored from v9.9)
             if (optParking && optParking.checked && todayKm > 1) {
                 setTimeout(function() {
-                    showConfirm(isEN ? 'Save current location as overnight parking?' : 'Salvare la posizione attuale come parcheggio notte?', function() {
+                    showConfirm(LANG3 === 'es' ? '¿Guardar la ubicación actual como estacionamiento nocturno?' : isEN ? 'Save current location as overnight parking?' : 'Salvare la posizione attuale come parcheggio notte?', function() {
                         var lastPt = todayPoints.length > 0 ? todayPoints[todayPoints.length - 1] : null;
-                        saveParkingSpot(isEN ? 'Overnight ' + todayStr() : 'Notte ' + todayStr(), lastPt ? lastPt.lat : null, lastPt ? lastPt.lng : null, 3);
+                        saveParkingSpot(LANG3 === 'es' ? 'Noche ' + todayStr() : isEN ? 'Overnight ' + todayStr() : 'Notte ' + todayStr(), lastPt ? lastPt.lat : null, lastPt ? lastPt.lng : null, 3);
                         // v2.59: send "arrived" push notification to family with Maps link
                         if (lastPt && lastPt.lat && lastPt.lng && typeof queuePushNotification === 'function') {
                             var mapsUrl = 'https://maps.google.com/?q=' + lastPt.lat.toFixed(6) + ',' + lastPt.lng.toFixed(6);
-                            var g = (isEN ? 'D' : 'G') + (getCurrentTripDay() + 1);
+                            var g = (LANG3 === 'es' ? 'D' : isEN ? 'D' : 'G') + (getCurrentTripDay() + 1);
                             queuePushNotification('arrived_parking', {
-                                title: (isEN ? '🅿️ We arrived! — ' : '🅿️ Siamo arrivati! — ') + g,
-                                body: (isEN ? 'Overnight parking saved. See location: ' : 'Parcheggio notte salvato. Posizione: ') + mapsUrl,
+                                title: (LANG3 === 'es' ? '🅿️ Llegamos! — ' : isEN ? '🅿️ We arrived! — ' : '🅿️ Siamo arrivati! — ') + g,
+                                body: (LANG3 === 'es' ? 'Estacionamiento nocturno guardado. Ver ubicación: ' : isEN ? 'Overnight parking saved. See location: ' : 'Parcheggio notte salvato. Posizione: ') + mapsUrl,
                                 target: 'family',
                                 url: mapsUrl
                             });
@@ -5569,10 +5569,10 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                     // Check if recap was already confirmed today
                     var recapDone = localStorage.getItem('recap_done_' + todayStr());
                     if (!recapDone) {
-                        showToast(isEN ? '📋 Don\'t forget to close today\'s diary!' : '📋 Non dimenticare di chiudere il diario di oggi!', 'info', 8000);
+                        showToast(LANG3 === 'es' ? '📋 ¡No olvides cerrar el diario de hoy!' : isEN ? '📋 Don\'t forget to close today\'s diary!' : '📋 Non dimenticare di chiudere il diario di oggi!', 'info', 8000);
                         if (window.queuePushNotification) window.queuePushNotification('recap_reminder', {
-                            title: isEN ? '📋 Daily recap' : '📋 Riepilogo giornaliero',
-                            body: isEN ? 'Tap to close today\'s diary' : 'Tocca per chiudere il diario di oggi',
+                            title: LANG3 === 'es' ? '📋 Resumen diario' : isEN ? '📋 Daily recap' : '📋 Riepilogo giornaliero',
+                            body: LANG3 === 'es' ? 'Toca para cerrar el diario de hoy' : isEN ? 'Tap to close today\'s diary' : 'Tocca per chiudere il diario di oggi',
                             target: 'owner'
                         });
                     }
@@ -5622,13 +5622,13 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
         // Button handlers
         if (startBtn) startBtn.addEventListener('click', startLive);
         if (stopBtn) stopBtn.addEventListener('click', function() {
-            showConfirm(isEN ? 'End today\'s trip?' : 'Terminare il viaggio di oggi?', function() { stopLive(); });
+            showConfirm(LANG3 === 'es' ? '¿Terminar el viaje de hoy?' : isEN ? 'End today\'s trip?' : 'Terminare il viaggio di oggi?', function() { stopLive(); });
         });
         // Quick-start inline button (admin shortcut) — toggles start/stop
         var quickStartBtn = document.getElementById('pos-quick-start');
         if (quickStartBtn) quickStartBtn.addEventListener('click', function() {
             if (liveActive) {
-                showConfirm(isEN ? 'End today\'s trip?' : 'Terminare il viaggio di oggi?', function() { stopLive(); });
+                showConfirm(LANG3 === 'es' ? '¿Terminar el viaje de hoy?' : isEN ? 'End today\'s trip?' : 'Terminare il viaggio di oggi?', function() { stopLive(); });
             } else {
                 startLive();
             }
@@ -5657,7 +5657,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                         // Sustained movement detected — start trip
                         navigator.geolocation.clearWatch(autoStartWatchId);
                         autoStartWatchId = null;
-                        showToast(isEN ? '🚗 Movement detected — starting trip!' : '🚗 Movimento rilevato — avvio viaggio!', 'info');
+                        showToast(LANG3 === 'es' ? '🚗 Movimiento detectado — iniciando viaje!' : isEN ? '🚗 Movement detected — starting trip!' : '🚗 Movimento rilevato — avvio viaggio!', 'info');
                         startLive();
                     }
                 } else {
@@ -5677,7 +5677,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             if (lat && lng && dbRef) {
               dbRef.child('currentLocation/restMode').set(true).catch(function() {});
             }
-            showToast('🅿️ ' + (isEN ? 'Parking saved!' : 'Parcheggio salvato!'), 'success');
+            showToast('🅿️ ' + (LANG3 === 'es' ? '¡Estacionamiento guardado!' : isEN ? 'Parking saved!' : 'Parcheggio salvato!'), 'success');
             renderParkingList();
             updateMapMarkers();
         }
@@ -5685,7 +5685,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
         var parkingBtn = document.getElementById('pos-parking-btn');
         if (parkingBtn) {
             parkingBtn.addEventListener('click', function() {
-                if (!isOwner) { showToast(isEN ? '🔒 Only organizers.' : '🔒 Solo organizzatori.', 'info'); return; }
+                if (!isOwner) { showToast(LANG3 === 'es' ? '🔒 Solo organizadores.' : isEN ? '🔒 Only organizers.' : '🔒 Solo organizzatori.', 'info'); return; }
                 var name = document.getElementById('pos-parking-name').value.trim();
                 var rating = parseInt(document.getElementById('pos-parking-rating').value) || 3;
                 // v3.91: Allow empty name — save with GPS coordinates
@@ -5695,12 +5695,12 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                         saveParkingSpot(finalName, pos.coords.latitude, pos.coords.longitude, rating);
                         document.getElementById('pos-parking-name').value = '';
                     }, function() {
-                        if (!name) { showToast(isEN ? 'GPS unavailable, enter a name.' : 'GPS non disponibile, inserisci un nome.', 'info'); return; }
+                        if (!name) { showToast(LANG3 === 'es' ? 'GPS no disponible, introduce un nombre.' : isEN ? 'GPS unavailable, enter a name.' : 'GPS non disponibile, inserisci un nome.', 'info'); return; }
                         saveParkingSpot(name, null, null, rating);
                         document.getElementById('pos-parking-name').value = '';
                     }, { enableHighAccuracy: true, timeout: 10000 });
                 } else {
-                    if (!name) { showToast(isEN ? 'GPS unavailable, enter a name.' : 'GPS non disponibile, inserisci un nome.', 'info'); return; }
+                    if (!name) { showToast(LANG3 === 'es' ? 'GPS no disponible, introduce un nombre.' : isEN ? 'GPS unavailable, enter a name.' : 'GPS non disponibile, inserisci un nome.', 'info'); return; }
                     saveParkingSpot(name, null, null, rating);
                     document.getElementById('pos-parking-name').value = '';
                 }
@@ -5712,7 +5712,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             var container = document.getElementById('pos-parking-list');
             if (!container) return;
             var ref = getFamilyRef('parking');
-            if (!ref) { container.innerHTML = '<p style="color:var(--text-muted);font-size:13px;">' + (isEN ? 'Configure Family ID to sync.' : 'Configura ID Famiglia per sincronizzare.') + '</p>'; return; }
+            if (!ref) { container.innerHTML = '<p style="color:var(--text-muted);font-size:13px;">' + (LANG3 === 'es' ? 'Configura ID familiar para sincronizar.' : isEN ? 'Configure Family ID to sync.' : 'Configura ID Famiglia per sincronizzare.') + '</p>'; return; }
             if (_parkingRef) _parkingRef.off('value'); // v4.02: cleanup previous listener
             _parkingRef = ref;
             ref.on('value', function(snap) {
@@ -5726,8 +5726,8 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                     var card = document.createElement('div');
                     card.className = 'pos-card pos-done';
                     var html = '<div class="pos-card-header"><strong>🅿️ ' + escapeHtml(s.name || '—') + '</strong> · ' + '⭐'.repeat(s.rating || 3);
-                    if (isOwner) html += ' <button class="pos-edit-btn" data-pkey="' + key + '" title="' + (isEN ? 'Edit' : 'Modifica') + '">✏️</button>';
-                    if (isOwner) html += ' <button class="pos-del-btn" data-pkey="' + key + '" title="' + (isEN ? 'Delete' : 'Elimina') + '">🗑️</button>';
+                    if (isOwner) html += ' <button class="pos-edit-btn" data-pkey="' + key + '" title="' + (LANG3 === 'es' ? 'Editar' : isEN ? 'Edit' : 'Modifica') + '">✏️</button>';
+                    if (isOwner) html += ' <button class="pos-del-btn" data-pkey="' + key + '" title="' + (LANG3 === 'es' ? 'Eliminar' : isEN ? 'Delete' : 'Elimina') + '">🗑️</button>';
                     html += '</div>';
                     html += '<div class="pos-card-info">' + (s.time || s.date || '');
                     if (s.lat) html += ' · <a href="https://maps.google.com/?q=' + s.lat + ',' + s.lng + '" target="_blank">📍</a>';
@@ -5741,23 +5741,23 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                         var pkey = btn.getAttribute('data-pkey');
                         var spot = spots[pkey];
                         if (!spot) return;
-                        var newName = prompt(isEN ? 'Edit name:' : 'Modifica nome:', spot.name || '');
+                        var newName = prompt(LANG3 === 'es' ? 'Editar nombre:' : isEN ? 'Edit name:' : 'Modifica nome:', spot.name || '');
                         if (newName === null) return; // cancelled
-                        var newRatingStr = prompt(isEN ? 'Rating (1-5 stars):' : 'Valutazione (1-5 stelle):', String(spot.rating || 3));
+                        var newRatingStr = prompt(LANG3 === 'es' ? 'Valoración (1-5 estrellas):' : isEN ? 'Rating (1-5 stars):' : 'Valutazione (1-5 stelle):', String(spot.rating || 3));
                         if (newRatingStr === null) return;
                         var newRating = parseInt(newRatingStr, 10);
                         if (isNaN(newRating) || newRating < 1) newRating = 1;
                         if (newRating > 5) newRating = 5;
                         var pRef = getFamilyRef('parking/' + pkey);
                         if (pRef) pRef.update({ name: newName.trim() || spot.name, rating: newRating });
-                        showToast('✏️ ' + (isEN ? 'Updated!' : 'Aggiornato!'), 'success');
+                        showToast('✏️ ' + (LANG3 === 'es' ? '¡Actualizado!' : isEN ? 'Updated!' : 'Aggiornato!'), 'success');
                     });
                 });
                 // Delete handler
                 container.querySelectorAll('.pos-del-btn[data-pkey]').forEach(function(btn) {
                     btn.addEventListener('click', function() {
                         var pkey = btn.getAttribute('data-pkey');
-                        showConfirm(isEN ? 'Delete this parking?' : 'Eliminare questo parcheggio?', function() {
+                        showConfirm(LANG3 === 'es' ? '¿Eliminar este aparcamiento?' : isEN ? 'Delete this parking?' : 'Eliminare questo parcheggio?', function() {
                             var pRef = getFamilyRef('parking/' + pkey);
                             if (pRef) pRef.remove();
                         });
@@ -5784,7 +5784,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             var local = loadLocal(KEYS.CUSTOM_CHECKINS, {});
             local[Date.now()] = item;
             saveLocal(KEYS.CUSTOM_CHECKINS, local);
-            showToast('📌 ' + (isEN ? 'Stop saved!' : 'Tappa salvata!'), 'success');
+            showToast('📌 ' + (LANG3 === 'es' ? '¡Parada guardada!' : isEN ? 'Stop saved!' : 'Tappa salvata!'), 'success');
             if(window.haptic) window.haptic(10);
             updateMapMarkers();
         }
@@ -5792,10 +5792,10 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
         var customBtn = document.getElementById('pos-custom-btn');
         if (customBtn) {
             customBtn.addEventListener('click', function() {
-                if (!isOwner) { showToast(isEN ? '🔒 Only organizers.' : '🔒 Solo organizzatori.', 'info'); return; }
+                if (!isOwner) { showToast(LANG3 === 'es' ? '🔒 Solo organizadores.' : isEN ? '🔒 Only organizers.' : '🔒 Solo organizzatori.', 'info'); return; }
                 var nameInput = document.getElementById('pos-custom-name');
                 var name = nameInput.value.trim();
-                if (!name) { showToast(isEN ? 'Enter a name.' : 'Inserisci un nome.', 'info'); return; }
+                if (!name) { showToast(LANG3 === 'es' ? 'Introduce un nombre.' : isEN ? 'Enter a name.' : 'Inserisci un nome.', 'info'); return; }
                 // v3.41 FIX: Use autocomplete coordinates if available (from Nominatim),
                 // otherwise fall back to device GPS. This fixes the bug where custom
                 // check-ins showed the user's current position instead of the place's coords.
@@ -5852,7 +5852,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                 // v3.91 FIX: single reverse geocode only (no invalid POI query)
                 // Extracts address components as suggestions — fast, 1 request only
                 var url = 'https://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat + '&lon=' + lng + '&zoom=18&addressdetails=1';
-                window._nominatimFetch(url, { headers: { 'Accept-Language': isEN ? 'en' : 'it' } }).then(function(data) {
+                window._nominatimFetch(url, { headers: { 'Accept-Language': LANG3 === 'es' ? 'es' : isEN ? 'en' : 'it' } }).then(function(data) {
                     var results = [];
                     if (data && data.display_name) {
                         var addr = data.address || {};
@@ -5870,7 +5870,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             function searchPlaces(query, lat, lng, cb) {
                 var url = 'https://nominatim.openstreetmap.org/search?format=json&limit=8&q=' + encodeURIComponent(query) + '&addressdetails=1';
                 if (lat && lng) url += '&viewbox=' + (lng - 0.5) + ',' + (lat + 0.5) + ',' + (lng + 0.5) + ',' + (lat - 0.5) + '&bounded=0';
-                window._nominatimFetch(url, { headers: { 'Accept-Language': isEN ? 'en' : 'it' } }).then(function(data) {
+                window._nominatimFetch(url, { headers: { 'Accept-Language': LANG3 === 'es' ? 'es' : isEN ? 'en' : 'it' } }).then(function(data) {
                     var results = [];
                     if (data && data.length) {
                         data.forEach(function(item) {
@@ -6018,7 +6018,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                     .sort(function(a,b) { return b[0].localeCompare(a[0]); });
                 container.innerHTML = '';
                 if (arr.length === 0) {
-                    container.innerHTML = '<p style="color:var(--text-muted);font-size:13px;">' + (isEN ? 'No data yet. Start a trip!' : 'Nessun dato. Avvia un viaggio!') + '</p>';
+                    container.innerHTML = '<p style="color:var(--text-muted);font-size:13px;">' + (LANG3 === 'es' ? 'Aún no hay datos. ¡Empieza un viaje!' : isEN ? 'No data yet. Start a trip!' : 'Nessun dato. Avvia un viaggio!') + '</p>';
                     return;
                 }
                 // v2.93: scheda TOTALE in cima (somma km, tempo di guida, velocità media complessiva).
@@ -6034,8 +6034,8 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                 totCard.className = 'pos-card';
                 totCard.style.cssText = 'background:linear-gradient(135deg,#1e3a5f,#2d5a8f);color:#fff;border:none;';
                 totCard.innerHTML = '<div class="pos-card-row"><div class="pos-card-main">' +
-                    '<div class="pos-card-header"><strong>📊 ' + (isEN ? 'TOTAL (' + arr.length + ' days)' : 'TOTALE (' + arr.length + ' giorni)') + '</strong></div>' +
-                    '<div class="pos-card-info" style="color:#fff;">🚗 ' + totKm.toFixed(1) + ' km · ⏱️ ' + formatTime(totTime) + ' · ⚡ ' + Math.round(totAvg) + ' km/h ' + (isEN ? 'avg' : 'media') + '</div>' +
+                    '<div class="pos-card-header"><strong>📊 ' + (LANG3 === 'es' ? 'TOTAL (' + arr.length + ' días)' : isEN ? 'TOTAL (' + arr.length + ' days)' : 'TOTALE (' + arr.length + ' giorni)') + '</strong></div>' +
+                    '<div class="pos-card-info" style="color:#fff;">🚗 ' + totKm.toFixed(1) + ' km · ⏱️ ' + formatTime(totTime) + ' · ⚡ ' + Math.round(totAvg) + ' km/h ' + (LANG3 === 'es' ? 'media' : isEN ? 'avg' : 'media') + '</div>' +
                     '</div></div>';
                 container.appendChild(totCard);
                 arr.forEach(function(entry) {
@@ -6051,11 +6051,11 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                     var _dispTime = s.time || 0;
                     var _dispKm = s.odometerKm != null ? s.odometerKm : (s.km || 0);
                     var _dispAvg = _dispTime > 0 ? (_dispKm / (_dispTime / 3600000)) : 0;
-                    dhtml += '<div class="pos-card-info">\uD83D\uDE97 ' + kmLabel + ' \u00B7 \u23F1\uFE0F ' + formatTime(_dispTime) + ' \u00B7 \u26A1 ' + Math.round(_dispAvg) + ' km/h ' + (isEN ? 'avg' : 'media') + '</div>';
+                    dhtml += '<div class="pos-card-info">\uD83D\uDE97 ' + kmLabel + ' \u00B7 \u23F1\uFE0F ' + formatTime(_dispTime) + ' \u00B7 \u26A1 ' + Math.round(_dispAvg) + ' km/h ' + (LANG3 === 'es' ? 'media' : isEN ? 'avg' : 'media') + '</div>';
                     dhtml += '</div>';
                     if (isOwner) {
-                        dhtml += '<button class="pos-edit-km-btn" data-dkey="' + date + '" data-km="' + displayKm.toFixed(1) + '" title="' + (isEN ? 'Edit km' : 'Modifica km') + '" style="background:none;border:none;font-size:16px;cursor:pointer;padding:4px 6px;">✏️</button>';
-                        dhtml += '<button class="pos-del-btn" data-dkey="' + date + '" title="' + (isEN ? 'Delete' : 'Elimina') + '">\uD83D\uDDD1\uFE0F</button>';
+                        dhtml += '<button class="pos-edit-km-btn" data-dkey="' + date + '" data-km="' + displayKm.toFixed(1) + '" title="' + (LANG3 === 'es' ? 'Editar km' : isEN ? 'Edit km' : 'Modifica km') + '" style="background:none;border:none;font-size:16px;cursor:pointer;padding:4px 6px;">✏️</button>';
+                        dhtml += '<button class="pos-del-btn" data-dkey="' + date + '" title="' + (LANG3 === 'es' ? 'Eliminar' : isEN ? 'Delete' : 'Elimina') + '">\uD83D\uDDD1\uFE0F</button>';
                     }
                     dhtml += '</div>';
                     card.innerHTML = dhtml;
@@ -6065,7 +6065,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                 container.querySelectorAll('.pos-del-btn[data-dkey]').forEach(function(btn) {
                     btn.addEventListener('click', function() {
                         var dkey = btn.getAttribute('data-dkey');
-                        showConfirm(isEN ? 'Delete this daily summary?' : 'Eliminare questo riepilogo giornaliero?', function() {
+                        showConfirm(LANG3 === 'es' ? '¿Eliminar este resumen diario?' : isEN ? 'Delete this daily summary?' : 'Eliminare questo riepilogo giornaliero?', function() {
                             var dRef = getFamilyRef('dailySummaries/' + dkey);
                             if (dRef) dRef.remove();
                         });
@@ -6096,15 +6096,15 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                 var overlay = document.createElement('div');
                 overlay.className = 'manual-km-overlay';
                 overlay.innerHTML = '<div class="manual-km-modal">' +
-                  '<h3>' + (isEN ? '✏️ Edit daily stats' : '✏️ Modifica statistiche giornaliere') + '</h3>' +
-                  '<p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">' + (isEN ? 'Edit km and drive time for ' + dateKey + '.' : 'Modifica km e tempo di guida per il ' + dateKey + '.') + '</p>' +
-                  '<label>' + (isEN ? 'Km (odometer)' : 'Km (contachilometri)') + '</label>' +
+                  '<h3>' + (LANG3 === 'es' ? '✏️ Editar estadísticas diarias' : isEN ? '✏️ Edit daily stats' : '✏️ Modifica statistiche giornaliere') + '</h3>' +
+                   '<p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">' + (LANG3 === 'es' ? 'Edita km y tiempo de conducción para ' + dateKey + '.' : isEN ? 'Edit km and drive time for ' + dateKey + '.' : 'Modifica km e tempo di guida per il ' + dateKey + '.') + '</p>' +
+                  '<label>' + (LANG3 === 'es' ? 'Km (odómetro)' : isEN ? 'Km (odometer)' : 'Km (contachilometri)') + '</label>' +
                   '<input type="number" id="edit-km-value" step="0.1" min="0" max="9999" value="' + currentKm + '" style="font-size:18px;text-align:center;">' +
-                  '<label style="margin-top:12px;">' + (isEN ? 'Drive time (h:mm)' : 'Tempo di guida (h:mm)') + '</label>' +
+                  '<label style="margin-top:12px;">' + (LANG3 === 'es' ? 'Tiempo de conducción (h:mm)' : isEN ? 'Drive time (h:mm)' : 'Tempo di guida (h:mm)') + '</label>' +
                   '<div style="display:flex;gap:8px;align-items:center;"><input type="number" id="edit-time-h" min="0" max="24" value="' + currentH + '" style="font-size:18px;text-align:center;width:60px;"><span style="font-size:18px;">:</span><input type="number" id="edit-time-m" min="0" max="59" value="' + String(currentM).padStart(2,'0') + '" style="font-size:18px;text-align:center;width:60px;"></div>' +
                   '<div class="manual-km-actions">' +
-                  '  <button class="manual-km-cancel">' + (isEN ? 'Cancel' : 'Annulla') + '</button>' +
-                  '  <button class="manual-km-save">' + (isEN ? 'Save' : 'Salva') + '</button>' +
+                  '  <button class="manual-km-cancel">' + (LANG3 === 'es' ? 'Cancelar' : isEN ? 'Cancel' : 'Annulla') + '</button>' +
+                  '  <button class="manual-km-save">' + (LANG3 === 'es' ? 'Guardar' : isEN ? 'Save' : 'Salva') + '</button>' +
                   '</div>' +
                   '</div>';
                 document.body.appendChild(overlay);
@@ -6115,7 +6115,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                     var newH = parseInt(document.getElementById('edit-time-h').value) || 0;
                     var newM = parseInt(document.getElementById('edit-time-m').value) || 0;
                     if (isNaN(newKm) || newKm < 0) {
-                        showToast(isEN ? 'Enter a valid value' : 'Inserisci un valore valido', 'error');
+                        showToast(LANG3 === 'es' ? 'Introduce un valor válido' : isEN ? 'Enter a valid value' : 'Inserisci un valore valido', 'error');
                         return;
                     }
                     var newTimeMs = (newH * 3600000) + (newM * 60000);
@@ -6125,7 +6125,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                     var sumRef = getFamilyRef('dailySummaries/' + dateKey);
                     if (sumRef) {
                         sumRef.update(updates).then(function() {
-                            showToast(isEN ? '✅ Stats updated!' : '✅ Statistiche aggiornate!', 'success');
+                            showToast(LANG3 === 'es' ? '✅ Estadísticas actualizadas!' : isEN ? '✅ Stats updated!' : '✅ Statistiche aggiornate!', 'success');
                             overlay.remove();
                             updateStats();
                             if (typeof refreshHomeStats === 'function') refreshHomeStats();
@@ -6151,8 +6151,8 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             for (var d = maxDay; d >= 0; d--) {
                 var dayDate = new Date(TRIP_START.getTime() + d * 86400000);
                 var dateStr = window.localDateStr(dayDate); // v2.96: LOCAL — must match dailySummaries key
-                var label = (isEN ? 'D' : 'G') + (d + 1) + ' (' + dayDate.getDate() + '/' + (dayDate.getMonth() + 1) + ')';
-                if (d === tripDay) label += isEN ? ' — today' : ' — oggi';
+                var label = (LANG3 === 'es' ? 'D' : isEN ? 'D' : 'G') + (d + 1) + ' (' + dayDate.getDate() + '/' + (dayDate.getMonth() + 1) + ')';
+                if (d === tripDay) label += LANG3 === 'es' ? ' — hoy' : isEN ? ' — today' : ' — oggi';
                 var opt = document.createElement('option');
                 opt.value = dateStr;
                 opt.textContent = label;
@@ -6191,7 +6191,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
 
                 overlay.innerHTML =
                     '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:#1a1a2e;">' +
-                        '<span style="color:#fff;font-size:14px;font-weight:700;">🚗 ' + (isEN ? 'Drive Mode' : 'Modalità Guida') + '</span>' +
+                        '<span style="color:#fff;font-size:14px;font-weight:700;">🚗 ' + (LANG3 === 'es' ? 'Modo de conducción' : isEN ? 'Drive Mode' : 'Modalità Guida') + '</span>' +
                         '<button id="dm-close" style="background:rgba(255,255,255,0.15);border:none;color:#fff;font-size:18px;padding:6px 12px;border-radius:8px;cursor:pointer;">✕</button>' +
                     '</div>' +
                     '<div style="display:flex;gap:0;background:#111;padding:8px 16px;justify-content:space-around;">' +
@@ -6207,12 +6207,12 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                         '<div style="width:1px;background:#333;margin:0 8px;"></div>' +
                         '<div style="text-align:center;">' +
                             '<div id="dm-time" style="font-size:36px;font-weight:700;color:#90cdf4;line-height:1.4;">0:00</div>' +
-                            '<div style="font-size:12px;color:#aaa;">' + (isEN ? 'drive time' : 'tempo guida') + '</div>' +
+                            '<div style="font-size:12px;color:#aaa;">' + (LANG3 === 'es' ? 'tiempo de conducción' : isEN ? 'drive time' : 'tempo guida') + '</div>' +
                         '</div>' +
                     '</div>' +
                     '<div id="dm-map" style="flex:1;"></div>' +
                     '<div style="padding:12px 16px;background:#1a1a2e;">' +
-                        '<button id="dm-stop" style="width:100%;padding:14px;background:#e53e3e;color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;">⏹️ ' + (isEN ? 'End Day' : 'Fine Giornata') + '</button>' +
+                        '<button id="dm-stop" style="width:100%;padding:14px;background:#e53e3e;color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;">⏹️ ' + (LANG3 === 'es' ? 'Fin del día' : isEN ? 'End Day' : 'Fine Giornata') + '</button>' +
                     '</div>';
 
                 document.body.appendChild(overlay);
@@ -6266,7 +6266,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                 var daySelect = document.getElementById('pos-edit-km-day-select');
                 var exportDate = daySelect && daySelect.value ? daySelect.value : todayStr();
                 var trackRef = getFamilyRef('tracks/' + exportDate + '/points');
-                if (!trackRef) { showToast(isEN ? 'No track data' : 'Nessun dato tracciato', 'error'); return; }
+                if (!trackRef) { showToast(LANG3 === 'es' ? 'No hay datos de seguimiento' : isEN ? 'No track data' : 'Nessun dato tracciato', 'error'); return; }
 
                 gpxExportBtn.disabled = true;
                 gpxExportBtn.textContent = '⏳';
@@ -6278,12 +6278,12 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                     else if (raw && typeof raw === 'object') pts = Object.values(raw);
 
                     if (pts.length === 0) {
-                        showToast(isEN ? 'No GPS points found for this day' : 'Nessun punto GPS per questo giorno', 'info');
+                        showToast(LANG3 === 'es' ? 'No se encontraron puntos GPS para este día' : isEN ? 'No GPS points found for this day' : 'Nessun punto GPS per questo giorno', 'info');
                         gpxExportBtn.disabled = false; gpxExportBtn.textContent = '⬇️ GPX'; return;
                     }
 
                     // Build GPX
-                    var creator = 'Quo Vadis v2.59 (viaggio-europa-2026.web.app)';
+                    var creator = 'Quo Vadis v2.59 (travelyourlife.github.io/Progetto_Viaggio_Europa_2026)';
                     var gpxLines = [
                         '<?xml version="1.0" encoding="UTF-8"?>',
                         '<gpx version="1.1" creator="' + creator + '" xmlns="http://www.topografix.com/GPX/1/1">',
@@ -6314,11 +6314,11 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                     document.body.appendChild(a); a.click();
                     setTimeout(function() { URL.revokeObjectURL(url); a.remove(); }, 1000);
 
-                    showToast((isEN ? '✅ GPX exported: ' : '✅ GPX esportato: ') + pts.length + (isEN ? ' points' : ' punti'), 'success');
+                    showToast((LANG3 === 'es' ? '✅ GPX exportado: ' : isEN ? '✅ GPX exported: ' : '✅ GPX esportato: ') + pts.length + (LANG3 === 'es' ? ' puntos' : isEN ? ' points' : ' punti'), 'success');
                     gpxExportBtn.disabled = false; gpxExportBtn.textContent = '⬇️ GPX';
                 }).catch(function(err) {
                     console.error('[GPX] Export error:', err);
-                    showToast(isEN ? '❌ Export failed' : '❌ Export fallito', 'error');
+                    showToast(LANG3 === 'es' ? '❌ Exportación fallida' : isEN ? '❌ Export failed' : '❌ Export fallito', 'error');
                     gpxExportBtn.disabled = false; gpxExportBtn.textContent = '⬇️ GPX';
                 });
             });
@@ -6330,7 +6330,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
         if (timelineImportBtn) {
             timelineImportBtn.addEventListener('click', function() {
                 if (window.showTimelineImport) window.showTimelineImport();
-                else showToast(isEN ? 'Timeline import not available' : 'Import timeline non disponibile', 'error');
+                else showToast(LANG3 === 'es' ? 'Importación de timeline no disponible' : isEN ? 'Timeline import not available' : 'Import timeline non disponibile', 'error');
             });
         }
 
@@ -6344,12 +6344,12 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                         var lat = pos.coords.latitude, lng = pos.coords.longitude;
                         if (!userMarker) {
                             var blueIcon = L.divIcon({ className: '', html: '<div style="background:#3182ce;width:16px;height:16px;border-radius:50%;border:3px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.4);"></div>', iconSize: [22,22], iconAnchor: [11,11] });
-                            userMarker = L.marker([lat, lng], {icon: blueIcon, zIndexOffset: 1000}).bindPopup(isEN ? '📍 You are here!' : '📍 Sei qui!').addTo(map);
+                            userMarker = L.marker([lat, lng], {icon: blueIcon, zIndexOffset: 1000}).bindPopup(LANG3 === 'es' ? '📍 Estás aquí!' : isEN ? '📍 You are here!' : '📍 Sei qui!').addTo(map);
                         } else {
                             userMarker.setLatLng([lat, lng]);
                         }
                         map.setView([lat, lng], 13);
-                    }, function() { showToast(isEN ? 'GPS error.' : 'Errore GPS.', 'error'); }, { enableHighAccuracy: true, timeout: 10000 });
+                    }, function() { showToast(LANG3 === 'es' ? 'Error de GPS.' : isEN ? 'GPS error.' : 'Errore GPS.', 'error'); }, { enableHighAccuracy: true, timeout: 10000 });
                 }
             });
         }
@@ -6361,7 +6361,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                 if (vanMarker) {
                     map.setView(vanMarker.getLatLng(), 13);
                 } else {
-                    showToast(isEN ? 'Van position not available.' : 'Posizione furgone non disponibile.', 'info');
+                    showToast(LANG3 === 'es' ? 'Posición de la furgoneta no disponible.' : isEN ? 'Van position not available.' : 'Posizione furgone non disponibile.', 'info');
                 }
             });
         }
@@ -6386,11 +6386,11 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                         navigator.geolocation.getCurrentPosition(function(pos) {
                             window.open('https://www.google.com/maps/@' + pos.coords.latitude + ',' + pos.coords.longitude + ',17z/data=!3m1!1e1', '_blank');
                         }, function() {
-                            showToast(isEN ? 'GPS not available.' : 'GPS non disponibile.', 'info');
+                            showToast(LANG3 === 'es' ? 'GPS no disponible.' : isEN ? 'GPS not available.' : 'GPS non disponibile.', 'info');
                         });
                         return;
                     }
-                    showToast(isEN ? 'Position not available.' : 'Posizione non disponibile.', 'info');
+                    showToast(LANG3 === 'es' ? 'Posición no disponible.' : isEN ? 'Position not available.' : 'Posizione non disponibile.', 'info');
                     return;
                 }
                 // Google Maps satellite URL with appropriate zoom
@@ -6416,7 +6416,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                     var _ll = todayPoints.map(function(p) { return [p.lat, p.lng]; });
                     trackLine = L.polyline(_ll, { color: '#e53e3e', weight: 4, opacity: 0.8 }).addTo(map);
                 }
-                window.openMapFullscreen(map, isEN ? 'Live Map' : 'Mappa Live');
+                window.openMapFullscreen(map, LANG3 === 'es' ? 'Mapa Live' : isEN ? 'Live Map' : 'Mappa Live');
             });
         }
 
@@ -6467,11 +6467,11 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                 if (liveActive) {
                     quickStartBtn.textContent = '\u23F9';
                     quickStartBtn.classList.add('stop-mode');
-                    quickStartBtn.title = isEN ? 'Stop trip' : 'Ferma viaggio';
+                    quickStartBtn.title = LANG3 === 'es' ? 'Detener viaje' : isEN ? 'Stop trip' : 'Ferma viaggio';
                 } else {
                     quickStartBtn.textContent = '\u25B6';
                     quickStartBtn.classList.remove('stop-mode');
-                    quickStartBtn.title = isEN ? 'Start trip' : 'Avvia viaggio';
+                    quickStartBtn.title = LANG3 === 'es' ? 'Iniciar viaje' : isEN ? 'Start trip' : 'Avvia viaggio';
                 }
             }
 
@@ -6491,10 +6491,10 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             var staleSince = window._lastGpsFix ? (Date.now() - window._lastGpsFix) : Infinity;
             if (staleSince > 90000) { // >90s without a fix
                 liveDot.className = 'pos-live-indicator pos-live-stale';
-                if (liveLabel) liveLabel.textContent = isEN ? 'GPS signal lost...' : 'Segnale GPS perso...';
+                if (liveLabel) liveLabel.textContent = LANG3 === 'es' ? 'Señal GPS perdida...' : isEN ? 'GPS signal lost...' : 'Segnale GPS perso...';
             } else {
                 liveDot.className = 'pos-live-indicator pos-live-on';
-                if (liveLabel) liveLabel.textContent = isEN ? 'Trip active' : 'Viaggio attivo';
+                if (liveLabel) liveLabel.textContent = LANG3 === 'es' ? 'Viaje activo' : isEN ? 'Trip active' : 'Viaggio attivo';
             }
         }, 30000);
 
@@ -6556,7 +6556,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             if (startBtn) startBtn.style.display = 'none';
             if (stopBtn) stopBtn.style.display = '';
             if (liveDot) { liveDot.className = 'pos-live-indicator pos-live-on'; }
-            if (liveLabel) liveLabel.textContent = isEN ? 'Trip active' : 'Viaggio attivo';
+            if (liveLabel) liveLabel.textContent = LANG3 === 'es' ? 'Viaje activo' : isEN ? 'Trip active' : 'Viaggio attivo';
             var _ltd2 = document.getElementById('liveTabDot'); if (_ltd2) _ltd2.classList.add('active');
 
             initMap();
@@ -6708,7 +6708,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                 _qvLog.info('[Tracking] Auto-saved dailySummary (resume):', todayKm.toFixed(1), 'km');
             }, 5 * 60 * 1000); // every 5 minutes
 
-            showToast(isEN ? '🔄 Trip resumed!' : '🔄 Viaggio ripreso!', 'success');
+            showToast(LANG3 === 'es' ? '🔄 Viaje reanudado!' : isEN ? '🔄 Trip resumed!' : '🔄 Viaggio ripreso!', 'success');
             updatePosAuthUI();
         }
 
@@ -6751,7 +6751,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             var statsDiv = document.getElementById('pos-live-stats');
             if (statsDiv) statsDiv.style.display = '';
             if (liveDot) liveDot.className = 'pos-live-indicator pos-live-on';
-            if (liveLabel) liveLabel.textContent = isEN ? 'Trip active (GPS background)' : 'Viaggio attivo (GPS background)';
+            if (liveLabel) liveLabel.textContent = LANG3 === 'es' ? 'Viaje activo (GPS en segundo plano)' : isEN ? 'Trip active (GPS background)' : 'Viaggio attivo (GPS background)';
             var _ltd3 = document.getElementById('liveTabDot'); if (_ltd3) _ltd3.classList.add('active');
             updatePosAuthUI();
 
@@ -6839,10 +6839,10 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
         btnRow.className = 'qv-modal-btns';
         var cancelBtn = document.createElement('button');
         cancelBtn.className = 'qv-modal-btn qv-modal-cancel';
-        cancelBtn.textContent = isEN ? 'Cancel' : 'Annulla';
+        cancelBtn.textContent = LANG3 === 'es' ? 'Cancelar' : isEN ? 'Cancel' : 'Annulla';
         var confirmBtn = document.createElement('button');
         confirmBtn.className = 'qv-modal-btn qv-modal-confirm';
-        confirmBtn.textContent = isEN ? 'Confirm' : 'Conferma';
+        confirmBtn.textContent = LANG3 === 'es' ? 'Confirmar' : isEN ? 'Confirm' : 'Conferma';
         btnRow.appendChild(cancelBtn);
         btnRow.appendChild(confirmBtn);
         modal.appendChild(msgEl);
@@ -6892,7 +6892,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             if (!navigator.onLine) { banner.classList.add('visible'); }
             else { banner.classList.remove('visible'); }
         }
-        window.addEventListener('online', function() { banner.classList.remove('visible'); showToast(isEN ? 'Connection restored' : 'Connessione ripristinata', 'success'); });
+        window.addEventListener('online', function() { banner.classList.remove('visible'); showToast(LANG3 === 'es' ? 'Conexión restablecida' : isEN ? 'Connection restored' : 'Connessione ripristinata', 'success'); });
         window.addEventListener('offline', function() { banner.classList.add('visible'); });
         updateOnline();
     })();
@@ -6910,7 +6910,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             if (totalEl) totalEl.textContent = total;
             if (countEl) countEl.textContent = done;
             var pct = total > 0 ? Math.round(done / total * 100) : 0;
-            if (percentEl) percentEl.textContent = pct + (isEN ? '% complete' : '% completato');
+            if (percentEl) percentEl.textContent = pct + (LANG3 === 'es' ? '% completado' : isEN ? '% complete' : '% completato');
             if (fillEl) fillEl.style.width = pct + '%';
         }
         updateZainoProgress();
@@ -6957,7 +6957,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
         if (tripDay >= 0 && tripDay <= TRIP_DAYS - 1) {
             // During trip: show "Vai a G[X] (oggi)"
             btn.style.display = '';
-            btn.textContent = '\uD83D\uDCC5 ' + (isEN ? 'Go to D' : 'Vai a G') + (tripDay + 1) + (isEN ? ' (today)' : ' (oggi)');
+            btn.textContent = '\uD83D\uDCC5 ' + (LANG3 === 'es' ? 'Ir a D' : isEN ? 'Go to D' : 'Vai a G') + (tripDay + 1) + (LANG3 === 'es' ? ' (hoy)' : isEN ? ' (today)' : ' (oggi)');
             btn.addEventListener('click', function() {
                 if (window.__gotoTodayDay) window.__gotoTodayDay();
             });
@@ -6969,8 +6969,8 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             if (daysLeft > 0) {
                 btn.style.display = '';
                 var countdownTxt = daysLeft === 1
-                    ? (isEN ? '1 day to departure' : 'Manca 1 giorno alla partenza')
-                    : (isEN ? daysLeft + ' days to departure' : 'Mancano ' + daysLeft + ' giorni alla partenza');
+                    ? (LANG3 === 'es' ? 'Falta 1 día para la salida' : isEN ? '1 day to departure' : 'Manca 1 giorno alla partenza')
+                    : (LANG3 === 'es' ? 'Faltan ' + daysLeft + ' días para la salida' : isEN ? daysLeft + ' days to departure' : 'Mancano ' + daysLeft + ' giorni alla partenza');
                 btn.textContent = '\u23F3 ' + countdownTxt;
                 btn.style.cursor = 'default';
                 btn.style.opacity = '0.85';
@@ -6993,7 +6993,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
         // 1) Highlight mt-item in mobile timeline
         var mtDayLinks = document.querySelectorAll('.mt-item .mt-day');
         mtDayLinks.forEach(function(link) {
-            var _dayPfx = isEN ? 'D' : 'G';
+            var _dayPfx = LANG3 === 'es' ? 'D' : isEN ? 'D' : 'G';
             if (link.textContent.trim() === _dayPfx + (tripDay + 1)) {
                 var item = link.closest('.mt-item');
                 if (item) {
@@ -7037,11 +7037,11 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
         var bannerDismissed = sessionStorage.getItem('today-banner-dismissed-' + tripDay);
         if (banner && window.tripDays && window.tripDays[tripDay] && !bannerDismissed) {
             var td = window.tripDays[tripDay];
-            var giorni = isEN ? ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'] : ['Domenica','Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato'];
-            var mesi = isEN ? ['January','February','March','April','May','June','July','August','September','October','November','December'] : ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
+            var giorni = LANG3 === 'es' ? ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'] : isEN ? ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'] : ['Domenica','Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato'];
+            var mesi = LANG3 === 'es' ? ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'] : isEN ? ['January','February','March','April','May','June','July','August','September','October','November','December'] : ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
             var tripDate = new Date(TRIP_START.getTime() + tripDay * 86400000);
             var dateStr = giorni[tripDate.getDay()] + ' ' + tripDate.getDate() + ' ' + mesi[tripDate.getMonth()];
-            banner.innerHTML = '<span class="today-banner-text">📍 <strong>' + (isEN ? 'Today D' : 'Oggi G') + (tripDay + 1) + '</strong> — ' + dateStr + ' — ' + td.title + '</span><button class="today-banner-close" aria-label="' + (isEN ? 'Close' : 'Chiudi') + '">&times;</button>';
+            banner.innerHTML = '<span class="today-banner-text">📍 <strong>' + (LANG3 === 'es' ? 'Hoy D' : isEN ? 'Today D' : 'Oggi G') + (tripDay + 1) + '</strong> — ' + dateStr + ' — ' + td.title + '</span><button class="today-banner-close" aria-label="' + (LANG3 === 'es' ? 'Cerrar' : isEN ? 'Close' : 'Chiudi') + '">&times;</button>';
             banner.style.display = 'flex';
             banner.querySelector('.today-banner-text').addEventListener('click', function() {
                 var giorniLink = document.querySelector('[data-tab="tab-giorni"]');
@@ -7380,10 +7380,10 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             pill.className = 'iqn-pill';
             pill.setAttribute('data-region', r.id);
             pill.setAttribute('type', 'button');
-            var daysLabel = isEN ? (r.daysEn || r.days) : r.days;
-            pill.setAttribute('aria-label', (isEN ? r.en : r.it) + ' (' + daysLabel + ')');
+            var daysLabel = LANG3 === 'es' ? (r.daysEs || r.daysEn || r.days) : isEN ? (r.daysEn || r.days) : r.days;
+            pill.setAttribute('aria-label', (LANG3 === 'es' ? (r.es || r.en) : isEN ? r.en : r.it) + ' (' + daysLabel + ')');
             pill.innerHTML = '<span class="iqn-flag">' + r.flags + '</span> ' +
-                             '<span class="iqn-label">' + (isEN ? r.en : r.it) + '</span>' +
+                             '<span class="iqn-label">' + (LANG3 === 'es' ? (r.es || r.en) : isEN ? r.en : r.it) + '</span>' +
                              '<span class="iqn-days">' + daysLabel + '</span>';
             pill.addEventListener('click', function() {
                 // v3.54: no dropdown to close
@@ -7613,8 +7613,8 @@ function handleSwUpdate(sw) {
     var banner = document.createElement('div');
     banner.id = 'sw-update-banner';
     banner.style.cssText = 'position:fixed;bottom:70px;left:12px;right:12px;z-index:99998;background:linear-gradient(135deg,var(--primary,#2c5282),var(--accent,#6366f1));color:#fff;padding:14px 18px;border-radius:14px;box-shadow:0 4px 20px rgba(0,0,0,0.3);display:flex;align-items:center;gap:12px;font-size:14px;font-weight:600;animation:slideUp 0.3s ease;';
-    banner.innerHTML = '<span style="flex:1;">' + (typeof isEN !== 'undefined' && isEN ? '\u2728 New version available!' : '\u2728 Nuova versione disponibile!') + '</span>' +
-      '<button id="sw-update-btn" style="background:var(--bg-card,#fff);color:var(--primary,#2c5282);border:none;border-radius:8px;padding:8px 16px;font-weight:700;font-size:13px;cursor:pointer;white-space:nowrap;">' + (typeof isEN !== 'undefined' && isEN ? 'Update' : 'Aggiorna') + '</button>' +
+    banner.innerHTML = '<span style="flex:1;">' + (typeof isEN !== 'undefined' && LANG3 === 'es' ? '\\u2728 Nueva versión disponible!' : isEN ? '\u2728 New version available!' : '\u2728 Nuova versione disponibile!') + '</span>' +
+      '<button id="sw-update-btn" style="background:var(--bg-card,#fff);color:var(--primary,#2c5282);border:none;border-radius:8px;padding:8px 16px;font-weight:700;font-size:13px;cursor:pointer;white-space:nowrap;">' + (typeof isEN !== 'undefined' && LANG3 === 'es' ? 'Actualizar' : isEN ? 'Update' : 'Aggiorna') + '</button>' +
       '<button id="sw-update-dismiss" style="background:transparent;border:none;color:rgba(255,255,255,0.7);font-size:18px;cursor:pointer;padding:4px 8px;">\u2715</button>';
     document.body.appendChild(banner);
 
@@ -7716,7 +7716,7 @@ if ('serviceWorker' in navigator) {
         if (statusEl && diffDays >= 0 && diffDays <= TRIP_DAYS - 1) {
             var todayBadge = document.createElement('div');
             todayBadge.style.cssText = 'margin-top:8px; padding:6px 12px; background:rgba(255,255,255,0.15); border-radius:8px; font-size:13px; backdrop-filter:blur(4px);';
-            todayBadge.innerHTML = '📍 <strong>' + (isEN ? 'You are here today: D' : 'Oggi sei qui: G') + diffDays + '</strong>'; // v2.96: i18n
+            todayBadge.innerHTML = '📍 <strong>' + (LANG3 === 'es' ? 'Estás aquí hoy: D' : isEN ? 'You are here today: D' : 'Oggi sei qui: G') + diffDays + '</strong>'; // v2.96: i18n
             // Try to get the city from tripDays
             if (window.tripDays && window.tripDays[diffDays]) {
                 todayBadge.innerHTML += ' — ' + window.tripDays[diffDays].city;
@@ -8060,19 +8060,19 @@ async function fetchForecast(lat, lon, date, _retry) {
       const forecast = await fetchForecast(lat, lon, dateStr);
         if (forecast) {
           const wInfo = weatherCodes[forecast.code] || {it: 'Variabile', en: 'Variable', icon: '🌤️'};
-          const label = isEN ? wInfo.en : wInfo.it;
+          const label = LANG3 === 'es' ? (wInfo.es || wInfo.en) : isEN ? wInfo.en : wInfo.it;
           var daylightStr = '';
           if (forecast.sunrise && forecast.sunset) {
             daylightStr = '🌅 ' + forecast.sunrise + '–' + forecast.sunset + ' (' + forecast.daylight + ')';
           } else if (forecast.daylight) {
-            daylightStr = '🌅 ' + forecast.daylight + (isEN ? ' daylight' : ' di luce');
+            daylightStr = '🌅 ' + forecast.daylight + (LANG3 === 'es' ? ' de luz' : isEN ? ' daylight' : ' di luce');
           } else {
             daylightStr = el.dataset.daylight || '';
           }
-          const badge = isEN ? '(live forecast)' : '(previsione live)';
+          const badge = LANG3 === 'es' ? '(previsión en vivo)' : isEN ? '(live forecast)' : '(previsione live)';
           var extra = '';
-          if (forecast.wind) extra += ' · ' + (isEN ? 'Wind ' : 'Vento ') + forecast.wind + ' km/h';
-          if (forecast.precipProb != null && forecast.precipProb > 0) extra += ' · ' + (isEN ? 'Rain ' : 'Pioggia ') + forecast.precipProb + '%';
+          if (forecast.wind) extra += ' · ' + (LANG3 === 'es' ? 'Viento ' : isEN ? 'Wind ' : 'Vento ') + forecast.wind + ' km/h';
+          if (forecast.precipProb != null && forecast.precipProb > 0) extra += ' · ' + (LANG3 === 'es' ? 'Lluvia ' : isEN ? 'Rain ' : 'Pioggia ') + forecast.precipProb + '%';
           el.innerHTML = `${wInfo.icon} ${forecast.high}°C / ${forecast.low}°C · ${label} · ${daylightStr}${extra} <span class="meteo-badge meteo-live">${badge}</span>`;
           // v3.14: make meteo clickable → open yr.no
           el.style.cursor = 'pointer';
@@ -8094,7 +8094,7 @@ async function fetchForecast(lat, lon, date, _retry) {
     if (typeof firebase === 'undefined' || !firebase.database) {
       // No Firebase — just mark as historical
       const badge = el.querySelector('.meteo-badge');
-      if (badge) badge.textContent = isEN ? '(historical)' : '(storico)';
+      if (badge) badge.textContent = LANG3 === 'es' ? '(histórico)' : isEN ? '(historical)' : '(storico)';
       return;
     }
     var familyId = (typeof FAMILY_ID !== 'undefined') ? FAMILY_ID : 'viaggio-europa-2026';
@@ -8103,24 +8103,24 @@ async function fetchForecast(lat, lon, date, _retry) {
       if (snap.exists()) {
         var w = snap.val();
         var wInfo = weatherCodes[w.code] || {it: 'Variabile', en: 'Variable', icon: w.icon || '\u{1F324}\uFE0F'};
-        var label = isEN ? wInfo.en : wInfo.it;
+        var label = LANG3 === 'es' ? (wInfo.es || wInfo.en) : isEN ? wInfo.en : wInfo.it;
         var daylightStr = '';
         if (w.sunrise && w.sunset) {
           daylightStr = '\u{1F305} ' + w.sunrise + '\u2013' + w.sunset + ' (' + w.daylight + ')';
         }
         var extra = '';
-        if (w.wind && w.wind > 0) extra += ' \u00b7 ' + (isEN ? 'Wind ' : 'Vento ') + w.wind + ' km/h';
-        if (w.precipProb && w.precipProb > 0) extra += ' \u00b7 ' + (isEN ? 'Rain ' : 'Pioggia ') + w.precipProb + '%';
-        var badge = isEN ? '(real weather)' : '(meteo reale)';
+        if (w.wind && w.wind > 0) extra += ' \u00b7 ' + (LANG3 === 'es' ? 'Viento ' : isEN ? 'Wind ' : 'Vento ') + w.wind + ' km/h';
+        if (w.precipProb && w.precipProb > 0) extra += ' \u00b7 ' + (LANG3 === 'es' ? 'Lluvia ' : isEN ? 'Rain ' : 'Pioggia ') + w.precipProb + '%';
+        var badge = LANG3 === 'es' ? '(tiempo real)' : isEN ? '(real weather)' : '(meteo reale)';
         el.innerHTML = (w.icon || wInfo.icon) + ' ' + w.high + '\u00b0C / ' + w.low + '\u00b0C \u00b7 ' + label + ' \u00b7 ' + daylightStr + extra + ' <span class="meteo-badge meteo-real">' + badge + '</span>';
       } else {
         // No archive data — mark as historical static
         var badge2 = el.querySelector('.meteo-badge');
-        if (badge2) badge2.textContent = isEN ? '(historical)' : '(storico)';
+        if (badge2) badge2.textContent = LANG3 === 'es' ? '(histórico)' : isEN ? '(historical)' : '(storico)';
       }
     } catch(e) {
       var badge3 = el.querySelector('.meteo-badge');
-      if (badge3) badge3.textContent = isEN ? '(historical)' : '(storico)';
+      if (badge3) badge3.textContent = LANG3 === 'es' ? '(histórico)' : isEN ? '(historical)' : '(storico)';
     }
   }
 
@@ -8175,7 +8175,7 @@ async function fetchForecast(lat, lon, date, _retry) {
           lat: parseFloat(el.dataset.lat),
           lon: parseFloat(el.dataset.lon),
           name: (function() {
-            var prefix = (isEN ? 'Day ' : 'Giorno ') + (dayIdx + 1);
+            var prefix = (LANG3 === 'es' ? 'Día ' : isEN ? 'Day ' : 'Giorno ') + (dayIdx + 1);
             var city = el.closest('[data-city]') ? el.closest('[data-city]').dataset.city : '';
             return city ? prefix + ' \u2014 ' + city : prefix;
           })()
@@ -8188,7 +8188,7 @@ async function fetchForecast(lat, lon, date, _retry) {
   async function loadPosWeather() {
     var stops = getNextStops(4);
     if (!stops.length) {
-      weatherPanel.innerHTML = '<p style="color:var(--text-muted);font-size:13px;">' + (isEN ? 'No upcoming stops within forecast range.' : 'Nessuna tappa nelle prossime previsioni.') + '</p>';
+      weatherPanel.innerHTML = '<p style="color:var(--text-muted);font-size:13px;">' + (LANG3 === 'es' ? 'No hay paradas próximas dentro del rango de previsión.' : isEN ? 'No upcoming stops within forecast range.' : 'Nessuna tappa nelle prossime previsioni.') + '</p>';
       return;
     }
     var html = '';
@@ -8212,7 +8212,7 @@ async function fetchForecast(lat, lon, date, _retry) {
         var low = Math.round(data.daily.temperature_2m_min[0]);
         var code = data.daily.weathercode[0];
         var wInfo = weatherCodes[code] || {it: 'Variabile', en: 'Variable', icon: '🌤️'};
-        var label = isEN ? wInfo.en : wInfo.it;
+        var label = LANG3 === 'es' ? (wInfo.es || wInfo.en) : isEN ? wInfo.en : wInfo.it;
         var daylightStr = '';
         var riseFmt = '';
         var setFmt = '';
@@ -8228,7 +8228,7 @@ async function fetchForecast(lat, lon, date, _retry) {
         }
         var wind = data.daily.windspeed_10m_max ? Math.round(data.daily.windspeed_10m_max[0]) : 0;
         var precip = data.daily.precipitation_probability_max ? data.daily.precipitation_probability_max[0] : 0;
-        var dayLabel = s.date.toLocaleDateString(isEN ? 'en-US' : 'it-IT', {weekday:'short', day:'numeric', month:'short'});
+        var dayLabel = s.date.toLocaleDateString(LANG3 === 'es' ? 'es-ES' : isEN ? 'en-US' : 'it-IT', {weekday:'short', day:'numeric', month:'short'});
         html += '<div class="pos-weather-card">';
         html += '<div class="pos-weather-card-header">' + wInfo.icon + ' <strong>' + escapeHtml(s.name) + '</strong></div>';
         html += '<div class="pos-weather-card-date">' + dayLabel + '</div>';
@@ -8249,7 +8249,7 @@ async function fetchForecast(lat, lon, date, _retry) {
           html += '<div style="border-top:1px solid var(--border);margin-top:8px;padding-top:6px;display:flex;gap:10px;flex-wrap:wrap;">';
           for (var d2 = 1; d2 < Math.min(daysAvail, 3); d2++) {
             var d2Date = new Date(s.date); d2Date.setDate(d2Date.getDate() + d2);
-            var d2Label = d2Date.toLocaleDateString(isEN ? 'en-US' : 'it-IT', {weekday:'short', day:'numeric'});
+            var d2Label = d2Date.toLocaleDateString(LANG3 === 'es' ? 'es-ES' : isEN ? 'en-US' : 'it-IT', {weekday:'short', day:'numeric'});
             var d2Info = weatherCodes[wCodes[d2]] || {icon: '🌤️'};
             var d2Prec = precipArr && precipArr[d2] ? precipArr[d2] : 0;
             html += '<span style="font-size:12px;color:var(--text-muted);">' + d2Label + ' ' + d2Info.icon + ' ' + Math.round(tMax[d2]) + '°/' + Math.round(tMin[d2]) + '°' + (d2Prec > 20 ? ' 🌧️' + d2Prec + '%' : '') + '</span>';
@@ -8262,7 +8262,7 @@ async function fetchForecast(lat, lon, date, _retry) {
     if (html) {
       weatherPanel.innerHTML = html;
     } else {
-      weatherPanel.innerHTML = '<p style="color:var(--text-muted);font-size:13px;">' + (isEN ? 'Could not load forecasts.' : 'Impossibile caricare le previsioni.') + '</p>';
+      weatherPanel.innerHTML = '<p style="color:var(--text-muted);font-size:13px;">' + (LANG3 === 'es' ? 'No se pudieron cargar las previsiones.' : isEN ? 'Could not load forecasts.' : 'Impossibile caricare le previsioni.') + '</p>';
     }
   }
 
@@ -8392,7 +8392,7 @@ async function fetchForecast(lat, lon, date, _retry) {
           else { var pc2 = cb.closest(".pos-card"); if (pc2) pc2.classList.remove("pos-done"); }
         }
       });
-      showSyncStatus(isEN ? '☁️ Synced' : '☁️ Sincronizzato', 'ok');
+      showSyncStatus(LANG3 === 'es' ? '☁️ Sincronizado' : isEN ? '☁️ Synced' : '☁️ Sincronizzato', 'ok');
     }
   });
 
@@ -8428,7 +8428,7 @@ async function fetchForecast(lat, lon, date, _retry) {
   window.firebaseSetCurrentDay = function(dayIndex) {
     if (!isOwner) { _qvLog.info('[Firebase] Write blocked (viewer mode)'); return; }
     dbRef.child('currentDay').set({ day: dayIndex, ts: Date.now() });
-    showSyncStatus(isEN ? '📍 Day updated' : '📍 Giorno aggiornato', 'ok');
+    showSyncStatus(LANG3 === 'es' ? '📍 Día actualizado' : isEN ? '📍 Day updated' : '📍 Giorno aggiornato', 'ok');
   };
 
   // ─── 3. FAMILY NOTES ───
@@ -8504,12 +8504,12 @@ async function fetchForecast(lat, lon, date, _retry) {
         var total = document.querySelectorAll('input[type="checkbox"][data-idx]').length;
         countEl.textContent = done;
         var pct = total > 0 ? Math.round(done / total * 100) : 0;
-        if (percentEl) percentEl.textContent = pct + (isEN ? '% complete' : '% completato');
+        if (percentEl) percentEl.textContent = pct + (LANG3 === 'es' ? '% completado' : isEN ? '% complete' : '% completato');
         if (fillEl) fillEl.style.width = pct + '%';
       }
     }
     window.dispatchEvent(new CustomEvent('zainoSynced', { detail: finalState }));
-    showSyncStatus(isEN ? '☁️ Synced' : '☁️ Sincronizzato', 'ok');
+    showSyncStatus(LANG3 === 'es' ? '☁️ Sincronizado' : isEN ? '☁️ Synced' : '☁️ Sincronizzato', 'ok');
   });
 
   // Debounced zaino push — waits 1.5s of inactivity before writing
@@ -8562,7 +8562,7 @@ async function fetchForecast(lat, lon, date, _retry) {
     badge.style.cssText = 'position:absolute;top:8px;left:8px;background:rgba(229,62,62,0.92);color:#fff;' +
       'font-size:11px;font-weight:700;padding:3px 8px;border-radius:20px;z-index:10;' +
       'backdrop-filter:blur(4px);pointer-events:none;';
-    badge.textContent = isEN ? '🔴 Database offline' : '🔴 Database offline';
+    badge.textContent = LANG3 === 'es' ? '🔴 Base de datos sin conexión' : isEN ? '🔴 Database offline' : '🔴 Database offline';
     // hero card needs position:relative for absolute child
     if (getComputedStyle(heroCard).position === 'static') {
       heroCard.style.position = 'relative';
@@ -8574,7 +8574,7 @@ async function fetchForecast(lat, lon, date, _retry) {
     window._firebaseConnected = connected;
 
     if (connected) {
-      showSyncStatus(isEN ? '☁️ Online' : '☁️ Online', 'ok');
+      showSyncStatus(LANG3 === 'es' ? '☁️ En línea' : isEN ? '☁️ Online' : '☁️ Online', 'ok');
       _removeOfflineBadge();
     } else {
       // Only flag as offline if the disconnection persists (not a handshake
@@ -8617,7 +8617,7 @@ async function fetchForecast(lat, lon, date, _retry) {
     // Populate the select dropdown with all days (-1 to TRIP_DAYS-1)
   // v3.47 FIX: Display G1-G55 (1-indexed) while internal values stay 0-indexed
   if (daySelect) {
-    var prefix = isEN ? 'D' : 'G';
+    var prefix = LANG3 === 'es' ? 'D' : isEN ? 'D' : 'G';
     for (var d = -1; d < TRIP_DAYS; d++) {
       var opt = document.createElement('option');
       opt.value = d;
@@ -8631,7 +8631,7 @@ async function fetchForecast(lat, lon, date, _retry) {
     daySelect.value = currentDay;
   }
   function updateLabel() {
-    if (dayLabel) dayLabel.textContent = (isEN ? 'D' : 'G') + (currentDay >= 0 ? (currentDay + 1) : '0');
+    if (dayLabel) dayLabel.textContent = (LANG3 === 'es' ? 'D' : isEN ? 'D' : 'G') + (currentDay >= 0 ? (currentDay + 1) : '0');
     if (daySelect) daySelect.value = currentDay;
   }
   updateLabel();
@@ -8663,7 +8663,7 @@ async function fetchForecast(lat, lon, date, _retry) {
     if (window.firebaseSetCurrentDay) {
       window.firebaseSetCurrentDay(currentDay);
     }
-    showToast('\u2601\ufe0f ' + (isEN ? 'Day synced to D' : 'Giorno sincronizzato a G') + (currentDay + 1), 'success');
+    showToast('\u2601\ufe0f ' + (LANG3 === 'es' ? 'Día sincronizado a D' : isEN ? 'Day synced to D' : 'Giorno sincronizzato a G') + (currentDay + 1), 'success');
   });
   if (resetBtn) resetBtn.addEventListener('click', function() {
     window._dayOverride = undefined;
@@ -8678,7 +8678,7 @@ async function fetchForecast(lat, lon, date, _retry) {
     // Calculate real day from TRIP_START
     currentDay = Math.max(-1, Math.min(Math.floor((Date.now() - TRIP_START.getTime()) / 86400000), TRIP_DAYS - 1));
     updateLabel();
-    showToast('\u21ba ' + (isEN ? 'Override removed \u2014 real date' : 'Override rimosso \u2014 data reale'), 'success');
+    showToast('\u21ba ' + (LANG3 === 'es' ? 'Anulación eliminada \\u2014 fecha real' : isEN ? 'Override removed \u2014 real date' : 'Override rimosso \u2014 data reale'), 'success');
     window.dispatchEvent(new CustomEvent('dayOverrideChanged', {detail: null}));
   });
   
@@ -8771,7 +8771,7 @@ async function fetchForecast(lat, lon, date, _retry) {
                     ? '<strong>Install Quo Vadis</strong><br>Quick access, works offline'
                     : '<strong>Installa Quo Vadis</strong><br>Accesso rapido, funziona offline';
             }
-            btn.textContent = isEN ? 'Install' : 'Installa';
+            btn.textContent = LANG3 === 'es' ? 'Instalar' : isEN ? 'Install' : 'Installa';
             showBanner();
         }
         // else: not a modal or banner visit, do nothing
@@ -8804,7 +8804,7 @@ async function fetchForecast(lat, lon, date, _retry) {
                     ? '<strong>Install Quo Vadis</strong><br>Tap <strong>\u25A1\u2191</strong> or <strong>\u22EF</strong> at the bottom \u2192 <strong>"Add to Home Screen"</strong>'
                     : '<strong>Installa Quo Vadis</strong><br>Tocca <strong>\u25A1\u2191</strong> o <strong>\u22EF</strong> in basso \u2192 <strong>"Aggiungi a Home"</strong>';
             }
-            btn.textContent = isEN ? 'Show me' : 'Mostrami';
+            btn.textContent = LANG3 === 'es' ? 'Muéstrame' : isEN ? 'Show me' : 'Mostrami';
             btn.setAttribute('data-action', 'ios-tip');
             showBanner();
 
@@ -8816,7 +8816,7 @@ async function fetchForecast(lat, lon, date, _retry) {
                     ? '<strong>Install Quo Vadis</strong><br>Tap <strong>Share \u25A1\u2191</strong> (top right) \u2192 <strong>"Add to Home Screen"</strong>'
                     : '<strong>Installa Quo Vadis</strong><br>Tocca <strong>Condividi \u25A1\u2191</strong> (in alto a dx) \u2192 <strong>"Aggiungi a Home"</strong>';
             }
-            btn.textContent = isEN ? 'Show me' : 'Mostrami';
+            btn.textContent = LANG3 === 'es' ? 'Muéstrame' : isEN ? 'Show me' : 'Mostrami';
             btn.setAttribute('data-action', 'ios-chrome-tip');
             showBanner();
 
@@ -8828,7 +8828,7 @@ async function fetchForecast(lat, lon, date, _retry) {
                     ? '<strong>Install Quo Vadis</strong><br>Tap <strong>\u2630</strong> (menu, bottom right) \u2192 <strong>Share</strong> \u2192 <strong>"Add to Home Screen"</strong>'
                     : '<strong>Installa Quo Vadis</strong><br>Tocca <strong>\u2630</strong> (menu, in basso a destra) \u2192 <strong>Condividi</strong> \u2192 <strong>"Aggiungi a Home"</strong>';
             }
-            btn.textContent = isEN ? 'Show me' : 'Mostrami';
+            btn.textContent = LANG3 === 'es' ? 'Muéstrame' : isEN ? 'Show me' : 'Mostrami';
             btn.setAttribute('data-action', 'ios-firefox-tip');
             showBanner();
 
@@ -8840,7 +8840,7 @@ async function fetchForecast(lat, lon, date, _retry) {
                     ? '<strong>Install Quo Vadis</strong><br>Open this page in <strong>Safari</strong> to install'
                     : '<strong>Installa Quo Vadis</strong><br>Apri questa pagina in <strong>Safari</strong> per installare';
             }
-            btn.textContent = isEN ? 'Copy link' : 'Copia link';
+            btn.textContent = LANG3 === 'es' ? 'Copiar enlace' : isEN ? 'Copy link' : 'Copia link';
             btn.setAttribute('data-action', 'copy-link');
             showBanner();
 
@@ -8852,7 +8852,7 @@ async function fetchForecast(lat, lon, date, _retry) {
                     ? '<strong>Install Quo Vadis</strong><br>Click <strong>File</strong> (top menu bar) \u2192 <strong>"Add to Dock"</strong>'
                     : '<strong>Installa Quo Vadis</strong><br>Clicca <strong>File</strong> (barra menu in alto) \u2192 <strong>"Aggiungi al Dock"</strong>';
             }
-            btn.textContent = isEN ? 'Got it' : 'OK';
+            btn.textContent = LANG3 === 'es' ? 'OK' : isEN ? 'Got it' : 'OK';
             btn.setAttribute('data-action', 'dismiss');
             showBanner();
 
@@ -8864,7 +8864,7 @@ async function fetchForecast(lat, lon, date, _retry) {
                     ? '<strong>Install Quo Vadis</strong><br>Click <strong>\u22ee</strong> (3 dots, top right) \u2192 <strong>"Cast, save, and share"</strong> \u2192 <strong>"Install page as app"</strong>'
                     : '<strong>Installa Quo Vadis</strong><br>Clicca <strong>\u22ee</strong> (3 puntini, in alto a destra) \u2192 <strong>"Trasmetti, salva e condividi"</strong> \u2192 <strong>"Installa pagina come app"</strong>';
             }
-            btn.textContent = isEN ? 'Got it' : 'OK';
+            btn.textContent = LANG3 === 'es' ? 'OK' : isEN ? 'Got it' : 'OK';
             btn.setAttribute('data-action', 'dismiss');
             showBanner();
 
@@ -8876,7 +8876,7 @@ async function fetchForecast(lat, lon, date, _retry) {
                     ? '<strong>Install Quo Vadis</strong><br>Click <strong>\u2026</strong> (3 dots, top right) \u2192 <strong>Apps</strong> \u2192 <strong>"Install this site as an app"</strong>'
                     : '<strong>Installa Quo Vadis</strong><br>Clicca <strong>\u2026</strong> (3 puntini, in alto a destra) \u2192 <strong>App</strong> \u2192 <strong>"Installa il sito come app"</strong>';
             }
-            btn.textContent = isEN ? 'Got it' : 'OK';
+            btn.textContent = LANG3 === 'es' ? 'OK' : isEN ? 'Got it' : 'OK';
             btn.setAttribute('data-action', 'dismiss');
             showBanner();
 
@@ -8888,7 +8888,7 @@ async function fetchForecast(lat, lon, date, _retry) {
                     ? '<strong>Tip:</strong> Open in <strong>Chrome</strong> or <strong>Edge</strong> for one-tap install'
                     : '<strong>Suggerimento:</strong> Apri in <strong>Chrome</strong> o <strong>Edge</strong> per installazione diretta';
             }
-            btn.textContent = isEN ? 'Got it' : 'OK';
+            btn.textContent = LANG3 === 'es' ? 'OK' : isEN ? 'Got it' : 'OK';
             btn.setAttribute('data-action', 'dismiss');
             showBanner();
 
@@ -8899,7 +8899,7 @@ async function fetchForecast(lat, lon, date, _retry) {
                     ? '<strong>Install Quo Vadis</strong><br>Tap <strong>\u2295</strong> in the address bar (bottom), or <strong>\u2261</strong> (bottom right) \u2192 <strong>"Add to Home screen"</strong>'
                     : '<strong>Installa Quo Vadis</strong><br>Tocca <strong>\u2295</strong> nella barra indirizzi (in basso), oppure <strong>\u2261</strong> (in basso a destra) \u2192 <strong>"Aggiungi a Home"</strong>';
             }
-            btn.textContent = isEN ? 'Got it' : 'OK';
+            btn.textContent = LANG3 === 'es' ? 'OK' : isEN ? 'Got it' : 'OK';
             btn.setAttribute('data-action', 'dismiss');
             showBanner();
 
@@ -8910,7 +8910,7 @@ async function fetchForecast(lat, lon, date, _retry) {
                     ? '<strong>Install Quo Vadis</strong><br>Tap <strong>\u22ee</strong> (top right) \u2192 <strong>"Add to Home screen"</strong> or <strong>"Install app"</strong>'
                     : '<strong>Installa Quo Vadis</strong><br>Tocca <strong>\u22ee</strong> (in alto a dx) \u2192 <strong>"Aggiungi a Home"</strong> o <strong>"Installa app"</strong>';
             }
-            btn.textContent = isEN ? 'Got it' : 'OK';
+            btn.textContent = LANG3 === 'es' ? 'OK' : isEN ? 'Got it' : 'OK';
             btn.setAttribute('data-action', 'dismiss');
             showBanner();
         } else {
@@ -8920,7 +8920,7 @@ async function fetchForecast(lat, lon, date, _retry) {
                     ? '<strong>Install Quo Vadis</strong><br>Use your browser menu to install this app'
                     : '<strong>Installa Quo Vadis</strong><br>Usa il menu del browser per installare l\'app';
             }
-            btn.textContent = isEN ? 'Got it' : 'OK';
+            btn.textContent = LANG3 === 'es' ? 'OK' : isEN ? 'Got it' : 'OK';
             btn.setAttribute('data-action', 'dismiss');
             showBanner();
         }
@@ -8952,8 +8952,8 @@ async function fetchForecast(lat, lon, date, _retry) {
                 showIOSTip('firefox');
             } else if (action === 'copy-link') {
                 navigator.clipboard.writeText(window.location.href).then(function() {
-                    btn.textContent = isEN ? 'Copied!' : 'Copiato!';
-                    setTimeout(function() { btn.textContent = isEN ? 'Copy link' : 'Copia link'; }, 2000);
+                    btn.textContent = LANG3 === 'es' ? '¡Copiado!' : isEN ? 'Copied!' : 'Copiato!';
+                    setTimeout(function() { btn.textContent = LANG3 === 'es' ? 'Copiar enlace' : isEN ? 'Copy link' : 'Copia link'; }, 2000);
                 });
             } else {
                 // Dismiss
@@ -9053,8 +9053,8 @@ async function fetchForecast(lat, lon, date, _retry) {
             return '<div class="install-modal-step"><span class="install-modal-step-icon">' + icon + '</span><span class="install-modal-step-text">' + text + '</span></div>';
         };
 
-        var title = isEN ? 'Install Quo Vadis' : 'Installa Quo Vadis';
-        var subtitle = isEN ? 'Follow the trip in real time with notifications' : 'Segui il viaggio in tempo reale con le notifiche';
+        var title = LANG3 === 'es' ? 'Instalar Quo Vadis' : isEN ? 'Install Quo Vadis' : 'Installa Quo Vadis';
+        var subtitle = LANG3 === 'es' ? 'Sigue el viaje en tiempo real con notificaciones' : isEN ? 'Follow the trip in real time with notifications' : 'Segui il viaggio in tempo reale con le notifiche';
         var stepsHtml = '';
         var hasNativeInstall = !!deferredPrompt;
 
@@ -9075,11 +9075,11 @@ async function fetchForecast(lat, lon, date, _retry) {
         var visualHtml = '';
         if (isIOS && isSafari) {
             visualHtml = '<div class="install-modal-visual">'
-                + '<div class="install-visual-step"><span class="install-visual-ico">\u25A1\u2191</span><span class="install-visual-cap">' + (isEN ? 'Share' : 'Condividi') + '</span></div>'
+                + '<div class="install-visual-step"><span class="install-visual-ico">\u25A1\u2191</span><span class="install-visual-cap">' + (LANG3 === 'es' ? 'Compartir' : isEN ? 'Share' : 'Condividi') + '</span></div>'
                 + '<span class="install-visual-arrow">\u2192</span>'
-                + '<div class="install-visual-step"><span class="install-visual-ico">\u2795</span><span class="install-visual-cap">' + (isEN ? 'Add to Home' : 'Aggiungi a Home') + '</span></div>'
+                + '<div class="install-visual-step"><span class="install-visual-ico">\u2795</span><span class="install-visual-cap">' + (LANG3 === 'es' ? 'Añadir a Inicio' : isEN ? 'Add to Home' : 'Aggiungi a Home') + '</span></div>'
                 + '<span class="install-visual-arrow">\u2192</span>'
-                + '<div class="install-visual-step"><span class="install-visual-ico">\u2705</span><span class="install-visual-cap">' + (isEN ? 'Add' : 'Aggiungi') + '</span></div>'
+                + '<div class="install-visual-step"><span class="install-visual-ico">\u2705</span><span class="install-visual-cap">' + (LANG3 === 'es' ? 'Añadir' : isEN ? 'Add' : 'Aggiungi') + '</span></div>'
                 + '</div>';
         }
 
@@ -9164,12 +9164,12 @@ async function fetchForecast(lat, lon, date, _retry) {
 
         var btnHtml = '';
         if (hasNativeInstall) {
-            btnHtml = '<button class="install-modal-btn install-modal-primary">' + (isEN ? 'Install Now' : 'Installa Ora') + '</button>';
+            btnHtml = '<button class="install-modal-btn install-modal-primary">' + (LANG3 === 'es' ? 'Instalar ahora' : isEN ? 'Install Now' : 'Installa Ora') + '</button>';
         } else {
             // v4.44: Copy link is always useful (share via WhatsApp, open in Safari, etc.)
-            btnHtml = '<button class="install-modal-btn install-modal-primary" data-action="copy-link">' + (isEN ? 'Copy Link' : 'Copia Link') + '</button>';
+            btnHtml = '<button class="install-modal-btn install-modal-primary" data-action="copy-link">' + (LANG3 === 'es' ? 'Copiar enlace' : isEN ? 'Copy Link' : 'Copia Link') + '</button>';
         }
-        btnHtml += '<button class="install-modal-btn install-modal-secondary">' + (isEN ? 'Later' : 'Dopo') + '</button>';
+        btnHtml += '<button class="install-modal-btn install-modal-secondary">' + (LANG3 === 'es' ? 'Más tarde' : isEN ? 'Later' : 'Dopo') + '</button>';
 
         modal.innerHTML = '<button class="install-modal-close">\u2715</button>'
             + '<div class="install-modal-icon">\uD83D\uDCF2</div>'
@@ -9210,8 +9210,8 @@ async function fetchForecast(lat, lon, date, _retry) {
                     });
                 } else if (primaryBtn.getAttribute('data-action') === 'copy-link') {
                     navigator.clipboard.writeText(window.location.href).then(function() {
-                        primaryBtn.textContent = isEN ? 'Copied!' : 'Copiato!';
-                        setTimeout(function() { primaryBtn.textContent = isEN ? 'Copy Link' : 'Copia Link'; }, 2000);
+                        primaryBtn.textContent = LANG3 === 'es' ? '¡Copiado!' : isEN ? 'Copied!' : 'Copiato!';
+                        setTimeout(function() { primaryBtn.textContent = LANG3 === 'es' ? 'Copiar enlace' : isEN ? 'Copy Link' : 'Copia Link'; }, 2000);
                     });
                 }
             });
@@ -9236,11 +9236,11 @@ async function fetchForecast(lat, lon, date, _retry) {
         var modal = document.createElement('div');
         modal.className = 'install-modal';
         modal.innerHTML = '<div class="install-modal-icon">\uD83D\uDD14</div>'
-            + '<h2 class="install-modal-title">' + (isEN ? 'Stay Updated' : 'Resta Aggiornato') + '</h2>'
-            + '<p class="install-modal-subtitle">' + (isEN ? 'Get notified about trip updates, new diary entries, and live position.' : 'Ricevi notifiche su aggiornamenti del viaggio, nuove pagine di diario e posizione live.') + '</p>'
+            + '<h2 class="install-modal-title">' + (LANG3 === 'es' ? 'Mantente al día' : isEN ? 'Stay Updated' : 'Resta Aggiornato') + '</h2>'
+            + '<p class="install-modal-subtitle">' + (LANG3 === 'es' ? 'Recibe notificaciones sobre actualizaciones del viaje, nuevas entradas del diario y posición en vivo.' : isEN ? 'Get notified about trip updates, new diary entries, and live position.' : 'Ricevi notifiche su aggiornamenti del viaggio, nuove pagine di diario e posizione live.') + '</p>'
             + '<div class="install-modal-actions">'
-            + '<button class="install-modal-btn install-modal-primary">' + (isEN ? 'Enable Notifications' : 'Attiva Notifiche') + '</button>'
-            + '<button class="install-modal-btn install-modal-secondary">' + (isEN ? 'No thanks' : 'No grazie') + '</button>'
+            + '<button class="install-modal-btn install-modal-primary">' + (LANG3 === 'es' ? 'Activar notificaciones' : isEN ? 'Enable Notifications' : 'Attiva Notifiche') + '</button>'
+            + '<button class="install-modal-btn install-modal-secondary">' + (LANG3 === 'es' ? 'No, gracias' : isEN ? 'No thanks' : 'No grazie') + '</button>'
             + '</div>';
         overlay.appendChild(modal);
         document.body.appendChild(overlay);
@@ -9282,7 +9282,7 @@ async function fetchForecast(lat, lon, date, _retry) {
         // If already installed, gently inform instead of showing install steps.
         var _std = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
         if (_std) {
-            if (window.showToast) showToast(isEN ? '✅ App already installed' : '✅ App già installata', 'success');
+            if (window.showToast) showToast(LANG3 === 'es' ? '✅ App ya instalada' : isEN ? '✅ App already installed' : '✅ App già installata', 'success');
             return;
         }
         // Remove any existing overlay first so it always reopens cleanly.
@@ -9471,15 +9471,15 @@ async function fetchForecast(lat, lon, date, _retry) {
     }
 
     function wmoToText(code) {
-        if (code === 0) return isEN ? 'Clear' : 'Sereno';
-        if (code <= 3) return isEN ? 'Partly cloudy' : 'Parz. nuvoloso';
-        if (code <= 48) return isEN ? 'Foggy' : 'Nebbia';
-        if (code <= 57) return isEN ? 'Drizzle' : 'Pioggerella';
-        if (code <= 67) return isEN ? 'Rain' : 'Pioggia';
-        if (code <= 77) return isEN ? 'Snow' : 'Neve';
-        if (code <= 82) return isEN ? 'Showers' : 'Acquazzoni';
-        if (code <= 86) return isEN ? 'Snow showers' : 'Neve';
-        return isEN ? 'Thunderstorm' : 'Temporale';
+        if (code === 0) return LANG3 === 'es' ? 'Despejado' : isEN ? 'Clear' : 'Sereno';
+        if (code <= 3) return LANG3 === 'es' ? 'Parcialmente nublado' : isEN ? 'Partly cloudy' : 'Parz. nuvoloso';
+        if (code <= 48) return LANG3 === 'es' ? 'Niebla' : isEN ? 'Foggy' : 'Nebbia';
+        if (code <= 57) return LANG3 === 'es' ? 'Llovizna' : isEN ? 'Drizzle' : 'Pioggerella';
+        if (code <= 67) return LANG3 === 'es' ? 'Lluvia' : isEN ? 'Rain' : 'Pioggia';
+        if (code <= 77) return LANG3 === 'es' ? 'Nieve' : isEN ? 'Snow' : 'Neve';
+        if (code <= 82) return LANG3 === 'es' ? 'Chubascos' : isEN ? 'Showers' : 'Acquazzoni';
+        if (code <= 86) return LANG3 === 'es' ? 'Chubascos de nieve' : isEN ? 'Snow showers' : 'Neve';
+        return LANG3 === 'es' ? 'Tormenta' : isEN ? 'Thunderstorm' : 'Temporale';
     }
 
     function formatHoursMinutes(totalMinutes) {
@@ -9545,14 +9545,14 @@ async function fetchForecast(lat, lon, date, _retry) {
             if (heroPreAvatar) heroPreAvatar.style.display = 'none';
             heroDuringTrip.style.display = '';
             // v3.74: Badge shows G/D + 1-indexed day number
-            var dayPrefix = isEN ? 'D' : 'G';
+            var dayPrefix = LANG3 === 'es' ? 'D' : isEN ? 'D' : 'G';
             if (heroTripDateDay) heroTripDateDay.textContent = dayPrefix + (dayIdx + 1);
             // v3.77: Show date inline next to badge
             var heroTripDateSub = document.getElementById('hero-trip-date-sub');
             if (heroTripDateSub) {
                 var _dateObj = new Date(now);
-                var _dOpts = isEN ? { day: 'numeric', month: 'short' } : { day: 'numeric', month: 'long' };
-                heroTripDateSub.textContent = _dateObj.toLocaleDateString(isEN ? 'en-GB' : 'it-IT', _dOpts);
+                var _dOpts = LANG3 === 'es' ? { day: 'numeric', month: 'short' } : isEN ? { day: 'numeric', month: 'short' } : { day: 'numeric', month: 'long' };
+                heroTripDateSub.textContent = _dateObj.toLocaleDateString(LANG3 === 'es' ? 'es-ES' : isEN ? 'en-GB' : 'it-IT', _dOpts);
             }
 
             // v1.99: Distance from home badge
@@ -9574,7 +9574,7 @@ async function fetchForecast(lat, lon, date, _retry) {
                             } else {
                                 // Has coords but no city yet — reverse geocode
                                 _reverseGeocode(cl.lat, cl.lng, function(city, country, flag) {
-                                    if (heroTripCity) heroTripCity.textContent = '📍 ' + (city || (isEN ? 'On the road' : 'In viaggio'));
+                                    if (heroTripCity) heroTripCity.textContent = '📍 ' + (city || (LANG3 === 'es' ? 'En ruta' : isEN ? 'On the road' : 'In viaggio'));
                                     if (heroTripCountry) heroTripCountry.textContent = (country || '') + ' ' + (flag || '');
                                 });
                             }
@@ -9643,7 +9643,7 @@ async function fetchForecast(lat, lon, date, _retry) {
                 var sunTimes = riseHH + ':' + riseMM + '–' + setHH + ':' + setMM;
 
                 // Update integrated hero weather row (planned destination)
-                var destLabel = (isEN ? '🎯 ' : '🎯 ') + cityName;
+                var destLabel = (LANG3 === 'es' ? '🎯 ' : isEN ? '🎯 ' : '🎯 ') + cityName;
                 if (heroWeatherLoc) heroWeatherLoc.textContent = destLabel;
                 if (heroWeatherIcon) heroWeatherIcon.textContent = wmoToEmoji(wCode);
                 if (heroWeatherTemp) heroWeatherTemp.textContent = tMax + '°/' + tMin + '°';
@@ -9730,7 +9730,7 @@ async function fetchForecast(lat, lon, date, _retry) {
     }
 
     function _showRoadDistance(km) {
-        heroTripDistanceText.textContent = '~' + km.toLocaleString(isEN ? 'en-US' : 'it-IT') + ' km ' + (isEN ? 'from home' : 'da casa') + ' \uD83C\uDFE0';
+        heroTripDistanceText.textContent = '~' + km.toLocaleString(LANG3 === 'es' ? 'es-ES' : isEN ? 'en-US' : 'it-IT') + ' km ' + (LANG3 === 'es' ? 'desde casa' : isEN ? 'from home' : 'da casa') + ' \uD83C\uDFE0';
         heroTripDistance.style.display = '';
     }
 
@@ -9772,7 +9772,7 @@ async function fetchForecast(lat, lon, date, _retry) {
         // v2.59: ETA estimate — uses live position + average speed if tracking is active
         // Falls back to static "Domani" label when not driving
         if (heroNextWhenBlock) {
-            var etaText = isEN ? 'Tomorrow' : 'Domani';
+            var etaText = LANG3 === 'es' ? 'Mañana' : isEN ? 'Tomorrow' : 'Domani';
             try {
                 var isTracking = window._isLiveTrackingActive && window._isLiveTrackingActive();
                 if (isTracking && window._lastKnownLat && window._lastKnownLng) {
@@ -9928,7 +9928,7 @@ window.injectAllWikiLinks = function() {
                     var enName = data.labelEn || country;
                     if (text.indexOf(country) !== -1 || text.indexOf(enName) !== -1) {
                         var url = isEN ? data.wikiEn : data.wiki;
-                        var label = isEN ? enName : country;
+                var label = LANG3 === 'es' ? (enName || country) : isEN ? enName : country;
                         h2.insertAdjacentHTML('beforeend', makeWikiIcon(url, label));
                     }
                 });
@@ -9986,7 +9986,7 @@ window.injectAllWikiLinks = function() {
                 var enName = data.labelEn || key;
                 if (text.indexOf(key) !== -1 || text.indexOf(enName) !== -1) {
                     var url = isEN ? data.wikiEn : data.wiki;
-                    var label = isEN ? (enName || key) : key;
+                    var label = LANG3 === 'es' ? (enName || key) : isEN ? (enName || key) : key;
                     el.insertAdjacentHTML('afterend', makeWikiIcon(url, label));
                     globalInjected[elId] = (globalInjected[elId] || 0) + 1;
                     matched = true;
@@ -10067,15 +10067,15 @@ window.injectAllWikiLinks = function() {
     if (user && ownerFlag) {
       authBtn.classList.add('logged-in');
       authBtn.textContent = user.displayName ? user.displayName.charAt(0).toUpperCase() : '✓';
-      authBtn.title = (isEN ? 'Logged in as ' : 'Connesso come ') + (user.displayName || user.email);
+      authBtn.title = (LANG3 === 'es' ? 'Conectado como ' : isEN ? 'Logged in as ' : 'Connesso come ') + (user.displayName || user.email);
     } else if (user) {
       authBtn.classList.add('logged-in');
       authBtn.textContent = '👤';
-      authBtn.title = (isEN ? 'Logged in (viewer): ' : 'Connesso (viewer): ') + user.email;
+      authBtn.title = (LANG3 === 'es' ? 'Conectado (viewer): ' : isEN ? 'Logged in (viewer): ' : 'Connesso (viewer): ') + user.email;
     } else {
       authBtn.classList.remove('logged-in');
       authBtn.textContent = '👤';
-      authBtn.title = isEN ? 'Sign in' : 'Accedi';
+      authBtn.title = LANG3 === 'es' ? 'Iniciar sesión' : isEN ? 'Sign in' : 'Accedi';
     }
   }
 
@@ -10085,13 +10085,13 @@ window.injectAllWikiLinks = function() {
 
   authBtn.addEventListener('click', function() {
     if (typeof firebase === 'undefined' || !firebase.auth) {
-      showToast(isEN ? 'Firebase not available' : 'Firebase non disponibile', 'error');
+      showToast(LANG3 === 'es' ? 'Firebase no disponible' : isEN ? 'Firebase not available' : 'Firebase non disponibile', 'error');
       return;
     }
     var user = firebase.auth().currentUser;
     if (user) {
       // Show logout option via custom modal
-      showConfirm((isEN ? 'Logged in as: ' : 'Connesso come: ') + (user.displayName || user.email) + '\n\n' + (isEN ? 'Sign out?' : 'Disconnettersi?'), function() {
+      showConfirm((LANG3 === 'es' ? 'Conectado como: ' : isEN ? 'Logged in as: ' : 'Connesso come: ') + (user.displayName || user.email) + '\n\n' + (LANG3 === 'es' ? '¿Cerrar sesión?' : isEN ? 'Sign out?' : 'Disconnettersi?'), function() {
         firebase.auth().signOut().then(function() {
           // Fix #2: Clean up all Firebase listeners on logout to prevent memory leaks & data exposure
           if (typeof window.detachFirebaseListeners === 'function') {
@@ -10101,14 +10101,14 @@ window.injectAllWikiLinks = function() {
             window.detachFirebaseListeners('admin');
             window.detachFirebaseListeners('home');
           }
-          showToast(isEN ? 'Signed out' : 'Disconnesso', 'info');
+          showToast(LANG3 === 'es' ? 'Desconectado' : isEN ? 'Signed out' : 'Disconnesso', 'info');
           setTimeout(function() { window.location.reload(); }, 500);
         });
       });
     } else {
       // Sign in with Google — unified method handles browser/PWA/standalone
       doGoogleSignIn(function(user) {
-        showToast((isEN ? 'Welcome, ' : 'Benvenuto, ') + user.displayName, 'success');
+        showToast((LANG3 === 'es' ? 'Bienvenido, ' : isEN ? 'Welcome, ' : 'Benvenuto, ') + user.displayName, 'success');
       });
     }
   });
@@ -10142,12 +10142,12 @@ window.injectAllWikiLinks = function() {
       if (user) {
         // Logged in → direct signOut (v3.82 fix: don't rely on hidden authBtn.click())
         firebase.auth().signOut().then(function() {
-          if (window.showToast) showToast(isEN ? 'Signed out' : 'Disconnesso', 'info');
+          if (window.showToast) showToast(LANG3 === 'es' ? 'Desconectado' : isEN ? 'Signed out' : 'Disconnesso', 'info');
         });
       } else {
         // Not logged in → call doGoogleSignIn directly (v3.62 fix: don't rely on hidden authBtn.click())
         doGoogleSignIn(function(u) {
-          if (window.showToast) window.showToast((isEN ? 'Welcome, ' : 'Benvenuto, ') + (u.displayName || u.email), 'success');
+          if (window.showToast) window.showToast((LANG3 === 'es' ? 'Bienvenido, ' : isEN ? 'Welcome, ' : 'Benvenuto, ') + (u.displayName || u.email), 'success');
         });
       }
     });
@@ -10255,10 +10255,10 @@ window.injectAllWikiLinks = function() {
   if (testPushBtn) {
     testPushBtn.addEventListener('click', function() {
       console.debug('[TestPush] clicked. isOwner=' + isOwner + ', db=' + !!db);
-      if (!isOwner) { showAlert(isEN ? 'Only owners can test notifications.' : 'Solo owner possono testare le notifiche.'); return; }
-      if (!db) { showAlert(isEN ? 'Firebase unavailable. Are you offline?' : 'Firebase non disponibile. Sei offline?'); return; }
+      if (!isOwner) { showAlert(LANG3 === 'es' ? 'Solo los propietarios pueden probar las notificaciones.' : isEN ? 'Only owners can test notifications.' : 'Solo owner possono testare le notifiche.'); return; }
+      if (!db) { showAlert(LANG3 === 'es' ? 'Firebase no disponible. ¿Estás sin conexión?' : isEN ? 'Firebase unavailable. Are you offline?' : 'Firebase non disponibile. Sei offline?'); return; }
       testPushBtn.disabled = true;
-      testPushBtn.textContent = isEN ? '⏳ Sending...' : '⏳ Invio...';
+      testPushBtn.textContent = LANG3 === 'es' ? '⏳ Enviando...' : isEN ? '⏳ Sending...' : '⏳ Invio...';
       var now = new Date();
       var testNotif = {
         type: 'test_push',
@@ -10272,14 +10272,14 @@ window.injectAllWikiLinks = function() {
         source: 'manual_test'
       };
       db.ref('trips/' + FAMILY_ID + '/notifications/queue').push(testNotif).then(function() {
-        testPushBtn.textContent = isEN ? '✅ Sent!' : '✅ Inviata!';
+        testPushBtn.textContent = LANG3 === 'es' ? '✅ Enviado!' : isEN ? '✅ Sent!' : '✅ Inviata!';
         testPushBtn.style.background = '#27ae60';
-        if (window.showToast) showToast(isEN ? '✅ Test notification sent to Firebase queue' : '✅ Notifica di test inviata alla coda Firebase', 'success');
+        if (window.showToast) showToast(LANG3 === 'es' ? '✅ Notificación de prueba enviada a la cola de Firebase' : isEN ? '✅ Test notification sent to Firebase queue' : '✅ Notifica di test inviata alla coda Firebase', 'success');
         setTimeout(function() { testPushBtn.textContent = '🔔 Test Push'; testPushBtn.style.background = ''; testPushBtn.disabled = false; }, 3000);
       }).catch(function(err) {
-        testPushBtn.textContent = isEN ? '❌ Error' : '❌ Errore';
+        testPushBtn.textContent = LANG3 === 'es' ? '❌ Error' : isEN ? '❌ Error' : '❌ Errore';
         testPushBtn.style.background = '#e74c3c';
-        showAlert((isEN ? 'Send error: ' : 'Errore invio: ') + err.message);
+        showAlert((LANG3 === 'es' ? 'Error al enviar: ' : isEN ? 'Send error: ' : 'Errore invio: ') + err.message);
         setTimeout(function() { testPushBtn.textContent = '🔔 Test Push'; testPushBtn.style.background = ''; testPushBtn.disabled = false; }, 3000);
       });
     });
@@ -10359,25 +10359,25 @@ window.injectAllWikiLinks = function() {
   // --- #2: Special milestones ---
   if (diffToStart === 7) {
     addNotif('milestone-7', '\ud83c\udf89',
-      isEN ? '<strong>One week to go!</strong> Time to finalize your packing list.' : '<strong>Manca una settimana!</strong> \u00c8 ora di finalizzare lo zaino.',
+      LANG3 === 'es' ? '<strong>¡Falta una semana!</strong> Es hora de ultimar la lista de equipaje.' : isEN ? '<strong>One week to go!</strong> Time to finalize your packing list.' : '<strong>Manca una settimana!</strong> \u00c8 ora di finalizzare lo zaino.',
       'highlight',
-      isEN ? 'Open Backpack' : 'Apri Zaino',
+      LANG3 === 'es' ? 'Abrir mochila' : isEN ? 'Open Backpack' : 'Apri Zaino',
       function() { window.switchTabFromHome('zaino'); }
     );
   }
   if (diffToStart === 1) {
     addNotif('milestone-1', '\u2708\ufe0f',
-      isEN ? '<strong>Tomorrow you leave!</strong> Check your backpack one last time.' : '<strong>Domani si parte!</strong> Controlla lo zaino un\'ultima volta.',
+      LANG3 === 'es' ? '<strong>¡Mañana te vas!</strong> Revisa la mochila por última vez.' : isEN ? '<strong>Tomorrow you leave!</strong> Check your backpack one last time.' : '<strong>Domani si parte!</strong> Controlla lo zaino un\'ultima volta.',
       'highlight',
-      isEN ? 'Open Backpack' : 'Apri Zaino',
+      LANG3 === 'es' ? 'Abrir mochila' : isEN ? 'Open Backpack' : 'Apri Zaino',
       function() { window.switchTabFromHome('zaino'); }
     );
   }
   if (diffToStart === 0) {
     addNotif('milestone-start', '\ud83c\udf8a',
-      isEN ? '<strong>Today is the day! The adventure begins!</strong> \ud83d\uddfa\ufe0f' : '<strong>Oggi \u00e8 il grande giorno! L\'avventura comincia!</strong> \ud83d\uddfa\ufe0f',
+      LANG3 === 'es' ? '<strong>¡Hoy es el gran día! ¡La aventura comienza!</strong> \\ud83d\\uddfa\\ufe0f' : isEN ? '<strong>Today is the day! The adventure begins!</strong> \ud83d\uddfa\ufe0f' : '<strong>Oggi \u00e8 il grande giorno! L\'avventura comincia!</strong> \ud83d\uddfa\ufe0f',
       'highlight',
-      isEN ? 'View Itinerary' : 'Vedi Itinerario',
+      LANG3 === 'es' ? 'Ver itinerario' : isEN ? 'View Itinerary' : 'Vedi Itinerario',
       function() { window.switchTabFromHome('giorni'); }
     );
   }
@@ -10390,7 +10390,7 @@ window.injectAllWikiLinks = function() {
         ? 'Today\'s drive: <strong>' + dayData.km + ' km</strong> (' + (dayData.oreEn || dayData.ore) + ')'
         : 'Guida di oggi: <strong>' + dayData.km + ' km</strong> (' + dayData.ore + ')';
       addNotif('km-' + tripDay, '\ud83d\ude97', kmText, 'info',
-        isEN ? 'View day' : 'Vedi giorno',
+        LANG3 === 'es' ? 'Ver día' : isEN ? 'View day' : 'Vedi giorno',
         function() {
           window.switchTabFromHome('giorni');
           setTimeout(function() {
@@ -10408,9 +10408,9 @@ window.injectAllWikiLinks = function() {
   // --- #4: Post-trip ---
   if (tripDay >= TRIP_DAYS) {
     addNotif('post-trip', '\ud83c\udfe0',
-      isEN ? '<strong>The trip is over!</strong> What an amazing adventure. Check your memories!' : '<strong>Il viaggio \u00e8 finito!</strong> Che avventura incredibile. Rivedi i ricordi!',
+      LANG3 === 'es' ? '<strong>¡El viaje ha terminado!</strong> Qué aventura tan increíble. Revisa tus recuerdos!' : isEN ? '<strong>The trip is over!</strong> What an amazing adventure. Check your memories!' : '<strong>Il viaggio \u00e8 finito!</strong> Che avventura incredibile. Rivedi i ricordi!',
       'info',
-      isEN ? 'View Diary' : 'Vedi Diario',
+      LANG3 === 'es' ? 'Ver diario' : isEN ? 'View Diary' : 'Vedi Diario',
       function() { window.switchTabFromHome('diario'); }
     );
   }
@@ -10425,7 +10425,7 @@ window.injectAllWikiLinks = function() {
         ? 'You have <strong>' + unchecked + ' item' + (unchecked > 1 ? 's' : '') + '</strong> unchecked in your backpack!'
         : 'Hai <strong>' + unchecked + ' oggett' + (unchecked > 1 ? 'i' : 'o') + '</strong> non spuntat' + (unchecked > 1 ? 'i' : 'o') + ' nello zaino!';
       addNotif('zaino-' + todayStr, '\ud83c\udf92', zainoText, 'warning',
-        isEN ? 'Open Backpack' : 'Apri Zaino',
+        LANG3 === 'es' ? 'Abrir mochila' : isEN ? 'Open Backpack' : 'Apri Zaino',
         function() { window.switchTabFromHome('zaino'); },
         true
       );
@@ -10444,7 +10444,7 @@ window.injectAllWikiLinks = function() {
     });
     if (uncheckedPiano.length > 0 && (diffToStart === 7 || diffToStart === 3) && window.queuePushNotification) {
       queuePushNotification('checklist_reminder', {
-        title: isEN ? '\ud83d\udccb ' + uncheckedPiano.length + ' tasks to complete!' : '\ud83d\udccb ' + uncheckedPiano.length + ' attivit\u00e0 da completare!',
+        title: LANG3 === 'es' ? '📋 ' + uncheckedPiano.length + ' tareas por completar!' : isEN ? '📋 ' + uncheckedPiano.length + ' tasks to complete!' : '📋 ' + uncheckedPiano.length + ' attività da completare!',
         body: uncheckedPiano.slice(0, 3).join(', ') + (uncheckedPiano.length > 3 ? '...' : ''),
         target: 'owner',
         url: './#tab-piano',
@@ -10466,7 +10466,7 @@ window.injectAllWikiLinks = function() {
         ? '<strong>Tomorrow:</strong> ' + nextRoute + (nextKm ? ' (' + nextKm + ', ' + nextOre + ')' : '')
         : '<strong>Domani:</strong> ' + nextRoute + (nextKm ? ' (' + nextKm + ', ' + nextOre + ')' : '');
       addNotif('next-stage-' + todayStr, '\ud83d\udee3\ufe0f', nextText, 'info',
-        isEN ? 'View day' : 'Vedi giorno',
+        LANG3 === 'es' ? 'Ver día' : isEN ? 'View day' : 'Vedi giorno',
         function() {
           window.switchTabFromHome('giorni');
           setTimeout(function() {
@@ -10519,7 +10519,7 @@ window.injectAllWikiLinks = function() {
       return true;
     });
     if (visibleNotifs.length === 0) {
-      drawerList.innerHTML = '<div style="text-align:center;padding:32px 16px;color:var(--text-muted);font-size:14px;">' + (isEN ? 'No notifications' : 'Nessuna notifica') + '</div>';
+      drawerList.innerHTML = '<div style="text-align:center;padding:32px 16px;color:var(--text-muted);font-size:14px;">' + (LANG3 === 'es' ? 'Sin notificaciones' : isEN ? 'No notifications' : 'Nessuna notifica') + '</div>';
       return;
     }
     visibleNotifs.forEach(function(n) {
@@ -10541,22 +10541,22 @@ window.injectAllWikiLinks = function() {
         var nDate = new Date(n.createdAt);
         var nDateStr = window.localDateStr(nDate); // v2.96: LOCAL (match todayStr local var)
         if (nDateStr === todayStr) {
-          timeStr = (isEN ? 'Today ' : 'Oggi ') + nDate.toLocaleTimeString(isEN ? 'en-GB' : 'it-IT', { hour: '2-digit', minute: '2-digit' });
+          timeStr = (LANG3 === 'es' ? 'Hoy ' : isEN ? 'Today ' : 'Oggi ') + nDate.toLocaleTimeString(LANG3 === 'es' ? 'es-ES' : isEN ? 'en-GB' : 'it-IT', { hour: '2-digit', minute: '2-digit' });
         } else {
-          timeStr = nDate.toLocaleDateString(isEN ? 'en-GB' : 'it-IT', { day: 'numeric', month: 'short' }) + ' ' + nDate.toLocaleTimeString(isEN ? 'en-GB' : 'it-IT', { hour: '2-digit', minute: '2-digit' });
+          timeStr = nDate.toLocaleDateString(LANG3 === 'es' ? 'es-ES' : isEN ? 'en-GB' : 'it-IT', { day: 'numeric', month: 'short' }) + ' ' + nDate.toLocaleTimeString(LANG3 === 'es' ? 'es-ES' : isEN ? 'en-GB' : 'it-IT', { hour: '2-digit', minute: '2-digit' });
         }
       }
       html += '<span class="notif-item-time">' + timeStr + '</span>';
       if (n.actionLabel && n.action) {
         html += '<a class="notif-item-link" data-action="go">' + n.actionLabel + ' \u2192</a>';
       } else if (n.url && n.url !== './') {
-        var linkLabel = isEN ? 'Open' : 'Apri';
+        var linkLabel = LANG3 === 'es' ? 'Abrir' : isEN ? 'Open' : 'Apri';
         // SECURITY: sanitize URL — only allow relative paths or same-origin URLs
         var safeNotifUrl = (n.url && (/^\.?\//.test(n.url) || /^\.\.?\//.test(n.url) || /^#/.test(n.url) || n.url.indexOf(location.origin) === 0)) ? escapeHtml(n.url) : './';
         html += '<a class="notif-item-link" data-action="url" data-url="' + safeNotifUrl + '">' + linkLabel + ' \u2192</a>';
       }
       html += '</div>';
-      html += '<button class="notif-item-dismiss" aria-label="' + (isEN ? 'Dismiss' : 'Chiudi') + '">&times;</button>';
+      html += '<button class="notif-item-dismiss" aria-label="' + (LANG3 === 'es' ? 'Cerrar' : isEN ? 'Dismiss' : 'Chiudi') + '">&times;</button>';
       item.innerHTML = html;
 
       // Bind action link
@@ -10827,7 +10827,7 @@ window.injectAllWikiLinks = function() {
     tip.id = 'notif-blocked-tip';
     tip.style.cssText = 'background:var(--bg-alt, rgba(214,158,46,0.15));border:1px solid var(--warning, #d69e2e);border-radius:10px;padding:12px 14px;margin:12px;font-size:12px;line-height:1.5;color:var(--warning, #d69e2e);';
     tip.innerHTML = '<div style="margin-bottom:6px;">⚠️ ' + helpText + '</div>' +
-      '<div style="font-size:11px;opacity:0.8;">' + (isEN ? 'This way you\'ll only receive notifications from Quo Vadis, nothing else.' : 'Così riceverai notifiche solo da Quo Vadis, nient\'altro.') + '</div>';
+      '<div style="font-size:11px;opacity:0.8;">' + (LANG3 === 'es' ? 'Así solo recibirás notificaciones de Quo Vadis, nada más.' : isEN ? 'This way you\'ll only receive notifications from Quo Vadis, nothing else.' : 'Così riceverai notifiche solo da Quo Vadis, nient\'altro.') + '</div>';
     var container = document.getElementById('notif-container') || document.getElementById('toastContainer');
     if (container) container.prepend(tip);
     else document.body.appendChild(tip);
@@ -10978,8 +10978,8 @@ window.injectAllWikiLinks = function() {
     banner.className = 'notif-banner notif-info';
     banner.style.cssText = 'cursor:pointer;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:9999;width:88%;max-width:360px;padding:20px 24px;border-radius:16px;background:var(--bg-card,#fff);box-shadow:0 8px 32px rgba(0,0,0,0.25);display:flex;align-items:center;gap:12px;font-size:15px;animation:slideIn 0.3s ease;';
     banner.innerHTML = '<span class="notif-icon">🔔</span>' +
-      '<span class="notif-text">' + (isEN ? 'Get trip updates?' : 'Vuoi ricevere aggiornamenti sul viaggio?') + '</span>' +
-      '<button class="notif-yes" style="background:var(--accent);color:#fff;border:none;border-radius:6px;padding:4px 12px;font-weight:600;">' + (isEN ? 'Yes' : 'S\u00ec') + '</button>' +
+      '<span class="notif-text">' + (LANG3 === 'es' ? '¿Recibir actualizaciones del viaje?' : isEN ? 'Get trip updates?' : 'Vuoi ricevere aggiornamenti sul viaggio?') + '</span>' +
+      '<button class="notif-yes" style="background:var(--accent);color:#fff;border:none;border-radius:6px;padding:4px 12px;font-weight:600;">' + (LANG3 === 'es' ? 'Sí' : isEN ? 'Yes' : 'S\u00ec') + '</button>' +
       '<button class="notif-dismiss" style="background:none;border:none;color:var(--text-light);font-size:18px;padding:4px 8px;cursor:pointer;opacity:0.6;">✕</button>';
     banner.querySelector('.notif-yes').addEventListener('click', function(e) {
       e.stopPropagation();
@@ -11029,19 +11029,19 @@ window.injectAllWikiLinks = function() {
     if (perm === 'granted') {
       text = 'ON'; color = '#4caf50';
     } else if (perm === 'denied') {
-      text = isEN ? 'Blocked' : 'Bloccate'; color = '#e53935';
+      text = LANG3 === 'es' ? 'Bloqueado' : isEN ? 'Blocked' : 'Bloccate'; color = '#e53935';
     } else if (perm === 'default') {
       text = 'OFF'; color = 'var(--text-light)';
     } else {
-      text = isEN ? 'N/A' : 'N/D'; color = 'var(--text-light)';
+      text = LANG3 === 'es' ? 'N/A' : isEN ? 'N/A' : 'N/D'; color = 'var(--text-light)';
     }
     // Update sidebar status
     if (notifStatusEl) { notifStatusEl.textContent = text; notifStatusEl.style.color = color; }
     // Update bottom sheet status
     if (altroNotifStatus) {
-      var subText = perm === 'granted' ? (isEN ? 'Notifications active' : 'Notifiche attive')
-        : perm === 'denied' ? (isEN ? 'Blocked by browser' : 'Bloccate dal browser')
-        : (isEN ? 'Tap to enable' : 'Tocca per attivare');
+      var subText = perm === 'granted' ? (LANG3 === 'es' ? 'Notificaciones activas' : isEN ? 'Notifications active' : 'Notifiche attive')
+        : perm === 'denied' ? (LANG3 === 'es' ? 'Bloqueado por el navegador' : isEN ? 'Blocked by browser' : 'Bloccate dal browser')
+        : (LANG3 === 'es' ? 'Toca para activar' : isEN ? 'Tap to enable' : 'Tocca per attivare');
       altroNotifStatus.textContent = subText;
     }
   }
@@ -11158,19 +11158,19 @@ window.injectAllWikiLinks = function() {
     if (!notifSettingsPanel) return;
     var perm = typeof Notification !== 'undefined' ? Notification.permission : 'unsupported';
     if (perm === 'granted') {
-      notifSettingsToggle.textContent = isEN ? '\ud83d\udd15 Disable notifications' : '\ud83d\udd15 Disattiva notifiche';
+      notifSettingsToggle.textContent = LANG3 === 'es' ? '\\ud83d\\udd15 Desactivar notificaciones' : isEN ? '\ud83d\udd15 Disable notifications' : '\ud83d\udd15 Disattiva notifiche';
       notifSettingsToggle.classList.add('active');
-      notifSettingsStatusEl.textContent = isEN ? '\u2705 Notifications active' : '\u2705 Notifiche attive';
+      notifSettingsStatusEl.textContent = LANG3 === 'es' ? '\\u2705 Notificaciones activas' : isEN ? '\u2705 Notifications active' : '\u2705 Notifiche attive';
       notifSettingsStatusEl.style.color = '#4caf50';
     } else if (perm === 'denied') {
-      notifSettingsToggle.textContent = isEN ? '\ud83d\udd14 Enable notifications' : '\ud83d\udd14 Attiva notifiche';
+      notifSettingsToggle.textContent = LANG3 === 'es' ? '\\ud83d\\udd14 Activar notificaciones' : isEN ? '\ud83d\udd14 Enable notifications' : '\ud83d\udd14 Attiva notifiche';
       notifSettingsToggle.classList.remove('active');
-      notifSettingsStatusEl.textContent = isEN ? '\ud83d\udeab Blocked by browser' : '\ud83d\udeab Bloccate dal browser';
+      notifSettingsStatusEl.textContent = LANG3 === 'es' ? '\\ud83d\\udeab Bloqueado por el navegador' : isEN ? '\ud83d\udeab Blocked by browser' : '\ud83d\udeab Bloccate dal browser';
       notifSettingsStatusEl.style.color = '#e53935';
     } else {
-      notifSettingsToggle.textContent = isEN ? '\ud83d\udd14 Enable notifications' : '\ud83d\udd14 Attiva notifiche';
+      notifSettingsToggle.textContent = LANG3 === 'es' ? '\\ud83d\\udd14 Activar notificaciones' : isEN ? '\ud83d\udd14 Enable notifications' : '\ud83d\udd14 Attiva notifiche';
       notifSettingsToggle.classList.remove('active');
-      notifSettingsStatusEl.textContent = isEN ? 'Tap to enable push notifications' : 'Tocca per attivare le notifiche push';
+      notifSettingsStatusEl.textContent = LANG3 === 'es' ? 'Toca para activar las notificaciones push' : isEN ? 'Tap to enable push notifications' : 'Tocca per attivare le notifiche push';
       notifSettingsStatusEl.style.color = '';
     }
   }
@@ -11188,15 +11188,15 @@ window.injectAllWikiLinks = function() {
     // 1. Permission
     checks.push(new Promise(function(resolve) {
       if (!('Notification' in window)) {
-        results.push('❌ ' + (isEN ? 'Notifications not supported' : 'Notifiche non supportate'));
+        results.push('❌ ' + (LANG3 === 'es' ? 'Notificaciones no compatibles' : isEN ? 'Notifications not supported' : 'Notifiche non supportate'));
         issues++;
       } else if (Notification.permission === 'granted') {
-        results.push('✅ ' + (isEN ? 'Permission granted' : 'Permesso concesso'));
+        results.push('✅ ' + (LANG3 === 'es' ? 'Permiso concedido' : isEN ? 'Permission granted' : 'Permesso concesso'));
       } else if (Notification.permission === 'denied') {
-        results.push('❌ ' + (isEN ? 'Blocked — enable in phone Settings' : 'Bloccate — attiva nelle Impostazioni del telefono'));
+        results.push('❌ ' + (LANG3 === 'es' ? 'Bloqueado — activa en Ajustes del teléfono' : isEN ? 'Blocked — enable in phone Settings' : 'Bloccate — attiva nelle Impostazioni del telefono'));
         issues++;
       } else {
-        results.push('⚠️ ' + (isEN ? 'Not yet enabled — tap the button below' : 'Non ancora attivate — premi il bottone qui sotto'));
+        results.push('⚠️ ' + (LANG3 === 'es' ? 'Aún no activado — toca el botón de abajo' : isEN ? 'Not yet enabled — tap the button below' : 'Non ancora attivate — premi il bottone qui sotto'));
         issues++;
       }
       resolve();
@@ -11206,9 +11206,9 @@ window.injectAllWikiLinks = function() {
     checks.push(new Promise(function(resolve) {
       var token = localStorage.getItem('viaggio2026_fcm_token');
       if (token) {
-        results.push('✅ ' + (isEN ? 'Device registered' : 'Dispositivo registrato'));
+        results.push('✅ ' + (LANG3 === 'es' ? 'Dispositivo registrado' : isEN ? 'Device registered' : 'Dispositivo registrato'));
       } else {
-        results.push('❌ ' + (isEN ? 'Device not registered — enable notifications first' : 'Dispositivo non registrato — attiva prima le notifiche'));
+        results.push('❌ ' + (LANG3 === 'es' ? 'Dispositivo no registrado — activa las notificaciones primero' : isEN ? 'Device not registered — enable notifications first' : 'Dispositivo non registrato — attiva prima le notifiche'));
         issues++;
       }
       resolve();
@@ -11218,9 +11218,9 @@ window.injectAllWikiLinks = function() {
     checks.push(new Promise(function(resolve) {
       var isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
       if (isStandalone) {
-        results.push('✅ ' + (isEN ? 'App installed' : 'App installata'));
+        results.push('✅ ' + (LANG3 === 'es' ? 'App instalada' : isEN ? 'App installed' : 'App installata'));
       } else {
-        results.push('⚠️ ' + (isEN ? 'App not installed — install for better background notifications' : 'App non installata — installa per notifiche migliori in background'));
+        results.push('⚠️ ' + (LANG3 === 'es' ? 'App no instalada — instala para mejores notificaciones en segundo plano' : isEN ? 'App not installed — install for better background notifications' : 'App non installata — installa per notifiche migliori in background'));
       }
       resolve();
     }));
@@ -11230,15 +11230,15 @@ window.injectAllWikiLinks = function() {
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.getRegistration().then(function(reg) {
           if (reg && reg.active) {
-            results.push('✅ ' + (isEN ? 'Background service active' : 'Servizio background attivo'));
+            results.push('✅ ' + (LANG3 === 'es' ? 'Servicio en segundo plano activo' : isEN ? 'Background service active' : 'Servizio background attivo'));
           } else {
-            results.push('❌ ' + (isEN ? 'Background service not active' : 'Servizio background non attivo'));
+            results.push('❌ ' + (LANG3 === 'es' ? 'Servicio en segundo plano no activo' : isEN ? 'Background service not active' : 'Servizio background non attivo'));
             issues++;
           }
           resolve();
         }).catch(function() { resolve(); });
       } else {
-        results.push('❌ ' + (isEN ? 'Not supported by browser' : 'Non supportato dal browser'));
+        results.push('❌ ' + (LANG3 === 'es' ? 'No compatible con el navegador' : isEN ? 'Not supported by browser' : 'Non supportato dal browser'));
         issues++;
         resolve();
       }
@@ -11247,11 +11247,11 @@ window.injectAllWikiLinks = function() {
     Promise.all(checks).then(function() {
       if (issues === 0) {
         icon.textContent = '🟢';
-        title.textContent = isEN ? 'Notifications working' : 'Notifiche funzionanti';
+        title.textContent = LANG3 === 'es' ? 'Notificaciones funcionando' : isEN ? 'Notifications working' : 'Notifiche funzionanti';
         title.style.color = '#38a169';
       } else {
         icon.textContent = '🔴';
-        title.textContent = isEN ? issues + ' issue' + (issues > 1 ? 's' : '') + ' found' : issues + (issues > 1 ? ' problemi trovati' : ' problema trovato');
+        title.textContent = LANG3 === 'es' ? issues + (issues > 1 ? ' problemas encontrados' : ' problema encontrado') : isEN ? issues + ' issue' + (issues > 1 ? 's' : '') + ' found' : issues + (issues > 1 ? ' problemi trovati' : ' problema trovato');
         title.style.color = '#e53e3e';
       }
       list.innerHTML = results.join('<br>');
@@ -11346,31 +11346,31 @@ window.injectAllWikiLinks = function() {
     overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;padding:16px;';
     overlay.innerHTML =
       '<div class="recap-widget" style="background:var(--bg-card);border-radius:16px;max-width:420px;width:100%;max-height:90vh;overflow-y:auto;padding:24px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">' +
-        '<h3 style="margin:0 0 12px;font-size:18px;">' + (isEN ? '\ud83d\udcdd Daily Recap' : '\ud83d\udcdd Riepilogo del giorno') + '</h3>' +
+        '<h3 style="margin:0 0 12px;font-size:18px;">' + (LANG3 === 'es' ? '\\ud83d\\udcdd Resumen del día' : isEN ? '\ud83d\udcdd Daily Recap' : '\ud83d\udcdd Riepilogo del giorno') + '</h3>' +
         '<div class="recap-stats" style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px;">' +
           '<span style="background:var(--bg-alt);padding:6px 12px;border-radius:8px;font-size:14px;">\ud83d\ude90 ' + kmToday.toFixed(1) + ' km</span>' +
           (timeToday ? '<span style="background:var(--bg-alt);padding:6px 12px;border-radius:8px;font-size:14px;">\u23f1\ufe0f ' + timeToday + '</span>' : '') +
-          '<span style="background:var(--bg-alt);padding:6px 12px;border-radius:8px;font-size:14px;">\ud83d\udcc5 ' + (isEN ? 'Day ' : 'G') + Math.max(1, tripDay + 1) + '</span>' +
+          '<span style="background:var(--bg-alt);padding:6px 12px;border-radius:8px;font-size:14px;">\ud83d\udcc5 ' + (LANG3 === 'es' ? 'D' : isEN ? 'Day ' : 'G') + Math.max(1, tripDay + 1) + '</span>' +
         '</div>' +
         // Text input
-        '<label style="font-size:13px;font-weight:600;display:block;margin-bottom:4px;">' + (isEN ? 'How was today?' : 'Com\u2019\u00e8 andata oggi?') + '</label>' +
-        '<textarea id="recap-text" rows="3" style="width:100%;border:1px solid var(--border);border-radius:8px;padding:10px;font-size:14px;resize:vertical;background:var(--bg-alt);color:var(--text);" placeholder="' + (isEN ? 'Write something or record audio...' : 'Scrivi qualcosa o registra audio...') + '"></textarea>' +
+        '<label style="font-size:13px;font-weight:600;display:block;margin-bottom:4px;">' + (LANG3 === 'es' ? '¿Cómo fue hoy?' : isEN ? 'How was today?' : 'Com\u2019\u00e8 andata oggi?') + '</label>' +
+        '<textarea id="recap-text" rows="3" style="width:100%;border:1px solid var(--border);border-radius:8px;padding:10px;font-size:14px;resize:vertical;background:var(--bg-alt);color:var(--text);" placeholder="' + (LANG3 === 'es' ? 'Escribe algo o graba audio...' : isEN ? 'Write something or record audio...' : 'Scrivi qualcosa o registra audio...') + '"></textarea>' +
         // Audio record button
         '<div style="display:flex;gap:8px;margin:10px 0;">' +
-          '<button id="recap-audio-btn" style="flex:1;padding:10px;border:1px solid var(--border);border-radius:8px;background:var(--bg-alt);cursor:pointer;font-size:14px;">\ud83c\udfa4 ' + (isEN ? 'Record audio' : 'Registra audio') + '</button>' +
-          '<button id="recap-photo-btn" style="flex:1;padding:10px;border:1px solid var(--border);border-radius:8px;background:var(--bg-alt);cursor:pointer;font-size:14px;">\ud83d\udcf7 ' + (isEN ? 'Add photos' : 'Aggiungi foto') + '</button>' +
+          '<button id="recap-audio-btn" style="flex:1;padding:10px;border:1px solid var(--border);border-radius:8px;background:var(--bg-alt);cursor:pointer;font-size:14px;">\ud83c\udfa4 ' + (LANG3 === 'es' ? 'Grabar audio' : isEN ? 'Record audio' : 'Registra audio') + '</button>' +
+          '<button id="recap-photo-btn" style="flex:1;padding:10px;border:1px solid var(--border);border-radius:8px;background:var(--bg-alt);cursor:pointer;font-size:14px;">\ud83d\udcf7 ' + (LANG3 === 'es' ? 'Añadir fotos' : isEN ? 'Add photos' : 'Aggiungi foto') + '</button>' +
         '</div>' +
         // Audio player (hidden until recording)
         '<div id="recap-audio-container" style="display:none;margin:8px 0;"></div>' +
         // Photo preview
         '<div id="recap-photo-preview" style="display:flex;gap:6px;flex-wrap:wrap;margin:8px 0;"></div>' +
         // Highlight
-        '<label style="font-size:13px;font-weight:600;display:block;margin:8px 0 4px;">' + (isEN ? '\u2b50 Highlight of the day' : '\u2b50 Momento top') + '</label>' +
-        '<input id="recap-highlight" type="text" style="width:100%;border:1px solid var(--border);border-radius:8px;padding:10px;font-size:14px;background:var(--bg-alt);color:var(--text);" placeholder="' + (isEN ? 'Best moment...' : 'Il momento migliore...') + '">' +
+        '<label style="font-size:13px;font-weight:600;display:block;margin:8px 0 4px;">' + (LANG3 === 'es' ? '\\u2b50 Momento destacado' : isEN ? '\u2b50 Highlight of the day' : '\u2b50 Momento top') + '</label>' +
+        '<input id="recap-highlight" type="text" style="width:100%;border:1px solid var(--border);border-radius:8px;padding:10px;font-size:14px;background:var(--bg-alt);color:var(--text);" placeholder="' + (LANG3 === 'es' ? 'El mejor momento...' : isEN ? 'Best moment...' : 'Il momento migliore...') + '">' +
         // Actions
         '<div style="display:flex;gap:10px;margin-top:16px;">' +
-          '<button id="recap-skip" style="flex:1;padding:12px;border:1px solid var(--border);border-radius:8px;background:var(--bg-alt);cursor:pointer;font-size:14px;">' + (isEN ? 'Later' : 'Dopo') + '</button>' +
-          '<button id="recap-save" style="flex:2;padding:12px;border:none;border-radius:8px;background:var(--accent);color:#fff;cursor:pointer;font-size:14px;font-weight:600;">' + (isEN ? '\u2705 Save & Close' : '\u2705 Salva e chiudi') + '</button>' +
+          '<button id="recap-skip" style="flex:1;padding:12px;border:1px solid var(--border);border-radius:8px;background:var(--bg-alt);cursor:pointer;font-size:14px;">' + (LANG3 === 'es' ? 'Más tarde' : isEN ? 'Later' : 'Dopo') + '</button>' +
+          '<button id="recap-save" style="flex:2;padding:12px;border:none;border-radius:8px;background:var(--accent);color:#fff;cursor:pointer;font-size:14px;font-weight:600;">' + (LANG3 === 'es' ? '\\u2705 Guardar & Cerrar' : isEN ? '\u2705 Save & Close' : '\u2705 Salva e chiudi') + '</button>' +
         '</div>' +
       '</div>';
 
@@ -11417,14 +11417,14 @@ window.injectAllWikiLinks = function() {
           _mediaRecorder.stop();
         }
         isRecording = false;
-        audioBtn.textContent = '\ud83c\udfa4 ' + (isEN ? 'Record audio' : 'Registra audio');
+        audioBtn.textContent = '\ud83c\udfa4 ' + (LANG3 === 'es' ? 'Grabar audio' : isEN ? 'Record audio' : 'Registra audio');
         audioBtn.style.background = 'var(--bg-alt)';
         return;
       }
 
       // Start recording
       if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        showToast(isEN ? 'Microphone not supported' : 'Microfono non supportato', 'error');
+        showToast(LANG3 === 'es' ? 'Micrófono no compatible' : isEN ? 'Microphone not supported' : 'Microfono non supportato', 'error');
         return;
       }
       navigator.mediaDevices.getUserMedia({ audio: true }).then(function(stream) {
@@ -11441,7 +11441,7 @@ window.injectAllWikiLinks = function() {
           var container = document.getElementById('recap-audio-container');
           container.style.display = '';
           container.innerHTML = '<audio controls src="' + audioUrl + '" style="width:100%;height:40px;"></audio>' +
-            '<button id="recap-audio-del" style="font-size:12px;margin-top:4px;color:var(--danger);background:none;border:none;cursor:pointer;">' + (isEN ? 'Delete recording' : 'Elimina registrazione') + '</button>';
+            '<button id="recap-audio-del" style="font-size:12px;margin-top:4px;color:var(--danger);background:none;border:none;cursor:pointer;">' + (LANG3 === 'es' ? 'Eliminar grabación' : isEN ? 'Delete recording' : 'Elimina registrazione') + '</button>';
           container.querySelector('#recap-audio-del').addEventListener('click', function() {
             _recapAudioBlob = null;
             container.style.display = 'none';
@@ -11450,12 +11450,12 @@ window.injectAllWikiLinks = function() {
         };
         _mediaRecorder.start();
         isRecording = true;
-        audioBtn.textContent = '\u23f9\ufe0f ' + (isEN ? 'Stop' : 'Stop');
+        audioBtn.textContent = '\u23f9\ufe0f ' + (LANG3 === 'es' ? 'Stop' : isEN ? 'Stop' : 'Stop');
         audioBtn.style.background = '#ff4444';
         audioBtn.style.color = '#fff';
       }).catch(function(err) {
         console.warn('[Audio] getUserMedia error:', err);
-        showToast(isEN ? 'Microphone access denied' : 'Accesso microfono negato', 'error');
+        showToast(LANG3 === 'es' ? 'Acceso al micrófono denegado' : isEN ? 'Microphone access denied' : 'Accesso microfono negato', 'error');
       });
     });
 
@@ -11506,9 +11506,9 @@ window.injectAllWikiLinks = function() {
 
       // Offline feedback: show appropriate message
       if (!navigator.onLine) {
-        saveBtn.textContent = isEN ? '📡 Saving locally...' : '📡 Salvataggio locale...';
+        saveBtn.textContent = LANG3 === 'es' ? '📡 Guardando localmente...' : isEN ? '📡 Saving locally...' : '📡 Salvataggio locale...';
       } else {
-        saveBtn.textContent = isEN ? 'Saving...' : 'Salvataggio...';
+        saveBtn.textContent = LANG3 === 'es' ? 'Guardando...' : isEN ? 'Saving...' : 'Salvataggio...';
       }
 
       diarioRef.child(dayKey).update(entryData).then(function() {
@@ -11556,7 +11556,7 @@ window.injectAllWikiLinks = function() {
         _recapPhotos.forEach(function(p, idx) {
           photoChain = photoChain.then(function() {
             if (_recapPhotos.length > 1 && window.showToast) {
-              showToast((isEN ? 'Uploading ' : 'Caricamento ') + (idx + 1) + '/' + _recapPhotos.length + '…', 'info', 1500);
+              showToast((LANG3 === 'es' ? 'Cargando ' : isEN ? 'Uploading ' : 'Caricamento ') + (idx + 1) + '/' + _recapPhotos.length + '…', 'info', 1500);
             }
             return _uploadRecapPhoto(p, idx);
           });
@@ -11588,9 +11588,9 @@ window.injectAllWikiLinks = function() {
         localStorage.setItem('recap_done_' + today, '1');
         overlay.remove();
         if (!navigator.onLine) {
-          showToast(isEN ? '\ud83d\udce1 Saved locally — will sync when online' : '\ud83d\udce1 Salvato localmente — sincronizzer\u00e0 online', 'success', 4000);
+          showToast(LANG3 === 'es' ? '\\ud83d\\udce1 Guardado localmente — se sincronizará cuando haya conexión' : isEN ? '\ud83d\udce1 Saved locally — will sync when online' : '\ud83d\udce1 Salvato localmente — sincronizzer\u00e0 online', 'success', 4000);
         } else {
-          showToast(isEN ? '\u2705 Day saved to journal!' : '\u2705 Giorno salvato nel diario!', 'success');
+          showToast(LANG3 === 'es' ? '\\u2705 Día guardado en el diario!' : isEN ? '\u2705 Day saved to journal!' : '\u2705 Giorno salvato nel diario!', 'success');
         }
         if (window.haptic) window.haptic(15);
         // v2.63 FIX: reload gallery if it's open so new photos appear immediately
@@ -11601,7 +11601,7 @@ window.injectAllWikiLinks = function() {
 
         // Queue evening push notification to visitors
         queuePushNotification('evening_recap', {
-          title: isEN ? '\ud83d\udcdd Day ' + Math.max(1, tripDay + 1) + ' recap' : '\ud83d\udcdd Riepilogo giorno ' + Math.max(1, tripDay + 1),
+          title: LANG3 === 'es' ? '\ud83d\udcdd Resumen día ' + Math.max(1, tripDay + 1) : isEN ? '\ud83d\udcdd Day ' + Math.max(1, tripDay + 1) + ' recap' : '\ud83d\udcdd Riepilogo giorno ' + Math.max(1, tripDay + 1),
           body: (kmToday > 0 ? (kmToday.toFixed(0) + ' km') : '') + (highlight ? ' \u2014 ' + highlight : ''),
           target: 'owner',
           url: './#tab-diario',
@@ -11609,8 +11609,8 @@ window.injectAllWikiLinks = function() {
         });
       }).catch(function(err) {
         console.error('[Recap] Save error:', err);
-        showToast(isEN ? 'Error saving' : 'Errore salvataggio', 'error');
-        saveBtn.textContent = isEN ? '\u2705 Save & Close' : '\u2705 Salva e chiudi';
+        showToast(LANG3 === 'es' ? 'Error al guardar' : isEN ? 'Error saving' : 'Errore salvataggio', 'error');
+        saveBtn.textContent = LANG3 === 'es' ? '\\u2705 Guardar & Cerrar' : isEN ? '\u2705 Save & Close' : '\u2705 Salva e chiudi';
         saveBtn.disabled = false;
       });
     });
@@ -11902,8 +11902,8 @@ window.injectAllWikiLinks = function() {
         showPlaceSuggestion(placeName, lat, lng);
         // Also queue push for family
         queuePushNotification('place_suggestion', {
-          title: isEN ? '📍 Stopped at ' + placeName : '📍 Fermo a ' + placeName,
-          body: isEN ? 'Tap to add as a stop' : 'Tocca per aggiungere come tappa',
+          title: LANG3 === 'es' ? '📍 Detenido en ' + placeName : isEN ? '📍 Stopped at ' + placeName : '📍 Fermo a ' + placeName,
+          body: LANG3 === 'es' ? 'Toca para añadir como parada' : isEN ? 'Tap to add as a stop' : 'Tocca per aggiungere come tappa',
           target: 'owner',
           url: './#tab-posizione'
         });
@@ -11960,10 +11960,10 @@ window.injectAllWikiLinks = function() {
     toastEl.className = 'toast toast-info';
     toastEl.style.cssText = 'display:flex;flex-direction:column;gap:8px;padding:12px 16px;max-width:320px;';
     toastEl.innerHTML =
-      '<span style="font-size:14px;">' + (isEN ? '\ud83d\udccd Stopped at <strong>' + escapeHtml(placeName) + '</strong>. Add as stop?' : '\ud83d\udccd Fermo a <strong>' + escapeHtml(placeName) + '</strong>. Aggiungere?') + '</span>' +
+      '<span style="font-size:14px;">' + (LANG3 === 'es' ? '\ud83d\udccd Detenido en <strong>' + escapeHtml(placeName) + '</strong>. ¿Añadir parada?' : isEN ? '\ud83d\udccd Stopped at <strong>' + escapeHtml(placeName) + '</strong>. Add as stop?' : '\ud83d\udccd Fermo a <strong>' + escapeHtml(placeName) + '</strong>. Aggiungere?') + '</span>' +
       '<div style="display:flex;gap:8px;">' +
-        '<button id="place-add-yes" style="flex:1;padding:8px;border:none;border-radius:6px;background:var(--accent);color:#fff;font-weight:600;cursor:pointer;">' + (isEN ? 'Yes' : 'S\u00ec') + '</button>' +
-        '<button id="place-add-no" style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;background:var(--bg-alt);cursor:pointer;">' + (isEN ? 'No' : 'No') + '</button>' +
+        '<button id="place-add-yes" style="flex:1;padding:8px;border:none;border-radius:6px;background:var(--accent);color:#fff;font-weight:600;cursor:pointer;">' + (LANG3 === 'es' ? 'Sí' : isEN ? 'Yes' : 'S\u00ec') + '</button>' +
+        '<button id="place-add-no" style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;background:var(--bg-alt);cursor:pointer;">' + (LANG3 === 'es' ? 'No' : isEN ? 'No' : 'No') + '</button>' +
       '</div>';
     var toastContainer = document.getElementById('toastContainer');
     if (toastContainer) toastContainer.appendChild(toastEl);
@@ -11984,7 +11984,7 @@ window.injectAllWikiLinks = function() {
           auto: true
         });
       }
-      showToast(isEN ? '\u2705 ' + placeName + ' added!' : '\u2705 ' + placeName + ' aggiunto!', 'success');
+      showToast(LANG3 === 'es' ? '\u2705 ' + placeName + ' ¡añadido!' : isEN ? '\u2705 ' + placeName + ' added!' : '\u2705 ' + placeName + ' aggiunto!', 'success');
       toastEl.remove();
     });
 
@@ -12023,7 +12023,7 @@ window.injectAllWikiLinks = function() {
             var data = JSON.parse(content);
             processTimelineData(data);
           } catch (err) {
-            showToast(isEN ? 'Invalid file format' : 'Formato file non valido', 'error');
+            showToast(LANG3 === 'es' ? 'Formato de archivo no válido' : isEN ? 'Invalid file format' : 'Formato file non valido', 'error');
           }
         }
       };
@@ -12109,7 +12109,7 @@ window.injectAllWikiLinks = function() {
     }
 
     if (segments.length === 0) {
-      showToast(isEN ? 'No timeline data found in file' : 'Nessun dato timeline trovato nel file', 'error');
+      showToast(LANG3 === 'es' ? 'No se encontraron datos de la línea de tiempo en el archivo' : isEN ? 'No timeline data found in file' : 'Nessun dato timeline trovato nel file', 'error');
       return;
     }
 
@@ -12150,18 +12150,18 @@ window.injectAllWikiLinks = function() {
     overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;padding:16px;';
 
     var html = '<div style="background:var(--bg-card);border-radius:16px;max-width:500px;width:100%;max-height:85vh;overflow-y:auto;padding:24px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">';
-    html += '<h3 style="margin:0 0 12px;">' + (isEN ? '\ud83d\uddfa\ufe0f Timeline Import Report' : '\ud83d\uddfa\ufe0f Report Import Timeline') + '</h3>';
-    html += '<p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">' + (isEN ? dates.length + ' days found. Review before importing:' : dates.length + ' giorni trovati. Controlla prima di importare:') + '</p>';
+    html += '<h3 style="margin:0 0 12px;">' + (LANG3 === 'es' ? '\\ud83d\\uddfa\\ufe0f Informe de importación del timeline' : isEN ? '\ud83d\uddfa\ufe0f Timeline Import Report' : '\ud83d\uddfa\ufe0f Report Import Timeline') + '</h3>';
+    html += '<p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">' + (LANG3 === 'es' ? dates.length + ' días encontrados. Revisa antes de importar:' : isEN ? dates.length + ' days found. Review before importing:' : dates.length + ' giorni trovati. Controlla prima di importare:') + '</p>';
 
     html += '<div style="max-height:40vh;overflow-y:auto;border:1px solid var(--border);border-radius:8px;padding:8px;">';
     dates.forEach(function(date) {
       var day = dayMap[date];
       var tripDay = getTripDayFromDate(date);
-      var dayLabel = tripDay >= 0 ? ((isEN ? 'Day ' : 'G') + (tripDay + 1)) : date;
+      var dayLabel = tripDay >= 0 ? ((LANG3 === 'es' ? 'D' : isEN ? 'Day ' : 'G') + (tripDay + 1)) : date;
       html += '<div style="padding:6px 0;border-bottom:1px solid var(--border);font-size:13px;">';
       html += '<strong>' + dayLabel + '</strong> (' + date + '): ';
       html += '\ud83d\ude90 ' + day.km.toFixed(1) + ' km';
-      if (day.visits.length > 0) html += ' \u2022 \ud83d\udccd ' + day.visits.length + (isEN ? ' stops' : ' soste');
+      if (day.visits.length > 0) html += ' \u2022 \ud83d\udccd ' + day.visits.length + (LANG3 === 'es' ? ' paradas' : isEN ? ' stops' : ' soste');
       if (day.driveMs > 0) {
         var hrs = Math.floor(day.driveMs / 3600000);
         var mins = Math.floor((day.driveMs % 3600000) / 60000);
@@ -12172,8 +12172,8 @@ window.injectAllWikiLinks = function() {
     html += '</div>';
 
     html += '<div style="display:flex;gap:10px;margin-top:16px;">';
-    html += '<button id="timeline-cancel" style="flex:1;padding:12px;border:1px solid var(--border);border-radius:8px;background:var(--bg-alt);cursor:pointer;">' + (isEN ? 'Cancel' : 'Annulla') + '</button>';
-    html += '<button id="timeline-import" style="flex:2;padding:12px;border:none;border-radius:8px;background:var(--accent);color:#fff;cursor:pointer;font-weight:600;">' + (isEN ? '\u2705 Import' : '\u2705 Importa') + '</button>';
+    html += '<button id="timeline-cancel" style="flex:1;padding:12px;border:1px solid var(--border);border-radius:8px;background:var(--bg-alt);cursor:pointer;">' + (LANG3 === 'es' ? 'Cancelar' : isEN ? 'Cancel' : 'Annulla') + '</button>';
+    html += '<button id="timeline-import" style="flex:2;padding:12px;border:none;border-radius:8px;background:var(--accent);color:#fff;cursor:pointer;font-weight:600;">' + (LANG3 === 'es' ? '\\u2705 Importa' : isEN ? '\u2705 Import' : '\u2705 Importa') + '</button>';
     html += '</div></div>';
 
     overlay.innerHTML = html;
@@ -12199,7 +12199,7 @@ window.injectAllWikiLinks = function() {
     // v3.91 FIX: count only valid days (not skipped)
     var validDates = dates.filter(function(d) { return getTripDayFromDate(d) >= 0; });
     var total = validDates.length;
-    if (total === 0) { showToast(isEN ? '⚠️ No valid trip days found' : '⚠️ Nessun giorno valido trovato', 'info'); return; }
+    if (total === 0) { showToast(LANG3 === 'es' ? '⚠️ No se encontraron días de viaje válidos' : isEN ? '⚠️ No valid trip days found' : '⚠️ Nessun giorno valido trovato', 'info'); return; }
 
     dates.forEach(function(date) {
       var day = dayMap[date];
@@ -12226,7 +12226,7 @@ window.injectAllWikiLinks = function() {
         // v3.91 FIX: count inside async callback
         imported++;
         if (imported === total) {
-          showToast((isEN ? '\u2705 Imported data for ' : '\u2705 Importati dati per ') + imported + (isEN ? ' days' : ' giorni'), 'success');
+          showToast((LANG3 === 'es' ? '\\u2705 Datos importados para ' : isEN ? '\u2705 Imported data for ' : '\u2705 Importati dati per ') + imported + (LANG3 === 'es' ? ' días' : isEN ? ' days' : ' giorni'), 'success');
         }
       });
 
@@ -12269,7 +12269,7 @@ window.injectAllWikiLinks = function() {
           }
           if (Object.keys(updates).length > 0) {
             updates.timelineImported = true;
-            diarioRef.child(dayKey).update(updates).catch(function(e) { console.error('[Diario] save failed:', e); if (window.showToast) showToast(isEN ? '❌ Save failed — check connection' : '❌ Salvataggio fallito — controlla la connessione', 'error'); });
+            diarioRef.child(dayKey).update(updates).catch(function(e) { console.error('[Diario] save failed:', e); if (window.showToast) showToast(LANG3 === 'es' ? '❌ Guardado fallido — comprueba la conexión' : isEN ? '❌ Save failed — check connection' : '❌ Salvataggio fallito — controlla la connessione', 'error'); });
           }
         }
       });
@@ -12326,7 +12326,7 @@ window.injectAllWikiLinks = function() {
 
     var dates = Object.keys(pointsByDate).sort();
     if (dates.length === 0) {
-      showToast(isEN ? 'No GPS points found in trip date range' : 'Nessun punto GPS trovato nel periodo del viaggio', 'error');
+      showToast(LANG3 === 'es' ? 'No se encontraron puntos GPS en el rango de fechas del viaje' : isEN ? 'No GPS points found in trip date range' : 'Nessun punto GPS trovato nel periodo del viaggio', 'error');
       return;
     }
 
@@ -12355,24 +12355,24 @@ window.injectAllWikiLinks = function() {
     overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;padding:16px;';
 
     var html = '<div style="background:var(--bg-card);border-radius:16px;max-width:500px;width:100%;max-height:85vh;overflow-y:auto;padding:24px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">';
-    html += '<h3 style="margin:0 0 12px;">' + (isEN ? '\ud83d\udccd Records.json Import' : '\ud83d\udccd Import Records.json') + '</h3>';
-    html += '<p style="font-size:13px;color:var(--text-muted);margin-bottom:8px;">' + (isEN ? 'Raw GPS points for map polyline' : 'Punti GPS grezzi per tracciato mappa') + '</p>';
-    html += '<p style="font-size:13px;margin-bottom:12px;"><strong>' + totalPoints + '</strong> ' + (isEN ? 'points across' : 'punti in') + ' <strong>' + dates.length + '</strong> ' + (isEN ? 'days' : 'giorni') + '</p>';
+    html += '<h3 style="margin:0 0 12px;">' + (LANG3 === 'es' ? '\\ud83d\\udccd Import Records.json' : isEN ? '\ud83d\udccd Records.json Import' : '\ud83d\udccd Import Records.json') + '</h3>';
+    html += '<p style="font-size:13px;color:var(--text-muted);margin-bottom:8px;">' + (LANG3 === 'es' ? 'Puntos GPS sin procesar para la polilínea del mapa' : isEN ? 'Raw GPS points for map polyline' : 'Punti GPS grezzi per tracciato mappa') + '</p>';
+    html += '<p style="font-size:13px;margin-bottom:12px;"><strong>' + totalPoints + '</strong> ' + (LANG3 === 'es' ? 'puntos en' : isEN ? 'points across' : 'punti in') + ' <strong>' + dates.length + '</strong> ' + (LANG3 === 'es' ? 'días' : isEN ? 'days' : 'giorni') + '</p>';
     if (outOfRangeDays > 0) {
-      html += '<p style="font-size:13px;color:#e53e3e;margin-bottom:8px;font-weight:600;">\u26a0\ufe0f ' + (isEN ? outOfRangeDays + ' day(s) outside trip range — will be skipped' : outOfRangeDays + ' giorno/i fuori dal range del viaggio — verranno saltati') + '</p>';
+      html += '<p style="font-size:13px;color:#e53e3e;margin-bottom:8px;font-weight:600;">\u26a0\ufe0f ' + (LANG3 === 'es' ? outOfRangeDays + ' día(s) fuera del rango del viaje — se omitirán' : isEN ? outOfRangeDays + ' day(s) outside trip range — will be skipped' : outOfRangeDays + ' giorno/i fuori dal range del viaggio — verranno saltati') + '</p>';
     }
     if (validDays === 0) {
-      html += '<p style="font-size:13px;color:#e53e3e;margin-bottom:8px;font-weight:600;">\u274c ' + (isEN ? 'No days within trip range! Import will have no effect.' : 'Nessun giorno nel range del viaggio! L\'import non avr\u00e0 effetto.') + '</p>';
+      html += '<p style="font-size:13px;color:#e53e3e;margin-bottom:8px;font-weight:600;">\u274c ' + (LANG3 === 'es' ? 'No hay días en el rango del viaje. La importación no tendrá efecto.' : isEN ? 'No days within trip range! Import will have no effect.' : 'Nessun giorno nel range del viaggio! L\'import non avr\u00e0 effetto.') + '</p>';
     }
     if (skipped > 0) {
-      html += '<p style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">' + (isEN ? 'Skipped ' + skipped + ' points (low accuracy or outside trip)' : 'Scartati ' + skipped + ' punti (bassa precisione o fuori viaggio)') + '</p>';
+      html += '<p style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">' + (LANG3 === 'es' ? 'Omitidos ' + skipped + ' puntos (baja precisión o fuera del viaje)' : isEN ? 'Skipped ' + skipped + ' points (low accuracy or outside trip)' : 'Scartati ' + skipped + ' punti (bassa precisione o fuori viaggio)') + '</p>';
     }
 
     html += '<div style="max-height:35vh;overflow-y:auto;border:1px solid var(--border);border-radius:8px;padding:8px;">';
     dates.forEach(function(date) {
       var pts = pointsByDate[date];
       var tripDay = getTripDayFromDate(date);
-      var dayLabel = tripDay >= 0 ? ((isEN ? 'Day ' : 'G') + (tripDay + 1)) : date;
+      var dayLabel = tripDay >= 0 ? ((LANG3 === 'es' ? 'D' : isEN ? 'Day ' : 'G') + (tripDay + 1)) : date;
       var isOutOfRange = tripDay < 0;
       // Calculate km from points
       var km = 0;
@@ -12385,14 +12385,14 @@ window.injectAllWikiLinks = function() {
       html += '<strong>' + dayLabel + '</strong> (' + date + '): ';
       html += '\ud83d\udccd ' + pts.length + ' pts';
       html += ' \u2022 \ud83d\ude90 ' + km.toFixed(1) + ' km';
-      if (isOutOfRange) html += ' <span style="color:#e53e3e;font-size:11px;">\u2014 ' + (isEN ? 'skipped' : 'saltato') + '</span>';
+      if (isOutOfRange) html += ' <span style="color:#e53e3e;font-size:11px;">\u2014 ' + (LANG3 === 'es' ? 'omitido' : isEN ? 'skipped' : 'saltato') + '</span>';
       html += '</div>';
     });
     html += '</div>';
 
     html += '<div style="display:flex;gap:10px;margin-top:16px;">';
-    html += '<button id="records-cancel" style="flex:1;padding:12px;border:1px solid var(--border);border-radius:8px;background:var(--bg-alt);cursor:pointer;">' + (isEN ? 'Cancel' : 'Annulla') + '</button>';
-    html += '<button id="records-import" style="flex:2;padding:12px;border:none;border-radius:8px;background:var(--accent);color:#fff;cursor:pointer;font-weight:600;">' + (isEN ? '\u2705 Import GPS Points' : '\u2705 Importa Punti GPS') + '</button>';
+    html += '<button id="records-cancel" style="flex:1;padding:12px;border:1px solid var(--border);border-radius:8px;background:var(--bg-alt);cursor:pointer;">' + (LANG3 === 'es' ? 'Cancelar' : isEN ? 'Cancel' : 'Annulla') + '</button>';
+    html += '<button id="records-import" style="flex:2;padding:12px;border:none;border-radius:8px;background:var(--accent);color:#fff;cursor:pointer;font-weight:600;">' + (LANG3 === 'es' ? '\\u2705 Importa Puntos GPS' : isEN ? '\u2705 Import GPS Points' : '\u2705 Importa Punti GPS') + '</button>';
     html += '</div></div>';
 
     overlay.innerHTML = html;
@@ -12414,7 +12414,7 @@ window.injectAllWikiLinks = function() {
 
     // v4.04: Early warning if file contains no usable dates
     if (total === 0) {
-      showToast(isEN ? '⚠️ No GPS points found in file' : '⚠️ Nessun punto GPS trovato nel file', 'warn');
+      showToast(LANG3 === 'es' ? '⚠️ No se encontraron puntos GPS en el archivo' : isEN ? '⚠️ No GPS points found in file' : '⚠️ Nessun punto GPS trovato nel file', 'warn');
       return;
     }
 
@@ -12425,14 +12425,14 @@ window.injectAllWikiLinks = function() {
       var outOfRange = dates.filter(function(d) { return d < TRIP_START_DATE || d > TRIP_END_DATE; });
       if (outOfRange.length === dates.length) {
         showToast(
-          isEN ? '⚠️ All dates are outside the trip range (' + TRIP_START_DATE + ' – ' + TRIP_END_DATE + ')'
+          LANG3 === 'es' ? '⚠️ Todas las fechas están fuera del rango del viaje (' + TRIP_START_DATE : isEN ? '⚠️ All dates are outside the trip range (' + TRIP_START_DATE + ' – ' + TRIP_END_DATE + ')'
                : '⚠️ Tutte le date sono fuori dal range del viaggio (' + TRIP_START_DATE + ' – ' + TRIP_END_DATE + ')',
           'warn'
         );
         return;
       } else if (outOfRange.length > 0) {
         showToast(
-          isEN ? '⚠️ ' + outOfRange.length + ' dates outside trip range will be skipped'
+          LANG3 === 'es' ? '⚠️ ' + outOfRange.length + ' fechas fuera del rango del viaje se omitirán' : isEN ? '⚠️ ' + outOfRange.length + ' dates outside trip range will be skipped'
                : '⚠️ ' + outOfRange.length + ' date fuori range verranno saltate',
           'warn'
         );
@@ -12538,7 +12538,7 @@ window.injectAllWikiLinks = function() {
           } else {
             // Nominatim fallback for unknown countries
             var _cRefFb = db.ref('trips/' + FAMILY_ID + '/dailySummaries/' + date);
-            var _fbUrl = 'https://nominatim.openstreetmap.org/reverse?format=json&lat=' + _lastPtDay.lat + '&lon=' + _lastPtDay.lng + '&zoom=5&accept-language=' + (isEN ? 'en' : 'it');
+            var _fbUrl = 'https://nominatim.openstreetmap.org/reverse?format=json&lat=' + _lastPtDay.lat + '&lon=' + _lastPtDay.lng + '&zoom=5&accept-language=' + (LANG3 === 'es' ? 'es' : isEN ? 'en' : 'it');
             // v4.02: route through _nominatimFetch for rate limiting + User-Agent
             window._nominatimFetch(_fbUrl).then(function(d){
               if(d&&d.address){var cc=(d.address.country_code||'').toUpperCase();var cn=d.address.country||'';if(cc)_cRefFb.update({country:cn,countryCode:cc});}
@@ -12622,7 +12622,7 @@ window.injectAllWikiLinks = function() {
               // v3.93: Update unified /currentLocation with most recent imported point
               if (window.writeCurrentLocation) window.writeCurrentLocation(lastPt.lat, lastPt.lng);
             }
-            showToast((isEN ? '\u2705 GPS track imported for ' : '\u2705 Tracciato GPS importato per ') + imported + (isEN ? ' days' : ' giorni'), 'success');
+            showToast((LANG3 === 'es' ? '\\u2705 Trayecto GPS importado para ' : isEN ? '\u2705 GPS track imported for ' : '\u2705 Tracciato GPS importato per ') + imported + (LANG3 === 'es' ? ' días' : isEN ? ' days' : ' giorni'), 'success');
             // v3.92: Show conflict resolution prompt if GPX < live by >10%
             if (window._gpxConflicts && window._gpxConflicts.length > 0) {
               setTimeout(function() { _showGpxConflictPrompt(); }, 800);
@@ -12632,7 +12632,7 @@ window.injectAllWikiLinks = function() {
           console.error('[GPX Import] Write failed for a day:', err);
           imported++;
           if (imported === total) {
-            showToast((isEN ? '\u26a0\ufe0f Import completed with errors' : '\u26a0\ufe0f Importazione completata con errori'), 'error');
+            showToast((LANG3 === 'es' ? '\\u26a0\\ufe0f Importación completada con errores' : isEN ? '\u26a0\ufe0f Import completed with errors' : '\u26a0\ufe0f Importazione completata con errori'), 'error');
           }
         });
       });
@@ -12648,8 +12648,8 @@ window.injectAllWikiLinks = function() {
     var overlay = document.createElement('div');
     overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;padding:16px;';
     var html = '<div style="background:var(--bg-card);border-radius:16px;max-width:450px;width:100%;max-height:80vh;overflow-y:auto;padding:24px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">';
-    html += '<h3 style="margin:0 0 12px;">\u26a0\ufe0f ' + (isEN ? 'GPX vs Live mismatch' : 'GPX vs Live: differenza km') + '</h3>';
-    html += '<p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">' + (isEN ? 'GPSLogger recorded fewer km than live tracking (>10% difference). GPSLogger is generally more accurate.' : 'GPSLogger ha registrato meno km del live tracking (differenza >10%). GPSLogger \u00e8 generalmente pi\u00f9 preciso.') + '</p>';
+    html += '<h3 style="margin:0 0 12px;">\u26a0\ufe0f ' + (LANG3 === 'es' ? 'GPX vs Live: diferencia de km' : isEN ? 'GPX vs Live mismatch' : 'GPX vs Live: differenza km') + '</h3>';
+    html += '<p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">' + (LANG3 === 'es' ? 'GPSLogger registró menos km que el seguimiento en vivo (diferencia >10%). GPSLogger suele ser más preciso.' : isEN ? 'GPSLogger recorded fewer km than live tracking (>10% difference). GPSLogger is generally more accurate.' : 'GPSLogger ha registrato meno km del live tracking (differenza >10%). GPSLogger \u00e8 generalmente pi\u00f9 preciso.') + '</p>';
 
     conflicts.forEach(function(c, i) {
       var pct = Math.round(((c.liveKm - c.gpxKm) / c.liveKm) * 100);
@@ -12661,8 +12661,8 @@ window.injectAllWikiLinks = function() {
     });
 
     html += '<div style="display:flex;gap:10px;margin-top:16px;">';
-    html += '<button id="gpx-conflict-keep" style="flex:1;padding:12px;border:1px solid var(--border);border-radius:8px;background:var(--bg-alt);cursor:pointer;font-size:13px;">' + (isEN ? 'Keep Live' : 'Tieni Live') + '</button>';
-    html += '<button id="gpx-conflict-use-gpx" style="flex:2;padding:12px;border:none;border-radius:8px;background:var(--accent);color:#fff;cursor:pointer;font-weight:600;font-size:13px;">' + (isEN ? '\u2705 Use GPX (more accurate)' : '\u2705 Usa GPX (pi\u00f9 preciso)') + '</button>';
+    html += '<button id="gpx-conflict-keep" style="flex:1;padding:12px;border:1px solid var(--border);border-radius:8px;background:var(--bg-alt);cursor:pointer;font-size:13px;">' + (LANG3 === 'es' ? 'Mantener Live' : isEN ? 'Keep Live' : 'Tieni Live') + '</button>';
+    html += '<button id="gpx-conflict-use-gpx" style="flex:2;padding:12px;border:none;border-radius:8px;background:var(--accent);color:#fff;cursor:pointer;font-weight:600;font-size:13px;">' + (LANG3 === 'es' ? '\\u2705 Usar GPX (más preciso)' : isEN ? '\u2705 Use GPX (more accurate)' : '\u2705 Usa GPX (pi\u00f9 preciso)') + '</button>';
     html += '</div></div>';
 
     overlay.innerHTML = html;
@@ -12670,7 +12670,7 @@ window.injectAllWikiLinks = function() {
 
     overlay.querySelector('#gpx-conflict-keep').addEventListener('click', function() {
       overlay.remove();
-      showToast(isEN ? 'Kept live tracking km' : 'Mantenuti km del live tracking', 'info');
+      showToast(LANG3 === 'es' ? 'Km mantenidos del seguimiento en vivo' : isEN ? 'Kept live tracking km' : 'Mantenuti km del live tracking', 'info');
     });
     overlay.querySelector('#gpx-conflict-use-gpx').addEventListener('click', function() {
       conflicts.forEach(function(c) {
@@ -12682,7 +12682,7 @@ window.injectAllWikiLinks = function() {
         c.summRef.update(upd);
       });
       overlay.remove();
-      showToast(isEN ? '\u2705 Updated with GPX data' : '\u2705 Aggiornato con dati GPX', 'success');
+      showToast(LANG3 === 'es' ? '\\u2705 Actualizado con datos GPX' : isEN ? '\u2705 Updated with GPX data' : '\u2705 Aggiornato con dati GPX', 'success');
     });
   }
 
@@ -12701,7 +12701,7 @@ window.injectAllWikiLinks = function() {
       trkpts = doc.querySelectorAll('wpt');
     }
     if (!trkpts || trkpts.length === 0) {
-      showToast(isEN ? 'No track points found in GPX' : 'Nessun punto trovato nel file GPX', 'error');
+      showToast(LANG3 === 'es' ? 'No se encontraron puntos de recorrido en el GPX' : isEN ? 'No track points found in GPX' : 'Nessun punto trovato nel file GPX', 'error');
       return;
     }
 
@@ -12745,7 +12745,7 @@ window.injectAllWikiLinks = function() {
 
     var dates = Object.keys(pointsByDate).sort();
     if (dates.length === 0) {
-      showToast(isEN ? 'No GPS points found in trip date range' : 'Nessun punto GPS trovato nel periodo del viaggio', 'error');
+      showToast(LANG3 === 'es' ? 'No se encontraron puntos GPS en el rango de fechas del viaje' : isEN ? 'No GPS points found in trip date range' : 'Nessun punto GPS trovato nel periodo del viaggio', 'error');
       return;
     }
 
@@ -12846,8 +12846,8 @@ window.injectAllWikiLinks = function() {
     if (!chatNotifToggle) return;
     chatNotifToggle.textContent = chatNotifEnabled ? '\uD83D\uDD14' : '\uD83D\uDD15';
     chatNotifToggle.title = chatNotifEnabled
-      ? (isEN ? 'Chat notifications ON (tap to disable)' : 'Notifiche chat ATTIVE (tap per disattivare)')
-      : (isEN ? 'Chat notifications OFF (tap to enable)' : 'Notifiche chat DISATTIVATE (tap per attivare)');
+      ? (LANG3 === 'es' ? 'Notificaciones de chat ACTIVAS (toca para desactivar)' : isEN ? 'Chat notifications ON (tap to disable)' : 'Notifiche chat ATTIVE (tap per disattivare)')
+      : (LANG3 === 'es' ? 'Notificaciones de chat DESACTIVADAS (toca para activar)' : isEN ? 'Chat notifications OFF (tap to enable)' : 'Notifiche chat DISATTIVATE (tap per attivare)');
     chatNotifToggle.style.opacity = chatNotifEnabled ? '1' : '0.5';
   }
   updateChatNotifToggle();
@@ -12869,8 +12869,8 @@ window.injectAllWikiLinks = function() {
       }
       if (window.showToast) {
         showToast(chatNotifEnabled
-          ? (isEN ? 'Chat notifications enabled' : 'Notifiche chat attivate \uD83D\uDD14')
-          : (isEN ? 'Chat notifications disabled' : 'Notifiche chat disattivate \uD83D\uDD15'),
+          ? (LANG3 === 'es' ? 'Notificaciones de chat activadas \\uD83D\\uDD14' : isEN ? 'Chat notifications enabled' : 'Notifiche chat attivate \uD83D\uDD14')
+          : (LANG3 === 'es' ? 'Notificaciones de chat desactivadas \\uD83D\\uDD15' : isEN ? 'Chat notifications disabled' : 'Notifiche chat disattivate \uD83D\uDD15'),
           'info', 2000);
       }
       // If enabling and permission not yet granted, request it
@@ -12938,7 +12938,7 @@ window.injectAllWikiLinks = function() {
                   if (chatPendingPrompt) chatPendingPrompt.style.display = 'block';
                 }).catch(function(err) {
                   console.error('Chat pending write failed:', err);
-                  if (typeof showToast === 'function') showToast(isEN ? 'Error sending request. Try again.' : 'Errore nell\'invio della richiesta. Riprova.', 'error');
+                  if (typeof showToast === 'function') showToast(LANG3 === 'es' ? 'Error al enviar la solicitud. Intenta de nuevo.' : isEN ? 'Error sending request. Try again.' : 'Errore nell\'invio della richiesta. Riprova.', 'error');
                 });
               } else {
                 chatInputBar.style.display = 'none';
@@ -13099,7 +13099,7 @@ window.injectAllWikiLinks = function() {
       }
       var name = document.createElement('span');
       name.className = 'chat-msg-name';
-      var authorName = msg.displayName || (isEN ? 'Anonymous' : 'Anonimo');
+      var authorName = msg.displayName || (LANG3 === 'es' ? 'Anónimo' : isEN ? 'Anonymous' : 'Anonimo');
       name.textContent = authorName;
       name.style.color = getAuthorColor(authorName);
       header.appendChild(name);
@@ -13124,7 +13124,7 @@ window.injectAllWikiLinks = function() {
         var img = document.createElement('img');
         img.className = 'chat-media';
         img.src = msg.mediaUrl;
-        img.alt = isEN ? 'Shared photo' : 'Foto condivisa';
+        img.alt = LANG3 === 'es' ? 'Foto compartida' : isEN ? 'Shared photo' : 'Foto condivisa';
         img.loading = 'lazy';
         img.addEventListener('click', function() { window.open(msg.mediaUrl, '_blank'); });
         mediaWrap.appendChild(img);
@@ -13133,7 +13133,7 @@ window.injectAllWikiLinks = function() {
         dlBtn.href = msg.mediaUrl;
         dlBtn.target = '_blank';
         dlBtn.download = 'photo_' + (msg.timestamp || Date.now()) + '.jpg';
-        dlBtn.title = isEN ? 'Download' : 'Scarica';
+        dlBtn.title = LANG3 === 'es' ? 'Descargar' : isEN ? 'Download' : 'Scarica';
         dlBtn.textContent = '\u2B07';
         mediaWrap.appendChild(dlBtn);
         bubble.appendChild(mediaWrap);
@@ -13147,7 +13147,7 @@ window.injectAllWikiLinks = function() {
         dlBtnA.href = msg.mediaUrl;
         dlBtnA.target = '_blank';
         dlBtnA.download = 'audio_' + (msg.timestamp || Date.now()) + '.webm';
-        dlBtnA.title = isEN ? 'Download' : 'Scarica';
+        dlBtnA.title = LANG3 === 'es' ? 'Descargar' : isEN ? 'Download' : 'Scarica';
         dlBtnA.textContent = '\u2B07';
         bubble.appendChild(dlBtnA);
       }
@@ -13257,7 +13257,7 @@ window.injectAllWikiLinks = function() {
     // v2.72: rate limit — max 1 messaggio ogni 2 secondi
     var _now = Date.now();
     if (_now - _lastMsgSent < 2000) {
-      if (window.showToast) showToast(isEN ? '⏳ Wait a moment...' : '⏳ Aspetta un momento...', 'info');
+      if (window.showToast) showToast(LANG3 === 'es' ? '⏳ Espera un momento...' : isEN ? '⏳ Wait a moment...' : '⏳ Aspetta un momento...', 'info');
       return;
     }
     _lastMsgSent = _now;
@@ -13267,7 +13267,7 @@ window.injectAllWikiLinks = function() {
     }
     if (!chatUser) {
       console.warn('[Chat] sendMessage blocked: no chatUser');
-      if (window.showToast) showToast(isEN ? 'Please sign in first' : 'Accedi prima di inviare', 'info');
+      if (window.showToast) showToast(LANG3 === 'es' ? 'Inicia sesión antes de enviar' : isEN ? 'Please sign in first' : 'Accedi prima di inviare', 'info');
       return;
     }
     if (!text && !mediaUrl) return;
@@ -13275,7 +13275,7 @@ window.injectAllWikiLinks = function() {
     // Security: enforce max message length (matches server-side .validate rule)
     var MAX_MSG_LENGTH = 5000;
     if (text && text.length > MAX_MSG_LENGTH) {
-      if (window.showToast) showToast(isEN ? 'Message too long (max 5000 chars)' : 'Messaggio troppo lungo (max 5000 caratteri)', 'error');
+      if (window.showToast) showToast(LANG3 === 'es' ? 'Mensaje demasiado largo (máx. 5000 caracteres)' : isEN ? 'Message too long (max 5000 chars)' : 'Messaggio troppo lungo (max 5000 caratteri)', 'error');
       return;
     }
 
@@ -13317,7 +13317,7 @@ window.injectAllWikiLinks = function() {
       }
       var statusEl = document.createElement('div');
       statusEl.className = 'chat-msg-status';
-      statusEl.innerHTML = '<span class="status-icon">⏳</span> <span>' + (isEN ? 'Sending...' : 'Invio in corso...') + '</span>';
+      statusEl.innerHTML = '<span class="status-icon">⏳</span> <span>' + (LANG3 === 'es' ? 'Enviando...' : isEN ? 'Sending...' : 'Invio in corso...') + '</span>';
       pendingBubble.appendChild(statusEl);
       pendingDiv.appendChild(pendingBubble);
       chatMessages.appendChild(pendingDiv);
@@ -13351,10 +13351,10 @@ window.injectAllWikiLinks = function() {
         pendingEl.classList.remove('pending');
         var statusDiv = pendingEl.querySelector('.chat-msg-status');
         if (statusDiv) {
-          statusDiv.innerHTML = '<span class="status-icon" style="color:var(--danger)">⚠️</span> <span style="color:var(--danger)">' + (isEN ? 'Failed' : 'Fallito') + '</span>';
+          statusDiv.innerHTML = '<span class="status-icon" style="color:var(--danger)">⚠️</span> <span style="color:var(--danger)">' + (LANG3 === 'es' ? 'Fallido' : isEN ? 'Failed' : 'Fallito') + '</span>';
         }
       }
-      if (window.showToast) showToast(isEN ? 'Failed to send message' : 'Invio messaggio fallito', 'error');
+      if (window.showToast) showToast(LANG3 === 'es' ? 'No se pudo enviar el mensaje' : isEN ? 'Failed to send message' : 'Invio messaggio fallito', 'error');
     });
   }
 
@@ -13425,7 +13425,7 @@ window.injectAllWikiLinks = function() {
     var cancelBtn = document.createElement('button');
     cancelBtn.type = 'button';
     cancelBtn.style.cssText = 'flex:1;padding:12px;border-radius:10px;border:none;background:var(--border-color,#e2e8f0);font-size:14px;font-weight:600;cursor:pointer;color:var(--text-color,#1a1a2e);';
-    cancelBtn.textContent = isEN ? 'Cancel' : 'Annulla';
+    cancelBtn.textContent = LANG3 === 'es' ? 'Cancelar' : isEN ? 'Cancel' : 'Annulla';
     var okBtn = document.createElement('button');
     okBtn.type = 'button';
     okBtn.style.cssText = 'flex:1;padding:12px;border-radius:10px;border:none;background:#3b82f6;color:#fff;font-size:14px;font-weight:600;cursor:pointer;';
@@ -13450,7 +13450,7 @@ window.injectAllWikiLinks = function() {
   // ─── File attachment ───
   chatAttachBtn.addEventListener('click', function() {
     if (!chatUser) {
-      if (window.showToast) showToast(isEN ? 'Please sign in first' : 'Accedi prima', 'info');
+      if (window.showToast) showToast(LANG3 === 'es' ? 'Inicia sesión primero' : isEN ? 'Please sign in first' : 'Accedi prima', 'info');
       return;
     }
     chatFileInput.click();
@@ -13464,14 +13464,14 @@ window.injectAllWikiLinks = function() {
     var ALLOWED_MIME = ['image/', 'audio/', 'video/', 'application/pdf'];
     var isMimeAllowed = ALLOWED_MIME.some(function(t) { return file.type.startsWith(t); });
     if (!isMimeAllowed) {
-      showToast(isEN ? '❌ File type not allowed. Use images, audio, video or PDF.' : '❌ Tipo file non supportato. Usa immagini, audio, video o PDF.', 'error');
+      showToast(LANG3 === 'es' ? '❌ Tipo de archivo no permitido. Usa imágenes, audio, video o PDF.' : isEN ? '❌ File type not allowed. Use images, audio, video or PDF.' : '❌ Tipo file non supportato. Usa immagini, audio, video o PDF.', 'error');
       chatFileInput.value = '';
       return;
     }
 
     // Check file size (max 13MB)
     if (file.size > 13 * 1024 * 1024) {
-      if (window.showToast) showToast(isEN ? 'File too large (max 13MB)' : 'File troppo grande (max 13MB)', 'error');
+      if (window.showToast) showToast(LANG3 === 'es' ? 'Archivo demasiado grande (máx. 13MB)' : isEN ? 'File too large (max 13MB)' : 'File troppo grande (max 13MB)', 'error');
       chatFileInput.value = '';
       return;
     }
@@ -13480,16 +13480,16 @@ window.injectAllWikiLinks = function() {
     if (typeof firebase !== 'undefined' && firebase.storage) {
       var storageRef = firebase.storage().ref();
       var fileRef = storageRef.child('chat/' + Date.now() + '_' + file.name);
-      if (window.showToast) showToast(isEN ? 'Uploading...' : 'Caricamento...', 'info');
+      if (window.showToast) showToast(LANG3 === 'es' ? 'Cargando...' : isEN ? 'Uploading...' : 'Caricamento...', 'info');
 
       fileRef.put(file).then(function(snapshot) {
         return snapshot.ref.getDownloadURL();
       }).then(function(url) {
         sendMessage('', url, file.type);
-        if (window.showToast) showToast(isEN ? 'File sent!' : 'File inviato!', 'success');
+        if (window.showToast) showToast(LANG3 === 'es' ? '¡Archivo enviado!' : isEN ? 'File sent!' : 'File inviato!', 'success');
       }).catch(function(err) {
         console.error('[Chat] Upload failed:', err);
-        if (window.showToast) showToast(isEN ? 'Upload failed. Blaze plan may be required.' : 'Caricamento fallito. Potrebbe servire il piano Blaze.', 'error');
+        if (window.showToast) showToast(LANG3 === 'es' ? 'Carga fallida. Puede requerirse el plan Blaze.' : isEN ? 'Upload failed. Blaze plan may be required.' : 'Caricamento fallito. Potrebbe servire il piano Blaze.', 'error');
       });
     } else {
       // Fallback: convert small images to base64 data URL (< 200KB only)
@@ -13501,7 +13501,7 @@ window.injectAllWikiLinks = function() {
         reader.readAsDataURL(file);
       } else {
         if (window.showToast) showToast(
-          isEN ? 'Firebase Storage not available. Activate Blaze plan for media sharing.' :
+          LANG3 === 'es' ? 'Firebase Storage no disponible. Activa el plan Blaze para compartir multimedia.' : isEN ? 'Firebase Storage not available. Activate Blaze plan for media sharing.' :
                  'Firebase Storage non disponibile. Attiva il piano Blaze per condividere media.',
           'warning', 5000
         );
@@ -13532,11 +13532,11 @@ window.injectAllWikiLinks = function() {
   function startRecording() {
     if (isRecording) return;
     if (!chatUser) {
-      if (window.showToast) showToast(isEN ? 'Please sign in first' : 'Accedi prima', 'info');
+      if (window.showToast) showToast(LANG3 === 'es' ? 'Inicia sesión primero' : isEN ? 'Please sign in first' : 'Accedi prima', 'info');
       return;
     }
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      if (window.showToast) showToast(isEN ? 'Microphone not supported' : 'Microfono non supportato', 'error');
+      if (window.showToast) showToast(LANG3 === 'es' ? 'Micrófono no compatible' : isEN ? 'Microphone not supported' : 'Microfono non supportato', 'error');
       return;
     }
     navigator.mediaDevices.getUserMedia({ audio: true }).then(function(stream) {
@@ -13564,7 +13564,7 @@ window.injectAllWikiLinks = function() {
       }, 1000);
     }).catch(function(err) {
       console.error('[Chat] Mic access denied:', err);
-      if (window.showToast) showToast(isEN ? 'Microphone access denied' : 'Accesso microfono negato', 'error');
+      if (window.showToast) showToast(LANG3 === 'es' ? 'Acceso al micrófono denegado' : isEN ? 'Microphone access denied' : 'Accesso microfono negato', 'error');
     });
   }
 
@@ -13581,7 +13581,7 @@ window.injectAllWikiLinks = function() {
         _chatRecStream.getTracks().forEach(function(t) { t.stop(); });
         var blob = new Blob(audioChunks, { type: window._audioMimeType || 'audio/webm' });
         if (blob.size < 1000) {
-          if (window.showToast) showToast(isEN ? 'Recording too short' : 'Registrazione troppo breve', 'info');
+          if (window.showToast) showToast(LANG3 === 'es' ? 'Grabación demasiado corta' : isEN ? 'Recording too short' : 'Registrazione troppo breve', 'info');
           return;
         }
         // Upload to Firebase Storage
@@ -13589,18 +13589,18 @@ window.injectAllWikiLinks = function() {
           var storageRef = firebase.storage().ref();
           var fileName = 'chat/viaggio-europa-2026/audio/' + Date.now() + '.webm';
           var fileRef = storageRef.child(fileName);
-          if (window.showToast) showToast(isEN ? 'Sending audio...' : 'Invio audio...', 'info');
+          if (window.showToast) showToast(LANG3 === 'es' ? 'Enviando audio...' : isEN ? 'Sending audio...' : 'Invio audio...', 'info');
           fileRef.put(blob).then(function(snapshot) {
             return snapshot.ref.getDownloadURL();
           }).then(function(url) {
             sendMessage('', url, window._audioMimeType || 'audio/webm');
-            if (window.showToast) showToast(isEN ? 'Audio sent!' : 'Audio inviato!', 'success');
+            if (window.showToast) showToast(LANG3 === 'es' ? '¡Audio enviado!' : isEN ? 'Audio sent!' : 'Audio inviato!', 'success');
           }).catch(function(err) {
             console.error('[Chat] Audio upload failed:', err);
-            if (window.showToast) showToast(isEN ? 'Audio upload failed' : 'Caricamento audio fallito', 'error');
+            if (window.showToast) showToast(LANG3 === 'es' ? 'Error al subir audio' : isEN ? 'Audio upload failed' : 'Caricamento audio fallito', 'error');
           });
         } else {
-          if (window.showToast) showToast(isEN ? 'Firebase Storage not available' : 'Firebase Storage non disponibile', 'warning');
+          if (window.showToast) showToast(LANG3 === 'es' ? 'Firebase Storage no disponible' : isEN ? 'Firebase Storage not available' : 'Firebase Storage non disponibile', 'warning');
         }
       };
     } else {
@@ -13726,7 +13726,7 @@ window.injectAllWikiLinks = function() {
 
     // Reply
     var replyBtn = document.createElement('button');
-    replyBtn.innerHTML = '<span>↩️</span><span>' + (isEN ? 'Reply' : 'Rispondi') + '</span>';
+    replyBtn.innerHTML = '<span>↩️</span><span>' + (LANG3 === 'es' ? 'Responder' : isEN ? 'Reply' : 'Rispondi') + '</span>';
     bindTap(replyBtn, function() {
       setReply(key, msgText, msgAuthor);
       overlay.remove();
@@ -13736,12 +13736,12 @@ window.injectAllWikiLinks = function() {
     // Copy (only if there's text)
     if (msgText) {
       var copyBtn = document.createElement('button');
-      copyBtn.innerHTML = '<span>📋</span><span>' + (isEN ? 'Copy' : 'Copia') + '</span>';
+      copyBtn.innerHTML = '<span>📋</span><span>' + (LANG3 === 'es' ? 'Copiar' : isEN ? 'Copy' : 'Copia') + '</span>';
       bindTap(copyBtn, function() {
         navigator.clipboard.writeText(msgText).then(function() {
-          if (window.showToast) showToast(isEN ? 'Copied!' : 'Copiato!', 'success');
+          if (window.showToast) showToast(LANG3 === 'es' ? '¡Copiado!' : isEN ? 'Copied!' : 'Copiato!', 'success');
         }).catch(function() {
-          if (window.showToast) showToast(isEN ? 'Copy failed' : 'Copia fallita', 'error');
+          if (window.showToast) showToast(LANG3 === 'es' ? 'Copia fallida' : isEN ? 'Copy failed' : 'Copia fallita', 'error');
         });
         overlay.remove();
       });
@@ -13752,13 +13752,13 @@ window.injectAllWikiLinks = function() {
     if (isMineMsg || isOwner) {
       var delBtn = document.createElement('button');
       delBtn.className = 'destructive';
-      delBtn.innerHTML = '<span>🗑️</span><span>' + (isEN ? 'Delete' : 'Elimina') + '</span>';
+      delBtn.innerHTML = '<span>🗑️</span><span>' + (LANG3 === 'es' ? 'Eliminar' : isEN ? 'Delete' : 'Elimina') + '</span>';
       bindTap(delBtn, function() {
         overlay.remove();
-        var confirmText = isEN ? 'Delete this message for everyone?' : 'Eliminare questo messaggio per tutti?';
+        var confirmText = LANG3 === 'es' ? '¿Eliminar este mensaje para todos?' : isEN ? 'Delete this message for everyone?' : 'Eliminare questo messaggio per tutti?';
         showConfirm(confirmText, function() {
           CHAT_REF.child(key).remove().then(function() {
-            if (window.showToast) showToast(isEN ? 'Message deleted' : 'Messaggio eliminato', 'info');
+            if (window.showToast) showToast(LANG3 === 'es' ? 'Mensaje eliminado' : isEN ? 'Message deleted' : 'Messaggio eliminato', 'info');
           });
         });
       });
@@ -13802,7 +13802,7 @@ window.injectAllWikiLinks = function() {
       if (val && val.name && (Date.now() - (val.t || 0)) < 5000) typers.push(val.name.split(' ')[0]);
     });
     if (typers.length > 0) {
-      typingEl.textContent = typers.join(', ') + (isEN ? ' typing...' : ' sta scrivendo...');
+      typingEl.textContent = typers.join(', ') + (LANG3 === 'es' ? ' escribiendo...' : isEN ? ' typing...' : ' sta scrivendo...');
       typingEl.style.display = 'block';
     } else {
       typingEl.style.display = 'none';
@@ -13822,9 +13822,9 @@ window.injectAllWikiLinks = function() {
   var locationBtn = document.getElementById('chat-location-btn');
   if (locationBtn) {
     locationBtn.addEventListener('click', function() {
-      if (!chatUser) { if (window.showToast) showToast(isEN ? 'Please sign in first' : 'Accedi prima', 'info'); return; }
-      if (!navigator.geolocation) { if (window.showToast) showToast(isEN ? 'Geolocation not supported' : 'Geolocalizzazione non supportata', 'error'); return; }
-      if (window.showToast) showToast(isEN ? 'Getting location...' : 'Ottenendo posizione...', 'info');
+      if (!chatUser) { if (window.showToast) showToast(LANG3 === 'es' ? 'Inicia sesión primero' : isEN ? 'Please sign in first' : 'Accedi prima', 'info'); return; }
+      if (!navigator.geolocation) { if (window.showToast) showToast(LANG3 === 'es' ? 'Geolocalización no soportada' : isEN ? 'Geolocation not supported' : 'Geolocalizzazione non supportata', 'error'); return; }
+      if (window.showToast) showToast(LANG3 === 'es' ? 'Obteniendo ubicación...' : isEN ? 'Getting location...' : 'Ottenendo posizione...', 'info');
       navigator.geolocation.getCurrentPosition(function(pos) {
         var lat = pos.coords.latitude.toFixed(5);
         var lng = pos.coords.longitude.toFixed(5);
@@ -13832,7 +13832,7 @@ window.injectAllWikiLinks = function() {
         var locUrl = 'https://maps.google.com/?q=' + lat + ',' + lng;
         sendMessage(locText + '\n' + locUrl, null, null, 'location');
       }, function() {
-        if (window.showToast) showToast(isEN ? 'Could not get location' : 'Impossibile ottenere la posizione', 'error');
+        if (window.showToast) showToast(LANG3 === 'es' ? 'No se pudo obtener la ubicación' : isEN ? 'Could not get location' : 'Impossibile ottenere la posizione', 'error');
       }, { enableHighAccuracy: true, timeout: 10000 });
     });
   }
@@ -14169,7 +14169,7 @@ window.injectAllWikiLinks = function() {
   var origChatRefPush = CHAT_REF.push;
   var patchedPush = function() {
     if (chatUser && isUserBanned(chatUser.uid)) {
-      if (window.showToast) showToast(isEN ? 'You have been blocked from this chat.' : 'Sei stato bloccato da questa chat.', 'error');
+      if (window.showToast) showToast(LANG3 === 'es' ? 'Has sido bloqueado de este chat.' : isEN ? 'You have been blocked from this chat.' : 'Sei stato bloccato da questa chat.', 'error');
       return { set: function(){}, update: function(){} };
     }
     if (chatUser) trackUserMessage(chatUser);
@@ -14226,7 +14226,7 @@ window.injectAllWikiLinks = function() {
     var _today = new Date();
     var _dayNum = Math.max(1, Math.floor((_today - _tripStart) / 86400000) + 1);
     var _dayKey = 'G' + _dayNum;
-    if (plTitle) plTitle.textContent = (window.isEN ? 'Soundtrack — ' : 'Colonna sonora — ') + _dayKey;
+    if (plTitle) plTitle.textContent = (window.LANG3 === 'es' ? 'Banda sonora — ' : isEN ? 'Soundtrack — ' : 'Colonna sonora — ') + _dayKey;
 
     // Show section
     plSection.style.display = '';
@@ -14282,7 +14282,7 @@ window.injectAllWikiLinks = function() {
       });
 
       plApproved.innerHTML = approvedHtml;
-      plList.innerHTML = listHtml || '<div style="font-size:12px;color:#94a3b8;">' + (window.isEN ? 'No suggestions yet' : 'Nessun suggerimento ancora') + '</div>';
+      plList.innerHTML = listHtml || '<div style="font-size:12px;color:#94a3b8;">' + (window.LANG3 === 'es' ? 'Aún no hay sugerencias' : isEN ? 'No suggestions yet' : 'Nessun suggerimento ancora') + '</div>';
 
       // Hide form if already suggested
       var plForm = document.getElementById('chat-playlist-form');
@@ -14309,13 +14309,13 @@ window.injectAllWikiLinks = function() {
     if (plSubmitBtn) plSubmitBtn.addEventListener('click', function() {
       var _user = firebase.auth().currentUser;
       if (!_user) {
-        if (window.showToast) showToast(window.isEN ? 'Sign in first' : 'Accedi prima', 'info');
+        if (window.showToast) showToast(window.LANG3 === 'es' ? 'Inicia sesión primero' : isEN ? 'Sign in first' : 'Accedi prima', 'info');
         return;
       }
       var song = (plSongInput.value || '').trim();
       var artist = (plArtistInput.value || '').trim();
       if (!song) {
-        if (window.showToast) showToast(window.isEN ? 'Enter a song title' : 'Inserisci il titolo', 'info');
+        if (window.showToast) showToast(window.LANG3 === 'es' ? 'Introduce el título de la canción' : isEN ? 'Enter a song title' : 'Inserisci il titolo', 'info');
         return;
       }
       plRef.child(_user.uid).set({
@@ -14327,7 +14327,7 @@ window.injectAllWikiLinks = function() {
       }).then(function() {
         plSongInput.value = '';
         plArtistInput.value = '';
-        if (window.showToast) showToast(window.isEN ? '\u266A Song suggested!' : '\u266A Canzone suggerita!', 'success');
+        if (window.showToast) showToast(window.LANG3 === 'es' ? '\\u266A Canción sugerida!' : isEN ? '\u266A Song suggested!' : '\u266A Canzone suggerita!', 'success');
       });
     });
   })();
@@ -14420,7 +14420,7 @@ window.injectAllWikiLinks = function() {
   if (altroLoginBtn) {
     altroLoginBtn.addEventListener('click', function() {
       doGoogleSignIn(function(u) {
-        if (window.showToast) window.showToast((isEN ? 'Welcome, ' : 'Benvenuto, ') + (u.displayName || u.email), 'success');
+        if (window.showToast) window.showToast((LANG3 === 'es' ? 'Bienvenido, ' : isEN ? 'Welcome, ' : 'Benvenuto, ') + (u.displayName || u.email), 'success');
       });
     });
   }
@@ -14433,7 +14433,7 @@ window.injectAllWikiLinks = function() {
     altroLogoutBtn.addEventListener('click', function() {
       var user = firebase.auth().currentUser;
       if (!user) return;
-      showConfirm((isEN ? 'Logged in as: ' : 'Connesso come: ') + (user.displayName || user.email) + '\n\n' + (isEN ? 'Sign out?' : 'Disconnettersi?'), function() {
+      showConfirm((LANG3 === 'es' ? 'Conectado como: ' : isEN ? 'Logged in as: ' : 'Connesso come: ') + (user.displayName || user.email) + '\n\n' + (LANG3 === 'es' ? '¿Cerrar sesión?' : isEN ? 'Sign out?' : 'Disconnettersi?'), function() {
         firebase.auth().signOut().then(function() {
           if (typeof window.detachFirebaseListeners === 'function') {
             window.detachFirebaseListeners('chat');
@@ -14442,7 +14442,7 @@ window.injectAllWikiLinks = function() {
             window.detachFirebaseListeners('admin');
             window.detachFirebaseListeners('home');
           }
-          showToast(isEN ? 'Signed out' : 'Disconnesso', 'info');
+          showToast(LANG3 === 'es' ? 'Desconectado' : isEN ? 'Signed out' : 'Disconnesso', 'info');
           setTimeout(function() { window.location.reload(); }, 500);
         });
       });
@@ -14521,7 +14521,7 @@ window.injectAllWikiLinks = function() {
   accordionSection.className = 'walking-daily-accordion';
   accordionSection.id = 'pos-walking-daily';
   accordionSection.innerHTML = '<button type="button" class="walking-daily-toggle" id="walking-daily-toggle">' +
-    '<span>' + (isEN ? '▶ Daily details' : '▶ Dettagli per giorno') + '</span></button>' +
+    '<span>' + (LANG3 === 'es' ? '▶ Detalles diarios' : isEN ? '▶ Daily details' : '▶ Dettagli per giorno') + '</span></button>' +
     '<div class="walking-daily-body" id="walking-daily-body" style="display:none;"></div>';
   var garminCard = document.getElementById('pos-garmin-card');
   if (garminCard && garminCard.nextSibling) {
@@ -14536,7 +14536,7 @@ window.injectAllWikiLinks = function() {
   toggleBtn.addEventListener('click', function() {
     isOpen = !isOpen;
     bodyEl.style.display = isOpen ? '' : 'none';
-    toggleBtn.querySelector('span').textContent = (isOpen ? '▼ ' : '▶ ') + (isEN ? 'Daily details' : 'Dettagli per giorno');
+    toggleBtn.querySelector('span').textContent = (isOpen ? '▼ ' : '▶ ') + (LANG3 === 'es' ? 'Detalles diarios' : isEN ? 'Daily details' : 'Dettagli per giorno');
   });
 
   (function() { var _actDailyCb = function(snapshot) {
@@ -14593,9 +14593,9 @@ window.injectAllWikiLinks = function() {
       if (isOwner) {
         entries.forEach(function(e) {
           if (e.act.type === 'daily_walk') {
-            html += '<button class="pos-del-btn act-edit" data-actkey="' + e.key + '" data-date="' + (e.act.date || '') + '" data-steps="' + (e.act.steps || 0) + '" data-distance="' + (e.act.distance || 0) + '" data-name="' + (e.act.name || '').replace(/"/g, '&quot;') + '" title="' + (isEN ? 'Edit' : 'Modifica') + '" style="font-size:11px;margin-left:4px;">✏️</button>';
+            html += '<button class="pos-del-btn act-edit" data-actkey="' + e.key + '" data-date="' + (e.act.date || '') + '" data-steps="' + (e.act.steps || 0) + '" data-distance="' + (e.act.distance || 0) + '" data-name="' + (e.act.name || '').replace(/"/g, '&quot;') + '" title="' + (LANG3 === 'es' ? 'Editar' : isEN ? 'Edit' : 'Modifica') + '" style="font-size:11px;margin-left:4px;">✏️</button>';
           }
-          html += '<button class="pos-del-btn act-del" data-actkey="' + e.key + '" title="' + (isEN ? 'Delete' : 'Elimina') + '" style="font-size:11px;margin-left:4px;">🗑️</button>';
+          html += '<button class="pos-del-btn act-del" data-actkey="' + e.key + '" title="' + (LANG3 === 'es' ? 'Eliminar' : isEN ? 'Delete' : 'Elimina') + '" style="font-size:11px;margin-left:4px;">🗑️</button>';
         });
       }
       html += '</div>';
@@ -14617,7 +14617,7 @@ window.injectAllWikiLinks = function() {
     bodyEl.querySelectorAll('.act-del[data-actkey]').forEach(function(btn) {
       btn.addEventListener('click', function() {
         var actkey = btn.getAttribute('data-actkey');
-        showConfirm(isEN ? 'Delete this entry?' : 'Eliminare questa voce?', function() {
+        showConfirm(LANG3 === 'es' ? '¿Eliminar esta entrada?' : isEN ? 'Delete this entry?' : 'Eliminare questa voce?', function() {
           activitiesRef.child(actkey).remove();
         });
       });
@@ -14651,19 +14651,19 @@ window.injectAllWikiLinks = function() {
     var overlay = document.createElement('div');
     overlay.className = 'manual-km-overlay';
     overlay.innerHTML = '<div class="manual-km-modal">' +
-      '<h3>' + (isEdit ? (isEN ? '✏️ Edit walking day' : '✏️ Modifica giorno a piedi') : (isEN ? '🚶 Add walking day' : '🚶 Aggiungi giorno a piedi')) + '</h3>' +
-      '<label>' + (isEN ? 'Date' : 'Data') + '</label>' +
+      '<h3>' + (isEdit ? (LANG3 === 'es' ? '✏️ Editar día a pie' : isEN ? '✏️ Edit walking day' : '✏️ Modifica giorno a piedi') : (LANG3 === 'es' ? '🚶 Añadir día a pie' : isEN ? '🚶 Add walking day' : '🚶 Aggiungi giorno a piedi')) + '</h3>' +
+      '<label>' + (LANG3 === 'es' ? 'Fecha' : isEN ? 'Date' : 'Data') + '</label>' +
       '<input type="date" id="manual-km-date" value="' + today + '">' +
-      '<label>' + (isEN ? 'Steps (from Garmin)' : 'Passi (da Garmin)') + '</label>' +
+      '<label>' + (LANG3 === 'es' ? 'Pasos (de Garmin)' : isEN ? 'Steps (from Garmin)' : 'Passi (da Garmin)') + '</label>' +
       '<input type="number" id="manual-km-steps" step="1" min="0" max="99999" placeholder="es. 12500" value="' + prefillSteps + '">' +
-      '<label>' + (isEN ? 'Km walked' : 'Km a piedi') + '</label>' +
+      '<label>' + (LANG3 === 'es' ? 'Km caminados' : isEN ? 'Km walked' : 'Km a piedi') + '</label>' +
       '<input type="number" id="manual-km-value" step="0.1" min="0" max="999" placeholder="es. 8.5" value="' + prefillKm + '">' +
-      '<p style="font-size:11px;color:var(--text-muted);margin:4px 0 0;">' + (isEN ? 'Leave km empty to auto-estimate from steps (×0.0007)' : 'Lascia km vuoto per stima automatica dai passi (×0,0007)') + '</p>' +
-      '<label>' + (isEN ? 'Note (optional)' : 'Nota (opzionale)') + '</label>' +
-      '<input type="text" id="manual-km-note" placeholder="' + (isEN ? 'e.g. Walking in Oslo' : 'es. Passeggiata a Oslo') + '" maxlength="60" value="' + prefillName.replace(/"/g, '&quot;') + '">' +
+      '<p style="font-size:11px;color:var(--text-muted);margin:4px 0 0;">' + (LANG3 === 'es' ? 'Deja km vacío para estimar automáticamente a partir de los pasos (×0.0007)' : isEN ? 'Leave km empty to auto-estimate from steps (×0.0007)' : 'Lascia km vuoto per stima automatica dai passi (×0,0007)') + '</p>' +
+      '<label>' + (LANG3 === 'es' ? 'Nota (opcional)' : isEN ? 'Note (optional)' : 'Nota (opzionale)') + '</label>' +
+      '<input type="text" id="manual-km-note" placeholder="' + (LANG3 === 'es' ? 'p. ej. Paseando por Oslo' : isEN ? 'e.g. Walking in Oslo' : 'es. Passeggiata a Oslo') + '" maxlength="60" value="' + prefillName.replace(/"/g, '&quot;') + '">' +
       '<div class="manual-km-actions">' +
-      '  <button class="manual-km-cancel">' + (isEN ? 'Cancel' : 'Annulla') + '</button>' +
-      '  <button class="manual-km-save">' + (isEdit ? (isEN ? 'Update' : 'Aggiorna') : (isEN ? 'Save' : 'Salva')) + '</button>' +
+      '  <button class="manual-km-cancel">' + (LANG3 === 'es' ? 'Cancelar' : isEN ? 'Cancel' : 'Annulla') + '</button>' +
+      '  <button class="manual-km-save">' + (isEdit ? (LANG3 === 'es' ? 'Actualizar' : isEN ? 'Update' : 'Aggiorna') : (LANG3 === 'es' ? 'Guardar' : isEN ? 'Save' : 'Salva')) + '</button>' +
       '</div>' +
       '</div>';
     document.body.appendChild(overlay);
@@ -14678,7 +14678,7 @@ window.injectAllWikiLinks = function() {
       var note = document.getElementById('manual-km-note').value.trim();
 
       if (!steps && !km) {
-        if (window.showToast) showToast(isEN ? 'Enter steps or km' : 'Inserisci passi o km', 'error');
+        if (window.showToast) showToast(LANG3 === 'es' ? 'Introduce pasos o km' : isEN ? 'Enter steps or km' : 'Inserisci passi o km', 'error');
         return;
       }
 
@@ -14691,7 +14691,7 @@ window.injectAllWikiLinks = function() {
         stravaId: isEdit ? (prefill.stravaId || editKey) : ('garmin_' + Date.now()),
         type: 'daily_walk',
         category: 'foot',
-        name: note || (isEN ? 'Daily walking' : 'Camminata giornaliera'),
+        name: note || (LANG3 === 'es' ? 'Caminata diaria' : isEN ? 'Daily walking' : 'Camminata giornaliera'),
         date: date,
         distance: Math.round(km * 100) / 100,
         steps: steps,
@@ -14701,11 +14701,11 @@ window.injectAllWikiLinks = function() {
 
       var targetKey = isEdit ? editKey : ('garmin_' + date.replace(/-/g, '') + '_' + Date.now());
       activitiesRef.child(targetKey).set(entry).then(function() {
-        if (window.showToast) showToast(isEdit ? (isEN ? '✏️ Updated!' : '✏️ Aggiornato!') : (isEN ? '👣 Saved!' : '👣 Salvato!'), 'success');
+        if (window.showToast) showToast(isEdit ? (LANG3 === 'es' ? '✏️ Actualizado!' : isEN ? '✏️ Updated!' : '✏️ Aggiornato!') : (LANG3 === 'es' ? '👣 Guardado!' : isEN ? '👣 Saved!' : '👣 Salvato!'), 'success');
         overlay.remove();
       }).catch(function(err) {
         console.error('Walking entry save error:', err);
-        if (window.showToast) showToast(isEN ? 'Save failed' : 'Salvataggio fallito', 'error');
+        if (window.showToast) showToast(LANG3 === 'es' ? 'Error al guardar' : isEN ? 'Save failed' : 'Salvataggio fallito', 'error');
       });
     });
   }
@@ -14968,7 +14968,7 @@ window.injectAllWikiLinks = function() {
   var showToast = function(msg, type, dur) { if (window.showToast) window.showToast(msg, type, dur); };
 
   // v4.90 FIX: _lg at IIFE level so renderSocialBlock/renderPhotoSocial can access it
-  var _lg = (typeof LANG3 !== 'undefined') ? LANG3 : (isEN ? 'en' : 'it');
+  var _lg = (typeof LANG3 !== 'undefined') ? LANG3 : (LANG3 === 'es' ? 'es' : isEN ? 'en' : 'it');
 
   var diarioRef = firebase.database().ref('trips/' + FAMILY_ID + '/diary');
   var approvedRef = firebase.database().ref('trips/' + FAMILY_ID + '/approvedUsers');
@@ -15130,7 +15130,7 @@ window.injectAllWikiLinks = function() {
         // Build day header
         var flag = dayData.countryCode ? countryCodeToFlag(dayData.countryCode) : '';
         var dn = dayData.dayNumber;
-        var dayPrefix = (typeof LANG3 !== 'undefined' && LANG3 === 'es') ? 'Día ' : isEN ? 'Day ' : 'Giorno ';
+        var dayPrefix = (typeof LANG3 !== 'undefined' && LANG3 === 'es') ? 'Día ' : LANG3 === 'es' ? 'Día ' : isEN ? 'Day ' : 'Giorno ';
         var dayLabel = (typeof dn === 'number' && dn >= 0) ? (dayPrefix + (dn + 1)) : '';
 
         // Format date: "7 lug 2026"
@@ -15226,12 +15226,12 @@ window.injectAllWikiLinks = function() {
           // Future date: schedule for that date
           var publishTs = new Date(entryDate + 'T09:00:00').getTime();
           entryRef.update({ publishAt: publishTs }).then(function() {
-            if (window.showToast) showToast(isEN ? '\ud83d\udd52 Scheduled for ' + entryDate : '\ud83d\udd52 Programmato per ' + entryDate, 'success');
+            if (window.showToast) showToast(LANG3 === 'es' ? '\ud83d\udd52 Programado para ' + entryDate : isEN ? '\ud83d\udd52 Scheduled for ' + entryDate : '\ud83d\udd52 Programmato per ' + entryDate, 'success');
           });
         } else {
           // Today or past: publish immediately
           entryRef.update({ draft: null, publishAt: null }).then(function() {
-            if (window.showToast) showToast(isEN ? '\u2705 Post published!' : '\u2705 Post pubblicato!', 'success');
+            if (window.showToast) showToast(LANG3 === 'es' ? '\\u2705 Post publicado!' : isEN ? '\u2705 Post published!' : '\u2705 Post pubblicato!', 'success');
           }).catch(function(err) {
             console.error('[Diario] Publish failed:', err);
             if (window.showToast) showToast('Failed to publish', 'danger');
@@ -15249,12 +15249,12 @@ window.injectAllWikiLinks = function() {
       if (!key) return;
       // v3.94: uses global isEN
       var familyId = (typeof FAMILY_ID !== 'undefined') ? FAMILY_ID : 'viaggio-europa-2026';
-      showConfirm(isEN ? 'Delete this journal entry?' : 'Eliminare questa voce del diario?', function() {
+      showConfirm(LANG3 === 'es' ? '¿Eliminar esta entrada del diario?' : isEN ? 'Delete this journal entry?' : 'Eliminare questa voce del diario?', function() {
         firebase.database().ref('trips/' + familyId + '/diary/' + key).remove().then(function() {
-          if (window.showToast) showToast(isEN ? 'Entry deleted' : 'Voce eliminata', 'info');
+          if (window.showToast) showToast(LANG3 === 'es' ? 'Entrada eliminada' : isEN ? 'Entry deleted' : 'Voce eliminata', 'info');
         }).catch(function(err) {
           console.error('[Diario] Delete failed:', err);
-          if (window.showToast) showToast(isEN ? 'Failed to delete' : 'Impossibile eliminare', 'danger');
+          if (window.showToast) showToast(LANG3 === 'es' ? 'No se pudo eliminar' : isEN ? 'Failed to delete' : 'Impossibile eliminare', 'danger');
         });
       });
     });
@@ -15302,10 +15302,10 @@ window.injectAllWikiLinks = function() {
       var updates = {};
       orderedKeys.forEach(function(k, i) { updates[k + '/order'] = i; });
       return photosRef.update(updates).then(function() {
-        if (window.showToast) showToast(okMsg || (isEN ? 'Order updated' : 'Ordine aggiornato'), 'success');
+        if (window.showToast) showToast(okMsg || (LANG3 === 'es' ? 'Pedido actualizado' : isEN ? 'Order updated' : 'Ordine aggiornato'), 'success');
       }).catch(function(err) {
         console.error('[Diario] Reorder failed:', err);
-        if (window.showToast) showToast(isEN ? 'Failed to reorder' : 'Riordino fallito', 'danger');
+        if (window.showToast) showToast(LANG3 === 'es' ? 'No se pudo reordenar' : isEN ? 'Failed to reorder' : 'Riordino fallito', 'danger');
       });
     }
 
@@ -15331,7 +15331,7 @@ window.injectAllWikiLinks = function() {
             if (ta !== tb) return ta - tb;
             return String(ka).localeCompare(String(kb));
           });
-          return _persistPhotoOrder(sKey, keys, isEN ? 'Sorted by date' : 'Ordinate per data');
+          return _persistPhotoOrder(sKey, keys, LANG3 === 'es' ? 'Ordenadas por fecha' : isEN ? 'Sorted by date' : 'Ordinate per data');
         });
         return;
       }
@@ -15356,7 +15356,7 @@ window.injectAllWikiLinks = function() {
         return _persistPhotoOrder(key, keys);
       }).catch(function(err) {
         console.error('[Diario] Reorder failed:', err);
-        if (window.showToast) showToast(isEN ? 'Failed to reorder' : 'Riordino fallito', 'danger');
+        if (window.showToast) showToast(LANG3 === 'es' ? 'No se pudo reordenar' : isEN ? 'Failed to reorder' : 'Riordino fallito', 'danger');
       });
     });
 
@@ -15513,7 +15513,7 @@ window.injectAllWikiLinks = function() {
               .update({ draft: null, publishAt: null, publishedAt: _now })
               .then(function() {
                 _qvLog.info('[Diario] Auto-published scheduled post:', key, entry.title || '');
-                if (window.showToast) showToast('📖 ' + (entry.title || 'Post') + ' — ' + (isEN ? 'published!' : 'pubblicato!'), 'success');
+                if (window.showToast) showToast('📖 ' + (entry.title || 'Post') + ' — ' + (LANG3 === 'es' ? '¡publicado!' : isEN ? 'published!' : 'pubblicato!'), 'success');
               });
           }
         });
@@ -15632,7 +15632,7 @@ window.injectAllWikiLinks = function() {
         date: today,
         customLabel: 'Pre-viaggio',
         customType: 'message',
-        text: isEN ? 'The countdown has begun! The van is almost ready, the adventure is about to start.' : 'Il conto alla rovescia \u00e8 iniziato! Il furgone \u00e8 quasi pronto, l\'avventura sta per iniziare.',
+        text: LANG3 === 'es' ? '¡La cuenta atrás ha comenzado! La furgoneta está casi lista, la aventura está a punto de comenzar.' : isEN ? 'The countdown has begun! The van is almost ready, the adventure is about to start.' : 'Il conto alla rovescia \u00e8 iniziato! Il furgone \u00e8 quasi pronto, l\'avventura sta per iniziare.',
         draft: true,
         createdAt: firebase.database.ServerValue.TIMESTAMP
       },
@@ -15641,7 +15641,7 @@ window.injectAllWikiLinks = function() {
         date: today,
         customLabel: 'Pre-viaggio',
         customType: 'photo',
-        text: isEN ? 'Preparations underway! Here\'s what awaits us along the road \u2014 fjords, Baltic cities, and much more.' : 'Preparativi in corso! Ecco cosa ci aspetta lungo la strada \u2014 fiordi, citt\u00e0 baltiche, e tanto altro.',
+        text: LANG3 === 'es' ? '¡Preparativos en marcha! Esto es lo que nos espera en el camino \u2014 fiordos, ciudades bálticas y mucho más.' : isEN ? 'Preparations underway! Here\'s what awaits us along the road \u2014 fjords, Baltic cities, and much more.' : 'Preparativi in corso! Ecco cosa ci aspetta lungo la strada \u2014 fiordi, citt\u00e0 baltiche, e tanto altro.',
         draft: true,
         createdAt: firebase.database.ServerValue.TIMESTAMP
       },
@@ -15650,13 +15650,13 @@ window.injectAllWikiLinks = function() {
         date: today,
         customLabel: 'Pre-viaggio',
         customType: 'recap',
-        text: isEN ? 'The route is ready! 55 days, 13 countries, 12,000 km in a van with the whole family.' : 'Il percorso \u00e8 pronto! 55 giorni, 13 paesi, 12.000 km in furgone con tutta la famiglia.',
+        text: LANG3 === 'es' ? '¡La ruta está lista! 55 días, 13 países, 12.000 km en una furgoneta con toda la familia.' : isEN ? 'The route is ready! 55 days, 13 countries, 12,000 km in a van with the whole family.' : 'Il percorso \u00e8 pronto! 55 giorni, 13 paesi, 12.000 km in furgone con tutta la famiglia.',
         draft: true,
         createdAt: firebase.database.ServerValue.TIMESTAMP
       }
     };
     diarioRef.update(seeds).then(function() {
-      showToast(isEN ? '\ud83d\udcdd 3 draft posts created!' : '\ud83d\udcdd 3 bozze create!', 'info');
+      showToast(LANG3 === 'es' ? '\\ud83d\\udcdd 3 borradores creados!' : isEN ? '\ud83d\udcdd 3 draft posts created!' : '\ud83d\udcdd 3 bozze create!', 'info');
     });
   }
 
@@ -15673,7 +15673,7 @@ window.injectAllWikiLinks = function() {
           window._diarySeedDone = true;
           seedDefaultDrafts();
         } else {
-          timelineEl.innerHTML = '<div style="text-align:center;padding:40px 20px;color:var(--text-muted);">' + (isEN ? 'No journal entries yet. Stay tuned!' : 'Nessuna voce nel diario. Resta sintonizzato!') + '</div>';
+          timelineEl.innerHTML = '<div style="text-align:center;padding:40px 20px;color:var(--text-muted);">' + (LANG3 === 'es' ? 'Aún no hay entradas en el diario. ¡Mantente atento!' : isEN ? 'No journal entries yet. Stay tuned!' : 'Nessuna voce nel diario. Resta sintonizzato!') + '</div>';
         }
         return;
       }
@@ -15707,9 +15707,9 @@ window.injectAllWikiLinks = function() {
           else if (isEN && entry.titleEn) dayLabel = entry.titleEn;
           else dayLabel = entry.customLabel;
         } else if (dn < 0) {
-          dayLabel = (typeof LANG3 !== 'undefined' && LANG3 === 'es') ? 'Pre-viaje' : isEN ? 'Pre-trip' : 'Pre-viaggio';
+          dayLabel = (typeof LANG3 !== 'undefined' && LANG3 === 'es') ? 'Pre-viaje' : LANG3 === 'es' ? 'Previo al viaje' : isEN ? 'Pre-trip' : 'Pre-viaggio';
         } else {
-          var dayPrefix = (typeof LANG3 !== 'undefined' && LANG3 === 'es') ? 'Día ' : isEN ? 'Day ' : 'G';
+          var dayPrefix = (typeof LANG3 !== 'undefined' && LANG3 === 'es') ? 'Día ' : LANG3 === 'es' ? 'D' : isEN ? 'Day ' : 'G';
           dayLabel = dayPrefix + ( typeof dn === 'number' ? (dn + 1) : '?');
         }
         var dateStr = entry.date || '';
@@ -15742,16 +15742,16 @@ window.injectAllWikiLinks = function() {
           if (entry.highlight) {
             entryType = 'highlight'; entryTypeLabel = '\u2b50 Highlight';
           } else {
-            entryType = 'photo'; entryTypeLabel = '\ud83d\udcf7 ' + (isEN ? 'Photo' : 'Foto');
+            entryType = 'photo'; entryTypeLabel = '\ud83d\udcf7 ' + (LANG3 === 'es' ? 'Foto' : isEN ? 'Photo' : 'Foto');
           }
         } else if (entry.audio && entry.audio.url) {
           entryType = 'audio'; entryTypeLabel = '\ud83c\udfa4 Audio';
         } else if (entry.activities && (entry.activities.km || entry.activities.walk_km || entry.activities.bike_km)) {
-          entryType = 'tappa'; entryTypeLabel = '\ud83d\udea9 ' + (isEN ? 'Stage' : 'Tappa');
+          entryType = 'tappa'; entryTypeLabel = '\ud83d\udea9 ' + (LANG3 === 'es' ? 'Etapa' : isEN ? 'Stage' : 'Tappa');
         } else if (entry.text && entry.text.length > 100) {
-          entryType = 'recap'; entryTypeLabel = '\ud83d\udcdd ' + (isEN ? 'Recap' : 'Riepilogo');
+          entryType = 'recap'; entryTypeLabel = '\ud83d\udcdd ' + (LANG3 === 'es' ? 'Resumen' : isEN ? 'Recap' : 'Riepilogo');
         } else if (entry.text && entry.text.length > 0 && entry.text.length <= 100) {
-          entryType = 'message'; entryTypeLabel = '\ud83d\udcac ' + (isEN ? 'Message' : 'Messaggio');
+          entryType = 'message'; entryTypeLabel = '\ud83d\udcac ' + (LANG3 === 'es' ? 'Mensaje' : isEN ? 'Message' : 'Messaggio');
         } else {
           entryType = 'checkin'; entryTypeLabel = '\ud83d\udccd Check-in';
         }
@@ -15764,9 +15764,9 @@ window.injectAllWikiLinks = function() {
         html += '      <div><div class="diario-day" data-entry-key="' + key + '">' + dayLabel + '</div><div class="diario-date">' + dateStr + '</div></div>';
         if (isDraft && isOwner && entry.publishAt) {
           var schedDate = window.localDateStr(new Date(entry.publishAt)); // v2.96: LOCAL
-          html += '      <span class="diario-draft-badge" style="background:var(--bg-secondary,#e8f4fd);color:var(--accent,#1976d2);">\ud83d\udd52 ' + (isEN ? 'Scheduled: ' : 'Programmato: ') + schedDate + '</span>';
+          html += '      <span class="diario-draft-badge" style="background:var(--bg-secondary,#e8f4fd);color:var(--accent,#1976d2);">\ud83d\udd52 ' + (LANG3 === 'es' ? 'Programado: ' : isEN ? 'Scheduled: ' : 'Programmato: ') + schedDate + '</span>';
         } else if (isDraft && isOwner) {
-          html += '      <span class="diario-draft-badge">' + (isEN ? '\u270f\ufe0f Draft' : '\u270f\ufe0f Bozza') + '</span>';
+          html += '      <span class="diario-draft-badge">' + (LANG3 === 'es' ? '\\u270f\\ufe0f Borrador' : isEN ? '\u270f\ufe0f Draft' : '\u270f\ufe0f Bozza') + '</span>';
         }
         if (flag) html += '      <span class="diario-flag">' + flag + ' ' + country + '</span>';
         html += '      <span class="diario-entry-type diario-type-' + entryType + '">' + entryTypeLabel + '</span>';
@@ -15798,7 +15798,7 @@ window.injectAllWikiLinks = function() {
           // v4.97.3: owner toolbar — "Sort by date" only (drag removed from grid view)
           if (_photoOwner && _orderedKeys.length > 1) {
             html += '    <div class="diario-photos-toolbar">';
-            html += '      <button class="diario-photo-sortdate" data-entry-key="' + key + '" title="' + (_lg === 'es' ? 'Ordenar fotos por fecha' : isEN ? 'Sort photos by date' : 'Ordina le foto per data') + '">🕒 ' + (_lg === 'es' ? 'Ordenar por fecha' : isEN ? 'Sort by date' : 'Ordina per data') + '</button>';
+            html += '      <button class="diario-photo-sortdate" data-entry-key="' + key + '" title="' + (_lg === 'es' ? 'Ordenar fotos por fecha' : LANG3 === 'es' ? 'Ordenar fotos por fecha' : isEN ? 'Sort photos by date' : 'Ordina le foto per data') + '">🕒 ' + (_lg === 'es' ? 'Ordenar por fecha' : LANG3 === 'es' ? 'Ordenar por fecha' : isEN ? 'Sort by date' : 'Ordina per data') + '</button>';
             html += '    </div>';
           }
           // v4.97.4: Grid 2x2 layout — max 4 photos visible, "+N" overlay on last
@@ -15851,7 +15851,7 @@ window.injectAllWikiLinks = function() {
               html += '    <div class="diario-audio" style="margin:8px 0;display:flex;align-items:center;gap:6px;">';
               html += '<audio controls src="' + escapeHtml(a.url) + '" style="flex:1;height:36px;border-radius:8px;"></audio>';
               if (isOwner && !window._simRole) {
-                html += '<button class="diario-audio-delete" data-entry-key="' + key + '" data-audio-key="' + audioKey + '" data-audio-type="audios" title="' + (isEN ? 'Delete audio' : 'Elimina audio') + '" style="background:none;border:none;font-size:18px;cursor:pointer;padding:4px 8px;opacity:0.6;">\u274c</button>';
+                html += '<button class="diario-audio-delete" data-entry-key="' + key + '" data-audio-key="' + audioKey + '" data-audio-type="audios" title="' + (LANG3 === 'es' ? 'Eliminar audio' : isEN ? 'Delete audio' : 'Elimina audio') + '" style="background:none;border:none;font-size:18px;cursor:pointer;padding:4px 8px;opacity:0.6;">\u274c</button>';
               }
               html += '</div>';
             }
@@ -15861,7 +15861,7 @@ window.injectAllWikiLinks = function() {
           html += '    <div class="diario-audio" style="margin:8px 0;display:flex;align-items:center;gap:6px;">';
           html += '<audio controls src="' + escapeHtml(entry.audio.url) + '" style="flex:1;height:36px;border-radius:8px;"></audio>';
           if (isOwner && !window._simRole) {
-            html += '<button class="diario-audio-delete" data-entry-key="' + key + '" data-audio-key="" data-audio-type="audio" title="' + (isEN ? 'Delete audio' : 'Elimina audio') + '" style="background:none;border:none;font-size:18px;cursor:pointer;padding:4px 8px;opacity:0.6;">\u274c</button>';
+            html += '<button class="diario-audio-delete" data-entry-key="' + key + '" data-audio-key="" data-audio-type="audio" title="' + (LANG3 === 'es' ? 'Eliminar audio' : isEN ? 'Delete audio' : 'Elimina audio') + '" style="background:none;border:none;font-size:18px;cursor:pointer;padding:4px 8px;opacity:0.6;">\u274c</button>';
           }
           html += '</div>';
         }
@@ -15915,14 +15915,14 @@ window.injectAllWikiLinks = function() {
             var stopNames = entry.stops.map(function(s) { return s.name; });
             html += '<span class="diario-stat">\ud83d\udccd ' + stopNames.join(', ') + '</span>';
           } else if (typeof entry.stops === 'number' && entry.stops > 0) {
-            html += '<span class="diario-stat">\ud83d\udccd ' + entry.stops + (isEN ? ' stops' : ' tappe') + '</span>';
+            html += '<span class="diario-stat">\ud83d\udccd ' + entry.stops + (LANG3 === 'es' ? ' etapas' : isEN ? ' stops' : ' tappe') + '</span>';
           }
         }
         if (entry.customStops && Array.isArray(entry.customStops) && entry.customStops.length > 0) {
           entry.customStops.forEach(function(s, idx) {
             html += '<span class="diario-stat diario-custom-stop" data-entry-key="' + key + '" data-stop-idx="' + idx + '">\ud83d\udccc <span class="diario-stop-name">' + escapeHtml(s.name) + '</span>';
             if (isOwner && !window._simRole) {
-              html += '<button class="diario-stop-remove" data-entry-key="' + key + '" data-stop-idx="' + idx + '" title="' + (isEN ? 'Remove' : 'Rimuovi') + '" style="background:none;border:none;font-size:12px;cursor:pointer;padding:0 0 0 4px;opacity:0.6;vertical-align:middle;">\u2716</button>';
+              html += '<button class="diario-stop-remove" data-entry-key="' + key + '" data-stop-idx="' + idx + '" title="' + (LANG3 === 'es' ? 'Eliminar' : isEN ? 'Remove' : 'Rimuovi') + '" style="background:none;border:none;font-size:12px;cursor:pointer;padding:0 0 0 4px;opacity:0.6;vertical-align:middle;">\u2716</button>';
             }
             html += '</span>';
           });
@@ -15960,7 +15960,7 @@ window.injectAllWikiLinks = function() {
         if (isOwner && !window._simRole) {
           html += '    <div class="diario-entry-actions">';
           if (isDraft) {
-            html += '      <button class="diario-publish-btn" data-key="' + key + '" style="background:var(--success);color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;cursor:pointer;">\u2705 ' + (isEN ? 'Publish' : 'Pubblica') + '</button>';
+            html += '      <button class="diario-publish-btn" data-key="' + key + '" style="background:var(--success);color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;cursor:pointer;">\u2705 ' + (LANG3 === 'es' ? 'Publicar' : isEN ? 'Publish' : 'Pubblica') + '</button>';
           }
           html += '      <button class="diario-edit-btn" data-key="' + key + '">\u270f\ufe0f</button>';
           html += '      <button class="diario-upload-btn" data-key="' + key + '">\ud83d\udcf7</button>';
@@ -16009,7 +16009,7 @@ window.injectAllWikiLinks = function() {
       // instead of leaving the diary silently empty.
       _diarioQuery.on('value', _diarioCb, function(err) {
         console.error('[Diario] listener error:', err && err.message);
-        if (window.showToast) showToast(isEN ? '⚠️ Could not load the diary' : '⚠️ Impossibile caricare il diario', 'error');
+        if (window.showToast) showToast(LANG3 === 'es' ? '⚠️ Imposible cargar el diario' : isEN ? '⚠️ Could not load the diary' : '⚠️ Impossibile caricare il diario', 'error');
       });
     }
   }
@@ -16109,8 +16109,8 @@ window.injectAllWikiLinks = function() {
     try {
       var d = new Date(ts);
       // v3.94: uses global isEN
-      return d.toLocaleDateString(isEN ? 'en-GB' : 'it-IT', { day: '2-digit', month: 'short' }) + ' ' +
-             d.toLocaleTimeString(isEN ? 'en-GB' : 'it-IT', { hour: '2-digit', minute: '2-digit' });
+      return d.toLocaleDateString(LANG3 === 'es' ? 'es-ES' : isEN ? 'en-GB' : 'it-IT', { day: '2-digit', month: 'short' }) + ' ' +
+             d.toLocaleTimeString(LANG3 === 'es' ? 'es-ES' : isEN ? 'en-GB' : 'it-IT', { hour: '2-digit', minute: '2-digit' });
     } catch (e) { return ''; }
   }
 
@@ -16144,7 +16144,7 @@ window.injectAllWikiLinks = function() {
            emoji + (c > 0 ? '<span class="diario-react-count">' + c + '</span>' : '') + '</button>';
     });
     h += '<button type="button" class="diario-comments-toggle" data-key="' + key + '">\uD83D\uDCAC ' +
-         (commentCount > 0 ? commentCount + ' ' : '') + (_lg === 'es' ? 'Comentarios' : isEN ? 'Comments' : 'Commenti') + '</button>';
+         (commentCount > 0 ? commentCount + ' ' : '') + (_lg === 'es' ? 'Comentarios' : LANG3 === 'es' ? 'Comentarios' : isEN ? 'Comments' : 'Commenti') + '</button>';
     h += '</div>';
 
     // v4.18: "Ci sono stato!" / "I was there!" toggle removed per user request
@@ -16167,9 +16167,9 @@ window.injectAllWikiLinks = function() {
     // Comment form (v4.00: added photo button)
     h += '<div class="diario-comment-form">' +
          '<input type="text" class="diario-comment-input" data-key="' + key + '" maxlength="2000" placeholder="' +
-         (isEN ? 'Write a comment…' : 'Scrivi un commento…') + '">' +
-         '<button type="button" class="diario-comment-photo" data-key="' + key + '" title="' + (isEN ? 'Attach photo' : 'Allega foto') + '">\uD83D\uDCF7</button>' +
-         '<button type="button" class="diario-comment-send" data-key="' + key + '">' + (isEN ? 'Send' : 'Invia') + '</button>' +
+         (LANG3 === 'es' ? 'Escribe un comentario…' : isEN ? 'Write a comment…' : 'Scrivi un commento…') + '">' +
+         '<button type="button" class="diario-comment-photo" data-key="' + key + '" title="' + (LANG3 === 'es' ? 'Adjuntar foto' : isEN ? 'Attach photo' : 'Allega foto') + '">\uD83D\uDCF7</button>' +
+         '<button type="button" class="diario-comment-send" data-key="' + key + '">' + (LANG3 === 'es' ? 'Enviar' : isEN ? 'Send' : 'Invia') + '</button>' +
          '</div>';
     h += '</div>';
     h += '</div>';
@@ -16180,7 +16180,7 @@ window.injectAllWikiLinks = function() {
     // v3.94: uses global isEN
     var keys = Object.keys(comments || {});
     if (keys.length === 0) {
-      return '<div class="diario-comments-empty">' + (isEN ? 'No comments yet. Be the first!' : 'Ancora nessun commento. Scrivi tu il primo!') + '</div>';
+      return '<div class="diario-comments-empty">' + (LANG3 === 'es' ? 'Aún no hay comentarios. ¡Sé el primero!' : isEN ? 'No comments yet. Be the first!' : 'Ancora nessun commento. Scrivi tu il primo!') + '</div>';
     }
     // Sort by timestamp ascending
     keys.sort(function(a, b) { return (comments[a].ts || 0) - (comments[b].ts || 0); });
@@ -16192,7 +16192,7 @@ window.injectAllWikiLinks = function() {
       var canDelete = isOwner || (myUid && c.uid === myUid);
       out += '<div class="diario-comment" data-cid="' + cid + '">';
       out += '<div class="diario-comment-body">';
-      out += '<span class="diario-comment-author">' + escapeHtml(c.name || (isEN ? 'Guest' : 'Ospite')) + '</span>';
+      out += '<span class="diario-comment-author">' + escapeHtml(c.name || (LANG3 === 'es' ? 'Invitado' : isEN ? 'Guest' : 'Ospite')) + '</span>';
       out += '<span class="diario-comment-time">' + escapeHtml(_formatCommentTime(c.ts)) + '</span>';
       if (c.photoUrl) {
         out += '<img src="' + escapeHtml(c.photoUrl) + '" class="diario-comment-photo-img" loading="lazy" onclick="window.open(this.src,\'_blank\')" alt="">';
@@ -16202,7 +16202,7 @@ window.injectAllWikiLinks = function() {
       }
       out += '</div>';
       if (canDelete) {
-        out += '<button type="button" class="diario-comment-del" data-key="' + key + '" data-cid="' + cid + '" title="' + (isEN ? 'Delete' : 'Elimina') + '">\uD83D\uDDD1\uFE0F</button>';
+        out += '<button type="button" class="diario-comment-del" data-key="' + key + '" data-cid="' + cid + '" title="' + (LANG3 === 'es' ? 'Eliminar' : isEN ? 'Delete' : 'Elimina') + '">\uD83D\uDDD1\uFE0F</button>';
       }
       // v4.00 Feature #Extra: Comment reactions
       var cReactions = c.reactions || {};
@@ -16231,7 +16231,7 @@ window.injectAllWikiLinks = function() {
   function toggleCommentReaction(postKey, commentId, emoji) {
     var user = _socialUser();
     if (!user || !user.uid) {
-      if (window.showToast) showToast(isEN ? 'Sign in to react' : 'Accedi per reagire', 'info');
+      if (window.showToast) showToast(LANG3 === 'es' ? 'Inicia sesión para reaccionar' : isEN ? 'Sign in to react' : 'Accedi per reagire', 'info');
       return;
     }
     var ref = firebase.database().ref('trips/' + FAMILY_ID + '/diary/' + postKey + '/comments/' + commentId + '/reactions/' + user.uid);
@@ -16244,7 +16244,7 @@ window.injectAllWikiLinks = function() {
       return ref.set({ emoji: emoji, timestamp: firebase.database.ServerValue.TIMESTAMP });
     }).catch(function(err) {
       console.warn('[Diario] Comment reaction failed:', err.message);
-      if (window.showToast) showToast(isEN ? 'Could not save reaction' : 'Impossibile salvare la reazione', 'danger');
+      if (window.showToast) showToast(LANG3 === 'es' ? 'No se pudo guardar la reacción' : isEN ? 'Could not save reaction' : 'Impossibile salvare la reazione', 'danger');
     });
   }
 
@@ -16266,8 +16266,8 @@ window.injectAllWikiLinks = function() {
         if (!isOwner && window.queuePushNotification) {
           // v3.94: uses global isEN
           queuePushNotification('diary_reaction', {
-            title: emoji + ' ' + (isEN ? 'New reaction' : 'Nuova reazione'),
-            body: (user.displayName || (isEN ? 'Someone' : 'Qualcuno')) + (isEN ? ' reacted to a diary post' : ' ha reagito a un post del diario'),
+            title: emoji + ' ' + (LANG3 === 'es' ? 'Nueva reacción' : isEN ? 'New reaction' : 'Nuova reazione'),
+            body: (user.displayName || (LANG3 === 'es' ? 'Alguien' : isEN ? 'Someone' : 'Qualcuno')) + (LANG3 === 'es' ? ' reaccionó a una entrada del diario' : isEN ? ' reacted to a diary post' : ' ha reagito a un post del diario'),
             target: 'owner',
             url: './#diario',
             tag: 'diary_reaction_' + key,
@@ -16286,7 +16286,7 @@ window.injectAllWikiLinks = function() {
   function sendComment(key, text, photoUrl) {
     var user = _socialUser();
     if (!user || !user.uid) {
-      if (window.showToast) showToast(isEN ? 'Sign in to comment' : 'Accedi per commentare', 'info');
+      if (window.showToast) showToast(LANG3 === 'es' ? 'Inicia sesión para comentar' : isEN ? 'Sign in to comment' : 'Accedi per commentare', 'info');
       return Promise.resolve();
     }
     text = (text || '').trim();
@@ -16295,7 +16295,7 @@ window.injectAllWikiLinks = function() {
     var commentsRef = firebase.database().ref('trips/' + FAMILY_ID + '/diary/' + key + '/comments');
     var payload = {
       uid: user.uid,
-      name: user.displayName || user.email || (isEN ? 'Guest' : 'Ospite'),
+      name: user.displayName || user.email || (LANG3 === 'es' ? 'Invitado' : isEN ? 'Guest' : 'Ospite'),
       text: text,
       ts: Date.now()
     };
@@ -16303,8 +16303,8 @@ window.injectAllWikiLinks = function() {
     return commentsRef.push(payload).then(function() {
       if (!isOwner && window.queuePushNotification) {
         queuePushNotification('diary_comment', {
-          title: '\uD83D\uDCAC ' + (isEN ? 'New comment' : 'Nuovo commento'),
-          body: (user.displayName || (isEN ? 'Someone' : 'Qualcuno')) + ': ' + (photoUrl ? '\uD83D\uDCF7 ' : '') + (text.length > 80 ? text.substring(0, 80) + '\u2026' : text || (isEN ? 'Photo' : 'Foto')),
+          title: '\uD83D\uDCAC ' + (LANG3 === 'es' ? 'Nuevo comentario' : isEN ? 'New comment' : 'Nuovo commento'),
+          body: (user.displayName || (LANG3 === 'es' ? 'Alguien' : isEN ? 'Someone' : 'Qualcuno')) + ': ' + (photoUrl ? '\uD83D\uDCF7 ' : '') + (text.length > 80 ? text.substring(0, 80) + '\u2026' : text || (LANG3 === 'es' ? 'Foto' : isEN ? 'Photo' : 'Foto')),
           target: 'owner',
           url: './#diario',
           tag: 'diary_comment_' + key,
@@ -16313,7 +16313,7 @@ window.injectAllWikiLinks = function() {
       }
     }).catch(function(err) {
       console.warn('[Diario] Comment failed:', err.message);
-      if (window.showToast) showToast(isEN ? 'Could not send comment' : 'Impossibile inviare il commento', 'danger');
+      if (window.showToast) showToast(LANG3 === 'es' ? 'No se pudo enviar el comentario' : isEN ? 'Could not send comment' : 'Impossibile inviare il commento', 'danger');
     });
   }
 
@@ -16321,21 +16321,21 @@ window.injectAllWikiLinks = function() {
   function uploadCommentPhoto(key, file) {
     var user = _socialUser();
     if (!user || !user.uid) {
-      if (window.showToast) showToast(isEN ? 'Sign in first' : 'Accedi prima', 'info');
+      if (window.showToast) showToast(LANG3 === 'es' ? 'Inicia sesión primero' : isEN ? 'Sign in first' : 'Accedi prima', 'info');
       return;
     }
     if (!firebase.storage) {
-      if (window.showToast) showToast(isEN ? 'Storage not available' : 'Storage non disponibile', 'error');
+      if (window.showToast) showToast(LANG3 === 'es' ? 'Almacenamiento no disponible' : isEN ? 'Storage not available' : 'Storage non disponibile', 'error');
       return;
     }
     if (file.size > 13 * 1024 * 1024) {
-      if (window.showToast) showToast(isEN ? 'Photo too large (max 13 MB)' : 'Foto troppo grande (max 13 MB)', 'error');
+      if (window.showToast) showToast(LANG3 === 'es' ? 'Foto demasiado grande (máx. 13 MB)' : isEN ? 'Photo too large (max 13 MB)' : 'Foto troppo grande (max 13 MB)', 'error');
       return;
     }
     var commentId = Date.now() + '_' + user.uid.substring(0, 6);
     var storagePath = 'diary/' + FAMILY_ID + '/' + key + '/comments/' + commentId + '.jpg';
     var fileRef = firebase.storage().ref(storagePath);
-    if (window.showToast) showToast(isEN ? 'Uploading photo...' : 'Caricamento foto...', 'info');
+    if (window.showToast) showToast(LANG3 === 'es' ? 'Cargando foto...' : isEN ? 'Uploading photo...' : 'Caricamento foto...', 'info');
     fileRef.put(file, { contentType: file.type || 'image/jpeg' }).then(function(snapshot) {
       return snapshot.ref.getDownloadURL();
     }).then(function(url) {
@@ -16343,11 +16343,11 @@ window.injectAllWikiLinks = function() {
       var text = input ? input.value.trim() : '';
       sendComment(key, text, url).then(function() {
         if (input) input.value = '';
-        if (window.showToast) showToast(isEN ? 'Photo comment sent!' : 'Commento con foto inviato!', 'success');
+        if (window.showToast) showToast(LANG3 === 'es' ? '¡Comentario con foto enviado!' : isEN ? 'Photo comment sent!' : 'Commento con foto inviato!', 'success');
       });
     }).catch(function(err) {
       console.error('[Diario] Comment photo upload failed:', err);
-      if (window.showToast) showToast(isEN ? 'Upload failed' : 'Caricamento fallito', 'error');
+      if (window.showToast) showToast(LANG3 === 'es' ? 'Carga fallida' : isEN ? 'Upload failed' : 'Caricamento fallito', 'error');
     });
   }
 
@@ -16355,7 +16355,7 @@ window.injectAllWikiLinks = function() {
     // v3.94: uses global isEN
     firebase.database().ref('trips/' + FAMILY_ID + '/diary/' + key + '/comments/' + cid).remove().catch(function(err) {
       console.warn('[Diario] Comment delete failed:', err.message);
-      if (window.showToast) showToast(isEN ? 'Could not delete' : 'Impossibile eliminare', 'danger');
+      if (window.showToast) showToast(LANG3 === 'es' ? 'No se pudo eliminar' : isEN ? 'Could not delete' : 'Impossibile eliminare', 'danger');
     });
   }
 
@@ -16412,7 +16412,7 @@ window.injectAllWikiLinks = function() {
       // v4.08 FIX: renamed from 'db' to 'delBtn' to avoid shadowing Firebase db reference
       var delBtn = e.target.closest('.diario-comment-del');
       if (delBtn) {
-        showConfirm(isEN ? 'Delete this comment?' : 'Eliminare questo commento?', function() {
+        showConfirm(LANG3 === 'es' ? '¿Eliminar este comentario?' : isEN ? 'Delete this comment?' : 'Eliminare questo commento?', function() {
           deleteComment(delBtn.getAttribute('data-key'), delBtn.getAttribute('data-cid'));
         });
         return;
@@ -16458,7 +16458,7 @@ window.injectAllWikiLinks = function() {
         var _entryKey = audioDelBtn.getAttribute('data-entry-key');
         var _audioKey = audioDelBtn.getAttribute('data-audio-key');
         var _audioType = audioDelBtn.getAttribute('data-audio-type');
-        showConfirm(isEN ? 'Delete this audio?' : 'Eliminare questo audio?', function() {
+        showConfirm(LANG3 === 'es' ? '¿Eliminar este audio?' : isEN ? 'Delete this audio?' : 'Eliminare questo audio?', function() {
           var ref;
           if (_audioType === 'audios' && _audioKey) {
             ref = diarioRef.child(_entryKey + '/audios/' + _audioKey);
@@ -16466,10 +16466,10 @@ window.injectAllWikiLinks = function() {
             ref = diarioRef.child(_entryKey + '/audio');
           }
           ref.remove().then(function() {
-            if (window.showToast) showToast(isEN ? 'Audio deleted' : 'Audio eliminato', 'success');
+            if (window.showToast) showToast(LANG3 === 'es' ? 'Audio eliminado' : isEN ? 'Audio deleted' : 'Audio eliminato', 'success');
           }).catch(function(err) {
             console.error('[Diario] audio delete failed:', err);
-            if (window.showToast) showToast(isEN ? 'Delete failed' : 'Eliminazione fallita', 'error');
+            if (window.showToast) showToast(LANG3 === 'es' ? 'Eliminación fallida' : isEN ? 'Delete failed' : 'Eliminazione fallita', 'error');
           });
         });
         return;
@@ -16479,12 +16479,12 @@ window.injectAllWikiLinks = function() {
       if (stopRemBtn) {
         var _entryKey = stopRemBtn.getAttribute('data-entry-key');
         var _stopIdx = parseInt(stopRemBtn.getAttribute('data-stop-idx'));
-        showConfirm(isEN ? 'Remove this location tag?' : 'Rimuovere questo tag luogo?', function() {
+        showConfirm(LANG3 === 'es' ? '¿Eliminar esta etiqueta de ubicación?' : isEN ? 'Remove this location tag?' : 'Rimuovere questo tag luogo?', function() {
           diarioRef.child(_entryKey + '/customStops').once('value', function(snap) {
             var stops = snap.val() || [];
             stops.splice(_stopIdx, 1);
             diarioRef.child(_entryKey + '/customStops').set(stops).then(function() {
-              if (window.showToast) showToast(isEN ? 'Tag removed' : 'Tag rimosso', 'success');
+              if (window.showToast) showToast(LANG3 === 'es' ? 'Etiqueta eliminada' : isEN ? 'Tag removed' : 'Tag rimosso', 'success');
             });
           });
         });
@@ -16498,10 +16498,10 @@ window.injectAllWikiLinks = function() {
         var _entryKey2 = _chip.getAttribute('data-entry-key');
         var _stopIdx2 = parseInt(_chip.getAttribute('data-stop-idx'));
         var currentName = stopName.textContent.trim();
-        _showPromptModal(isEN ? 'Edit location name:' : 'Modifica nome luogo:', currentName, function(newName) {
+        _showPromptModal(LANG3 === 'es' ? 'Editar nombre del lugar:' : isEN ? 'Edit location name:' : 'Modifica nome luogo:', currentName, function(newName) {
           if (newName !== null && newName.trim() !== '' && newName.trim() !== currentName) {
             diarioRef.child(_entryKey2 + '/customStops/' + _stopIdx2 + '/name').set(newName.trim()).then(function() {
-              if (window.showToast) showToast(isEN ? 'Tag updated' : 'Tag aggiornato', 'success');
+              if (window.showToast) showToast(LANG3 === 'es' ? 'Etiqueta actualizada' : isEN ? 'Tag updated' : 'Tag aggiornato', 'success');
             });
           }
         });
@@ -16715,16 +16715,16 @@ window.injectAllWikiLinks = function() {
         (caption ? '<div class="diario-lightbox-caption-display">' + escapeHtml(caption) + '</div>' : '') +
         // Caption editor (owner only)
         (isOwner ? '<div class="diario-lightbox-caption-row" style="display:flex;gap:8px;margin:8px 0;align-items:center;">' +
-          '<input id="diario-caption-input" type="text" placeholder="' + (isEN ? 'Add a caption...' : 'Aggiungi una didascalia...') + '" ' +
+          '<input id="diario-caption-input" type="text" placeholder="' + (LANG3 === 'es' ? 'Añadir una leyenda...' : isEN ? 'Add a caption...' : 'Aggiungi una didascalia...') + '" ' +
           'value="' + (caption || '').replace(/"/g, '&quot;') + '" ' +
           'style="flex:1;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:var(--bg-card);color:var(--text);">' +
           '<button class="diario-lightbox-caption-save pos-btn" style="white-space:nowrap;font-size:13px;padding:8px 12px;">' +
-          (isEN ? '💾 Save' : '💾 Salva') + '</button></div>' : '') +
+          (LANG3 === 'es' ? '💾 Guardar' : isEN ? '💾 Save' : '💾 Salva') + '</button></div>' : '') +
         // v4.25: per-photo reactions + comments (reuses the diary REACTION_EMOJIS set)
         '<div class="diario-photo-social" data-entry-key="' + eKey + '" data-photo-key="' + pKey + '"></div>' +
         '<div class="diario-lightbox-actions">' +
-          (isOwner ? '<button class="diario-lightbox-del">' + (isEN ? '🗑️ Delete photo' : '🗑️ Elimina foto') + '</button>' : '') +
-          '<button class="diario-lightbox-close">' + (isEN ? '✕ Close' : '✕ Chiudi') + '</button>' +
+          (isOwner ? '<button class="diario-lightbox-del">' + (LANG3 === 'es' ? '🗑️ Eliminar foto' : isEN ? '🗑️ Delete photo' : '🗑️ Elimina foto') + '</button>' : '') +
+          '<button class="diario-lightbox-close">' + (LANG3 === 'es' ? '✕ Cerrar' : isEN ? '✕ Close' : '✕ Chiudi') + '</button>' +
         '</div>' +
       '</div>';
     }
@@ -16762,7 +16762,7 @@ window.injectAllWikiLinks = function() {
              emoji + (c > 0 ? '<span class="diario-react-count">' + c + '</span>' : '') + '</button>';
       });
       h += '<button type="button" class="diario-comments-toggle photo-comments-toggle">💬 ' +
-           (commentCount > 0 ? commentCount + ' ' : '') + (_lg === 'es' ? 'Comentarios' : isEN ? 'Comments' : 'Commenti') + '</button>';
+           (commentCount > 0 ? commentCount + ' ' : '') + (_lg === 'es' ? 'Comentarios' : LANG3 === 'es' ? 'Comentarios' : isEN ? 'Comments' : 'Commenti') + '</button>';
       h += '</div>';
       // Who reacted (names)
       var reactorNames = [];
@@ -16780,8 +16780,8 @@ window.injectAllWikiLinks = function() {
       h += renderPhotoCommentsList(comments, myUid);
       h += '<div class="diario-comment-form">' +
            '<input type="text" class="diario-comment-input photo-comment-input" maxlength="2000" placeholder="' +
-           (isEN ? 'Write a comment…' : 'Scrivi un commento…') + '">' +
-           '<button type="button" class="diario-comment-send photo-comment-send">' + (isEN ? 'Send' : 'Invia') + '</button>' +
+           (LANG3 === 'es' ? 'Escribe un comentario…' : isEN ? 'Write a comment…' : 'Scrivi un commento…') + '">' +
+           '<button type="button" class="diario-comment-send photo-comment-send">' + (LANG3 === 'es' ? 'Enviar' : isEN ? 'Send' : 'Invia') + '</button>' +
            '</div>';
       h += '</div>';
       holder.innerHTML = h;
@@ -16789,7 +16789,7 @@ window.injectAllWikiLinks = function() {
     function renderPhotoCommentsList(comments, myUid) {
       var keys = Object.keys(comments || {});
       if (keys.length === 0) {
-        return '<div class="diario-comments-empty">' + (isEN ? 'No comments yet. Be the first!' : 'Ancora nessun commento. Scrivi tu il primo!') + '</div>';
+        return '<div class="diario-comments-empty">' + (LANG3 === 'es' ? 'Aún no hay comentarios. ¡Sé el primero!' : isEN ? 'No comments yet. Be the first!' : 'Ancora nessun commento. Scrivi tu il primo!') + '</div>';
       }
       keys.sort(function(a, b) { return (comments[a].ts || 0) - (comments[b].ts || 0); });
       var out = '';
@@ -16798,12 +16798,12 @@ window.injectAllWikiLinks = function() {
         var canDelete = isOwner || (myUid && c.uid === myUid);
         out += '<div class="diario-comment" data-cid="' + cid + '">';
         out += '<div class="diario-comment-body">';
-        out += '<span class="diario-comment-author">' + escapeHtml(c.name || (isEN ? 'Guest' : 'Ospite')) + '</span>';
+        out += '<span class="diario-comment-author">' + escapeHtml(c.name || (LANG3 === 'es' ? 'Invitado' : isEN ? 'Guest' : 'Ospite')) + '</span>';
         out += '<span class="diario-comment-time">' + escapeHtml(_formatCommentTime(c.ts)) + '</span>';
         if (c.text) { out += '<span class="diario-comment-text">' + escapeHtml(c.text) + '</span>'; }
         out += '</div>';
         if (canDelete) {
-          out += '<button type="button" class="diario-comment-del photo-comment-del" data-cid="' + cid + '" title="' + (isEN ? 'Delete' : 'Elimina') + '">🗑️</button>';
+          out += '<button type="button" class="diario-comment-del photo-comment-del" data-cid="' + cid + '" title="' + (LANG3 === 'es' ? 'Eliminar' : isEN ? 'Delete' : 'Elimina') + '">🗑️</button>';
         }
         out += '</div>';
       });
@@ -16811,7 +16811,7 @@ window.injectAllWikiLinks = function() {
     }
     function togglePhotoReaction(eKey, pKey, emoji) {
       var user = (typeof _socialUser === 'function') ? _socialUser() : (firebase.auth ? firebase.auth().currentUser : null);
-      if (!user || !user.uid) { if (window.showToast) showToast(isEN ? 'Sign in to react' : 'Accedi per reagire', 'info'); return; }
+      if (!user || !user.uid) { if (window.showToast) showToast(LANG3 === 'es' ? 'Inicia sesión para reaccionar' : isEN ? 'Sign in to react' : 'Accedi per reagire', 'info'); return; }
       var ref = firebase.database().ref(_photoPath(eKey, pKey) + '/reactions/' + user.uid);
       ref.once('value').then(function(snap) {
         if (snap.val() === emoji) return ref.remove();
@@ -16820,20 +16820,20 @@ window.injectAllWikiLinks = function() {
     }
     function sendPhotoComment(eKey, pKey, text) {
       var user = (typeof _socialUser === 'function') ? _socialUser() : (firebase.auth ? firebase.auth().currentUser : null);
-      if (!user || !user.uid) { if (window.showToast) showToast(isEN ? 'Sign in to comment' : 'Accedi per commentare', 'info'); return Promise.resolve(); }
+      if (!user || !user.uid) { if (window.showToast) showToast(LANG3 === 'es' ? 'Inicia sesión para comentar' : isEN ? 'Sign in to comment' : 'Accedi per commentare', 'info'); return Promise.resolve(); }
       text = (text || '').trim();
       if (!text) return Promise.resolve();
       if (text.length > 2000) text = text.substring(0, 2000);
       return firebase.database().ref(_photoPath(eKey, pKey) + '/comments').push({
         uid: user.uid,
-        name: user.displayName || user.email || (isEN ? 'Guest' : 'Ospite'),
+        name: user.displayName || user.email || (LANG3 === 'es' ? 'Invitado' : isEN ? 'Guest' : 'Ospite'),
         text: text,
         ts: Date.now()
       }).then(function() {
         if (!isOwner && window.queuePushNotification) {
           queuePushNotification('diary_comment', {
-            title: '💬 ' + (isEN ? 'New photo comment' : 'Nuovo commento foto'),
-            body: (user.displayName || (isEN ? 'Someone' : 'Qualcuno')) + ': ' + (text.length > 80 ? text.substring(0, 80) + '…' : text),
+            title: '💬 ' + (LANG3 === 'es' ? 'Nuevo comentario de foto' : isEN ? 'New photo comment' : 'Nuovo commento foto'),
+            body: (user.displayName || (LANG3 === 'es' ? 'Alguien' : isEN ? 'Someone' : 'Qualcuno')) + ': ' + (text.length > 80 ? text.substring(0, 80) + '…' : text),
             target: 'owner', url: './#diario', tag: 'diary_photo_comment_' + eKey, senderUid: user.uid
           });
         }
@@ -16942,10 +16942,10 @@ window.injectAllWikiLinks = function() {
             var thumbEl = document.querySelector('[data-entry-key="' + entryKey + '"][data-photo-key="' + photoKey + '"]');
             if (thumbEl) thumbEl.setAttribute('alt', newCaption);
             if (photoList[currentIdx]) photoList[currentIdx].caption = newCaption;
-            if (window.showToast) showToast(isEN ? '✅ Caption saved' : '✅ Didascalia salvata', 'success');
+            if (window.showToast) showToast(LANG3 === 'es' ? '✅ Leyenda guardada' : isEN ? '✅ Caption saved' : '✅ Didascalia salvata', 'success');
           }).catch(function(err) {
             console.error('[Diario] Caption save error:', err);
-            if (window.showToast) showToast(isEN ? '❌ Save failed' : '❌ Salvataggio fallito', 'error');
+            if (window.showToast) showToast(LANG3 === 'es' ? '❌ Guardado fallido' : isEN ? '❌ Save failed' : '❌ Salvataggio fallito', 'error');
           });
         });
       }
@@ -16953,16 +16953,16 @@ window.injectAllWikiLinks = function() {
       var delBtn = overlay.querySelector('.diario-lightbox-del');
       if (delBtn) {
         delBtn.addEventListener('click', function() {
-          showConfirm(isEN ? 'Delete this photo?' : 'Eliminare questa foto?', function() {
+          showConfirm(LANG3 === 'es' ? '¿Eliminar esta foto?' : isEN ? 'Delete this photo?' : 'Eliminare questa foto?', function() {
             diarioRef.child(entryKey + '/photos/' + photoKey).remove().then(function() {
-              if (window.showToast) showToast(isEN ? 'Photo deleted' : 'Foto eliminata', 'success');
+              if (window.showToast) showToast(LANG3 === 'es' ? 'Foto eliminada' : isEN ? 'Photo deleted' : 'Foto eliminata', 'success');
               photoList.splice(currentIdx, 1);
               if (photoList.length === 0) { closeLightbox(); return; }
               if (currentIdx >= photoList.length) currentIdx = photoList.length - 1;
               navigateTo(currentIdx);
             }).catch(function(err) {
               console.error('[Diario] Delete photo error:', err);
-              if (window.showToast) showToast(isEN ? 'Error deleting' : 'Errore eliminazione', 'error');
+              if (window.showToast) showToast(LANG3 === 'es' ? 'Error al eliminar' : isEN ? 'Error deleting' : 'Errore eliminazione', 'error');
             });
           });
         });
@@ -16987,7 +16987,7 @@ window.injectAllWikiLinks = function() {
           }
           var cdel = e.target.closest('.photo-comment-del');
           if (cdel) {
-            showConfirm(isEN ? 'Delete this comment?' : 'Eliminare questo commento?', function() {
+            showConfirm(LANG3 === 'es' ? '¿Eliminar este comentario?' : isEN ? 'Delete this comment?' : 'Eliminare questo commento?', function() {
               deletePhotoComment(entryKey, photoKey, cdel.getAttribute('data-cid'));
             });
             return;
@@ -17072,7 +17072,7 @@ window.injectAllWikiLinks = function() {
       if (document.body.contains(input)) document.body.removeChild(input);
       if (!input.files || input.files.length === 0) return;
       if (!storageRef) {
-        if (window.showToast) showToast(isEN ? 'Storage not available' : 'Storage non disponibile', 'error');
+        if (window.showToast) showToast(LANG3 === 'es' ? 'Almacenamiento no disponible' : isEN ? 'Storage not available' : 'Storage non disponibile', 'error');
         return;
       }
       var files = Array.from(input.files); // unlimited photos
@@ -17128,11 +17128,11 @@ window.injectAllWikiLinks = function() {
       files.forEach(function(file, idx) {
         chain = chain.then(function() {
           if (total > 1 && window.showToast) {
-            showToast((isEN ? 'Uploading ' : 'Caricamento ') + (idx + 1) + '/' + total + '…', 'info', 1500);
+            showToast((LANG3 === 'es' ? 'Cargando ' : isEN ? 'Uploading ' : 'Caricamento ') + (idx + 1) + '/' + total + '…', 'info', 1500);
           }
           return uploadOne(file, idx).then(function() {
             okCount++;
-            if (total === 1 && window.showToast) showToast(isEN ? 'Photo uploaded!' : 'Foto caricata!', 'success');
+            if (total === 1 && window.showToast) showToast(LANG3 === 'es' ? '¡Foto cargada!' : isEN ? 'Photo uploaded!' : 'Foto caricata!', 'success');
           }).catch(function() {
             failCount++;
           });
@@ -17142,9 +17142,9 @@ window.injectAllWikiLinks = function() {
       chain.then(function() {
         if (total > 1 && window.showToast) {
           if (failCount === 0) {
-            showToast((isEN ? 'All ' : 'Tutte le ') + okCount + (isEN ? ' photos uploaded!' : ' foto caricate!'), 'success');
+            showToast((LANG3 === 'es' ? 'Todas ' : isEN ? 'All ' : 'Tutte le ') + okCount + (LANG3 === 'es' ? ' fotos subidas!' : isEN ? ' photos uploaded!' : ' foto caricate!'), 'success');
           } else {
-            showToast(okCount + '/' + total + (isEN ? ' photos uploaded, ' : ' foto caricate, ') + failCount + (isEN ? ' failed — check your connection and retry.' : ' non riuscite — controlla la connessione e riprova.'), 'error', 6000);
+            showToast(okCount + '/' + total + (LANG3 === 'es' ? ' fotos subidas, ' : isEN ? ' photos uploaded, ' : ' foto caricate, ') + failCount + (LANG3 === 'es' ? ' no se pudo — comprueba tu conexión y vuelve a intentarlo.' : isEN ? ' failed — check your connection and retry.' : ' non riuscite — controlla la connessione e riprova.'), 'error', 6000);
           }
         }
       });
@@ -17156,7 +17156,7 @@ window.injectAllWikiLinks = function() {
   // ─── Audio Recorder (per-entry voice note) ───
   function showAudioRecorder(dayKey) {
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      if (window.showToast) showToast(isEN ? 'Microphone not supported' : 'Microfono non supportato', 'error');
+      if (window.showToast) showToast(LANG3 === 'es' ? 'Micrófono no compatible' : isEN ? 'Microphone not supported' : 'Microfono non supportato', 'error');
       return;
     }
     // Inject pulse animation if not already present
@@ -17170,8 +17170,8 @@ window.injectAllWikiLinks = function() {
     var overlay = document.createElement('div');
     overlay.className = 'diario-edit-overlay';
     overlay.innerHTML = '<div class="diario-edit-modal" style="text-align:center;">' +
-      '<h3>' + (isEN ? '🎤 Record Voice Note' : '🎤 Registra Nota Vocale') + '</h3>' +
-      '<p id="audio-rec-status" style="font-size:14px;color:var(--text-muted);min-height:20px;">' + (isEN ? 'Tap the microphone to start' : 'Tocca il microfono per iniziare') + '</p>' +
+      '<h3>' + (LANG3 === 'es' ? '🎤 Grabar nota de voz' : isEN ? '🎤 Record Voice Note' : '🎤 Registra Nota Vocale') + '</h3>' +
+      '<p id="audio-rec-status" style="font-size:14px;color:var(--text-muted);min-height:20px;">' + (LANG3 === 'es' ? 'Toca el micrófono para comenzar' : isEN ? 'Tap the microphone to start' : 'Tocca il microfono per iniziare') + '</p>' +
       '<div style="position:relative;width:100px;height:100px;margin:16px auto;">' +
         '<div id="audio-rec-ring" style="position:absolute;top:0;left:0;width:100%;height:100%;border-radius:50%;border:3px solid var(--accent);transition:all 0.3s;"></div>' +
         '<button id="audio-rec-toggle" style="position:absolute;top:5px;left:5px;width:90px;height:90px;border-radius:50%;border:none;background:var(--accent);color:#fff;font-size:36px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.3s;">🎙️</button>' +
@@ -17179,8 +17179,8 @@ window.injectAllWikiLinks = function() {
       '<div id="audio-rec-timer" style="font-size:28px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--text);margin:8px 0;display:none;">0:00</div>' +
       '<div id="audio-rec-player" style="display:none;margin:12px 0;"></div>' +
       '<div class="diario-edit-actions">' +
-        '<button class="diario-edit-cancel">' + (isEN ? 'Cancel' : 'Annulla') + '</button>' +
-        '<button class="diario-edit-save" id="audio-rec-save" disabled>' + (isEN ? 'Save' : 'Salva') + '</button>' +
+        '<button class="diario-edit-cancel">' + (LANG3 === 'es' ? 'Cancelar' : isEN ? 'Cancel' : 'Annulla') + '</button>' +
+        '<button class="diario-edit-save" id="audio-rec-save" disabled>' + (LANG3 === 'es' ? 'Guardar' : isEN ? 'Save' : 'Salva') + '</button>' +
       '</div>' +
     '</div>';
     document.body.appendChild(overlay);
@@ -17224,7 +17224,7 @@ window.injectAllWikiLinks = function() {
         toggleBtn.style.background = 'var(--success)';
         toggleBtn.style.animation = 'none';
         ringEl.style.borderColor = 'var(--success)';
-        statusEl.textContent = isEN ? 'Listen and save, or record again' : 'Riascolta e salva, o registra di nuovo';
+        statusEl.textContent = LANG3 === 'es' ? 'Escucha y guarda, o graba de nuevo' : isEN ? 'Listen and save, or record again' : 'Riascolta e salva, o registra di nuovo';
       } else if (_blob) {
         // STATE: DONE → RE-RECORD (reset)
         _blob = null;
@@ -17237,7 +17237,7 @@ window.injectAllWikiLinks = function() {
         toggleBtn.style.background = 'var(--accent)';
         toggleBtn.style.animation = 'none';
         ringEl.style.borderColor = 'var(--accent)';
-        statusEl.textContent = isEN ? 'Tap the microphone to start' : 'Tocca il microfono per iniziare';
+        statusEl.textContent = LANG3 === 'es' ? 'Toca el micrófono para comenzar' : isEN ? 'Tap the microphone to start' : 'Tocca il microfono per iniziare';
         timerEl.style.display = 'none';
       } else {
         // STATE: READY → RECORDING
@@ -17264,16 +17264,16 @@ window.injectAllWikiLinks = function() {
           toggleBtn.style.background = '#ff4444';
           toggleBtn.style.animation = 'audioRecPulse 1.5s ease-in-out infinite';
           ringEl.style.borderColor = '#ff4444';
-          statusEl.textContent = isEN ? 'Recording...' : 'Registrazione in corso...';
+          statusEl.textContent = LANG3 === 'es' ? 'Grabando...' : isEN ? 'Recording...' : 'Registrazione in corso...';
         }).catch(function() {
-          if (window.showToast) showToast(isEN ? 'Microphone access denied' : 'Accesso microfono negato', 'error');
+          if (window.showToast) showToast(LANG3 === 'es' ? 'Acceso al micrófono denegado' : isEN ? 'Microphone access denied' : 'Accesso microfono negato', 'error');
         });
       }
     });
 
     saveBtn.addEventListener('click', function() {
       if (!_blob || !storageRef) return;
-      saveBtn.textContent = isEN ? 'Uploading...' : 'Caricamento...';
+      saveBtn.textContent = LANG3 === 'es' ? 'Cargando...' : isEN ? 'Uploading...' : 'Caricamento...';
       saveBtn.disabled = true;
       var filename = dayKey + '_audio_' + Date.now() + '.webm';
       var fileRef = storageRef.child(dayKey + '/' + filename);
@@ -17282,12 +17282,12 @@ window.injectAllWikiLinks = function() {
       }).then(function(url) {
         return diarioRef.child(dayKey + '/audio').set({ url: url, duration: 0 });
       }).then(function() {
-        if (window.showToast) showToast(isEN ? 'Audio saved!' : 'Audio salvato!', 'success');
+        if (window.showToast) showToast(LANG3 === 'es' ? '¡Audio guardado!' : isEN ? 'Audio saved!' : 'Audio salvato!', 'success');
         overlay.remove();
       }).catch(function(err) {
         console.error('[Diario] Audio upload error:', err);
-        if (window.showToast) showToast(isEN ? 'Upload failed' : 'Upload fallito', 'error');
-        saveBtn.textContent = isEN ? 'Save' : 'Salva';
+        if (window.showToast) showToast(LANG3 === 'es' ? 'Upload fallido' : isEN ? 'Upload failed' : 'Upload fallito', 'error');
+        saveBtn.textContent = LANG3 === 'es' ? 'Guardar' : isEN ? 'Save' : 'Salva';
         saveBtn.disabled = false;
       });
     });
@@ -17341,18 +17341,18 @@ window.injectAllWikiLinks = function() {
       var overlay = document.createElement('div');
       overlay.className = 'diario-edit-overlay';
       var typeOptions = [
-        { value: '', label: isEN ? '(Auto-detect)' : '(Automatico)' },
+        { value: '', label: LANG3 === 'es' ? '(Automático)' : isEN ? '(Auto-detect)' : '(Automatico)' },
         { value: 'checkin', label: '📍 Check-in' },
-        { value: 'tappa', label: '🚩 ' + (isEN ? 'Stage' : 'Tappa') },
+        { value: 'tappa', label: '🚩 ' + (LANG3 === 'es' ? 'Etapa' : isEN ? 'Stage' : 'Tappa') },
         { value: 'highlight', label: '⭐ Highlight' },
-        { value: 'photo', label: '📷 ' + (isEN ? 'Photo' : 'Foto') },
+        { value: 'photo', label: '📷 ' + (LANG3 === 'es' ? 'Foto' : isEN ? 'Photo' : 'Foto') },
         { value: 'video', label: '🎬 Video' },
         { value: 'audio', label: '🎤 Audio' },
-        { value: 'recap', label: '📝 ' + (isEN ? 'Recap' : 'Riepilogo') },
-        { value: 'message', label: '💬 ' + (isEN ? 'Message' : 'Messaggio') },
-        { value: 'cibo', label: '🍝 ' + (isEN ? 'Food' : 'Cibo') },
-        { value: 'cultura', label: '🏛️ ' + (isEN ? 'Culture' : 'Cultura') },
-        { value: 'attivita', label: '🥾 ' + (isEN ? 'Activity' : 'Attività') },
+        { value: 'recap', label: '📝 ' + (LANG3 === 'es' ? 'Resumen' : isEN ? 'Recap' : 'Riepilogo') },
+        { value: 'message', label: '💬 ' + (LANG3 === 'es' ? 'Mensaje' : isEN ? 'Message' : 'Messaggio') },
+        { value: 'cibo', label: '🍝 ' + (LANG3 === 'es' ? 'Comida' : isEN ? 'Food' : 'Cibo') },
+        { value: 'cultura', label: '🏛️ ' + (LANG3 === 'es' ? 'Cultura' : isEN ? 'Culture' : 'Cultura') },
+        { value: 'attivita', label: '🥾 ' + (LANG3 === 'es' ? 'Actividad' : isEN ? 'Activity' : 'Attività') },
       ];
       var typeSelectHtml = '<select id="diario-edit-type">';
       typeOptions.forEach(function(opt) {
@@ -17362,34 +17362,34 @@ window.injectAllWikiLinks = function() {
       typeSelectHtml += '</select>';
 
       overlay.innerHTML = '<div class="diario-edit-modal">' +
-        '<h3>' + (isEN ? 'Edit entry' : 'Modifica voce') + '</h3>' +
-        '<label>' + (isEN ? 'Date' : 'Data') + '</label>' +
+        '<h3>' + (LANG3 === 'es' ? 'Editar entrada' : isEN ? 'Edit entry' : 'Modifica voce') + '</h3>' +
+        '<label>' + (LANG3 === 'es' ? 'Fecha' : isEN ? 'Date' : 'Data') + '</label>' +
         '<input type="date" id="diario-edit-date">' +
-        '<label>' + (isEN ? 'Entry type' : 'Tipo voce') + '</label>' +
+        '<label>' + (LANG3 === 'es' ? 'Tipo de entrada' : isEN ? 'Entry type' : 'Tipo voce') + '</label>' +
         typeSelectHtml +
-        '<label>' + (isEN ? 'Day name (optional)' : 'Nome giorno (opzionale)') + '</label>' +
-        '<input type="text" id="diario-edit-label" maxlength="40" placeholder="' + (isEN ? 'e.g. Departure, Rest day...' : 'es. Partenza, Giorno di riposo...') + '">' +
-        '<label>' + (isEN ? 'Text / Story' : 'Testo / Racconto') + '</label>' +
+        '<label>' + (LANG3 === 'es' ? 'Nombre del día (opcional)' : isEN ? 'Day name (optional)' : 'Nome giorno (opzionale)') + '</label>' +
+        '<input type="text" id="diario-edit-label" maxlength="40" placeholder="' + (LANG3 === 'es' ? 'p. ej. Salida, Día de descanso...' : isEN ? 'e.g. Departure, Rest day...' : 'es. Partenza, Giorno di riposo...') + '">' +
+        '<label>' + (LANG3 === 'es' ? 'Texto / Historia' : isEN ? 'Text / Story' : 'Testo / Racconto') + '</label>' +
         '<textarea id="diario-edit-text" rows="6" maxlength="2000"></textarea>' +
-        '<label>' + (isEN ? 'Km driven (0 to remove)' : 'Km guidati (0 per rimuovere)') + '</label>' +
+        '<label>' + (LANG3 === 'es' ? 'Km recorridos (0 para eliminar)' : isEN ? 'Km driven (0 to remove)' : 'Km guidati (0 per rimuovere)') + '</label>' +
         '<input type="number" id="diario-edit-km" min="0" max="9999" step="1">' +
-        '<label>' + (isEN ? 'Drive time (empty to remove)' : 'Tempo guida (vuoto per rimuovere)') + '</label>' +
-        '<input type="text" id="diario-edit-drivetime" placeholder="' + (isEN ? 'e.g. 3h 45m' : 'es. 3h 45m') + '">' +
-        '<label>' + (isEN ? 'Highlight of the day' : 'Momento top del giorno') + '</label>' +
+        '<label>' + (LANG3 === 'es' ? 'Tiempo de conducción (vacío para eliminar)' : isEN ? 'Drive time (empty to remove)' : 'Tempo guida (vuoto per rimuovere)') + '</label>' +
+        '<input type="text" id="diario-edit-drivetime" placeholder="' + (LANG3 === 'es' ? 'p. ej. 3h 45m' : isEN ? 'e.g. 3h 45m' : 'es. 3h 45m') + '">' +
+        '<label>' + (LANG3 === 'es' ? 'Momento destacado del día' : isEN ? 'Highlight of the day' : 'Momento top del giorno') + '</label>' +
         '<input type="text" id="diario-edit-highlight" maxlength="120">' +
-        '<label>\ud83d\udccc ' + (isEN ? 'Add location tag' : 'Aggiungi tag luogo') + '</label>' +
+        '<label>\ud83d\udccc ' + (LANG3 === 'es' ? 'Añadir etiqueta de ubicación' : isEN ? 'Add location tag' : 'Aggiungi tag luogo') + '</label>' +
         '<div style="position:relative;">' +
-          '<input type="text" id="diario-edit-place" placeholder="' + (isEN ? 'Search place...' : 'Cerca luogo...') + '" autocomplete="off">' +
+          '<input type="text" id="diario-edit-place" placeholder="' + (LANG3 === 'es' ? 'Buscar lugar...' : isEN ? 'Search place...' : 'Cerca luogo...') + '" autocomplete="off">' +
           '<div id="diario-edit-place-suggestions" style="display:none;position:absolute;left:0;right:0;top:100%;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;max-height:180px;overflow-y:auto;z-index:999;box-shadow:var(--shadow-md);"></div>' +
         '</div>' +
         '<div id="diario-edit-place-chips" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;"></div>' +
-        '<label>\u{1F324}\uFE0F ' + (isEN ? 'Weather' : 'Meteo') + '</label>' +
+        '<label>\u{1F324}\uFE0F ' + (LANG3 === 'es' ? 'Tiempo' : isEN ? 'Weather' : 'Meteo') + '</label>' +
         '<div id="diario-edit-weather-chip" style="display:flex;align-items:center;gap:6px;margin-top:4px;"></div>' +
-        '<button type="button" id="diario-edit-weather-btn" style="margin-top:6px;padding:6px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg-alt);font-size:13px;cursor:pointer;">' + (isEN ? '\u{1F4CD} Add current weather' : '\u{1F4CD} Aggiungi meteo attuale') + '</button>' +
+        '<button type="button" id="diario-edit-weather-btn" style="margin-top:6px;padding:6px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg-alt);font-size:13px;cursor:pointer;">' + (LANG3 === 'es' ? '\\u{1F4CD} Añadir el tiempo actual' : isEN ? '\u{1F4CD} Add current weather' : '\u{1F4CD} Aggiungi meteo attuale') + '</button>' +
         '<div class="diario-edit-actions">' +
-        '  <button class="diario-edit-cancel">' + (isEN ? 'Cancel' : 'Annulla') + '</button>' +
-        '  <button class="diario-edit-save">' + (isEN ? 'Save draft' : 'Salva bozza') + '</button>' +
-        '  <button class="diario-edit-publish" style="background:var(--success,#16a34a);color:#fff;">' + (isEN ? 'Save & publish' : 'Salva e pubblica') + '</button>' +
+        '  <button class="diario-edit-cancel">' + (LANG3 === 'es' ? 'Cancelar' : isEN ? 'Cancel' : 'Annulla') + '</button>' +
+        '  <button class="diario-edit-save">' + (LANG3 === 'es' ? 'Guardar borrador' : isEN ? 'Save draft' : 'Salva bozza') + '</button>' +
+        '  <button class="diario-edit-publish" style="background:var(--success,#16a34a);color:#fff;">' + (LANG3 === 'es' ? 'Guardar y publicar' : isEN ? 'Save & publish' : 'Salva e pubblica') + '</button>' +
         '</div>' +
         '</div>';
       document.body.appendChild(overlay);
@@ -17495,10 +17495,10 @@ window.injectAllWikiLinks = function() {
         var _entryDateVal = (overlay.querySelector('#diario-edit-date').value || entry.date || '');
         var _coords = window._resolveWeatherCoords ? window._resolveWeatherCoords({ date: _entryDateVal, customStops: _editStops }) : null;
         if (!_coords) {
-          if (window.showToast) showToast(isEN ? '❌ Cannot determine location for this entry' : '❌ Posizione non determinabile per questa voce', 'error');
+          if (window.showToast) showToast(LANG3 === 'es' ? '❌ No se puede determinar la ubicación de esta entrada' : isEN ? '❌ Cannot determine location for this entry' : '❌ Posizione non determinabile per questa voce', 'error');
           return;
         }
-        _weatherBtn.textContent = isEN ? 'Loading...' : 'Caricamento...';
+        _weatherBtn.textContent = LANG3 === 'es' ? 'Cargando...' : isEN ? 'Loading...' : 'Caricamento...';
         _weatherBtn.disabled = true;
         var lat = _coords.lat;
         var lng = _coords.lng;
@@ -17522,8 +17522,8 @@ window.injectAllWikiLinks = function() {
           };
           _renderWeatherChip();
         }).catch(function() {
-          if (window.showToast) showToast(isEN ? '\u274c Weather fetch failed' : '\u274c Meteo non disponibile', 'error');
-          _weatherBtn.textContent = isEN ? '\u{1F4CD} Add current weather' : '\u{1F4CD} Aggiungi meteo attuale';
+          if (window.showToast) showToast(LANG3 === 'es' ? '\\u274c Error al obtener el clima' : isEN ? '\u274c Weather fetch failed' : '\u274c Meteo non disponibile', 'error');
+          _weatherBtn.textContent = LANG3 === 'es' ? '\\u{1F4CD} Añadir el tiempo actual' : isEN ? '\u{1F4CD} Add current weather' : '\u{1F4CD} Aggiungi meteo attuale';
           _weatherBtn.disabled = false;
         });
       });
@@ -17604,13 +17604,13 @@ window.injectAllWikiLinks = function() {
 
         diarioRef.child(dayKey).update(updates).then(function() {
           if (dateVal && dateVal > today) {
-            if (window.showToast) showToast(isEN ? '\ud83d\udd52 Scheduled for ' + dateVal : '\ud83d\udd52 Programmato per ' + dateVal, 'success');
+            if (window.showToast) showToast(LANG3 === 'es' ? '\ud83d\udd52 Programado para ' + dateVal : isEN ? '\ud83d\udd52 Scheduled for ' + dateVal : '\ud83d\udd52 Programmato per ' + dateVal, 'success');
           } else if (publishNow) {
-            if (window.showToast) showToast(isEN ? '\u2705 Published!' : '\u2705 Pubblicato!', 'success');
+            if (window.showToast) showToast(LANG3 === 'es' ? '\\u2705 Publicado!' : isEN ? '\u2705 Published!' : '\u2705 Pubblicato!', 'success');
           } else {
-            if (window.showToast) showToast(isEN ? '\ud83d\udcdd Draft saved' : '\ud83d\udcdd Bozza salvata', 'success');
+            if (window.showToast) showToast(LANG3 === 'es' ? '\\ud83d\\udcdd Borrador guardado' : isEN ? '\ud83d\udcdd Draft saved' : '\ud83d\udcdd Bozza salvata', 'success');
           }
-        }).catch(function(e) { console.error('[Diario] save failed:', e); if (window.showToast) showToast(isEN ? '\u274c Save failed' : '\u274c Salvataggio fallito', 'error'); });
+        }).catch(function(e) { console.error('[Diario] save failed:', e); if (window.showToast) showToast(LANG3 === 'es' ? '\\u274c Error al guardar' : isEN ? '\u274c Save failed' : '\u274c Salvataggio fallito', 'error'); });
         })(); // end IIFE
       }
 
@@ -17625,16 +17625,16 @@ window.injectAllWikiLinks = function() {
   // weatherData and refetches the REAL weather for that entry's date, fixing
   // entries that were saved with the wrong (Verona) location.
   function repairDiaryWeather(btn) {
-    if (!isOwner) { if (window.showToast) showToast(isEN ? '\ud83d\udd12 Owner only.' : '\ud83d\udd12 Solo organizzatori.', 'info'); return; }
+    if (!isOwner) { if (window.showToast) showToast(LANG3 === 'es' ? '\\ud83d\\udd12 Solo propietario.' : isEN ? '\ud83d\udd12 Owner only.' : '\ud83d\udd12 Solo organizzatori.', 'info'); return; }
     if (typeof firebase === 'undefined' || !firebase.database) return;
     var origLabel = btn ? btn.textContent : '';
-    if (btn) { btn.disabled = true; btn.textContent = isEN ? 'Fixing weather...' : 'Correggo meteo...'; }
+    if (btn) { btn.disabled = true; btn.textContent = LANG3 === 'es' ? 'Corrigiendo el tiempo...' : isEN ? 'Fixing weather...' : 'Correggo meteo...'; }
     var ref = firebase.database().ref('trips/' + FAMILY_ID + '/diary');
     ref.once('value').then(function(snap) {
       var entries = snap.val() || {};
       var keys = Object.keys(entries).filter(function(k) { return entries[k] && entries[k].weatherData; });
       if (!keys.length) {
-        if (window.showToast) showToast(isEN ? 'No weather to fix.' : 'Nessun meteo da correggere.', 'info');
+        if (window.showToast) showToast(LANG3 === 'es' ? 'No hay datos meteorológicos para corregir.' : isEN ? 'No weather to fix.' : 'Nessun meteo da correggere.', 'info');
         if (btn) { btn.disabled = false; btn.textContent = origLabel; }
         return;
       }
@@ -17670,12 +17670,12 @@ window.injectAllWikiLinks = function() {
         });
       });
       chain.then(function() {
-        if (window.showToast) showToast((isEN ? '\u2705 Weather fixed on ' : '\u2705 Meteo corretto su ') + fixed + (isEN ? ' entries' : ' voci'), 'success', 5000);
+        if (window.showToast) showToast((LANG3 === 'es' ? '\\u2705 Clima fijado en ' : isEN ? '\u2705 Weather fixed on ' : '\u2705 Meteo corretto su ') + fixed + (LANG3 === 'es' ? ' entradas' : isEN ? ' entries' : ' voci'), 'success', 5000);
         if (btn) { btn.disabled = false; btn.textContent = origLabel; }
         if (typeof loadTimeline === 'function') loadTimeline();
       });
     }).catch(function() {
-      if (window.showToast) showToast(isEN ? '\u274c Repair failed' : '\u274c Correzione fallita', 'error');
+      if (window.showToast) showToast(LANG3 === 'es' ? '\\u274c Reparación fallida' : isEN ? '\u274c Repair failed' : '\u274c Correzione fallita', 'error');
       if (btn) { btn.disabled = false; btn.textContent = origLabel; }
     });
   }
@@ -17688,7 +17688,7 @@ window.injectAllWikiLinks = function() {
   // ─── Add Entry (auto-populate from today's data) ───
   if (addEntryBtn) {
     addEntryBtn.addEventListener('click', function() {
-      if (!isOwner) { if (window.showToast) showToast(isEN ? '\ud83d\udd12 Only organizers can add entries.' : '\ud83d\udd12 Solo gli organizzatori possono aggiungere entry.', 'info'); return; }
+      if (!isOwner) { if (window.showToast) showToast(LANG3 === 'es' ? '\\ud83d\\udd12 Solo los organizadores pueden añadir entradas.' : isEN ? '\ud83d\udd12 Only organizers can add entries.' : '\ud83d\udd12 Solo gli organizzatori possono aggiungere entry.', 'info'); return; }
       var tripDay = getCurrentTripDay();
       var dayKey, dayLabel;
       var now = new Date();
@@ -17806,10 +17806,10 @@ window.injectAllWikiLinks = function() {
 
                 // Save
                 diarioRef.child(dayKey).set(entryData).then(function() {
-                  if (window.showToast) showToast(isEN ? 'Post added to journal!' : 'Post aggiunto al diario!', 'success');
+                  if (window.showToast) showToast(LANG3 === 'es' ? '¡Publicación añadida al diario!' : isEN ? 'Post added to journal!' : 'Post aggiunto al diario!', 'success');
                 }).catch(function(e) {
                   console.error('[Diario] Add entry failed:', e);
-                  if (window.showToast) showToast(isEN ? '❌ Failed to add post: ' + e.message : '❌ Impossibile aggiungere il post: ' + e.message, 'error');
+                  if (window.showToast) showToast(LANG3 === 'es' ? '❌ Error al añadir el post: ' + e.message : isEN ? '❌ Failed to add post: ' + e.message : '❌ Impossibile aggiungere il post: ' + e.message, 'error');
                 });
               });
             });
@@ -17845,7 +17845,7 @@ window.injectAllWikiLinks = function() {
 
     var catIcons = { park: '🎢', market: '🛒', nature: '🌲', museum: '🏛️', viewpoint: '🌅', festival: '🎉', spa: '♨️' };
     var catColors = { park: '#e53e3e', market: '#dd6b20', nature: '#38a169', museum: '#6b46c1', viewpoint: '#3182ce', festival: '#d53f8c', spa: '#e53e3e' };
-    var catLabels = { park: isEN ? 'Theme Park' : 'Parco divertimenti', market: isEN ? 'Market' : 'Mercato', nature: isEN ? 'National Park' : 'Parco Nazionale', museum: isEN ? 'Museum' : 'Museo', viewpoint: isEN ? 'Viewpoint' : 'Punto panoramico', festival: 'Festival', spa: isEN ? 'Spa / Thermal' : 'Terme' };
+    var catLabels = { park: LANG3 === 'es' ? 'Parque de atracciones' : isEN ? 'Theme Park' : 'Parco divertimenti', market: LANG3 === 'es' ? 'Mercado' : isEN ? 'Market' : 'Mercato', nature: LANG3 === 'es' ? 'Parque Nacional' : isEN ? 'National Park' : 'Parco Nazionale', museum: LANG3 === 'es' ? 'Museo' : isEN ? 'Museum' : 'Museo', viewpoint: LANG3 === 'es' ? 'Punto panorámico' : isEN ? 'Viewpoint' : 'Punto panoramico', festival: 'Festival', spa: LANG3 === 'es' ? 'Termas' : isEN ? 'Spa / Thermal' : 'Terme' };
 
     function renderPOICards(items, container) {
         if (!container) return;
@@ -17859,7 +17859,7 @@ window.injectAllWikiLinks = function() {
                     '<span class="poi-icon" style="color:' + catColors[poi.cat] + '; font-size:1.5em;">' + catIcons[poi.cat] + '</span>' +
                     '<div class="poi-card-title">' +
                         '<strong>' + name + '</strong> ' + poi.country +
-                        '<br><small class="poi-card-meta">' + catLabels[poi.cat] + (poi.city ? ' · ' + poi.city : '') + (poi.period ? ' · 📅 ' + poi.period : '') + ' · ' + (isEN ? 'Day ' : 'Giorno ') + poi.nearDay.replace('g','') + '</small>' +
+                        '<br><small class="poi-card-meta">' + catLabels[poi.cat] + (poi.city ? ' · ' + poi.city : '') + (poi.period ? ' · 📅 ' + poi.period : '') + ' · ' + (LANG3 === 'es' ? 'Día ' : isEN ? 'Day ' : 'Giorno ') + poi.nearDay.replace('g','') + '</small>' +
                     '</div>' +
                 '</div>' +
                 '<p class="poi-card-desc">' + desc + '</p>' +
@@ -17867,7 +17867,7 @@ window.injectAllWikiLinks = function() {
                     '<span class="poi-price">💰 ' + price + '</span>' +
                     '<span class="poi-links">' +
                         '<a href="' + poi.mapsUrl + '" target="_blank" rel="noopener" title="Google Maps">📍</a>' +
-                        (poi.url ? ' <a href="' + poi.url + '" target="_blank" rel="noopener" title="' + (isEN ? 'Website' : 'Sito web') + '">🌐</a>' : '') +
+                        (poi.url ? ' <a href="' + poi.url + '" target="_blank" rel="noopener" title="' + (LANG3 === 'es' ? 'Sitio web' : isEN ? 'Website' : 'Sito web') + '">🌐</a>' : '') +
                     '</span>' +
                 '</div>' +
             '</div>';
@@ -18047,12 +18047,12 @@ window.injectAllWikiLinks = function() {
     checks.push(new Promise(function(resolve) {
       // v2.34 FIX: Skip SW check in Capacitor (not supported in native WebView)
       if (isCapacitorNative) {
-        results.push(isEN ? '⏭️ Service Worker: N/A (native app, uses native FCM)' : '⏭️ Service Worker: N/A (app nativa, usa FCM nativo)');
+        results.push(LANG3 === 'es' ? '⏭️ Service Worker: N/A (app nativa, usa FCM nativo)' : isEN ? '⏭️ Service Worker: N/A (native app, uses native FCM)' : '⏭️ Service Worker: N/A (app nativa, usa FCM nativo)');
         resolve();
         return;
       }
       if (!('serviceWorker' in navigator)) {
-        results.push(isEN ? '❌ Service Worker not supported' : '❌ Service Worker non supportato');
+        results.push(LANG3 === 'es' ? '❌ Service Worker no soportado' : isEN ? '❌ Service Worker not supported' : '❌ Service Worker non supportato');
         issues++;
         resolve();
       } else {
@@ -18071,17 +18071,17 @@ window.injectAllWikiLinks = function() {
           var installing = (reg && (reg.installing || reg.waiting)) ||
                            regs.some(function(r){ return r && (r.installing || r.waiting); });
           if (hasActive) {
-            results.push(isEN ? '✅ Service Worker active' : '✅ Service Worker attivo');
+            results.push(LANG3 === 'es' ? '✅ Service Worker activo' : isEN ? '✅ Service Worker active' : '✅ Service Worker attivo');
             swOk = true;
           } else if (installing) {
-            results.push(isEN ? '⚠️ Service Worker installing' : '⚠️ Service Worker in installazione');
+            results.push(LANG3 === 'es' ? '⚠️ Service Worker en instalación' : isEN ? '⚠️ Service Worker installing' : '⚠️ Service Worker in installazione');
             warnings++;
           } else {
-            results.push(isEN ? '❌ Service Worker not registered' : '❌ Service Worker non registrato');
+            results.push(LANG3 === 'es' ? '❌ Service Worker no registrado' : isEN ? '❌ Service Worker not registered' : '❌ Service Worker non registrato');
             issues++;
           }
           resolve();
-        }).catch(function() { results.push(isEN ? '❌ SW check failed' : '❌ SW check fallito'); issues++; resolve(); });
+        }).catch(function() { results.push(LANG3 === 'es' ? '❌ SW check fallido' : isEN ? '❌ SW check failed' : '❌ SW check fallito'); issues++; resolve(); });
       }
     }));
 
@@ -18089,20 +18089,20 @@ window.injectAllWikiLinks = function() {
     checks.push(new Promise(function(resolve) {
       // v2.34 FIX: Skip web notification check in Capacitor
       if (isCapacitorNative) {
-        results.push(isEN ? '⏭️ Push Notifications: N/A (uses native FCM)' : '⏭️ Notifiche Push: N/A (usa FCM nativo)');
+        results.push(LANG3 === 'es' ? '⏭️ Notificaciones Push: N/A (usa FCM nativo)' : isEN ? '⏭️ Push Notifications: N/A (uses native FCM)' : '⏭️ Notifiche Push: N/A (usa FCM nativo)');
         resolve();
         return;
       }
       if (!('Notification' in window)) {
-        results.push(isEN ? '❌ Notifications not supported by browser' : '❌ Notifiche non supportate dal browser');
+        results.push(LANG3 === 'es' ? '❌ Notificaciones no soportadas por el navegador' : isEN ? '❌ Notifications not supported by browser' : '❌ Notifiche non supportate dal browser');
         issues++;
       } else if (Notification.permission === 'granted') {
-        results.push(isEN ? '✅ Notification permission granted' : '✅ Permesso notifiche concesso');
+        results.push(LANG3 === 'es' ? '✅ Permiso de notificaciones concedido' : isEN ? '✅ Notification permission granted' : '✅ Permesso notifiche concesso');
       } else if (Notification.permission === 'denied') {
-        results.push(isEN ? '❌ Notifications blocked — go to Settings > Notifications > Chrome/PWA' : '❌ Notifiche bloccate — vai in Impostazioni > Notifiche > Chrome/PWA');
+        results.push(LANG3 === 'es' ? '❌ Notificaciones bloqueadas — ve a Ajustes > Notificaciones > Chrome/PWA' : isEN ? '❌ Notifications blocked — go to Settings > Notifications > Chrome/PWA' : '❌ Notifiche bloccate — vai in Impostazioni > Notifiche > Chrome/PWA');
         issues++;
       } else {
-        results.push(isEN ? '⚠️ Notification permission not requested — press "Enable push"' : '⚠️ Permesso notifiche non richiesto — premi "Attiva push"');
+        results.push(LANG3 === 'es' ? '⚠️ Permiso de notificaciones no solicitado — pulsa "Activar push"' : isEN ? '⚠️ Notification permission not requested — press "Enable push"' : '⚠️ Permesso notifiche non richiesto — premi "Attiva push"');
         warnings++;
       }
       resolve();
@@ -18112,15 +18112,15 @@ window.injectAllWikiLinks = function() {
     checks.push(new Promise(function(resolve) {
       // v2.34 FIX: In Capacitor, FCM token is managed natively
       if (isCapacitorNative) {
-        results.push(isEN ? '⏭️ FCM Token: handled natively by plugin' : '⏭️ Token FCM: gestito nativamente dal plugin');
+        results.push(LANG3 === 'es' ? '⏭️ Token FCM: gestionado nativamente por el plugin' : isEN ? '⏭️ FCM Token: handled natively by plugin' : '⏭️ Token FCM: gestito nativamente dal plugin');
         resolve();
         return;
       }
       var token = localStorage.getItem('viaggio2026_fcm_token');
       if (token) {
-        results.push(isEN ? '✅ FCM Token saved locally' : '✅ Token FCM salvato localmente');
+        results.push(LANG3 === 'es' ? '✅ Token FCM guardado localmente' : isEN ? '✅ FCM Token saved locally' : '✅ Token FCM salvato localmente');
       } else {
-        results.push(isEN ? '❌ FCM Token missing — press "Refresh Token" in System & Debug' : '❌ Token FCM assente — premi "Refresh Token" in Sistema & Debug');
+        results.push(LANG3 === 'es' ? '❌ Token FCM ausente — pulsa "Refresh Token" en Sistema & Debug' : isEN ? '❌ FCM Token missing — press "Refresh Token" in System & Debug' : '❌ Token FCM assente — premi "Refresh Token" in Sistema & Debug');
         issues++;
       }
       resolve();
@@ -18129,36 +18129,36 @@ window.injectAllWikiLinks = function() {
     // 4. Token in DB
     checks.push(new Promise(function(resolve) {
       if (typeof db === 'undefined' || !db) {
-        results.push(isEN ? '❌ Database not connected' : '❌ Database non connesso');
+        results.push(LANG3 === 'es' ? '❌ Base de datos no conectada' : isEN ? '❌ Database not connected' : '❌ Database non connesso');
         issues++;
         resolve();
         return;
       }
       var user = typeof firebaseUser !== 'undefined' ? firebaseUser : null;
       if (!user) {
-        results.push(isEN ? '⚠️ Not authenticated — token cannot be verified in DB' : '⚠️ Non autenticato — token non verificabile nel DB');
+        results.push(LANG3 === 'es' ? '⚠️ No autenticado — el token no puede verificarse en la DB' : isEN ? '⚠️ Not authenticated — token cannot be verified in DB' : '⚠️ Non autenticato — token non verificabile nel DB');
         warnings++;
         resolve();
         return;
       }
       db.ref('fcm_tokens/' + user.uid).once('value').then(function(snap) {
         if (snap.exists() && snap.numChildren() > 0) {
-          results.push('✅ ' + snap.numChildren() + (isEN ? ' device(s) registered in DB' : ' dispositivo/i registrato/i nel DB'));
+          results.push('✅ ' + snap.numChildren() + (LANG3 === 'es' ? ' dispositivo(s) registrados en DB' : isEN ? ' device(s) registered in DB' : ' dispositivo/i registrato/i nel DB'));
         } else {
-          results.push(isEN ? '❌ No token in DB for your account — press "Refresh Token"' : '❌ Nessun token nel DB per il tuo account — premi "Refresh Token"');
+          results.push(LANG3 === 'es' ? '❌ No hay token en DB para tu cuenta — pulsa "Refresh Token"' : isEN ? '❌ No token in DB for your account — press "Refresh Token"' : '❌ Nessun token nel DB per il tuo account — premi "Refresh Token"');
           issues++;
         }
         resolve();
-      }).catch(function() { results.push(isEN ? '⚠️ Error reading token DB' : '⚠️ Errore lettura token DB'); warnings++; resolve(); });
+      }).catch(function() { results.push(LANG3 === 'es' ? '⚠️ Error al leer DB de tokens' : isEN ? '⚠️ Error reading token DB' : '⚠️ Errore lettura token DB'); warnings++; resolve(); });
     }));
 
     // 5. Firebase Auth
     checks.push(new Promise(function(resolve) {
       var user = typeof firebaseUser !== 'undefined' ? firebaseUser : null;
       if (user) {
-        results.push((isEN ? '✅ Authenticated as ' : '✅ Autenticato come ') + (user.displayName || user.email));
+        results.push((LANG3 === 'es' ? '✅ Autenticado como ' : isEN ? '✅ Authenticated as ' : '✅ Autenticato come ') + (user.displayName || user.email));
       } else {
-        results.push(isEN ? '❌ Not authenticated' : '❌ Non autenticato');
+        results.push(LANG3 === 'es' ? '❌ No autenticado' : isEN ? '❌ Not authenticated' : '❌ Non autenticato');
         issues++;
       }
       resolve();
@@ -18167,9 +18167,9 @@ window.injectAllWikiLinks = function() {
     // 6. Database connection
     checks.push(new Promise(function(resolve) {
       if (typeof db !== 'undefined' && db) {
-        results.push(isEN ? '✅ Database connected' : '✅ Database connesso');
+        results.push(LANG3 === 'es' ? '✅ Base de datos conectada' : isEN ? '✅ Database connected' : '✅ Database connesso');
       } else {
-        results.push(isEN ? '❌ Database not connected' : '❌ Database non connesso');
+        results.push(LANG3 === 'es' ? '❌ Base de datos no conectada' : isEN ? '❌ Database not connected' : '❌ Database non connesso');
         issues++;
       }
       resolve();
@@ -18184,14 +18184,14 @@ window.injectAllWikiLinks = function() {
           snap.forEach(function(c) { last = c.val(); });
           if (last && last.sentAt) {
             var ago = Math.round((Date.now() - last.sentAt) / 60000);
-            var agoStr = ago < 60 ? ago + (isEN ? ' min ago' : ' min fa') : Math.round(ago/60) + (isEN ? 'h ago' : 'h fa');
-            results.push((isEN ? '✅ Last push sent: ' : '✅ Ultima push inviata: ') + agoStr);
+            var agoStr = ago < 60 ? ago + (LANG3 === 'es' ? ' min. atrás' : isEN ? ' min ago' : ' min fa') : Math.round(ago/60) + (LANG3 === 'es' ? 'h hace' : isEN ? 'h ago' : 'h fa');
+            results.push((LANG3 === 'es' ? '✅ Última push enviada: ' : isEN ? '✅ Last push sent: ' : '✅ Ultima push inviata: ') + agoStr);
           } else {
-            results.push(isEN ? '⚠️ Push queued but not yet sent' : '⚠️ Push in coda ma non ancora inviata');
+            results.push(LANG3 === 'es' ? '⚠️ Push en cola pero aún no enviado' : isEN ? '⚠️ Push queued but not yet sent' : '⚠️ Push in coda ma non ancora inviata');
             warnings++;
           }
         } else {
-          results.push(isEN ? 'ℹ️ No push in queue (normal if you haven\'t tested yet)' : 'ℹ️ Nessuna push nella coda (normale se non hai ancora testato)');
+          results.push(LANG3 === 'es' ? 'ℹ️ No hay push en la cola (normal si aún no has probado)' : isEN ? 'ℹ️ No push in queue (normal if you haven\'t tested yet)' : 'ℹ️ Nessuna push nella coda (normale se non hai ancora testato)');
         }
         resolve();
       }).catch(function() { resolve(); });
@@ -18225,18 +18225,18 @@ window.injectAllWikiLinks = function() {
 
       if (issues === 0 && warnings === 0) {
         icon.textContent = '🟢';
-        title.textContent = isEN ? 'All OK' : 'Tutto OK';
-        subtitle.textContent = isEN ? 'Push active, SW updated, token valid' : 'Push attive, SW aggiornato, token valido';
+        title.textContent = LANG3 === 'es' ? 'Todo OK' : isEN ? 'All OK' : 'Tutto OK';
+        subtitle.textContent = LANG3 === 'es' ? 'Push activas, SW actualizado, token válido' : isEN ? 'Push active, SW updated, token valid' : 'Push attive, SW aggiornato, token valido';
         banner.style.borderColor = '#38a169';
       } else if (issues === 0) {
         icon.textContent = '🟡';
-        title.textContent = warnings + (isEN ? (warnings > 1 ? ' warnings' : ' warning') : (warnings > 1 ? ' avvisi' : ' avviso'));
-        subtitle.textContent = isEN ? 'Working but with possible improvements' : 'Funziona ma con possibili miglioramenti';
+        title.textContent = warnings + (LANG3 === 'es' ? (warnings > 1 ? ' avisos' : ' aviso') : isEN ? (warnings > 1 ? ' warnings' : ' warning') : (warnings > 1 ? ' avvisi' : ' avviso'));
+        subtitle.textContent = LANG3 === 'es' ? 'Funciona pero con posibles mejoras' : isEN ? 'Working but with possible improvements' : 'Funziona ma con possibili miglioramenti';
         banner.style.borderColor = '#d69e2e';
       } else {
         icon.textContent = '🔴';
-        title.textContent = issues + (isEN ? (issues > 1 ? ' issues' : ' issue') : (issues > 1 ? ' problemi' : ' problema'));
-        subtitle.textContent = isEN ? 'Push notifications may not work correctly' : 'Le push potrebbero non funzionare correttamente';
+        title.textContent = issues + (LANG3 === 'es' ? (issues > 1 ? ' problemas' : ' problema') : isEN ? (issues > 1 ? ' issues' : ' issue') : (issues > 1 ? ' problemi' : ' problema'));
+        subtitle.textContent = LANG3 === 'es' ? 'Las notificaciones push podrían no funcionar correctamente' : isEN ? 'Push notifications may not work correctly' : 'Le push potrebbero non funzionare correttamente';
         banner.style.borderColor = '#e53e3e';
       }
 
@@ -18336,15 +18336,15 @@ window.injectAllWikiLinks = function() {
     adminTestPushDelay.addEventListener('click', function() {
       if (!db) { adminLog('ERROR: db is null'); return; }
       adminTestPushDelay.disabled = true;
-      adminTestPushDelay.textContent = isEN ? '⏱️ Sending...' : '⏱️ Invio...';
-      adminLog(isEN ? '📤 Push sent to queue — close the app NOW to receive it as a pop-up!' : '📤 Push inviata alla coda — chiudi l\'app ORA per riceverla come pop-up!');
+      adminTestPushDelay.textContent = LANG3 === 'es' ? '⏱️ Enviando...' : isEN ? '⏱️ Sending...' : '⏱️ Invio...';
+      adminLog(LANG3 === 'es' ? '📤 Push enviada a la cola — cierra la app AHORA para recibirla como ventana emergente!' : isEN ? '📤 Push sent to queue — close the app NOW to receive it as a pop-up!' : '📤 Push inviata alla coda — chiudi l\'app ORA per riceverla come pop-up!');
       var ref = db.ref('trips/' + FAMILY_ID + '/notifications/queue');
       ref.push({
         type: 'test', title: '🧪 Admin Test (background)', body: 'Se vedi questo pop-up, le push in background funzionano!',
         target: 'owner', url: './', tag: 'admin-test-bg-' + Date.now(), createdAt: Date.now(), sent: false, source: 'admin-panel'
       }).then(function() {
-        adminLog(isEN ? '✅ Push queued — close the app within 3 seconds!' : '✅ Push in coda — chiudi l\'app entro 3 secondi!');
-        adminTestPushDelay.textContent = isEN ? '✅ Close the app!' : '✅ Chiudi l\'app!';
+        adminLog(LANG3 === 'es' ? '✅ Push en cola — cierra la app en 3 segundos!' : isEN ? '✅ Push queued — close the app within 3 seconds!' : '✅ Push in coda — chiudi l\'app entro 3 secondi!');
+        adminTestPushDelay.textContent = LANG3 === 'es' ? '✅ ¡Cierra la app!' : isEN ? '✅ Close the app!' : '✅ Chiudi l\'app!';
         adminTestPushDelay.style.background = '#27ae60';
         setTimeout(function() {
           adminTestPushDelay.textContent = '⏱️ Test Push (5s)';
@@ -18557,7 +18557,7 @@ window.injectAllWikiLinks = function() {
 
   function renderAdminUsers() {
     if (!adminUsersList) return;
-    adminUsersList.innerHTML = '<p style="color:var(--text-muted);font-size:13px;">' + (isEN ? 'Loading...' : 'Caricamento...') + '</p>';
+    adminUsersList.innerHTML = '<p style="color:var(--text-muted);font-size:13px;">' + (LANG3 === 'es' ? 'Cargando...' : isEN ? 'Loading...' : 'Caricamento...') + '</p>';
 
     // Fetch approvedUsers and pendingUsers first, then render
     approvedRef.once('value', function(approvedSnap) {
@@ -18567,7 +18567,7 @@ window.injectAllWikiLinks = function() {
     usersRef.once('value', function(snap) {
       var users = snap.val();
       if (!users || Object.keys(users).length === 0) {
-        adminUsersList.innerHTML = '<p style="color:var(--text-muted);">' + (isEN ? 'No registered users.' : 'Nessun utente registrato.') + '</p>';
+        adminUsersList.innerHTML = '<p style="color:var(--text-muted);">' + (LANG3 === 'es' ? 'No hay usuarios registrados.' : isEN ? 'No registered users.' : 'Nessun utente registrato.') + '</p>';
         return;
       }
 
@@ -18605,19 +18605,19 @@ window.injectAllWikiLinks = function() {
       var html = '';
       if (duplicateUIDs.length > 0 && !localStorage.getItem('admin-dupes-dismissed') && !sessionStorage.getItem('admin-dupes-cleaned')) {
         html += '<div style="margin-bottom:10px;padding:8px 12px;background:var(--warning,#d69e2e);color:#fff;border-radius:8px;font-size:12px;display:flex;align-items:center;gap:8px;">';
-        html += '<span>\u26a0\ufe0f ' + duplicateUIDs.length + (isEN ? ' duplicate UID(s) found' : ' UID duplicati trovati') + '</span>';
-        html += '<button id="admin-cleanup-dupes" class="pos-btn" style="font-size:11px;padding:4px 10px;background:var(--card-bg,#fff);color:#d69e2e;border:none;border-radius:6px;cursor:pointer;font-weight:700;">\ud83e\uddf9 ' + (isEN ? 'Clean up' : 'Pulisci') + '</button>';
+        html += '<span>\u26a0\ufe0f ' + duplicateUIDs.length + (LANG3 === 'es' ? ' UID(s) duplicados encontrados' : isEN ? ' duplicate UID(s) found' : ' UID duplicati trovati') + '</span>';
+        html += '<button id="admin-cleanup-dupes" class="pos-btn" style="font-size:11px;padding:4px 10px;background:var(--card-bg,#fff);color:#d69e2e;border:none;border-radius:6px;cursor:pointer;font-weight:700;">\ud83e\uddf9 ' + (LANG3 === 'es' ? 'Limpiar' : isEN ? 'Clean up' : 'Pulisci') + '</button>';
         html += '</div>';
       }
 
       html += '<table class="admin-table" style="width:100%;border-collapse:collapse;font-size:0.85em;">';
       html += '<thead><tr style="border-bottom:1px solid var(--border-color,#e2e8f0);">';
       html += '<th style="padding:6px 4px;text-align:left;"></th>';
-      html += '<th style="padding:6px 4px;text-align:left;">' + (isEN ? 'Name' : 'Nome') + '</th>';
+      html += '<th style="padding:6px 4px;text-align:left;">' + (LANG3 === 'es' ? 'Nombre' : isEN ? 'Name' : 'Nome') + '</th>';
       html += '<th style="padding:6px 4px;text-align:left;">Email</th>';
-      html += '<th style="padding:6px 4px;text-align:left;">' + (isEN ? 'Last seen' : 'Ultimo accesso') + '</th>';
-      html += '<th style="padding:6px 4px;text-align:left;">' + (isEN ? 'Status' : 'Stato') + '</th>';
-      html += '<th style="padding:6px 4px;text-align:center;">' + (isEN ? 'Action' : 'Azione') + '</th>';
+      html += '<th style="padding:6px 4px;text-align:left;">' + (LANG3 === 'es' ? 'Último acceso' : isEN ? 'Last seen' : 'Ultimo accesso') + '</th>';
+      html += '<th style="padding:6px 4px;text-align:left;">' + (LANG3 === 'es' ? 'Estado' : isEN ? 'Status' : 'Stato') + '</th>';
+      html += '<th style="padding:6px 4px;text-align:center;">' + (LANG3 === 'es' ? 'Acción' : isEN ? 'Action' : 'Azione') + '</th>';
       html += '</tr></thead><tbody>';
 
       deduped.forEach(function(entry) {
@@ -18627,27 +18627,27 @@ window.injectAllWikiLinks = function() {
         var isDynamicOwnerUser = !!dynamicOwnerMap[uid];
         var isOwnerUser = isHardcodedOwnerUser || isDynamicOwnerUser;
         var isBanned = !!globalBanned[uid];
-        var lastSeen = u.lastSeen ? new Date(u.lastSeen).toLocaleString(isEN ? 'en-GB' : 'it-IT', {day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : '\u2014';
+        var lastSeen = u.lastSeen ? new Date(u.lastSeen).toLocaleString(LANG3 === 'es' ? 'es-ES' : isEN ? 'en-GB' : 'it-IT', {day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : '\u2014';
         var safePhoto = (u.photo && /^https:\/\//.test(u.photo)) ? escapeHtml(u.photo) : '';
         var photo = safePhoto ? '<img src="' + safePhoto + '" style="width:28px;height:28px;border-radius:50%;vertical-align:middle;" loading="lazy">' : '<span style="font-size:20px;">\ud83d\udc64</span>';
         var isApproved = !!approvedMap[uid];
         var isPending = !!pendingMap[uid];
         // v1.99: Ghost indicator — user in DB but inactive > 30 days (may be deleted from Auth)
         var isGhost = !isOwnerUser && u.lastSeen && (Date.now() - u.lastSeen > 30 * 86400000);
-        var ghostBadge = isGhost ? ' <span title="' + (isEN ? 'Inactive > 30 days (possible ghost account)' : 'Inattivo > 30 giorni (possibile account fantasma)') + '" style="font-size:11px;cursor:help;">\ud83d\udc7b</span>' : '';
+        var ghostBadge = isGhost ? ' <span title="' + (LANG3 === 'es' ? 'Inactivo > 30 días (posible cuenta fantasma)' : isEN ? 'Inactive > 30 days (possible ghost account)' : 'Inattivo > 30 giorni (possibile account fantasma)') + '" style="font-size:11px;cursor:help;">\ud83d\udc7b</span>' : '';
         var statusBadge;
         if (isHardcodedOwnerUser) {
           statusBadge = '<span style="background:var(--accent,#6366f1);color:#fff;padding:2px 8px;border-radius:8px;font-size:11px;">Owner ★</span>';
         } else if (isDynamicOwnerUser) {
           statusBadge = '<span style="background:var(--accent,#6366f1);color:#fff;padding:2px 8px;border-radius:8px;font-size:11px;">Owner</span>';
         } else if (isBanned) {
-          statusBadge = '<span style="background:var(--danger,#e53e3e);color:#fff;padding:2px 8px;border-radius:8px;font-size:11px;">' + (isEN ? 'Banned' : 'Bannato') + '</span>';
+          statusBadge = '<span style="background:var(--danger,#e53e3e);color:#fff;padding:2px 8px;border-radius:8px;font-size:11px;">' + (LANG3 === 'es' ? 'Bloqueado' : isEN ? 'Banned' : 'Bannato') + '</span>';
         } else if (isPending) {
-          statusBadge = '<span style="background:var(--warning,#d69e2e);color:#fff;padding:2px 8px;border-radius:8px;font-size:11px;">' + (isEN ? 'Pending' : 'In attesa') + '</span>';
+          statusBadge = '<span style="background:var(--warning,#d69e2e);color:#fff;padding:2px 8px;border-radius:8px;font-size:11px;">' + (LANG3 === 'es' ? 'Pendiente' : isEN ? 'Pending' : 'In attesa') + '</span>';
         } else if (isApproved) {
-          statusBadge = '<span style="background:var(--success,#38a169);color:#fff;padding:2px 8px;border-radius:8px;font-size:11px;">' + (isEN ? 'Active' : 'Attivo') + '</span>';
+          statusBadge = '<span style="background:var(--success,#38a169);color:#fff;padding:2px 8px;border-radius:8px;font-size:11px;">' + (LANG3 === 'es' ? 'Activo' : isEN ? 'Active' : 'Attivo') + '</span>';
         } else {
-          statusBadge = '<span style="background:var(--text-muted,#a0aec0);color:#fff;padding:2px 8px;border-radius:8px;font-size:11px;">' + (isEN ? 'Unknown' : 'Sconosciuto') + '</span>';
+          statusBadge = '<span style="background:var(--text-muted,#a0aec0);color:#fff;padding:2px 8px;border-radius:8px;font-size:11px;">' + (LANG3 === 'es' ? 'Desconocido' : isEN ? 'Unknown' : 'Sconosciuto') + '</span>';
         }
         var uidShort = '<span style="font-size:10px;color:var(--text-muted);font-family:monospace;">' + uid.substring(0, 8) + '...</span>';
         var actionBtn = '';
@@ -18655,36 +18655,36 @@ window.injectAllWikiLinks = function() {
         if (isOwnerUser && !isHardcodedOwnerUser && isHardcodedOwner) {
           // Dynamic owner: show Demote button (only hardcoded super-admins can demote)
           actionBtn = uidShort + ' ';
-          actionBtn += '<button class="admin-demote-owner pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--warning,#d69e2e);color:#fff;border:none;border-radius:6px;cursor:pointer;margin-right:4px;">' + (isEN ? '⬇️ Demote' : '⬇️ Rimuovi Owner') + '</button>';
+          actionBtn += '<button class="admin-demote-owner pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--warning,#d69e2e);color:#fff;border:none;border-radius:6px;cursor:pointer;margin-right:4px;">' + (LANG3 === 'es' ? '⬇️ Degradar' : isEN ? '⬇️ Demote' : '⬇️ Rimuovi Owner') + '</button>';
         } else if (!isOwnerUser && isApproved && isHardcodedOwner) {
           // Approved non-owner: show Promote button (only hardcoded super-admins can promote)
           actionBtn = uidShort + ' ';
-          actionBtn += '<button class="admin-promote-owner pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--accent,#6366f1);color:#fff;border:none;border-radius:6px;cursor:pointer;margin-right:4px;">' + (isEN ? '⬆️ Promote' : '⬆️ Promuovi Owner') + '</button>';
+          actionBtn += '<button class="admin-promote-owner pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--accent,#6366f1);color:#fff;border:none;border-radius:6px;cursor:pointer;margin-right:4px;">' + (LANG3 === 'es' ? '⬆️ Promover' : isEN ? '⬆️ Promote' : '⬆️ Promuovi Owner') + '</button>';
         }
         if (!isOwnerUser) {
           if (isBanned) {
             // Banned: show Unban + Delete
-            actionBtn = uidShort + ' <button class="admin-global-unban pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--success,#38a169);color:#fff;border:none;border-radius:6px;cursor:pointer;margin-right:4px;">' + (isEN ? 'Unban' : 'Sblocca') + '</button>';
-            actionBtn += '<button class="admin-delete-user pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:#718096;color:#fff;border:none;border-radius:6px;cursor:pointer;">' + (isEN ? '🗑️ Delete' : '🗑️ Elimina') + '</button>';
+            actionBtn = uidShort + ' <button class="admin-global-unban pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--success,#38a169);color:#fff;border:none;border-radius:6px;cursor:pointer;margin-right:4px;">' + (LANG3 === 'es' ? 'Desbloquear' : isEN ? 'Unban' : 'Sblocca') + '</button>';
+            actionBtn += '<button class="admin-delete-user pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:#718096;color:#fff;border:none;border-radius:6px;cursor:pointer;">' + (LANG3 === 'es' ? '🗑️ Eliminar' : isEN ? '🗑️ Delete' : '🗑️ Elimina') + '</button>';
           } else if (isApproved) {
             // Active/Approved: show Remove (soft revoke) + Ban (hard block)
             actionBtn = uidShort + ' ';
-            actionBtn += '<button class="admin-remove-user pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--warning,#d69e2e);color:#fff;border:none;border-radius:6px;cursor:pointer;margin-right:4px;">' + (isEN ? 'Remove' : 'Rimuovi') + '</button>';
-            actionBtn += '<button class="admin-global-ban pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--danger,#e53e3e);color:#fff;border:none;border-radius:6px;cursor:pointer;margin-right:4px;">' + (isEN ? 'Ban' : 'Blocca') + '</button>';
-            actionBtn += '<button class="admin-delete-user pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:#718096;color:#fff;border:none;border-radius:6px;cursor:pointer;">' + (isEN ? '🗑️ Delete' : '🗑️ Elimina') + '</button>';
+            actionBtn += '<button class="admin-remove-user pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--warning,#d69e2e);color:#fff;border:none;border-radius:6px;cursor:pointer;margin-right:4px;">' + (LANG3 === 'es' ? 'Eliminar' : isEN ? 'Remove' : 'Rimuovi') + '</button>';
+            actionBtn += '<button class="admin-global-ban pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--danger,#e53e3e);color:#fff;border:none;border-radius:6px;cursor:pointer;margin-right:4px;">' + (LANG3 === 'es' ? 'Bloquear' : isEN ? 'Ban' : 'Blocca') + '</button>';
+            actionBtn += '<button class="admin-delete-user pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:#718096;color:#fff;border:none;border-radius:6px;cursor:pointer;">' + (LANG3 === 'es' ? '🗑️ Eliminar' : isEN ? '🗑️ Delete' : '🗑️ Elimina') + '</button>';
           } else {
             // Pending or Sconosciuto: show Approve + Reject + Ban
             actionBtn = uidShort + ' ';
-            actionBtn += '<button class="admin-inline-approve pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--success,#38a169);color:#fff;border:none;border-radius:6px;cursor:pointer;margin-right:4px;">\u2705 ' + (isEN ? 'Approve' : 'Approva') + '</button>';
-            actionBtn += '<button class="admin-inline-reject pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--warning,#d69e2e);color:#fff;border:none;border-radius:6px;cursor:pointer;margin-right:4px;">\u274c ' + (isEN ? 'Reject' : 'Rifiuta') + '</button>';
-            actionBtn += '<button class="admin-global-ban pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--danger,#e53e3e);color:#fff;border:none;border-radius:6px;cursor:pointer;margin-right:4px;">' + (isEN ? 'Ban' : 'Blocca') + '</button>';
-            actionBtn += '<button class="admin-delete-user pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:#718096;color:#fff;border:none;border-radius:6px;cursor:pointer;">' + (isEN ? '🗑️ Delete' : '🗑️ Elimina') + '</button>';
+            actionBtn += '<button class="admin-inline-approve pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--success,#38a169);color:#fff;border:none;border-radius:6px;cursor:pointer;margin-right:4px;">\u2705 ' + (LANG3 === 'es' ? 'Aprobar' : isEN ? 'Approve' : 'Approva') + '</button>';
+            actionBtn += '<button class="admin-inline-reject pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--warning,#d69e2e);color:#fff;border:none;border-radius:6px;cursor:pointer;margin-right:4px;">\u274c ' + (LANG3 === 'es' ? 'Rechazar' : isEN ? 'Reject' : 'Rifiuta') + '</button>';
+            actionBtn += '<button class="admin-global-ban pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--danger,#e53e3e);color:#fff;border:none;border-radius:6px;cursor:pointer;margin-right:4px;">' + (LANG3 === 'es' ? 'Bloquear' : isEN ? 'Ban' : 'Blocca') + '</button>';
+            actionBtn += '<button class="admin-delete-user pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:#718096;color:#fff;border:none;border-radius:6px;cursor:pointer;">' + (LANG3 === 'es' ? '🗑️ Eliminar' : isEN ? '🗑️ Delete' : '🗑️ Elimina') + '</button>';
           }
         }
 
         html += '<tr style="border-bottom:1px solid var(--border-color,#e2e8f0);' + (isBanned ? 'opacity:0.6;' : '') + '">';
         html += '<td style="padding:6px 4px;">' + photo + '</td>';
-        html += '<td style="padding:6px 4px;">' + escapeHtml(u.name || 'Anonimo') + ' <button class="admin-edit-name" data-uid="' + uid + '" data-name="' + escapeHtml(u.name || '') + '" style="background:none;border:none;cursor:pointer;font-size:13px;padding:2px;vertical-align:middle;" title="' + (isEN ? 'Edit display name' : 'Modifica nome') + '">✏️</button></td>';
+        html += '<td style="padding:6px 4px;">' + escapeHtml(u.name || 'Anonimo') + ' <button class="admin-edit-name" data-uid="' + uid + '" data-name="' + escapeHtml(u.name || '') + '" style="background:none;border:none;cursor:pointer;font-size:13px;padding:2px;vertical-align:middle;" title="' + (LANG3 === 'es' ? 'Editar nombre para mostrar' : isEN ? 'Edit display name' : 'Modifica nome') + '">✏️</button></td>';
         html += '<td style="padding:6px 4px;font-size:0.85em;color:var(--text-muted);">' + escapeHtml(u.email || '\u2014') + '</td>';
         html += '<td style="padding:6px 4px;">' + lastSeen + '</td>';
         html += '<td style="padding:6px 4px;">' + statusBadge + ghostBadge + '</td>';
@@ -18699,18 +18699,18 @@ window.injectAllWikiLinks = function() {
       var cleanupBtn = document.getElementById('admin-cleanup-dupes');
       if (cleanupBtn) {
         cleanupBtn.addEventListener('click', function() {
-          showConfirm((isEN ? 'Remove ' + duplicateUIDs.length + ' duplicate UID(s)? Only the most recent per email will be kept.' : 'Rimuovere ' + duplicateUIDs.length + ' UID duplicati? Verr\u00e0 mantenuto solo il pi\u00f9 recente per email.'), function() {
+          showConfirm((LANG3 === 'es' ? '¿Eliminar ' + duplicateUIDs.length + ' UID(s) duplicado(s)? Solo se conservará el más reciente por email.' : isEN ? 'Remove ' + duplicateUIDs.length + ' duplicate UID(s)? Only the most recent per email will be kept.' : 'Rimuovere ' + duplicateUIDs.length + ' UID duplicati? Verr\u00e0 mantenuto solo il pi\u00f9 recente per email.'), function() {
             var updates = {};
             duplicateUIDs.forEach(function(duid) { updates[duid] = null; });
             _qvLog.info('[Admin] Removing duplicate UIDs:', duplicateUIDs);
             usersRef.update(updates).then(function() {
               localStorage.setItem('admin-dupes-dismissed', '1');
               sessionStorage.setItem('admin-dupes-cleaned', '1');
-              if (window.showToast) showToast(isEN ? 'Duplicates removed!' : 'Duplicati rimossi!', 'success');
+              if (window.showToast) showToast(LANG3 === 'es' ? '¡Duplicados eliminados!' : isEN ? 'Duplicates removed!' : 'Duplicati rimossi!', 'success');
               renderAdminUsers();
             }).catch(function(err) {
               console.error('[Admin] Failed to remove duplicates:', err);
-              if (window.showToast) showToast(isEN ? 'Error: ' + err.message : 'Errore: ' + err.message, 'error');
+              if (window.showToast) showToast(LANG3 === 'es' ? 'Error: ' + err.message : isEN ? 'Error: ' + err.message : 'Errore: ' + err.message, 'error');
             });
           });
         });
@@ -18722,9 +18722,9 @@ window.injectAllWikiLinks = function() {
           var uid = btn.dataset.uid;
           var u = users[uid] || {};
           var userName = u.name || u.email || uid;
-          showConfirm((isEN ? 'Promote ' + userName + ' to Owner? They will have full admin access.' : 'Promuovere ' + userName + ' a Owner? Avr\u00e0 accesso completo da admin.'), function() {
+          showConfirm((LANG3 === 'es' ? '¿Promover a ' + userName + ' a Owner? Tendrá acceso completo de administrador.' : isEN ? 'Promote ' + userName + ' to Owner? They will have full admin access.' : 'Promuovere ' + userName + ' a Owner? Avr\u00e0 accesso completo da admin.'), function() {
             ownerUsersRef.child(uid).set(true).then(function() {
-              if (window.showToast) showToast(isEN ? userName + ' promoted to Owner!' : userName + ' promosso a Owner!', 'success');
+              if (window.showToast) showToast(LANG3 === 'es' ? userName + ' promovido a Owner!' : isEN ? userName + ' promoted to Owner!' : userName + ' promosso a Owner!', 'success');
               // Update FCM token role to 'owner' for push targeting
               db.ref('fcm_tokens/' + uid).once('value', function(tokSnap) {
                 var tokData = tokSnap.val();
@@ -18742,7 +18742,7 @@ window.injectAllWikiLinks = function() {
               });
               renderAdminUsers();
             }).catch(function(err) {
-              if (window.showToast) showToast(isEN ? 'Error: ' + err.message : 'Errore: ' + err.message, 'error');
+              if (window.showToast) showToast(LANG3 === 'es' ? 'Error: ' + err.message : isEN ? 'Error: ' + err.message : 'Errore: ' + err.message, 'error');
             });
           });
         });
@@ -18754,9 +18754,9 @@ window.injectAllWikiLinks = function() {
           var uid = btn.dataset.uid;
           var u = users[uid] || {};
           var userName = u.name || u.email || uid;
-          showConfirm((isEN ? 'Remove Owner role from ' + userName + '? They will keep regular access.' : 'Rimuovere il ruolo Owner da ' + userName + '? Manterr\u00e0 l\'accesso normale.'), function() {
+          showConfirm((LANG3 === 'es' ? '¿Quitar el rol Owner a ' + userName + '? Mantendrá el acceso normal.' : isEN ? 'Remove Owner role from ' + userName + '? They will keep regular access.' : 'Rimuovere il ruolo Owner da ' + userName + '? Manterr\u00e0 l\'accesso normale.'), function() {
             ownerUsersRef.child(uid).remove().then(function() {
-              if (window.showToast) showToast(isEN ? userName + ' demoted to regular user' : userName + ' rimosso da Owner', 'info');
+              if (window.showToast) showToast(LANG3 === 'es' ? userName + ' degradado a usuario regular' : isEN ? userName + ' demoted to regular user' : userName + ' rimosso da Owner', 'info');
               // Update FCM token role back to 'family'
               db.ref('fcm_tokens/' + uid).once('value', function(tokSnap) {
                 var tokData = tokSnap.val();
@@ -18774,7 +18774,7 @@ window.injectAllWikiLinks = function() {
               });
               renderAdminUsers();
             }).catch(function(err) {
-              if (window.showToast) showToast(isEN ? 'Error: ' + err.message : 'Errore: ' + err.message, 'error');
+              if (window.showToast) showToast(LANG3 === 'es' ? 'Error: ' + err.message : isEN ? 'Error: ' + err.message : 'Errore: ' + err.message, 'error');
             });
           });
         });
@@ -18785,9 +18785,9 @@ window.injectAllWikiLinks = function() {
         btn.addEventListener('click', function() {
           var uid = btn.dataset.uid;
           var userName = users[uid] ? (users[uid].name || users[uid].email || uid) : uid;
-          showConfirm((isEN ? 'Globally ban ' : 'Bannare globalmente ') + userName + '?', function() {
+          showConfirm((LANG3 === 'es' ? 'Bloquear globalmente ' : isEN ? 'Globally ban ' : 'Bannare globalmente ') + userName + '?', function() {
             bannedRef.child(uid).set(true).then(function() {
-              if (window.showToast) showToast(isEN ? 'User banned globally' : 'Utente bannato globalmente', 'success');
+              if (window.showToast) showToast(LANG3 === 'es' ? 'Usuario bloqueado globalmente' : isEN ? 'User banned globally' : 'Utente bannato globalmente', 'success');
               renderAdminUsers();
             });
           });
@@ -18799,7 +18799,7 @@ window.injectAllWikiLinks = function() {
         btn.addEventListener('click', function() {
           var uid = btn.dataset.uid;
           bannedRef.child(uid).remove().then(function() {
-            if (window.showToast) showToast(isEN ? 'User unbanned' : 'Utente sbloccato', 'success');
+            if (window.showToast) showToast(LANG3 === 'es' ? 'Usuario desbloqueado' : isEN ? 'User unbanned' : 'Utente sbloccato', 'success');
             renderAdminUsers();
           });
         });
@@ -18811,7 +18811,7 @@ window.injectAllWikiLinks = function() {
           var uid = btn.dataset.uid;
           var u = users[uid] || {};
           var userName = u.name || u.email || uid;
-          showConfirm((isEN ? 'Approve ' : 'Approvare ') + userName + '?', function() {
+          showConfirm((LANG3 === 'es' ? 'Aprobar ' : isEN ? 'Approve ' : 'Approvare ') + userName + '?', function() {
             approvedRef.child(uid).set({
               email: u.email || '',
               displayName: u.name || '',
@@ -18821,7 +18821,7 @@ window.injectAllWikiLinks = function() {
               // Remove from pendingUsers if present
               return pendingRef.child(uid).remove();
             }).then(function() {
-              if (window.showToast) showToast(isEN ? 'User approved!' : 'Utente approvato!', 'success');
+              if (window.showToast) showToast(LANG3 === 'es' ? '¡Usuario aprobado!' : isEN ? 'User approved!' : 'Utente approvato!', 'success');
               renderAdminUsers();
               renderAdminPending();
             });
@@ -18835,7 +18835,7 @@ window.injectAllWikiLinks = function() {
           var uid = btn.dataset.uid;
           var u = users[uid] || {};
           var userName = u.name || u.email || uid;
-          showConfirm((isEN ? 'Remove access for ' : 'Rimuovere l\'accesso a ') + userName + (isEN ? '? They can request access again later.' : '? Potr\u00e0 richiedere l\'accesso di nuovo.'), function() {
+          showConfirm((LANG3 === 'es' ? 'Revocar acceso a ' : isEN ? 'Remove access for ' : 'Rimuovere l\'accesso a ') + userName + (LANG3 === 'es' ? '? Podrán solicitar acceso de nuevo más tarde.' : isEN ? '? They can request access again later.' : '? Potr\u00e0 richiedere l\'accesso di nuovo.'), function() {
             // v1.99: Complete cleanup — remove from ALL nodes to prevent ghost entries
             var removeOps = [];
             removeOps.push(approvedRef.child(uid).remove());
@@ -18843,11 +18843,11 @@ window.injectAllWikiLinks = function() {
             removeOps.push(pendingRef.child(uid).remove());
             removeOps.push(db.ref('fcm_tokens/' + uid).remove());
             Promise.all(removeOps).then(function() {
-              if (window.showToast) showToast(isEN ? 'User fully removed (not banned, can re-request)' : 'Utente rimosso completamente (non bannato, pu\u00f2 richiedere di nuovo)', 'info');
+              if (window.showToast) showToast(LANG3 === 'es' ? 'Usuario eliminado por completo (no bloqueado, puede solicitar de nuevo)' : isEN ? 'User fully removed (not banned, can re-request)' : 'Utente rimosso completamente (non bannato, pu\u00f2 richiedere di nuovo)', 'info');
               renderAdminUsers();
             }).catch(function(err) {
               console.error('[Admin] Remove user error:', err);
-              if (window.showToast) showToast(isEN ? 'Error removing user' : 'Errore nella rimozione', 'error');
+              if (window.showToast) showToast(LANG3 === 'es' ? 'Error al quitar el usuario' : isEN ? 'Error removing user' : 'Errore nella rimozione', 'error');
             });
           });
         });
@@ -18859,14 +18859,14 @@ window.injectAllWikiLinks = function() {
           var uid = btn.dataset.uid;
           var u = users[uid] || {};
           var userName = u.name || u.email || uid;
-          showConfirm((isEN ? 'Reject ' : 'Rifiutare ') + userName + (isEN ? '? They can retry later.' : '? Potr\u00e0 riprovare in seguito.'), function() {
+          showConfirm((LANG3 === 'es' ? 'Rechazar ' : isEN ? 'Reject ' : 'Rifiutare ') + userName + (LANG3 === 'es' ? '? Podrán reintentar más tarde.' : isEN ? '? They can retry later.' : '? Potr\u00e0 riprovare in seguito.'), function() {
             // Remove from chat/users, pendingUsers, and fcm_tokens
             var removeOps = [];
             removeOps.push(usersRef.child(uid).remove());
             removeOps.push(pendingRef.child(uid).remove());
             removeOps.push(db.ref('fcm_tokens/' + uid).remove());
             Promise.all(removeOps).then(function() {
-              if (window.showToast) showToast(isEN ? 'User rejected (can retry)' : 'Utente rifiutato (pu\u00f2 riprovare)', 'info');
+              if (window.showToast) showToast(LANG3 === 'es' ? 'Usuario rechazado (puede reintentar)' : isEN ? 'User rejected (can retry)' : 'Utente rifiutato (pu\u00f2 riprovare)', 'info');
               renderAdminUsers();
               renderAdminPending();
             });
@@ -18880,7 +18880,7 @@ window.injectAllWikiLinks = function() {
           var uid = btn.dataset.uid;
           var u = users[uid] || {};
           var userName = u.name || u.email || uid;
-          showConfirm((isEN ? 'Permanently delete ' : 'Eliminare definitivamente ') + userName + (isEN ? '? This removes all traces from the system.' : '? Verr\u00e0 rimosso completamente dal sistema.'), function() {
+          showConfirm((LANG3 === 'es' ? 'Eliminar permanentemente ' : isEN ? 'Permanently delete ' : 'Eliminare definitivamente ') + userName + (LANG3 === 'es' ? '? Esto se eliminará completamente del sistema.' : isEN ? '? This removes all traces from the system.' : '? Verr\u00e0 rimosso completamente dal sistema.'), function() {
             var deleteOps = [];
             deleteOps.push(approvedRef.child(uid).remove());
             deleteOps.push(pendingRef.child(uid).remove());
@@ -18900,7 +18900,7 @@ window.injectAllWikiLinks = function() {
                 msgSnap.forEach(function(child) {
                   // Mark messages as from deleted user (soft delete preserves conversation context)
                   msgUpdates[child.key + '/deletedUser'] = true;
-                  msgUpdates[child.key + '/name'] = isEN ? '[Deleted User]' : '[Utente Eliminato]';
+                  msgUpdates[child.key + '/name'] = LANG3 === 'es' ? '[Usuario eliminado]' : isEN ? '[Deleted User]' : '[Utente Eliminato]';
                   msgUpdates[child.key + '/photo'] = '';
                 });
                 return chatMsgRef.update(msgUpdates);
@@ -18910,12 +18910,12 @@ window.injectAllWikiLinks = function() {
               })
             );
             Promise.all(deleteOps).then(function() {
-              if (window.showToast) showToast(isEN ? 'User permanently deleted' : 'Utente eliminato definitivamente', 'success');
+              if (window.showToast) showToast(LANG3 === 'es' ? 'Usuario eliminado permanentemente' : isEN ? 'User permanently deleted' : 'Utente eliminato definitivamente', 'success');
               renderAdminUsers();
               renderAdminPending();
             }).catch(function(err) {
               console.error('[Admin] Delete user error:', err);
-              if (window.showToast) showToast(isEN ? 'Error deleting user' : 'Errore nell\'eliminazione', 'error');
+              if (window.showToast) showToast(LANG3 === 'es' ? 'Error al eliminar el usuario' : isEN ? 'Error deleting user' : 'Errore nell\'eliminazione', 'error');
             });
           });
         });
@@ -18926,17 +18926,17 @@ window.injectAllWikiLinks = function() {
         btn.addEventListener('click', function() {
           var uid = btn.dataset.uid;
           var currentName = btn.dataset.name || '';
-          _showPromptModal(isEN ? 'New display name for this user:' : 'Nuovo nome visualizzato per questo utente:', currentName, function(newName) {
+          _showPromptModal(LANG3 === 'es' ? 'Nuevo nombre para mostrar de este usuario:' : isEN ? 'New display name for this user:' : 'Nuovo nome visualizzato per questo utente:', currentName, function(newName) {
             if (newName === null || newName.trim() === '' || newName.trim() === currentName) return;
             var updateFn = firebase.app().functions('europe-west1').httpsCallable('updateUserDisplayName');
             updateFn({ uid: uid, displayName: newName.trim() }).then(function(result) {
-              if (window.showToast) showToast(isEN ? 'Display name updated to: ' + result.data.displayName : 'Nome aggiornato a: ' + result.data.displayName, 'success');
+              if (window.showToast) showToast(LANG3 === 'es' ? 'Nombre actualizado a: ' + result.data.displayName : isEN ? 'Display name updated to: ' + result.data.displayName : 'Nome aggiornato a: ' + result.data.displayName, 'success');
               // Also update local DB
               usersRef.child(uid).child('name').set(newName.trim());
               renderAdminUsers();
             }).catch(function(err) {
               console.error('[Admin] Edit name error:', err);
-              if (window.showToast) showToast(isEN ? 'Error: ' + err.message : 'Errore: ' + err.message, 'error');
+              if (window.showToast) showToast(LANG3 === 'es' ? 'Error: ' + err.message : isEN ? 'Error: ' + err.message : 'Errore: ' + err.message, 'error');
             });
           });
         });
@@ -18951,7 +18951,7 @@ window.injectAllWikiLinks = function() {
     pendingRef.once('value', function(snap) {
       var users = snap.val();
       if (!users || Object.keys(users).length === 0) {
-        adminPendingList.innerHTML = '<p style="color:var(--text-muted);font-size:13px;">' + (isEN ? 'No pending requests.' : 'Nessuna richiesta in attesa.') + '</p>';
+        adminPendingList.innerHTML = '<p style="color:var(--text-muted);font-size:13px;">' + (LANG3 === 'es' ? 'No hay solicitudes pendientes.' : isEN ? 'No pending requests.' : 'Nessuna richiesta in attesa.') + '</p>';
         return;
       }
 
@@ -18963,8 +18963,8 @@ window.injectAllWikiLinks = function() {
         html += '<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-color,#e2e8f0);">';
         html += photo;
         html += '<span style="flex:1;font-size:14px;">' + escapeHtml(u.displayName || u.email || uid) + '</span>';
-        html += '<button class="admin-approve-btn pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--success,#38a169);color:#fff;border:none;border-radius:6px;cursor:pointer;">\u2705 ' + (isEN ? 'Approve' : 'Approva') + '</button>';
-        html += '<button class="admin-reject-btn pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--danger,#e53e3e);color:#fff;border:none;border-radius:6px;cursor:pointer;">\u274c ' + (isEN ? 'Reject' : 'Rifiuta') + '</button>';
+        html += '<button class="admin-approve-btn pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--success,#38a169);color:#fff;border:none;border-radius:6px;cursor:pointer;">\u2705 ' + (LANG3 === 'es' ? 'Aprobar' : isEN ? 'Approve' : 'Approva') + '</button>';
+        html += '<button class="admin-reject-btn pos-btn" data-uid="' + uid + '" style="font-size:11px;padding:4px 10px;background:var(--danger,#e53e3e);color:#fff;border:none;border-radius:6px;cursor:pointer;">\u274c ' + (LANG3 === 'es' ? 'Rechazar' : isEN ? 'Reject' : 'Rifiuta') + '</button>';
         html += '</div>';
       });
       adminPendingList.innerHTML = html;
@@ -18982,7 +18982,7 @@ window.injectAllWikiLinks = function() {
           }).then(function() {
             return pendingRef.child(uid).remove();
           }).then(function() {
-            if (window.showToast) showToast(isEN ? 'User approved!' : 'Utente approvato!', 'success');
+            if (window.showToast) showToast(LANG3 === 'es' ? '¡Usuario aprobado!' : isEN ? 'User approved!' : 'Utente approvato!', 'success');
             renderAdminPending();
           });
         });
@@ -18993,7 +18993,7 @@ window.injectAllWikiLinks = function() {
         btn.addEventListener('click', function() {
           var uid = btn.dataset.uid;
           pendingRef.child(uid).remove().then(function() {
-            if (window.showToast) showToast(isEN ? 'Request rejected' : 'Richiesta rifiutata', 'info');
+            if (window.showToast) showToast(LANG3 === 'es' ? 'Solicitud rechazada' : isEN ? 'Request rejected' : 'Richiesta rifiutata', 'info');
             renderAdminPending();
           });
         });
@@ -19048,7 +19048,7 @@ window.injectAllWikiLinks = function() {
   setBtn.addEventListener('click', function() {
     var val = input.value.trim();
     if (val === '' || isNaN(parseInt(val, 10))) {
-      status.textContent = isEN ? '❌ Enter a valid number.' : '❌ Inserisci un numero valido.';
+      status.textContent = LANG3 === 'es' ? '❌ Introduce un número válido.' : isEN ? '❌ Enter a valid number.' : '❌ Inserisci un numero valido.';
       status.style.color = '#e53e3e';
       return;
     }
@@ -19093,14 +19093,14 @@ window.injectAllWikiLinks = function() {
   // ═══ SUB-SECTION 1: Per-User Notification Toggles ═══
   function renderNotifUsers() {
     if (!notifUsersContainer) return;
-    notifUsersContainer.innerHTML = '<p style="color:var(--text-muted);font-size:13px;">' + (isEN ? 'Loading...' : 'Caricamento...') + '</p>';
+    notifUsersContainer.innerHTML = '<p style="color:var(--text-muted);font-size:13px;">' + (LANG3 === 'es' ? 'Cargando...' : isEN ? 'Loading...' : 'Caricamento...') + '</p>';
 
     approvedRef.once('value', function(approvedSnap) {
       var approved = approvedSnap.val() || {};
       var uids = Object.keys(approved);
 
       if (uids.length === 0) {
-        notifUsersContainer.innerHTML = '<p style="color:var(--text-muted);font-size:13px;">' + (isEN ? 'No approved users.' : 'Nessun utente approvato.') + '</p>';
+        notifUsersContainer.innerHTML = '<p style="color:var(--text-muted);font-size:13px;">' + (LANG3 === 'es' ? 'No hay usuarios aprobados.' : isEN ? 'No approved users.' : 'Nessun utente approvato.') + '</p>';
         return;
       }
 
@@ -19142,7 +19142,7 @@ window.injectAllWikiLinks = function() {
           toggle.addEventListener('change', function() {
             var uid = toggle.dataset.uid;
             notifPrefsRef.child(uid).update({ inApp: toggle.checked }).then(function() {
-              notifLog((isEN ? 'In-app ' : 'In-app ') + (toggle.checked ? 'ON' : 'OFF') + ' → ' + uid.substring(0, 8));
+              notifLog((LANG3 === 'es' ? 'En la app ' : isEN ? 'In-app ' : 'In-app ') + (toggle.checked ? 'ON' : 'OFF') + ' → ' + uid.substring(0, 8));
             }).catch(function(err) {
               notifLog('❌ Error: ' + err.message);
             });
@@ -19214,10 +19214,10 @@ window.injectAllWikiLinks = function() {
       };
       notifScheduleRef.set(schedData).then(function() {
         if (schedStatus) {
-          schedStatus.textContent = '✅ ' + (isEN ? 'Saved!' : 'Salvato!');
+          schedStatus.textContent = '✅ ' + (LANG3 === 'es' ? '¡Guardado!' : isEN ? 'Saved!' : 'Salvato!');
           schedStatus.style.color = '#38a169';
         }
-        notifLog(isEN ? 'Schedule saved to Firebase' : 'Orari salvati su Firebase');
+        notifLog(LANG3 === 'es' ? 'Horario guardado en Firebase' : isEN ? 'Schedule saved to Firebase' : 'Orari salvati su Firebase');
         setTimeout(function() { if (schedStatus) schedStatus.textContent = ''; }, 3000);
       }).catch(function(err) {
         if (schedStatus) {
@@ -19236,7 +19236,7 @@ window.injectAllWikiLinks = function() {
   var testGenericBtn = document.getElementById('admin-notif-test-generic');
 
   function queueTestNotification(type, title, body, tag) {
-    notifLog((isEN ? 'Queuing test: ' : 'Invio test: ') + type + '...');
+    notifLog((LANG3 === 'es' ? 'Prueba en cola: ' : isEN ? 'Queuing test: ' : 'Invio test: ') + type + '...');
     var ts = Date.now();
     var payload = {
       type: type,
@@ -19251,8 +19251,8 @@ window.injectAllWikiLinks = function() {
     };
     // Write to queue (triggers Cloud Function for push)
     notifQueueRef.push(payload).then(function() {
-      notifLog('\u2705 ' + (isEN ? 'Test queued: ' : 'Test in coda: ') + title);
-      if (window.showToast) showToast((isEN ? 'Test notification sent' : 'Notifica test inviata'), 'success');
+      notifLog('\u2705 ' + (LANG3 === 'es' ? 'Prueba en cola: ' : isEN ? 'Test queued: ' : 'Test in coda: ') + title);
+      if (window.showToast) showToast((LANG3 === 'es' ? 'Notificación de prueba enviada' : isEN ? 'Test notification sent' : 'Notifica test inviata'), 'success');
       // Cloud Function will write to history and send push — no client-side history write needed
     }).catch(function(err) {
       notifLog('\u274c Queue error: ' + err.message);
@@ -19263,8 +19263,8 @@ window.injectAllWikiLinks = function() {
     testCountdownBtn.addEventListener('click', function() {
       var daysUntil = Math.ceil((TRIP_START.getTime() - Date.now()) / 86400000);
       queueTestNotification('countdown',
-        '📅 ' + daysUntil + (isEN ? ' days to departure' : ' giorni alla partenza'),
-        isEN ? 'Countdown test from admin panel' : 'Test countdown dal pannello admin',
+        '📅 ' + daysUntil + (LANG3 === 'es' ? ' días para la salida' : isEN ? ' days to departure' : ' giorni alla partenza'),
+        LANG3 === 'es' ? 'Prueba de cuenta regresiva desde el panel admin' : isEN ? 'Countdown test from admin panel' : 'Test countdown dal pannello admin',
         'test-countdown');
     });
   }
@@ -19272,8 +19272,8 @@ window.injectAllWikiLinks = function() {
   if (testZainoBtn) {
     testZainoBtn.addEventListener('click', function() {
       queueTestNotification('zaino_reminder',
-        '🎒 ' + (isEN ? 'Backpack: check before departure!' : 'Zaino: controlla prima della partenza!'),
-        isEN ? 'Zaino reminder test from admin panel' : 'Test promemoria zaino dal pannello admin',
+        '🎒 ' + (LANG3 === 'es' ? 'Mochila: ¡revisa antes de salir!' : isEN ? 'Backpack: check before departure!' : 'Zaino: controlla prima della partenza!'),
+        LANG3 === 'es' ? 'Prueba de recordatorio Zaino desde el panel admin' : isEN ? 'Zaino reminder test from admin panel' : 'Test promemoria zaino dal pannello admin',
         'test-zaino');
     });
   }
@@ -19281,8 +19281,8 @@ window.injectAllWikiLinks = function() {
   if (testEveningBtn) {
     testEveningBtn.addEventListener('click', function() {
       queueTestNotification('next_stage',
-        '🛣️ ' + (isEN ? 'Tomorrow: Test Route' : 'Domani: Percorso Test'),
-        isEN ? 'Evening next-stage test from admin panel' : 'Test prossima tappa serale dal pannello admin',
+        '🛣️ ' + (LANG3 === 'es' ? 'Mañana: Ruta de prueba' : isEN ? 'Tomorrow: Test Route' : 'Domani: Percorso Test'),
+        LANG3 === 'es' ? 'Prueba nocturna de la siguiente etapa desde el panel de administración' : isEN ? 'Evening next-stage test from admin panel' : 'Test prossima tappa serale dal pannello admin',
         'test-evening');
     });
   }
@@ -19290,8 +19290,8 @@ window.injectAllWikiLinks = function() {
   if (testGenericBtn) {
     testGenericBtn.addEventListener('click', function() {
       queueTestNotification('test',
-        '🔔 ' + (isEN ? 'Admin Test Push' : 'Test Push Admin'),
-        isEN ? 'Generic push test from notification config panel' : 'Test push generico dal pannello configurazione notifiche',
+        '🔔 ' + (LANG3 === 'es' ? 'Prueba Push Admin' : isEN ? 'Admin Test Push' : 'Test Push Admin'),
+        LANG3 === 'es' ? 'Prueba push genérica desde el panel de configuración de notificaciones' : isEN ? 'Generic push test from notification config panel' : 'Test push generico dal pannello configurazione notifiche',
         'test-generic');
     });
   }
@@ -19335,14 +19335,14 @@ window.injectAllWikiLinks = function() {
 
     firebase.database().ref('trips/' + familyId + '/weatherArchive').once('value', function(snap) {
       if (!snap.exists()) {
-        container.innerHTML = '<p>' + (isEN ? 'Weather data will appear here during the trip.' : 'I dati meteo reali appariranno qui durante il viaggio.') + '</p>';
+        container.innerHTML = '<p>' + (LANG3 === 'es' ? 'Los datos meteorológicos aparecerán aquí durante el viaje.' : isEN ? 'Weather data will appear here during the trip.' : 'I dati meteo reali appariranno qui durante il viaggio.') + '</p>';
         return;
       }
 
       var data = snap.val();
       var days = Object.values(data);
       if (days.length === 0) {
-        container.innerHTML = '<p>' + (isEN ? 'No weather data yet.' : 'Nessun dato meteo ancora.') + '</p>';
+        container.innerHTML = '<p>' + (LANG3 === 'es' ? 'Aún no hay datos meteorológicos.' : isEN ? 'No weather data yet.' : 'Nessun dato meteo ancora.') + '</p>';
         return;
       }
 
@@ -19393,39 +19393,39 @@ window.injectAllWikiLinks = function() {
 
       // Temperature card
       html += '<div class="weather-stat-card">';
-      html += '<h3>🌡️ ' + (isEN ? 'Temperature' : 'Temperature') + '</h3>';
-      html += '<p><strong>' + (isEN ? 'Hottest' : 'Più caldo') + ':</strong> ' + maxTemp + '°C — G' + hottestDay.day + ' ' + escapeHtml(hottestDay.city) + '</p>';
-      html += '<p><strong>' + (isEN ? 'Coldest' : 'Più freddo') + ':</strong> ' + minTemp + '°C — G' + coldestDay.day + ' ' + escapeHtml(coldestDay.city) + '</p>';
-      html += '<p><strong>' + (isEN ? 'Average' : 'Media') + ':</strong> ' + avgHigh + '°/' + avgLow + '°C</p>';
+      html += '<h3>🌡️ ' + (LANG3 === 'es' ? 'Temperatura' : isEN ? 'Temperature' : 'Temperature') + '</h3>';
+      html += '<p><strong>' + (LANG3 === 'es' ? 'Lo más popular' : isEN ? 'Hottest' : 'Più caldo') + ':</strong> ' + maxTemp + '°C — G' + hottestDay.day + ' ' + escapeHtml(hottestDay.city) + '</p>';
+      html += '<p><strong>' + (LANG3 === 'es' ? 'Más frío' : isEN ? 'Coldest' : 'Più freddo') + ':</strong> ' + minTemp + '°C — G' + coldestDay.day + ' ' + escapeHtml(coldestDay.city) + '</p>';
+      html += '<p><strong>' + (LANG3 === 'es' ? 'Media' : isEN ? 'Average' : 'Media') + ':</strong> ' + avgHigh + '°/' + avgLow + '°C</p>';
       html += '</div>';
 
       // Conditions card
       html += '<div class="weather-stat-card">';
-      html += '<h3>☀️ ' + (isEN ? 'Conditions' : 'Condizioni') + '</h3>';
-      html += '<p>☀️ ' + (isEN ? 'Sunny' : 'Sole') + ': <strong>' + sunnyDays + '</strong> ' + (isEN ? 'days' : 'giorni') + '</p>';
-      html += '<p>⛅ ' + (isEN ? 'Cloudy' : 'Nuvoloso') + ': <strong>' + cloudyDays + '</strong> ' + (isEN ? 'days' : 'giorni') + '</p>';
-      html += '<p>🌧️ ' + (isEN ? 'Rain' : 'Pioggia') + ': <strong>' + rainyDays + '</strong> ' + (isEN ? 'days' : 'giorni') + '</p>';
-      if (stormDays > 0) html += '<p>⛈️ ' + (isEN ? 'Storms' : 'Temporali') + ': <strong>' + stormDays + '</strong> ' + (isEN ? 'days' : 'giorni') + '</p>';
+      html += '<h3>☀️ ' + (LANG3 === 'es' ? 'Condiciones' : isEN ? 'Conditions' : 'Condizioni') + '</h3>';
+      html += '<p>☀️ ' + (LANG3 === 'es' ? 'Soleado' : isEN ? 'Sunny' : 'Sole') + ': <strong>' + sunnyDays + '</strong> ' + (LANG3 === 'es' ? 'días' : isEN ? 'days' : 'giorni') + '</p>';
+      html += '<p>⛅ ' + (LANG3 === 'es' ? 'Nublado' : isEN ? 'Cloudy' : 'Nuvoloso') + ': <strong>' + cloudyDays + '</strong> ' + (LANG3 === 'es' ? 'días' : isEN ? 'days' : 'giorni') + '</p>';
+      html += '<p>🌧️ ' + (LANG3 === 'es' ? 'Lluvia' : isEN ? 'Rain' : 'Pioggia') + ': <strong>' + rainyDays + '</strong> ' + (LANG3 === 'es' ? 'días' : isEN ? 'days' : 'giorni') + '</p>';
+      if (stormDays > 0) html += '<p>⛈️ ' + (LANG3 === 'es' ? 'Tormentas' : isEN ? 'Storms' : 'Temporali') + ': <strong>' + stormDays + '</strong> ' + (LANG3 === 'es' ? 'días' : isEN ? 'days' : 'giorni') + '</p>';
       html += '</div>';
 
       // Wind card
       html += '<div class="weather-stat-card">';
-      html += '<h3>💨 ' + (isEN ? 'Wind' : 'Vento') + '</h3>';
-      html += '<p><strong>' + (isEN ? 'Max' : 'Max') + ':</strong> ' + maxWind + ' km/h' + (windyDay ? ' — G' + windyDay.day + ' ' + windyDay.city : '') + '</p>';
-      html += '<p><strong>' + (isEN ? 'Windy days' : 'Giorni ventosi') + ' (>25 km/h):</strong> ' + windyDays + '</p>';
+      html += '<h3>💨 ' + (LANG3 === 'es' ? 'Viento' : isEN ? 'Wind' : 'Vento') + '</h3>';
+      html += '<p><strong>' + (LANG3 === 'es' ? 'Máx' : isEN ? 'Max' : 'Max') + ':</strong> ' + maxWind + ' km/h' + (windyDay ? ' — G' + windyDay.day + ' ' + windyDay.city : '') + '</p>';
+      html += '<p><strong>' + (LANG3 === 'es' ? 'Días ventosos' : isEN ? 'Windy days' : 'Giorni ventosi') + ' (>25 km/h):</strong> ' + windyDays + '</p>';
       html += '</div>';
 
       // Daylight card
       html += '<div class="weather-stat-card">';
-      html += '<h3>🌅 ' + (isEN ? 'Daylight' : 'Ore di luce') + '</h3>';
-      html += '<p><strong>' + (isEN ? 'Most' : 'Massimo') + ':</strong> ~' + maxDaylight + 'h</p>';
-      html += '<p><strong>' + (isEN ? 'Least' : 'Minimo') + ':</strong> ~' + minDaylight + 'h</p>';
+      html += '<h3>🌅 ' + (LANG3 === 'es' ? 'Horas de luz' : isEN ? 'Daylight' : 'Ore di luce') + '</h3>';
+      html += '<p><strong>' + (LANG3 === 'es' ? 'Máximo' : isEN ? 'Most' : 'Massimo') + ':</strong> ~' + maxDaylight + 'h</p>';
+      html += '<p><strong>' + (LANG3 === 'es' ? 'Menos' : isEN ? 'Least' : 'Minimo') + ':</strong> ~' + minDaylight + 'h</p>';
       html += '</div>';
 
       html += '</div>';
 
       // Summary line
-      html += '<p class="weather-summary"><strong>' + totalDays + '/' + (typeof TRIP_DAYS !== 'undefined' ? TRIP_DAYS : 55) + '</strong> ' + (isEN ? 'days recorded' : 'giorni registrati') + '</p>';
+      html += '<p class="weather-summary"><strong>' + totalDays + '/' + (typeof TRIP_DAYS !== 'undefined' ? TRIP_DAYS : 55) + '</strong> ' + (LANG3 === 'es' ? 'días registrados' : isEN ? 'days recorded' : 'giorni registrati') + '</p>';
 
       container.innerHTML = html;
     });
@@ -19462,7 +19462,7 @@ window.injectAllWikiLinks = function() {
       .orderByChild('type').equalTo('curiosity')
       .once('value', function(snap) {
         if (!snap.exists()) {
-          container.innerHTML = '<p class="curiosita-empty" style="text-align:center;color:#888;">' + (isEN ? 'Fun facts will appear here as they are sent (every day at 9:00).' : 'Le curiosità appariranno qui man mano che vengono inviate (ogni giorno alle 9:00).') + '</p>';
+          container.innerHTML = '<p class="curiosita-empty" style="text-align:center;color:#888;">' + (LANG3 === 'es' ? 'Los datos curiosos aparecerán aquí a medida que se envíen (todos los días a las 9:00).' : isEN ? 'Fun facts will appear here as they are sent (every day at 9:00).' : 'Le curiosità appariranno qui man mano che vengono inviate (ogni giorno alle 9:00).') + '</p>';
           return;
         }
 
@@ -19487,7 +19487,7 @@ window.injectAllWikiLinks = function() {
         });
 
         if (items.length === 0) {
-          container.innerHTML = '<p class="curiosita-empty" style="text-align:center;color:#888;">' + (isEN ? 'No fun facts received yet.' : 'Nessuna curiosità ancora ricevuta.') + '</p>';
+          container.innerHTML = '<p class="curiosita-empty" style="text-align:center;color:#888;">' + (LANG3 === 'es' ? 'Aún no se han recibido curiosidades.' : isEN ? 'No fun facts received yet.' : 'Nessuna curiosità ancora ricevuta.') + '</p>';
           return;
         }
 
@@ -19644,7 +19644,7 @@ window.injectAllWikiLinks = function() {
             return;
         }
         btn.style.display = '';
-        btn.textContent = isEN ? '📍 Today: D' + (dayIdx+1) : '📍 Oggi: G' + (dayIdx+1);
+        btn.textContent = LANG3 === 'es' ? '📍 Hoy: D' + (dayIdx+1) : isEN ? '📍 Today: D' + (dayIdx+1) : '📍 Oggi: G' + (dayIdx+1);
         btn.onclick = function() {
             if (window.switchTab) window.switchTab('giorni', 'g' + (dayIdx+1));
             else if (window.switchTabFromHome) window.switchTabFromHome('giorni');
@@ -19667,7 +19667,7 @@ window.injectAllWikiLinks = function() {
             'background:#ef4444;color:#fff;font-size:12px;font-weight:600;padding:6px 14px;' +
             'border-radius:20px;z-index:9998;display:none;box-shadow:0 2px 8px rgba(0,0,0,.3);' +
             'pointer-events:none;transition:opacity .3s;';
-        badge.textContent = isEN ? '📵 Offline' : '📵 Offline';
+        badge.textContent = LANG3 === 'es' ? '📵 Sin conexión' : isEN ? '📵 Offline' : '📵 Offline';
         document.body.appendChild(badge);
     }
     function updateBadge() {
@@ -19858,7 +19858,7 @@ window.injectAllWikiLinks = function() {
       // v4.10 FIX (P3): error callback for the expenses listener.
       expenseRef.on('value', _expenseCb, function(err) {
         console.error('[Spese] listener error:', err && err.message);
-        if (window.showToast) showToast(isEN ? '⚠️ Could not load expenses' : '⚠️ Impossibile caricare le spese', 'error');
+        if (window.showToast) showToast(LANG3 === 'es' ? '⚠️ Imposible cargar gastos' : isEN ? '⚠️ Could not load expenses' : '⚠️ Impossibile caricare le spese', 'error');
       });
     }
   }
@@ -19878,7 +19878,7 @@ window.injectAllWikiLinks = function() {
   function saveExpenseManual() {
     var amount = parseFloat(document.getElementById('expense-amount').value);
     if (!amount || amount <= 0) {
-      showExpenseStatus(isEN ? '⚠️ Enter a valid amount' : '⚠️ Inserisci un importo valido', 'red');
+      showExpenseStatus(LANG3 === 'es' ? '⚠️ Introduce un importe válido' : isEN ? '⚠️ Enter a valid amount' : '⚠️ Inserisci un importo valido', 'red');
       return;
     }
 
@@ -19886,7 +19886,7 @@ window.injectAllWikiLinks = function() {
     // v4.10 FIX (P0 #1): block save if the currency cannot be converted.
     var _eurManual = toEur(amount, _curManual);
     if (_eurManual == null) {
-      showExpenseStatus((isEN ? '⚠️ Unsupported currency: ' : '⚠️ Valuta non supportata: ') + _curManual, 'red');
+      showExpenseStatus((LANG3 === 'es' ? '⚠️ Moneda no soportada: ' : isEN ? '⚠️ Unsupported currency: ' : '⚠️ Valuta non supportata: ') + _curManual, 'red');
       return;
     }
     var expense = {
@@ -19903,12 +19903,12 @@ window.injectAllWikiLinks = function() {
     };
 
     expenseRef.push(expense).then(function() {
-      showExpenseStatus(isEN ? '✅ Expense saved!' : '✅ Spesa salvata!', '#38a169');
+      showExpenseStatus(LANG3 === 'es' ? '✅ ¡Gasto guardado!' : isEN ? '✅ Expense saved!' : '✅ Spesa salvata!', '#38a169');
       // Reset form
       document.getElementById('expense-amount').value = '';
       document.getElementById('expense-note').value = '';
     }).catch(function(err) {
-      showExpenseStatus('❌ ' + (isEN ? 'Error: ' : 'Errore: ') + err.message, 'red');
+      showExpenseStatus('❌ ' + (LANG3 === 'es' ? 'Error: ' : isEN ? 'Error: ' : 'Errore: ') + err.message, 'red');
     });
   }
 
@@ -19928,7 +19928,7 @@ window.injectAllWikiLinks = function() {
 
     var statusEl = document.getElementById('expense-ocr-status');
     var previewEl = document.getElementById('expense-ocr-preview');
-    if (statusEl) { statusEl.style.display = ''; statusEl.textContent = isEN ? '🔄 Loading image...' : '🔄 Caricamento immagine...'; }
+    if (statusEl) { statusEl.style.display = ''; statusEl.textContent = LANG3 === 'es' ? '🔄 Cargando imagen...' : isEN ? '🔄 Loading image...' : '🔄 Caricamento immagine...'; }
     if (previewEl) { previewEl.style.display = 'none'; previewEl.innerHTML = ''; }
 
     // Upload to Firebase Storage
@@ -19946,24 +19946,24 @@ window.injectAllWikiLinks = function() {
     }).then(function(result) {
       var data = result.data;
       if (!data.success) {
-        if (statusEl) statusEl.textContent = '⚠️ ' + (data.error || (isEN ? 'Unknown error' : 'Errore sconosciuto'));
+        if (statusEl) statusEl.textContent = '⚠️ ' + (data.error || (LANG3 === 'es' ? 'Error desconocido' : isEN ? 'Unknown error' : 'Errore sconosciuto'));
         return;
       }
 
       var expenses = data.expenses || [];
       if (expenses.length === 0) {
-        if (statusEl) statusEl.textContent = isEN ? '⚠️ No expenses found in screenshot' : '⚠️ Nessuna spesa trovata nello screenshot';
+        if (statusEl) statusEl.textContent = LANG3 === 'es' ? '⚠️ No se encontraron gastos en el screenshot' : isEN ? '⚠️ No expenses found in screenshot' : '⚠️ Nessuna spesa trovata nello screenshot';
         return;
       }
 
-      if (statusEl) statusEl.textContent = isEN ? '✅ Found ' + expenses.length + ' expenses — confirm below:' : '✅ Trovate ' + expenses.length + ' spese — conferma sotto:';
+      if (statusEl) statusEl.textContent = LANG3 === 'es' ? '✅ Encontrados ' + expenses.length + ' gastos — confirma abajo:' : isEN ? '✅ Found ' + expenses.length + ' expenses — confirm below:' : '✅ Trovate ' + expenses.length + ' spese — conferma sotto:';
       if (previewEl) {
         previewEl.style.display = '';
         renderOcrPreview(expenses, previewEl);
       }
     }).catch(function(err) {
       console.error('[Expense OCR]', err);
-      if (statusEl) statusEl.textContent = '❌ ' + (isEN ? 'Error: ' : 'Errore: ') + (err.message || err);
+      if (statusEl) statusEl.textContent = '❌ ' + (LANG3 === 'es' ? 'Error: ' : isEN ? 'Error: ' : 'Errore: ') + (err.message || err);
     });
 
     // Reset input
@@ -19986,15 +19986,15 @@ window.injectAllWikiLinks = function() {
         '<div style="font-size:16px;font-weight:700;">' + exp.amount.toFixed(2) + ' ' + exp.currency + '</div>' +
         '<div style="font-size:11px;color:var(--text-muted);">≈ ' + formatEur(toEurDisplay(exp.amount, exp.currency)) + '</div>' +
         '</div></div>' +
-        '<label style="font-size:11px;margin-top:4px;display:block;"><input type="checkbox" class="ocr-confirm-check" data-idx="' + idx + '" checked> ' + (isEN ? 'Import this expense' : 'Importa questa spesa') + '</label>';
+        '<label style="font-size:11px;margin-top:4px;display:block;"><input type="checkbox" class="ocr-confirm-check" data-idx="' + idx + '" checked> ' + (LANG3 === 'es' ? 'Importar este gasto' : isEN ? 'Import this expense' : 'Importa questa spesa') + '</label>';
       container.appendChild(div);
       items.push(exp);
     });
 
     var btnRow = document.createElement('div');
     btnRow.style.cssText = 'display:flex;gap:8px;margin-top:10px;';
-    btnRow.innerHTML = '<button class="pos-btn pos-btn-green" id="ocr-confirm-all" style="flex:1;font-size:13px;">✅ ' + (isEN ? 'Import selected' : 'Importa selezionate') + '</button>' +
-      '<button class="pos-btn pos-btn-red" id="ocr-cancel" style="font-size:13px;">✕ ' + (isEN ? 'Cancel' : 'Annulla') + '</button>';
+    btnRow.innerHTML = '<button class="pos-btn pos-btn-green" id="ocr-confirm-all" style="flex:1;font-size:13px;">✅ ' + (LANG3 === 'es' ? 'Importar seleccionados' : isEN ? 'Import selected' : 'Importa selezionate') + '</button>' +
+      '<button class="pos-btn pos-btn-red" id="ocr-cancel" style="font-size:13px;">✕ ' + (LANG3 === 'es' ? 'Cancelar' : isEN ? 'Cancel' : 'Annulla') + '</button>';
     container.appendChild(btnRow);
 
     document.getElementById('ocr-confirm-all').addEventListener('click', function() {
@@ -20026,7 +20026,7 @@ window.injectAllWikiLinks = function() {
       expenseRef.update(updates).then(function() {
         container.style.display = 'none';
         var statusEl = document.getElementById('expense-ocr-status');
-        if (statusEl) statusEl.textContent = '✅ ' + toSave.length + (isEN ? ' expenses imported!' : ' spese importate!');
+        if (statusEl) statusEl.textContent = '✅ ' + toSave.length + (LANG3 === 'es' ? ' gastos importados!' : isEN ? ' expenses imported!' : ' spese importate!');
         setTimeout(function() { if (statusEl) statusEl.style.display = 'none'; }, 3000);
       });
     });
@@ -20061,10 +20061,10 @@ window.injectAllWikiLinks = function() {
       var text = evt.target.result;
       var expenses = parseCsvText(text, file.name);
       if (expenses.length === 0) {
-        if (statusEl) statusEl.textContent = isEN ? '⚠️ No transactions found in file.' : '⚠️ Nessuna transazione trovata nel file.';
+        if (statusEl) statusEl.textContent = LANG3 === 'es' ? '⚠️ No se encontraron transacciones en el archivo.' : isEN ? '⚠️ No transactions found in file.' : '⚠️ Nessuna transazione trovata nel file.';
         return;
       }
-      if (statusEl) statusEl.textContent = isEN ? '✅ Found ' + expenses.length + ' transactions — confirm below:' : '✅ Trovate ' + expenses.length + ' transazioni — conferma sotto:';
+      if (statusEl) statusEl.textContent = LANG3 === 'es' ? '✅ Encontradas ' + expenses.length + ' transacciones — confirma abajo:' : isEN ? '✅ Found ' + expenses.length + ' transactions — confirm below:' : '✅ Trovate ' + expenses.length + ' transazioni — conferma sotto:';
       if (previewEl) {
         previewEl.style.display = '';
         renderOcrPreview(expenses, previewEl);
@@ -20101,7 +20101,7 @@ window.injectAllWikiLinks = function() {
           });
           expenseRef.update(updates).then(function() {
             previewEl.style.display = 'none';
-            if (statusEl) statusEl.textContent = '✅ ' + toSave.length + (isEN ? ' expenses imported from CSV!' : ' spese importate da CSV!');
+            if (statusEl) statusEl.textContent = '✅ ' + toSave.length + (LANG3 === 'es' ? ' gastos importados desde CSV!' : isEN ? ' expenses imported from CSV!' : ' spese importate da CSV!');
             setTimeout(function() { if (statusEl) statusEl.style.display = 'none'; }, 3000);
           });
         });
@@ -20265,7 +20265,7 @@ window.injectAllWikiLinks = function() {
           extractPdfText(typedArray, statusEl, previewEl);
         };
         script.onerror = function() {
-          if (statusEl) statusEl.textContent = isEN ? '❌ Error loading PDF library.' : '❌ Errore caricamento libreria PDF.';
+          if (statusEl) statusEl.textContent = LANG3 === 'es' ? '❌ Error al cargar la librería PDF.' : isEN ? '❌ Error loading PDF library.' : '❌ Errore caricamento libreria PDF.';
         };
         document.head.appendChild(script);
       } else {
@@ -20303,7 +20303,7 @@ window.injectAllWikiLinks = function() {
       }
     }).catch(function(err) {
       console.error('[PDF]', err);
-      if (statusEl) statusEl.textContent = (isEN ? '❌ Error reading PDF: ' : '❌ Errore lettura PDF: ') + (err.message || err);
+      if (statusEl) statusEl.textContent = (LANG3 === 'es' ? '❌ Error leyendo PDF: ' : isEN ? '❌ Error reading PDF: ' : '❌ Errore lettura PDF: ') + (err.message || err);
     });
   }
 
@@ -20313,15 +20313,15 @@ window.injectAllWikiLinks = function() {
     parseExpensePdf({ pdfText: pdfText }).then(function(result) {
       var data = result.data;
       if (!data.success) {
-        if (statusEl) statusEl.textContent = '⚠️ ' + (data.error || (isEN ? 'Unknown error' : 'Errore sconosciuto'));
+        if (statusEl) statusEl.textContent = '⚠️ ' + (data.error || (LANG3 === 'es' ? 'Error desconocido' : isEN ? 'Unknown error' : 'Errore sconosciuto'));
         return;
       }
       var expenses = data.expenses || [];
       if (expenses.length === 0) {
-        if (statusEl) statusEl.textContent = isEN ? '⚠️ No expenses found in PDF' : '⚠️ Nessuna spesa trovata nel PDF';
+        if (statusEl) statusEl.textContent = LANG3 === 'es' ? '⚠️ No se encontraron gastos en el PDF' : isEN ? '⚠️ No expenses found in PDF' : '⚠️ Nessuna spesa trovata nel PDF';
         return;
       }
-      if (statusEl) statusEl.textContent = isEN ? '✅ Found ' + expenses.length + ' expenses — confirm below:' : '✅ Trovate ' + expenses.length + ' spese — conferma sotto:';
+      if (statusEl) statusEl.textContent = LANG3 === 'es' ? '✅ Encontradas ' + expenses.length + ' gastos — confirma abajo:' : isEN ? '✅ Found ' + expenses.length + ' expenses — confirm below:' : '✅ Trovate ' + expenses.length + ' spese — conferma sotto:';
       if (previewEl) {
         previewEl.style.display = '';
         renderOcrPreview(expenses, previewEl);
@@ -20355,7 +20355,7 @@ window.injectAllWikiLinks = function() {
             });
             expenseRef.update(updates).then(function() {
               previewEl.style.display = 'none';
-              if (statusEl) statusEl.textContent = '✅ ' + toSave.length + (isEN ? ' expenses imported from PDF!' : ' spese importate da PDF!');
+              if (statusEl) statusEl.textContent = '✅ ' + toSave.length + (LANG3 === 'es' ? ' gastos importados desde PDF!' : isEN ? ' expenses imported from PDF!' : ' spese importate da PDF!');
               setTimeout(function() { if (statusEl) statusEl.style.display = 'none'; }, 3000);
             });
           });
@@ -20363,7 +20363,7 @@ window.injectAllWikiLinks = function() {
       }
     }).catch(function(err) {
       console.error('[PDF AI]', err);
-      if (statusEl) statusEl.textContent = '❌ ' + (isEN ? 'Error: ' : 'Errore: ') + (err.message || err);
+      if (statusEl) statusEl.textContent = '❌ ' + (LANG3 === 'es' ? 'Error: ' : isEN ? 'Error: ' : 'Errore: ') + (err.message || err);
     });
   }
 
@@ -20413,7 +20413,7 @@ window.injectAllWikiLinks = function() {
     var filtered = filterCat ? expensesCache.filter(function(e) { return e.category === filterCat; }) : expensesCache;
 
     if (filtered.length === 0) {
-      container.innerHTML = '<p style="text-align:center;color:var(--text-muted);font-size:13px;padding:20px;">' + (isEN ? 'No expenses recorded' : 'Nessuna spesa registrata') + '</p>';
+      container.innerHTML = '<p style="text-align:center;color:var(--text-muted);font-size:13px;padding:20px;">' + (LANG3 === 'es' ? 'No hay gastos registrados' : isEN ? 'No expenses recorded' : 'Nessuna spesa registrata') + '</p>';
       return;
     }
 
@@ -20433,8 +20433,8 @@ window.injectAllWikiLinks = function() {
         '<div style="font-size:14px;font-weight:700;">' + (e.currency === 'EUR' ? eurStr : amtStr) + '</div>' +
         (e.currency !== 'EUR' ? '<div style="font-size:10px;color:var(--text-muted);">≈ ' + eurStr + '</div>' : '') +
         '</div>' +
-        '<button class="expense-edit-btn" data-key="' + e._key + '" style="background:none;border:none;font-size:14px;cursor:pointer;padding:4px;opacity:0.6;" title="' + (isEN ? 'Edit' : 'Modifica') + '">✏️</button>' +
-        '<button class="expense-delete-btn" data-key="' + e._key + '" style="background:none;border:none;font-size:14px;cursor:pointer;padding:4px;opacity:0.5;" title="' + (isEN ? 'Delete' : 'Elimina') + '">🗑️</button>' +
+        '<button class="expense-edit-btn" data-key="' + e._key + '" style="background:none;border:none;font-size:14px;cursor:pointer;padding:4px;opacity:0.6;" title="' + (LANG3 === 'es' ? 'Editar' : isEN ? 'Edit' : 'Modifica') + '">✏️</button>' +
+        '<button class="expense-delete-btn" data-key="' + e._key + '" style="background:none;border:none;font-size:14px;cursor:pointer;padding:4px;opacity:0.5;" title="' + (LANG3 === 'es' ? 'Eliminar' : isEN ? 'Delete' : 'Elimina') + '">🗑️</button>' +
         '</div>';
     });
     container.innerHTML = html;
@@ -20443,7 +20443,7 @@ window.injectAllWikiLinks = function() {
     container.querySelectorAll('.expense-delete-btn').forEach(function(btn) {
       btn.addEventListener('click', function() {
         var key = btn.dataset.key;
-        if (confirm(isEN ? 'Delete this expense?' : 'Eliminare questa spesa?')) {
+        if (confirm(LANG3 === 'es' ? '¿Eliminar este gasto?' : isEN ? 'Delete this expense?' : 'Eliminare questa spesa?')) {
           expenseRef.child(key).remove();
         }
       });
@@ -20465,7 +20465,7 @@ window.injectAllWikiLinks = function() {
     var existing = document.getElementById('expense-edit-modal');
     if (existing) existing.remove();
 
-    var countryOptions = isEN ? [
+    var countryOptions = LANG3 === 'es' ? [
       {v:'',l:'— none —'},{v:'IT',l:'🇮🇹 Italy'},{v:'AT',l:'🇦🇹 Austria'},{v:'CZ',l:'🇨🇿 Czechia'},
       {v:'PL',l:'🇵🇱 Poland'},{v:'LT',l:'🇱🇹 Lithuania'},{v:'LV',l:'🇱🇻 Latvia'},{v:'EE',l:'🇪🇪 Estonia'},
       {v:'FI',l:'🇫🇮 Finland'},{v:'NO',l:'🇳🇴 Norway'},{v:'DK',l:'🇩🇰 Denmark'},{v:'DE',l:'🇩🇪 Germany'},
@@ -20486,7 +20486,7 @@ window.injectAllWikiLinks = function() {
     }).join('');
     // Build subcategory dropdown options for current category
     var _editSubOpts = SUBCATEGORIES[exp.category] || ['altro'];
-    var subcategoryOptionsHtml = '<option value="">\u2014 ' + (isEN ? 'select' : 'seleziona') + ' \u2014</option>' + _editSubOpts.map(function(s) {
+    var subcategoryOptionsHtml = '<option value="">\u2014 ' + (LANG3 === 'es' ? 'Seleccionar' : isEN ? 'select' : 'seleziona') + ' \u2014</option>' + _editSubOpts.map(function(s) {
       return '<option value="' + s + '"' + (exp.subcategory === s ? ' selected' : '') + '>' + s.replace(/_/g, ' ') + '</option>';
     }).join('');
 
@@ -20494,19 +20494,19 @@ window.injectAllWikiLinks = function() {
     modal.id = 'expense-edit-modal';
     modal.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;padding:16px;';
     modal.innerHTML = '<div style="background:var(--bg-card,#fff);border-radius:16px;padding:20px;max-width:400px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,0.3);">' +
-      '<h3 style="margin:0 0 14px;font-size:16px;">✏️ ' + (isEN ? 'Edit Expense' : 'Modifica Spesa') + '</h3>' +
+      '<h3 style="margin:0 0 14px;font-size:16px;">✏️ ' + (LANG3 === 'es' ? 'Editar gasto' : isEN ? 'Edit Expense' : 'Modifica Spesa') + '</h3>' +
       '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">' +
-      '<div><label style="font-size:11px;color:var(--text-muted);">' + (isEN ? 'Amount' : 'Importo') + '</label><input type="number" id="exp-edit-amount" value="' + exp.amount + '" step="0.01" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:6px;font-size:14px;"></div>' +
-      '<div><label style="font-size:11px;color:var(--text-muted);">' + (isEN ? 'Currency' : 'Valuta') + '</label><input type="text" id="exp-edit-currency" value="' + escapeHtml(exp.currency) + '" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:6px;font-size:14px;"></div>' +
-      '<div style="grid-column:1/-1;"><label style="font-size:11px;color:var(--text-muted);">' + (isEN ? 'Date' : 'Data') + '</label><input type="date" id="exp-edit-date" value="' + (exp.date || '') + '" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:6px;font-size:14px;"></div>' +
-      '<div style="grid-column:1/-1;"><label style="font-size:11px;color:var(--text-muted);">' + (isEN ? 'Note' : 'Nota') + '</label><input type="text" id="exp-edit-note" value="' + escapeHtml(exp.note || exp.merchant || '') + '" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:6px;font-size:14px;"></div>' +
-      '<div><label style="font-size:11px;color:var(--text-muted);">' + (isEN ? 'Country' : 'Paese') + '</label><select id="exp-edit-country" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:6px;font-size:14px;">' + countryOptionsHtml + '</select></div>' +
-      '<div><label style="font-size:11px;color:var(--text-muted);">' + (isEN ? 'Category' : 'Categoria') + '</label><select id="exp-edit-category" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:6px;font-size:14px;">' + categoryOptionsHtml + '</select></div>' +
-      '<div style="grid-column:1/-1;"><label style="font-size:11px;color:var(--text-muted);">' + (isEN ? 'Subcategory' : 'Sottocategoria') + '</label><select id="exp-edit-subcategory" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:6px;font-size:14px;">' + subcategoryOptionsHtml + '</select></div>' +
+      '<div><label style="font-size:11px;color:var(--text-muted);">' + (LANG3 === 'es' ? 'Importe' : isEN ? 'Amount' : 'Importo') + '</label><input type="number" id="exp-edit-amount" value="' + exp.amount + '" step="0.01" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:6px;font-size:14px;"></div>' +
+      '<div><label style="font-size:11px;color:var(--text-muted);">' + (LANG3 === 'es' ? 'Moneda' : isEN ? 'Currency' : 'Valuta') + '</label><input type="text" id="exp-edit-currency" value="' + escapeHtml(exp.currency) + '" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:6px;font-size:14px;"></div>' +
+      '<div style="grid-column:1/-1;"><label style="font-size:11px;color:var(--text-muted);">' + (LANG3 === 'es' ? 'Fecha' : isEN ? 'Date' : 'Data') + '</label><input type="date" id="exp-edit-date" value="' + (exp.date || '') + '" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:6px;font-size:14px;"></div>' +
+      '<div style="grid-column:1/-1;"><label style="font-size:11px;color:var(--text-muted);">' + (LANG3 === 'es' ? 'Nota' : isEN ? 'Note' : 'Nota') + '</label><input type="text" id="exp-edit-note" value="' + escapeHtml(exp.note || exp.merchant || '') + '" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:6px;font-size:14px;"></div>' +
+      '<div><label style="font-size:11px;color:var(--text-muted);">' + (LANG3 === 'es' ? 'País' : isEN ? 'Country' : 'Paese') + '</label><select id="exp-edit-country" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:6px;font-size:14px;">' + countryOptionsHtml + '</select></div>' +
+      '<div><label style="font-size:11px;color:var(--text-muted);">' + (LANG3 === 'es' ? 'Categoría' : isEN ? 'Category' : 'Categoria') + '</label><select id="exp-edit-category" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:6px;font-size:14px;">' + categoryOptionsHtml + '</select></div>' +
+      '<div style="grid-column:1/-1;"><label style="font-size:11px;color:var(--text-muted);">' + (LANG3 === 'es' ? 'Subcategoría' : isEN ? 'Subcategory' : 'Sottocategoria') + '</label><select id="exp-edit-subcategory" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:6px;font-size:14px;">' + subcategoryOptionsHtml + '</select></div>' +
       '</div>' +
       '<div style="display:flex;gap:8px;margin-top:14px;">' +
-      '<button id="exp-edit-save" class="pos-btn pos-btn-green" style="flex:1;">💾 ' + (isEN ? 'Save' : 'Salva') + '</button>' +
-      '<button id="exp-edit-cancel" class="pos-btn pos-btn-gray" style="flex:1;">' + (isEN ? 'Cancel' : 'Annulla') + '</button>' +
+      '<button id="exp-edit-save" class="pos-btn pos-btn-green" style="flex:1;">💾 ' + (LANG3 === 'es' ? 'Guardar' : isEN ? 'Save' : 'Salva') + '</button>' +
+      '<button id="exp-edit-cancel" class="pos-btn pos-btn-gray" style="flex:1;">' + (LANG3 === 'es' ? 'Cancelar' : isEN ? 'Cancel' : 'Annulla') + '</button>' +
       '</div></div>';
 
     document.body.appendChild(modal);
@@ -20532,14 +20532,14 @@ window.injectAllWikiLinks = function() {
       };
       var _eurEdit = toEur(updates.amount, updates.currency);
       if (_eurEdit == null) {
-        if (window.showToast) showToast((isEN ? '⚠️ Unsupported currency: ' : '⚠️ Valuta non supportata: ') + updates.currency, 'warn');
+        if (window.showToast) showToast((LANG3 === 'es' ? '⚠️ Moneda no soportada: ' : isEN ? '⚠️ Unsupported currency: ' : '⚠️ Valuta non supportata: ') + updates.currency, 'warn');
         return;
       }
       updates.amountEur = _eurEdit;
       expenseRef.child(exp._key).update(updates).then(function() {
         modal.remove();
       }).catch(function(err) {
-        alert((isEN ? 'Error: ' : 'Errore: ') + err.message);
+        alert((LANG3 === 'es' ? 'Error: ' : isEN ? 'Error: ' : 'Errore: ') + err.message);
       });
     });
   }
@@ -20662,9 +20662,9 @@ window.injectAllWikiLinks = function() {
 
   // ─── Export CSV ───
   function exportCSV() {
-    if (expensesCache.length === 0) { alert(isEN ? 'No expenses to export' : 'Nessuna spesa da esportare'); return; }
+    if (expensesCache.length === 0) { alert(LANG3 === 'es' ? 'No hay gastos para exportar' : isEN ? 'No expenses to export' : 'Nessuna spesa da esportare'); return; }
 
-    var header = isEN ? 'Date,Amount,Currency,Amount EUR,Category,Subcategory,Note,Country,Source\n' : 'Data,Importo,Valuta,Importo EUR,Categoria,Sottocategoria,Nota,Paese,Fonte\n';
+    var header = LANG3 === 'es' ? 'Fecha,Importe,Moneda,Importe EUR,Categoría,Subcategoría,Nota,País,Fuente\\n' : isEN ? 'Date,Amount,Currency,Amount EUR,Category,Subcategory,Note,Country,Source\n' : 'Data,Importo,Valuta,Importo EUR,Categoria,Sottocategoria,Nota,Paese,Fonte\n';
     var rows = expensesCache.map(function(e) {
       return [
         e.date || '',
@@ -20684,7 +20684,7 @@ window.injectAllWikiLinks = function() {
     var url = URL.createObjectURL(blob);
     var a = document.createElement('a');
     a.href = url;
-    a.download = (isEN ? 'trip-expenses-' : 'spese-viaggio-') + (window.localDateStr ? window.localDateStr() : new Date().toISOString().slice(0, 10)) + '.csv';
+    a.download = (LANG3 === 'es' ? 'gastos-viaje-' : isEN ? 'trip-expenses-' : 'spese-viaggio-') + (window.localDateStr ? window.localDateStr() : new Date().toISOString().slice(0, 10)) + '.csv';
     a.click();
     URL.revokeObjectURL(url);
   }

@@ -158,7 +158,7 @@ var weatherCodes = {
 // NOTE (v2.34): Firebase API keys are safe to expose client-side (they only identify the project).
 // Security is enforced by Firebase Security Rules + Auth. Restrict this key in
 // Google Cloud Console → API Restrictions → HTTP referrers:
-//   viaggio-europa-2026.web.app/*
+//   travelyourlife.github.io/Progetto_Viaggio_Europa_2026/*
 //   https://localhost
 //   https://localhost/*
 //   http://localhost
