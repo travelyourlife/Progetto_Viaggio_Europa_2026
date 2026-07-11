@@ -1359,8 +1359,8 @@ function renderTimeline() {
         var wikiData = WIKI_LINKS[t.id];
         var wikiArr = Array.isArray(wikiData) ? wikiData : [wikiData];
         wikiArr.forEach(function(w) {
-          var wUrl = isEN ? w.wikiEn : w.wiki;
-          var wLabel = isEN ? (w.labelEn || w.label) : w.label;
+          var wUrl = (LANG3 === "es" || isEN) ? (w.wikiEn || w.wiki) : w.wiki;
+          var wLabel = (LANG3 === "es" || isEN) ? (w.labelEn || w.label) : w.label;
           wikiHtml += ' <a href="' + wUrl + '" target="_blank" rel="noopener noreferrer" class="wiki-link" title="Wikipedia: ' + wLabel + '">\ud83d\udcd6</a>';
         });
       }
@@ -1501,7 +1501,7 @@ window.openMapFullscreen = function openMapFullscreen(mapInstance, title) {
                 else if (isCurrent) { color = '#e53e3e'; radius = 12; }
                 else if (tripActive && currentDay > stop.endIdx) { color = '#38a169'; radius = 8; }
                 else { color = '#2c5282'; radius = 8; }
-                var city = typeof isEN !== 'undefined' && isEN ? c.cityEn : c.city;
+                var city = (LANG3 === "es" || isEN) ? (c.cityEn || c.city) : c.city;
                 var marker = L.circleMarker([stop.lat, stop.lng], { radius: radius, fillColor: color, color: '#fff', weight: 1.5, fillOpacity: 0.9 })
                     .addTo(fsMap);
                 // Build rich popup (same as Itinerario)
@@ -1881,7 +1881,7 @@ function initRouteMap() {
         stops.forEach(function(stop) {
             var dayIdx = stop.startIdx;
             var c = TRIP_COORDS[dayIdx];
-            var city = isEN ? c.cityEn : c.city;
+            var city = (LANG3 === "es" || isEN) ? (c.cityEn || c.city) : c.city;
 
             var color, radius;
             var isStart = stop.startIdx === 0;
@@ -2547,8 +2547,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         // v4.61: itemized breakdown string (road + ferry)
         function formatKmBreakdown() {
-            var road = Math.round(totalRoadKm).toLocaleString('it-IT', {maximumFractionDigits: 0});
-            var ferry = Math.round(totalFerryKm).toLocaleString('it-IT', {maximumFractionDigits: 0});
+            var road = Math.round(totalRoadKm).toLocaleString(LANG3 === 'es' ? 'es-ES' : isEN ? 'en-US' : 'it-IT', {maximumFractionDigits: 0});
+            var ferry = Math.round(totalFerryKm).toLocaleString(LANG3 === 'es' ? 'es-ES' : isEN ? 'en-US' : 'it-IT', {maximumFractionDigits: 0});
             if (isEN) {
                 return '\uD83D\uDE90 ' + road + ' km on road + \u26F4\uFE0F ' + ferry + ' km by ferry';
             }
@@ -2678,6 +2678,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // v3.46: Weekday abbreviations
             var _wdIT = ['Lun','Mar','Mer','Gio','Ven','Sab','Dom'];
             var _wdEN = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+            var _wdES = ["Lun","Mar","Mié","Jue","Vie","Sáb","Dom"];
 
             // Bars
             for (var j = startIdx; j < startIdx + 7; j++) {
@@ -2728,14 +2729,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Compute weekday from TRIP_START + j days
                     var dayDate = new Date(TRIP_START.getTime() + j * 86400000);
                     var wdIdx = (dayDate.getDay() + 6) % 7; // Mon=0
-                    var wdName = isEN ? _wdEN[wdIdx] : _wdIT[wdIdx];
+                    var wdName = LANG3 === "es" ? _wdES[wdIdx] : isEN ? _wdEN[wdIdx] : _wdIT[wdIdx];
                     // v4.38: per-day country flag from TRIP_COORDS (highlight border crossings)
                     var _flagHtml = '';
                     if (typeof TRIP_COORDS !== 'undefined' && TRIP_COORDS[j]) {
                         var _tc = TRIP_COORDS[j];
                         var _prevTc = (j > 0) ? TRIP_COORDS[j - 1] : null;
                         var _isCrossing = _prevTc && _prevTc.country !== _tc.country;
-                        var _cityName = (isEN ? (_tc.cityEn || _tc.city) : _tc.city) || '';
+                        var _cityName = ((LANG3 === "es" || isEN) ? (_tc.cityEn || _tc.city) : _tc.city) || "";
                         var _titleTxt = _cityName + (_isCrossing ? (LANG3 === 'es' ? ' — entrando en ' + _tc.country : isEN ? ' — entering ' + _tc.country : ' — ingresso in ' + _tc.country) : '');
                         if (_tc.flag) {
                             _flagHtml = '<br><span title="' + _titleTxt.replace(/"/g, '') + '" style="font-size:13px;line-height:1;' + (_isCrossing ? 'filter:drop-shadow(0 0 1px #3b82f6);' : '') + '">' + _tc.flag + (_isCrossing ? '<span style="color:#3b82f6;font-weight:700;">•</span>' : '') + '</span>';
@@ -2874,41 +2875,93 @@ document.addEventListener('DOMContentLoaded', function() {
     var topBarTitle = document.getElementById('topBarTitle');
     var topBarBack = document.getElementById('topBarBack');
     var _altroSubTabs = ['cibo', 'cultura', 'attivita', 'luoghi', 'natura', 'itinerari', 'riepilogo', 'piano', 'zaino', 'admin'];
-    var _tabTitles = isEN ? {
-        home: 'Quo Vadis',
-        giorni: 'Itinerary',
-        posizione: 'On the Road',
-        diario: 'Journal',
-        chat: 'Chat',
-        altro: 'More',
-        cibo: 'Food',
-        cultura: 'Culture',
-        attivita: 'Activities',
-        luoghi: 'Places',
-        natura: 'Nature',
-        itinerari: 'City itineraries',
-        riepilogo: 'Summary',
-        piano: 'Plan',
-        zaino: 'Packing',
-        admin: 'Admin'
+    var _tabTitles = LANG3 === "es" ? {
+        home: "Quo Vadis",
+        giorni: "Itinerario",
+        posizione: "En directo",
+        diario: "Diario",
+        chat: "Chat",
+        altro: "Más",
+        cibo: "Comida",
+        cultura: "Cultura",
+        attivita: "Actividades",
+        luoghi: "Lugares",
+        natura: "Naturaleza",
+        itinerari: "Itinerarios ciudad",
+        riepilogo: "Resumen",
+        piano: "Plan",
+        zaino: "Mochila",
+        admin: "Admin"
+    } : isEN ? {
+        home: "Quo Vadis",
+        giorni: "Itinerary",
+        posizione: "On the Road",
+        diario: "Journal",
+        chat: "Chat",
+        altro: "More",
+        cibo: "Food",
+        cultura: "Culture",
+        attivita: "Activities",
+        luoghi: "Places",
+        natura: "Nature",
+        itinerari: "City itineraries",
+        riepilogo: "Summary",
+        piano: "Plan",
+        zaino: "Packing",
+        admin: "Admin"
     } : {
-        home: 'Quo Vadis',
-        giorni: 'Itinerario',
-        posizione: 'In Viaggio',
-        diario: 'Diario',
-        chat: 'Chat',
-        altro: 'Altro',
-        cibo: 'Cibo',
-        cultura: 'Cultura',
-        attivita: 'Attivit\u00e0',
-        luoghi: 'Luoghi',
-        natura: 'Natura',
-        itinerari: 'Itinerari città',
-        riepilogo: 'Riepilogo',
-        piano: 'Piano',
-        zaino: 'Zaino',
-        admin: 'Admin'
+        home: "Quo Vadis",
+        giorni: "Itinerario",
+        posizione: "In Viaggio",
+        diario: "Diario",
+        chat: "Chat",
+        altro: "Altro",
+        cibo: "Cibo",
+        cultura: "Cultura",
+        attivita: "Attivit\u00e0",
+        luoghi: "Luoghi",
+        natura: "Natura",
+        itinerari: "Itinerari citt\u00e0",
+        riepilogo: "Riepilogo",
+        piano: "Piano",
+        zaino: "Zaino",
+        admin: "Admin"
     };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     function updateTopBar(tabId) {
         if (!topBarTitle) return;
@@ -7913,7 +7966,7 @@ window.HOME_DEPARTURE_COORDS = HOME_DEPARTURE_COORDS;
 // (km 0 or no arrow in tragitto) it falls back to the plain city name.
 function _smartStopLabel(day, city, isEN) {
     if (!day) return city || '';
-    var route = (isEN ? day.tragittoEn : day.tragitto) || '';
+    var route = (LANG3 === "es" ? (day.tragittoES || day.tragittoEn || day.tragitto) : isEN ? day.tragittoEn : day.tragitto) || "";
     var kmNum = parseInt(String(day.km || '0').replace(/[^0-9]/g, ''), 10) || 0;
     // Arrow variants used in the data: ➔ (\u2794) and → (\u2192).
     var hasArrow = /\u2794|\u2192|➔|→/.test(route);
@@ -9344,7 +9397,7 @@ async function fetchForecast(lat, lon, date, _retry) {
 
         // v3.95 FIX: Use shared computeTotalKm() — single source of truth for km calculation
         window.computeTotalKm(function(totalKm) {
-            hsKm.textContent = Math.round(totalKm).toLocaleString('it-IT');
+            hsKm.textContent = Math.round(totalKm).toLocaleString(LANG3 === 'es' ? 'es-ES' : isEN ? 'en-US' : 'it-IT');
         });
 
         // v4.88: Countries visited — merge check-ins + dailySummaries + countriesVisited (aligned with stat-countries)
@@ -9531,7 +9584,7 @@ async function fetchForecast(lat, lon, date, _retry) {
         }
 
         var coord = TRIP_COORDS[dayIdx];
-        var cityName = isEN ? coord.cityEn : coord.city;
+        var cityName = (LANG3 === "es" || isEN) ? (coord.cityEn || coord.city) : coord.city;
 
         var now = new Date();
         // v1.84: Session-only override
@@ -9743,7 +9796,7 @@ async function fetchForecast(lat, lon, date, _retry) {
             return;
         }
         var nextCoord = TRIP_COORDS[nextIdx];
-        var nextCity = isEN ? nextCoord.cityEn : nextCoord.city;
+        var nextCity = (LANG3 === "es" || isEN) ? (nextCoord.cityEn || nextCoord.city) : nextCoord.city;
         heroNextLocBlock.textContent = '\uD83C\uDFAF ' + nextCity;
 
         // Fetch next-stop weather
@@ -9927,7 +9980,7 @@ window.injectAllWikiLinks = function() {
                     // Match country name in heading (IT or EN)
                     var enName = data.labelEn || country;
                     if (text.indexOf(country) !== -1 || text.indexOf(enName) !== -1) {
-                        var url = isEN ? data.wikiEn : data.wiki;
+                        var url = (LANG3 === "es" || isEN) ? (data.wikiEn || data.wiki) : data.wiki;
                 var label = LANG3 === 'es' ? (enName || country) : isEN ? enName : country;
                         h2.insertAdjacentHTML('beforeend', makeWikiIcon(url, label));
                     }
@@ -9951,7 +10004,7 @@ window.injectAllWikiLinks = function() {
                             Object.keys(WIKI_TREKS).forEach(function(key) {
                                 if (trekName === key || trekName.indexOf(key) === 0) {
                                     var data = WIKI_TREKS[key];
-                                    var url = isEN ? data.wikiEn : data.wiki;
+                                    var url = (LANG3 === "es" || isEN) ? (data.wikiEn || data.wiki) : data.wiki;
                                     strong.insertAdjacentHTML('afterend', makeWikiIcon(url, key));
                                 }
                             });
@@ -9985,7 +10038,7 @@ window.injectAllWikiLinks = function() {
                 var data = dict[key];
                 var enName = data.labelEn || key;
                 if (text.indexOf(key) !== -1 || text.indexOf(enName) !== -1) {
-                    var url = isEN ? data.wikiEn : data.wiki;
+                    var url = (LANG3 === "es" || isEN) ? (data.wikiEn || data.wiki) : data.wiki;
                     var label = LANG3 === 'es' ? (enName || key) : isEN ? (enName || key) : key;
                     el.insertAdjacentHTML('afterend', makeWikiIcon(url, label));
                     globalInjected[elId] = (globalInjected[elId] || 0) + 1;
@@ -10459,9 +10512,9 @@ window.injectAllWikiLinks = function() {
     var tomorrow = tripDay + 1;
     if (nowHour >= 19 && itinerario[tomorrow]) {
       var nextData = itinerario[tomorrow];
-      var nextRoute = isEN ? nextData.tragittoEn : nextData.tragitto;
+      var nextRoute = LANG3 === "es" ? (nextData.tragittoES || nextData.tragittoEn || nextData.tragitto) : isEN ? nextData.tragittoEn : nextData.tragitto;
       var nextKm = nextData.km ? nextData.km + ' km' : '';
-      var nextOre = isEN ? (nextData.oreEn || nextData.ore) : nextData.ore;
+      var nextOre = (LANG3 === "es" || isEN) ? (nextData.oreEn || nextData.ore) : nextData.ore;
       var nextText = isEN
         ? '<strong>Tomorrow:</strong> ' + nextRoute + (nextKm ? ' (' + nextKm + ', ' + nextOre + ')' : '')
         : '<strong>Domani:</strong> ' + nextRoute + (nextKm ? ' (' + nextKm + ', ' + nextOre + ')' : '');
@@ -10533,7 +10586,7 @@ window.injectAllWikiLinks = function() {
       html += '<div class="notif-item-body">';
       // Use text for local notifs, title+body for Firebase notifs
       // SECURITY: escape title/body from Firebase to prevent stored XSS
-      var displayText = n.text || ('<strong>' + escapeHtml(n.title || '') + '</strong>' + (n.body ? '<br>' + escapeHtml(n.body) : ''));
+      var _nBody = (LANG3 === 'es' && n.bodyES) ? n.bodyES : (isEN && n.bodyEN) ? n.bodyEN : n.body; var displayText = n.text || ('<strong>' + escapeHtml(n.title || '') + '</strong>' + (_nBody ? '<br>' + escapeHtml(_nBody) : ''));
       html += '<span class="notif-item-text">' + displayText + '</span>';
       // Time display
       var timeStr = '';
@@ -10718,7 +10771,9 @@ window.injectAllWikiLinks = function() {
               id: key,
               icon: n.icon || getIconForType(n.type),
               title: n.title || '',
-              body: n.body || '',
+              body: n.body || "",
+              bodyEN: n.bodyEN || "",
+              bodyES: n.bodyES || "",
               text: n.text || '',
               type: n.type,
               target: n.target || 'all',
@@ -11980,7 +12035,7 @@ window.injectAllWikiLinks = function() {
           lat: lat,
           lng: lng,
           date: todayStr(),
-          time: new Date().toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' }),
+          time: new Date().toLocaleTimeString(LANG3 === 'es' ? 'es-ES' : isEN ? 'en-US' : 'it-IT', { hour: '2-digit', minute: '2-digit' }),
           auto: true
         });
       }
@@ -12247,7 +12302,7 @@ window.injectAllWikiLinks = function() {
                 lat: visit.lat,
                 lng: visit.lng,
                 date: date,
-                time: visit.start ? new Date(visit.start).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' }) : '',
+                time: visit.start ? new Date(visit.start).toLocaleTimeString(LANG3 === 'es' ? 'es-ES' : isEN ? 'en-US' : 'it-IT', { hour: '2-digit', minute: '2-digit' }) : '',
                 source: 'timeline_import'
               });
             }
@@ -13060,7 +13115,7 @@ window.injectAllWikiLinks = function() {
 
     // Date separator
     var msgDate = new Date(msg.timestamp || 0);
-    var dateStr = msgDate.toLocaleDateString(LANG === 'en' ? 'en-GB' : 'it-IT', {
+    var dateStr = msgDate.toLocaleDateString(LANG3 === 'es' ? 'es-ES' : LANG === 'en' ? 'en-GB' : 'it-IT', {
       weekday: 'short', day: 'numeric', month: 'short'
     });
     if (dateStr !== lastDateShown) {
@@ -13105,7 +13160,7 @@ window.injectAllWikiLinks = function() {
       header.appendChild(name);
       var time = document.createElement('span');
       time.className = 'chat-msg-time';
-      time.textContent = msgDate.toLocaleTimeString(LANG === 'en' ? 'en-GB' : 'it-IT', { hour: '2-digit', minute: '2-digit' });
+      time.textContent = msgDate.toLocaleTimeString(LANG3 === 'es' ? 'es-ES' : LANG === 'en' ? 'en-GB' : 'it-IT', { hour: '2-digit', minute: '2-digit' });
       header.appendChild(time);
       div.appendChild(header);
     }
@@ -13202,7 +13257,7 @@ window.injectAllWikiLinks = function() {
       var timeOwn = document.createElement('span');
       timeOwn.className = 'chat-msg-time';
       timeOwn.style.cssText = 'display:block; text-align:right; margin-top:2px; font-size:10px; opacity:0.7;';
-      timeOwn.textContent = msgDate.toLocaleTimeString(LANG === 'en' ? 'en-GB' : 'it-IT', { hour: '2-digit', minute: '2-digit' });
+      timeOwn.textContent = msgDate.toLocaleTimeString(LANG3 === 'es' ? 'es-ES' : LANG === 'en' ? 'en-GB' : 'it-IT', { hour: '2-digit', minute: '2-digit' });
       bubble.appendChild(timeOwn);
     }
 
@@ -14495,7 +14550,7 @@ window.injectAllWikiLinks = function() {
     // Garmin daily row
     var elSteps = document.getElementById('pos-garmin-steps');
     var elDailyKm = document.getElementById('pos-garmin-walk-daily');
-    if (elSteps) elSteps.textContent = totalSteps.toLocaleString('it-IT');
+    if (elSteps) elSteps.textContent = totalSteps.toLocaleString(LANG3 === 'es' ? 'es-ES' : isEN ? 'en-US' : 'it-IT');
     if (elDailyKm) elDailyKm.textContent = kmDaily.toFixed(1);
 
     // Strava hiking row
@@ -14505,7 +14560,7 @@ window.injectAllWikiLinks = function() {
     // Totale viaggio
     posGarminWalk.textContent = kmTotal.toFixed(1);
     var elStepsTotal = document.getElementById('pos-garmin-steps-total');
-    if (elStepsTotal) elStepsTotal.textContent = totalSteps.toLocaleString('it-IT');
+    if (elStepsTotal) elStepsTotal.textContent = totalSteps.toLocaleString(LANG3 === 'es' ? 'es-ES' : isEN ? 'en-US' : 'it-IT');
 
     // Update stat card if exists
     var statKmFootTotal = document.getElementById('stat-km-foot-total');
@@ -14586,7 +14641,7 @@ window.injectAllWikiLinks = function() {
       html += '<div class="walking-daily-row">';
       html += '  <span class="walking-daily-date">' + dateLabel + '</span>';
       html += '  <span class="walking-daily-info">';
-      if (daySteps > 0) html += '👣 ' + daySteps.toLocaleString('it-IT') + ' ';
+      if (daySteps > 0) html += '👣 ' + daySteps.toLocaleString(LANG3 === 'es' ? 'es-ES' : isEN ? 'en-US' : 'it-IT') + ' ';
       if (dayKmDaily > 0) html += '🚶 ' + dayKmDaily.toFixed(1) + ' km ';
       if (dayKmHike > 0) html += '🧥 ' + hikeNames[0] + ' ' + dayKmHike.toFixed(1) + ' km';
       html += '  </span>';
@@ -17851,9 +17906,9 @@ window.injectAllWikiLinks = function() {
         if (!container) return;
         var html = '';
         items.forEach(function(poi) {
-            var name = isEN ? poi.nameEn : poi.name;
-            var desc = isEN ? poi.descEn : poi.desc;
-            var price = isEN ? poi.priceEn : poi.price;
+            var name = (LANG3 === "es" || isEN) ? (poi.nameEn || poi.name) : poi.name;
+            var desc = (LANG3 === "es" || isEN) ? (poi.descEn || poi.desc) : poi.desc;
+            var price = (LANG3 === "es" || isEN) ? (poi.priceEn || poi.price) : poi.price;
             html += '<div class="poi-card" data-cat="' + poi.cat + '">' +
                 '<div class="poi-card-header">' +
                     '<span class="poi-icon" style="color:' + catColors[poi.cat] + '; font-size:1.5em;">' + catIcons[poi.cat] + '</span>' +
@@ -19468,7 +19523,7 @@ window.injectAllWikiLinks = function() {
 
         // v2.94: usa i metadati logici (dateKey/tripDay/slot) quando presenti,
         // con fallback ai vecchi record (solo timestamp) per retro-compatibilità.
-        var SLOT_LABELS = ['🌅 Mattino', '☀️ Pomeriggio', '🌙 Sera'];
+        var SLOT_LABELS = LANG3 === 'es' ? ['D83cDf05 Mañana', '2600Fe0f Tarde', 'D83cDf19 Noche'] : isEN ? ['D83cDf05 Morning', '2600Fe0f Afternoon', 'D83cDf19 Evening'] : ['D83cDf05 Mattino', '2600Fe0f Pomeriggio', 'D83cDf19 Sera'];
         var items = [];
         snap.forEach(function(child) {
           var v = child.val() || {};
@@ -19476,7 +19531,7 @@ window.injectAllWikiLinks = function() {
           // dateKey logico: se manca, ricavalo dal timestamp di invio.
           var dk = v.dateKey || (ts ? window.localDateStr(new Date(ts)) : ''); // v2.96: LOCAL
           items.push({
-            body: v.body || '',
+            body: (LANG3 === "es" ? (v.bodyES || v.body) : isEN ? (v.bodyEN || v.body) : v.body) || "",
             title: v.title || '',
             source: v.source || '',
             slot: (typeof v.slot === 'number') ? v.slot : null,
@@ -19505,11 +19560,11 @@ window.injectAllWikiLinks = function() {
           if (!dk || dk === 'senza-data') return '';
           var parts = dk.split('-');
           var d = new Date(parseInt(parts[0],10), parseInt(parts[1],10)-1, parseInt(parts[2],10));
-          return d.toLocaleDateString('it-IT', { weekday:'long', day:'numeric', month:'long' });
+          return d.toLocaleDateString(LANG3 === 'es' ? 'es-ES' : isEN ? 'en-US' : 'it-IT', { weekday:'long', day:'numeric', month:'long' });
         }
 
         var html = '<div class="curiosita-archive">';
-        html += '<p class="curiosita-summary" style="margin-bottom:12px;color:#555;">📚 <strong>' + items.length + '</strong> curiosità in <strong>' + dayKeys.length + '</strong> giorni</p>';
+        html += '<p class="curiosita-summary" style="margin-bottom:12px;color:#555;">D83dDcda <strong>' + items.length + '</strong> ' + (LANG3 === 'es' ? 'curiosidades en' : isEN ? 'fun facts in' : 'curiosit00e0 in') + ' <strong>' + dayKeys.length + '</strong> ' + (LANG3 === 'es' ? 'd00edas' : isEN ? 'days' : 'giorni') + '</p>';
         dayKeys.forEach(function(dk) {
           var dayItems = groups[dk];
           // Ordina per fascia (slot) se disponibile, altrimenti per orario di invio.
@@ -19527,7 +19582,7 @@ window.injectAllWikiLinks = function() {
             }
             html += '<div style="font-size:0.92rem;line-height:1.4;color:inherit;">' + escapeHtml(item.body || item.title || '') + '</div>';
             if (item.source) {
-              html += '<div class="curiosita-source" style="font-size:0.68rem;color:#aaa;margin-top:6px;">Fonte: ' + escapeHtml(item.source) + '</div>';
+              html += '<div class="curiosita-source" style="font-size:0.68rem;color:#aaa;margin-top:6px;">' + (LANG3 === 'es' ? 'Fuente: ' : isEN ? 'Source: ' : 'Fonte: ') + escapeHtml(item.source) + '</div>';
             }
             html += '</div>';
           });
@@ -19565,7 +19620,7 @@ window.injectAllWikiLinks = function() {
       var rows = [];
       snap.forEach(function(child) {
         var v = child.val() || {};
-        rows.push({ key: child.key, body: v.body || '', ts: v.timestamp || v.createdAt || 0 });
+        rows.push({ key: child.key, body: (LANG3 === "es" ? (v.bodyES || v.body) : isEN ? (v.bodyEN || v.body) : v.body) || "", ts: v.timestamp || v.createdAt || 0 });
       });
       // Mantieni la più vecchia per ogni testo: ordina per ts ascendente.
       rows.sort(function(a, b) { return a.ts - b.ts; });
@@ -19723,6 +19778,44 @@ window.injectAllWikiLinks = function() {
     supermercato: '🛒', campeggio: '⛺', attivita: '🎢',
     shopping: '🛍️', veicolo: '🔧', altro: '📦'
   };
+  var CATEGORY_LABELS = {
+    carburante: LANG3 === "es" ? "combustible" : isEN ? "fuel" : "carburante",
+    pedaggi_traghetti: LANG3 === "es" ? "peajes/ferries" : isEN ? "tolls/ferries" : "pedaggi traghetti",
+    cibo: LANG3 === "es" ? "comida" : isEN ? "food" : "cibo",
+    supermercato: LANG3 === "es" ? "supermercado" : isEN ? "grocery" : "supermercato",
+    campeggio: LANG3 === "es" ? "acampada" : isEN ? "camping" : "campeggio",
+    attivita: LANG3 === "es" ? "actividades" : isEN ? "activities" : "attivita",
+    shopping: LANG3 === "es" ? "compras" : isEN ? "shopping" : "shopping",
+    veicolo: LANG3 === "es" ? "vehículo" : isEN ? "vehicle" : "veicolo",
+    altro: LANG3 === "es" ? "otro" : isEN ? "other" : "altro"
+  };
+  var SUBCATEGORY_LABELS = {
+    diesel: LANG3==="es"?"diésel":isEN?"diesel":"diesel",
+    adblue: "AdBlue", gpl: "GPL", benzina: LANG3==="es"?"gasolina":isEN?"petrol":"benzina",
+    autostrada: LANG3==="es"?"autopista":isEN?"motorway":"autostrada",
+    traghetto: LANG3==="es"?"ferry":isEN?"ferry":"traghetto",
+    tunnel: LANG3==="es"?"túnel":isEN?"tunnel":"tunnel",
+    parcheggio: LANG3==="es"?"aparcamiento":isEN?"parking":"parcheggio",
+    ristorante: LANG3==="es"?"restaurante":isEN?"restaurant":"ristorante",
+    bar: "bar", fast_food: "fast food", takeaway: "takeaway",
+    spesa: LANG3==="es"?"compra":isEN?"groceries":"spesa",
+    acqua_bevande: LANG3==="es"?"agua/bebidas":isEN?"water/drinks":"acqua/bevande",
+    snack: "snack", altro: LANG3==="es"?"otro":isEN?"other":"altro",
+    campeggio: LANG3==="es"?"camping":isEN?"campsite":"campeggio",
+    area_sosta: LANG3==="es"?"área de descanso":isEN?"rest area":"area sosta",
+    parcheggio_notte: LANG3==="es"?"pernocta":isEN?"overnight parking":"parcheggio notte",
+    biglietti: LANG3==="es"?"entradas":isEN?"tickets":"biglietti",
+    escursioni: LANG3==="es"?"excursiones":isEN?"excursions":"escursioni",
+    musei: LANG3==="es"?"museos":isEN?"museums":"musei",
+    parchi: LANG3==="es"?"parques":isEN?"parks":"parchi",
+    souvenir: "souvenir", abbigliamento: LANG3==="es"?"ropa":isEN?"clothing":"abbigliamento",
+    elettronica: LANG3==="es"?"electrónica":isEN?"electronics":"elettronica",
+    manutenzione: LANG3==="es"?"mantenimiento":isEN?"maintenance":"manutenzione",
+    lavaggio: LANG3==="es"?"lavado":isEN?"wash":"lavaggio",
+    assicurazione: LANG3==="es"?"seguro":isEN?"insurance":"assicurazione",
+    farmacia: LANG3==="es"?"farmacia":isEN?"pharmacy":"farmacia",
+    sim: "SIM", lavanderia: LANG3==="es"?"lavandería":isEN?"laundry":"lavanderia"
+  };
 
   var expensesCache = [];
   var expenseRef = null;
@@ -19869,7 +19962,7 @@ window.injectAllWikiLinks = function() {
     subs.forEach(function(s) {
       var opt = document.createElement('option');
       opt.value = s;
-      opt.textContent = s.replace(/_/g, ' ');
+      opt.textContent = (SUBCATEGORY_LABELS[s] || s.replace(/_/g, ' '));
       subSelect.appendChild(opt);
     });
   }
@@ -19979,7 +20072,7 @@ window.injectAllWikiLinks = function() {
       div.style.cssText = 'background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:10px;margin-bottom:8px;';
       div.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;">' +
         '<div><strong>' + (CATEGORY_ICONS[exp.category] || '📦') + ' ' + escapeHtml(exp.merchant) + '</strong>' +
-        '<div style="font-size:12px;color:var(--text-muted);">' + (exp.date || '—') + ' · ' + escapeHtml(exp.category) + (exp.subcategory ? '/' + escapeHtml(exp.subcategory) : '') + '</div>' +
+        '<div style="font-size:12px;color:var(--text-muted);">' + (exp.date || '—') + ' · ' + escapeHtml(CATEGORY_LABELS[exp.category] || exp.category) + (exp.subcategory ? '/' + escapeHtml(SUBCATEGORY_LABELS[exp.subcategory] || exp.subcategory) : '') + '</div>' +
         (exp.note ? '<div style="font-size:11px;color:var(--text-muted);font-style:italic;">' + escapeHtml(exp.note) + '</div>' : '') +
         '</div>' +
         '<div style="text-align:right;">' +
@@ -20394,7 +20487,7 @@ window.injectAllWikiLinks = function() {
     if (el('expense-stat-total')) el('expense-stat-total').textContent = formatEur(totalEur);
     if (el('expense-stat-avg')) el('expense-stat-avg').textContent = formatEur(avgDay);
     if (el('expense-stat-count')) el('expense-stat-count').textContent = expensesCache.length;
-    if (el('expense-stat-topcat')) el('expense-stat-topcat').textContent = (CATEGORY_ICONS[topCat] || '') + ' ' + (topCat || '—');
+    if (el('expense-stat-topcat')) el('expense-stat-topcat').textContent = (CATEGORY_ICONS[topCat] || '') + ' ' + (CATEGORY_LABELS[topCat] || topCat || '—');
   }
 
   // ─── List ───
@@ -20426,8 +20519,8 @@ window.injectAllWikiLinks = function() {
       html += '<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);">' +
         '<span style="font-size:20px;">' + icon + '</span>' +
         '<div style="flex:1;min-width:0;">' +
-        '<div style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="' + escapeHtml(e.note || e.merchant || '') + '">' + escapeHtml(e.note || e.merchant || e.category) + '</div>' +
-        '<div style="font-size:11px;color:var(--text-muted);">' + (e.date || '—') + (countryStr ? ' · ' + countryStr : '') + (e.subcategory ? ' · ' + escapeHtml(e.subcategory) : '') + '</div>' +
+        '<div style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="' + escapeHtml(e.note || e.merchant || '') + '">' + escapeHtml(e.note || e.merchant || (CATEGORY_LABELS[e.category] || e.category)) + '</div>' +
+        '<div style="font-size:11px;color:var(--text-muted);">' + (e.date || '—') + (countryStr ? ' · ' + countryStr : '') + (e.subcategory ? ' · ' + escapeHtml(SUBCATEGORY_LABELS[e.subcategory] || e.subcategory) : '') + '</div>' +
         '</div>' +
         '<div style="text-align:right;flex-shrink:0;">' +
         '<div style="font-size:14px;font-weight:700;">' + (e.currency === 'EUR' ? eurStr : amtStr) + '</div>' +
@@ -20482,12 +20575,12 @@ window.injectAllWikiLinks = function() {
     // Build category dropdown options
     var catKeys = Object.keys(CATEGORY_ICONS);
     var categoryOptionsHtml = catKeys.map(function(cat) {
-      return '<option value="' + cat + '"' + (exp.category === cat ? ' selected' : '') + '>' + (CATEGORY_ICONS[cat] || '') + ' ' + cat.replace(/_/g, ' ') + '</option>';
+      return '<option value="' + cat + '"' + (exp.category === cat ? ' selected' : '') + '>' + (CATEGORY_ICONS[cat] || '') + ' ' + (CATEGORY_LABELS[cat] || cat.replace(/_/g, ' ')) + '</option>';
     }).join('');
     // Build subcategory dropdown options for current category
     var _editSubOpts = SUBCATEGORIES[exp.category] || ['altro'];
     var subcategoryOptionsHtml = '<option value="">\u2014 ' + (LANG3 === 'es' ? 'Seleccionar' : isEN ? 'select' : 'seleziona') + ' \u2014</option>' + _editSubOpts.map(function(s) {
-      return '<option value="' + s + '"' + (exp.subcategory === s ? ' selected' : '') + '>' + s.replace(/_/g, ' ') + '</option>';
+      return '<option value="' + s + '"' + (exp.subcategory === s ? ' selected' : '') + '>' + (SUBCATEGORY_LABELS[s] || s.replace(/_/g, ' ')) + '</option>';
     }).join('');
 
     var modal = document.createElement('div');
@@ -20601,7 +20694,7 @@ window.injectAllWikiLinks = function() {
       ctx.fillRect(labelMargin, y, barW, barHeight);
       ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text').trim() || '#1a202c';
       ctx.textAlign = 'right';
-      ctx.fillText((CATEGORY_ICONS[cat] || '') + ' ' + cat.replace(/_/g, ' '), labelMargin - 10, y + barHeight - 6);
+      ctx.fillText((CATEGORY_ICONS[cat] || '') + ' ' + (CATEGORY_LABELS[cat] || cat.replace(/_/g, ' ')), labelMargin - 10, y + barHeight - 6);
       ctx.textAlign = 'left';
       ctx.fillText(formatEur(catTotals[cat]) + ' (' + Math.round(pct * 100) + '%)', labelMargin + barW + 8, y + barHeight - 6);
       y += barHeight + gap;

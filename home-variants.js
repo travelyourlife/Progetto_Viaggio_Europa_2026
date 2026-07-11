@@ -1214,7 +1214,7 @@
     html += '<div class="hv-diary-preview-header">';
     html += '  <div>';
     html += '    <div class="hv-diary-preview-title">' + (lang === 'es' ? 'Resumen D' : lang === 'en' ? 'Recap D' : 'Riepilogo G') + (tripData.dayNum > 0 ? tripData.dayNum : '--') + '</div>';
-    html += '    <div class="hv-diary-preview-time">' + new Date().toLocaleDateString('it-IT', {day:'2-digit', month:'2-digit', year:'numeric'}) + '</div>';
+    html += '    <div class="hv-diary-preview-time">' + new Date().toLocaleDateString(_lang3 === 'es' ? 'es-ES' : _en ? 'en-US' : 'it-IT', {day:'2-digit', month:'2-digit', year:'numeric'}) + '</div>';
     html += '  </div>';
     html += '</div>';
     if (dayData && dayData.narrative) {
@@ -1864,7 +1864,7 @@
   function formatKmDistance(km) {
     km = Math.round(km);
     if (km >= 1000) {
-      return km.toLocaleString('it-IT', {maximumFractionDigits: 0}) + ' km';
+      return km.toLocaleString(_lang3 === 'es' ? 'es-ES' : _en ? 'en-US' : 'it-IT', {maximumFractionDigits: 0}) + ' km';
     }
     return km + ' km';
   }
@@ -1963,7 +1963,7 @@
         var items = [];
         snap.forEach(function(child) {
           var v = child.val();
-          items.push({ title: v.title || '', body: v.body || '', ts: v.createdAt || 0, tag: v.tag || '' });
+          items.push({ title: v.title || '', body: (_lang3 === 'es' ? (v.bodyES || v.body) : _en ? (v.bodyEN || v.body) : v.body) || '', ts: v.createdAt || 0, tag: v.tag || '' });
         });
         // Sort by timestamp descending (newest first)
         items.sort(function(a, b) { return b.ts - a.ts; });
@@ -1983,7 +1983,7 @@
     } else {
       html += '<div style="display:flex;flex-direction:column;gap:12px;">';
       items.forEach(function(item) {
-        var dateStr = item.ts ? new Date(item.ts).toLocaleDateString('it-IT', { day:'numeric', month:'short' }) : '';
+        var dateStr = item.ts ? new Date(item.ts).toLocaleDateString(_lang3 === 'es' ? 'es-ES' : _en ? 'en-US' : 'it-IT', { day:'numeric', month:'short' }) : '';
         html += '<div style="background:#f8f9fa;border-radius:10px;padding:12px;">';
         html += '<div style="font-size:0.75rem;color:#888;margin-bottom:4px;">' + dateStr + '</div>';
         html += '<div style="font-size:0.95rem;">' + escHtml(item.body || item.title) + '</div>';

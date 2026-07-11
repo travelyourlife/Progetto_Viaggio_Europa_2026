@@ -189,8 +189,10 @@
           // Vinta la fascia → invia in coda.
           return queueRef.push({
             type: 'curiosity',
-            title: curio.emoji + ' Sapevi che...',
+            title: curio.emoji + ((typeof LANG3 !== 'undefined' && LANG3 === 'es') ? ' 00bfSab00edas que...' : (typeof isEN !== 'undefined' && isEN) ? ' Did you know...' : ' Sapevi che...'),
             body: curio.text,
+            bodyEN: curio.textEN || curio.text,
+            bodyES: curio.textES || curio.text,
             source: curio.source || '',
             slot: slotIdx,
             tripDay: tripDay,
@@ -416,7 +418,7 @@
           var appUrl = 'https://travelyourlife.github.io/Progetto_Viaggio_Europa_2026/';
           var msgParts = [];
 
-          // Header: 📸 *Riepilogo serale — G3 · Marki* 🇵🇱
+          var _rl = (typeof LANG3 !== 'undefined') ? LANG3 : 'it'; var header = 'D83dDcf8 *' + (_rl === 'es' ? 'Resumen nocturno 2014 ' : _rl === 'en' ? 'Evening recap 2014 ' : 'Riepilogo serale 2014 ') + g;
           var header = '📸 *Riepilogo serale — ' + g;
           if (cityName) header += ' · ' + cityName;
           header += '*';
@@ -426,7 +428,7 @@
 
           // Driving stats: 🚐 874 km · ⏱️ 8h 12min
           if (km) {
-            var driveLine = '🚐 ' + km + ' km percorsi';
+            var driveLine = 'D83dDe90 ' + km + (_rl === 'es' ? ' km recorridos' : _rl === 'en' ? ' km driven' : ' km percorsi');
             if (driveTime) driveLine += ' · ⏱️ ' + driveTime;
             msgParts.push(driveLine);
           }
@@ -436,9 +438,9 @@
             msgParts.push(weatherStr);
           }
 
-          // Steps: 👣 12.500 passi (8.7 km)
+            var _csLang = (typeof LANG3 !== 'undefined') ? LANG3 : 'it'; var stepsLine = 'D83dDc63 ' + todaySteps.toLocaleString(_csLang === 'es' ? 'es-ES' : _csLang === 'en' ? 'en-US' : 'it-IT') + (_csLang === 'es' ? ' pasos' : _csLang === 'en' ? ' steps' : ' passi');
           if (todaySteps > 0) {
-            var stepsLine = '👣 ' + todaySteps.toLocaleString('it-IT') + ' passi';
+            var _csLang = (typeof LANG3 !== 'undefined') ? LANG3 : 'it'; var stepsLine = 'D83dDc63 ' + todaySteps.toLocaleString(_csLang === 'es' ? 'es-ES' : _csLang === 'en' ? 'en-US' : 'it-IT') + (_csLang === 'es' ? ' pasos' : _csLang === 'en' ? ' steps' : ' passi');
             if (todayWalkKm > 0) stepsLine += ' (' + todayWalkKm.toFixed(1) + ' km)';
             msgParts.push(stepsLine);
           }
@@ -466,7 +468,7 @@
 
           // Photos count
           if (photos.length > 0) {
-            msgParts.push('');
+            msgParts.push('D83dDdbcFe0f ' + photos.length + (_rl === 'es' ? ' fotos en el diario' : _rl === 'en' ? ' photos in diary' : ' foto nel diario'));
             msgParts.push('🖼️ ' + photos.length + ' foto nel diario');
           }
 
@@ -558,8 +560,13 @@
       var dest = dayData ? (dayData.tragitto || dayData.title || '') : '';
       var km   = dayData ? (dayData.km || 0) : 0;
 
-      var title = '\uD83C\uDF05 Buongiorno! Giorno ' + (dayIdx + 1) + '/' + totalDays;
-      var body  = dest + (km > 0 ? ' \u00B7 ' + km + ' km' : ' \u00B7 Giorno di sosta');
+      var _bgLang = (typeof LANG3 !== 'undefined') ? LANG3 : 'it';
+      var title = _bgLang === 'es' ? '\uD83C\uDF05 ¡Buenos días! Día ' + (dayIdx + 1) + '/' + totalDays
+        : _bgLang === 'en' ? '\uD83C\uDF05 Good morning! Day ' + (dayIdx + 1) + '/' + totalDays
+        : '\uD83C\uDF05 Buongiorno! Giorno ' + (dayIdx + 1) + '/' + totalDays;
+      var _restLabel = _bgLang === 'es' ? ' \u00B7 Día de descanso'
+        : _bgLang === 'en' ? ' \u00B7 Rest day' : ' \u00B7 Giorno di sosta';
+      var body  = dest + (km > 0 ? ' \u00B7 ' + km + ' km' : _restLabel);
 
       var familyId = (typeof FAMILY_ID !== 'undefined') ? FAMILY_ID : 'viaggio-europa-2026';
 

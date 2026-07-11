@@ -168,7 +168,7 @@
   function startBackgroundTracking() {
     if (bgGeoActive) return;
     if (!BackgroundGeolocation) {
-      if (window.showToast) window.showToast('GPS: Plugin non disponibile', 'error');
+      if (window.showToast) window.showToast((typeof LANG3 !== 'undefined' && LANG3 === 'es') ? 'GPS: Plugin no disponible' : (typeof isEN !== 'undefined' && isEN) ? 'GPS: Plugin not available' : 'GPS: Plugin non disponibile', 'error');
       return;
     }
 
@@ -181,12 +181,12 @@
           if (retryRefs) {
             doStartTracking(retryRefs);
           } else {
-            if (window.showToast) window.showToast('GPS: Firebase non pronto. Riprova.', 'error');
+            if (window.showToast) window.showToast((typeof LANG3 !== 'undefined' && LANG3 === 'es') ? 'GPS: Firebase no listo. Reintentar.' : (typeof isEN !== 'undefined' && isEN) ? 'GPS: Firebase not ready. Retry.' : 'GPS: Firebase non pronto. Riprova.', 'error');
           }
         });
         return;
       }
-      if (window.showToast) window.showToast('GPS: Firebase non pronto. Riprova.', 'error');
+      if (window.showToast) window.showToast((typeof LANG3 !== 'undefined' && LANG3 === 'es') ? 'GPS: Firebase no listo. Reintentar.' : (typeof isEN !== 'undefined' && isEN) ? 'GPS: Firebase not ready. Retry.' : 'GPS: Firebase non pronto. Riprova.', 'error');
       return;
     }
 
@@ -217,7 +217,7 @@
     }, function(location, error) {
       if (error) {
         if (error.code === 'NOT_AUTHORIZED') {
-          if (window.confirm('Quo Vadis ha bisogno del permesso GPS in background. Aprire le impostazioni?')) {
+          if (window.confirm((typeof LANG3 !== 'undefined' && LANG3 === 'es') ? 'Quo Vadis necesita permiso GPS en segundo plano. 00bfAbrir ajustes?' : (typeof isEN !== 'undefined' && isEN) ? 'Quo Vadis needs background GPS permission. Open settings?' : 'Quo Vadis ha bisogno del permesso GPS in background. Aprire le impostazioni?')) {
             BackgroundGeolocation.openSettings();
           }
         }
@@ -360,7 +360,7 @@
       window.dispatchEvent(new CustomEvent('capgpsTrackingStarted', {
         detail: { km: bgTodayKm, startTime: bgStartTime }
       }));
-      if (window.showToast) window.showToast('🚐 Tracking GPS avviato (background attivo)', 'success');
+      if (window.showToast) window.showToast((typeof LANG3 !== 'undefined' && LANG3 === 'es') ? 'D83dDe90 Tracking GPS iniciado (segundo plano activo)' : (typeof isEN !== 'undefined' && isEN) ? 'D83dDe90 GPS tracking started (background active)' : 'D83dDe90 Tracking GPS avviato (background attivo)', 'success');
       console.log('[CapGPS] Watcher started, ID:', watcherId);
     });
   }
@@ -424,7 +424,7 @@
     window.dispatchEvent(new CustomEvent('capgpsTrackingStopped', {
       detail: { km: bgTodayKm }
     }));
-    if (window.showToast) window.showToast('⏹️ Tracking fermato. ' + bgTodayKm.toFixed(1) + ' km registrati.', 'info');
+    if (window.showToast) window.showToast((typeof LANG3 !== 'undefined' && LANG3 === 'es') ? '23f9Fe0f Tracking detenido. ' + bgTodayKm.toFixed(1) + ' km registrados.' : (typeof isEN !== 'undefined' && isEN) ? '23f9Fe0f Tracking stopped. ' + bgTodayKm.toFixed(1) + ' km recorded.' : '23f9Fe0f Tracking fermato. ' + bgTodayKm.toFixed(1) + ' km registrati.', 'info');
     console.log('[CapGPS] Tracking stopped. Total km:', bgTodayKm.toFixed(1));
   }
 
