@@ -3145,7 +3145,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }, 50);
         } else if (tabId === 'giorni') {
-            // v4.98.9: removed auto-scroll to today — stay at top.
+            // v4.99: removed auto-scroll to today — stay at top.
             // User can tap "Ir a D[X] (hoy)" button to jump manually.
             window.scrollTo({ top: 0, behavior: 'smooth' });
         } else {
@@ -15055,7 +15055,7 @@ window.injectAllWikiLinks = function() {
       // as a reliable tiebreaker for posts written on the same day.
       if (!e.draft) { e._key = key; published.push(e); }
     });
-    // v4.98.9: sort by date desc, then sortOrder, then publishedAt desc, then createdAt desc.
+    // v4.99: sort by date desc, then sortOrder, then publishedAt desc, then createdAt desc.
     published.sort(function(a, b) {
       var d = (b.date || '').localeCompare(a.date || '');
       if (d !== 0) return d;
@@ -15252,7 +15252,7 @@ window.injectAllWikiLinks = function() {
         }
 
                 galleryGrid.appendChild(header);
-        // v4.98.9: Reorder button for gallery (owner only, >1 photo)
+        // v4.99: Reorder button for gallery (owner only, >1 photo)
         var _nPhotos = dayData.photos.length;
         if (_effectiveOwnerGallery && _nPhotos > 1) {
           var reorderBtn = document.createElement('button');
@@ -15294,7 +15294,7 @@ window.injectAllWikiLinks = function() {
   if (viewTimelineBtn) viewTimelineBtn.addEventListener('click', function() { switchDiarioView('timeline'); });
   if (viewGalleryBtn) viewGalleryBtn.addEventListener('click', function() { switchDiarioView('gallery'); });
 
-  // ─── v4.98.9: Gallery photo reorder (touch drag-and-drop) ───
+  // ─── v4.99: Gallery photo reorder (touch drag-and-drop) ───
   (function setupGalleryReorder() {
     if (!galleryGrid) return;
     var _galleryReorderActive = null;
@@ -15414,7 +15414,7 @@ window.injectAllWikiLinks = function() {
   })();
     // ─── end Gallery toggle ────────────────────────────────────
 
-  // ─── v4.98.9: Post reorder (drag-and-drop) ───
+  // ─── v4.99: Post reorder (drag-and-drop) ───
   (function setupPostReorder() {
     var reorderBtn = document.getElementById('diario-reorder-posts');
     if (!reorderBtn || !timelineEl) return;
@@ -16003,7 +16003,7 @@ window.injectAllWikiLinks = function() {
       }
 
       var html = '';
-      // v4.98.9: sort posts by date desc, then manual sortOrder (if set), then publishedAt desc,
+      // v4.99: sort posts by date desc, then manual sortOrder (if set), then publishedAt desc,
       // then createdAt desc. Removed dayNumber tiebreaker which caused posts published later
       // to appear below older posts when both share the same date.
       var sortedKeys = Object.keys(entries).sort(function(a, b) {
@@ -16142,7 +16142,7 @@ window.injectAllWikiLinks = function() {
               // Visible photos in grid
               html += '      <div class="diario-photo-wrap" style="position:relative;">';
               html += '        <img src="' + safeUrl + '" alt="' + escapeHtml(photo.caption || '') + '" class="diario-photo" loading="lazy" data-entry-key="' + key + '" data-photo-key="' + photoKey + '">';
-              // v4.98.9: drag handle for touch reordering (owner only, >1 photo)
+              // v4.99: drag handle for touch reordering (owner only, >1 photo)
               if (_photoOwner && _totalPhotos > 1) {
                 html += '        <div class="diario-photo-draghandle" title="' + (LANG3 === 'es' ? 'Mantén presionado para reordenar' : isEN ? 'Hold to reorder' : 'Tieni premuto per riordinare') + '">☰</div>';
               }
