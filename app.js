@@ -3144,11 +3144,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     el.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
             }, 50);
-        } else if (tabId === 'giorni' && typeof window.__gotoTodayDay === 'function') {
-            // v4.30: opening the Itinerario tab with no explicit target auto-opens
-            // and scrolls to today's day (fallback: next upcoming day). Deep-links
-            // (scrollToId set) are handled above and take precedence.
-            setTimeout(function() { window.__gotoTodayDay(); }, 60);
+        } else if (tabId === 'giorni') {
+            // v4.98.9: removed auto-scroll to today — stay at top.
+            // User can tap "Ir a D[X] (hoy)" button to jump manually.
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         } else {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -10586,7 +10585,18 @@ window.injectAllWikiLinks = function() {
       html += '<div class="notif-item-body">';
       // Use text for local notifs, title+body for Firebase notifs
       // SECURITY: escape title/body from Firebase to prevent stored XSS
-      var _nBody = (LANG3 === 'es' && n.bodyES) ? n.bodyES : (isEN && n.bodyEN) ? n.bodyEN : n.body; var displayText = n.text || ('<strong>' + escapeHtml(n.title || '') + '</strong>' + (_nBody ? '<br>' + escapeHtml(_nBody) : ''));
+      var _nBody = n.body || '';
+      if (LANG3 === 'es' && n.bodyES) { _nBody = n.bodyES; }
+      else if (isEN && n.bodyEN) { _nBody = n.bodyEN; }
+      else if ((LANG3 === 'es' || isEN) && _nBody && typeof CURIOSITA_DATA !== 'undefined') {
+        for (var _ci = 0; _ci < CURIOSITA_DATA.length; _ci++) {
+          if (CURIOSITA_DATA[_ci].text === _nBody) {
+            _nBody = LANG3 === 'es' ? (CURIOSITA_DATA[_ci].textES || _nBody) : (CURIOSITA_DATA[_ci].textEN || _nBody);
+            break;
+          }
+        }
+      }
+      var displayText = n.text || ('<strong>' + escapeHtml(n.title || '') + '</strong>' + (_nBody ? '<br>' + escapeHtml(_nBody) : ''));
       html += '<span class="notif-item-text">' + displayText + '</span>';
       // Time display
       var timeStr = '';
@@ -15045,11 +15055,16 @@ window.injectAllWikiLinks = function() {
       // as a reliable tiebreaker for posts written on the same day.
       if (!e.draft) { e._key = key; published.push(e); }
     });
-    // v4.48: sort by date descending, then by real creation time descending
-    // (newest post first) so a post written later the same day shows on top.
+    // v4.98.9: sort by date desc, then sortOrder, then publishedAt desc, then createdAt desc.
     published.sort(function(a, b) {
       var d = (b.date || '').localeCompare(a.date || '');
       if (d !== 0) return d;
+      var soA = a.sortOrder || 0, soB = b.sortOrder || 0;
+      if (soA && soB) return soA - soB;
+      if (soA && !soB) return -1;
+      if (!soA && soB) return 1;
+      var pA = a.publishedAt || 0, pB = b.publishedAt || 0;
+      if (pA || pB) return (pB || 0) - (pA || 0);
       return window._entryCreatedTs(b._key, b) - window._entryCreatedTs(a._key, a);
     });
     window._diaryEntriesForHome = published;
@@ -15174,8 +15189,13 @@ window.injectAllWikiLinks = function() {
         var dayData = dayMap[dateStr];
         if (dayData.photos.length === 0) return;
 
-        // Sort photos within day: chronological (oldest first)
+        // Sort photos within day: respect manual order first, then chronological
         dayData.photos.sort(function(a, b) {
+          var oa = (typeof a.order === 'number') ? a.order : null;
+          var ob = (typeof b.order === 'number') ? b.order : null;
+          if (oa !== null && ob === null) return -1;
+          if (oa === null && ob !== null) return 1;
+          if (oa !== null && ob !== null && oa !== ob) return oa - ob;
           var tsA = a.ts || 0;
           var tsB = b.ts || 0;
           if (tsA !== tsB) return tsA - tsB;
@@ -15232,15 +15252,29 @@ window.injectAllWikiLinks = function() {
         }
 
                 galleryGrid.appendChild(header);
-        // v4.97: Create photo grid for this day — adaptive columns based on count
+        // v4.98.9: Reorder button for gallery (owner only, >1 photo)
         var _nPhotos = dayData.photos.length;
+        if (_effectiveOwnerGallery && _nPhotos > 1) {
+          var reorderBtn = document.createElement('button');
+          reorderBtn.className = 'gallery-reorder-btn';
+          reorderBtn.setAttribute('data-date', dateStr);
+          reorderBtn.textContent = LANG3 === 'es' ? '↕️ Reordenar' : isEN ? '↕️ Reorder' : '↕️ Riordina';
+          reorderBtn.style.cssText = 'display:inline-block;padding:5px 12px;margin-bottom:8px;border:1px solid var(--border-color,#e2e8f0);border-radius:8px;background:var(--bg-alt,#f7fafc);font-size:12px;cursor:pointer;color:var(--text-primary,#1a202c);';
+          galleryGrid.appendChild(reorderBtn);
+        }
+        // v4.97: Create photo grid for this day — adaptive columns based on count
         var grid = document.createElement('div');
+        grid.className = 'gallery-day-grid';
+        grid.setAttribute('data-date', dateStr);
         // Adaptive grid: 1 photo=full width, 2=2 cols, 3+=3 cols
         var _gridCols = _nPhotos === 1 ? '1fr' : _nPhotos === 2 ? '1fr 1fr' : 'repeat(3,1fr)';
         grid.style.cssText = 'display:grid;grid-template-columns:' + _gridCols + ';gap:3px;margin-bottom:8px;border-radius:12px;overflow:hidden;';
         dayData.photos.forEach(function(p, _idx) {
           var wrap = document.createElement('div');
+          wrap.className = 'gallery-photo-wrap';
           wrap.style.cssText = 'position:relative;overflow:hidden;' + (_nPhotos === 1 ? 'aspect-ratio:16/9;' : 'aspect-ratio:1;');
+          wrap.setAttribute('data-entry-key', p.entryKey);
+          wrap.setAttribute('data-photo-key', p.photoKey);
           var img = document.createElement('img');
           img.src = p.url;
           img.alt = escapeHtml(p.caption);
@@ -15259,7 +15293,241 @@ window.injectAllWikiLinks = function() {
 
   if (viewTimelineBtn) viewTimelineBtn.addEventListener('click', function() { switchDiarioView('timeline'); });
   if (viewGalleryBtn) viewGalleryBtn.addEventListener('click', function() { switchDiarioView('gallery'); });
-  // ─── end Gallery toggle ────────────────────────────────────
+
+  // ─── v4.98.9: Gallery photo reorder (touch drag-and-drop) ───
+  (function setupGalleryReorder() {
+    if (!galleryGrid) return;
+    var _galleryReorderActive = null;
+    var _galleryDrag = null;
+
+    galleryGrid.addEventListener('click', function(e) {
+      var btn = e.target.closest('.gallery-reorder-btn');
+      if (!btn) return;
+      if (!isOwner || window._simRole) return;
+      var dateStr = btn.getAttribute('data-date');
+      var grid = galleryGrid.querySelector('.gallery-day-grid[data-date="' + dateStr + '"]');
+      if (!grid) return;
+
+      if (_galleryReorderActive === dateStr) {
+        _galleryReorderActive = null;
+        btn.textContent = LANG3 === 'es' ? '\u2195\ufe0f Reordenar' : isEN ? '\u2195\ufe0f Reorder' : '\u2195\ufe0f Riordina';
+        btn.style.background = 'var(--bg-alt,#f7fafc)';
+        btn.style.borderColor = 'var(--border-color,#e2e8f0)';
+        btn.style.color = 'var(--text-primary,#1a202c)';
+        grid.querySelectorAll('.gallery-drag-handle').forEach(function(h) { h.remove(); });
+        grid.style.gap = '3px';
+      } else {
+        if (_galleryReorderActive) {
+          var prevBtn = galleryGrid.querySelector('.gallery-reorder-btn[data-date="' + _galleryReorderActive + '"]');
+          var prevGrid = galleryGrid.querySelector('.gallery-day-grid[data-date="' + _galleryReorderActive + '"]');
+          if (prevBtn) { prevBtn.textContent = LANG3 === 'es' ? '\u2195\ufe0f Reordenar' : isEN ? '\u2195\ufe0f Reorder' : '\u2195\ufe0f Riordina'; prevBtn.style.background = 'var(--bg-alt,#f7fafc)'; prevBtn.style.borderColor = 'var(--border-color,#e2e8f0)'; prevBtn.style.color = 'var(--text-primary,#1a202c)'; }
+          if (prevGrid) { prevGrid.querySelectorAll('.gallery-drag-handle').forEach(function(h) { h.remove(); }); prevGrid.style.gap = '3px'; }
+        }
+        _galleryReorderActive = dateStr;
+        btn.textContent = LANG3 === 'es' ? '\u2705 Hecho' : isEN ? '\u2705 Done' : '\u2705 Fatto';
+        btn.style.background = 'var(--accent,#1976d2)';
+        btn.style.borderColor = 'var(--accent,#1976d2)';
+        btn.style.color = '#fff';
+        grid.style.gap = '4px';
+        grid.querySelectorAll('.gallery-photo-wrap').forEach(function(wrap) {
+          var handle = document.createElement('div');
+          handle.className = 'gallery-drag-handle';
+          handle.textContent = '\u2630';
+          handle.style.cssText = 'position:absolute;top:4px;left:4px;width:28px;height:28px;border-radius:6px;background:rgba(0,0,0,0.6);color:#fff;font-size:14px;line-height:28px;text-align:center;cursor:grab;z-index:3;touch-action:none;user-select:none;box-shadow:0 1px 3px rgba(0,0,0,0.3);';
+          wrap.style.position = 'relative';
+          wrap.appendChild(handle);
+        });
+      }
+    });
+
+    galleryGrid.addEventListener('pointerdown', function(e) {
+      if (!_galleryReorderActive) return;
+      if (!isOwner || window._simRole) return;
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      var handle = e.target.closest('.gallery-drag-handle');
+      if (!handle) return;
+      var wrap = handle.closest('.gallery-photo-wrap');
+      if (!wrap) return;
+      var grid = wrap.closest('.gallery-day-grid');
+      if (!grid || grid.querySelectorAll('.gallery-photo-wrap').length < 2) return;
+      _galleryDrag = { wrap: wrap, grid: grid, startX: e.clientX, startY: e.clientY, started: false };
+      try { wrap.setPointerCapture(e.pointerId); } catch (_e) {}
+      e.preventDefault();
+    });
+
+    galleryGrid.addEventListener('pointermove', function(e) {
+      if (!_galleryDrag) return;
+      var dx = Math.abs(e.clientX - _galleryDrag.startX), dy = Math.abs(e.clientY - _galleryDrag.startY);
+      if (!_galleryDrag.started) {
+        if (dx < 6 && dy < 6) return;
+        _galleryDrag.started = true;
+        _galleryDrag.wrap.style.opacity = '0.5';
+        _galleryDrag.wrap.style.outline = '2px dashed var(--accent,#1976d2)';
+        _galleryDrag.wrap.style.outlineOffset = '-2px';
+      }
+      e.preventDefault();
+      var els = Array.prototype.slice.call(_galleryDrag.grid.querySelectorAll('.gallery-photo-wrap'));
+      var target = null;
+      for (var i = 0; i < els.length; i++) {
+        if (els[i] === _galleryDrag.wrap) continue;
+        var r = els[i].getBoundingClientRect();
+        if (e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom) { target = els[i]; break; }
+      }
+      if (target && target !== _galleryDrag.wrap) {
+        var tr = target.getBoundingClientRect();
+        var after = (e.clientX - tr.left) > tr.width / 2;
+        if (after) { target.parentNode.insertBefore(_galleryDrag.wrap, target.nextSibling); }
+        else { target.parentNode.insertBefore(_galleryDrag.wrap, target); }
+      }
+    });
+
+    function finishGalleryDrag(e) {
+      if (!_galleryDrag) return;
+      var wasDragging = _galleryDrag.started;
+      var grid = _galleryDrag.grid;
+      _galleryDrag.wrap.style.opacity = '';
+      _galleryDrag.wrap.style.outline = '';
+      _galleryDrag.wrap.style.outlineOffset = '';
+      _galleryDrag = null;
+      if (!wasDragging) return;
+      var wraps = Array.prototype.slice.call(grid.querySelectorAll('.gallery-photo-wrap'));
+      var familyId = (typeof FAMILY_ID !== 'undefined') ? FAMILY_ID : 'viaggio-europa-2026';
+      var updates = {};
+      wraps.forEach(function(w, idx) {
+        var entryKey = w.getAttribute('data-entry-key');
+        var photoKey = w.getAttribute('data-photo-key');
+        if (entryKey && photoKey) {
+          updates['trips/' + familyId + '/diary/' + entryKey + '/photos/' + photoKey + '/order'] = idx;
+        }
+      });
+      if (Object.keys(updates).length > 0) {
+        firebase.database().ref().update(updates).then(function() {
+          if (window.showToast) showToast(LANG3 === 'es' ? 'Orden actualizado' : isEN ? 'Order updated' : 'Ordine aggiornato', 'success');
+        }).catch(function(err) {
+          console.error('[Gallery] Reorder failed:', err);
+          if (window.showToast) showToast(LANG3 === 'es' ? 'Error al reordenar' : isEN ? 'Reorder failed' : 'Riordino fallito', 'danger');
+        });
+      }
+    }
+    galleryGrid.addEventListener('pointerup', finishGalleryDrag);
+    galleryGrid.addEventListener('pointercancel', finishGalleryDrag);
+  })();
+    // ─── end Gallery toggle ────────────────────────────────────
+
+  // ─── v4.98.9: Post reorder (drag-and-drop) ───
+  (function setupPostReorder() {
+    var reorderBtn = document.getElementById('diario-reorder-posts');
+    if (!reorderBtn || !timelineEl) return;
+    var _reorderActive = false;
+    var _postDrag = null;
+    var familyId = (typeof FAMILY_ID !== 'undefined') ? FAMILY_ID : 'viaggio-europa-2026';
+
+    // Show button only for owner
+    function showReorderBtn() {
+      if (isOwner && !window._simRole) reorderBtn.style.display = '';
+      else reorderBtn.style.display = 'none';
+    }
+    showReorderBtn();
+    // Re-check on role change
+    var _origShowReorder = window._diarioRoleChanged;
+    window._diarioRoleChanged = function() { if (_origShowReorder) _origShowReorder(); showReorderBtn(); };
+
+    reorderBtn.addEventListener('click', function() {
+      _reorderActive = !_reorderActive;
+      reorderBtn.textContent = _reorderActive ? '✅ Fatto' : '↕️ Riordina';
+      reorderBtn.style.background = _reorderActive ? 'var(--success, #22c55e)' : '';
+      reorderBtn.style.color = _reorderActive ? '#fff' : '';
+      // Toggle drag handles on post cards
+      var cards = timelineEl.querySelectorAll('.diario-entry-card');
+      cards.forEach(function(card) {
+        var handle = card.querySelector('.diario-post-draghandle');
+        if (_reorderActive) {
+          if (!handle) {
+            handle = document.createElement('div');
+            handle.className = 'diario-post-draghandle';
+            handle.style.cssText = 'position:absolute;top:8px;left:8px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:20px;cursor:grab;z-index:10;background:rgba(255,255,255,0.9);border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,0.15);touch-action:none;';
+            handle.textContent = '☰';
+            card.style.position = 'relative';
+            card.insertBefore(handle, card.firstChild);
+          }
+          handle.style.display = 'flex';
+        } else {
+          if (handle) handle.style.display = 'none';
+        }
+      });
+    });
+
+    // Drag logic
+    timelineEl.addEventListener('pointerdown', function(e) {
+      if (!_reorderActive) return;
+      var handle = e.target.closest('.diario-post-draghandle');
+      if (!handle) return;
+      var card = handle.closest('.diario-entry-card');
+      if (!card) return;
+      e.preventDefault();
+      card.setPointerCapture(e.pointerId);
+      _postDrag = { el: card, startY: e.clientY, origTop: card.offsetTop, pointerId: e.pointerId };
+      card.style.zIndex = '999';
+      card.style.opacity = '0.85';
+      card.style.transition = 'none';
+    });
+
+    timelineEl.addEventListener('pointermove', function(e) {
+      if (!_postDrag) return;
+      var dy = e.clientY - _postDrag.startY;
+      _postDrag.el.style.transform = 'translateY(' + dy + 'px)';
+      // Find swap target
+      var cards = Array.from(timelineEl.querySelectorAll('.diario-entry-card'));
+      var dragIdx = cards.indexOf(_postDrag.el);
+      var dragRect = _postDrag.el.getBoundingClientRect();
+      var dragCenter = dragRect.top + dragRect.height / 2;
+      for (var i = 0; i < cards.length; i++) {
+        if (i === dragIdx) continue;
+        var r = cards[i].getBoundingClientRect();
+        var center = r.top + r.height / 2;
+        if (dragIdx < i && dragCenter > center) {
+          timelineEl.insertBefore(cards[i], _postDrag.el);
+          _postDrag.startY = e.clientY;
+          _postDrag.el.style.transform = '';
+          break;
+        } else if (dragIdx > i && dragCenter < center) {
+          timelineEl.insertBefore(_postDrag.el, cards[i]);
+          _postDrag.startY = e.clientY;
+          _postDrag.el.style.transform = '';
+          break;
+        }
+      }
+    });
+
+    function finishPostDrag(e) {
+      if (!_postDrag) return;
+      _postDrag.el.style.transform = '';
+      _postDrag.el.style.zIndex = '';
+      _postDrag.el.style.opacity = '';
+      _postDrag.el.style.transition = '';
+      _postDrag = null;
+      // Persist new order
+      var cards = Array.from(timelineEl.querySelectorAll('.diario-entry-card'));
+      var updates = {};
+      cards.forEach(function(card, idx) {
+        var key = card.getAttribute('data-key');
+        if (key) {
+          updates['trips/' + familyId + '/diary/' + key + '/sortOrder'] = idx + 1;
+        }
+      });
+      if (Object.keys(updates).length > 0) {
+        firebase.database().ref().update(updates).then(function() {
+          if (window.showToast) showToast(LANG3 === 'es' ? 'Orden actualizado' : isEN ? 'Order updated' : 'Ordine aggiornato', 'success');
+        }).catch(function(err) {
+          console.error('[Diario] Post reorder failed:', err);
+          if (window.showToast) showToast(LANG3 === 'es' ? 'Error al reordenar' : isEN ? 'Reorder failed' : 'Riordino fallito', 'danger');
+        });
+      }
+    }
+    timelineEl.addEventListener('pointerup', finishPostDrag);
+    timelineEl.addEventListener('pointercancel', finishPostDrag);
+  })();
+  // ─── end Post reorder ────────────────────────────────────
 
   // ─── Event Delegation for Diario buttons (always works regardless of bindEntryActions timing) ───
   if (timelineEl) {
@@ -15285,7 +15553,7 @@ window.injectAllWikiLinks = function() {
           });
         } else {
           // Today or past: publish immediately
-          entryRef.update({ draft: null, publishAt: null }).then(function() {
+          entryRef.update({ draft: null, publishAt: null, publishedAt: Date.now() }).then(function() {
             if (window.showToast) showToast(LANG3 === 'es' ? '\\u2705 Post publicado!' : isEN ? '\u2705 Post published!' : '\u2705 Post pubblicato!', 'success');
           }).catch(function(err) {
             console.error('[Diario] Publish failed:', err);
@@ -15669,12 +15937,13 @@ window.injectAllWikiLinks = function() {
     if (isNaN(d.getTime())) return dateStr;
     var now = new Date();
     var diffDays = Math.floor((now - d) / 86400000);
-    if (diffDays === 0) return lang === 'en' ? 'Today' : 'Oggi';
-    if (diffDays === 1) return lang === 'en' ? 'Yesterday' : 'Ieri';
-    if (diffDays >= 2 && diffDays < 7) return lang === 'en' ? diffDays + ' days ago' : diffDays + ' giorni fa';
+    if (diffDays === 0) return lang === 'es' ? 'Hoy' : lang === 'en' ? 'Today' : 'Oggi';
+    if (diffDays === 1) return lang === 'es' ? 'Ayer' : lang === 'en' ? 'Yesterday' : 'Ieri';
+    if (diffDays >= 2 && diffDays < 7) return lang === 'es' ? 'hace ' + diffDays + ' d00edas' : lang === 'en' ? diffDays + ' days ago' : diffDays + ' giorni fa';
     var months_it = ['gen','feb','mar','apr','mag','giu','lug','ago','set','ott','nov','dic'];
     var months_en = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-    var months = lang === 'en' ? months_en : months_it;
+    var months_es = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+    var months = lang === 'es' ? months_es : lang === 'en' ? months_en : months_it;
     return d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
   }
 
@@ -15734,18 +16003,25 @@ window.injectAllWikiLinks = function() {
       }
 
       var html = '';
-      // v4.74 FIX: sort posts REVERSE-CHRONOLOGICALLY (newest first, day N → day 1).
-      // Primary: date descending. Tiebreaker: dayNumber descending, then createdAt descending.
+      // v4.98.9: sort posts by date desc, then manual sortOrder (if set), then publishedAt desc,
+      // then createdAt desc. Removed dayNumber tiebreaker which caused posts published later
+      // to appear below older posts when both share the same date.
       var sortedKeys = Object.keys(entries).sort(function(a, b) {
-        var dateA = entries[a].date || '';
-        var dateB = entries[b].date || '';
+        var ea = entries[a], eb = entries[b];
+        var dateA = ea.date || '';
+        var dateB = eb.date || '';
         var dateDiff = dateB.localeCompare(dateA);
         if (dateDiff !== 0) return dateDiff;
-        // Tiebreaker 1: dayNumber descending when dates are equal/missing
-        var diff = (entries[b].dayNumber || 0) - (entries[a].dayNumber || 0);
-        if (diff !== 0) return diff;
-        // Tiebreaker 2: creation time descending (latest post first)
-        return window._entryCreatedTs(b, entries[b]) - window._entryCreatedTs(a, entries[a]);
+        // Tiebreaker 1: manual sortOrder (lower = higher on page, 0 = unset)
+        var soA = ea.sortOrder || 0, soB = eb.sortOrder || 0;
+        if (soA && soB) return soA - soB;
+        if (soA && !soB) return -1;
+        if (!soA && soB) return 1;
+        // Tiebreaker 2: publishedAt descending (last published on top)
+        var pA = ea.publishedAt || 0, pB = eb.publishedAt || 0;
+        if (pA || pB) return (pB || 0) - (pA || 0);
+        // Tiebreaker 3: creation time descending (latest created first)
+        return window._entryCreatedTs(b, eb) - window._entryCreatedTs(a, ea);
       });
 
       sortedKeys.forEach(function(key) {
@@ -15814,7 +16090,7 @@ window.injectAllWikiLinks = function() {
         var isDraft = !!entry.draft;
         html += '<div class="diario-entry' + (isDraft ? ' diario-entry-draft' : '') + '" data-key="' + key + '">';
         html += '  <div class="diario-entry-marker"></div>';
-        html += '  <div class="diario-entry-card' + (isDraft ? ' diario-card-draft' : '') + '">';
+        html += '  <div class="diario-entry-card' + (isDraft ? ' diario-card-draft' : '') + '" data-key="' + key + '">';
         html += '    <div class="diario-entry-header">';
         html += '      <div><div class="diario-day" data-entry-key="' + key + '">' + dayLabel + '</div><div class="diario-date">' + dateStr + '</div></div>';
         if (isDraft && isOwner && entry.publishAt) {
@@ -15866,6 +16142,10 @@ window.injectAllWikiLinks = function() {
               // Visible photos in grid
               html += '      <div class="diario-photo-wrap" style="position:relative;">';
               html += '        <img src="' + safeUrl + '" alt="' + escapeHtml(photo.caption || '') + '" class="diario-photo" loading="lazy" data-entry-key="' + key + '" data-photo-key="' + photoKey + '">';
+              // v4.98.9: drag handle for touch reordering (owner only, >1 photo)
+              if (_photoOwner && _totalPhotos > 1) {
+                html += '        <div class="diario-photo-draghandle" title="' + (LANG3 === 'es' ? 'Mantén presionado para reordenar' : isEN ? 'Hold to reorder' : 'Tieni premuto per riordinare') + '">☰</div>';
+              }
               // "+N more" overlay on 4th photo when total > 4
               if (_pi === 3 && _totalPhotos > 4) {
                 html += '        <div class="diario-photo-more-overlay">+' + (_totalPhotos - 4) + '</div>';
@@ -16307,7 +16587,7 @@ window.injectAllWikiLinks = function() {
   function toggleReaction(key, emoji) {
     var user = _socialUser();
     if (!user || !user.uid) {
-      if (window.showToast) showToast(document.documentElement.lang === 'en' ? 'Sign in to react' : 'Accedi per reagire', 'info');
+      if (window.showToast) showToast(LANG3 === 'es' ? 'Inicia sesi00f3n para reaccionar' : isEN ? 'Sign in to react' : 'Accedi per reagire', 'info');
       return;
     }
     var ref = firebase.database().ref('trips/' + FAMILY_ID + '/diary/' + key + '/reactions/' + user.uid);
@@ -16332,7 +16612,7 @@ window.injectAllWikiLinks = function() {
       });
     }).catch(function(err) {
       console.warn('[Diario] Reaction failed:', err.message);
-      if (window.showToast) showToast(document.documentElement.lang === 'en' ? 'Could not save reaction' : 'Impossibile salvare la reazione', 'danger');
+      if (window.showToast) showToast(LANG3 === 'es' ? 'No se pudo guardar la reacci00f3n' : isEN ? 'Could not save reaction' : 'Impossibile salvare la reazione', 'danger');
     });
   }
 
@@ -17651,6 +17931,7 @@ window.injectAllWikiLinks = function() {
           // Explicit publish: remove draft/schedule
           updates['draft'] = null;
           updates['publishAt'] = null;
+          updates['publishedAt'] = Date.now();
         } else {
           // Save as draft: keep it hidden from followers, clear any stale schedule
           updates['draft'] = true;
@@ -19525,13 +19806,27 @@ window.injectAllWikiLinks = function() {
         // con fallback ai vecchi record (solo timestamp) per retro-compatibilità.
         var SLOT_LABELS = LANG3 === 'es' ? ['D83cDf05 Mañana', '2600Fe0f Tarde', 'D83cDf19 Noche'] : isEN ? ['D83cDf05 Morning', '2600Fe0f Afternoon', 'D83cDf19 Evening'] : ['D83cDf05 Mattino', '2600Fe0f Pomeriggio', 'D83cDf19 Sera'];
         var items = [];
+        // v4.98.2: build lookup from CURIOSITA_DATA to translate old Firebase records that only have Italian body
+        var _curioLookup = {};
+        if ((LANG3 === "es" || isEN) && typeof CURIOSITA_DATA !== "undefined") {
+          CURIOSITA_DATA.forEach(function(c) {
+            if (c.text) {
+              _curioLookup[c.text] = { es: c.textES || c.text, en: c.textEN || c.text };
+            }
+          });
+        }
+        function _translateCurioBody(body, bodyES, bodyEN) {
+          if (LANG3 === "es") { if (bodyES) return bodyES; if (_curioLookup[body]) return _curioLookup[body].es; return body; }
+          if (isEN) { if (bodyEN) return bodyEN; if (_curioLookup[body]) return _curioLookup[body].en; return body; }
+          return body;
+        }
         snap.forEach(function(child) {
           var v = child.val() || {};
           var ts = v.timestamp || v.createdAt || 0;
           // dateKey logico: se manca, ricavalo dal timestamp di invio.
           var dk = v.dateKey || (ts ? window.localDateStr(new Date(ts)) : ''); // v2.96: LOCAL
           items.push({
-            body: (LANG3 === "es" ? (v.bodyES || v.body) : isEN ? (v.bodyEN || v.body) : v.body) || "",
+            body: _translateCurioBody(v.body || "", v.bodyES, v.bodyEN),
             title: v.title || '',
             source: v.source || '',
             slot: (typeof v.slot === 'number') ? v.slot : null,
@@ -19620,7 +19915,7 @@ window.injectAllWikiLinks = function() {
       var rows = [];
       snap.forEach(function(child) {
         var v = child.val() || {};
-        rows.push({ key: child.key, body: (LANG3 === "es" ? (v.bodyES || v.body) : isEN ? (v.bodyEN || v.body) : v.body) || "", ts: v.timestamp || v.createdAt || 0 });
+        rows.push({ key: child.key, body: _translateCurioBody(v.body || "", v.bodyES, v.bodyEN), ts: v.timestamp || v.createdAt || 0 });
       });
       // Mantieni la più vecchia per ogni testo: ordina per ts ascendente.
       rows.sort(function(a, b) { return a.ts - b.ts; });

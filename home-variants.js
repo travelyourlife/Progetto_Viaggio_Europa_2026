@@ -1069,7 +1069,8 @@
     // >= 7 days: fixed format
     var months_it = ['gen','feb','mar','apr','mag','giu','lug','ago','set','ott','nov','dic'];
     var months_en = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-    var months = lang === 'en' ? months_en : months_it;
+    var months_es = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+    var months = lang === 'es' ? months_es : lang === 'en' ? months_en : months_it;
     return d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
   }
 
@@ -1961,9 +1962,19 @@
       .orderByChild('type').equalTo('curiosity')
       .once('value').then(function(snap) {
         var items = [];
+        // v4.98.2: lookup from CURIOSITA_DATA for old Firebase records
+        var _hvCurioLookup = {};
+        if ((_lang3 === "es" || _en) && typeof CURIOSITA_DATA !== "undefined") {
+          CURIOSITA_DATA.forEach(function(c) { if (c.text) _hvCurioLookup[c.text] = { es: c.textES || c.text, en: c.textEN || c.text }; });
+        }
+        function _hvTranslate(body, bodyES, bodyEN) {
+          if (_lang3 === "es") { if (bodyES) return bodyES; if (_hvCurioLookup[body]) return _hvCurioLookup[body].es; return body; }
+          if (_en) { if (bodyEN) return bodyEN; if (_hvCurioLookup[body]) return _hvCurioLookup[body].en; return body; }
+          return body;
+        }
         snap.forEach(function(child) {
           var v = child.val();
-          items.push({ title: v.title || '', body: (_lang3 === 'es' ? (v.bodyES || v.body) : _en ? (v.bodyEN || v.body) : v.body) || '', ts: v.createdAt || 0, tag: v.tag || '' });
+          items.push({ title: v.title || '', body: _hvTranslate(v.body || '', v.bodyES, v.bodyEN), ts: v.createdAt || 0, tag: v.tag || '' });
         });
         // Sort by timestamp descending (newest first)
         items.sort(function(a, b) { return b.ts - a.ts; });
