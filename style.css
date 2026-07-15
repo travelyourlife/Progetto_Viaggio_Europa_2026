@@ -4529,8 +4529,27 @@ html[lang="en"] .notif-drawer-list:empty::after {
   color: #fff;
   font-size: 1.5rem;
   font-weight: 700;
-  pointer-events: none;
+  pointer-events: auto;
+  cursor: pointer;
   z-index: 2;
+}
+/* Expanded grid: show all photos */
+.diario-photos.expanded {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+.diario-photos.expanded .diario-photo-wrap {
+  aspect-ratio: 1;
+}
+.diario-photos-collapse-btn {
+  display: block;
+  margin: 6px auto 0;
+  padding: 6px 16px;
+  border: 1px solid var(--border, #ddd);
+  border-radius: 20px;
+  background: var(--bg-card, #fff);
+  color: var(--text-muted, #666);
+  font-size: 13px;
+  cursor: pointer;
 }
 .diario-photo {
   width: 100%;

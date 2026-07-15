@@ -1144,39 +1144,65 @@ function checkOwnerStatus() {
       if (user && !isOwner && typeof firebase !== 'undefined' && firebase.database) {
         (function() {
           var _uid = user.uid;
-          var _approvedRef = firebase.database().ref('trips/' + FAMILY_ID + '/approvedUsers/' + _uid);
-          var _pendingRef = firebase.database().ref('trips/' + FAMILY_ID + '/pendingUsers/' + _uid);
-          var _bannedRef = firebase.database().ref('trips/' + FAMILY_ID + '/bannedUsers/' + _uid);
-          // Only submit if not banned, not approved, and not already pending
-          _bannedRef.once('value', function(banSnap) {
-            if (banSnap.exists()) return; // banned — do nothing
+          // v5.01 FIX (points 1+2): Optimized pending-submit — only 1 read (approvedUsers)
+          // + 1 write (pendingUsers). The banned check is handled by Security Rules on the
+          // write itself (PERMISSION_DENIED if banned). This reduces from 4 round-trips to 2,
+          // making it far more likely to complete on flaky mobile connections.
+          // Retries automatically on visibilitychange/resume if the write fails.
+          function _trySubmitPending() {
+            if (window._pendingSubmitDone) return;
+            var _approvedRef = firebase.database().ref('trips/' + FAMILY_ID + '/approvedUsers/' + _uid);
+            var _pendingRef = firebase.database().ref('trips/' + FAMILY_ID + '/pendingUsers/' + _uid);
+            // Single read: check if already approved (needed for UI state)
             _approvedRef.once('value', function(appSnap) {
               if (appSnap.exists()) {
-                window._userApproved = true; // Mark user as approved for tab access
-                // v4.62: approval resolved asynchronously — re-render the Home so the
-                // feed switches from the "awaiting approval" banner to the real feed
-                // (or honest empty state) without needing a manual reload.
-                try { if (window.HomeVariants && window.HomeVariants.rerender) window.HomeVariants.rerender(); } catch (e) {}
-                return; // already approved
-              }
-              _pendingRef.once('value', function(pendSnap) {
-                if (pendSnap.exists()) { window._pendingSubmitDone = true; return; } // already pending
-                if (window._pendingSubmitDone) return; // another code path already submitted
+                window._userApproved = true;
                 window._pendingSubmitDone = true;
-                // Auto-submit pending request
-                _pendingRef.set({
-                  email: user.email || '',
-                  displayName: user.displayName || 'Utente',
-                  photoURL: user.photoURL || '',
-                  requestedAt: firebase.database.ServerValue.TIMESTAMP
-                }).then(function() {
-                  _qvLog.info('[Auth] Auto-submitted pending access request for ' + user.email);
-                }).catch(function(e) {
-                  console.warn('[Auth] Could not submit pending request:', e.message);
-                });
+                try { if (window.HomeVariants && window.HomeVariants.rerender) window.HomeVariants.rerender(); } catch (e) {}
+                return; // already approved — no pending needed
+              }
+              if (window._pendingSubmitDone) return;
+              // Direct write attempt — Security Rules will reject if banned.
+              // If already in pendingUsers, .set() overwrites with same data (idempotent, no harm).
+              window._pendingSubmitDone = true;
+              _pendingRef.set({
+                email: user.email || '',
+                displayName: user.displayName || 'Utente',
+                photoURL: user.photoURL || '',
+                requestedAt: firebase.database.ServerValue.TIMESTAMP
+              }).then(function() {
+                _qvLog.info('[Auth] Pending access request submitted for ' + user.email);
+              }).catch(function(e) {
+                // PERMISSION_DENIED = banned (rules block it) — stop retrying.
+                // Other errors (offline, timeout) — allow retry on next resume.
+                if (e && e.code === 'PERMISSION_DENIED') {
+                  _qvLog.info('[Auth] Write denied (user likely banned): ' + user.email);
+                  // keep _pendingSubmitDone = true so we don't retry
+                } else {
+                  window._pendingSubmitDone = false;
+                  console.warn('[Auth] Pending request failed (will retry on resume):', e.message || e);
+                }
               });
+            }).catch(function(e) {
+              // approvedUsers read failed (offline?) — allow retry
+              console.warn('[Auth] approvedUsers read failed (will retry):', e.message || e);
             });
-          });
+          }
+          // Initial attempt
+          _trySubmitPending();
+          // v5.01: Retry on visibilitychange (app resume / tab focus) — catches cases
+          // where the initial attempt failed due to flaky connection or early app close.
+          // Listener auto-removes once the write succeeds (pendingSubmitDone = true).
+          function _onVisResume() {
+            if (document.visibilityState !== 'visible') return;
+            if (window._pendingSubmitDone) {
+              document.removeEventListener('visibilitychange', _onVisResume);
+              return;
+            }
+            // Small delay to let Firebase reconnect after resume
+            setTimeout(_trySubmitPending, 1500);
+          }
+          document.addEventListener('visibilitychange', _onVisResume);
         })();
       }
 
@@ -1670,27 +1696,29 @@ window.openMapFullscreen = function openMapFullscreen(mapInstance, title) {
                 else if (raw && typeof raw === 'object') pts = Object.values(raw);
                 if (!fsMap || !fsMap._container) return;
                 if (pts.length > 1) {
-                    var latlngs = pts.map(function(p) { return [p.lat, p.lng]; });
-                    var todayLine = L.polyline(latlngs, {
-                        color: '#e53e3e', weight: 4, opacity: 0.9
-                    }).addTo(fsMap);
-                    // Re-fit bounds to include today's track
-                    var allLatLngs = [];
-                    fsMap.eachLayer(function(layer) {
-                        if (layer instanceof L.Polyline) {
-                            (function flatten(arr) {
-                                arr.forEach(function(item) {
-                                    if (Array.isArray(item)) flatten(item);
-                                    else if (item.lat !== undefined) allLatLngs.push(item);
-                                });
-                            })(layer.getLatLngs());
-                        } else if (layer instanceof L.CircleMarker || layer instanceof L.Marker) {
-                            allLatLngs.push(layer.getLatLng());
+                    // v5.00: route today's track through OSRM for road-following display
+                    function _fsFitBounds() {
+                        var allLatLngs = [];
+                        fsMap.eachLayer(function(layer) {
+                            if (layer instanceof L.Polyline) {
+                                (function flatten(arr) {
+                                    arr.forEach(function(item) {
+                                        if (Array.isArray(item)) flatten(item);
+                                        else if (item.lat !== undefined) allLatLngs.push(item);
+                                    });
+                                })(layer.getLatLngs());
+                            } else if (layer instanceof L.CircleMarker || layer instanceof L.Marker) {
+                                allLatLngs.push(layer.getLatLng());
+                            }
+                        });
+                        if (allLatLngs.length > 1) {
+                            fsMap.fitBounds(L.latLngBounds(allLatLngs), { padding: [30, 30], animate: false });
                         }
-                    });
-                    if (allLatLngs.length > 1) {
-                        fsMap.fitBounds(L.latLngBounds(allLatLngs), { padding: [30, 30], animate: false });
                     }
+                    // v5.01 REVERT: straight lines for today (OSRM picks wrong roads)
+                    var latlngs = pts.map(function(p) { return [p.lat, p.lng]; });
+                    L.polyline(latlngs, { color: '#e53e3e', weight: 4, opacity: 0.9 }).addTo(fsMap);
+                    _fsFitBounds();
                 }
             }, function(e) { if (window._qvLog) window._qvLog.warn('[FS] today track error', e); });
         } catch (e) { if (window._qvLog) window._qvLog.warn('[FS] today track setup error', e); }
@@ -2080,14 +2108,18 @@ function initRouteMap() {
                 if (Array.isArray(raw)) pts = raw;
                 else if (raw && typeof raw === 'object') pts = Object.values(raw);
                 if (!routeMapInstance || pts.length < 2) return;
+                // v5.00: route today's track through OSRM for road-following display
+                function _rmFitAfterToday() {
+                    try {
+                        var trackGroup = L.featureGroup(window._routeMapTrackLines);
+                        routeMapInstance.fitBounds(trackGroup.getBounds().pad(0.1), { animate: false });
+                    } catch (e) { /* noop */ }
+                }
+                // v5.01 REVERT: straight lines for today (OSRM picks wrong roads)
                 var latlngs = pts.map(function(p) { return [p.lat, p.lng]; });
                 var todayLine = L.polyline(latlngs, { color: '#e53e3e', weight: 4, opacity: 0.9, lineJoin: 'round' }).addTo(routeMapInstance);
                 window._routeMapTrackLines.push(todayLine);
-                // Extend bounds to include today
-                try {
-                    var trackGroup = L.featureGroup(window._routeMapTrackLines);
-                    routeMapInstance.fitBounds(trackGroup.getBounds().pad(0.1), { animate: false });
-                } catch (e) { /* noop */ }
+                _rmFitAfterToday();
             });
         })();
         // ─── POI Layer via UnifiedMap (same as Mappa Live) ───
@@ -4590,6 +4622,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             // v3.98 FIX: When tracking is active, use in-memory todayPoints instead of
             // loading from Firebase (avoids duplicate polyline). But still draw the track
             // so fullscreen map clone can pick it up.
+            // v5.01 REVERT: straight lines for today (OSRM picks wrong roads)
             if (liveActive && todayPoints && todayPoints.length > 1) {
                 if (trackLine) map.removeLayer(trackLine);
                 var liveLatlngs = todayPoints.map(function(p) { return [p.lat, p.lng]; });
@@ -4609,6 +4642,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                         }
                         if (trackLine) map.removeLayer(trackLine);
                         if (points.length > 1) {
+                            // v5.01 REVERT: straight lines for today (OSRM picks wrong roads)
                             var latlngs = points.map(function(p) { return [p.lat, p.lng]; });
                             trackLine = L.polyline(latlngs, { color: '#e53e3e', weight: 4, opacity: 0.8 }).addTo(map);
                         }
@@ -15634,27 +15668,112 @@ window.injectAllWikiLinks = function() {
 
     timelineEl.addEventListener('click', function(e) {
       // v4.43: "Sort by date" button (owner only) — reorder a post's photos by capture/upload time.
+      // v5.00 FIX: added .catch(), visual feedback, and takenAt backfill from EXIF URL heuristic.
       var sortBtn = e.target.closest('.diario-photo-sortdate');
       if (sortBtn) {
         if (!isOwner || window._simRole) return;
         var sKey = sortBtn.getAttribute('data-entry-key');
         if (!sKey) return;
+        // Visual feedback: disable button while sorting
+        sortBtn.disabled = true;
+        var origText = sortBtn.textContent;
+        sortBtn.textContent = '⏳ ' + (LANG3 === 'es' ? 'Ordenando...' : isEN ? 'Sorting...' : 'Ordinamento...');
         var familyId = (typeof FAMILY_ID !== 'undefined') ? FAMILY_ID : 'viaggio-europa-2026';
         firebase.database().ref('trips/' + familyId + '/diary/' + sKey + '/photos').once('value').then(function(snap) {
           var photos = snap.val() || {};
-          // v4.47: chronological by EXIF capture date (takenAt) first, then upload
-          // time; strip any manual order first.
-          function tsOf(k, p) {
-            var t = (p && (p.takenAt || p.uploadedAt)) || 0;
-            if (!t) { var m = String(k).match(/^(\d{13})/); if (m) t = parseInt(m[1], 10); }
-            return t;
+          var photoKeys = Object.keys(photos);
+          if (photoKeys.length < 2) {
+            sortBtn.disabled = false; sortBtn.textContent = origText;
+            return;
           }
-          var keys = Object.keys(photos).sort(function(ka, kb) {
+          // v5.00: chronological by EXIF capture date (takenAt) first, then uploadedAt,
+          // then Firebase push key timestamp extraction, then key string comparison.
+          function tsOf(k, p) {
+            if (!p) return 0;
+            // 1. EXIF capture date
+            if (p.takenAt) return p.takenAt;
+            // 2. Upload time
+            if (p.uploadedAt) return p.uploadedAt;
+            // 3. Firebase push key embedded timestamp (first 8 chars encode time)
+            if (k && k.charAt(0) === '-' && k.length >= 20) {
+              // Decode Firebase push key timestamp (base64-like encoding)
+              var PUSH_CHARS = '-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz';
+              var ts = 0;
+              for (var ci = 0; ci < 8; ci++) {
+                ts = ts * 64 + PUSH_CHARS.indexOf(k.charAt(ci));
+              }
+              if (ts > 1600000000000 && ts < 2000000000000) return ts;
+            }
+            // 4. Key starts with 13 digits (legacy format)
+            var m = String(k).match(/^(\d{13})/);
+            if (m) return parseInt(m[1], 10);
+            return 0;
+          }
+          var keys = photoKeys.sort(function(ka, kb) {
             var ta = tsOf(ka, photos[ka]), tb = tsOf(kb, photos[kb]);
             if (ta !== tb) return ta - tb;
             return String(ka).localeCompare(String(kb));
           });
+          // v5.00: check if the new order differs from the current display order
+          var currentOrder = _orderedPhotoKeys(photos);
+          var orderChanged = false;
+          if (keys.length === currentOrder.length) {
+            for (var oi = 0; oi < keys.length; oi++) {
+              if (keys[oi] !== currentOrder[oi]) { orderChanged = true; break; }
+            }
+          } else { orderChanged = true; }
+          if (!orderChanged) {
+            if (window.showToast) showToast(LANG3 === 'es' ? 'Ya están en orden cronológico' : isEN ? 'Already in chronological order' : 'Già in ordine cronologico', 'info');
+            return;
+          }
           return _persistPhotoOrder(sKey, keys, LANG3 === 'es' ? 'Ordenadas por fecha' : isEN ? 'Sorted by date' : 'Ordinate per data');
+        }).catch(function(err) {
+          console.error('[Diario] Sort by date failed:', err);
+          if (window.showToast) showToast(LANG3 === 'es' ? 'Error al ordenar' : isEN ? 'Sort failed' : 'Ordinamento fallito', 'danger');
+        }).finally(function() {
+          sortBtn.disabled = false;
+          sortBtn.textContent = origText;
+        });
+        return;
+      }
+
+      // v5.00: "+N more" overlay tap → expand grid to show ALL photos (for reordering)
+      var moreOverlay = e.target.closest('.diario-photo-more-overlay');
+      if (moreOverlay) {
+        var container = moreOverlay.closest('.diario-photos');
+        if (!container) return;
+        // Hide the overlay
+        moreOverlay.style.display = 'none';
+        // Show all hidden photos as proper grid items with drag handles
+        var hiddenImgs = container.querySelectorAll('img.diario-photo[style*="display:none"]');
+        hiddenImgs.forEach(function(img) {
+          // Wrap each hidden img in a .diario-photo-wrap with drag handle
+          var wrap = document.createElement('div');
+          wrap.className = 'diario-photo-wrap';
+          wrap.style.position = 'relative';
+          img.style.display = '';
+          img.parentNode.insertBefore(wrap, img);
+          wrap.appendChild(img);
+          // Add drag handle if owner
+          if (isOwner && !window._simRole) {
+            var handle = document.createElement('div');
+            handle.className = 'diario-photo-draghandle';
+            handle.title = LANG3 === 'es' ? 'Mantén presionado para reordenar' : isEN ? 'Hold to reorder' : 'Tieni premuto per riordinare';
+            handle.textContent = '☰';
+            wrap.appendChild(handle);
+          }
+        });
+        // Update grid layout for more columns
+        container.classList.add('expanded');
+        container.setAttribute('data-count', '4'); // keep 2-col base, expanded overrides
+        // Add "collapse" button after the grid
+        var collapseBtn = document.createElement('button');
+        collapseBtn.className = 'diario-photos-collapse-btn';
+        collapseBtn.textContent = LANG3 === 'es' ? '▲ Comprimir' : isEN ? '▲ Collapse' : '▲ Comprimi';
+        container.parentNode.insertBefore(collapseBtn, container.nextSibling);
+        collapseBtn.addEventListener('click', function() {
+          // Re-render the diary to restore original state
+          if (typeof loadTimeline === 'function') loadTimeline();
         });
         return;
       }

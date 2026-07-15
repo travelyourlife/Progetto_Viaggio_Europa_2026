@@ -76,10 +76,10 @@
     <link rel="apple-touch-icon" sizes="167x167" href="./icon.png">
     <title>Quo Vadis — V4.92</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
-    <link rel="stylesheet" href="style.css?v=4.99">
-    <link rel="stylesheet" href="home-variants.css?v=4.99">
-    <link rel="stylesheet" href="unified-map.css?v=4.99">
-    <link rel="stylesheet" href="modern-pages.css?v=4.99">
+    <link rel="stylesheet" href="style.css?v=5.01">
+    <link rel="stylesheet" href="home-variants.css?v=5.01">
+    <link rel="stylesheet" href="unified-map.css?v=5.01">
+    <link rel="stylesheet" href="modern-pages.css?v=5.01">
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" crossorigin="">
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" crossorigin="">
 <!-- Firebase SDK (compat mode for single-file app) -->
@@ -96,7 +96,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = "4.99";
+  var EXPECTED_VERSION = "5.01";
   window.IS_PROD = true; // v2.71: disabilita debug overlay in produzione
     window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
@@ -163,25 +163,25 @@
   });
 })();
 </script>
-<script src="data.js?v=4.99" defer></script>
-<script src="days-data.js?v=4.99" defer></script>
-<script src="days-renderer.js?v=4.99" defer></script>
+<script src="data.js?v=5.01" defer></script>
+<script src="days-data.js?v=5.01" defer></script>
+<script src="days-renderer.js?v=5.01" defer></script>
 <!-- wiki-links.js: caricato lazy alla prima apertura tab Cultura/Attività (34KB) -->
-<script src="weather-coords.js?v=4.99" defer></script>
+<script src="weather-coords.js?v=5.01" defer></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
 <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js" crossorigin="" defer></script>
-<script src="poi-data.js?v=4.99" defer></script>
+<script src="poi-data.js?v=5.01" defer></script>
 <!-- poi-data.js caricato sopra con defer — 161KB, usato da UnifiedMap e tab Luoghi -->
 <!-- wiki-links.js lazy: caricato solo alla prima apertura tab Cultura/Attività -->
-<script src="app.js?v=4.99" defer></script>
-<script src="curiosita-data.js?v=4.99" defer></script>
+<script src="app.js?v=5.01" defer></script>
+<script src="curiosita-data.js?v=5.01" defer></script>
 <script>window.QV_CURIOSITA_SERVER_SIDE = true; window.QV_RECAP_SERVER_SIDE = true;</script>
-<script src="curiosita-scheduler.js?v=4.99" defer></script>
-<script src="quiz-fun.js?v=4.99" defer></script>
-<script src="unified-map.js?v=4.99" defer></script>
-<script src="city-itineraries.js?v=4.99" defer></script>
-<script src="city-itineraries-ui.js?v=4.99" defer></script>
-<script src="home-variants.js?v=4.99" defer></script>
+<script src="curiosita-scheduler.js?v=5.01" defer></script>
+<script src="quiz-fun.js?v=5.01" defer></script>
+<script src="unified-map.js?v=5.01" defer></script>
+<script src="city-itineraries.js?v=5.01" defer></script>
+<script src="city-itineraries-ui.js?v=5.01" defer></script>
+<script src="home-variants.js?v=5.01" defer></script>
 </head>
 <body class="on-home">
 
@@ -603,7 +603,7 @@
 
 <h1 style="text-align:center; margin-top:16px;">📅 Itinerario — Giorno per Giorno</h1>
 
-<div id="goto-today-box" style="text-align:center; margin-bottom:16px; display:none;">
+<div id="goto-today-box" style="text-align:center; margin-bottom:16px;">
     <div style="display:inline-flex; flex-wrap:wrap; gap:10px; justify-content:center; align-items:center;">
         <button type="button" id="goto-today-btn" class="pos-btn pos-btn-blue" style="font-size:15px; padding:12px 24px;">📅 Vai al giorno di oggi</button>
         <button type="button" id="goto-citta-btn" class="pos-btn pos-btn-green" style="font-size:15px; padding:12px 24px;">🗺️ Itinerari città</button>
@@ -5011,7 +5011,7 @@ Maturazione: fine Agosto-Settembre. Bacca tonda, rossa e soda che cresce su arbu
 Maturazione: Luglio-Agosto. Conosciuto come "l'oro delle paludi", è la bacca più preziosa e costosa. Cresce esclusivamente nelle torbiere umide e acquitrinose (richiede stivali di gomma per la raccolta). La pianta produce un solo fiore bianco e un solo frutto per stelo. Il frutto assomiglia a un lampone, ma inizia di colore rosso duro e, maturando, diventa morbido, succoso e di un colore ambra-aranciato brillante. Ha un sapore unico, dolce-acidulo con note di miele e albicocca. Ricchissimo di vitamina C, viene tradizionalmente servito sotto forma di marmellata calda sul <em>leipäjuusto</em> (il "formaggio di pane" finlandese).</div>
 </div>
 <h4 class="nature-subsection">Funghi Commestibili e Identificazione</h4>
-<p>Delle 5.000 specie fungine finlandesi, circa 200 sono commestibili. La raccolta richiede attenzione per evitare scambi con specie tossiche. La regola d'oro finlandese è: "Non raccogliere funghi bianchi". L'Angelo Distruttore (<em>Amanita virosa</em>), completamente bianco e mortale, è presente nei boschi finlandesi.</p>
+<p>Delle 5.010 specie fungine finlandesi, circa 200 sono commestibili. La raccolta richiede attenzione per evitare scambi con specie tossiche. La regola d'oro finlandese è: "Non raccogliere funghi bianchi". L'Angelo Distruttore (<em>Amanita virosa</em>), completamente bianco e mortale, è presente nei boschi finlandesi.</p>
 <div class="nature-table-wrap"><table class="nature-table">
 <thead><tr>
 <th>Specie Commestibile</th>
@@ -5156,7 +5156,7 @@ L'uccello più grande d'Europa (apertura alare 2,5 m). Salvata dall'estinzione c
 <figure class="nature-figure"><img src="images/nature/rapakivi-granite.jpg" alt="Granito Rapakivi" loading="lazy" class="nature-img"><figcaption>Granito Rapakivi</figcaption></figure>
 <p>Il substrato roccioso finlandese appartiene allo Scudo Fennoscandiano, con rocce vecchie da 1,6 a oltre 3 miliardi di anni. La roccia nazionale è il granito. Nella regione sud-orientale (area del Saimaa Geopark e Wiborg) si trova una roccia unica al mondo: il <strong>granito <em>rapakivi</strong></em> (1,6 miliardi di anni). Il nome finlandese significa letteralmente "pietra fangosa" o "pietra che si sgretola" (<em>rapautua</em> = sgretolarsi, <em>kivi</em> = pietra). È caratterizzato da grandi cristalli tondeggianti di ortoclasio rosso/rosa circondati da un anello di oligoclasio verde/grigio. A causa dei diversi coefficienti di dilatazione termica di questi minerali, la roccia si frattura facilmente con gli sbalzi di temperatura e si disgrega in una ghiaia rossastra (chiamata <em>moro</em>). È molto usato in architettura e pavimentazioni (noto commercialmente come "Baltic Brown").</p>
 <h4 class="nature-subsection">La Glaciazione Weichseliana e le Formazioni Glaciali</h4>
-<p>Circa 25.000 anni fa, durante l'ultimo massimo glaciale, l'intera Finlandia era sepolta sotto una <strong>calotta di ghiaccio spessa 2 chilometri</strong>. L'immensa pressione ha asportato in media 7-25 metri di roccia solida, piallando le colline (creando le rocce montonate, lisce a monte e ruvide a valle) e scavando le fratture preesistenti. Quando il clima si riscaldò, il ghiaccio iniziò a sciogliersi e a ritirarsi verso nord-ovest, lasciando dietro di sé formazioni inconfondibili:</p>
+<p>Circa 25.010 anni fa, durante l'ultimo massimo glaciale, l'intera Finlandia era sepolta sotto una <strong>calotta di ghiaccio spessa 2 chilometri</strong>. L'immensa pressione ha asportato in media 7-25 metri di roccia solida, piallando le colline (creando le rocce montonate, lisce a monte e ruvide a valle) e scavando le fratture preesistenti. Quando il clima si riscaldò, il ghiaccio iniziò a sciogliersi e a ritirarsi verso nord-ovest, lasciando dietro di sé formazioni inconfondibili:</p>
 <div class="nature-species-card">
 <img src="images/nature/punkaharju-esker.jpg" alt="Punkaharju Esker" loading="lazy" class="nature-species-img">
 <div class="nature-species-text"><strong>Esker (<em>harju</em>)</strong>
@@ -8952,7 +8952,7 @@ Etica whale-watching: distanza >60 m, mai tagliare la rotta; max 30 min; evitare
 <hr>
 <h2 id="cucina-tedesca-g40-transito-brema">🇩🇪 Cucina Tedesca (G40 — transito Brema)</h2>
 <h4 id="storia-cucina-tedesca">📜 Storia della cucina tedesca</h4>
-<p>La cucina tedesca (<a href="https://it.wikipedia.org/wiki/Cucina_tedesca" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) varia enormemente da regione a regione. Brema, città anseatica, ha una tradizione marinara: aringhe, anguille affumicate, Labskaus (stufato di marinai). La <strong>Reinheitsgebot</strong> (<a href="https://it.wikipedia.org/wiki/Reinheitsgebot" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) del 1516 è la legge sulla purezza della birra più antica del mondo: solo acqua, malto, luppolo e lievito. La Germania ha 1.500+ birrifici e 5.000+ birre diverse! Il <strong>Brot</strong> (pane tedesco) è Patrimonio UNESCO: oltre 3.000 varietà registrate, più di qualsiasi altro paese.</p>
+<p>La cucina tedesca (<a href="https://it.wikipedia.org/wiki/Cucina_tedesca" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) varia enormemente da regione a regione. Brema, città anseatica, ha una tradizione marinara: aringhe, anguille affumicate, Labskaus (stufato di marinai). La <strong>Reinheitsgebot</strong> (<a href="https://it.wikipedia.org/wiki/Reinheitsgebot" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) del 1516 è la legge sulla purezza della birra più antica del mondo: solo acqua, malto, luppolo e lievito. La Germania ha 1.500+ birrifici e 5.010+ birre diverse! Il <strong>Brot</strong> (pane tedesco) è Patrimonio UNESCO: oltre 3.000 varietà registrate, più di qualsiasi altro paese.</p>
 <h4 id="extra-piatti-germania">🍽️ Altri piatti da provare</h4>
 <ul>
 <li><strong>Labskaus</strong> (Brema) — Stufato rosa di carne in scatola, barbabietola, patate con uovo fritto e aringa. Piatto dei marinai anseatici! <a href="https://it.wikipedia.org/wiki/Labskaus" target="_blank" rel="noopener noreferrer">📚</a></li>
@@ -9429,7 +9429,7 @@ Etica whale-watching: distanza >60 m, mai tagliare la rotta; max 30 min; evitare
 </tr>
 </tbody>
 </table>
-<p>🥾 Trailhead: <a href="https://maps.google.com/?q=69.6492,18.9553" target="_blank" rel="noopener noreferrer">📍 Fjellheisen base</a>
+<p>🥾 Trailhead: <a href="https://maps.google.com/?q=69.6318,19.0025" target="_blank" rel="noopener noreferrer">📍 Fjellheisen base</a>
 <a href="https://maps.google.com/?q=69.6600,18.9400" target="_blank" rel="noopener noreferrer">📍 Prestvannet</a>
 <a href="https://maps.google.com/?q=69.6540,18.9680" target="_blank" rel="noopener noreferrer">📍 Sherpatrappa</a></p>
 <h4 id="trek-senja">🇳🇴 Senja (G17)</h4>
@@ -9469,7 +9469,7 @@ Etica whale-watching: distanza >60 m, mai tagliare la rotta; max 30 min; evitare
 </tr>
 </tbody>
 </table>
-<p>🥾 Trailhead: <a href="https://maps.google.com/?q=69.2950,17.0500" target="_blank" rel="noopener noreferrer">📍 Tungeneset</a>
+<p>🥾 Trailhead: <a href="https://maps.google.com/?q=69.4869,17.3331" target="_blank" rel="noopener noreferrer">📍 Tungeneset</a>
 <a href="https://maps.google.com/?q=69.2500,17.0000" target="_blank" rel="noopener noreferrer">📍 Ersfjordstranda</a>
 <a href="https://maps.google.com/?q=69.2848,17.1067" target="_blank" rel="noopener noreferrer">📍 Segla/Hesten parking</a></p>
 <h4 id="trek-vesteralen">🇳🇴 Vesterålen / Andøya (G18-G19)</h4>
@@ -9497,7 +9497,7 @@ Etica whale-watching: distanza >60 m, mai tagliare la rotta; max 30 min; evitare
 </tr>
 </tbody>
 </table>
-<p>🥾 Trailhead: <a href="https://maps.google.com/?q=69.2700,15.8700" target="_blank" rel="noopener noreferrer">📍 Bleik Beach</a>
+<p>🥾 Trailhead: <a href="https://maps.google.com/?q=69.2355,15.9492" target="_blank" rel="noopener noreferrer">📍 Bleik Beach</a>
 <a href="https://maps.google.com/?q=69.1200,15.8900" target="_blank" rel="noopener noreferrer">📍 Måtinden parking</a></p>
 <h4 id="trek-lofoten">🇳🇴 Lofoten (G20-G24)</h4>
 <table>
@@ -9548,10 +9548,10 @@ Etica whale-watching: distanza >60 m, mai tagliare la rotta; max 30 min; evitare
 </tr>
 </tbody>
 </table>
-<p>🥾 Trailhead: <a href="https://maps.google.com/?q=68.2100,13.8600" target="_blank" rel="noopener noreferrer">📍 Haukland</a>
-<a href="https://maps.google.com/?q=68.1300,13.5900" target="_blank" rel="noopener noreferrer">📍 Offersøykammen</a>
-<a href="https://maps.google.com/?q=68.0580,13.0750" target="_blank" rel="noopener noreferrer">📍 Reinebringen</a>
-<a href="https://maps.google.com/?q=68.0900,13.1200" target="_blank" rel="noopener noreferrer">📍 Ryten/Kvalvika</a></p>
+<p>🥾 Trailhead: <a href="https://maps.google.com/?q=68.1991,13.5328" target="_blank" rel="noopener noreferrer">📍 Haukland</a>
+<a href="https://maps.google.com/?q=68.1495,13.5063" target="_blank" rel="noopener noreferrer">📍 Offersøykammen</a>
+<a href="https://maps.google.com/?q=67.9223,13.0784" target="_blank" rel="noopener noreferrer">📍 Reinebringen</a>
+<a href="https://maps.google.com/?q=68.0887,13.1390" target="_blank" rel="noopener noreferrer">📍 Ryten/Kvalvika</a></p>
 <h4 id="trek-geiranger">🇳🇴 Geiranger / Trollstigen (G29)</h4>
 <table>
 <thead>
@@ -9589,7 +9589,7 @@ Etica whale-watching: distanza >60 m, mai tagliare la rotta; max 30 min; evitare
 </tr>
 </tbody>
 </table>
-<p>🥾 Trailhead: <a href="https://maps.google.com/?q=62.4560,7.6700" target="_blank" rel="noopener noreferrer">📍 Trollstigen top</a>
+<p>🥾 Trailhead: <a href="https://maps.google.com/?q=62.4533,7.6627" target="_blank" rel="noopener noreferrer">📍 Trollstigen top</a>
 <a href="https://maps.google.com/?q=62.0900,7.0700" target="_blank" rel="noopener noreferrer">📍 Flydalsjuvet</a>
 <a href="https://maps.google.com/?q=62.1100,7.0400" target="_blank" rel="noopener noreferrer">📍 Skageflå</a></p>
 <h4 id="trek-bergen">🇳🇴 Bergen (G31)</h4>
@@ -9650,7 +9650,7 @@ Etica whale-watching: distanza >60 m, mai tagliare la rotta; max 30 min; evitare
 </tr>
 </tbody>
 </table>
-<p>🥾 Trailhead: <a href="https://maps.google.com/?q=58.9943,6.1490" target="_blank" rel="noopener noreferrer">📍 Preikestolen parking</a>
+<p>🥾 Trailhead: <a href="https://maps.google.com/?q=58.9924,6.1376" target="_blank" rel="noopener noreferrer">📍 Preikestolen parking</a>
 <a href="https://maps.google.com/?q=59.0340,6.5780" target="_blank" rel="noopener noreferrer">📍 Kjerag parking</a></p>
 <h4 id="trek-finlandia">🇫🇮 Trekking Finlandia (G7-G15)</h4>
 <table>
@@ -9671,7 +9671,7 @@ Etica whale-watching: distanza >60 m, mai tagliare la rotta; max 30 min; evitare
 </tr>
 </tbody>
 </table>
-<p>🥾 Trailhead: <a href="https://maps.google.com/?q=61.7600,29.3900" target="_blank" rel="noopener noreferrer">📍 Punkaharju Ridge</a></p>
+<p>🥾 Trailhead: <a href="https://maps.google.com/?q=61.7762,29.3366" target="_blank" rel="noopener noreferrer">📍 Punkaharju Ridge</a></p>
 <p><em>In Finlandia dei laghi non ci sono trekking avanzati: il terreno e piatto. Meglio kayak/canoa.</em></p>
 <h4 id="trek-baschi">🇪🇸 Paesi Baschi (G44-G45)</h4>
 <table>
@@ -9704,7 +9704,7 @@ Etica whale-watching: distanza >60 m, mai tagliare la rotta; max 30 min; evitare
 </tr>
 </tbody>
 </table>
-<p>🥾 Trailhead: <a href="https://maps.google.com/?q=43.4480,-2.7850" target="_blank" rel="noopener noreferrer">📍 Gaztelugatxe parking</a>
+<p>🥾 Trailhead: <a href="https://maps.google.com/?q=43.4412,-2.7840" target="_blank" rel="noopener noreferrer">📍 Gaztelugatxe parking</a>
 <a href="https://maps.google.com/?q=43.3150,-2.2550" target="_blank" rel="noopener noreferrer">📍 Flysch Zumaia</a>
 <a href="https://maps.google.com/?q=43.3200,-2.0050" target="_blank" rel="noopener noreferrer">📍 Monte Igueldo</a></p>
 <h4 id="trek-picos">🇪🇸 Picos de Europa (G46)</h4>
@@ -9750,7 +9750,7 @@ Etica whale-watching: distanza >60 m, mai tagliare la rotta; max 30 min; evitare
 </tr>
 </tbody>
 </table>
-<p>🥾 Trailhead: <a href="https://maps.google.com/?q=43.1488,-4.8088" target="_blank" rel="noopener noreferrer">📍 Fuente Dé cable car</a>
+<p>🥾 Trailhead: <a href="https://maps.google.com/?q=43.1431,-4.8126" target="_blank" rel="noopener noreferrer">📍 Fuente Dé cable car</a>
 <a href="https://maps.google.com/?q=43.2700,-5.0500" target="_blank" rel="noopener noreferrer">📍 Lagos de Covadonga</a>
 <a href="https://maps.google.com/?q=43.2480,-4.8380" target="_blank" rel="noopener noreferrer">📍 Ruta del Cares (Poncebos)</a></p>
 <hr>
@@ -12800,7 +12800,7 @@ Maturazione: fine Agosto-Settembre. Bacca tonda, rossa e soda che cresce su arbu
 Maturazione: Luglio-Agosto. Conosciuto come "l'oro delle paludi", è la bacca più preziosa e costosa. Cresce esclusivamente nelle torbiere umide e acquitrinose (richiede stivali di gomma per la raccolta). La pianta produce un solo fiore bianco e un solo frutto per stelo. Il frutto assomiglia a un lampone, ma inizia di colore rosso duro e, maturando, diventa morbido, succoso e di un colore ambra-aranciato brillante. Ha un sapore unico, dolce-acidulo con note di miele e albicocca. Ricchissimo di vitamina C, viene tradizionalmente servito sotto forma di marmellata calda sul <em>leipäjuusto</em> (il "formaggio di pane" finlandese).</div>
 </div>
 <h4 class="nature-subsection">Funghi Commestibili e Identificazione</h4>
-<p>Delle 5.000 specie fungine finlandesi, circa 200 sono commestibili. La raccolta richiede attenzione per evitare scambi con specie tossiche. La regola d'oro finlandese è: "Non raccogliere funghi bianchi". L'Angelo Distruttore (<em>Amanita virosa</em>), completamente bianco e mortale, è presente nei boschi finlandesi.</p>
+<p>Delle 5.010 specie fungine finlandesi, circa 200 sono commestibili. La raccolta richiede attenzione per evitare scambi con specie tossiche. La regola d'oro finlandese è: "Non raccogliere funghi bianchi". L'Angelo Distruttore (<em>Amanita virosa</em>), completamente bianco e mortale, è presente nei boschi finlandesi.</p>
 <div class="nature-table-wrap"><table class="nature-table">
 <thead><tr>
 <th>Specie Commestibile</th>
@@ -12945,7 +12945,7 @@ L'uccello più grande d'Europa (apertura alare 2,5 m). Salvata dall'estinzione c
 <figure class="nature-figure"><img src="images/nature/rapakivi-granite.jpg" alt="Granito Rapakivi" loading="lazy" class="nature-img"><figcaption>Granito Rapakivi</figcaption></figure>
 <p>Il substrato roccioso finlandese appartiene allo Scudo Fennoscandiano, con rocce vecchie da 1,6 a oltre 3 miliardi di anni. La roccia nazionale è il granito. Nella regione sud-orientale (area del Saimaa Geopark e Wiborg) si trova una roccia unica al mondo: il <strong>granito <em>rapakivi</strong></em> (1,6 miliardi di anni). Il nome finlandese significa letteralmente "pietra fangosa" o "pietra che si sgretola" (<em>rapautua</em> = sgretolarsi, <em>kivi</em> = pietra). È caratterizzato da grandi cristalli tondeggianti di ortoclasio rosso/rosa circondati da un anello di oligoclasio verde/grigio. A causa dei diversi coefficienti di dilatazione termica di questi minerali, la roccia si frattura facilmente con gli sbalzi di temperatura e si disgrega in una ghiaia rossastra (chiamata <em>moro</em>). È molto usato in architettura e pavimentazioni (noto commercialmente come "Baltic Brown").</p>
 <h4 class="nature-subsection">La Glaciazione Weichseliana e le Formazioni Glaciali</h4>
-<p>Circa 25.000 anni fa, durante l'ultimo massimo glaciale, l'intera Finlandia era sepolta sotto una <strong>calotta di ghiaccio spessa 2 chilometri</strong>. L'immensa pressione ha asportato in media 7-25 metri di roccia solida, piallando le colline (creando le rocce montonate, lisce a monte e ruvide a valle) e scavando le fratture preesistenti. Quando il clima si riscaldò, il ghiaccio iniziò a sciogliersi e a ritirarsi verso nord-ovest, lasciando dietro di sé formazioni inconfondibili:</p>
+<p>Circa 25.010 anni fa, durante l'ultimo massimo glaciale, l'intera Finlandia era sepolta sotto una <strong>calotta di ghiaccio spessa 2 chilometri</strong>. L'immensa pressione ha asportato in media 7-25 metri di roccia solida, piallando le colline (creando le rocce montonate, lisce a monte e ruvide a valle) e scavando le fratture preesistenti. Quando il clima si riscaldò, il ghiaccio iniziò a sciogliersi e a ritirarsi verso nord-ovest, lasciando dietro di sé formazioni inconfondibili:</p>
 <div class="nature-species-card">
 <img src="images/nature/punkaharju-esker.jpg" alt="Punkaharju Esker" loading="lazy" class="nature-species-img">
 <div class="nature-species-text"><strong>Esker (<em>harju</em>)</strong>
@@ -14543,10 +14543,10 @@ Etica whale-watching: distanza >60 m, mai tagliare la rotta; max 30 min; evitare
 <p><strong>Il problema:</strong> Farete circa 1.870 km in 4 giorni di guida (G3–G6), con G7 giorno di sosta a Tallinn. Considerate le pause bagno, i pranzi e il traffico, i tempi di percorrenza reali aumenteranno del 20-30%. I bambini passeranno la maggior parte del tempo legati ai seggiolini.</p>
 <p><strong>Soluzione:</strong> Partite sempre all'alba (es. 5:00 o 6:00 del mattino). I bambini dormiranno per le prime 3-4 ore di viaggio, permettendovi di "mangiare chilometri" in pace e arrivare a destinazione per l'ora di pranzo, salvando i pomeriggi per i parchi e le esplorazioni.</p>
 <h3 id="2-luscita-dalle-lofoten-g25-lofoten-mo-i-rana">2. L'Uscita dalle Lofoten (G25: Lofoten → Mo i Rana)</h3>
-<p>La tabella segna 400 km, 5h + traghetto. Attenzione perché questa stima è ottimistica:</p>
+<p>La tabella segna 330 km, 4h + traghetto 3h 15m. Attenzione perché questa stima è ottimistica:</p>
 <p>Il traghetto Moskenes–Bodø dura circa 3,5–4 ore</p>
 <p>Dovete essere all'imbarco almeno 1 ora (o 2) prima</p>
-<p>Da Bodø a Mo i Rana ci sono circa 230 km (altre 3,5 ore di guida)</p>
+<p>Da Bodø a Mo i Rana ci sono circa 320 km (altre 4 ore di guida)</p>
 <p><strong>Il problema:</strong> Questa sarà una giornata logorante, quasi esclusivamente di transito (circa 9-10 ore totali tra guida, attese e navigazione). Consideratela una giornata "persa" a livello turistico e preparate intrattenimento a bordo per i bambini.</p>
 <h3 id="3-lincognita-dei-traghetti-prenotazioni-obbligatorie">3. L'Incognita dei Traghetti (Prenotazioni Obbligatorie)</h3>
 <p>Il viaggio fa affidamento su alcuni traghetti cruciali (Tallinn–Helsinki, Moskenes–Bodø, Kristiansand–Hirtshals).</p>
@@ -16179,7 +16179,7 @@ Etica whale-watching: distanza >60 m, mai tagliare la rotta; max 30 min; evitare
 <script>
 // Load home-variants.html templates into the page
 (function(){
-  fetch('./home-variants.html?v=4.99').then(function(r){return r.text();}).then(function(html){
+  fetch('./home-variants.html?v=5.01').then(function(r){return r.text();}).then(function(html){
     var div = document.getElementById('hv-templates');
     if(div) div.innerHTML = html;
     // Move templates to document body for proper <template> access
@@ -16195,12 +16195,12 @@ Etica whale-watching: distanza >60 m, mai tagliare la rotta; max 30 min; evitare
 <script>
   if (typeof window.IS_PROD === 'undefined' || window.IS_PROD !== true) {
     var _dbgScript = document.createElement('script');
-    _dbgScript.src = 'debug-overlay.js?v=4.99';
+    _dbgScript.src = 'debug-overlay.js?v=5.01';
     _dbgScript.defer = true;
     document.head.appendChild(_dbgScript);
   }
 </script>
 <!-- Capacitor GPS Bridge (only activates inside native app, ignored in browser) -->
-<script src="capacitor-gps-bridge.js?v=4.99" defer></script>
+<script src="capacitor-gps-bridge.js?v=5.01" defer></script>
 </body>
 </html>

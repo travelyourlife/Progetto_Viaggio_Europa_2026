@@ -74,10 +74,10 @@
     <link rel="apple-touch-icon" sizes="167x167" href="./icon.png">
     <title>Quo Vadis — V4.90</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
-    <link rel="stylesheet" href="style.css?v=4.99">
-    <link rel="stylesheet" href="home-variants.css?v=4.99">
-    <link rel="stylesheet" href="unified-map.css?v=4.99">
-    <link rel="stylesheet" href="modern-pages.css?v=4.99">
+    <link rel="stylesheet" href="style.css?v=5.01">
+    <link rel="stylesheet" href="home-variants.css?v=5.01">
+    <link rel="stylesheet" href="unified-map.css?v=5.01">
+    <link rel="stylesheet" href="modern-pages.css?v=5.01">
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" crossorigin="">
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" crossorigin="">
 <!-- Firebase SDK (compat mode for single-file app) -->
@@ -94,7 +94,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = "4.99";
+  var EXPECTED_VERSION = "5.01";
   window.IS_PROD = true; // v2.96: parità con index.html — disabilita debug overlay in produzione
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
@@ -161,23 +161,23 @@
   });
 })();
 </script>
-<script src="data.js?v=4.99" defer></script>
-<script src="days-data.js?v=4.99" defer></script>
-<script src="days-renderer.js?v=4.99" defer></script>
+<script src="data.js?v=5.01" defer></script>
+<script src="days-data.js?v=5.01" defer></script>
+<script src="days-renderer.js?v=5.01" defer></script>
 <!-- wiki-links.js: lazy-loaded on first open of Culture/Activity tab (34KB) — parity with index.html -->
-<script src="weather-coords.js?v=4.99" defer></script>
+<script src="weather-coords.js?v=5.01" defer></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
 <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js" crossorigin="" defer></script>
-<script src="poi-data.js?v=4.99" defer></script>
-<script src="app.js?v=4.99" defer></script>
-<script src="curiosita-data.js?v=4.99" defer></script>
+<script src="poi-data.js?v=5.01" defer></script>
+<script src="app.js?v=5.01" defer></script>
+<script src="curiosita-data.js?v=5.01" defer></script>
 <script>window.QV_CURIOSITA_SERVER_SIDE = true; window.QV_RECAP_SERVER_SIDE = true;</script>
-<script src="curiosita-scheduler.js?v=4.99" defer></script>
-<script src="quiz-fun.js?v=4.99" defer></script>
-<script src="unified-map.js?v=4.99" defer></script>
-<script src="city-itineraries.js?v=4.99" defer></script>
-<script src="city-itineraries-ui.js?v=4.99" defer></script>
-<script src="home-variants.js?v=4.99" defer></script>
+<script src="curiosita-scheduler.js?v=5.01" defer></script>
+<script src="quiz-fun.js?v=5.01" defer></script>
+<script src="unified-map.js?v=5.01" defer></script>
+<script src="city-itineraries.js?v=5.01" defer></script>
+<script src="city-itineraries-ui.js?v=5.01" defer></script>
+<script src="home-variants.js?v=5.01" defer></script>
 </head>
 <body class="on-home">
 
@@ -597,7 +597,7 @@
 
 <h1 style="text-align:center; margin-top:16px;">📅 Itinerary — Day by Day</h1>
 
-<div id="goto-today-box" style="text-align:center; margin-bottom:16px; display:none;">
+<div id="goto-today-box" style="text-align:center; margin-bottom:16px;">
     <div style="display:inline-flex; flex-wrap:wrap; gap:10px; justify-content:center; align-items:center;">
         <button type="button" id="goto-today-btn" class="pos-btn pos-btn-blue" style="font-size:15px; padding:12px 24px;">📅 Go to today</button>
         <button type="button" id="goto-citta-btn" class="pos-btn pos-btn-green" style="font-size:15px; padding:12px 24px;">🗺️ City itineraries</button>
@@ -8618,7 +8618,7 @@ On cold, foggy winter mornings, reeds and hedges coat in delicate ice crystals, 
 </tr>
 </tbody>
 </table>
-<p>🥾 Trailhead: <a href="https://maps.google.com/?q=69.6492,18.9553" target="_blank" rel="noopener noreferrer">📍 Fjellheisen base</a>
+<p>🥾 Trailhead: <a href="https://maps.google.com/?q=69.6318,19.0025" target="_blank" rel="noopener noreferrer">📍 Fjellheisen base</a>
 <a href="https://maps.google.com/?q=69.6600,18.9400" target="_blank" rel="noopener noreferrer">📍 Prestvannet</a>
 <a href="https://maps.google.com/?q=69.6540,18.9680" target="_blank" rel="noopener noreferrer">📍 Sherpatrappa</a></p>
 <h4 id="trek-senja">🇳🇴 Senja (D17)</h4>
@@ -8658,7 +8658,7 @@ On cold, foggy winter mornings, reeds and hedges coat in delicate ice crystals, 
 </tr>
 </tbody>
 </table>
-<p>🥾 Trailhead: <a href="https://maps.google.com/?q=69.2950,17.0500" target="_blank" rel="noopener noreferrer">📍 Tungeneset</a>
+<p>🥾 Trailhead: <a href="https://maps.google.com/?q=69.4869,17.3331" target="_blank" rel="noopener noreferrer">📍 Tungeneset</a>
 <a href="https://maps.google.com/?q=69.2500,17.0000" target="_blank" rel="noopener noreferrer">📍 Ersfjordstranda</a>
 <a href="https://maps.google.com/?q=69.2848,17.1067" target="_blank" rel="noopener noreferrer">📍 Segla/Hesten parking</a></p>
 <h4 id="trek-vesteralen">🇳🇴 Vesterålen / Andøya (D18-D19)</h4>
@@ -8686,7 +8686,7 @@ On cold, foggy winter mornings, reeds and hedges coat in delicate ice crystals, 
 </tr>
 </tbody>
 </table>
-<p>🥾 Trailhead: <a href="https://maps.google.com/?q=69.2700,15.8700" target="_blank" rel="noopener noreferrer">📍 Bleik Beach</a>
+<p>🥾 Trailhead: <a href="https://maps.google.com/?q=69.2355,15.9492" target="_blank" rel="noopener noreferrer">📍 Bleik Beach</a>
 <a href="https://maps.google.com/?q=69.1200,15.8900" target="_blank" rel="noopener noreferrer">📍 Måtinden parking</a></p>
 <h4 id="trek-lofoten">🇳🇴 Lofoten (D20-D24)</h4>
 <table class="no-responsive">
@@ -8737,10 +8737,10 @@ On cold, foggy winter mornings, reeds and hedges coat in delicate ice crystals, 
 </tr>
 </tbody>
 </table>
-<p>🥾 Trailhead: <a href="https://maps.google.com/?q=68.2100,13.8600" target="_blank" rel="noopener noreferrer">📍 Haukland</a>
-<a href="https://maps.google.com/?q=68.1300,13.5900" target="_blank" rel="noopener noreferrer">📍 Offersøykammen</a>
-<a href="https://maps.google.com/?q=68.0580,13.0750" target="_blank" rel="noopener noreferrer">📍 Reinebringen</a>
-<a href="https://maps.google.com/?q=68.0900,13.1200" target="_blank" rel="noopener noreferrer">📍 Ryten/Kvalvika</a></p>
+<p>🥾 Trailhead: <a href="https://maps.google.com/?q=68.1991,13.5328" target="_blank" rel="noopener noreferrer">📍 Haukland</a>
+<a href="https://maps.google.com/?q=68.1495,13.5063" target="_blank" rel="noopener noreferrer">📍 Offersøykammen</a>
+<a href="https://maps.google.com/?q=67.9223,13.0784" target="_blank" rel="noopener noreferrer">📍 Reinebringen</a>
+<a href="https://maps.google.com/?q=68.0887,13.1390" target="_blank" rel="noopener noreferrer">📍 Ryten/Kvalvika</a></p>
 <h4 id="trek-geiranger">🇳🇴 Geiranger / Trollstigen (D29)</h4>
 <table class="no-responsive">
 <thead>
@@ -8778,7 +8778,7 @@ On cold, foggy winter mornings, reeds and hedges coat in delicate ice crystals, 
 </tr>
 </tbody>
 </table>
-<p>🥾 Trailhead: <a href="https://maps.google.com/?q=62.4560,7.6700" target="_blank" rel="noopener noreferrer">📍 Trollstigen top</a>
+<p>🥾 Trailhead: <a href="https://maps.google.com/?q=62.4533,7.6627" target="_blank" rel="noopener noreferrer">📍 Trollstigen top</a>
 <a href="https://maps.google.com/?q=62.0900,7.0700" target="_blank" rel="noopener noreferrer">📍 Flydalsjuvet</a>
 <a href="https://maps.google.com/?q=62.1100,7.0400" target="_blank" rel="noopener noreferrer">📍 Skageflå</a></p>
 <h4 id="trek-bergen">🇳🇴 Bergen (D31)</h4>
@@ -8839,7 +8839,7 @@ On cold, foggy winter mornings, reeds and hedges coat in delicate ice crystals, 
 </tr>
 </tbody>
 </table>
-<p>🥾 Trailhead: <a href="https://maps.google.com/?q=58.9943,6.1490" target="_blank" rel="noopener noreferrer">📍 Preikestolen parking</a>
+<p>🥾 Trailhead: <a href="https://maps.google.com/?q=58.9924,6.1376" target="_blank" rel="noopener noreferrer">📍 Preikestolen parking</a>
 <a href="https://maps.google.com/?q=59.0340,6.5780" target="_blank" rel="noopener noreferrer">📍 Kjerag parking</a></p>
 <h4 id="trek-finlandia">🇫🇮 Finland Trekking (D7-D15)</h4>
 <table class="no-responsive">
@@ -8860,7 +8860,7 @@ On cold, foggy winter mornings, reeds and hedges coat in delicate ice crystals, 
 </tr>
 </tbody>
 </table>
-<p>🥾 Trailhead: <a href="https://maps.google.com/?q=61.7600,29.3900" target="_blank" rel="noopener noreferrer">📍 Punkaharju Ridge</a></p>
+<p>🥾 Trailhead: <a href="https://maps.google.com/?q=61.7762,29.3366" target="_blank" rel="noopener noreferrer">📍 Punkaharju Ridge</a></p>
 <p><em>In the land of a thousand lakes, there are no advanced treks: the terrain is flat. Better for kayak/canoe.</em></p>
 <h4 id="trek-baschi">🇪🇸 Basque Country (D44-D45)</h4>
 <table class="no-responsive">
@@ -8893,7 +8893,7 @@ On cold, foggy winter mornings, reeds and hedges coat in delicate ice crystals, 
 </tr>
 </tbody>
 </table>
-<p>🥾 Trailhead: <a href="https://maps.google.com/?q=43.4480,-2.7850" target="_blank" rel="noopener noreferrer">📍 Gaztelugatxe parking</a>
+<p>🥾 Trailhead: <a href="https://maps.google.com/?q=43.4412,-2.7840" target="_blank" rel="noopener noreferrer">📍 Gaztelugatxe parking</a>
 <a href="https://maps.google.com/?q=43.3150,-2.2550" target="_blank" rel="noopener noreferrer">📍 Flysch Zumaia</a>
 <a href="https://maps.google.com/?q=43.3200,-2.0050" target="_blank" rel="noopener noreferrer">📍 Monte Igueldo</a></p>
 <h4 id="trek-picos">🇪🇸 Picos de Europa (D46)</h4>
@@ -8939,7 +8939,7 @@ On cold, foggy winter mornings, reeds and hedges coat in delicate ice crystals, 
 </tr>
 </tbody>
 </table>
-<p>🥾 Trailhead: <a href="https://maps.google.com/?q=43.1488,-4.8088" target="_blank" rel="noopener noreferrer">📍 Fuente Dé cable car</a>
+<p>🥾 Trailhead: <a href="https://maps.google.com/?q=43.1431,-4.8126" target="_blank" rel="noopener noreferrer">📍 Fuente Dé cable car</a>
 <a href="https://maps.google.com/?q=43.2700,-5.0500" target="_blank" rel="noopener noreferrer">📍 Lagos de Covadonga</a>
 <a href="https://maps.google.com/?q=43.2480,-4.8380" target="_blank" rel="noopener noreferrer">📍 Ruta del Cares (Poncebos)</a></p>
 <hr>
@@ -13644,10 +13644,10 @@ On cold, foggy winter mornings, reeds and hedges coat in delicate ice crystals, 
 <p><strong>The problem:</strong> You will drive about 1,870 km across 4 driving days (D3–D6), with D7 as a rest day in Tallinn. Considering bathroom breaks, lunches, and traffic, actual travel times will increase by 20-30%. The children will spend most of the time strapped in car seats.</p>
 <p><strong>Solution:</strong> Always start at dawn (e.g. 5:00 or 6:00 AM). The children will sleep for the first 3-4 hours of travel, allowing you to "cover kilometers" peacefully and arrive at the destination by lunchtime, saving afternoons for parks and explorations.</p>
 <h3 id="2-luscita-dalle-lofoten-g25-lofoten-mo-i-rana">2. Leaving the Lofoten (D25: Lofoten → Mo i Rana)</h3>
-<p>The table shows 400 km, 5h + ferry. Be careful as this estimate is optimistic:</p>
+<p>The table shows 330 km, 4h + ferry 3h 15m. Be careful as this estimate is optimistic:</p>
 <p>The Moskenes–Bodø ferry lasts about 3.5–4 hours</p>
 <p>You must be at the boarding at least 1 hour (or 2) before</p>
-<p>From Bodø to Mo i Rana there are about 230 km (another 3.5 hours driving)</p>
+<p>From Bodø to Mo i Rana there are about 320 km (another 4 hours driving)</p>
 <p><strong>The problem:</strong> This will be a draining day, almost exclusively transit (about 9-10 hours total including driving, waiting, and sailing). Consider it a "lost" day tourist-wise and prepare onboard entertainment for the children.</p>
 <h3 id="3-lincognita-dei-traghetti-prenotazioni-obbligatorie">3. The Ferry Uncertainty (Mandatory Reservations)</h3>
 <p>The trip relies on some crucial ferries (Tallinn–Helsinki, Moskenes–Bodø, Kristiansand–Hirtshals).</p>
@@ -15272,7 +15272,7 @@ On cold, foggy winter mornings, reeds and hedges coat in delicate ice crystals, 
 <script>
 // Load home-variants_en.html templates into the page
 (function(){
-  fetch('./home-variants_en.html?v=4.99').then(function(r){return r.text();}).then(function(html){
+  fetch('./home-variants_en.html?v=5.01').then(function(r){return r.text();}).then(function(html){
     var div = document.getElementById('hv-templates');
     if(div) div.innerHTML = html;
     // Move templates to document body for proper <template> access
@@ -15282,8 +15282,8 @@ On cold, foggy winter mornings, reeds and hedges coat in delicate ice crystals, 
 })();
 </script>
 <!-- Debug Overlay (v2.47 diagnostic) -->
-<script src="debug-overlay.js?v=4.99" defer></script>
+<script src="debug-overlay.js?v=5.01" defer></script>
 <!-- Capacitor GPS Bridge (only activates inside native app, ignored in browser) -->
-<script src="capacitor-gps-bridge.js?v=4.99" defer></script>
+<script src="capacitor-gps-bridge.js?v=5.01" defer></script>
 </body>
 </html>

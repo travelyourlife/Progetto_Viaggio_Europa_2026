@@ -29,6 +29,7 @@
  *  12. parseExpenseScreenshot  — onCall: GPT-4o Vision OCR for bank screenshots
  *  13. cleanupOldNotifications — onSchedule daily 03:00: purge queue >7 days
  *  14. parseExpensePdf          — onCall: GPT-4o text analysis for PDF bank statements
+ *  15. syncOrphanAuthUsers      — onSchedule daily 06:00: creates pendingUsers for Auth orphans
  *
  * Deploy:
  *   cd functions && rm -rf node_modules package-lock.json && npm install
@@ -2305,3 +2306,104 @@ exports.stravaOAuthCallback = onRequest({
     res.status(500).send('<html><body><h2>Internal error</h2><p>' + err.message + '</p></body></html>');
   }
 });
+
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// 15. SYNC ORPHAN AUTH USERS (Cloud Scheduler — 06:00 AM Rome)
+//     v5.01: Catches users who completed Google Sign-In (appear in Firebase Auth)
+//     but whose client-side pendingUsers write never completed (flaky connection,
+//     early app close, old app version). Creates the pending request server-side
+//     so the owner always gets notified.
+// ═══════════════════════════════════════════════════════════════════════════════
+exports.syncOrphanAuthUsers = onSchedule(
+  {
+    schedule: '0 6 * * *',
+    timeZone: 'Europe/Rome',
+  },
+  async (event) => {
+    logger.log('[SyncOrphans] Starting orphan Auth user check...');
+
+    // 1. List ALL Firebase Auth users (paginated)
+    const allAuthUsers = [];
+    let nextPageToken;
+    do {
+      const listResult = await admin.auth().listUsers(1000, nextPageToken);
+      listResult.users.forEach((userRecord) => {
+        allAuthUsers.push({
+          uid: userRecord.uid,
+          email: userRecord.email || '',
+          displayName: userRecord.displayName || 'Utente',
+          photoURL: userRecord.photoURL || '',
+        });
+      });
+      nextPageToken = listResult.pageToken;
+    } while (nextPageToken);
+
+    logger.log(`[SyncOrphans] Found ${allAuthUsers.length} total Auth users`);
+
+    // 2. Load existing approved, pending, banned, and owner users from RTDB
+    const [approvedSnap, pendingSnap, bannedSnap, ownerSnap] = await Promise.all([
+      db.ref(`trips/${FAMILY_ID}/approvedUsers`).once('value'),
+      db.ref(`trips/${FAMILY_ID}/pendingUsers`).once('value'),
+      db.ref(`trips/${FAMILY_ID}/bannedUsers`).once('value'),
+      db.ref(`trips/${FAMILY_ID}/ownerUsers`).once('value'),
+    ]);
+
+    const approved = approvedSnap.val() || {};
+    const pending = pendingSnap.val() || {};
+    const banned = bannedSnap.val() || {};
+    const owners = ownerSnap.val() || {};
+
+    // 3. Find orphans: in Auth but NOT in approved/pending/banned/owners/OWNER_UIDS
+    const orphans = allAuthUsers.filter((u) => {
+      if (OWNER_UIDS.includes(u.uid)) return false; // hardcoded owner
+      if (owners[u.uid]) return false;               // dynamic owner
+      if (approved[u.uid]) return false;             // already approved
+      if (pending[u.uid]) return false;              // already pending
+      if (banned[u.uid]) return false;               // banned
+      return true;
+    });
+
+    if (orphans.length === 0) {
+      logger.log('[SyncOrphans] No orphan users found. All good!');
+      return null;
+    }
+
+    logger.log(`[SyncOrphans] Found ${orphans.length} orphan user(s). Creating pending requests...`);
+
+    // 4. Write each orphan to pendingUsers (batch)
+    const updates = {};
+    orphans.forEach((u) => {
+      updates[`trips/${FAMILY_ID}/pendingUsers/${u.uid}`] = {
+        email: u.email,
+        displayName: u.displayName,
+        photoURL: u.photoURL,
+        requestedAt: Date.now(),
+        source: 'server-sync', // flag to distinguish from client-submitted requests
+      };
+    });
+
+    await db.ref().update(updates);
+    logger.log(`[SyncOrphans] Created ${orphans.length} pending request(s):`,
+      orphans.map((u) => u.email).join(', '));
+
+    // Note: The existing notifyNewPendingUser trigger (onValueCreated) will fire
+    // for each new pendingUsers/{uid} node, sending push notifications to the owner.
+    // However, db.ref().update() with multiple paths may or may not trigger
+    // onValueCreated for each child. To be safe, also queue a summary notification.
+    const notifRef = db.ref(`trips/${FAMILY_ID}/notifications/queue`);
+    await notifRef.push({
+      type: 'orphan_sync',
+      title: '👥 ' + orphans.length + ' nuov' + (orphans.length === 1 ? 'a' : 'e') + ' richiest' + (orphans.length === 1 ? 'a' : 'e') + ' di accesso',
+      body: orphans.slice(0, 3).map((u) => u.displayName || u.email).join(', ') +
+        (orphans.length > 3 ? ' +' + (orphans.length - 3) + ' altr' + (orphans.length - 3 === 1 ? 'o' : 'i') : '') +
+        ' — apri Admin per approvare.',
+      target: 'owner',
+      url: './#tab-admin',
+      tag: 'orphan_sync',
+      createdAt: Date.now(),
+      sent: false,
+    });
+
+    return null;
+  });

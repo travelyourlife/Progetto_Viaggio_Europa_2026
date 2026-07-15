@@ -61,10 +61,10 @@
 <link href="./icon.png" rel="apple-touch-icon" sizes="167x167"/>
 <title>Quo Vadis — V4.90</title>
 <link crossorigin="" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" rel="stylesheet"/>
-<link href="style.css?v=4.99" rel="stylesheet"/>
-<link href="home-variants.css?v=4.99" rel="stylesheet"/>
-<link href="unified-map.css?v=4.99" rel="stylesheet"/>
-<link href="modern-pages.css?v=4.99" rel="stylesheet"/>
+<link href="style.css?v=5.01" rel="stylesheet"/>
+<link href="home-variants.css?v=5.01" rel="stylesheet"/>
+<link href="unified-map.css?v=5.01" rel="stylesheet"/>
+<link href="modern-pages.css?v=5.01" rel="stylesheet"/>
 <link crossorigin="" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" rel="stylesheet"/>
 <link crossorigin="" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" rel="stylesheet"/>
 <!-- Firebase SDK (compat mode for single-file app) -->
@@ -81,7 +81,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = "4.99";
+  var EXPECTED_VERSION = "5.01";
   window.IS_PROD = true; // v2.96: parità con index.html — disabilita debug overlay in produzione
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
@@ -148,23 +148,23 @@
   });
 })();
 </script>
-<script defer="" src="data.js?v=4.99"></script>
-<script defer="" src="days-data.js?v=4.99"></script>
-<script defer="" src="days-renderer.js?v=4.99"></script>
+<script defer="" src="data.js?v=5.01"></script>
+<script defer="" src="days-data.js?v=5.01"></script>
+<script defer="" src="days-renderer.js?v=5.01"></script>
 <!-- wiki-links.js: lazy-loaded on first open of Culture/Activity tab (34KB) — parity with index.html -->
-<script defer="" src="weather-coords.js?v=4.99"></script>
+<script defer="" src="weather-coords.js?v=5.01"></script>
 <script crossorigin="" defer="" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script crossorigin="" defer="" src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
-<script defer="" src="poi-data.js?v=4.99"></script>
-<script defer="" src="app.js?v=4.99"></script>
-<script defer="" src="curiosita-data.js?v=4.99"></script>
+<script defer="" src="poi-data.js?v=5.01"></script>
+<script defer="" src="app.js?v=5.01"></script>
+<script defer="" src="curiosita-data.js?v=5.01"></script>
 <script>window.QV_CURIOSITA_SERVER_SIDE = true; window.QV_RECAP_SERVER_SIDE = true;</script>
-<script defer="" src="curiosita-scheduler.js?v=4.99"></script>
-<script defer="" src="quiz-fun.js?v=4.99"></script>
-<script defer="" src="unified-map.js?v=4.99"></script>
-<script defer="" src="city-itineraries.js?v=4.99"></script>
-<script defer="" src="city-itineraries-ui.js?v=4.99"></script>
-<script defer="" src="home-variants.js?v=4.99"></script>
+<script defer="" src="curiosita-scheduler.js?v=5.01"></script>
+<script defer="" src="quiz-fun.js?v=5.01"></script>
+<script defer="" src="unified-map.js?v=5.01"></script>
+<script defer="" src="city-itineraries.js?v=5.01"></script>
+<script defer="" src="city-itineraries-ui.js?v=5.01"></script>
+<script defer="" src="home-variants.js?v=5.01"></script>
 </head>
 <body class="on-home">
 <!-- ─── Splash Screen ─── -->
@@ -562,7 +562,7 @@
 <button id="btn-oggi" style="display:none;font-size:12px;font-weight:600;color:#3b82f6;background:#eff6ff;border:1px solid #bfdbfe;border-radius:20px;padding:5px 12px;cursor:pointer;" type="button">📍 Hoy: D2</button>
 </div>
 <h1 style="text-align:center; margin-top:16px;">📅 Itinerario — Día a día</h1>
-<div id="goto-today-box" style="text-align:center; margin-bottom:16px; display:none;">
+<div id="goto-today-box" style="text-align:center; margin-bottom:16px;">
 <div style="display:inline-flex; flex-wrap:wrap; gap:10px; justify-content:center; align-items:center;">
 <button class="pos-btn pos-btn-blue" id="goto-today-btn" style="font-size:15px; padding:12px 24px;" type="button">📅 Ir a hoy</button>
 <button class="pos-btn pos-btn-green" id="goto-citta-btn" style="font-size:15px; padding:12px 24px;" type="button">🗺️ Itinerarios de ciudad</button>
@@ -4361,7 +4361,7 @@ Maduración: finales de Agosto-Septiembre. Baya redonda, roja y firme que crece 
 Maduración: Julio-Agosto. Conocida como "el oro de los pantanos", es la baya más preciada y costosa. Crece exclusivamente en turberas húmedas y pantanosas (requiere botas de goma para la recolección). La planta produce una sola flor blanca y un solo fruto por tallo. El fruto se parece a una frambuesa, pero comienza de color rojo duro y, al madurar, se vuelve blando, jugoso y de un color ámbar-anaranjado brillante. Tiene un sabor único, dulce-ácido con notas de miel y albaricoque. Muy rica en vitamina C, se sirve tradicionalmente en forma de mermelada caliente sobre el <em>leipäjuusto</em> (el "queso de pan" finlandés).</div>
 </div>
 <h4 class="nature-subsection">Hongos Comestibles e Identificación</h4>
-<p>De las 5.000 especies fúngicas finlandesas, unas 200 son comestibles. La recolección requiere atención para evitar confusiones con especies tóxicas. La regla de oro finlandesa es: "No recojas hongos blancos". El Ángel Destructor (<em>Amanita virosa</em>), completamente blanco y mortal, está presente en los bosques finlandeses.</p>
+<p>De las 5.010 especies fúngicas finlandesas, unas 200 son comestibles. La recolección requiere atención para evitar confusiones con especies tóxicas. La regla de oro finlandesa es: "No recojas hongos blancos". El Ángel Destructor (<em>Amanita virosa</em>), completamente blanco y mortal, está presente en los bosques finlandeses.</p>
 <div class="nature-table-wrap"><table class="nature-table">
 <thead><tr>
 <th>Specie Commestibile</th>
@@ -4506,7 +4506,7 @@ El ave más grande de Europa (envergadura 2,5 m). Salvada de la extinción causa
 <figure class="nature-figure"><img src="images/nature/rapakivi-granite.jpg" alt="Granito Rapakivi" loading="lazy" class="nature-img"><figcaption>Granito Rapakivi</figcaption></figure>
 <p>El sustrato rocoso finlandés pertenece al Escudo Fennoscandiano, con rocas que tienen entre 1,6 y más de 3 mil millones de años. La roca nacional es el granito.   En la región sureste (área del Saimaa Geopark y Wiborg) se encuentra una roca única en el mundo: el <strong>granito <em>rapakivi</strong></em> (1,6 mil millones de años). El nombre finlandés significa literalmente "piedra fangosa" o "piedra que se deshace" (<em>rapautua</em> = deshacerse, <em>kivi</em> = piedra). Se caracteriza por grandes cristales redondeados de ortoclasa rojo/rosada rodeados por un anillo de oligoclasa verde/gris. Debido a los diferentes coeficientes de dilatación térmica de estos minerales, la roca se fractura fácilmente con los cambios de temperatura y se desintegra en una grava rojiza (llamada <em>moro</em>). Es muy utilizada en arquitectura y pavimentaciones (conocida comercialmente como "Baltic Brown").</p>
 <h4 class="nature-subsection">La Glaciación Weichseliana y las Formaciones Glaciares</h4>
-<p>Hace unos 25.000 años, durante el último máximo glacial, toda Finlandia estaba cubierta por una <strong>capa de hielo de 2 kilómetros de espesor</strong>. La inmensa presión removió en promedio entre 7 y 25 metros de roca sólida, lijando las colinas (creando las rocas montonadas, lisas en la parte superior y rugosas en la inferior) y excavando las fracturas preexistentes.   Cuando el clima se calentó, el hielo comenzó a derretirse y retirarse hacia el noroeste, dejando tras de sí formaciones inconfundibles:</p>
+<p>Hace unos 25.010 años, durante el último máximo glacial, toda Finlandia estaba cubierta por una <strong>capa de hielo de 2 kilómetros de espesor</strong>. La inmensa presión removió en promedio entre 7 y 25 metros de roca sólida, lijando las colinas (creando las rocas montonadas, lisas en la parte superior y rugosas en la inferior) y excavando las fracturas preexistentes.   Cuando el clima se calentó, el hielo comenzó a derretirse y retirarse hacia el noroeste, dejando tras de sí formaciones inconfundibles:</p>
 <div class="nature-species-card">
 <img src="images/nature/punkaharju-esker.jpg" alt="Punkaharju Esker" loading="lazy" class="nature-species-img">
 <div class="nature-species-text"><strong>Esker (<em>harju</em>)</strong>  
@@ -8350,7 +8350,7 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 </tr>
 </tbody>
 </table>
-<p>🥾 Inicio del sendero: <a href="https://maps.google.com/?q=69.6492,18.9553" rel="noopener noreferrer" target="_blank">📍 Base de Fjellheisen</a>
+<p>🥾 Inicio del sendero: <a href="https://maps.google.com/?q=69.6318,19.0025" rel="noopener noreferrer" target="_blank">📍 Base de Fjellheisen</a>
 <a href="https://maps.google.com/?q=69.6600,18.9400" rel="noopener noreferrer" target="_blank">📍 Prestvannet</a>
 <a href="https://maps.google.com/?q=69.6540,18.9680" rel="noopener noreferrer" target="_blank">📍 Sherpatrappa</a></p>
 <h4 id="trek-senja">🇳🇴 Senja (D17)</h4>
@@ -8390,7 +8390,7 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 </tr>
 </tbody>
 </table>
-<p>🥾 Inicio del sendero: <a href="https://maps.google.com/?q=69.2950,17.0500" rel="noopener noreferrer" target="_blank">📍 Tungeneset</a>
+<p>🥾 Inicio del sendero: <a href="https://maps.google.com/?q=69.4869,17.3331" rel="noopener noreferrer" target="_blank">📍 Tungeneset</a>
 <a href="https://maps.google.com/?q=69.2500,17.0000" rel="noopener noreferrer" target="_blank">📍 Ersfjordstranda</a>
 <a href="https://maps.google.com/?q=69.2848,17.1067" rel="noopener noreferrer" target="_blank">📍 Aparcamiento Segla/Hesten</a></p>
 <h4 id="trek-vesteralen">🇳🇴 Vesterålen / Andøya (D18-D19)</h4>
@@ -8418,7 +8418,7 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 </tr>
 </tbody>
 </table>
-<p>🥾 Inicio del sendero: <a href="https://maps.google.com/?q=69.2700,15.8700" rel="noopener noreferrer" target="_blank">📍 Bleik Beach</a>
+<p>🥾 Inicio del sendero: <a href="https://maps.google.com/?q=69.2355,15.9492" rel="noopener noreferrer" target="_blank">📍 Bleik Beach</a>
 <a href="https://maps.google.com/?q=69.1200,15.8900" rel="noopener noreferrer" target="_blank">📍 Aparcamiento de Måtinden</a></p>
 <h4 id="trek-lofoten">🇳🇴 Lofoten (D20-D24)</h4>
 <table class="no-responsive">
@@ -8469,10 +8469,10 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 </tr>
 </tbody>
 </table>
-<p>🥾 Inicio del sendero: <a href="https://maps.google.com/?q=68.2100,13.8600" rel="noopener noreferrer" target="_blank">📍 Haukland</a>
-<a href="https://maps.google.com/?q=68.1300,13.5900" rel="noopener noreferrer" target="_blank">📍 Offersøykammen</a>
-<a href="https://maps.google.com/?q=68.0580,13.0750" rel="noopener noreferrer" target="_blank">📍 Reinebringen</a>
-<a href="https://maps.google.com/?q=68.0900,13.1200" rel="noopener noreferrer" target="_blank">📍 Ryten/Kvalvika</a></p>
+<p>🥾 Inicio del sendero: <a href="https://maps.google.com/?q=68.1991,13.5328" rel="noopener noreferrer" target="_blank">📍 Haukland</a>
+<a href="https://maps.google.com/?q=68.1495,13.5063" rel="noopener noreferrer" target="_blank">📍 Offersøykammen</a>
+<a href="https://maps.google.com/?q=67.9223,13.0784" rel="noopener noreferrer" target="_blank">📍 Reinebringen</a>
+<a href="https://maps.google.com/?q=68.0887,13.1390" rel="noopener noreferrer" target="_blank">📍 Ryten/Kvalvika</a></p>
 <h4 id="trek-geiranger">🇳🇴 Geiranger / Trollstigen (D29)</h4>
 <table class="no-responsive">
 <thead>
@@ -8510,7 +8510,7 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 </tr>
 </tbody>
 </table>
-<p>🥾 Inicio del sendero: <a href="https://maps.google.com/?q=62.4560,7.6700" rel="noopener noreferrer" target="_blank">📍 Cima de Trollstigen</a>
+<p>🥾 Inicio del sendero: <a href="https://maps.google.com/?q=62.4533,7.6627" rel="noopener noreferrer" target="_blank">📍 Cima de Trollstigen</a>
 <a href="https://maps.google.com/?q=62.0900,7.0700" rel="noopener noreferrer" target="_blank">📍 Flydalsjuvet</a>
 <a href="https://maps.google.com/?q=62.1100,7.0400" rel="noopener noreferrer" target="_blank">📍 Skageflå</a></p>
 <h4 id="trek-bergen">🇳🇴 Bergen (D31)</h4>
@@ -8571,7 +8571,7 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 </tr>
 </tbody>
 </table>
-<p>🥾 Inicio del sendero: <a href="https://maps.google.com/?q=58.9943,6.1490" rel="noopener noreferrer" target="_blank">📍 Aparcamiento de Preikestolen</a>
+<p>🥾 Inicio del sendero: <a href="https://maps.google.com/?q=58.9924,6.1376" rel="noopener noreferrer" target="_blank">📍 Aparcamiento de Preikestolen</a>
 <a href="https://maps.google.com/?q=59.0340,6.5780" rel="noopener noreferrer" target="_blank">📍 Aparcamiento de Kjerag</a></p>
 <h4 id="trek-finlandia">🇫🇮 Senderismo en Finlandia (D7-D15)</h4>
 <table class="no-responsive">
@@ -8592,7 +8592,7 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 </tr>
 </tbody>
 </table>
-<p>🥾 Inicio del sendero: <a href="https://maps.google.com/?q=61.7600,29.3900" rel="noopener noreferrer" target="_blank">📍 Cresta de Punkaharju</a></p>
+<p>🥾 Inicio del sendero: <a href="https://maps.google.com/?q=61.7762,29.3366" rel="noopener noreferrer" target="_blank">📍 Cresta de Punkaharju</a></p>
 <p><em>En la tierra de los mil lagos no hay rutas avanzadas: el terreno es llano. Mejor para kayak/canoa.</em></p>
 <h4 id="trek-baschi">🇪🇸 Basque Country (D44-D45)</h4>
 <table class="no-responsive">
@@ -8625,7 +8625,7 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 </tr>
 </tbody>
 </table>
-<p>🥾 Inicio del sendero: <a href="https://maps.google.com/?q=43.4480,-2.7850" rel="noopener noreferrer" target="_blank">📍 Aparcamiento de Gaztelugatxe</a>
+<p>🥾 Inicio del sendero: <a href="https://maps.google.com/?q=43.4412,-2.7840" rel="noopener noreferrer" target="_blank">📍 Aparcamiento de Gaztelugatxe</a>
 <a href="https://maps.google.com/?q=43.3150,-2.2550" rel="noopener noreferrer" target="_blank">📍 Flysch de Zumaia</a>
 <a href="https://maps.google.com/?q=43.3200,-2.0050" rel="noopener noreferrer" target="_blank">📍 Monte Igueldo</a></p>
 <h4 id="trek-picos">🇪🇸 Picos de Europa (D46)</h4>
@@ -8671,7 +8671,7 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 </tr>
 </tbody>
 </table>
-<p>🥾 Inicio del sendero: <a href="https://maps.google.com/?q=43.1488,-4.8088" rel="noopener noreferrer" target="_blank">📍 Teleférico de Fuente Dé</a>
+<p>🥾 Inicio del sendero: <a href="https://maps.google.com/?q=43.1431,-4.8126" rel="noopener noreferrer" target="_blank">📍 Teleférico de Fuente Dé</a>
 <a href="https://maps.google.com/?q=43.2700,-5.0500" rel="noopener noreferrer" target="_blank">📍 Lagos de Covadonga</a>
 <a href="https://maps.google.com/?q=43.2480,-4.8380" rel="noopener noreferrer" target="_blank">📍 Ruta del Cares (Poncebos)</a></p>
 <hr/>
@@ -11493,7 +11493,7 @@ Maduración: finales de Agosto-Septiembre. Baya redonda, roja y firme que crece 
 Maduración: Julio-Agosto. Conocida como "el oro de los pantanos", es la baya más preciada y costosa. Crece exclusivamente en turberas húmedas y pantanosas (requiere botas de goma para la recolección). La planta produce una sola flor blanca y un solo fruto por tallo. El fruto se parece a una frambuesa, pero comienza de color rojo duro y, al madurar, se vuelve blando, jugoso y de un color ámbar-anaranjado brillante. Tiene un sabor único, dulce-ácido con notas de miel y albaricoque. Muy rica en vitamina C, se sirve tradicionalmente en forma de mermelada caliente sobre el <em>leipäjuusto</em> (el "queso de pan" finlandés).</div>
 </div>
 <h4 class="nature-subsection">Hongos Comestibles e Identificación</h4>
-<p>De las 5.000 especies fúngicas finlandesas, unas 200 son comestibles. La recolección requiere atención para evitar confusiones con especies tóxicas. La regla de oro finlandesa es: "No recojas hongos blancos". El Ángel Destructor (<em>Amanita virosa</em>), completamente blanco y mortal, está presente en los bosques finlandeses.</p>
+<p>De las 5.010 especies fúngicas finlandesas, unas 200 son comestibles. La recolección requiere atención para evitar confusiones con especies tóxicas. La regla de oro finlandesa es: "No recojas hongos blancos". El Ángel Destructor (<em>Amanita virosa</em>), completamente blanco y mortal, está presente en los bosques finlandeses.</p>
 <div class="nature-table-wrap"><table class="nature-table">
 <thead><tr>
 <th>Specie Commestibile</th>
@@ -11638,7 +11638,7 @@ El ave más grande de Europa (envergadura 2,5 m). Salvada de la extinción causa
 <figure class="nature-figure"><img src="images/nature/rapakivi-granite.jpg" alt="Granito Rapakivi" loading="lazy" class="nature-img"><figcaption>Granito Rapakivi</figcaption></figure>
 <p>El sustrato rocoso finlandés pertenece al Escudo Fennoscandiano, con rocas que tienen entre 1,6 y más de 3 mil millones de años. La roca nacional es el granito.   En la región sureste (área del Saimaa Geopark y Wiborg) se encuentra una roca única en el mundo: el <strong>granito <em>rapakivi</strong></em> (1,6 mil millones de años). El nombre finlandés significa literalmente "piedra fangosa" o "piedra que se deshace" (<em>rapautua</em> = deshacerse, <em>kivi</em> = piedra). Se caracteriza por grandes cristales redondeados de ortoclasa rojo/rosada rodeados por un anillo de oligoclasa verde/gris. Debido a los diferentes coeficientes de dilatación térmica de estos minerales, la roca se fractura fácilmente con los cambios de temperatura y se desintegra en una grava rojiza (llamada <em>moro</em>). Es muy utilizada en arquitectura y pavimentaciones (conocida comercialmente como "Baltic Brown").</p>
 <h4 class="nature-subsection">La Glaciación Weichseliana y las Formaciones Glaciares</h4>
-<p>Hace unos 25.000 años, durante el último máximo glacial, toda Finlandia estaba cubierta por una <strong>capa de hielo de 2 kilómetros de espesor</strong>. La inmensa presión removió en promedio entre 7 y 25 metros de roca sólida, lijando las colinas (creando las rocas montonadas, lisas en la parte superior y rugosas en la inferior) y excavando las fracturas preexistentes.   Cuando el clima se calentó, el hielo comenzó a derretirse y retirarse hacia el noroeste, dejando tras de sí formaciones inconfundibles:</p>
+<p>Hace unos 25.010 años, durante el último máximo glacial, toda Finlandia estaba cubierta por una <strong>capa de hielo de 2 kilómetros de espesor</strong>. La inmensa presión removió en promedio entre 7 y 25 metros de roca sólida, lijando las colinas (creando las rocas montonadas, lisas en la parte superior y rugosas en la inferior) y excavando las fracturas preexistentes.   Cuando el clima se calentó, el hielo comenzó a derretirse y retirarse hacia el noroeste, dejando tras de sí formaciones inconfundibles:</p>
 <div class="nature-species-card">
 <img src="images/nature/punkaharju-esker.jpg" alt="Punkaharju Esker" loading="lazy" class="nature-species-img">
 <div class="nature-species-text"><strong>Esker (<em>harju</em>)</strong>
@@ -13141,10 +13141,10 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 <p><strong>El problema:</strong> Recorrerás aproximadamente 1,870 km repartidos en 4 días de conducción (D3–D6), con D7 como día de descanso en Tallinn. Teniendo en cuenta paradas para el baño, comidas y el tráfico, los tiempos reales de viaje aumentarán un 20-30%. Los niños pasarán la mayor parte del tiempo sujetos en sus sillas de coche.</p>
 <p><strong>Solución:</strong> Siempre salid al amanecer (p. ej. 5:00 o 6:00 AM). Los niños dormirán las primeras 3-4 horas de viaje, lo que os permitirá "hacer kilómetros" en paz y llegar al destino a la hora de comer, dejando las tardes para parques y exploraciones.</p>
 <h3 id="2-luscita-dalle-lofoten-g25-lofoten-mo-i-rana">2. Salida de Lofoten (D25: Lofoten → Mo i Rana)</h3>
-<p>La tabla muestra 400 km, 5h + ferry. Ten cuidado: esta estimación es optimista:</p>
+<p>La tabla muestra 330 km, 4h + ferry 3h 15m. Ten cuidado: esta estimación es optimista:</p>
 <p>El ferry Moskenes–Bodø dura aproximadamente 3.5–4 hours</p>
 <p>Debes presentarte en el embarque al menos 1 hour (o 2) antes</p>
-<p>De Bodø a Mo i Rana hay unos 230 km (otras 3.5 hours de conducción)</p>
+<p>De Bodø a Mo i Rana hay unos 320 km (otras 4 horas de conducción)</p>
 <p><strong>El problema:</strong> Será un día agotador, casi exclusivamente de tránsito (aprox. 9-10 hours en total incluyendo conducción, espera y navegación). Considéralo un día "perdido" turísticamente y prepara entretenimiento a bordo para los niños.</p>
 <h3 id="3-lincognita-dei-traghetti-prenotazioni-obbligatorie">3. Incertidumbre de los ferries (reservas obligatorias)</h3>
 <p>El viaje depende de algunos ferries cruciales (Tallinn–Helsinki, Moskenes–Bodø, Kristiansand–Hirtshals).</p>
@@ -14720,7 +14720,7 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 <script>
 // Load home-variants_es.html templates into the page
 (function(){
-  fetch('./home-variants_es.html?v=4.99').then(function(r){return r.text();}).then(function(html){
+  fetch('./home-variants_es.html?v=5.01').then(function(r){return r.text();}).then(function(html){
     var div = document.getElementById('hv-templates');
     if(div) div.innerHTML = html;
     // Move templates to document body for proper <template> access
@@ -14730,8 +14730,8 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 })();
 </script>
 <!-- Debug Overlay (v2.47 diagnostic) -->
-<script defer="" src="debug-overlay.js?v=4.99"></script>
+<script defer="" src="debug-overlay.js?v=5.01"></script>
 <!-- Capacitor GPS Bridge (only activates inside native app, ignored in browser) -->
-<script defer="" src="capacitor-gps-bridge.js?v=4.99"></script>
+<script defer="" src="capacitor-gps-bridge.js?v=5.01"></script>
 </body>
 </html>
