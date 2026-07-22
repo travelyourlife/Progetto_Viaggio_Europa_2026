@@ -45,7 +45,10 @@
           "Wikipedia: Hauptplatz (Leoben)",
           "TripAdvisor: Hauptplatz"
         ],
-        "maps": "https://maps.google.com/?q=47.38046,15.09476"
+        "maps": "https://maps.google.com/?q=47.38046,15.09476",
+        "nameES": "Hauptplatz",
+        "shortES": "La plaza principal de Leoben, rodeada de edificios históricos y monumentos.",
+        "descES": "El Hauptplatz es el corazón palpitante de Leoben, con orígenes en la Edad Media. Esta amplia plaza peatonal está flanqueada por elegantes edificios históricos, entre ellos el Antiguo Ayuntamiento y la Columna de la Trinidad (Pestsäule). Es el lugar ideal para comenzar a explorar la ciudad, disfrutando de la atmósfera local en los numerosos cafés al aire libre."
       },
       {
         "tier": 2,
@@ -65,7 +68,10 @@
           "Wikipedia: Schwammerlturm",
           "Leoben Tourism: Schwammerlturm"
         ],
-        "maps": "https://maps.google.com/?q=47.37999,15.09258"
+        "maps": "https://maps.google.com/?q=47.37999,15.09258",
+        "nameES": "Schwammerlturm",
+        "shortES": "Una torre medieval icónica con un característico tejado con forma de hongo.",
+        "descES": "El Schwammerlturm, o 'Torre del Hongo', es el símbolo más famoso de Leoben. Alta circa 30 metri, esta torre medieval formaba parte de las antiguas fortificaciones de la ciudad. Su nombre proviene del tejado abovedado añadido en el siglo XVII, que recuerda a un hongo. Los visitantes pueden subir a la cima para disfrutar de una vista panorámica de la ciudad y del río Mur."
       },
       {
         "tier": 1,
@@ -85,7 +91,10 @@
           "Wikipedia: MuseumsCenter Leoben",
           "KulturQuartier Leoben Official Site"
         ],
-        "maps": "https://maps.google.com/?q=47.3807,15.09167"
+        "maps": "https://maps.google.com/?q=47.3807,15.09167",
+        "nameES": "MuseumsCenter Leoben",
+        "shortES": "Un museo que explora la rica historia y la cultura industrial de la región.",
+        "descES": "Situado en el KulturQuartier, el MuseumsCenter Leoben ofrece un fascinante viaje a través de 1100 años de historia de la ciudad. Las exposiciones se centran especialmente en la industria minera y metalúrgica que ha moldeado la región. El complejo alberga también la Kunsthalle, que presenta exposiciones de arte contemporáneo. La entrada cuesta aproximadamente 3,50 euro."
       },
       {
         "tier": 1,
@@ -105,7 +114,10 @@
           "Wikipedia: Pfarrkirche Leoben-St. Xaver",
           "Visit A City: Parish Church Leoben-St. Xaver"
         ],
-        "maps": "https://maps.google.com/?q=47.38079,15.09251"
+        "maps": "https://maps.google.com/?q=47.38079,15.09251",
+        "nameES": "Pfarrkirche Leoben-St. Xaver",
+        "shortES": "Una magnífica iglesia exjesuita con un imponente interior barroco.",
+        "descES": "La iglesia parroquial de San Francisco Javier es una obra maestra de la arquitectura barroca, construida entre 1660 y 1665. Originariamente una iglesia jesuita, domina el centro histórico con su fachada de dos torres. El interior está ricamente decorado y se ha conservado casi intacto desde el siglo XVII, ofreciendo una atmósfera de grandiosa espiritualidad."
       },
       {
         "tier": 1,
@@ -113,8 +125,8 @@
         "name": "Gösser Braumuseum",
         "nameEN": "Gösser Brewery Museum",
         "cat": "cibo",
-        "lat": 47.36138,
-        "lng": 15.09388,
+        "lat": 47.362203,
+        "lng": 15.094608,
         "short": "Scopri la storia della birra austriaca più famosa in questo museo interattivo.",
         "shortEN": "Discover the history of Austria's most famous beer in this interactive museum.",
         "desc": "Il Gösser Braumuseum, situato nel quartiere di Göss, celebra la lunga tradizione birraria di Leoben, che risale al 1010. Il museo offre un'esperienza interattiva sulla produzione della birra Gösser, una delle più amate in Austria. Le visite guidate, che costano circa 10 euro, includono spesso una degustazione finale. Si consiglia di prenotare in anticipo.",
@@ -125,7 +137,10 @@
           "TripAdvisor: Gösser Braumuseum",
           "Gösser Official Site"
         ],
-        "maps": "https://maps.google.com/?q=47.36138,15.09388"
+        "maps": "https://maps.google.com/?q=47.36138,15.09388",
+        "nameES": "Gösser Braumuseum",
+        "shortES": "Descubre la historia de la cerveza austriaca más famosa en este museo interactivo.",
+        "descES": "El Gösser Braumuseum, situado en el barrio de Göss, celebra la larga tradición cervecera de Leoben, que se remonta al 1010. El museo ofrece una experiencia interactiva sobre la elaboración de la cerveza Gösser, una de las más queridas en Austria. Las visitas guiadas, que cuestan unos 10 euro, suelen incluir una degustación al final. Se recomienda reservar con antelación."
       },
       {
         "id": "leo-6",
@@ -144,15 +159,19 @@
           "Leoben Sightseeing",
           "Wikipedia"
         ],
-        "maps": "https://maps.google.com/?q=47.378281,15.097676"
+        "maps": "https://maps.google.com/?q=47.378281,15.097676",
+        "nameES": "Eggenwald'sches Gartenhaus",
+        "shortES": "El edificio histórico donde se firmó el Tratado de Leoben en 1797.",
+        "descES": "El Eggenwald'sches Gartenhaus es un edificio histórico de gran importancia para Leoben y para Europa. En este edificio de una planta, de estilo clásico, Napoleone Bonaparte y los diplomáticos austriacos negociaron y firmaron el Tratado de Paz preliminar de Leoben el 18 de abril de 1797. El edificio destaca por su elegante escalinata exterior y su arquitectura sobria pero imponente. Representa una pieza fundamental de la historia europea conservada en el corazón de la Stiria.",
+        "tipsES": "Situado en Mühltaler Straße, es fácilmente accesible a pie desde el centro."
       },
       {
         "id": "leo-7",
         "name": "Evangelische Gustav Adolf Kirche",
         "nameEN": "Evangelische Gustav Adolf Kirche",
         "cat": "cultura",
-        "lat": 47.381666,
-        "lng": 15.093077,
+        "lat": 47.386031,
+        "lng": 15.092005,
         "short": "Una chiesa protestante con una guglia imponente e bellissime vetrate.",
         "shortEN": "A Protestant church with an imposing spire and beautiful stained glass windows.",
         "desc": "La Chiesa Evangelica Gustav Adolf è un punto di riferimento visivo a Leoben, grazie alla sua imponente guglia visibile dalla piazza principale. L'interno della chiesa è caratterizzato da un design spartano che crea un affascinante contrasto con le elaborate vetrate colorate. Questo luogo di culto rappresenta un'importante testimonianza della comunità protestante nella regione. La sua architettura semplice ma elegante invita alla riflessione e alla contemplazione.",
@@ -162,7 +181,11 @@
         "src": [
           "Leoben Sightseeing"
         ],
-        "maps": "https://maps.google.com/?q=47.381666,15.093077"
+        "maps": "https://maps.google.com/?q=47.381666,15.093077",
+        "nameES": "Evangelische Gustav Adolf Kirche",
+        "shortES": "Una iglesia protestante con una aguja imponente y hermosas vidrieras.",
+        "descES": "La Iglesia Evangélica Gustav Adolf es un punto de referencia visual en Leoben, gracias a su imponente aguja visible desde la plaza principal. El interior de la iglesia se caracteriza por un diseño sobrio que crea un contraste fascinante con las elaboradas vidrieras de colores. Este lugar de culto representa un testimonio importante de la comunidad protestante en la región. Su arquitectura simple pero elegante invita a la reflexión y a la contemplación.",
+        "tipsES": "Abierta para los oficios religiosos y las visitas durante el día."
       },
       {
         "id": "leo-8",
@@ -181,15 +204,19 @@
           "Leoben Sightseeing",
           "Mapcarta"
         ],
-        "maps": "https://maps.google.com/?q=47.37878,15.09386"
+        "maps": "https://maps.google.com/?q=47.37878,15.09386",
+        "nameES": "Freimannsturm",
+        "shortES": "Una torre histórica que formaba parte de las fortificaciones medievales de la ciudad.",
+        "descES": "El Freimannsturm es una torre histórica que formaba parte de las fortificaciones medievales de Leoben. Caracterizada por un poderoso tejado piramidal, un friso dentado y almenas en forma de cerradura, la torre es un excelente ejemplo de arquitectura militar del tardío Medievo. Su estructura robusta testimonia la importancia estratégica de la ciudad en el pasado. Hoy, la torre se yergue como un fascinante recordatorio de la rica historia de Leoben.",
+        "tipsES": "Visible desde el exterior, se encuentra en Krottendorfergasse."
       },
       {
         "id": "leo-9",
         "name": "Gärner Park",
         "nameEN": "Gärner Park",
         "cat": "natura",
-        "lat": 47.381198,
-        "lng": 15.094455,
+        "lat": 47.38304,
+        "lng": 15.092724,
         "short": "Un parco storico con un monumento dedicato alle vittime del fascismo.",
         "shortEN": "A historic park with a monument dedicated to the victims of fascism.",
         "desc": "Il Gärner Park è un'oasi verde inaugurata nel 1892 per celebrare il completamento della prima fase di costruzione nel quartiere Josefee. Il parco offre un ambiente sereno per passeggiate e relax, con alberi secolari e sentieri ben curati. All'interno del parco si trova anche un monumento antifascista eretto in omaggio alle vittime di Leoben tra il 1939 e il 1945. È un luogo perfetto per una pausa tranquilla durante l'esplorazione della città.",
@@ -199,7 +226,11 @@
         "src": [
           "Leoben Sightseeing"
         ],
-        "maps": "https://maps.google.com/?q=47.381198,15.094455"
+        "maps": "https://maps.google.com/?q=47.381198,15.094455",
+        "nameES": "Gärner Park",
+        "shortES": "Un parque histórico con un monumento dedicado a las víctimas del fascismo.",
+        "descES": "El Gärner Park es un oasis verde inaugurado en 1892 para celebrar la finalización de la primera fase de construcción en el barrio Josefee. El parque ofrece un entorno sereno para pasear y relajarse, con árboles centenarios y senderos bien cuidados. Dentro del parque también se encuentra un monumento antifascista erigido en homenaje a las víctimas de Leoben entre 1939 y 1945. Es un lugar perfecto para una pausa tranquila durante la exploración de la ciudad.",
+        "tipsES": "Ideal para un paseo relajante o un picnic."
       },
       {
         "id": "leo-10",
@@ -218,7 +249,11 @@
           "Leoben Sightseeing",
           "Mapy.com"
         ],
-        "maps": "https://maps.google.com/?q=47.37709,15.097615"
+        "maps": "https://maps.google.com/?q=47.37709,15.097615",
+        "nameES": "Jakobikirche",
+        "shortES": "Una iglesia histórica con un impresionante interior barroco y un espléndido púlpito.",
+        "descES": "La Jakobikirche, o Chiesa di San Giacomo, es una histórica iglesia parroquial con raíces que se remontan al siglo XII. El interior barroco es particularmente impresionante, dominado por el espléndido púlpito realizado por el escultor barroco Matthäus Krenauer. La iglesia ofrece una atmósfera de profunda espiritualidad y belleza artística. Es un lugar de gran importancia histórica y religiosa para la comunidad de Leoben.",
+        "tipsES": "Ubicada en Maßenbergstraße, merece una visita por su púlpito barroco."
       },
       {
         "tier": 1,
@@ -226,8 +261,8 @@
         "name": "Maßenburg",
         "nameEN": "Maßenburg",
         "cat": "panorama",
-        "lat": 47.37241,
-        "lng": 15.10871,
+        "lat": 47.375423,
+        "lng": 15.097395,
         "short": "Rovine di un castello medievale che offrono una vista panoramica sulla città.",
         "shortEN": "Ruins of a medieval castle offering a panoramic view of the city.",
         "desc": "La Maßenburg è un'imponente rovina di un castello situata sulla collina di Maßenberg, che domina la città di Leoben. Costruito originariamente alla fine del XIII secolo, il castello fu in gran parte ridotto in macerie nel 1820. Oggi, l'area offre un'attraente piattaforma panoramica da cui si può godere di una magnifica vista su Leoben e sulle montagne circostanti. È una meta popolare per escursioni e passeggiate panoramiche.",
@@ -238,7 +273,11 @@
           "Leoben Sightseeing",
           "Steiermark.com"
         ],
-        "maps": "https://maps.google.com/?q=47.37241,15.10871"
+        "maps": "https://maps.google.com/?q=47.37241,15.10871",
+        "nameES": "Maßenburg",
+        "shortES": "Ruinas de un castillo medieval que ofrecen una vista panorámica de la ciudad.",
+        "descES": "La Maßenburg es una imponente ruina de un castillo situada en la colina de Maßenberg, que domina la ciudad de Leoben. Construido originalmente a finales del siglo XIII, el castillo fue en gran parte destruido en 1820. Hoy, la zona ofrece una atractiva plataforma panorámica desde la que se puede disfrutar de una magnífica vista de Leoben y las montañas circundantes. Es un destino popular para excursiones y paseos panorámicos.",
+        "tipsES": "Accesible a través de un sendero de senderismo, ideal para contemplar la puesta de sol."
       },
       {
         "id": "leo-12",
@@ -257,7 +296,11 @@
           "Leoben Sightseeing",
           "Wikipedia"
         ],
-        "maps": "https://maps.google.com/?q=47.38556,15.09305"
+        "maps": "https://maps.google.com/?q=47.38556,15.09305",
+        "nameES": "Montanuniversität",
+        "shortES": "Una prestigiosa universidad especializada en ingeniería de minas y metalurgia.",
+        "descES": "La Montanuniversität es una universidad especializada de fama mundial situada en Leoben. Fundada en 1835 como 'Scuola corporativa stiriana delle miniere', la institución tiene una larga y orgullosa historia en el campo de la ingeniería de minas y la metalurgia. El imponente edificio principal de la universidad es un referente arquitectónico de la ciudad. La universidad atrae a miles de estudiantes internacionales, contribuyendo a la atmósfera animada y cosmopolita de Leoben.",
+        "tipsES": "Admira la arquitectura del edificio principal situado en Franz Josef-Straße."
       },
       {
         "id": "leo-13",
@@ -276,15 +319,19 @@
           "Leoben Sightseeing",
           "Wikimedia Commons"
         ],
-        "maps": "https://maps.google.com/?q=47.377108,15.090907"
+        "maps": "https://maps.google.com/?q=47.377108,15.090907",
+        "nameES": "Iglesia parroquial \"Maria am Waasen\"",
+        "shortES": "Una magnífica iglesia gótica con destacadas vidrieras en el coro.",
+        "descES": "La iglesia parroquial 'Maria am Waasen' es un primer ejemplo de arquitectura gótica en Estiria. Es el edificio más alto y una de las iglesias más antiguas de Leoben. Son especialmente destacables las ventanas del coro, que representan escenas de la vida de Jesús, diversos santos y figuras de los donantes de la iglesia. Esta magnífica edificación ofrece una experiencia espiritual y visual inolvidable para los visitantes.",
+        "tipsES": "Tómate tiempo para admirar las detalladas vidrieras góticas."
       },
       {
         "id": "leo-14",
         "name": "Peter Tunner-Park",
         "nameEN": "Peter Tunner-Park",
         "cat": "natura",
-        "lat": 47.38277,
-        "lng": 15.09289,
+        "lat": 47.381683,
+        "lng": 15.093145,
         "short": "Un tranquillo parco cittadino con monumenti dedicati a figure storiche locali.",
         "shortEN": "A quiet city park with monuments dedicated to local historical figures.",
         "desc": "Il Peter Tunner-Park è una piccola e curata oasi urbana situata nel centro di Leoben. Il parco ospita una scultura del famoso 'Montanista' Peter Tunner, oltre a busti dell'Arciduca Giovanni e dello scrittore stiriano Peter Rosegger. Con i suoi sentieri tranquilli e le aree verdi, offre un rifugio perfetto dal trambusto cittadino. È un luogo ideale per rilassarsi e godersi un momento di pace all'aria aperta.",
@@ -295,7 +342,11 @@
           "Leoben Sightseeing",
           "Airial.Travel"
         ],
-        "maps": "https://maps.google.com/?q=47.38277,15.09289"
+        "maps": "https://maps.google.com/?q=47.38277,15.09289",
+        "nameES": "Peter Tunner-Park",
+        "shortES": "Un tranquilo parque urbano con monumentos dedicados a figuras históricas locales.",
+        "descES": "El Peter Tunner-Park es un pequeño y cuidado oasis urbano situado en el centro de Leoben. El parque alberga una escultura del famoso 'montanista' Peter Tunner, además de bustos del Archiduque Giovanni y del escritor estirio Peter Rosegger. Con sus senderos tranquilos y sus zonas verdes, ofrece un refugio perfecto del bullicio de la ciudad. Es un lugar ideal para relajarse y disfrutar de un momento de paz al aire libre.",
+        "tipsES": "Un excelente lugar para una breve pausa durante la visita de la ciudad."
       },
       {
         "id": "leo-15",
@@ -303,7 +354,7 @@
         "nameEN": "Redemptorist Church",
         "cat": "cultura",
         "lat": 47.377036,
-        "lng": 15.0928,
+        "lng": 15.095263,
         "short": "Una suggestiva chiesa neo-romanica dedicata a Sant'Alfonso de' Liguori.",
         "shortEN": "A striking neo-Romanesque church dedicated to St. Alphonsus Liguori.",
         "desc": "La Chiesa dei Redentoristi, dedicata a Sant'Alfonso de' Liguori, è una delle fondazioni più recenti di Leoben. Costruita in stile neo-romanico, la sua facciata occidentale con una singola torre è particolarmente impressionante. L'interno della chiesa è spazioso e accogliente, offrendo un luogo di preghiera e riflessione per la comunità locale. La sua architettura distintiva la rende un'aggiunta interessante al paesaggio religioso della città.",
@@ -314,7 +365,11 @@
           "Leoben Sightseeing",
           "Tripadvisor"
         ],
-        "maps": "https://maps.google.com/?q=47.377036,15.0928"
+        "maps": "https://maps.google.com/?q=47.377036,15.0928",
+        "nameES": "Iglesia de los Redentoristas",
+        "shortES": "Una sugestiva iglesia neorrománica dedicada a Sant'Alfonso de' Liguori.",
+        "descES": "La Iglesia de los Redentoristas, dedicada a Sant'Alfonso de' Liguori, es una de las fundaciones más recientes de Leoben. Construida en estilo neorrománico, su fachada occidental con una única torre resulta particularmente impresionante. El interior de la iglesia es espacioso y acogedor, ofreciendo un lugar de oración y reflexión para la comunidad local. Su arquitectura distintiva la convierte en una adición interesante al paisaje religioso de la ciudad.",
+        "tipsES": "Situada en Gösser Straße, es fácilmente reconocible por su torre única."
       },
       {
         "id": "leo-16",
@@ -333,9 +388,16 @@
           "Wikidata",
           "Wikimedia Commons"
         ],
-        "maps": "https://maps.google.com/?q=47.379816,15.095013"
+        "maps": "https://maps.google.com/?q=47.379816,15.095013",
+        "nameES": "Bergmannsbrunnen",
+        "shortES": "Una fuente dedicada a la tradición minera de la región.",
+        "descES": "El Bergmannsbrunnen, o Fontana del Minatore, es un monumento situado en la plaza principal de Leoben que rinde homenaje a la larga tradición minera de la región. La fuente presenta una estatua de un minero con vestimenta tradicional, símbolo de la importancia de la industria extractiva para el desarrollo económico y cultural de la ciudad. Es una obra de arte significativa que celebra el duro trabajo y la dedicación de los mineros locales.",
+        "tipsES": "Admira los detalles de la estatua del minero en la plaza principal."
       }
-    ]
+    ],
+    "cityES": "Leoben",
+    "countryES": "Austria",
+    "introES": "Descubre Leoben, el corazón industrial e histórico de Stiria, situado a orillas del río Mur. Este itinerario a pie te llevará por plazas encantadoras, antiguas abadías y la rica tradición cervecera de la ciudad."
   },
   "vienna": {
     "city": "Vienna",
@@ -369,7 +431,11 @@
           "Wikipedia \"St. Stephen's Cathedral, Vienna\"",
           "stephansdom.at"
         ],
-        "maps": "https://maps.google.com/?q=48.20849,16.37311"
+        "maps": "https://maps.google.com/?q=48.20849,16.37311",
+        "nameES": "Cattedrale di Santo Stefano",
+        "shortES": "Icónica catedral gótica con un espléndido tejado de tejas y una alta aguja que ofrece vistas impresionantes de la ciudad.",
+        "descES": "La Cattedrale di Santo Stefano, o Stephansdom, es la iglesia madre dell'Arcidiocesi di Vienna y la sede del Arcivescovo. Erigiéndose orgullosa en el corazón de la ciudad, su espléndido tejado de tejas multicolores se ha convertido en uno de los símbolos más reconocibles de la capital. L'attuale struttura romanica e gotica fu in gran parte voluta dal duca Rodolfo IV nel XIV secolo, aunque la iglesia original se remonta al 1147. La magnífica Torre Sud, affettuosamente conosciuta come \"Steffl\", alcanza un'impressionante altezza di 136 metri y domina lo skyline viennese. Los visitantes pueden subir los 343 gradini de la torre para disfrutar de una vista espectacular o explorar las misteriosas catacombe sottostanti. La cattedrale ha sido testigo de muchos eventos importantes de la historia de los Asburgo y de Austria, lo que la convierte en un punto de partida esencial para cualquier tour a pie del centro histórico de Vienna.",
+        "tipsES": "Entrada gratuita en el área principal; se requieren entradas para las torres y las catacombe. Abierto todos los días 6:00 - 22:00."
       },
       {
         "tier": 2,
@@ -389,7 +455,11 @@
           "Wikipedia \"Hofburg\"",
           "hofburg-wien.at"
         ],
-        "maps": "https://maps.google.com/?q=48.20650,16.36526"
+        "maps": "https://maps.google.com/?q=48.20650,16.36526",
+        "nameES": "Palazzo dell'Hofburg",
+        "shortES": "Il grandioso ex palazzo imperiale degli Asburgo, che oggi ospita affascinanti musei e l'ufficio del Presidente austriaco.",
+        "descES": "Il Palazzo dell'Hofburg è l'ex principale palazzo imperiale della dinastia degli Asburgo e una magnifica testimonianza della ricca storia imperiale dell'Austria. Situato nel centro di Vienna, questo vasto complesso fu originariamente costruito nel XIII secolo e continuamente ampliato nel corso dei secoli da vari imperatori. Oggi funge da residenza ufficiale e luogo di lavoro del Presidente dell'Austria. Il complesso del palazzo ospita numerosi musei di fama mondiale, tra cui il Museo di Sisi, gli Appartamenti Imperiali e la Scuola di Equitazione Spagnola. Passeggiando per i suoi grandi cortili, i visitatori possono ammirare un'affascinante miscela di stili architettonici, dal gotico al barocco e al neoclassico. L'Hofburg è stato il centro politico dell'Impero austro-ungarico fino al 1918, e l'esplorazione dei suoi vasti terreni offre un viaggio accattivante nello stile di vita opulento di una delle famiglie reali più potenti d'Europa.",
+        "tipsES": "Compra un Sisi Ticket para el acceso combinado a los Appartamenti Imperiali, al Museo di Sisi y a la Collezione degli Argenti."
       },
       {
         "tier": 1,
@@ -409,7 +479,11 @@
           "Wikipedia \"Natural History Museum, Vienna\"",
           "nhm-wien.ac.at"
         ],
-        "maps": "https://maps.google.com/?q=48.20522,16.35937"
+        "maps": "https://maps.google.com/?q=48.20522,16.35937",
+        "nameES": "Museo di Storia Naturale",
+        "shortES": "Un espectacular museo de historia natural con esqueletos de dinosaurios, antiguos artefactos y exposiciones interactivas perfectas para familias.",
+        "descES": "El Museo de Storia Naturale di Vienna, o Naturhistorisches Museum, es uno de los museos de historia natural más importantes del mundo y un destino fantástico para las familias. Inaugurado en 1889, el magnífico edificio palaciego fue encargado por el emperador Francesco Giuseppe I para albergar la enorme colección de objetos naturales de los Asburgo. Hoy, el museo exhibe más de 30 millones de objetos en 39 salas expositivas. Los puntos destacados incluyen la famosa Venere di Willendorf di 29.500 anni fa, la mayor y más antigua colección pública de meteoritos del mundo y una espectacular sala de dinosaurios con un modelo de Allosauro en movimiento que encanta a los niños. La espléndida arquitectura del edificio, con sus intrincados frescos en el techo y la gran escalinata, es una atracción en sí misma. Ofrece una experiencia envolvente, educativa y divertida para visitantes de todas las edades.",
+        "tipsES": "Cerrado los martes. Entrada gratuita para niños y jóvenes menores de 19 años. ¡No os perdáis el dinosaurio en movimiento!"
       },
       {
         "tier": 1,
@@ -417,8 +491,8 @@
         "name": "Naschmarkt",
         "nameEN": "Naschmarkt",
         "cat": "cibo",
-        "lat": 48.19864,
-        "lng": 16.36142,
+        "lat": 48.19889,
+        "lng": 16.36361,
         "short": "Il mercato all'aperto più famoso di Vienna, vivace con diverse bancarelle di cibo, prelibatezze locali e prelibatezze culinarie internazionali.",
         "shortEN": "Vienna's most famous open-air market, bustling with diverse food stalls, local delicacies, and international culinary treats.",
         "desc": "Il Naschmarkt è il mercato all'aperto più popolare e vivace di Vienna, che offre una deliziosa esperienza sensoriale per gli amanti del cibo. Risalente al XVI secolo, originariamente iniziò come un luogo in cui venivano vendute principalmente bottiglie di latte. Nel corso dei secoli, si è evoluto in un vivace punto di ritrovo culinario che si estende per circa 1,5 chilometri. Oggi, il mercato ospita circa 120 bancarelle e ristoranti, offrendo un mix colorato di prelibatezze tradizionali viennesi e cucina internazionale, da prodotti freschi e spezie esotiche a dolci mediorientali e frutti di mare freschi. È il luogo perfetto per fare una pausa dalle visite turistiche, fare uno spuntino veloce o godersi un pasto rilassato. Il sabato, l'area diventa ancora più vivace con un famoso mercato delle pulci adiacente alle bancarelle di cibo, rendendolo un vivace centro culturale.",
@@ -429,7 +503,11 @@
           "Wikipedia \"Naschmarkt\"",
           "wien.gv.at"
         ],
-        "maps": "https://maps.google.com/?q=48.19864,16.36142"
+        "maps": "https://maps.google.com/?q=48.19864,16.36142",
+        "nameES": "Naschmarkt",
+        "shortES": "El mercado al aire libre más famoso de Vienna, animado con diversos puestos de comida, especialidades locales y delicias culinarias internacionales.",
+        "descES": "El Naschmarkt es el mercado al aire libre más popular y animado de Vienna, que ofrece una deliciosa experiencia sensorial para los amantes de la gastronomía. Con orígenes en il XVI secolo, originalmente empezó como un lugar donde se vendían principalmente botellas de leche. A lo largo de los siglos se ha transformado en un animado punto de encuentro culinario que se extiende por aproximadamente 1,5 chilometri. Hoy, el mercado alberga alrededor de 120 puestos y restaurantes, ofreciendo una mezcla colorida de delicias tradicionales vienesas y cocina internacional, desde productos frescos y especias exóticas hasta dulces del Medio Oriente y mariscos frescos. Es el lugar perfecto para hacer una pausa de las visitas turísticas, tomar un tentempié rápido o disfrutar de una comida relajada. Los sábados, la zona se vuelve aún más animada con un famoso mercado de pulgas adyacente a los puestos de comida, convirtiéndolo en un vibrante centro cultural.",
+        "tipsES": "La mayoría de los puestos está abierta de lunes a sábado. Lleva efectivo: algunos vendedores pequeños no aceptan tarjetas."
       },
       {
         "tier": 1,
@@ -449,7 +527,11 @@
           "Wikipedia \"Karlskirche\"",
           "karlskirche.at"
         ],
-        "maps": "https://maps.google.com/?q=48.19822,16.37186"
+        "maps": "https://maps.google.com/?q=48.19822,16.37186",
+        "nameES": "Karlskirche",
+        "shortES": "Una magnífica iglesia barroca con un ascensor panorámico que te lleva a contemplar sus espléndidos frescos de la cúpula.",
+        "descES": "La Karlskirche, o Chiesa di San Carlo, está ampliamente considerada la iglesia barroca más destacada de Vienna y una verdadera obra maestra arquitectónica. Encargada por el emperador del Sacro Romano Impero Carlo VI en 1713 tras la última gran epidemia de peste, la iglesia se completó en 1737. Diseñada por el arquitecto Johann Bernhard Fischer von Erlach, su sorprendente fachada presenta una enorme cúpula y dos columnas bellamente esculpidas inspiradas en la Colonna Traiana de Roma. Lo que hace realmente única a la Karlskirche es su ascensor panorámico, que lleva a los visitantes hasta lo alto de la cúpula. Esto permite observar de cerca los magníficos frescos del techo pintados por Johannes Michael Rottmayr, además de ofrecer una preciosa vista panorámica de Vienna. La iglesia también es famosa por acoger regularmente conciertos de música clásica, en particular el Requiem di Mozart y las Quattro Stagioni di Vivaldi.",
+        "tipsES": "El billete de entrada incluye el viaje en el ascensor panorámico. Abierto lunes-sábado 9:00-18:00, domingo desde las 12:00."
       },
       {
         "tier": 1,
@@ -469,7 +551,11 @@
           "Wikipedia: Vienna State Opera",
           "Official Website: wiener-staatsoper.at"
         ],
-        "maps": "https://maps.google.com/?q=48.203,16.3691"
+        "maps": "https://maps.google.com/?q=48.203,16.3691",
+        "nameES": "Wiener Staatsoper",
+        "shortES": "Uno de los teatros de ópera más prestigiosos del mundo, símbolo de la capital de la música.",
+        "descES": "L'Opera di Stato di Vienna es uno de los teatros de ópera más importantes y renombrados del mundo, inaugurado en 1869 con el Don Giovanni de Mozart. El edificio neorrenacentista fue en gran parte destruido durante la Seconda Guerra Mondiale y meticulosamente reconstruido para devolverle su antiguo esplendor. Hoy ofrece una programación variada con producciones de altísimo nivel, acogiendo a los mejores cantantes y directores de orquesta internacionales. Además, una vez al año el teatro se transforma para acoger el célebre y lujoso Ballo dell'Opera.",
+        "tipsES": "Reserva las entradas con mucha antelación o prueba a comprar entradas para los sitios de pie poco antes del espectáculo."
       },
       {
         "tier": 1,
@@ -489,7 +575,11 @@
           "Wikipedia: Albertina",
           "Official Website: albertina.at"
         ],
-        "maps": "https://maps.google.com/?q=48.2047,16.3681"
+        "maps": "https://maps.google.com/?q=48.2047,16.3681",
+        "nameES": "Albertina",
+        "shortES": "Un magnífico museo de arte con obras maestras desde Monet hasta Picasso y espléndidas salas de los Asburgo.",
+        "descES": "L'Albertina è un museo d'arte situato nel cuore di Vienna, che ospita una delle più grandi e importanti collezioni di stampe e disegni al mondo. Situato in un ex palazzo residenziale dei Asburgo, il museo presenta capolavori che vanno da Monet a Picasso, oltre a mostre temporanee di grande rilievo. Le sontuose sale di rappresentanza offrono anche uno spaccato della vita aristocratica del passato, con arredi originali e decorazioni sfarzose. È una tappa imperdibile per gli amanti dell'arte che visitano la capitale austriaca.",
+        "tipsES": "Abierto todos los días; la visita a las salas de representación está incluida en la entrada."
       },
       {
         "tier": 2,
@@ -509,7 +599,11 @@
           "Wikipedia: Kunsthistorisches Museum",
           "Official Website: khm.at"
         ],
-        "maps": "https://maps.google.com/?q=48.2038,16.3618"
+        "maps": "https://maps.google.com/?q=48.2038,16.3618",
+        "nameES": "Kunsthistorisches Museum",
+        "shortES": "El principal museo de arte de Vienna, que custodia las vastas colecciones imperiales de los Asburgo.",
+        "descES": "Il Kunsthistorisches Museum è il più grande museo d'arte dell'Austria, commissionato dall'imperatore Francesco Giuseppe per ospitare le formidabili collezioni imperiali. L'edificio stesso è un capolavoro architettonico, con interni sfarzosi, marmi pregiati e una magnifica cupola ottagonale. Al suo interno si possono ammirare opere inestimabili di artisti come Bruegel il Vecchio, Tiziano, Velázquez e Rubens. Il museo vanta inoltre una vasta e affascinante collezione di antichità egizie e greco-romane.",
+        "tipsES": "Il caffè sotto la cupola è uno dei più belli di Vienna, perfetto per una pausa elegante."
       },
       {
         "tier": 1,
@@ -529,15 +623,19 @@
           "Wikipedia: Museumsquartier",
           "Official Website: mqw.at"
         ],
-        "maps": "https://maps.google.com/?q=48.2033,16.3581"
+        "maps": "https://maps.google.com/?q=48.2033,16.3581",
+        "nameES": "Museumsquartier",
+        "shortES": "Un vasto y animado polo cultural que une arte moderna, museos y espacios recreativos al aire libre.",
+        "descES": "Il Museumsquartier è uno dei complessi culturali più grandi del mondo, situato negli spazi delle ex scuderie imperiali. Unisce sapientemente un'architettura barocca a edifici moderni e ospita istituzioni di rilievo come il Leopold Museum e il MUMOK. I suoi ampi cortili sono diventati un vivace punto di ritrovo per i viennesi e i turisti. Grazie ai famosi divani colorati chiamati 'Enzi' e ai numerosi caffè, l'area offre un'atmosfera rilassata e creativa.",
+        "tipsES": "La entrada a los patios es gratuita; un excelente lugar para relajarse al aire libre durante la buena temporada."
       },
       {
         "id": "vie-10",
         "name": "Rathaus",
         "nameEN": "Rathaus",
         "cat": "cultura",
-        "lat": 48.2106,
-        "lng": 16.3583,
+        "lat": 48.21083,
+        "lng": 16.35657,
         "short": "Il maestoso municipio neogotico di Vienna, fulcro di eventi e festival cittadini.",
         "shortEN": "Vienna's majestic Neo-Gothic city hall, a hub for city events and festivals.",
         "desc": "Il Rathaus è il maestoso municipio di Vienna, un imponente edificio in stile neogotico progettato da Friedrich von Schmidt e completato nel 1883. La sua facciata è dominata da cinque torri, la centrale delle quali è sormontata dalla statua del Rathausmann, uno dei simboli indiscussi della città. Gli interni sono altrettanto spettacolari, con ampie sale da ballo e cortili porticati. La piazza antistante ospita eventi tutto l'anno, tra cui il famoso mercatino di Natale e il festival del cinema all'aperto in estate.",
@@ -548,7 +646,11 @@
           "Wikipedia: Vienna City Hall",
           "wien.gv.at"
         ],
-        "maps": "https://maps.google.com/?q=48.2106,16.3583"
+        "maps": "https://maps.google.com/?q=48.2106,16.3583",
+        "nameES": "Rathaus",
+        "shortES": "El majestuoso ayuntamiento neogótico de Vienna, epicentro de eventos y festivales de la ciudad.",
+        "descES": "Il Rathaus è il maestoso municipio di Vienna, un imponente edificio in stile neogotico progettato da Friedrich von Schmidt e completato nel 1883. La sua facciata è dominata da cinque torri, la centrale delle quali è sormontata dalla statua del Rathausmann, uno dei simboli indiscussi della città. Gli interni sono altrettanto spettacolari, con ampie sale da ballo e cortili porticati. La piazza antistante ospita eventi tutto l'anno, tra cui il famoso mercatino di Natale e il festival del cinema all'aperto in estate.",
+        "tipsES": "Hay visitas guiadas gratuitas disponibles en determinados días de la semana."
       },
       {
         "id": "vie-11",
@@ -567,7 +669,11 @@
           "Wikipedia: Austrian Parliament Building",
           "parlament.gv.at"
         ],
-        "maps": "https://maps.google.com/?q=48.2082,16.3586"
+        "maps": "https://maps.google.com/?q=48.2082,16.3586",
+        "nameES": "Parlament",
+        "shortES": "Un imponente edificio neoclásico inspirado en la antigua Grecia, sede del gobierno austríaco.",
+        "descES": "El Parlamento austriaco es un magnífico edificio de estilo neoclásico, diseñado por el arquitecto Theophil Hansen para evocar la antigua Grecia, cuna de la democracia. Frente a la entrada principal se yergue la monumental fuente de Pallade Atena, diosa de la sabiduría, que recibe a los visitantes con su imponencia. El edificio alberga las dos cámaras del parlamento austriaco y es el corazón palpitante de la política nacional. Recientemente ha sido sometido a una amplia restauración para modernizar sus interiores y hacerlos más accesibles al público.",
+        "tipsES": "El centro de visitantes se ha renovado recientemente y ofrece interesantes exposiciones interactivas."
       },
       {
         "id": "vie-12",
@@ -586,7 +692,11 @@
           "Wikipedia: Peterskirche, Vienna",
           "peterskirche.at"
         ],
-        "maps": "https://maps.google.com/?q=48.2094,16.37"
+        "maps": "https://maps.google.com/?q=48.2094,16.37",
+        "nameES": "Peterskirche",
+        "shortES": "Una espléndida iglesia barroca en el corazón de Viena, conocida por sus interiores suntuosos y por sus conciertos.",
+        "descES": "La Peterskirche es una de las iglesias más antiguas de Viena, aunque la actual estructura barroca data de principios del siglo XVIII. Inspirada en la Basilica di San Pietro a Roma, presenta un interior ricamente decorado con estucos dorados, frescos espectaculares y un magnífico altar mayor. El cuidado de los detalles y la riqueza de los materiales la convierten en un verdadero tesoro escondido entre las calles del centro. La iglesia es famosa también por su excelente acústica y acoge regularmente conciertos de órgano y de música clásica.",
+        "tipsES": "Los conciertos de órgano vespertinos suelen ser gratuitos (se agradece una donación)."
       },
       {
         "id": "vie-13",
@@ -605,7 +715,11 @@
           "Wikipedia: Graben, Vienna",
           "Wikipedia: Plague Column, Vienna"
         ],
-        "maps": "https://maps.google.com/?q=48.2087,16.3698"
+        "maps": "https://maps.google.com/?q=48.2087,16.3698",
+        "nameES": "Graben & Pestsäule",
+        "shortES": "Una elegante calle peatonal dominada por la monumental Colonna della Peste barroca.",
+        "descES": "El Graben es una de las calles más famosas y elegantes del centro de Viena, flanqueada por espléndidos palacios históricos y tiendas de lujo. En el centro de esta animada vía peatonal se alza la Pestsäule, una columna de la peste en estilo barroco. Fue erigida por el emperador Leopoldo I como signo de agradecimiento por el fin de la devastadora epidemia de 1679. Esta obra maestra escultórica, rica en detalles dorados y figuras alegóricas, representa la fe triunfante sobre la enfermedad.",
+        "tipsES": "Excelente zona para ir de compras de lujo y para admirar la arquitectura vienesa mientras se saborea un café."
       },
       {
         "id": "vie-14",
@@ -624,15 +738,19 @@
           "Wikipedia: Spanish Riding School",
           "srs.at"
         ],
-        "maps": "https://maps.google.com/?q=48.2075,16.3666"
+        "maps": "https://maps.google.com/?q=48.2075,16.3666",
+        "nameES": "Spanische Hofreitschule",
+        "shortES": "La histórica escuela de equitación donde los famosos caballos Lipizzani se exhiben en una arena barroca.",
+        "descES": "La Scuola di Equitazione Spagnola es la única institución en el mundo que conserva y cultiva el arte ecuestre clásico en la tradición del Alta Scuola desde el Renacimiento. Situada en el vasto complejo del Hofburg, ofrece espectáculos inolvidables que atraen a visitantes de todo el mundo. Durante las exhibiciones, los magníficos sementales Lipizzani realizan complejos movimientos al compás de música clásica con increíble elegancia. La arena invernal barroca en la que se celebran los espectáculos es de una belleza sobrecogedora y añade magia a la experiencia.",
+        "tipsES": "Si las entradas para los espectáculos están agotadas, es posible asistir al entrenamiento matutino a un precio inferior."
       },
       {
         "id": "vie-15",
         "name": "Österreichische Nationalbibliothek",
         "nameEN": "Österreichische Nationalbibliothek",
         "cat": "cultura",
-        "lat": 48.206,
-        "lng": 16.3665,
+        "lat": 48.20538,
+        "lng": 16.36528,
         "short": "Una biblioteca barocca mozzafiato, considerata una delle più belle al mondo.",
         "shortEN": "A breathtaking Baroque library, considered one of the most beautiful in the world.",
         "desc": "La Sala di Rappresentanza (Prunksaal) della Biblioteca Nazionale Austriaca è senza dubbio una delle biblioteche storiche più belle del mondo. Costruita nel XVIII secolo per volere dell'imperatore Carlo VI, questa sala barocca lunga quasi 80 metri lascia i visitatori senza fiato. È decorata con magnifici affreschi sul soffitto, imponenti colonne e statue in marmo a grandezza naturale. Custodisce oltre 200.000 volumi antichi, tra cui la preziosa collezione del principe Eugenio di Savoia, in un'atmosfera magica e solenne.",
@@ -643,15 +761,19 @@
           "Wikipedia: Austrian National Library",
           "onb.ac.at"
         ],
-        "maps": "https://maps.google.com/?q=48.206,16.3665"
+        "maps": "https://maps.google.com/?q=48.206,16.3665",
+        "nameES": "Österreichische Nationalbibliothek",
+        "shortES": "Una biblioteca barroca impresionante, considerada una de las más bellas del mundo.",
+        "descES": "La Sala de Representación (Prunksaal) de la Biblioteca Nazionale Austriaca es sin duda una de las bibliotecas históricas más bellas del mundo. Construida en el siglo XVIII por orden del emperador Carlo VI, esta sala barroca de casi 80 metros deja a los visitantes sin aliento. Está decorada con magníficos frescos en el techo, imponentes columnas y estatuas de mármol a tamaño natural. Alberga más de 200.000 volúmenes antiguos, incluida la preciosa colección del principe Eugenio di Savoia, en una atmósfera mágica y solemne.",
+        "tipsES": "La entrada se encuentra en Josefsplatz; la fotografía sin flash suele estar permitida."
       },
       {
         "id": "vie-16",
         "name": "Stadtpark",
         "nameEN": "Stadtpark",
         "cat": "natura",
-        "lat": 48.205,
-        "lng": 16.38,
+        "lat": 48.20289,
+        "lng": 16.37972,
         "short": "Un bellissimo parco pubblico famoso per il monumento dorato a Johann Strauss.",
         "shortEN": "A beautiful public park famous for the gilded monument to Johann Strauss.",
         "desc": "Lo Stadtpark è un'oasi verde nel centro di Vienna, inaugurato nel 1862 come primo parco pubblico della città. È diviso in due dal fiume Wien e presenta un romantico design in stile paesaggistico inglese, con ampi prati e laghetti. Il parco è famoso per le sue numerose statue dedicate a musicisti e artisti viennesi che hanno fatto la storia. Tra queste spicca il celebre monumento dorato dedicato a Johann Strauss figlio, che è diventato uno dei luoghi più fotografati della capitale.",
@@ -662,7 +784,11 @@
           "Wikipedia: Stadtpark, Vienna",
           "wien.gv.at"
         ],
-        "maps": "https://maps.google.com/?q=48.205,16.38"
+        "maps": "https://maps.google.com/?q=48.205,16.38",
+        "nameES": "Stadtpark",
+        "shortES": "Un hermoso parque público famoso por el monumento dorado a Johann Strauss.",
+        "descES": "El Stadtpark es un oasis verde en el centro de Vienna, inaugurado en 1862 como el primer parque público de la ciudad. Está dividido en dos por el río Wien y presenta un diseño romántico de estilo paisajístico inglés, con amplios prados y estanques. El parque es famoso por sus numerosas estatuas dedicadas a músicos y artistas vieneses que hicieron historia. Entre ellas destaca el célebre monumento dorado dedicado a Johann Strauss figlio, que se ha convertido en uno de los lugares más fotografiados de la capital.",
+        "tipsES": "Perfecto para un paseo relajante; alberga también el Kursalon, donde se celebran conciertos de vals."
       },
       {
         "id": "vie-17",
@@ -681,7 +807,11 @@
           "Wikipedia: Volksgarten, Vienna",
           "wien.gv.at"
         ],
-        "maps": "https://maps.google.com/?q=48.208,16.3615"
+        "maps": "https://maps.google.com/?q=48.208,16.3615",
+        "nameES": "Volksgarten",
+        "shortES": "Un elegante jardín histórico conocido por su magnífico rosal y el monumento a la emperatriz Sissi.",
+        "descES": "El Volksgarten es un elegante parque público situado a lo largo de la Ringstraße, originalmente concebido como jardín privado para los archiduques de los Habsburgo. Es renombrado en todo el mundo por su espléndido rosal, que alberga cientos de variedades distintas de rosas. En primavera y verano, el jardín estalla en un festival de colores y fragancias, ofreciendo un espectáculo natural inolvidable. Dentro del parque también se encuentran el Tempio di Teseo, de estilo neoclásico, y el sugestivo monumento dedicado a la querida emperatriz Sissi.",
+        "tipsES": "Visítalo entre mayo y junio para ver las rosas en plena floración."
       },
       {
         "tier": 2,
@@ -689,8 +819,8 @@
         "name": "Schloss Belvedere",
         "nameEN": "Schloss Belvedere",
         "cat": "cultura",
-        "lat": 48.1915,
-        "lng": 16.3809,
+        "lat": 48.19216,
+        "lng": 16.37893,
         "short": "Un magnifico palazzo barocco che ospita la celebre opera 'Il Bacio' di Gustav Klimt.",
         "shortEN": "A magnificent Baroque palace housing Gustav Klimt's famous painting 'The Kiss'.",
         "desc": "Il Palazzo del Belvedere è uno straordinario complesso barocco costruito come residenza estiva per il grande condottiero principe Eugenio di Savoia. Il Belvedere Superiore, con la sua architettura imponente e i giardini terrazzati decorati con fontane e sfingi, è un capolavoro assoluto. Oggi le sue sale ospitano un'importante collezione d'arte austriaca che copre dal Medioevo ai giorni nostri. L'attrazione principale per i visitatori è la più grande collezione al mondo di dipinti di Gustav Klimt, tra cui il celeberrimo capolavoro 'Il Bacio'.",
@@ -701,7 +831,11 @@
           "Wikipedia: Belvedere, Vienna",
           "belvedere.at"
         ],
-        "maps": "https://maps.google.com/?q=48.1915,16.3809"
+        "maps": "https://maps.google.com/?q=48.1915,16.3809",
+        "nameES": "Schloss Belvedere",
+        "shortES": "Un magnífico palacio barroco que alberga la célebre obra 'Il Bacio' de Gustav Klimt.",
+        "descES": "Il Palazzo del Belvedere es un extraordinario complejo barroco construido como residencia de verano para el gran comandante militar principe Eugenio di Savoia. Il Belvedere Superiore, con su imponente arquitectura y sus jardines en terrazas decorados con fuentes y esfinges, es una obra maestra absoluta. Hoy sus salas albergan una importante colección de arte austriaco que abarca desde la Edad Media hasta nuestros días. La atracción principal para los visitantes es la mayor colección del mundo de pinturas de Gustav Klimt, entre las que figura la celebérrima obra maestra 'Il Bacio'.",
+        "tipsES": "Compra las entradas online para evitar las largas colas en la entrada de Il Belvedere Superiore."
       },
       {
         "tier": 1,
@@ -709,8 +843,8 @@
         "name": "Hundertwasserhaus",
         "nameEN": "Hundertwasserhaus",
         "cat": "cultura",
-        "lat": 48.2077,
-        "lng": 16.3928,
+        "lat": 48.20722,
+        "lng": 16.39417,
         "short": "Un eccentrico e colorato edificio residenziale che fonde arte, architettura e natura.",
         "shortEN": "An eccentric and colorful residential building that blends art, architecture, and nature.",
         "desc": "La Hundertwasserhaus è un complesso residenziale unico e colorato, progettato dall'eccentrico artista e architetto austriaco Friedensreich Hundertwasser. L'edificio si distingue nettamente dal paesaggio urbano per le sue facciate asimmetriche, i colori vivaci e i pavimenti volutamente ondulati. Una caratteristica fondamentale è la vegetazione lussureggiante che cresce sui tetti e sporge dai balconi, integrando la natura nella struttura. L'opera rappresenta una forte ribellione contro l'architettura moderna standardizzata e un inno all'armonia tra uomo e ambiente.",
@@ -721,7 +855,11 @@
           "Wikipedia: Hundertwasserhaus",
           "hundertwasser-haus.info"
         ],
-        "maps": "https://maps.google.com/?q=48.2077,16.3928"
+        "maps": "https://maps.google.com/?q=48.2077,16.3928",
+        "nameES": "Hundertwasserhaus",
+        "shortES": "Un excéntrico y colorido edificio residencial que fusiona arte, arquitectura y naturaleza.",
+        "descES": "La Hundertwasserhaus es un complejo residencial único y colorido, diseñado por el excéntrico artista y arquitecto austriaco Friedensreich Hundertwasser. El edificio se distingue claramente del paisaje urbano por sus fachadas asimétricas, sus colores vivos y los suelos deliberadamente ondulados. Una característica fundamental es la vegetación exuberante que crece en las azoteas y sobresale de los balcones, integrando la naturaleza en la estructura. La obra representa una fuerte rebeldía contra la arquitectura moderna estandarizada y un himno a la armonía entre el hombre y el entorno.",
+        "tipsES": "Al ser un edificio residencial, el interior no puede visitarse, pero el adyacente Hundertwasser Village ofrece una experiencia similar."
       },
       {
         "tier": 1,
@@ -741,7 +879,11 @@
           "Wikipedia: Prater",
           "praterwien.com"
         ],
-        "maps": "https://maps.google.com/?q=48.2166,16.3959"
+        "maps": "https://maps.google.com/?q=48.2166,16.3959",
+        "nameES": "Wiener Prater & Riesenrad",
+        "shortES": "El célebre parque de atracciones de Viena, dominado por la histórica noria de 1897.",
+        "descES": "Il Prater es un vasto parque público de Viena, famoso sobre todo por su parque de atracciones histórico conocido como Wurstelprater. El símbolo indiscutible de la zona es la Riesenrad, la noria gigante construida en 1897 con motivo del jubileo del emperador. Desde sus tradicionales cabinas de madera se puede disfrutar de una vista espectacular y romántica de toda la ciudad. Además de las atracciones y los juegos, il Prater incluye amplios paseos arbolados y bosques tranquilos, ideales para largas caminatas y excursiones en bicicleta.",
+        "tipsES": "La entrada al parque es gratuita; solo se paga por las atracciones individuales."
       },
       {
         "id": "vie-21",
@@ -760,7 +902,11 @@
           "Wikipedia: Secession Building",
           "secession.at"
         ],
-        "maps": "https://maps.google.com/?q=48.2003,16.3658"
+        "maps": "https://maps.google.com/?q=48.2003,16.3658",
+        "nameES": "Wiener Secession",
+        "shortES": "El símbolo del Art Nouveau vienés, conocido por su cúpula dorada y por el Fregio di Beethoven de Klimt.",
+        "descES": "Il Palazzo della Secessione es una obra maestra del Art Nouveau vienés, construido en 1898 como manifiesto arquitectónico del movimiento artístico liderado por Gustav Klimt. El edificio es inconfundible gracias a su sugestiva cúpula esférica formada por hojas de laurel doradas, cariñosamente llamada 'la col dorada' por los vieneses. Las paredes exteriores blancas están decoradas con delicados motivos florales y máscaras de gorgonas. En el sótano se exhibe de forma permanente el célebre Fregio di Beethoven, una obra monumental y fascinante realizada por Klimt.",
+        "tipsES": "El lema del movimiento, 'A cada época su arte, al arte su libertad', está inscrito sobre la entrada."
       },
       {
         "id": "vie-22",
@@ -779,15 +925,19 @@
           "Wikipedia: Votivkirche, Vienna",
           "votivkirche.at"
         ],
-        "maps": "https://maps.google.com/?q=48.2155,16.3598"
+        "maps": "https://maps.google.com/?q=48.2155,16.3598",
+        "nameES": "Votivkirche",
+        "shortES": "Una majestuosa iglesia neogótica construida para agradecer la salvación del emperador.",
+        "descES": "La Votivkirche, o Chiesa Votiva, es uno de los edificios neogóticos más importantes e imponentes del mundo, situado a lo largo de la célebre Ringstraße. Fue encargada por el arciduca Ferdinando Massimiliano como agradecimiento a Dios por el fallido atentado contra la vida de su hermano, el emperador Francesco Giuseppe, en 1853. Sus dos torres gemelas traforate, alte ben 99 metri, dominan el paisaje circundante. En el interior, los espléndidos vitrales coloridos y las altas bóvedas de arista la convierten en una de las iglesias más sugestivas y luminosas de Vienna.",
+        "tipsES": "El interior suele ser tranquilo y menos concurrido que otras iglesias del centro."
       },
       {
         "id": "vie-23",
         "name": "Karmelitermarkt",
         "nameEN": "Karmelitermarkt",
         "cat": "cibo",
-        "lat": 48.2173,
-        "lng": 16.3756,
+        "lat": 48.21748,
+        "lng": 16.37696,
         "short": "Un mercato storico e autentico, perfetto per scoprire i sapori locali lontano dalle folle turistiche.",
         "shortEN": "A historic and authentic market, perfect for discovering local flavors away from tourist crowds.",
         "desc": "Il Karmelitermarkt è uno dei mercati più antichi e autentici di Vienna, situato nel vivace quartiere di Leopoldstadt, a breve distanza dal centro. Meno turistico del Naschmarkt, offre un'atmosfera rilassata e un'eccellente selezione di prodotti freschi, formaggi, carni e specialità regionali. Negli ultimi anni, l'area circostante è diventata un punto di ritrovo alla moda, ricca di caffè accoglienti e ristoranti innovativi. È il luogo ideale per assaporare la vera vita quotidiana viennese e gustare ottimo cibo locale.",
@@ -798,9 +948,16 @@
           "Wikipedia: Karmelitermarkt",
           "wien.info"
         ],
-        "maps": "https://maps.google.com/?q=48.2173,16.3756"
+        "maps": "https://maps.google.com/?q=48.2173,16.3756",
+        "nameES": "Karmelitermarkt",
+        "shortES": "Un mercado histórico y auténtico, perfecto para descubrir los sabores locales lejos de las multitudes turísticas.",
+        "descES": "El Karmelitermarkt es uno de los mercados más antiguos y auténticos de Vienna, situado en el animado barrio de Leopoldstadt, a poca distancia del centro. Menos turístico que el Naschmarkt, ofrece un ambiente relajado y una excelente selección de productos frescos, quesos, carnes y especialidades regionales. En los últimos años, el área circundante se ha convertido en un punto de encuentro de moda, lleno de acogedores cafés y restaurantes innovadores. Es el lugar ideal para saborear la verdadera vida cotidiana vienesa y disfrutar de excelente comida local.",
+        "tipsES": "Visítalo el sábado por la mañana, cuando los productores locales traen sus productos frescos y el ambiente es más animado."
       }
-    ]
+    ],
+    "cityES": "Vienna",
+    "countryES": "Austria",
+    "introES": "Vienna es una ciudad de grandeza imperial, música clásica y arquitectura impresionante. Este itinerario a pie te lleva por su corazón histórico, combinando palacios reales, mercados animados y museos para familias."
   },
   "varsavia": {
     "city": "Varsavia",
@@ -833,7 +990,11 @@
           "Wikipedia \"St. Anne's Church, Warsaw\"",
           "warsawtour.pl"
         ],
-        "maps": "https://maps.google.com/?q=52.24604,21.01382"
+        "maps": "https://maps.google.com/?q=52.24604,21.01382",
+        "nameES": "Terrazza Panoramica di Sant'Anna",
+        "shortES": "Vista impresionante sobre la Città Vecchia.",
+        "descES": "Comienza tu aventura en Varsavia con una vista panorámica impresionante desde la terrazza panoramica della Chiesa di Sant'Anna. Situada a pocos pasos de la Piazza del Castello, esta histórica iglesia fue fundada en 1454 y ha sobrevivido a numerosas guerras. Sin embargo, la atracción principal para las familias es la torre campanaria independiente. Subir i 150 gradini di pietra es un mini-allenamiento divertido que te recompensa con el mirador más icónico sobre los tejados rojos del centro storico, sobre el río Vistola y el skyline moderno. Es el lugar perfecto para orientarse antes de sumergirse en las calles históricas de abajo. El contraste entre el centro storico meticulosamente reconstruido y los lejanos rascacielos modernos encierra perfectamente el espíritu resiliente y la historia dinámica de Varsavia.",
+        "tipsES": "La entrada a la torre es de pago; prepárate para subir a pie ya que no hay ascensor."
       },
       {
         "tier": 2,
@@ -853,7 +1014,11 @@
           "Wikipedia \"Royal Castle, Warsaw\"",
           "zamek-krolewski.pl"
         ],
-        "maps": "https://maps.google.com/?q=52.24806,21.01444"
+        "maps": "https://maps.google.com/?q=52.24806,21.01444",
+        "nameES": "Castello Reale di Varsavia",
+        "shortES": "Residencia real reconstruida con esplendor.",
+        "descES": "A poca distancia de la terraza panorámica se encuentra el magnífico Castello Reale, símbolo de la soberanía y de la resiliencia polaca. Construido originalmente en el siglo XIV, fue la residencia oficial de los monarcas polacos. Trágicamente, el castillo fue completamente destruido durante la Segunda Guerra Mundial en 1944. Lo que ves hoy es una milagrosa reconstrucción completada en 1984, financiada en gran parte por donaciones públicas. En su interior, las familias pueden admirar la opulenta Sala della Grande Assemblea, los fastuosos apartamentos reales y los cuadros originales de Canaletto, que encabezaron los esfuerzos de reconstrucción de posguerra. La amplia Piazza del Castello frente a él, con la imponente Colonna di Sigismondo erigida en 1644, ofrece mucho espacio abierto para pasear a los niños mientras se sumergen en la atmósfera regia.",
+        "tipsES": "La entrada es gratuita los miércoles. Consulta los horarios en el sitio oficial zamek-krolewski.pl."
       },
       {
         "tier": 2,
@@ -873,7 +1038,11 @@
           "Wikipedia \"Old Town Market Place, Warsaw\"",
           "UNESCO World Heritage Centre"
         ],
-        "maps": "https://maps.google.com/?q=52.24972,21.01222"
+        "maps": "https://maps.google.com/?q=52.24972,21.01222",
+        "nameES": "Piazza del Mercato della Città Vecchia",
+        "shortES": "Plaza histórica con la estatua de la Sirenetta.",
+        "descES": "Pasea por el corazón del centro histórico, patrimonio de la UNESCO, para descubrir la animada Piazza del Mercato, el centro histórico de Varsavia desde finales del siglo XIII. Rodeada de casas burguesas coloridas y bellamente ornamentadas, la plaza parece sacada de un cuento. En el centro se alza la icónica estatua de bronce de la Sirenetta di Varsavia (Syrenka), que empuña espada y escudo para proteger la ciudad. Según la leyenda local, es la hermana de la Sirenetta di Copenaghen. A los niños les encantará escuchar los relatos míticos de cómo conquistó los corazones de los pescadores. La plaza está animada por artistas callejeros, carruajes tirados por caballos y acogedoras cafeterías. Es el lugar ideal para tomar un tradicional helado polaco (lody) y disfrutar del ambiente vivo e histórico.",
+        "tipsES": "Excelente lugar para comprar recuerdos y probar los tradicionales pierogi en los restaurantes circundantes."
       },
       {
         "tier": 1,
@@ -893,7 +1062,11 @@
           "Wikipedia \"Warsaw Barbican\"",
           "warsawtour.pl"
         ],
-        "maps": "https://maps.google.com/?q=52.25139,21.01000"
+        "maps": "https://maps.google.com/?q=52.25139,21.01000",
+        "nameES": "Barbacane di Varsavia",
+        "shortES": "Antiguas murallas defensivas de ladrillo rojo.",
+        "descES": "Continúa tu recorrido hacia el norte hasta el Barbacane di Varsavia, un sugestivo puesto fortificado semicircular que en su día protegía la puerta norte de la ciudad. Erigido en 1540 y diseñado por el arquitecto italiano Giovanni Battista il Veneziano, esta masiva estructura de ladrillo rojo es una de las pocas reliquias que quedan de la compleja red de fortificaciones históricas que una vez rodearon Varsavia. Como gran parte de la ciudad, fue en gran medida destruido durante la Rivolta di Varsavia de 1944 y meticulosamente reconstruido en los años 50. Hoy en día, el Barbacane funciona como un pintoresco puente entre la Città Vecchia y la Città Nuova. A los niños les encantará explorar los gruesos muros, los arcos y las torres defensivas, imaginándose como caballeros medievales que defienden la ciudad.",
+        "tipsES": "Pasea por las murallas para encontrar artistas locales que venden pinturas y artesanía."
       },
       {
         "id": "war-5",
@@ -912,7 +1085,11 @@
           "Wikipedia \"Multimedia Fountain Park, Warsaw\"",
           "parkfontann.pl"
         ],
-        "maps": "https://maps.google.com/?q=52.25417,21.01139"
+        "maps": "https://maps.google.com/?q=52.25417,21.01139",
+        "nameES": "Parco Multimediale delle Fontane",
+        "shortES": "Espectáculos de agua, luces y música.",
+        "descES": "Concluye tu tour a pie justo fuera de las murallas históricas en el Parco Multimediale delle Fontane, una espectacular atracción moderna inaugurada en 2011. Situado en un valle verde junto al río Vistola, este parque cuenta con una impresionante serie de 367 chorros de agua y casi 300 luces LED. Durante el día, es un lugar fantástico y refrescante donde los niños pueden correr y refrescarse en las áreas de juegos acuáticos. Las noches de fin de semana, de mayo a septiembre, el parque se transforma en un mágico teatro al aire libre, con espectaculares espectáculos de agua, luces y láser sincronizados con la música. Estas atractivas exhibiciones suelen proyectar historias animadas de famosas leyendas de Varsavia, como el Basilisco o la Sirenetta, ofreciendo un final fascinante para toda la familia.",
+        "tipsES": "Los espectáculos nocturnos suelen celebrarse los viernes y sábados a las 21:00 o a las 21:30 en verano."
       },
       {
         "tier": 2,
@@ -932,7 +1109,11 @@
           "Wikipedia: Palace of Culture and Science",
           "warsawtour.pl"
         ],
-        "maps": "https://maps.google.com/?q=52.231838,21.005995"
+        "maps": "https://maps.google.com/?q=52.231838,21.005995",
+        "nameES": "Palace of Culture and Science",
+        "shortES": "Rascacielos icónico de la época soviética con una espectacular terraza panorámica.",
+        "descES": "Il Palazzo della Cultura e della Scienza es el edificio más alto de Polonia, un regalo de la Unione Sovietica para la nación. Ofrece una terraza panorámica al 30° piano con vistas impresionantes de toda Varsavia. En su interior alberga teatros, cines, museos y oficinas. Es un símbolo controvertido pero icónico de la capital polaca.",
+        "tipsES": "La terraza panorámica está abierta todos los días; las entradas se pueden comprar online para evitar colas."
       },
       {
         "tier": 1,
@@ -940,8 +1121,8 @@
         "name": "Krakowskie Przedmieście",
         "nameEN": "Krakowskie Przedmieście",
         "cat": "cultura",
-        "lat": 52.241667,
-        "lng": 21.015278,
+        "lat": 52.24652,
+        "lng": 21.013571,
         "short": "Elegante viale storico che fa parte della famosa Via Reale di Varsavia.",
         "shortEN": "Elegant historic avenue forming part of Warsaw's famous Royal Route.",
         "desc": "Krakowskie Przedmieście è una delle strade più prestigiose e storiche di Varsavia, parte della Via Reale. È fiancheggiata da palazzi storici, chiese eleganti e monumenti importanti, tra cui il Palazzo Presidenziale e l'Università di Varsavia. La strada è un vivace centro culturale, perfetto per passeggiare e ammirare l'architettura.",
@@ -951,7 +1132,11 @@
         "src": [
           "Wikipedia: Krakowskie Przedmieście"
         ],
-        "maps": "https://maps.google.com/?q=52.241667,21.015278"
+        "maps": "https://maps.google.com/?q=52.241667,21.015278",
+        "nameES": "Krakowskie Przedmieście",
+        "shortES": "Elegante paseo histórico que forma parte della famosa Via Reale di Varsavia.",
+        "descES": "Krakowskie Przedmieście es una de las calles más prestigiosas e históricas de Varsavia, parte della Via Reale. Está flanqueada por palacios históricos, iglesias elegantes y monumentos importantes, entre ellos il Palazzo Presidenziale y la Università di Varsavia. La calle es un animado centro cultural, perfecto para pasear y admirar la arquitectura.",
+        "tipsES": "Ideal para un paseo nocturno cuando los edificios están espléndidamente iluminados."
       },
       {
         "id": "war-8",
@@ -969,7 +1154,11 @@
         "src": [
           "Wikipedia: Presidential Palace, Warsaw"
         ],
-        "maps": "https://maps.google.com/?q=52.243056,21.015278"
+        "maps": "https://maps.google.com/?q=52.243056,21.015278",
+        "nameES": "Presidential Palace",
+        "shortES": "Residencia oficial del Presidente polaco, rica en historia y arquitectura neoclásica.",
+        "descES": "Il Palazzo Presidenziale es el palacio más grande de Varsavia y la residencia oficial del Presidente de Polonia. Construido nel XVII secolo, ha acogido numerosos eventos históricos cruciales, entre ellos la firma del Patto di Varsavia. Su fachada neoclásica y el monumento al príncipe Józef Poniatowski antistante son imprescindibles.",
+        "tipsES": "El interior no suele estar abierto al público, pero la fachada merece una foto."
       },
       {
         "id": "war-9",
@@ -987,7 +1176,11 @@
         "src": [
           "Wikipedia: Holy Cross Church, Warsaw"
         ],
-        "maps": "https://maps.google.com/?q=52.238611,21.0175"
+        "maps": "https://maps.google.com/?q=52.238611,21.0175",
+        "nameES": "Holy Cross Church",
+        "shortES": "Espléndida iglesia barroca que custodia el corazón de Fryderyk Chopin.",
+        "descES": "La Chiesa della Santa Croce es una de las iglesias barrocas más importantes de Varsavia, situada en Krakowskie Przedmieście. Es famosa en todo el mundo porque uno de sus pilares custodia el corazón del célebre compositor Fryderyk Chopin. El edificio sufrió graves daños durante la Segunda Guerra Mundial, pero fue meticulosamente reconstruido.",
+        "tipsES": "La entrada es gratuita; buscad el pilar con la urna de Chopin en el lado izquierdo de la nave."
       },
       {
         "id": "war-10",
@@ -1005,7 +1198,11 @@
         "src": [
           "Wikipedia: Tomb of the Unknown Soldier (Warsaw)"
         ],
-        "maps": "https://maps.google.com/?q=52.240833,21.011111"
+        "maps": "https://maps.google.com/?q=52.240833,21.011111",
+        "nameES": "Tomb of the Unknown Soldier",
+        "shortES": "Monumento solemne con una llama eterna, situado en Piazza Piłsudski.",
+        "descES": "La Tomba del Milite Ignoto es un monumento dedicado a los soldados polacos caídos en guerra, situado en Piazza Piłsudski. Es la única parte que sobrevivió del Palazzo Sassone, destruido durante la Segunda Guerra Mundial. La llama eterna está custodiada por una guardia de honor, y el cambio de guardia es una ceremonia solemne y conmovedora.",
+        "tipsES": "El cambio de guardia tiene lugar cada hora en punto."
       },
       {
         "id": "war-11",
@@ -1023,7 +1220,11 @@
         "src": [
           "Wikipedia: Saxon Garden"
         ],
-        "maps": "https://maps.google.com/?q=52.240278,21.008333"
+        "maps": "https://maps.google.com/?q=52.240278,21.008333",
+        "nameES": "Saxon Garden",
+        "shortES": "Parque público histórico con una magnífica fuente y estatuas clásicas.",
+        "descES": "I Giardini Sassoni son el parque público más antiguo de Varsavia, abiertos en 1727. Originalmente diseñados en estilo barroco francés, fueron luego transformados en un jardín paisajístico al inglés. El parque cuenta con una preciosa fuente del siglo XIX, estatuas alegóricas y amplios paseos arbolados perfectos para una pausa relajante.",
+        "tipsES": "Ideal para un paseo después de haber visitado la cercana Tomba del Milite Ignoto."
       },
       {
         "tier": 1,
@@ -1043,7 +1244,11 @@
           "Wikipedia: POLIN Museum of the History of Polish Jews",
           "polin.pl"
         ],
-        "maps": "https://maps.google.com/?q=52.249444,20.993056"
+        "maps": "https://maps.google.com/?q=52.249444,20.993056",
+        "nameES": "POLIN Museum of the History of Polish Jews",
+        "shortES": "Museo multigalardonado que celebra la milenaria historia de los judíos polacos.",
+        "descES": "El Museo POLIN se erige en el sitio del antiguo gueto de Varsavia y narra los mil años de historia de los judíos en Polonia. El edificio en sí es una obra maestra de la arquitectura contemporánea. La exposición principal es interactiva y profundamente conmovedora, ofreciendo un viaje inmersivo a través de siglos de convivencia, cultura y tragedia.",
+        "tipsES": "La visita requiere al menos 2-3 ore; se recomienda reservar las entradas con antelación."
       },
       {
         "tier": 1,
@@ -1063,7 +1268,11 @@
           "Wikipedia: Warsaw Uprising Museum",
           "1944.pl"
         ],
-        "maps": "https://maps.google.com/?q=52.232222,20.980833"
+        "maps": "https://maps.google.com/?q=52.232222,20.980833",
+        "nameES": "Warsaw Uprising Museum",
+        "shortES": "Museo inmersivo dedicado a la heroica Rivolta di Varsavia del 1944.",
+        "descES": "Este museo está dedicado a la Rivolta di Varsavia del 1944, uno de los eventos más heroicos y trágicos de la historia polaca. Situado en una antigua central eléctrica, utiliza exposiciones multimedia, sonidos y luces para recrear la atmósfera de la ciudad en guerra. Es una experiencia intensa que ayuda a comprender el espíritu indómito de Varsavia.",
+        "tipsES": "La entrada es gratuita los lunes. Prepárense para una experiencia emocionalmente intensa."
       },
       {
         "tier": 1,
@@ -1071,8 +1280,8 @@
         "name": "Łazienki Park",
         "nameEN": "Łazienki Park",
         "cat": "natura",
-        "lat": 52.215,
-        "lng": 21.035556,
+        "lat": 52.212621,
+        "lng": 21.03395,
         "short": "Vasto parco reale con palazzi storici, pavoni e concerti estivi di Chopin.",
         "shortEN": "Vast royal park featuring historic palaces, peacocks, and summer Chopin concerts.",
         "desc": "Il Parco Łazienki è il parco più grande e pittoresco di Varsavia, noto anche come il Parco delle Terme. Ospita il magnifico Palazzo sull'Acqua, ex residenza estiva dell'ultimo re di Polonia. I visitatori possono passeggiare tra giardini curati, pavoni in libertà e assistere ai famosi concerti gratuiti di Chopin durante l'estate.",
@@ -1082,7 +1291,11 @@
         "src": [
           "Wikipedia: Łazienki Park"
         ],
-        "maps": "https://maps.google.com/?q=52.215,21.035556"
+        "maps": "https://maps.google.com/?q=52.215,21.035556",
+        "nameES": "Łazienki Park",
+        "shortES": "Amplio parque real con palacios históricos, pavos reales y conciertos de verano de Chopin.",
+        "descES": "El Parco Łazienki es el parque más grande y pintoresco de Varsavia, también conocido como il Parco delle Terme. Alberga el magnífico Palazzo sull'Acqua, antigua residencia de verano del último rey de Polonia. Los visitantes pueden pasear entre jardines cuidados, pavos reales en libertad y asistir a los famosos conciertos gratuitos de Chopin durante el verano.",
+        "tipsES": "Los conciertos de Chopin se celebran todos los domingos de mayo a septiembre junto al monumento al compositor."
       },
       {
         "tier": 1,
@@ -1101,15 +1314,19 @@
         "src": [
           "Wikipedia: Copernicus Science Centre"
         ],
-        "maps": "https://maps.google.com/?q=52.241944,21.028611"
+        "maps": "https://maps.google.com/?q=52.241944,21.028611",
+        "nameES": "Copernicus Science Centre",
+        "shortES": "Museo de ciencias interactivo, perfecto para familias y mentes curiosas.",
+        "descES": "El Centro delle Scienze Copernico es uno de los museos científicos más grandes y modernos de Europa. Ofrece cientos de exposiciones interactivas que permiten a visitantes de todas las edades realizar experimentos y descubrir las leyes de la naturaleza. Situado a lo largo de la Vistola, incluye también un planetario de vanguardia.",
+        "tipsES": "Comprad las entradas online con bastante antelación, ya que se agotan rápidamente."
       },
       {
         "id": "war-16",
         "name": "Vistula Boulevards",
         "nameEN": "Vistula Boulevards",
         "cat": "natura",
-        "lat": 52.243333,
-        "lng": 21.028889,
+        "lat": 52.247605,
+        "lng": 21.020163,
         "short": "Vivace passeggiata lungo il fiume con caffè, piste ciclabili e spiagge urbane.",
         "shortEN": "Lively riverfront promenade with cafes, cycling paths, and urban beaches.",
         "desc": "I viali lungo il fiume Vistola sono diventati uno dei luoghi di ritrovo più popolari di Varsavia. Offrono chilometri di percorsi pedonali e ciclabili, caffè all'aperto, spiagge urbane e aree relax. Durante l'estate, la zona si anima con eventi culturali, musica dal vivo e una vivace vita notturna lungo le rive del fiume.",
@@ -1120,7 +1337,11 @@
           "warsawtour.pl",
           "Wikipedia: Vistula Boulevards"
         ],
-        "maps": "https://maps.google.com/?q=52.243333,21.028889"
+        "maps": "https://maps.google.com/?q=52.243333,21.028889",
+        "nameES": "Vistula Boulevards",
+        "shortES": "Animado paseo a lo largo del río con cafeterías, carriles bici y playas urbanas.",
+        "descES": "Los bulevares a lo largo del río Vistola se han convertido en uno de los puntos de encuentro más populares de Varsavia. Ofrecen kilómetros de rutas peatonales y ciclistas, cafés al aire libre, playas urbanas y zonas de descanso. Durante el verano, la zona se anima con eventos culturales, música en vivo y una animada vida nocturna a lo largo de las orillas del río.",
+        "tipsES": "Perfecto para un paseo al atardecer o para alquilar una bicicleta urbana."
       },
       {
         "id": "war-17",
@@ -1139,7 +1360,11 @@
           "koszyki.com",
           "Wikipedia: Hala Koszyki"
         ],
-        "maps": "https://maps.google.com/?q=52.222222,21.010278"
+        "maps": "https://maps.google.com/?q=52.222222,21.010278",
+        "nameES": "Hala Koszyki",
+        "shortES": "Histórico mercado cubierto transformado en un animado y moderno polo gastronómico.",
+        "descES": "Hala Koszyki es un histórico mercado cubierto restaurado y convertido en un moderno polo gastronómico. La arquitectura industrial de ladrillo y acero alberga decenas de restaurantes, bares y tiendas de productos alimentarios especializados. Es el lugar ideal para probar tanto la cocina polaca moderna como platos internacionales en un ambiente vibrante.",
+        "tipsES": "Perfecto para el almuerzo o la cena; puede estar muy concurrido los fines de semana."
       },
       {
         "id": "war-18",
@@ -1158,15 +1383,19 @@
           "Wikipedia: National Museum, Warsaw",
           "mnw.art.pl"
         ],
-        "maps": "https://maps.google.com/?q=52.231667,21.024722"
+        "maps": "https://maps.google.com/?q=52.231667,21.024722",
+        "nameES": "National Museum in Warsaw",
+        "shortES": "El principal museo de arte de Varsovia, con extensas colecciones de obras polacas y europeas.",
+        "descES": "El Museo Nacional es una de las mayores instituciones culturales de Polonia. Alberga una amplia colección de arte antiguo, pinturas polacas y extranjeras, y una extraordinaria galería de arte medieval. Entre las obras maestras destaca el enorme cuadro 'La battaglia di Grunwald' de Jan Matejko, una obra fundamental para la historia polaca.",
+        "tipsES": "La entrada a las exposiciones permanentes es gratuita los martes."
       },
       {
         "id": "war-19",
         "name": "Nowy Świat Street",
         "nameEN": "Nowy Świat Street",
         "cat": "cultura",
-        "lat": 52.233333,
-        "lng": 21.018333,
+        "lat": 52.235589,
+        "lng": 21.018553,
         "short": "Elegante via dello shopping e dei caffè, parte della storica Via Reale.",
         "shortEN": "Elegant shopping and cafe street, part of the historic Royal Route.",
         "desc": "Via Nowy Świat (Nuovo Mondo) è una delle principali arterie storiche e commerciali di Varsavia. Ricostruita dopo la guerra nel suo stile neoclassico originale, è ricca di boutique, ristoranti, caffè storici e librerie. È una continuazione della Via Reale e rappresenta il cuore pulsante della vita sociale cittadina.",
@@ -1176,7 +1405,11 @@
         "src": [
           "Wikipedia: Nowy Świat Street"
         ],
-        "maps": "https://maps.google.com/?q=52.233333,21.018333"
+        "maps": "https://maps.google.com/?q=52.233333,21.018333",
+        "nameES": "Nowy Świat Street",
+        "shortES": "Elegante calle de compras y cafés, parte de la histórica Via Reale.",
+        "descES": "Via Nowy Świat (Nuevo Mundo) es una de las principales arterias históricas y comerciales de Varsovia. Reconstruida tras la guerra en su estilo neoclásico original, está llena de boutiques, restaurantes, cafés históricos y librerías. Es una continuación de la Via Reale y representa el corazón palpitante de la vida social de la ciudad.",
+        "tipsES": "Parad en Blikle, una histórica pastelería famosa por sus pączki (krapfen polacos)."
       },
       {
         "id": "war-20",
@@ -1194,15 +1427,19 @@
         "src": [
           "Wikipedia: Ujazdów Castle"
         ],
-        "maps": "https://maps.google.com/?q=52.219722,21.031389"
+        "maps": "https://maps.google.com/?q=52.219722,21.031389",
+        "nameES": "Ujazdów Castle",
+        "shortES": "Castillo histórico que hoy alberga un dinámico centro de arte contemporáneo.",
+        "descES": "Il Castello di Ujazdów è un'antica residenza reale situata tra il Parco Łazienki e la Vistola. Oggi ospita il Centro per l'Arte Contemporanea, offrendo mostre d'arte moderna, proiezioni cinematografiche e performance. L'edificio combina un'architettura storica con un'anima culturale all'avanguardia, circondato da splendidi giardini.",
+        "tipsES": "Los jueves la entrada a las exposiciones es gratuita."
       },
       {
         "id": "war-21",
         "name": "Neon Museum",
         "nameEN": "Neon Museum",
         "cat": "cultura",
-        "lat": 52.248611,
-        "lng": 21.048333,
+        "lat": 52.231766,
+        "lng": 21.005798,
         "short": "Unico museo in Europa dedicato alle storiche insegne al neon dell'era sovietica.",
         "shortEN": "Unique museum in Europe dedicated to historic Soviet-era neon signs.",
         "desc": "Situato nel quartiere creativo di Praga, il Museo dei Neon è un'istituzione unica dedicata alla conservazione delle insegne luminose dell'era della Guerra Fredda. La collezione presenta centinaia di neon restaurati che un tempo illuminavano le strade polacche. È un tuffo affascinante nel design e nella tipografia del blocco orientale.",
@@ -1213,9 +1450,16 @@
           "Wikipedia: Neon Museum in Warsaw",
           "neonmuzeum.org"
         ],
-        "maps": "https://maps.google.com/?q=52.248611,21.048333"
+        "maps": "https://maps.google.com/?q=52.248611,21.048333",
+        "nameES": "Neon Museum",
+        "shortES": "Único museo en Europa dedicado a los históricos rótulos de neón de la era soviética.",
+        "descES": "Situato nel quartiere creativo di Praga, il Museo dei Neon è un'istituzione unica dedicata alla conservazione delle insegne luminose dell'era della Guerra Fredda. La collezione presenta centinaia di neon restaurati che un tempo illuminavano le strade polacche. È un tuffo affascinante nel design e nella tipografia del blocco orientale.",
+        "tipsES": "Perfecto para los amantes de la fotografía y del diseño retro."
       }
-    ]
+    ],
+    "cityES": "Varsavia",
+    "countryES": "Polonia",
+    "introES": "Descubre el corazón histórico de Varsavia, donde la arquitectura meticulosamente reconstruida se encuentra con leyendas fascinantes en un centro histórico compacto y peatonal."
   },
   "vilnius": {
     "city": "Vilnius",
@@ -1250,7 +1494,11 @@
           "Lietuvos nacionalinis muziejus (lnm.lt)",
           "UNESCO WHC #541"
         ],
-        "maps": "https://maps.google.com/?q=54.68685,25.29072"
+        "maps": "https://maps.google.com/?q=54.68685,25.29072",
+        "nameES": "Torre di Gediminas",
+        "shortES": "La única torre superstite del Castello Superiore, símbolo di Vilnius con vista panoramica sul centro storico.",
+        "descES": "La Torre di Gediminas è l'unica parte superstite del Castello Superiore che sorge in cima alla collinа di Gediminas, símbolo di Vilnius e dell'intera Lituania (tanto da essere stata raffigurata sull'ex valuta nazionale, il litas). Le prime fortificazioni in legno furono erette dal granduca Gediminas all'inizio del XIV secolo; il primo castello in mattoni fu completato nel 1409 dal granduca Vytautas, mentre la torre a tre piani che vediamo oggi fu ricostruita nel 1933. Oggi ospita un museo con reperti archeologici, armi e modelli dei castelli di Vilnius dal XIV al XVII secolo. Si raggiunge a piedi o con una funicolare, e dalla piattaforma panoramica in cima si gode una delle viste più belle sul centro storico (patrimonio UNESCO) e sul fiume Neris. Curiosità: il 7 ottobre 1988 la bandiera lituana fu issata di nuovo sulla torre durante il movimento per la restaurazione dell'indipendenza.",
+        "tipsES": "Museo Nazionale di Lituania. Funicolare disponibile dal cortile. Sali al tramonto per la luce migliore sul centro storico."
       },
       {
         "id": "vln-2",
@@ -1268,7 +1516,11 @@
         "src": [
           "Wikipedia \"Bernardine Garden\""
         ],
-        "maps": "https://maps.google.com/?q=54.68333,25.29611"
+        "maps": "https://maps.google.com/?q=54.68333,25.29611",
+        "nameES": "Giardino Bernardino",
+        "shortES": "Parco storico di oltre 9 ettari lungo il fiume Vilnia, con fontana \"danzante\", giostra e spazi per bambini.",
+        "descES": "Il Giardino Bernardino, un tempo noto come Parco Sereikiškės, è un parco pubblico di oltre 9 ettari sulla riva sinistra del fiume Vilnia, tra la Torre di Gediminas e il Monastero Bernardino. Le sue origini risalgono al 1469, quando il re di Polonia e granduca di Lituania Casimiro IV Jagellone invitò i monaci bernardini a Vilnius: furono loro a riorganizzare l'area e ad allestire un'esposizione botanica. Chiuso dal governo zarista nel 1864 e poi recuperato dai cittadini, distrutto durante la Seconda guerra mondiale e ricostruito in epoca sovietica, il parco è stato restaurato per la terza volta nel 2013 (con fondi parzialmente europei). Oggi offre aiuole curate, un'esposizione botanica con piante medicinali, una fontana \"danzante\" con spettacolo di luci e musica, una giostra, tavoli da scacchi e ampi spazi per i bambini: una tappa verde ideale con la famiglia.",
+        "tipsES": "Ingresso libero. A pochi minuti a piedi dalla Torre di Gediminas. Perfetto per una pausa con i bambini."
       },
       {
         "id": "vln-3",
@@ -1287,7 +1539,11 @@
           "WhichMuseum \"Toy Museum (Vilnius)\"",
           "zaislumuziejus.lt"
         ],
-        "maps": "https://maps.google.com/?q=54.68482,25.29159"
+        "maps": "https://maps.google.com/?q=54.68482,25.29159",
+        "nameES": "Museo dei Giocattoli",
+        "shortES": "Museo para familias sobre la historia del juguete, desde la Edad de Piedra hasta el siglo XX, con elementos interactivos.",
+        "descES": "El Museo dei Giocattoli (Žaislų muziejus) de Vilnius abrió sus puertas en diciembre de 2012 con el objetivo de contar de forma lúdica la historia de los juguetes, valorando el juguete como objeto de estudio científico. El recorrido acompaña a los visitantes en un viaje en el tiempo: desde la Edad Media hasta la Edad de Piedra, hasta el siglo XX, periodo en el que la industria del juguete conoció un enorme éxito. La colección, con especial atención a los juguetes lituanos y de la época soviética, es apreciada por los montajes cuidados y por los elementos interactivos que permiten a los más pequeños jugar con algunas exposiciones, creando una experiencia apta para varias generaciones. No es un museo grande, pero está lleno de objetos curiosos y ofrece una buena relación calidad-precio, ideal como pausa \"a medida de niño\" entre una parada histórica y otra.",
+        "tipsES": "Dirección: Šiltadaržio g. 2. Entrada general ~€7 (reducida ~€5). Adecuado para familias; tienda del museo y audioguía disponibles."
       },
       {
         "tier": 2,
@@ -1295,8 +1551,8 @@
         "name": "Užupis",
         "nameEN": "Užupis",
         "cat": "cultura",
-        "lat": 54.68318,
-        "lng": 25.30719,
+        "lat": 54.681281,
+        "lng": 25.299384,
         "short": "Il quartiere bohémien che nel 1998 si è proclamato repubblica indipendente degli artisti, con una costituzione tutta sua.",
         "shortEN": "The bohemian district that in 1998 declared itself an independent republic of artists, with its own constitution.",
         "desc": "Užupis (\"oltre il fiume\", in riferimento al Vilnia) è un piccolo quartiere di circa 60 ettari nel centro storico di Vilnius, da tempo amato da artisti e bohémien al punto da essere paragonato a Montmartre a Parigi o a Christiania a Copenhagen. Il 1° aprile 1998 il quartiere si è auto-proclamato repubblica indipendente — la Repubblica di Užupis — con tanto di costituzione. I 38 articoli della costituzione, affissi su una parete di via Paupio in oltre 20 lingue, alternano affermazioni poetiche e ironiche: \"Un cane ha il diritto di essere un cane\" (art. 12), \"Le persone hanno il diritto di essere felici\" (art. 16) e \"di essere infelici\" (art. 17). Da vedere anche l'Angelo di Užupis, statua di un angelo che suona la tromba inaugurata il 1° aprile 2002, diventata simbolo della rinascita del quartiere. La scelta del 1° aprile (pesce d'aprile) suggerisce quanto l'autoironia sia parte dell'identità del luogo.",
@@ -1307,15 +1563,19 @@
           "Wikipedia \"Užupis\"",
           "BBC Travel (2018)"
         ],
-        "maps": "https://maps.google.com/?q=54.68318,25.30719"
+        "maps": "https://maps.google.com/?q=54.68318,25.30719",
+        "nameES": "Užupis",
+        "shortES": "El barrio bohemio que en 1998 se proclamó república independiente de los artistas, con una constitución propia.",
+        "descES": "Užupis (\"más allá del río\", en referencia al Vilnia) es un pequeño barrio de unas 60 hectáreas en el casco histórico de Vilnius, desde hace tiempo querido por artistas y bohemios hasta el punto de ser comparado con Montmartre a Parigi o con Christiania a Copenhagen. El 1° de abril de 1998 el barrio se autoproclamó república independiente — la Repubblica di Užupis — con su propia constitución. Los 38 artículos de la constitución, expuestos en una pared de via Paupio en más de 20 idiomas, alternan afirmaciones poéticas e irónicas: \"Un perro tiene derecho a ser un perro\" (art. 12), \"Las personas tienen derecho a ser felices\" (art. 16) y \"a ser infelices\" (art. 17). También merece la pena ver l'Angelo di Užupis, estatua de un ángel que toca la trompeta inaugurada el 1° de abril de 2002, que se ha convertido en símbolo del renacimiento del barrio. La elección del 1° de abril (día de las bromas) sugiere hasta qué punto la autoironía forma parte de la identidad del lugar.",
+        "tipsES": "Busca el muro de la Constitución en via Paupio y l'Angelo di Užupis. Barrio ideal para cafés y galerías de arte."
       },
       {
         "id": "vln-5",
         "name": "Halės Turgus (Mercato delle Halle)",
         "nameEN": "Halės Market",
         "cat": "attivita",
-        "lat": 54.673,
-        "lng": 25.283,
+        "lat": 54.673375,
+        "lng": 25.286463,
         "short": "Il mercato coperto più antico di Vilnius (1906): prodotti freschi locali, pane nero, formaggi e street food.",
         "shortEN": "Vilnius's oldest covered market (1906): fresh local produce, black bread, cheeses and street food.",
         "desc": "Halės Turgus è il mercato coperto più antico di Vilnius e un autentico punto di riferimento storico della città. L'edificio fu costruito nel 1906 su progetto dell'architetto Vaclovas Michnevičius; per lungo tempo fu chiamato \"Mercato del Grano\", e solo nel 1914 prevalse il nome di Halės Market. Situato nel vivace quartiere della stazione, è il posto giusto per immergersi nella vita quotidiana locale e assaggiare la Lituania più genuina: frutta e verdura di stagione dalle fattorie lituane, carne, pollame, pesce e frutti di mare freschi, oltre a pane nero, formaggi, salumi e specialità da street food. È un mercato vivo e popolare, dove i sapori si incontrano e si possono fare acquisti per un picnic o un pranzo veloce.",
@@ -1327,7 +1587,11 @@
           "Go Vilnius (govilnius.lt)",
           "Kupi.com \"Hale Market\""
         ],
-        "maps": "https://maps.google.com/?q=54.6730,25.2830"
+        "maps": "https://maps.google.com/?q=54.6730,25.2830",
+        "nameES": "Halės Turgus (Mercado de las Halles)",
+        "shortES": "El mercado cubierto más antiguo de Vilnius (1906): productos frescos locales, pan negro, quesos y comida callejera.",
+        "descES": "Halės Turgus es el mercado cubierto más antiguo de Vilnius y un auténtico punto de referencia histórico de la ciudad. El edificio fue construido en 1906 por proyecto del arquitecto Vaclovas Michnevičius; durante mucho tiempo se llamó \"Mercato del Grano\", y solo en 1914 prevaleció el nombre Halės Market. Situado en el animado barrio de la estación, es el lugar indicado para sumergirse en la vida cotidiana local y degustar la Lituania más auténtica: frutas y verduras de temporada de las granjas lituanas, carne, aves, pescado y mariscos frescos, además de pan negro, quesos, embutidos y especialidades de comida callejera. Es un mercado vivo y popular, donde los sabores se encuentran y se pueden hacer compras para un picnic o un almuerzo rápido.",
+        "tipsES": "Dirección: Pylimo g. 58. Horarios (comprueba en el lugar): Lun–Vie 7:00–18:00, Sáb 7:00–16:00. Aparcamientos de pago en las cercanías."
       },
       {
         "tier": 2,
@@ -1347,7 +1611,11 @@
           "Wikipedia: Vilnius Cathedral",
           "Vilnius Tourism"
         ],
-        "maps": "https://maps.google.com/?q=54.685833,25.287778"
+        "maps": "https://maps.google.com/?q=54.685833,25.287778",
+        "nameES": "Vilnius Cathedral",
+        "shortES": "La principal catedral católica de Lituania, célebre por su arquitectura neoclásica y por la plaza que la precede.",
+        "descES": "La Cattedrale di Vilnius, dedicada a los Santi Stanislao e Ladislao, es el corazón espiritual de Lituania. Situada en la plaza homónima, esta majestuosa estructura neoclásica se alza sobre el emplazamiento de antiguos templos paganos. En su interior destaca la suntuosa Cappella di San Casimiro, una obra maestra del barroco. La plaza que la precede, con su icónica torre campanaria independiente, es el principal punto de encuentro de la ciudad.",
+        "tipsES": "La entrada a la catedral es gratuita, pero el acceso a las criptas y al campanario requiere una entrada."
       },
       {
         "tier": 1,
@@ -1367,7 +1635,11 @@
           "Official Site: Valdovų rūmai",
           "Wikipedia: Palace of the Grand Dukes of Lithuania"
         ],
-        "maps": "https://maps.google.com/?q=54.6865,25.2889"
+        "maps": "https://maps.google.com/?q=54.6865,25.2889",
+        "nameES": "Palace of the Grand Dukes of Lithuania",
+        "shortES": "Un palacio histórico reconstruido que alberga un museo sobre la historia del Granducato di Lituania.",
+        "descES": "Reconstruido en el siglo XXI, este imponente palacio renacentista fue la residencia de los soberanos del Granducato di Lituania. Hoy alberga un vasto museo nacional que recorre la historia del país a través de piezas arqueológicas, salones de representación recreados y exposiciones de arte. Los visitantes pueden explorar las ruinas originales en los sótanos y admirar vistas panorámicas desde la torre. Es un viaje fascinante al glorioso pasado de la nación.",
+        "tipsES": "Calcula al menos dos horas para la visita completa; hay audioguías disponibles en varios idiomas."
       },
       {
         "id": "vln-8",
@@ -1385,7 +1657,11 @@
         "src": [
           "Vilnius Tourism: Pilies Street"
         ],
-        "maps": "https://maps.google.com/?q=54.6828,25.2892"
+        "maps": "https://maps.google.com/?q=54.6828,25.2892",
+        "nameES": "Pilies Street",
+        "shortES": "La calle más antigua y animada del casco antiguo, llena de cafés, tiendas y arquitectura histórica.",
+        "descES": "Pilies è la strada più antica e pittoresca del centro storico di Vilnius, collegando la Piazza della Cattedrale alla Piazza del Municipio. Está flanqueada por edificios históricos de distintas épocas, que van del gótico al barroco. La vía está siempre animada gracias a los numerosos cafés, restaurantes, galerías de arte y tiendas de souvenirs que venden ámbar y lino. Pasear aquí ofrece una inmersión auténtica en la vibrante atmósfera de la ciudad.",
+        "tipsES": "Excelente zona para comprar souvenirs de ámbar o detenerse a tomar un café al aire libre."
       },
       {
         "tier": 1,
@@ -1404,7 +1680,11 @@
         "src": [
           "Wikipedia: St. Anne's Church, Vilnius"
         ],
-        "maps": "https://maps.google.com/?q=54.6831,25.2931"
+        "maps": "https://maps.google.com/?q=54.6831,25.2931",
+        "nameES": "St. Anne's Church",
+        "shortES": "Una obra maestra del gótico flamígero en ladrillo rojo, admirada incluso por Napoleone.",
+        "descES": "La iglesia de Sant'Anna es uno de los capolavori gotici più celebri di Lituania, famosa por su intrincada fachada de ladrillo rojo. Construida a finales del siglo XV, la leyenda cuenta que Napoleone Bonaparte quedó tan fascinado que quiso llevarla a Parigi en la palma de la mano. El exterior, con sus esbeltas agujas y motivos geométricos, es un ejemplo excepcional del gótico flamígero. El interior es más sobrio pero merece igualmente una visita.",
+        "tipsES": "La iglesia es pequeña y la visita es breve; la entrada es gratuita."
       },
       {
         "id": "vln-10",
@@ -1422,7 +1702,11 @@
         "src": [
           "Vilnius Tourism: Literatų Street"
         ],
-        "maps": "https://maps.google.com/?q=54.6822,25.2903"
+        "maps": "https://maps.google.com/?q=54.6822,25.2903",
+        "nameES": "Literatų Street",
+        "shortES": "Una pintoresca callejuela decorada con cientos de obras de arte dedicadas a escritores y poetas.",
+        "descES": "Esta estrecha y encantadora calle peatonal está dedicada a los escritores y poetas vinculados a Lituania. Los muros de la calle están decorados con cientos de pequeñas obras de arte, placas y esculturas incrustadas, cada una en homenaje a un distinto literato. El proyecto artístico, iniciado en 2008, transformó la calle en una galería de arte al aire libre. Es un lugar perfecto para pasear tranquilamente y tomar fotografías únicas.",
+        "tipsES": "Visítala con calma para apreciar los detalles de las distintas obras de arte en los muros."
       },
       {
         "tier": 1,
@@ -1442,7 +1726,11 @@
           "Wikipedia: Vilnius University",
           "Vilnius Tourism"
         ],
-        "maps": "https://maps.google.com/?q=54.6826,25.2878"
+        "maps": "https://maps.google.com/?q=54.6826,25.2878",
+        "nameES": "Vilnius University Architectural Ensemble",
+        "shortES": "Un complejo universitario histórico con magníficos patios, una iglesia barroca y una biblioteca con frescos.",
+        "descES": "Fundada en 1579, l'Università di Vilnius è una delle più antiche dell'Europa orientale. Su campus histórico es un laberinto de patios pintorescos, pórticos y pasadizos secretos que mezclan estilos gótico, renacentista, barroco y clásico. No te pierdas la Chiesa di San Giovanni con su alto campanario y la histórica biblioteca, rica en frescos y antiguos manuscritos. Pasear por sus patios es como dar un salto atrás en el tiempo.",
+        "tipsES": "El acceso a los patios requiere una pequeña entrada; el campanario ofrece una vista estupenda."
       },
       {
         "id": "vln-12",
@@ -1460,7 +1748,11 @@
         "src": [
           "Vilnius Tourism: Town Hall Square"
         ],
-        "maps": "https://maps.google.com/?q=54.6781,25.2875"
+        "maps": "https://maps.google.com/?q=54.6781,25.2875",
+        "nameES": "Town Hall Square",
+        "shortES": "Una animada plaza triangular dominada por el Ayuntamiento neoclásico, corazón de los eventos de la ciudad.",
+        "descES": "La Plaza del Ayuntamiento es uno de los núcleos neurálgicos de la vida pública de Vilnius, rodeada de elegantes edificios históricos y numerosos cafés. En el centro domina el Ayuntamiento neoclásico, antaño centro del comercio y de la administración municipal. La plaza triangular acoge regularmente mercados, conciertos y festivales, lo que la convierte en un lugar animado en todas las estaciones. Es el punto de partida ideal para explorar las callejuelas del barrio judío.",
+        "tipsES": "Excelente lugar para sentarse en un café al aire libre y observar el ir y venir de la ciudad."
       },
       {
         "tier": 1,
@@ -1480,7 +1772,11 @@
           "Wikipedia: Gate of Dawn",
           "Vilnius Tourism"
         ],
-        "maps": "https://maps.google.com/?q=54.6744,25.2895"
+        "maps": "https://maps.google.com/?q=54.6744,25.2895",
+        "nameES": "Gate of Dawn",
+        "shortES": "La única puerta de la ciudad que se conserva, que alberga una venerada imagen milagrosa de la Vergine Maria.",
+        "descES": "La Porta dell'Aurora è l'unica porta sopravvissuta delle antiche mura difensive di Vilnius. En su interior alberga una célebre capilla que guarda la icona de la Madonna della Misericordia, venerada tanto por católicos como por ortodoxos. La imagen, pintada en el siglo XVII, se considera milagrosa y atrae peregrinos de todo el mundo. La vista de la capilla iluminada desde la calle inferior es una de las imágenes más emblemáticas de la ciudad.",
+        "tipsES": "Respeta el silencio y la atmósfera de oración cuando visites la capilla."
       },
       {
         "id": "vln-14",
@@ -1499,7 +1795,11 @@
           "National Museum of Lithuania",
           "Vilnius Tourism"
         ],
-        "maps": "https://maps.google.com/?q=54.6764,25.2928"
+        "maps": "https://maps.google.com/?q=54.6764,25.2928",
+        "nameES": "Bastion of the Vilnius Defensive Wall",
+        "shortES": "Una antigua fortificación con un museo de armas y una terraza que ofrece vistas espectaculares de la ciudad.",
+        "descES": "Il Bastione della cinta muraria di Vilnius, conocido también como Barbacane, es una fortificación renacentista construida para defender la ciudad. Hoy alberga un museo que exhibe armas antiguas y armaduras, narrando la historia militar de Vilnius. Además del interés histórico, el sitio ofrece una espléndida terraza panorámica desde la que se disfruta de una vista impresionante sobre los tejados rojos del centro histórico y sobre el barrio di Užupis. Los sótanos del bastión añaden un toque de misterio a la visita.",
+        "tipsES": "La subida al bastión es corta pero empinada; la vista al atardecer es especialmente sugerente."
       },
       {
         "tier": 1,
@@ -1519,7 +1819,11 @@
           "Wikipedia: Three Crosses",
           "Vilnius Tourism"
         ],
-        "maps": "https://maps.google.com/?q=54.6868,25.2974"
+        "maps": "https://maps.google.com/?q=54.6868,25.2974",
+        "nameES": "Three Crosses Monument",
+        "shortES": "Un monumento histórico en una colina que ofrece la mejor vista panorámica de Vilnius.",
+        "descES": "Situado en la Collina delle Tre Croci, este imponente monumento blanco domina el panorama de Vilnius. Las cruces originales fueron erigidas en el siglo XVII para conmemorar a un grupo de monjes franciscanos martirizados, pero fueron destruidas durante el régimen soviético y reconstruidas en 1989 como símbolo de renacimiento nacional. La subida por el parque exige un poco de esfuerzo, pero la recompensa es la vista panorámica más espectacular y completa de toda la ciudad.",
+        "tipsES": "Lleva calzado cómodo para subir los escalones de madera que llevan a la cima de la colina."
       },
       {
         "id": "vln-16",
@@ -1538,7 +1842,11 @@
           "MO Museum Official Site",
           "Vilnius Tourism"
         ],
-        "maps": "https://maps.google.com/?q=54.6795,25.2771"
+        "maps": "https://maps.google.com/?q=54.6795,25.2771",
+        "nameES": "MO Museum",
+        "shortES": "Un museo de arte moderno y contemporáneo alojado en un edificio vanguardista diseñado por Daniel Libeskind.",
+        "descES": "Diseñado por el célebre arquitecto Daniel Libeskind, el MO Museum es el núcleo del arte moderno y contemporáneo en Lituania. El propio edificio es una obra de arte arquitectónica, con líneas audaces y espacios luminosos. En el interior, las exposiciones temporales presentan obras de artistas lituanos desde los anni '50 hasta la actualidad, ofreciendo un retrato único de la cultura visual del país. El museo dispone también de un jardín de esculturas y de una acogedora cafetería.",
+        "tipsES": "Consulta el programa de exposiciones temporales antes de la visita; la tienda del museo ofrece excelentes libros de arte."
       },
       {
         "tier": 1,
@@ -1557,7 +1865,11 @@
         "src": [
           "Wikipedia: Church of St. Peter and St. Paul, Vilnius"
         ],
-        "maps": "https://maps.google.com/?q=54.694,25.3061"
+        "maps": "https://maps.google.com/?q=54.694,25.3061",
+        "nameES": "Church of St. Peter and St. Paul",
+        "shortES": "La obra maestra del barroco lituano, célebre por su interior sobrecogedor decorado con más de 2.000 esculturas en estuco blanco.",
+        "descES": "Situada en el barrio de Antakalnis, esta iglesia es considerada la obra maestra absoluta del barroco lituano. Aunque el exterior es relativamente sobrio, el interior deja a los visitantes sin aliento: está decorado con más de 2.000 figuras en estuco blanco que crean una atmósfera celestial e intrincada. Las esculturas representan escenas bíblicas, ángeles, demonios y figuras históricas, realizadas con una maestría excepcional por artistas italianos en el siglo XVII. Es una parada imprescindible para los amantes del arte.",
+        "tipsES": "Se encuentra a aproximadamente 20 minuti a pie del centro, pero la extraordinaria decoración interior merece totalmente la caminata."
       },
       {
         "id": "vln-18",
@@ -1575,7 +1887,11 @@
         "src": [
           "Official Site: Museum of Occupations and Freedom Fights"
         ],
-        "maps": "https://maps.google.com/?q=54.688,25.2706"
+        "maps": "https://maps.google.com/?q=54.688,25.2706",
+        "nameES": "Museum of Occupations and Freedom Fights",
+        "shortES": "Un museo conmovedor situado en la antigua prisión del KGB, dedicado a la historia de las ocupaciones y de la resistencia lituana.",
+        "descES": "Situado en el antiguo cuartel general del KGB, este museo ofrece un testimonio conmovedor y crudo de la historia lituana durante las ocupaciones soviética y nazi. Las exposiciones en las plantas superiores documentan la resistencia de los partisanos y las deportaciones a Siberia. El momento más intenso de la visita es la exploración de las prisiones subterráneas, dejadas exactamente como estaban cuando el KGB abandonó el edificio en 1991. Es una experiencia profundamente emotiva y de importancia histórica.",
+        "tipsES": "La visita a las celdas subterráneas puede ser emocionalmente intensa; hay audioguías muy detalladas disponibles."
       },
       {
         "id": "vln-19",
@@ -1593,7 +1909,11 @@
         "src": [
           "Vilnius Tourism: Presidential Palace"
         ],
-        "maps": "https://maps.google.com/?q=54.6832,25.2858"
+        "maps": "https://maps.google.com/?q=54.6832,25.2858",
+        "nameES": "Presidential Palace",
+        "shortES": "La elegante residencia oficial del Presidente lituano, famosa por la ceremonia del cambio de la guardia.",
+        "descES": "El Palacio Presidencial es la residencia oficial del Presidente de Lituania. Este elegante edificio de estilo imperio, situado en la pintoresca Piazza Daukantas, ha alojado a lo largo de los siglos zares rusos, reyes polacos e incluso a Napoleone Bonaparte. Cada domingo a mediodía tiene lugar la solemne ceremonia del cambio de la guardia, un evento muy popular entre los turistas. Los jardines del palacio están abiertos al público durante los fines de semana de verano.",
+        "tipsES": "Asiste al cambio de la guardia el domingo a mediodía; reserva con antelación las visitas guiadas gratuitas en el interior."
       },
       {
         "id": "vln-20",
@@ -1611,7 +1931,11 @@
         "src": [
           "Wikipedia: Church of St. Casimir, Vilnius"
         ],
-        "maps": "https://maps.google.com/?q=54.6776,25.2883"
+        "maps": "https://maps.google.com/?q=54.6776,25.2883",
+        "nameES": "St. Casimir's Church",
+        "shortES": "La iglesia barroca más antigua de la ciudad, coronada por una característica cúpula con forma de corona.",
+        "descES": "La iglesia de San Casimiro es el edificio barroco más antiguo de Vilnius, fácilmente reconocible por su imponente cúpula con forma de corona granducal. Construida por los gesuitas a principios del siglo XVII, la iglesia ha tenido una historia turbulenta, habiendo sido convertida en iglesia ortodoxa e incluso en un museo del ateísmo durante la era soviética. Hoy ha recuperado su esplendor original y cuenta con una acústica excelente, albergando a menudo conciertos de órgano.",
+        "tipsES": "Consulta la programación local para asistir a uno de los evocadores conciertos de órgano gratuitos."
       },
       {
         "id": "vln-21",
@@ -1629,7 +1953,11 @@
         "src": [
           "Vilnius Tourism: Vokiečių Street"
         ],
-        "maps": "https://maps.google.com/?q=54.6793,25.2838"
+        "maps": "https://maps.google.com/?q=54.6793,25.2838",
+        "nameES": "Vokiečių Street",
+        "shortES": "Una amplia y animada avenida arbolada en el corazón del casco histórico, llena de restaurantes y cafés.",
+        "descES": "Vokiečių, que significa 'Calle de los Alemanes', es una de las avenidas más amplias y animadas del casco histórico. Históricamente fue el corazón comercial de la comunidad mercantil alemana y, posteriormente, una arteria importante del barrio judío. Hoy es un paseo arbolado dividido por la mitad, flanqueado por restaurantes de moda, boutiques y cafés con amplias terrazas. Es el lugar perfecto para un paseo vespertino o para disfrutar de la cocina local e internacional.",
+        "tipsES": "Zona excelente para cenar al aire libre durante los meses de verano o para un paseo nocturno."
       },
       {
         "id": "vln-22",
@@ -1647,15 +1975,19 @@
         "src": [
           "Wikipedia: Choral Synagogue (Vilnius)"
         ],
-        "maps": "https://maps.google.com/?q=54.6766,25.2808"
+        "maps": "https://maps.google.com/?q=54.6766,25.2808",
+        "nameES": "Choral Synagogue",
+        "shortES": "La única sinagoga superviviente en Vilnius, un importante símbolo de la histórica comunidad judía de la ciudad.",
+        "descES": "La Sinagoga Corale es la única sinagoga de Vilnius que sobrevivió a la Segunda Guerra Mundial y al régimen soviético. Construida en 1903 en estilo moresco-románico, representa el último baluarte de la 'Gerusalemme del Nord', como en su día se conocía Vilnius por su floreciente comunidad ebraica. El interior está elegantemente decorado y sigue sirviendo como lugar de culto activo para la pequeña pero resiliente comunidad judía local.",
+        "tipsES": "La entrada está permitida a los visitantes, pero se exige una vestimenta modesta y los hombres deben cubrirse la cabeza."
       },
       {
         "id": "vln-23",
         "name": "Bernardine Cemetery",
         "nameEN": "Bernardine Cemetery",
         "cat": "natura",
-        "lat": 54.6811,
-        "lng": 25.3058,
+        "lat": 54.680442,
+        "lng": 25.30817,
         "short": "Un antico e romantico cimitero storico immerso nella natura, perfetto per una passeggiata malinconica.",
         "shortEN": "An ancient and romantic historic cemetery immersed in nature, perfect for a melancholic stroll.",
         "desc": "Fondato nel 1810, il Cimitero dei Bernardini è uno dei cimiteri storici più antichi e affascinanti di Vilnius. Situato nel quartiere di Užupis, vicino al fiume Vilnia, è un luogo di pace e memoria, immerso in una fitta vegetazione. Le antiche lapidi ricoperte di muschio, le cripte in rovina e i sentieri ombreggiati creano un'atmosfera romantica e malinconica. È il luogo di riposo di molte figure culturali e storiche lituane e polacche.",
@@ -1665,9 +1997,16 @@
         "src": [
           "Vilnius Tourism: Bernardine Cemetery"
         ],
-        "maps": "https://maps.google.com/?q=54.6811,25.3058"
+        "maps": "https://maps.google.com/?q=54.6811,25.3058",
+        "nameES": "Bernardine Cemetery",
+        "shortES": "Un antiguo y romántico cementerio histórico inmerso en la naturaleza, perfecto para un paseo melancólico.",
+        "descES": "Fundado en 1810, el Cimitero dei Bernardini es uno de los cementerios históricos más antiguos y fascinantes de Vilnius. Situado en el barrio de Užupis, cerca del río Vilnia, es un lugar de paz y memoria, inmerso en una densa vegetación. Las antiguas lápidas cubiertas de musgo, las criptas en ruinas y los senderos sombreados crean una atmósfera romántica y melancólica. Es el lugar de reposo de muchas figuras culturales e históricas lituanas y polacas.",
+        "tipsES": "Visítalo en otoño, cuando las hojas de colores hacen la atmósfera aún más sugerente."
       }
-    ]
+    ],
+    "cityES": "Vilnius",
+    "countryES": "Lituania",
+    "introES": "Un itinerario a pie en el corazón UNESCO de Vilnius: dalla collina del castello al quartiere bohémien di Užupis, fino al mercato coperto più antico della città. Tappe vicine tra loro, percorribili comodamente a piedi o in monopattino."
   },
   "riga": {
     "city": "Riga",
@@ -1701,7 +2040,11 @@
           "Wikipedia \"Riga Central Market\"",
           "liveriga.com"
         ],
-        "maps": "https://maps.google.com/?q=56.94436,24.11472"
+        "maps": "https://maps.google.com/?q=56.94436,24.11472",
+        "nameES": "Mercato Centrale di Riga",
+        "shortES": "El mercado más grande de Europa en antiguos hangares.",
+        "descES": "Inaugurado en 1930, il Mercato Centrale di Riga es uno de los mercados cubiertos más grandes y animados de Europa, reconocido como patrimonio de la humanidad por la UNESCO en 1997. Su rasgo más sorprendente es la arquitectura: los cinco enormes pabellones que albergan los puestos del mercado fueron originalmente construidos como hangares para los dirigibles Zeppelin alemanes durante la Primera Guerra Mundial. Hoy, esos inmensos espacios ofrecen una increíble variedad de productos locales, desde quesos frescos hasta pescado ahumado, pasando por los dulces tradicionales letones. Es el lugar ideal para sumergirse en la vida cotidiana de la ciudad, saborear las especialidades gastronómicas locales y descubrir la auténtica cultura culinaria letona en una atmósfera vibrante y llena de historia.",
+        "tipsES": "Abierto todos los días. Ideal para un almuerzo rápido y económico."
       },
       {
         "tier": 2,
@@ -1721,7 +2064,11 @@
           "Wikipedia \"House of the Blackheads (Riga)\"",
           "melngalvjunams.lv"
         ],
-        "maps": "https://maps.google.com/?q=56.94714,24.10677"
+        "maps": "https://maps.google.com/?q=56.94714,24.10677",
+        "nameES": "Casa delle Teste Nere",
+        "shortES": "Magnífico edificio histórico en la Piazza del Municipio.",
+        "descES": "Situada en la pintoresca Piazza del Municipio, la Casa delle Teste Nere es uno de los edificios más icónicos de Riga. Construida originalmente en 1334, servía como lugar de reunión y celebración para la Confraternita delle Teste Nere, una cofradía de comerciantes y armadores solteros. Aunque el edificio original fue destruido durante la Seconda Guerra Mondiale en 1941, fue meticulosamente reconstruido en 1999 para conmemorar el octingentésimo aniversario de la ciudad. Su fachada de estilo gótico neerlandés, ricamente decorada con esculturas y detalles dorados, es una obra maestra arquitectónica. En el interior, los visitantes pueden explorar los suntuosos salones de baile, las bodegas históricas y admirar una amplia colección de platería y objetos que cuentan la rica historia comercial de Riga.",
+        "tipsES": "Entrada de pago. Consulta los horarios en el sitio oficial."
       },
       {
         "tier": 2,
@@ -1741,7 +2088,11 @@
           "Wikipedia \"Riga Cathedral\"",
           "doms.lv"
         ],
-        "maps": "https://maps.google.com/?q=56.94917,24.10444"
+        "maps": "https://maps.google.com/?q=56.94917,24.10444",
+        "nameES": "Cattedrale di Riga",
+        "shortES": "La chiesa medievale más grande dei Paesi Baltici.",
+        "descES": "La Cattedrale di Riga, conocida también como Duomo di Riga, es el corazón espiritual de la ciudad y la iglesia medieval más grande dei Paesi Baltici. Fundada en 1211 por il vescovo Alberto di Riga, la estructura ha sufrido numerosas modificaciones a lo largo de los siglos, fusionando armoniosamente estilos arquitectónicos románico, gótico, barroco y Art Nouveau. Uno de los tesoros más preciados de la catedral es su magnífico órgano de tubos, construido en 1884, que en su época fue el más grande del mundo con sus 6.718 canne. Aún hoy, los conciertos de órgano atraen visitantes de todo el mundo por su excepcional acústica. El claustro adyacente alberga el Museo di Storia di Riga e della Navigazione, ofreciendo un fascinante viaje al pasado de la ciudad.",
+        "tipsES": "Los conciertos de órgano suelen celebrarse al mediodía. Entradas en taquilla."
       },
       {
         "id": "rig-4",
@@ -1760,7 +2111,11 @@
           "Wikipedia \"Bastejkalns Park\"",
           "liveriga.com"
         ],
-        "maps": "https://maps.google.com/?q=56.95167,24.11111"
+        "maps": "https://maps.google.com/?q=56.95167,24.11111",
+        "nameES": "Parco Bastejkalna",
+        "shortES": "Un oasis verde y tranquilo en el centro de la ciudad.",
+        "descES": "El Parco Bastejkalna, o Collina del Bastione, es un encantador espacio verde situado en el corazón de Riga, justo junto al Monumento alla Libertà. Creado a mediados del siglo XIX sobre el emplazamiento de las antiguas fortificaciones de la ciudad demolidas en 1856, el parque es hoy un oasis de tranquilidad querido por residentes y turistas. Sus senderos sinuosos, los puentes románticos y las cascadas artificiales ofrecen un refugio perfecto del bullicio urbano. El canal de la ciudad atraviesa el parque, permitiendo agradables paseos en barco durante los meses más calurosos. Es un lugar ideal para familias, con amplios espacios para pasear y relajarse a la sombra de árboles centenarios, disfrutando de espléndidas vistas de la arquitectura circundante y de la Opera Nazionale Lettone.",
+        "tipsES": "Perfecto para un paseo relajante o un paseo en barco por el canal."
       },
       {
         "tier": 1,
@@ -1780,7 +2135,11 @@
           "jugendstils.riga.lv",
           "Wikipedia \"Art Nouveau architecture in Riga\""
         ],
-        "maps": "https://maps.google.com/?q=56.95944,24.10833"
+        "maps": "https://maps.google.com/?q=56.95944,24.10833",
+        "nameES": "Museo dell'Art Nouveau di Riga",
+        "shortES": "Sumérgete en la elegancia del Art Nouveau letón.",
+        "descES": "Riga cuenta con la mayor concentración de arquitectura Art Nouveau del mundo, y el Museo dell'Art Nouveau (Rīgas Jūgendstila Centrs) es el lugar perfecto para explorar este patrimonio. Situado en via Alberta 12, en un magnífico edificio diseñado en 1903 por el célebre arquitecto letón Konstantīns Pēkšēns, el museo ofrece una auténtica experiencia inmersiva. El apartamento, que en su día fue residencia del arquitecto, ha sido meticulosamente restaurado para mostrar los interiores originales de principios del XX secolo, completos con mobiliario de época, vidrieras de colores y decoraciones florales. Los visitantes pueden admirar la espectacular escalera de caracol en la entrada, considerada una de las más bellas de Europa. El museo ilustra vívidamente el estilo de vida de la burguesía de Riga durante el periodo de máximo esplendor del Art Nouveau.",
+        "tipsES": "Admira la magnífica escalera de caracol en la entrada antes de entrar."
       },
       {
         "tier": 1,
@@ -1800,7 +2159,11 @@
           "Wikipedia: St. Peter's Church, Riga",
           "Latvia Travel"
         ],
-        "maps": "https://maps.google.com/?q=56.9475,24.1094"
+        "maps": "https://maps.google.com/?q=56.9475,24.1094",
+        "nameES": "St. Peter's Church",
+        "shortES": "Una histórica iglesia medieval caracterizada por una imponente aguja y un mirador que ofrece vistas panorámicas de la ciudad.",
+        "descES": "St. Peter's Church es uno de los monumentos medievales más antiguos e importantes degli Stati Baltici, que data de 1209. Su imponente aguja domina el horizonte de Riga y ofrece vistas panorámicas impresionantes de la ciudad desde su mirador. El interior presenta una hermosa arquitectura gótica, epígrafes históricos y exposiciones de arte regulares. Ha sido reconstruida varias veces a lo largo de la historia, la última tras la Seconda Guerra Mondiale.",
+        "tipsES": "El mirador es accesible mediante ascensor; se requiere un billete de entrada."
       },
       {
         "tier": 1,
@@ -1819,7 +2182,11 @@
         "src": [
           "Wikipedia: Three Brothers, Riga"
         ],
-        "maps": "https://maps.google.com/?q=56.9503,24.1044"
+        "maps": "https://maps.google.com/?q=56.9503,24.1044",
+        "nameES": "Three Brothers",
+        "shortES": "El complejo de viviendas más antiguo de Riga, que muestra tres épocas arquitectónicas distintas.",
+        "descES": "Three Brothers forman el conjunto más antiguo de casas de vivienda en Riga, con cada edificio representando un distinto periodo de desarrollo arquitectónico. El edificio más antiguo, que data del siglo XV, presenta elementos del gótico tardío y del primer Renacimiento. El hermano intermedio muestra el manierismo neerlandés, mientras que el más joven es una estrecha estructura barroca. Hoy albergan el Museo di Architettura Lettone.",
+        "tipsES": "Visible gratuitamente desde el exterior; también el Museo di Architettura Lettone en el interior es gratuito pero tiene horarios limitados."
       },
       {
         "tier": 1,
@@ -1838,7 +2205,11 @@
         "src": [
           "Wikipedia: Freedom Monument"
         ],
-        "maps": "https://maps.google.com/?q=56.9514,24.1133"
+        "maps": "https://maps.google.com/?q=56.9514,24.1133",
+        "nameES": "Freedom Monument",
+        "shortES": "Un imponente monumento di 42 metri que simboliza la independencia y el orgullo nacional de Lettonia.",
+        "descES": "Freedom Monument es un imponente memorial que honra a los soldados caídos durante la Guerra d'Indipendenza lettone. Inaugurado en 1935, es alto 42 metri y está coronado por una figura de cobre de la Libertad que sostiene tres estrellas doradas, que representan las regiones históricas de Lettonia. Actúa como un poderoso símbolo de libertad, independencia y soberanía de Lettonia. La base presenta intrincadas esculturas que representan la historia y la cultura letona.",
+        "tipsES": "Las ceremonias del cambio de guardia se realizan cada hora durante el día."
       },
       {
         "id": "rig-9",
@@ -1856,7 +2227,11 @@
         "src": [
           "Wikipedia: Swedish Gate (Riga)"
         ],
-        "maps": "https://maps.google.com/?q=56.9516,24.1064"
+        "maps": "https://maps.google.com/?q=56.9516,24.1064",
+        "nameES": "Swedish Gate",
+        "shortES": "La única puerta sobreviviente de las murallas medievales de la ciudad di Riga, construida durante il dominio sueco.",
+        "descES": "La Porta Svedese è l'unica porta rimasta delle mura medievali originali della città di Riga. Costruita nel 1698 durante il periodo del dominio svedese, fu progettata per fornire accesso alle caserme fuori dalle mura della città. La porta è intrisa di leggende locali, tra cui storie di amore proibito tra una ragazza del posto e un soldato svedese. Attraversarla offre un legame tangibile con il passato fortificato di Riga.",
+        "tipsES": "Situata in via Torņa, è un ottimo posto per foto suggestive."
       },
       {
         "id": "rig-10",
@@ -1874,7 +2249,11 @@
         "src": [
           "Wikipedia: Riga Castle"
         ],
-        "maps": "https://maps.google.com/?q=56.9508,24.1006"
+        "maps": "https://maps.google.com/?q=56.9508,24.1006",
+        "nameES": "Riga Castle",
+        "shortES": "Un castillo histórico en el río Daugava que hoy sirve como residencia del Presidente letón.",
+        "descES": "Situato sulle rive del fiume Daugava, il Castello di Riga fu originariamente fondato nel 1330 come fortezza per l'Ordine di Livonia. Nel corso dei secoli è stato distrutto e ricostruito più volte, fondendo vari stili architettonici. Oggi funge da residenza ufficiale del Presidente della Lettonia e ospita diversi musei, tra cui il Museo Nazionale di Storia della Lettonia. Le sue robuste mura gialle e le torri distinte sono una parte fondamentale del paesaggio urbano.",
+        "tipsES": "Sebbene le aree presidenziali siano riservate, i musei al loro interno sono aperti al pubblico."
       },
       {
         "id": "rig-11",
@@ -1892,7 +2271,11 @@
         "src": [
           "Wikipedia: Latvian National Opera"
         ],
-        "maps": "https://maps.google.com/?q=56.9496,24.1139"
+        "maps": "https://maps.google.com/?q=56.9496,24.1139",
+        "nameES": "Latvian National Opera",
+        "shortES": "Un magnifico edificio neoclassico che ospita i principali spettacoli di opera e balletto della Lettonia.",
+        "descES": "L'Opera e il Balletto Nazionale Lettone sono ospitati in uno splendido edificio neoclassico completato nel 1863. Situato vicino al canale della città e circondato da splendidi giardini, è il luogo principale per la musica classica, l'opera e il balletto in Lettonia. L'interno è riccamente decorato, offrendo un'atmosfera grandiosa per spettacoli di livello mondiale. Anche se non si assiste a uno spettacolo, l'esterno dell'edificio è un gioiello architettonico da non perdere.",
+        "tipsES": "Sono disponibili visite guidate dell'interno, oppure è possibile prenotare i biglietti per uno spettacolo serale."
       },
       {
         "id": "rig-12",
@@ -1910,7 +2293,11 @@
         "src": [
           "Wikipedia: Powder Tower, Riga"
         ],
-        "maps": "https://maps.google.com/?q=56.9511,24.1086"
+        "maps": "https://maps.google.com/?q=56.9511,24.1086",
+        "nameES": "Powder Tower",
+        "shortES": "Una massiccia torre difensiva medievale che oggi ospita il Museo della Guerra Lettone.",
+        "descES": "La Torre delle Polveri è una delle torri difensive originali delle mura medievali della città di Riga, menzionata per la prima volta nel 1330. Ha acquisito il suo nome attuale nel XVII secolo quando veniva utilizzata per conservare la polvere da sparo. La massiccia struttura cilindrica ha mura spesse fino a tre metri e porta ancora i segni delle palle di cannone russe degli assedi storici. Oggi fa parte del Museo della Guerra Lettone, offrendo approfondimenti sulla storia militare della nazione.",
+        "tipsES": "L'ingresso al Museo della Guerra Lettone all'interno della torre è gratuito."
       },
       {
         "tier": 1,
@@ -1929,7 +2316,11 @@
         "src": [
           "Wikipedia: Cat House, Riga"
         ],
-        "maps": "https://maps.google.com/?q=56.9493,24.1086"
+        "maps": "https://maps.google.com/?q=56.9493,24.1086",
+        "nameES": "Cat House",
+        "shortES": "Un icónico edificio de estilo Art Nouveau famoso por las estatuas de gatos de cobre en el tejado.",
+        "descES": "La Casa dei Gatti es un famoso edificio de estilo Art Nouveau en el casco antiguo, conocido por las dos estatuas de gatos de cobre encaramadas en las torretas del tejado. Según la leyenda local, el rico comerciante que lo construyó fue rechazado por la Grande Gilda al otro lado de la calle, por lo que colocó a los gatos con las colas dirigidas hacia la Gilda en señal de desafío. El propio edificio presenta una arquitectura elegante y es uno de los puntos de referencia más fotografiados de Riga.",
+        "tipsES": "Se ve mejor desde la plaza frente a la Grande Gilda para conseguir el ángulo fotográfico perfecto."
       },
       {
         "id": "rig-14",
@@ -1947,7 +2338,11 @@
         "src": [
           "Wikipedia: Vērmanes Garden"
         ],
-        "maps": "https://maps.google.com/?q=56.9519,24.1181"
+        "maps": "https://maps.google.com/?q=56.9519,24.1181",
+        "nameES": "Vērmanes Garden",
+        "shortES": "El parque público más antiguo de Riga, que ofrece un tranquilo refugio verde con fuentes y un escenario al aire libre.",
+        "descES": "El Giardino Vērmanes es el parque público más antiguo de Riga, establecido en 1814 gracias a una generosa donación de Anna Gertrud Wöhrmann. Esta exuberante oasis verde en el centro de la ciudad cuenta con un precioso rosal, una pintoresca fuente y un escenario al aire libre que acoge conciertos en verano. Es el lugar preferido por la gente local para relajarse, jugar al ajedrez o disfrutar de un paseo tranquilo lejos de las calles concurridas.",
+        "tipsES": "Un excelente lugar para hacer un picnic o para tomar un café en uno de los quioscos cercanos."
       },
       {
         "id": "rig-15",
@@ -1965,7 +2360,11 @@
         "src": [
           "Wikipedia: Nativity of Christ Cathedral, Riga"
         ],
-        "maps": "https://maps.google.com/?q=56.9542,24.1158"
+        "maps": "https://maps.google.com/?q=56.9542,24.1158",
+        "nameES": "Nativity of Christ Cathedral",
+        "shortES": "La catedral ortodoxa más grande de Riga, conocida por su espléndida arquitectura neobizantina y sus cúpulas doradas.",
+        "descES": "La Cattedrale della Natività di Cristo es la iglesia ortodoxa más grande de Riga, impresionante por su arquitectura neobizantina y las relucientes cúpulas doradas. Construida durante la era del Imperio ruso a finales del siglo XIX, sobrevivió al período soviético cuando fue transformada de forma controvertida en un planetario y en un café. Hoy ha sido completamente restaurada a su antiguo esplendor, con iconos impresionantes y un ambiente profundamente espiritual en su interior.",
+        "tipsES": "Para entrar se requiere vestimenta modesta; se recomienda que las mujeres se cubran la cabeza."
       },
       {
         "id": "rig-16",
@@ -1983,15 +2382,19 @@
         "src": [
           "Wikipedia: Latvian National Museum of Art"
         ],
-        "maps": "https://maps.google.com/?q=56.9558,24.1131"
+        "maps": "https://maps.google.com/?q=56.9558,24.1131",
+        "nameES": "Latvian National Museum of Art",
+        "shortES": "El principal museo de arte de Letonia, que presenta obras maestras nacionales en un edificio histórico magníficamente restaurado.",
+        "descES": "Albergado en un majestuoso edificio historicista, el Museo Nazionale d'Arte Lettone es el principal depósito de arte profesional del país. El museo exhibe una colección completa de arte letón desde el siglo XVIII hasta la actualidad, destacando las obras maestras nacionales. Tras una importante remodelación, ahora dispone de modernas salas de exposición subterráneas y de una espléndida terraza con techo de cristal que ofrece vistas únicas al parque circundante.",
+        "tipsES": "No os perdáis las terrazas con techo en vidrio para una perspectiva arquitectónica única y vistas sobre la ciudad."
       },
       {
         "id": "rig-17",
         "name": "Museum of the Occupation of Latvia",
         "nameEN": "Museum of the Occupation of Latvia",
         "cat": "cultura",
-        "lat": 56.9472,
-        "lng": 24.1044,
+        "lat": 56.947093,
+        "lng": 24.106364,
         "short": "Un potente museo che documenta la storia della Lettonia sotto le occupazioni sovietica e nazista dal 1940 al 1991.",
         "shortEN": "A powerful museum documenting Latvia's history under Soviet and Nazi occupations from 1940 to 1991.",
         "desc": "Il Museo dell'Occupazione della Lettonia offre uno sguardo sobrio ed essenziale sulla storia del paese dal 1940 al 1991. Descrive in dettaglio i periodi di occupazione sia da parte dell'Unione Sovietica che della Germania nazista, evidenziando il profondo impatto sul popolo, sulla cultura e sullo stato lettone. Attraverso ampi manufatti, documenti e testimonianze personali, il museo educa i visitatori sulla resilienza della nazione durante i suoi tempi più bui.",
@@ -2001,7 +2404,11 @@
         "src": [
           "Wikipedia: Museum of the Occupation of Latvia"
         ],
-        "maps": "https://maps.google.com/?q=56.9472,24.1044"
+        "maps": "https://maps.google.com/?q=56.9472,24.1044",
+        "nameES": "Museum of the Occupation of Latvia",
+        "shortES": "Un potente museo que documenta la historia della Lettonia bajo las ocupaciones sovietica y nazista del 1940 al 1991.",
+        "descES": "Il Museo dell'Occupazione della Lettonia ofrece una mirada sobria y esencial sobre la historia del país del 1940 al 1991. Describe en detalle los periodos de ocupación tanto por parte de Unione Sovietica como de Germania nazista, destacando el profundo impacto sobre el pueblo, la cultura y el estado letón. A través de numerosos artefactos, documentos y testimonios personales, el museo educa a los visitantes sobre la resiliencia de la nación durante sus tiempos más oscuros.",
+        "tipsES": "Las exposiciones están llenas de textos y son emocionalmente impactantes; calculad al menos 1,5 horas para una visita."
       },
       {
         "id": "rig-18",
@@ -2019,7 +2426,11 @@
         "src": [
           "Wikipedia: St. John's Church, Riga"
         ],
-        "maps": "https://maps.google.com/?q=56.9478,24.1106"
+        "maps": "https://maps.google.com/?q=56.9478,24.1106",
+        "nameES": "St. John's Church",
+        "shortES": "Una histórica iglesia del siglo XIII caracterizada por una arquitectura gótico-tardía y un espléndido techo con bóveda de crucería.",
+        "descES": "La Chiesa di San Giovanni es un hermoso ejemplo de arquitectura gótico-tardía en Riga, originalmente construida como capilla dominicana en el siglo XIII. Presenta un sugestivo frontón escalonado y un interior único con un espléndido techo con bóveda de crucería. La iglesia es conocida también por las dos máscaras de piedra en la pared exterior que, según la leyenda, eran utilizadas por los monjes para predicar al público. Hoy sigue siendo una iglesia luterana activa.",
+        "tipsES": "Buscad la pequeña apertura en el muro donde se dice que dos monjes fueron emparedados vivos."
       },
       {
         "id": "rig-19",
@@ -2037,9 +2448,16 @@
         "src": [
           "Wikipedia: Esplanāde (Riga)"
         ],
-        "maps": "https://maps.google.com/?q=56.9536,24.1136"
+        "maps": "https://maps.google.com/?q=56.9536,24.1136",
+        "nameES": "Esplanāde Park",
+        "shortES": "Un amplio parque central que pasó de plaza de armas militar a un exuberante espacio público.",
+        "descES": "L'Esplanāde es un gran parque magníficamente ajardinado situado entre el centro histórico y el barrio de estilo Art Nouveau. Originalmente una plaza de armas militar, fue transformado en un parque público a finales del siglo XIX. El parque alberga numerosos monumentos y edificios importantes, entre ellos la Cattedrale della Natività di Cristo y el Museo Nazionale d'Arte Lettone. Sus amplios paseos arbolados lo convierten en un lugar perfecto para un paseo relajante.",
+        "tipsES": "Una excelente zona de transición para atravesar cuando se va del centro histórico al barrio de estilo Art Nouveau."
       }
-    ]
+    ],
+    "cityES": "Riga",
+    "countryES": "Lettonia",
+    "introES": "Descubre el encanto de Riga, donde la arquitectura medieval se encuentra con la elegancia del Art Nouveau. Un itinerario perfecto para explorar el corazón histórico y cultural de la capital letona."
   },
   "tallinn": {
     "city": "Tallinn",
@@ -2073,7 +2491,11 @@
           "Wikipedia \"Gatehouse of the Viru Gate\"",
           "visittallinn.ee"
         ],
-        "maps": "https://maps.google.com/?q=59.43655,24.75027"
+        "maps": "https://maps.google.com/?q=59.43655,24.75027",
+        "nameES": "Porta di Viru",
+        "shortES": "Entrada histórica a la Città Vecchia.",
+        "descES": "La Porta di Viru, construida en el siglo XIV, representa la entrada principal a la Città Vecchia de Tallinn. Originalmente parte de un sistema de fortificaciones más amplio, hoy solo quedan las dos pintorescas torres de vigía cubiertas de hiedra. Al atravesar estas torres, los visitantes son transportados de inmediato al pasado, recibidos por una animada calle flanqueada por tiendas, restaurantes y floristerías. Es el punto de partida perfecto para explorar el centro histórico, ofreciendo una introducción sugerente a la arquitectura medieval que caracteriza la capital estonia.",
+        "tipsES": "Excelente punto para hacer fotos; explora las floristerías cercanas."
       },
       {
         "tier": 2,
@@ -2093,7 +2515,11 @@
           "Wikipedia \"Tallinn Town Hall\"",
           "visittallinn.ee"
         ],
-        "maps": "https://maps.google.com/?q=59.43709,24.74547"
+        "maps": "https://maps.google.com/?q=59.43709,24.74547",
+        "nameES": "Piazza del Municipio",
+        "shortES": "El corazón palpitante de la ciudad medieval.",
+        "descES": "La Piazza del Municipio (Raekoja plats) es el núcleo neurálgico de la Città Vecchia de Tallinn desde el siglo XI. Dominada por el magnífico Ayuntamiento gótico, completado en 1404, la plaza está rodeada de elaboradas casas mercantiles de tonos pastel. Históricamente utilizada como mercado y punto de encuentro, hoy acoge cafés al aire libre, conciertos y el famoso mercadillo de Navidad. En el centro de la plaza hay una piedra circular desde la que se pueden divisar las cimas de las cinco agujas más importantes de la ciudad. Es un lugar vibrante, lleno de historia y atmósfera.",
+        "tipsES": "Busca la piedra circular en el centro de la plaza."
       },
       {
         "tier": 2,
@@ -2113,7 +2539,11 @@
           "Wikipedia \"Alexander Nevsky Cathedral, Tallinn\"",
           "visittallinn.ee"
         ],
-        "maps": "https://maps.google.com/?q=59.43583,24.73936"
+        "maps": "https://maps.google.com/?q=59.43583,24.73936",
+        "nameES": "Cattedrale di Aleksandr Nevskij",
+        "shortES": "Imponente catedral ortodoxa rusa.",
+        "descES": "Situada en la colina de Toompea, la Cattedrale di Aleksandr Nevskij es la iglesia ortodoxa de cúpulas más grande y majestuosa de Tallinn. Construida en 1900, durante el período en que Estonia formaba parte dell'Impero Russo, la catedral está dedicada al príncipe de Novgorod, Aleksandr Nevskij. La arquitectura de estilo revival ruso, con sus características cúpulas en forma de cebolla y sus ricos mosaicos, contrasta marcadamente con los edificios medievales circundantes. El interior es igualmente suntuoso, adornado con iconos valiosos y decoraciones doradas, ofreciendo una mirada fascinante a la historia religiosa y política de la región.",
+        "tipsES": "Entrada gratuita; recuerda vestirte de forma adecuada."
       },
       {
         "tier": 2,
@@ -2121,8 +2551,8 @@
         "name": "Piattaforma panoramica di Kohtuotsa",
         "nameEN": "Kohtuotsa viewing platform",
         "cat": "panorama",
-        "lat": 59.43694,
-        "lng": 24.74,
+        "lat": 59.43773,
+        "lng": 24.74221,
         "short": "Vista mozzafiato sui tetti rossi di Tallinn.",
         "shortEN": "Breathtaking view over Tallinn's red roofs.",
         "desc": "La piattaforma panoramica di Kohtuotsa, situata sul lato orientale della collina di Toompea, offre una delle viste più iconiche e fotografate di Tallinn. Da questo punto privilegiato, i visitatori possono ammirare un panorama spettacolare che abbraccia i tetti rossi e le guglie medievali della Città Vecchia, contrastando con i moderni grattacieli del centro direzionale e le acque scintillanti del Golfo di Finlandia sullo sfondo. È il luogo ideale per comprendere la conformazione della città e per scattare foto indimenticabili, specialmente al tramonto quando la luce calda avvolge gli antichi edifici.",
@@ -2133,15 +2563,19 @@
           "Wikipedia \"Toompea\"",
           "visittallinn.ee"
         ],
-        "maps": "https://maps.google.com/?q=59.43694,24.74000"
+        "maps": "https://maps.google.com/?q=59.43694,24.74000",
+        "nameES": "Piattaforma panoramica di Kohtuotsa",
+        "shortES": "Vista impresionante sobre los tejados rojos de Tallinn.",
+        "descES": "La plataforma panorámica de Kohtuotsa, situada en el lado oriental de la colina de Toompea, ofrece una de las vistas más icónicas y fotografiadas de Tallinn. Desde este punto privilegiado, los visitantes pueden contemplar un panorama espectacular que abarca los tejados rojos y las agujas medievales del Casco Antiguo, en contraste con los modernos rascacielos del distrito financiero y las aguas brillantes del Golfo de Finlandia al fondo. Es el lugar ideal para comprender la morfología de la ciudad y para tomar fotos inolvidables, especialmente al atardecer cuando la luz cálida envuelve los antiguos edificios.",
+        "tipsES": "El mejor momento para las fotos es temprano por la mañana o al atardecer."
       },
       {
         "id": "tal-5",
         "name": "Mercato di Balti Jaam",
         "nameEN": "Balti Jaam Market",
         "cat": "cibo",
-        "lat": 59.43995,
-        "lng": 24.73715,
+        "lat": 59.44121,
+        "lng": 24.73496,
         "short": "Mercato moderno con street food e prodotti locali.",
         "shortEN": "Modern market with street food and local products.",
         "desc": "Situato vicino alla stazione ferroviaria principale, il Mercato di Balti Jaam (Balti Jaama Turg) è un vivace complesso su tre livelli che combina il fascino di un mercato tradizionale con un design moderno. Riaperto nel 2017 dopo un'ampia ristrutturazione, ospita quasi 300 commercianti. Il piano terra è dedicato a carne, pesce e latticini freschi, oltre a una vasta area di street food che offre specialità locali e internazionali. I piani superiori ospitano negozi di antiquariato, abbigliamento vintage e artigianato estone. È un luogo eccellente per assaporare la cultura culinaria locale in un'atmosfera dinamica e accogliente.",
@@ -2152,7 +2586,11 @@
           "Wikipedia \"Tallinn Baltic Station\"",
           "visittallinn.ee"
         ],
-        "maps": "https://maps.google.com/?q=59.43995,24.73715"
+        "maps": "https://maps.google.com/?q=59.43995,24.73715",
+        "nameES": "Mercado de Balti Jaam",
+        "shortES": "Mercado moderno con comida callejera y productos locales.",
+        "descES": "Situado cerca de la estación ferroviaria principal, el Mercado de Balti Jaam (Balti Jaama Turg) es un animado complejo de tres niveles que combina el encanto de un mercado tradicional con un diseño moderno. Reabierto en 2017 tras una amplia remodelación, alberga casi 300 comerciantes. La planta baja está dedicada a carne, pescado y latticini freschi, además de una amplia zona de comida callejera que ofrece especialidades locales e internacionales. Los pisos superiores acogen tiendas de antigüedades, ropa vintage y artesanía estonia. Es un lugar excelente para saborear la cultura culinaria local en un ambiente dinámico y acogedor.",
+        "tipsES": "Perfecto para comer; prueba la comida callejera local."
       },
       {
         "tier": 1,
@@ -2172,7 +2610,11 @@
           "Wikipedia",
           "Visit Tallinn"
         ],
-        "maps": "https://maps.google.com/?q=59.4414,24.7475"
+        "maps": "https://maps.google.com/?q=59.4414,24.7475",
+        "nameES": "St. Olaf's Church",
+        "shortES": "Iglesia gótica histórica con una torre que ofrece vistas panorámicas impresionantes de la ciudad.",
+        "descES": "La Iglesia de Sant'Olav, antaño el edificio más alto del mundo, es un símbolo icónico de Tallinn. Construida en el XII secolo, su imponente aguja gótica domina el skyline de la ciudad. Los visitantes pueden subir los 232 gradini hasta la plataforma panorámica para disfrutar de una vista impresionante de 360 grados sobre el centro histórico y el puerto. El interior de la iglesia es sobrio pero evocador, reflejando su historia convulsa de incendios y reconstrucciones.",
+        "tipsES": "La subida a la torre es empinada y estrecha; abierta de abril a octubre."
       },
       {
         "tier": 1,
@@ -2192,7 +2634,11 @@
           "Wikipedia",
           "Riigikogu"
         ],
-        "maps": "https://maps.google.com/?q=59.4353,24.7372"
+        "maps": "https://maps.google.com/?q=59.4353,24.7372",
+        "nameES": "Toompea Castle",
+        "shortES": "Imponente castillo histórico que alberga el Parlamento estonio, con la célebre torre de Pikk Hermann.",
+        "descES": "El Castillo de Toompea, situado en la colina homónima, es la sede del Parlamento estonio (Riigikogu). La estructura mezcla diferentes estilos arquitectónicos, desde la fortaleza medieval de piedra hasta la fachada barroca rosa del palacio del siglo XVIII. La torre de Pikk Hermann, alta 46 metri, es un símbolo nacional donde cada mañana se iza la bandiera estone. Es un lugar fundamental para comprender la historia política y la independencia de Estonia.",
+        "tipsES": "Visitas guiadas gratuitas al parlamento disponibles previa reserva."
       },
       {
         "id": "tal-8",
@@ -2211,7 +2657,11 @@
           "Wikipedia",
           "Art Museum of Estonia"
         ],
-        "maps": "https://maps.google.com/?q=59.4358,24.7426"
+        "maps": "https://maps.google.com/?q=59.4358,24.7426",
+        "nameES": "St. Nicholas Church",
+        "shortES": "Ex iglesia medieval, ahora museo de arte sacro, célebre por la pintura 'Danza Macabra'.",
+        "descES": "La Chiesa di San Nicola es un antiguo edificio religioso medieval convertido en un museo de arte eclesiástico. Alberga obras maestras invaluables, entre ellas la famosa pintura 'Danza Macabra' de Bernt Notke, que representa la fragilidad de la vida humana. El museo expone también altares de madera finamente tallados y platería histórica. Su acústica excepcional lo convierte en un lugar popular para conciertos de música clásica y coral.",
+        "tipsES": "Entrada de pago; comprueba el programa para los conciertos de órgano del fin de semana."
       },
       {
         "tier": 1,
@@ -2231,7 +2681,11 @@
           "Wikipedia",
           "Tallinn City Museum"
         ],
-        "maps": "https://maps.google.com/?q=59.4347,24.7405"
+        "maps": "https://maps.google.com/?q=59.4347,24.7405",
+        "nameES": "Kiek in de Kök Museum and Bastion Tunnels",
+        "shortES": "Torre de artillería medieval y red de túneles subterráneos que narran la historia militar de la ciudad.",
+        "descES": "Kiek in de Kök es una maciza torre de artillería del siglo XV, cuyo nombre en bajo alemán significa 'echa un vistazo a la cocina'. Hoy alberga un fascinante museo dedicado a la historia de las fortificaciones de Tallinn y a las armas antiguas. Desde la torre se accede a los misteriosos túneles de los bastiones, construidos en el siglo XVII con fines militares y usados como refugios antiaéreos durante la Segunda Guerra Mundial. La exploración ofrece un viaje único bajo la superficie de la ciudad.",
+        "tipsES": "Los túneles pueden estar fríos; se recomienda llevar una chaqueta ligera."
       },
       {
         "id": "tal-10",
@@ -2250,7 +2704,11 @@
           "Visit Tallinn",
           "Wikipedia"
         ],
-        "maps": "https://maps.google.com/?q=59.4384,24.7396"
+        "maps": "https://maps.google.com/?q=59.4384,24.7396",
+        "nameES": "Patkuli viewing platform",
+        "shortES": "Terraza panorámica que ofrece vistas espectaculares de las murallas medievales y del Mar Baltico.",
+        "descES": "La plataforma panorámica de Patkuli ofrece una de las vistas más pintorescas y fotografiadas de Tallinn. Situada en el lado norte de la colina de Toompea, regala una perspectiva perfecta de las murallas medievales, las torres de vigilancia y el puerto a lo lejos. Es el lugar ideal para contemplar el contraste entre los tejados rojos de la Città Vecchia y el azul del Mar Baltico. Particularmente sugerente al atardecer, es accesible mediante una escalinata que sube desde la ciudad baja.",
+        "tipsES": "Accesible gratis 24 horas al día; prepárate para subir 157 escalones si llegas desde abajo."
       },
       {
         "id": "tal-11",
@@ -2269,7 +2727,11 @@
           "Visit Tallinn",
           "Lonely Planet"
         ],
-        "maps": "https://maps.google.com/?q=59.4378,24.7483"
+        "maps": "https://maps.google.com/?q=59.4378,24.7483",
+        "nameES": "St. Catherine's Passage",
+        "shortES": "Pintoresco callejón medieval flanqueado por talleres artesanales tradicionales y arcos de piedra.",
+        "descES": "El Passaggio di Santa Caterina es una de las callejuelas más románticas y fotogénicas de la Città Vecchia di Tallinn. Este callejón empedrado y semioculto conecta via Vene con via Müürivahe, bordeando los restos de la antigua iglesia de Santa Caterina. Está flanqueado por talleres artesanales donde se puede ver a artistas trabajar el vidrio, la cerámica, la joyería y los tejidos. La atmósfera medieval se ve realzada por los arcos de piedra que coronan el pasaje.",
+        "tipsES": "Excelente lugar para comprar souvenirs artesanales únicos y de alta calidad."
       },
       {
         "id": "tal-12",
@@ -2288,7 +2750,11 @@
           "Wikipedia",
           "Estonian Maritime Museum"
         ],
-        "maps": "https://maps.google.com/?q=59.4426,24.7494"
+        "maps": "https://maps.google.com/?q=59.4426,24.7494",
+        "nameES": "Fat Margaret",
+        "shortES": "Torre defensiva maciza che alberga el Museo Marittimo Estone y ofrece vistas desde la azotea.",
+        "descES": "La torre di Margherita la Grassa è una massiccia struttura difensiva del XVI secolo, costruita per proteggere la città dagli attacchi marittimi. Con sus paredes de hasta cinque metri de grosor, es un impresionante ejemplo de arquitectura militar medieval. Hoy alberga el Museo Marittimo Estone, que exhibe maquetas de barcos, instrumentos de navegación y el pecio de un barco mercante medieval (cog). La terraza en la azotea ofrece una espléndida vista del puerto y de la Città Vecchia.",
+        "tipsES": "La entrada incluye el acceso a la terraza panorámica en la azotea, abierta en verano."
       },
       {
         "id": "tal-13",
@@ -2307,7 +2773,11 @@
           "Wikipedia",
           "Visit Tallinn"
         ],
-        "maps": "https://maps.google.com/?q=59.4338,24.7446"
+        "maps": "https://maps.google.com/?q=59.4338,24.7446",
+        "nameES": "Freedom Square",
+        "shortES": "Amplia plaza peatonal dominada por el monumento de vidrio dedicado a la independencia estonia.",
+        "descES": "Piazza della Libertà es el corazón cívico y moderno de Tallinn, un amplio espacio peatonal rodeado de edificios elegantes. Dominada por la Colonna della Vittoria della Guerra d'Indipendenza, una estructura de vidrio iluminada, la plaza es un símbolo del orgullo nacional estonio. Es un lugar de encuentro popular, a menudo utilizado para conciertos, desfiles y celebraciones públicas. Debajo de la plaza hay restos arqueológicos visibles a través de paneles de vidrio y un centro comercial subterráneo.",
+        "tipsES": "Particularmente sugerente por la noche cuando la Colonna della Vittoria está iluminada."
       },
       {
         "id": "tal-14",
@@ -2326,7 +2796,11 @@
           "Wikipedia",
           "Visit Tallinn"
         ],
-        "maps": "https://maps.google.com/?q=59.4385,24.7565"
+        "maps": "https://maps.google.com/?q=59.4385,24.7565",
+        "nameES": "Rotermann Quarter",
+        "shortES": "Vibrante barrio peatonal que fusiona arquitectura industrial histórica y diseño moderno, lleno de restaurantes.",
+        "descES": "El Quartiere Rotermann es un excelente ejemplo de regeneración urbana, donde la arquitectura industrial del siglo XIX se encuentra con el diseño contemporáneo. Antiguamente zona de fábricas y almacenes fatiscenti, hoy es un animado centro comercial y cultural. Las calles peatonales están flanqueadas por boutiques de moda, cafés acogedores y algunos de los mejores restaurantes de Tallinn. El audaz contraste entre los viejos ladrillos rojos y las modernas estructuras de vidrio y acero lo convierte en un paraíso para los amantes de la arquitectura.",
+        "tipsES": "Excelente zona para cenar o ir de compras lejos de las multitudes de la Città Vecchia."
       },
       {
         "tier": 1,
@@ -2346,15 +2820,19 @@
           "Wikipedia",
           "Visit Tallinn"
         ],
-        "maps": "https://maps.google.com/?q=59.4398,24.7285"
+        "maps": "https://maps.google.com/?q=59.4398,24.7285",
+        "nameES": "Telliskivi Creative City",
+        "shortES": "Antigua zona industrial transformada en un vibrante centro artístico con arte urbano, galerías y cafés.",
+        "descES": "Telliskivi Creative City es el corazón bohemio y artístico de Tallinn, situado en un antiguo complejo industrial de época soviética. Este vibrante barrio alberga estudios de diseño, galerías de arte, oficinas de startups y el renombrado museo fotográfico Fotografiska. Las paredes de los edificios están cubiertas por vivos murales y obras de arte urbano. Es el lugar perfecto para descubrir la cultura alternativa estonia, comprar en mercadillos y saborear comida callejera innovadora.",
+        "tipsES": "Visita el sábado por el animado mercadillo al aire libre."
       },
       {
         "id": "tal-16",
         "name": "Seaplane Harbour",
         "nameEN": "Seaplane Harbour",
         "cat": "cultura",
-        "lat": 59.4516,
-        "lng": 24.7383,
+        "lat": 59.45043,
+        "lng": 24.73831,
         "short": "Spettacolare museo marittimo situato in storici hangar per idrovolanti, con un vero sottomarino esplorabile.",
         "shortEN": "Spectacular maritime museum located in historic seaplane hangars, featuring a real explorable submarine.",
         "desc": "Il Porto degli Idrovolanti è uno dei musei marittimi più innovativi d'Europa, ospitato in enormi hangar storici costruiti originariamente per l'aviazione russa. L'architettura degli hangar, con le loro cupole in cemento armato senza pilastri, è di per sé un capolavoro ingegneristico. L'attrazione principale è il sottomarino Lembit degli anni '30, che i visitatori possono esplorare all'interno. Il museo offre anche simulatori di volo, acquari e navi storiche ormeggiate all'esterno, rendendolo ideale per tutte le età.",
@@ -2365,7 +2843,11 @@
           "Wikipedia",
           "Estonian Maritime Museum"
         ],
-        "maps": "https://maps.google.com/?q=59.4516,24.7383"
+        "maps": "https://maps.google.com/?q=59.4516,24.7383",
+        "nameES": "Seaplane Harbour",
+        "shortES": "Espectacular museo marítimo situado en históricos hangares para hidroaviones, con un auténtico submarino que se puede explorar.",
+        "descES": "Il Porto degli Idrovolanti è uno dei musei marittimi più innovativi d'Europa, ospitato in enormi hangares storici costruiti originariamente per l'aviazione russa. L'architettura degli hangares, con le loro cupole in cemento armato senza pilastri, è di per sé un capolavoro ingegneristico. L'attrazione principale è il sottomarino Lembit degli anni '30, che i visitatori possono esplorare all'interno. Il museo offre anche simulatori di volo, acquari e navi storiche ormeggiate all'esterno, rendendolo ideale per tutte le età.",
+        "tipsES": "Calcula al menos dos horas para la visita; el museo es muy interactivo y apto para familias."
       },
       {
         "id": "tal-17",
@@ -2384,7 +2866,11 @@
           "Visit Tallinn",
           "Lonely Planet"
         ],
-        "maps": "https://maps.google.com/?q=59.4375,24.7472"
+        "maps": "https://maps.google.com/?q=59.4375,24.7472",
+        "nameES": "Masters' Courtyard",
+        "shortES": "Tranquilo patio medieval dedicado a la artesanía local, sede de una célebre y acogedora chocolatería.",
+        "descES": "Il Cortile dei Maestri es un rincón escondido y encantador de la Città Vecchia, dedicado a preservar las tradiciones artesanales de Tallinn. Este tranquilo patio medieval alberga talleres donde artesanos locales crean y venden joyas, cerámica y tejidos hechos a mano. La atmósfera se hace aún más mágica por la presencia de la famosa Chocolaterie Pierre, una cafetería con una decoración ecléctica y bohemia. Es el lugar idóneo para escapar del bullicio de las calles principales y saborear excelentes dulces.",
+        "tipsES": "No te pierdas el chocolate caliente y las trufas artesanales de la Chocolaterie Pierre."
       },
       {
         "id": "tal-18",
@@ -2403,9 +2889,16 @@
           "Wikipedia",
           "Visit Tallinn"
         ],
-        "maps": "https://maps.google.com/?q=59.4381,24.7456"
+        "maps": "https://maps.google.com/?q=59.4381,24.7456",
+        "nameES": "Holy Spirit Church",
+        "shortES": "Iglesia histórica con el reloj público más antiguo de la ciudad y un magnífico altar de madera.",
+        "descES": "La Chiesa dello Spirito Santo es una joya arquitectónica del siglo XIV, facilmente reconocibile per la sua torre ottagonale bianca e il tetto in legno. En la fachada exterior destaca el reloj público más antiguo de Tallinn, finamente pintado y que data del siglo XVII. El interior es íntimo y ricamente decorado, con un magnífico altar de madera tallado por Bernt Notke y galerías pintadas con escenas bíblicas. Fue una de las primeras iglesias en celebrar sermones en lengua estonia.",
+        "tipsES": "La entrada es de pago; el interior de madera oscura ofrece una atmósfera muy sugerente."
       }
-    ]
+    ],
+    "cityES": "Tallinn",
+    "countryES": "Estonia",
+    "introES": "Descubre el encanto medieval de Tallinn, una de las ciudades antiguas mejor conservadas de Europa. Este itinerario a pie te guía por las calles empedradas de su centro histórico, Patrimonio de la Humanidad de la UNESCO."
   },
   "helsinki": {
     "city": "Helsinki",
@@ -2416,8 +2909,8 @@
     "intro": "Esplora Helsinki partendo dal porto: una capitale compatta, verde e affacciata sul Baltico, perfetta da girare in monopattino tra mercati, cattedrali e sorprendenti spazi moderni a misura di famiglia. ⚠️ Dal 17 giugno 2025 i monopattini elettrici (oltre 15 km/h) sono vietati ai minori di 15 anni, anche a noleggio: i bambini più piccoli dovranno salire con un adulto o spostarsi a piedi.",
     "introEN": "Explore Helsinki starting from the harbour: a compact, green capital on the Baltic, perfect to tour by e-scooter among markets, cathedrals and surprisingly family-friendly modern spaces. ⚠️ Since 17 June 2025, e-scooters (faster than 15 km/h) are banned for under-15s, including rentals: younger children must ride with an adult or go on foot.",
     "center": [
-      60.1680,
-      24.9520
+      60.168,
+      24.952
     ],
     "zoom": 14,
     "stops": [
@@ -2439,7 +2932,11 @@
           "Profumo di Follia: Helsinki in un giorno",
           "Visit Finland"
         ],
-        "maps": "https://maps.google.com/?q=60.16743,24.95261"
+        "maps": "https://maps.google.com/?q=60.16743,24.95261",
+        "nameES": "Kauppatori (Plaza del Mercado)",
+        "shortES": "La animada plaza del mercado en el puerto: punto de partida y alquiler de patinetes.",
+        "descES": "Kauppatori es la histórica plaza del mercado de Helsinki, situada directamente frente al Mar Báltico y reconocible por los característicos toldos naranjas. Es el punto de partida ideal del itinerario: aquí hay numerosos patinetes de alquiler y puestos que venden souvenirs típicos en madera, pieles de reno y productos artesanales. En el plano gastronómico es el lugar indicado para probar street food finlandés como la sopa de salmón, las albóndigas de reno y los muikku fritos, pequeños pececillos de lago. La vista al puerto y el ir y venir de los ferries hacen que la atmósfera sea animada y agradable.",
+        "tipsES": "Configura con antelación la app de alquiler (Tier, Voi o Lime). Platos típicos de los puestos: alrededor de 10 euro."
       },
       {
         "tier": 2,
@@ -2447,8 +2944,8 @@
         "name": "Havis Amanda",
         "nameEN": "Havis Amanda",
         "cat": "cultura",
-        "lat": 60.16719,
-        "lng": 24.94944,
+        "lat": 60.16759,
+        "lng": 24.9514,
         "short": "L'iconica fontana con la ninfa del mare, a due passi dal mercato.",
         "shortEN": "The iconic sea-nymph fountain, a stone's throw from the market.",
         "desc": "A pochi metri da Kauppatori si trova la Havis Amanda, una delle statue più amate di Helsinki. Scolpita da Ville Vallgren e inaugurata nel 1908, raffigura una giovane donna che emerge dalle onde, circondata da quattro foche in bronzo che spruzzano acqua: un dettaglio che diverte molto i bambini. La statua rappresenta simbolicamente la rinascita della città. Durante la festa del primo maggio (Vappu) gli studenti la decorano con il tradizionale berretto dei diplomati.",
@@ -2458,7 +2955,11 @@
         "src": [
           "Profumo di Follia: Helsinki in un giorno"
         ],
-        "maps": "https://maps.google.com/?q=60.16719,24.94944"
+        "maps": "https://maps.google.com/?q=60.16719,24.94944",
+        "nameES": "Havis Amanda",
+        "shortES": "La icónica fuente con la ninfa del mar, a pocos pasos del mercado.",
+        "descES": "A pocos metros de Kauppatori se encuentra la Havis Amanda, una de las estatuas más queridas de Helsinki. Esculpida por Ville Vallgren e inaugurada en 1908, representa a una joven que emerge de las olas, rodeada por cuatro focas de bronce que lanzan agua: un detalle que hace mucha gracia a los niños. La estatua simboliza la renovación de la ciudad. Durante la fiesta del primero de mayo (Vappu) los estudiantes la decoran con el tradicional gorro de graduado.",
+        "tipsES": "Perfecta para una foto de recuerdo con los niños."
       },
       {
         "tier": 1,
@@ -2466,8 +2967,8 @@
         "name": "Vanha Kauppahalli (Mercato Coperto)",
         "nameEN": "Vanha Kauppahalli (Old Market Hall)",
         "cat": "cibo",
-        "lat": 60.16680,
-        "lng": 24.95220,
+        "lat": 60.1668,
+        "lng": 24.9522,
         "short": "Lo storico mercato coperto del 1889, ideale per una pausa o col maltempo.",
         "shortEN": "The historic 1889 indoor market, ideal for a break or in bad weather.",
         "desc": "Il Vanha Kauppahalli è il più antico mercato coperto di Helsinki, inaugurato nel 1889 e riconoscibile per la facciata a strisce rosse e bianche. All'interno, in un'atmosfera accogliente, si trovano piccole botteghe che vendono pesce fresco, formaggi, pane, dolci, spezie, caffè e prelibatezze locali, oltre a graziosi caffè dove sedersi. È la sosta perfetta in una giornata fredda o piovosa e il posto giusto per acquistare souvenir gastronomici come la carne di renna affumicata, venduta sottovuoto e adatta al trasporto.",
@@ -2477,7 +2978,11 @@
         "src": [
           "Profumo di Follia: Helsinki in un giorno"
         ],
-        "maps": "https://maps.google.com/?q=60.16680,24.95220"
+        "maps": "https://maps.google.com/?q=60.16680,24.95220",
+        "nameES": "Vanha Kauppahalli (Mercado Cubierto)",
+        "shortES": "El histórico mercado cubierto de 1889, ideal para una pausa o en caso de mal tiempo.",
+        "descES": "El Vanha Kauppahalli es el mercado cubierto más antiguo de Helsinki, inaugurado en 1889 y reconocible por su fachada a rayas rojas y blancas. En su interior, en un ambiente acogedor, hay pequeños puestos que venden pescado fresco, quesos, pan, dulces, especias, café y delicatessen locales, además de encantadores cafés donde sentarse. Es la parada perfecta en un día frío o lluvioso y el lugar idóneo para comprar souvenirs gastronómicos como la carne de reno ahumada, vendida al vacío y adecuada para el transporte.",
+        "tipsES": "A circa 50 metri da Kauppatori, verso il mare."
       },
       {
         "tier": 1,
@@ -2485,7 +2990,7 @@
         "name": "Cattedrale Uspenski",
         "nameEN": "Uspenski Cathedral",
         "cat": "panorama",
-        "lat": 60.16820,
+        "lat": 60.1682,
         "lng": 24.95828,
         "short": "Grande cattedrale ortodossa in mattoni rossi con vista sul porto.",
         "shortEN": "Large red-brick Orthodox cathedral with harbour views.",
@@ -2497,7 +3002,11 @@
           "TripAdvisor: cose da vedere a Helsinki",
           "Visit Finland"
         ],
-        "maps": "https://maps.google.com/?q=60.16820,24.95828"
+        "maps": "https://maps.google.com/?q=60.16820,24.95828",
+        "nameES": "Catedral Uspenski",
+        "shortES": "Gran catedral ortodoxa de ladrillo rojo con vistas al puerto.",
+        "descES": "A pocos minutos en patinete hacia el este, en la colina de Katajanokka, se alza la Cattedrale Uspenski, la mayor iglesia ortodoxa de la Europa occidental y septentrional. Construida en 1868 en ladrillo rojo y coronada por cúpulas en forma de cebolla doradas, domina el puerto y ofrece una bonita vista de la ciudad. La corta subida se ve recompensada por el panorama y el interior, ricamente decorado en estilo bizantino-ruso, merece una visita.",
+        "tipsES": "Subida corta; excelente mirador del puerto."
       },
       {
         "tier": 1,
@@ -2517,7 +3026,11 @@
           "Profumo di Follia: Helsinki in un giorno",
           "TripAdvisor: cose da vedere a Helsinki"
         ],
-        "maps": "https://maps.google.com/?q=60.16986,24.95229"
+        "maps": "https://maps.google.com/?q=60.16986,24.95229",
+        "nameES": "Piazza del Senato y Cattedrale di Helsinki",
+        "shortES": "El símbolo blanco de la ciudad y su plaza monumental peatonal.",
+        "descES": "La Senaatintori es la plaza monumental que representa el nacimiento de Helsinki, diseñada en estilo neoclásico por Carl Ludvig Engel. Dominándola está la blanca Cattedrale di Helsinki (Tuomiokirkko), completada en 1852 e inspirada en el Pantheon: su imponente escalinata y la cúpula verde son el motivo más fotografiado de la ciudad. La plaza, amplia y totalmente peatonal, es un espacio seguro donde los niños pueden correr libremente. Alrededor se encuentran la Universidad y el Palacio del Gobierno.",
+        "tipsES": "Plaza peatonal: espacio seguro para los niños y fotos excelentes."
       },
       {
         "tier": 2,
@@ -2525,8 +3038,8 @@
         "name": "Esplanadi e Design District",
         "nameEN": "Esplanadi & Design District",
         "cat": "natura",
-        "lat": 60.16764,
-        "lng": 24.94517,
+        "lat": 60.16749,
+        "lng": 24.94761,
         "short": "Il viale-parco alberato di Helsinki, cuore dello shopping e del design.",
         "shortEN": "Helsinki's tree-lined park avenue, heart of shopping and design.",
         "desc": "L'Esplanadi è il salotto verde di Helsinki: un viale alberato con un parco centrale, fiancheggiato dai due lati dalle vie dello shopping e dall'inizio del Design District, la zona dedicata al celebre design finlandese. Si può percorrere comodamente in monopattino sulle corsie laterali, ammirando le vetrine, oppure fermarsi nel parco per una pausa: in estate ci sono spesso musicisti di strada e ampi prati dove i bambini possono sgranchirsi le gambe.",
@@ -2537,7 +3050,11 @@
           "Profumo di Follia: Helsinki in un giorno",
           "Visit Finland"
         ],
-        "maps": "https://maps.google.com/?q=60.16764,24.94517"
+        "maps": "https://maps.google.com/?q=60.16764,24.94517",
+        "nameES": "Esplanadi y Design District",
+        "shortES": "El paseo-parque arbolado de Helsinki, corazón de las compras y del diseño.",
+        "descES": "El Esplanadi es el salón verde de Helsinki: un paseo arbolado con un parque central, flanqueado por ambos lados por las calles de compras y el inicio del Design District, la zona dedicada al célebre diseño finlandés. Se puede recorrer cómodamente en patinete por los carriles laterales, admirando los escaparates, o parar en el parque para un descanso: en verano suele haber músicos callejeros y amplios céspedes donde los niños pueden estirar las piernas.",
+        "tipsES": "Recorre los carriles laterales; ideal para una pausa en familia."
       },
       {
         "tier": 1,
@@ -2546,7 +3063,7 @@
         "nameEN": "Oodi Central Library",
         "cat": "kids",
         "lat": 60.17359,
-        "lng": 24.93810,
+        "lng": 24.9381,
         "short": "Spettacolare biblioteca moderna con una fantastica area per bambini.",
         "shortEN": "Spectacular modern library with a fantastic children's area.",
         "desc": "La Biblioteca Centrale Oodi è molto più di una biblioteca: è un centro polifunzionale dall'architettura futuristica in legno e vetro, inaugurato nel 2018. Il terzo piano, luminoso e aperto, ospita alberi veri, un caffè e soprattutto una splendida area dedicata ai bambini con tappeti morbidi, giochi e costruzioni. È una sosta gratuita e rilassante, perfetta per far riposare i genitori mentre i più piccoli si divertono, specialmente in caso di pioggia.",
@@ -2557,7 +3074,11 @@
           "TripAdvisor: cose da vedere a Helsinki",
           "Oodi Helsinki (sito ufficiale)"
         ],
-        "maps": "https://maps.google.com/?q=60.17359,24.93810"
+        "maps": "https://maps.google.com/?q=60.17359,24.93810",
+        "nameES": "Biblioteca Centrale Oodi",
+        "shortES": "Espectacular biblioteca moderna con una fantástica zona para niños.",
+        "descES": "La Biblioteca Centrale Oodi es mucho más que una biblioteca: es un centro polifuncional de arquitectura futurista en madera y vidrio, inaugurado en 2018. La tercera planta, luminosa y abierta, alberga árboles reales, una cafetería y, sobre todo, una espléndida zona dedicada a los niños con tapetes suaves, juegos y bloques de construcción. Es una parada gratuita y relajante, perfecta para que los padres descansen mientras los más pequeños se divierten, especialmente en caso de lluvia.",
+        "tipsES": "Entrada gratuita. Área infantil en la tercera planta."
       },
       {
         "tier": 1,
@@ -2577,7 +3098,11 @@
           "TripAdvisor: cose da vedere a Helsinki",
           "Wikipedia: Temppeliaukio Church"
         ],
-        "maps": "https://maps.google.com/?q=60.17313,24.92527"
+        "maps": "https://maps.google.com/?q=60.17313,24.92527",
+        "nameES": "Chiesa nella Roccia (Temppeliaukio)",
+        "shortES": "Iglesia única en el mundo, totalmente excavada en granito.",
+        "descES": "La Temppeliaukion Kirkko es una de las atracciones más espectaculares e insólitas de Helsinki: una iglesia completamente excavada en el interior de un bloque de sólido granito e inaugurada en 1969. Entrar en este 'cratere' circular, cubierto por una enorme cúpula de cobre e iluminado por la luz natural que se filtra a través de las claraboyas, es una experiencia sugestiva. La acústica excepcional la convierte en una sede muy apreciada para conciertos, y la singularidad del lugar fascina también a los niños.",
+        "tipsES": "Entrada de pago; puede cerrar durante conciertos o funciones."
       },
       {
         "tier": 2,
@@ -2585,8 +3110,8 @@
         "name": "Allas Sea Pool",
         "nameEN": "Allas Sea Pool",
         "cat": "attivita",
-        "lat": 60.16812,
-        "lng": 24.95435,
+        "lat": 60.16698,
+        "lng": 24.95747,
         "short": "Piscine galleggianti e sauna sul porto, a due passi da Kauppatori.",
         "shortEN": "Floating pools and sauna on the harbour, steps from Kauppatori.",
         "desc": "A conclusione del giro, tornando verso Kauppatori, l'Allas Sea Pool è un complesso galleggiante proprio sul porto, con saune pubbliche e piscine riscaldate all'aperto, oltre a una vasca con acqua di mare filtrata. È un'esperienza tipicamente finlandese e divertente anche per i bambini, con vista sul viavai dei traghetti. Una sosta rilassante e rigenerante prima di rientrare al van o al traghetto.",
@@ -2597,9 +3122,16 @@
           "Visit Finland",
           "Allas Sea Pool (sito ufficiale)"
         ],
-        "maps": "https://maps.google.com/?q=60.16812,24.95435"
+        "maps": "https://maps.google.com/?q=60.16812,24.95435",
+        "nameES": "Allas Sea Pool",
+        "shortES": "Piscinas flotantes y sauna en el puerto, a un paso de Kauppatori.",
+        "descES": "Al final del paseo, de regreso hacia Kauppatori, Allas Sea Pool es un complejo flotante justo en el puerto, con saunas públicas y piscinas exteriores climatizadas, además de una vasca con agua de mar filtrada. Es una experiencia típicamente finlandesa y divertida también para los niños, con vistas al ir y venir de los transbordadores. Una parada relajante y revitalizante antes de volver al van o al ferry.",
+        "tipsES": "Alternativa adrenalínica para los niños: el parque de atracciones Linnanmäki, más al norte."
       }
-    ]
+    ],
+    "cityES": "Helsinki",
+    "countryES": "Finlandia",
+    "introES": "Explora Helsinki partiendo del puerto: una capital compacta, verde y frente al Báltico, perfecta para recorrer en patinete eléctrico entre mercados, catedrales y sorprendentes espacios modernos pensados para familias. ⚠️ Desde el 17 giugno 2025 los patinetes eléctricos (más de 15 km/h) están prohibidos para menores de 15 años, también de alquiler: los niños más pequeños deberán subir con un adulto o desplazarse a pie."
   },
   "rovaniemi": {
     "city": "Rovaniemi",
@@ -2621,8 +3153,8 @@
         "name": "Piazza Lordi",
         "nameEN": "Lordi's Square",
         "cat": "cultura",
-        "lat": 66.5012,
-        "lng": 25.7305,
+        "lat": 66.502512,
+        "lng": 25.730496,
         "short": "La piazza centrale di Rovaniemi, dedicata ai vincitori dell'Eurovision 2006.",
         "shortEN": "The central square of Rovaniemi, dedicated to the 2006 Eurovision winners.",
         "desc": "Piazza Lordi (Lordin aukio) è il cuore pulsante di Rovaniemi, rinominata nel 2006 in onore della band hard rock Lordi, vincitrice dell'Eurovision Song Contest. Qui puoi trovare le impronte delle mani e le firme dei membri della band. La piazza è un vivace punto di ritrovo circondato da negozi e ristoranti, e ospita eventi durante tutto l'anno. Non perdere l'occasione di scattare una foto con il famoso termometro della piazza.",
@@ -2633,7 +3165,10 @@
           "Wikipedia: Lordi's Square",
           "Tripadvisor: Lordi's Square"
         ],
-        "maps": "https://maps.google.com/?q=66.5012,25.7305"
+        "maps": "https://maps.google.com/?q=66.5012,25.7305",
+        "nameES": "Piazza Lordi",
+        "shortES": "La plaza central de Rovaniemi, dedicada a los ganadores del Eurovision 2006.",
+        "descES": "Piazza Lordi (Lordin aukio) es el corazón palpitante de Rovaniemi, rebautizada en 2006 en honor de la banda de hard rock Lordi, ganadora del Eurovision Song Contest. Aquí puedes encontrar las huellas de las manos y las firmas de los miembros de la banda. La plaza es un animado punto de encuentro rodeado de tiendas y restaurantes, y acoge eventos durante todo el año. No pierdas la ocasión de hacerte una foto con el famoso termómetro de la plaza."
       },
       {
         "tier": 1,
@@ -2653,7 +3188,10 @@
           "Official site korundi.fi",
           "Visit Rovaniemi: Korundi House of Culture"
         ],
-        "maps": "https://maps.google.com/?q=66.5008,25.71797"
+        "maps": "https://maps.google.com/?q=66.5008,25.71797",
+        "nameES": "Korundi Casa della Cultura",
+        "shortES": "Un centro de arte y cultura alojado en un antiguo depósito de autobuses postales.",
+        "descES": "La Casa de la Cultura Korundi è uno dei pochi edifici sopravvissuti alla Seconda Guerra Mondiale a Rovaniemi. Oggi ospita il Museo d'Arte di Rovaniemi e l'Orchestra da Camera della Lapponia. Le mostre esplorano il mondo da una prospettiva nordica, offrendo un'immersione profonda nell'arte contemporanea finlandese. Si trova in Lapinkävijäntie 4, a breve distanza dal centro città."
       },
       {
         "tier": 2,
@@ -2673,7 +3211,10 @@
           "Official site arktikum.fi",
           "Wikipedia: Arktikum"
         ],
-        "maps": "https://maps.google.com/?q=66.50756,25.7263"
+        "maps": "https://maps.google.com/?q=66.50756,25.7263",
+        "nameES": "Arktikum",
+        "shortES": "Un museo y centro científico que cuenta la naturaleza, la cultura y la historia del Ártico.",
+        "descES": "Arktikum es uno dei punti di riferimento più noti di Rovaniemi, situato sulle rive del fiume Ounasjoki. Este museo y centro científico ofrece exposiciones interactivas sobre la vida en el Ártico, la historia de la Lapponia y el fenómeno de la aurora boreal. El edificio en sí es una maravilla arquitectónica, con un sugerente pasillo de vidrio lungo 172 metri. Los boletos de entrada varían, pero ofrecen una experiencia educativa imprescindible para todas las edades."
       },
       {
         "id": "rov-4",
@@ -2692,7 +3233,10 @@
           "Official site rovaniemenseurakunta.fi",
           "Visit Rovaniemi: Rovaniemi Church"
         ],
-        "maps": "https://maps.google.com/?q=66.49463,25.72925"
+        "maps": "https://maps.google.com/?q=66.49463,25.72925",
+        "nameES": "Chiesa di Rovaniemi",
+        "shortES": "Una icónica iglesia luterana que domina el perfil de la ciudad.",
+        "descES": "La Chiesa di Rovaniemi, completata nel 1950, è un punto di riferimento spirituale e architettonico della città. Progettata dall'architetto Bertel Liljequist, presenta un imponente affresco sull'altare intitolato 'La sorgente della vita', opera del professor Lennart Segerstråle. La chiesa puede ospitare fino a 680 persone y vanta un órgano de 45 registros. Si trova in Yliopistonkatu 2 ed è aperta ai visitatori durante il giorno."
       },
       {
         "tier": 1,
@@ -2700,8 +3244,8 @@
         "name": "Ponte della Candela del Boscaiolo",
         "nameEN": "Lumberjack's Candle Bridge",
         "cat": "cultura",
-        "lat": 66.50218,
-        "lng": 25.73186,
+        "lat": 66.503094,
+        "lng": 25.741227,
         "short": "Il primo ponte stradale strallato della Finlandia, un omaggio alla storia dei boscaioli.",
         "shortEN": "Finland's first cable-stayed road bridge, a tribute to the history of lumberjacks.",
         "desc": "Il Ponte della Candela del Boscaiolo (Jätkänkynttilä) attraversa il fiume Kemijoki per 320 metri, collegando il centro città con la collina di Ounasvaara. Completato nel 1989, è il primo ponte sospeso costruito in Lapponia in epoca moderna. Le due torri del ponte sono illuminate per simboleggiare le torce usate dai boscaioli, rendendo omaggio al patrimonio del disboscamento di Rovaniemi. Offre viste spettacolari, specialmente di notte o durante l'aurora boreale.",
@@ -2712,7 +3256,10 @@
           "Tripadvisor: Lumberjack's Candle Bridge",
           "VoiceMap: The Lumberjack's Candle Bridge"
         ],
-        "maps": "https://maps.google.com/?q=66.50218,25.73186"
+        "maps": "https://maps.google.com/?q=66.50218,25.73186",
+        "nameES": "Ponte della Candela del Boscaiolo",
+        "shortES": "El primer puente atirantado para tráfico rodado de Finlandia, un homenaje a la historia de los leñadores.",
+        "descES": "Il Ponte della Candela del Boscaiolo (Jätkänkynttilä) atraviesa el río Kemijoki per 320 metri, collegando il centro città con la collina di Ounasvaara. Completado en 1989, è il primo ponte sospeso costruito in Lapponia in epoca moderna. Le due torri del ponte sono illuminate per simboleggiare le torce usate dai boscaioli, rendendo omaggio al patrimonio del disboscamento di Rovaniemi. Ofrece vistas spettacolari, specialmente di notte o durante l'aurora boreale."
       },
       {
         "tier": 1,
@@ -2732,15 +3279,19 @@
           "Official Website",
           "Wikipedia"
         ],
-        "maps": "https://maps.google.com/?q=66.507556,25.724683"
+        "maps": "https://maps.google.com/?q=66.507556,25.724683",
+        "nameES": "Pilke Science Centre",
+        "shortES": "Un museo interactivo dedicado a los bosques nórdicos y al uso sostenible de la madera.",
+        "descES": "El Pilke Science Centre es un museo interactivo dedicado a los bosques nórdicos y a la industria de la madera, situado junto al Arktikum. A través de exposiciones prácticas y atractivas, los visitantes pueden explorar la importancia ecológica y económica de los bosques en Finlandia. El edificio en sí es una obra maestra de arquitectura en madera sostenible, diseñado para reducir al mínimo el impacto ambiental. Es un lugar ideal para comprender el profundo vínculo entre los finlandeses y la naturaleza que les rodea.",
+        "tipsES": "Compra el Culture Pass para la entrada combinada con Arktikum y Korundi."
       },
       {
         "id": "rov-7",
         "name": "Lappia Hall",
         "nameEN": "Lappia Hall",
         "cat": "cultura",
-        "lat": 66.497048,
-        "lng": 25.720518,
+        "lat": 66.496389,
+        "lng": 25.722778,
         "short": "Un iconico centro culturale e teatrale progettato dal famoso architetto Alvar Aalto.",
         "shortEN": "An iconic cultural and theatrical center designed by the famous architect Alvar Aalto.",
         "desc": "La Lappia Hall (Lappia-talo) è un importante centro culturale e teatrale progettato dal celebre architetto finlandese Alvar Aalto. L'edificio, completato in diverse fasi tra il 1961 e il 1975, si distingue per il suo tetto ondulato che ricorda le montagne della Lapponia. Ospita il Teatro della Città di Rovaniemi e la Scuola di Musica della Lapponia. Insieme alla biblioteca e al municipio, forma il centro amministrativo e culturale della città, noto come 'Aalto Centre'.",
@@ -2751,7 +3302,11 @@
           "Wikipedia",
           "Alvar Aalto Foundation"
         ],
-        "maps": "https://maps.google.com/?q=66.497048,25.720518"
+        "maps": "https://maps.google.com/?q=66.497048,25.720518",
+        "nameES": "Lappia Hall",
+        "shortES": "Un icónico centro cultural y teatral diseñado por el famoso arquitecto Alvar Aalto.",
+        "descES": "La Lappia Hall (Lappia-talo) es un importante centro cultural y teatral diseñado por el célebre arquitecto finlandés Alvar Aalto. El edificio, completado en varias fases entre 1961 y 1975, se distingue por su tejado ondulado que recuerda a las montañas de Laponia. Alberga el Teatro della Città di Rovaniemi y la Scuola di Musica della Lapponia. Junto con la biblioteca y el ayuntamiento, forma el centro administrativo y cultural de la ciudad, conocido como 'Aalto Centre'.",
+        "tipsES": "Admira la arquitectura exterior o reserva una entrada para un espectáculo teatral."
       },
       {
         "id": "rov-8",
@@ -2770,7 +3325,11 @@
           "Wikipedia",
           "Alvar Aalto Foundation"
         ],
-        "maps": "https://maps.google.com/?q=66.496498,25.722254"
+        "maps": "https://maps.google.com/?q=66.496498,25.722254",
+        "nameES": "Rovaniemi City Library",
+        "shortES": "Una espléndida biblioteca diseñada por Alvar Aalto, conocida por el uso magistral de la luz natural.",
+        "descES": "La Biblioteca della Città di Rovaniemi es otro capolavoro arquitectónico de Alvar Aalto, completado en 1965. El edificio es famoso por su diseño funcional y el uso innovador de la luz natural, que ilumina las amplias salas de lectura mediante lucernarios diseñados ad hoc. El interior presenta detalles en madera, latón y cuero, típicos del estilo de Aalto. Además de ser un lugar de estudio, alberga una amplia colección de literatura lapona, lo que la convierte en una parada imprescindible para los amantes de la arquitectura y la cultura.",
+        "tipsES": "La entrada es gratuita; explora las salas de lectura para apreciar el diseño de los interiores."
       },
       {
         "id": "rov-9",
@@ -2789,7 +3348,11 @@
           "Visit Rovaniemi",
           "Local Guides"
         ],
-        "maps": "https://maps.google.com/?q=66.498078,25.733532"
+        "maps": "https://maps.google.com/?q=66.498078,25.733532",
+        "nameES": "Angry Birds Activity Park",
+        "shortES": "Un divertido parque infantil al aire libre con temática de Angry Birds, ideal para familias.",
+        "descES": "El Angry Birds Activity Park es un parque de juegos al aire libre situado a lo largo de las orillas del río Kemijoki, a poca distancia del centro de la ciudad. El parque está completamente tematizado con Angry Birds, el famoso videojuego creado por la empresa finlandesa Rovio. Ofrece toboganes, columpios, paredes para escalar y circuitos de obstáculos, lo que lo convierte en un lugar perfecto para familias con niños. Es una zona recreativa gratuita y muy popular tanto entre los residentes como entre los turistas.",
+        "tipsES": "El acceso es gratuito y está abierto todo el año, pero se disfruta más en los meses más cálidos."
       },
       {
         "tier": 1,
@@ -2809,7 +3372,11 @@
           "Visit Rovaniemi",
           "Wikipedia"
         ],
-        "maps": "https://maps.google.com/?q=66.502504,25.802095"
+        "maps": "https://maps.google.com/?q=66.502504,25.802095",
+        "nameES": "Ounasvaara",
+        "shortES": "Una colina panorámica cerca del centro, perfecta para senderismo, esquí y actividades al aire libre.",
+        "descES": "Ounasvaara es una colina boscosa situada justo frente al centro de Rovaniemi, en la otra orilla del río Kemijoki. Es un destino popular para actividades al aire libre en todas las estaciones, ofreciendo senderos para excursiones, pistas de esquí, circuitos para mountain bike y una pista de trineo de verano. Desde la cima se disfruta de una vista panorámica espectacular de la ciudad y de los ríos circundantes. Es el lugar ideal para sumergirse en la naturaleza lapona sin alejarse demasiado del núcleo urbano.",
+        "tipsES": "Se puede llegar a pie desde el centro cruzando el puente Jätkänkynttilä."
       },
       {
         "id": "rov-11",
@@ -2828,7 +3395,11 @@
           "Local Guides",
           "OpenStreetMap"
         ],
-        "maps": "https://maps.google.com/?q=66.504417,25.738749"
+        "maps": "https://maps.google.com/?q=66.504417,25.738749",
+        "nameES": "Jätkänpuisto",
+        "shortES": "Un parque relajante a lo largo del río Kemijoki, con excelentes vistas del puente Jätkänkynttilä.",
+        "descES": "Jätkänpuisto es un tranquilo parque situado a lo largo de las orillas del río Kemijoki, cerca del famoso puente Jätkänkynttilä. El parque ofrece amplias zonas verdes, senderos para pasear y áreas de picnic, lo que lo convierte en un lugar ideal para relajarse y contemplar el paisaje fluvial. Durante el verano, es un punto de encuentro popular entre los locales que desean disfrutar del sol de medianoche, mientras que en invierno ofrece una vista sugerente del río helado y, con un poco de suerte, de la aurora boreal.",
+        "tipsES": "Excelente punto para fotografiar el puente o para un paseo vespertino."
       },
       {
         "id": "rov-12",
@@ -2847,7 +3418,11 @@
           "Visit Rovaniemi",
           "Local Guides"
         ],
-        "maps": "https://maps.google.com/?q=66.500408,25.71391"
+        "maps": "https://maps.google.com/?q=66.500408,25.71391",
+        "nameES": "Rovaniemi Market Square",
+        "shortES": "Una animada plaza del mercado donde comprar productos locales, artesanía y especialidades laponas.",
+        "descES": "La Plaza del Mercado de Rovaniemi (Kauppatori) es el corazón comercial al aire libre de la ciudad. Aquí se pueden encontrar puestos que venden productos locales, artesanía tradicional lapona, recuerdos y especialidades culinarias como carne de reno, frutos del bosque frescos y salmón. La atmósfera es animada y auténtica, ofreciendo a los visitantes la oportunidad de interactuar con los vendedores locales y saborear la cultura gastronómica de la región. Es un lugar excelente para comprar regalos únicos y probar la comida callejera finlandesa.",
+        "tipsES": "Visítala por la mañana para la mejor selección de productos frescos."
       },
       {
         "id": "rov-13",
@@ -2866,7 +3441,11 @@
           "Museum Official Website",
           "Visit Rovaniemi"
         ],
-        "maps": "https://maps.google.com/?q=66.479881,25.741848"
+        "maps": "https://maps.google.com/?q=66.479881,25.741848",
+        "nameES": "Rovaniemi Local History Museum",
+        "shortES": "Un museo al aire libre en una granja histórica que ilustra la vida rural tradicional lapona.",
+        "descES": "El Museo de Historia Local de Rovaniemi (Rovaniemen kotiseutumuseo) está situado en una granja histórica del siglo XIX que sobrevivió a la destrucción de la ciudad durante la Segunda Guerra Mundial. El museo ofrece una mirada fascinante sobre la vida rural tradicional en Lapponia antes de la era moderna. Los visitantes pueden explorar los edificios originales, entre ellos la casa principal, los graneros y las saunas, amueblados con objetos de época. Es una experiencia inmersiva que narra la historia de la comunidad local y sus tradiciones agrícolas.",
+        "tipsES": "Abierto principalmente durante los meses de verano; consulta los horarios antes de la visita."
       },
       {
         "id": "rov-14",
@@ -2885,7 +3464,11 @@
           "Visit Rovaniemi",
           "Local Tour Operators"
         ],
-        "maps": "https://maps.google.com/?q=66.487065,25.733839"
+        "maps": "https://maps.google.com/?q=66.487065,25.733839",
+        "nameES": "Kotisaari",
+        "shortES": "Una isla histórica en el río Kemijoki, antigua base de los leñadores, ahora un oasis de paz.",
+        "descES": "Kotisaari es una pintoresca isla situada en el río Kemijoki, que en su momento se utilizó como base para los leñadores que transportaban la madera a lo largo del río. Hoy, la isla es un oasis de paz que conserva los antiguos edificios de madera, entre ellos una vieja taberna y una sauna. Es accesible mediante excursiones en barco y ofrece una experiencia auténtica de la historia forestal de la región, inmersa en un paisaje natural impresionante. Es un lugar perfecto para quienes buscan tranquilidad y una inmersión en el pasado.",
+        "tipsES": "Accesible solo mediante visitas organizadas en barco; reserva con antelación."
       },
       {
         "id": "rov-15",
@@ -2904,9 +3487,16 @@
           "Wikipedia",
           "Orthodox Church of Finland"
         ],
-        "maps": "https://maps.google.com/?q=66.496412,25.751902"
+        "maps": "https://maps.google.com/?q=66.496412,25.751902",
+        "nameES": "Rovaniemi Orthodox Church",
+        "shortES": "Una iglesia ortodoxa sugerente con las características cúpulas en forma de cebolla y espléndidos iconos.",
+        "descES": "La Chiesa Ortodossa di Rovaniemi, dedicata a Sant'Andrea Apostolo, es un hermoso edificio religioso completado en 1957. La arquitectura de la iglesia es sencilla pero elegante, con las típicas cúpulas en forma de cebolla que caracterizan el estilo ortodoxo. En el interior, los visitantes pueden admirar espléndidos iconos y un ambiente de profunda espiritualidad. La iglesia atiende a la pequeña pero activa comunidad ortodoxa de la región y representa una interesante diversidad arquitectónica y cultural en el panorama de la ciudad.",
+        "tipsES": "Respeta el silencio y la vestimenta adecuada durante la visita en el interior."
       }
-    ]
+    ],
+    "cityES": "Rovaniemi",
+    "countryES": "Finlandia",
+    "introES": "Explora el corazón de Rovaniemi con este itinerario a pie que combina cultura, historia y naturaleza ártica. Descubre los lugares más icónicos de la capital de Laponia en medio día."
   },
   "oulu": {
     "city": "Oulu",
@@ -2940,7 +3530,10 @@
           "Wikipedia: Oulu",
           "Wikipedia: Toripolliisi"
         ],
-        "maps": "https://maps.google.com/?q=65.01349,25.46451"
+        "maps": "https://maps.google.com/?q=65.01349,25.46451",
+        "nameES": "Piazza del Mercato di Oulu",
+        "shortES": "El corazón palpitante de Oulu, famoso por sus animados mercados y la icónica estatua del Toripolliisi.",
+        "descES": "La Piazza del Mercato di Oulu (Kauppatori) es el centro histórico y comercial de la ciudad, situado cerca del paseo marítimo. Alberga el pintoresco Mercado Cubierto (Kauppahalli), un edificio neogótico donde es posible probar especialidades locales. La atracción más fotografiada es el Toripolliisi, una simpática estatua de bronce de un policía del mercado. La piazza está rodeada de antiguos almacenes de madera rojos, ahora transformados en cafeterías y restaurantes."
       },
       {
         "tier": 1,
@@ -2959,7 +3552,10 @@
         "src": [
           "Wikipedia: Oulu Cathedral"
         ],
-        "maps": "https://maps.google.com/?q=65.01472,25.47583"
+        "maps": "https://maps.google.com/?q=65.01472,25.47583",
+        "nameES": "Cattedrale di Oulu",
+        "shortES": "Una majestuosa catedral neoclásica que domina el centro de la ciudad.",
+        "descES": "La Cattedrale di Oulu (Oulun tuomiokirkko) es una iglesia evangélica luterana construida originalmente en 1777. Tras ser destruida por un incendio en 1822, fue reconstruida en estilo neoclásico según el proyecto del famoso arquitecto Carl Ludvig Engel y completada en 1832. El interior es conocido por su hermoso órgano y el modelo de un barco colgado del techo, típico de las iglesias marítimas nórdicas. Está abierta a los visitantes todos los días y la entrada es gratuita."
       },
       {
         "tier": 1,
@@ -2978,7 +3574,10 @@
         "src": [
           "Wikipedia: Hupisaaret Islands"
         ],
-        "maps": "https://maps.google.com/?q=65.01833,25.4775"
+        "maps": "https://maps.google.com/?q=65.01833,25.4775",
+        "nameES": "Isole Hupisaaret",
+        "shortES": "Un oasis verde de paz formado por pequeñas islas conectadas por pintorescos puentes.",
+        "descES": "El parque de las Isole Hupisaaret es un área verde situada en el estuario del río Oulu, a pocos pasos del centro de la ciudad. Está compuesto por decenas de pequeñas islas conectadas por encantadores puentes peatonales blancos, creando un paisaje idílico. El parque alberga espléndidos jardines, arroyos y senderos peatonales perfectos para un paseo relajante. En su interior también hay un rosedal y un teatro de verano."
       },
       {
         "id": "oul-4",
@@ -2996,7 +3595,10 @@
         "src": [
           "Wikipedia: Oulu Museum of Art"
         ],
-        "maps": "https://maps.google.com/?q=65.01833,25.48194"
+        "maps": "https://maps.google.com/?q=65.01833,25.48194",
+        "nameES": "Museo d'Arte di Oulu",
+        "shortES": "Un museo de arte contemporáneo situado en los márgenes del parque Hupisaaret.",
+        "descES": "El Museo d'Arte di Oulu (OMA) se encuentra en el barrio de Myllytulli, cerca del parque de las Isole Hupisaaret. El museo está alojado en un antiguo edificio industrial, una fábrica de pegamento y cuero, que ha sido magníficamente restaurado. Sus colecciones se centran principalmente en el arte contemporáneo finlandés y regional, ofreciendo una visión de la cultura visual del norte. El museo organiza regularmente exposiciones temporales y eventos culturales."
       },
       {
         "tier": 1,
@@ -3015,15 +3617,18 @@
         "src": [
           "Wikipedia: Oulu Castle"
         ],
-        "maps": "https://maps.google.com/?q=65.017,25.468"
+        "maps": "https://maps.google.com/?q=65.017,25.468",
+        "nameES": "Castello di Oulu",
+        "shortES": "Las ruinas históricas de un castillo del siglo XVI en una isla en el delta del río.",
+        "descES": "El Castello di Oulu (Oulun linna) fue construido en 1590 en la isla de Linnansaari para defender la ciudad. Aunque la estructura original de madera fue destruida, hoy es posible visitar las ruinas de piedra y las bóvedas restauradas. Sobre los cimientos del castillo se construyó un observatorio en 1875, que ahora alberga una cafetería de verano. La isla también ofrece espléndidas vistas del río y de la ciudad circundante."
       },
       {
         "id": "oul-6",
         "name": "Pikisaari",
         "nameEN": "Pikisaari",
         "cat": "cultura",
-        "lat": 65.016,
-        "lng": 25.454,
+        "lat": 65.017671,
+        "lng": 25.456463,
         "short": "Un pittoresco quartiere su un'isola noto per le sue storiche case in legno e la comunità di artisti.",
         "shortEN": "A picturesque island neighborhood known for its historic wooden houses and artist community.",
         "desc": "Pikisaari è un affascinante e storico quartiere di case in legno situato su un'isola a breve distanza a piedi dal centro della città. Originariamente un'area industriale e di costruzione di barche, oggi è una vivace comunità di artisti e artigiani. Le case in legno del XVII secolo ben conservate e i sentieri panoramici sul lungomare lo rendono una zona deliziosa per una passeggiata rilassante.",
@@ -3033,7 +3638,11 @@
         "src": [
           "Visit Oulu: Pikisaari"
         ],
-        "maps": "https://maps.google.com/?q=65.016,25.454"
+        "maps": "https://maps.google.com/?q=65.016,25.454",
+        "nameES": "Pikisaari",
+        "shortES": "Un pintoresco barrio en una isla conocido por sus históricas casas de madera y la comunidad de artistas.",
+        "descES": "Pikisaari es un encantador e histórico barrio de casas de madera situado en una isla a poca distancia a pie del centro de la ciudad. Originalmente un área industrial y de construcción de barcos, hoy es una vibrante comunidad de artistas y artesanos. Las casas de madera bien conservadas del siglo XVII y los senderos panorámicos junto al mar lo convierten en una zona deliciosa para un paseo relajante.",
+        "tipsES": "Fácilmente accesible mediante un puente peatonal desde la zona de la Piazza del Mercato."
       },
       {
         "id": "oul-7",
@@ -3051,7 +3660,11 @@
         "src": [
           "Wikipedia: Rotuaari"
         ],
-        "maps": "https://maps.google.com/?q=65.0123,25.4705"
+        "maps": "https://maps.google.com/?q=65.0123,25.4705",
+        "nameES": "Rotuaari",
+        "shortES": "La principal calle peatonal y el corazón comercial de Oulu.",
+        "descES": "Rotuaari es la animada zona peatonal en el corazón de Oulu, que incluye partes de Kirkkokatu y de las calles circundantes. Es el centro comercial y social de la ciudad, flanqueado por tiendas, cafeterías, restaurantes y grandes almacenes. La calle está calefaccionada en invierno para mantenerla libre de nieve y hielo, lo que la convierte en un lugar de encuentro confortable durante todo el año.",
+        "tipsES": "Ideal para ir de compras y cenar. Busca el escenario central donde a menudo se celebran eventos."
       },
       {
         "tier": 1,
@@ -3059,8 +3672,8 @@
         "name": "Tietomaa",
         "nameEN": "Tietomaa",
         "cat": "kids",
-        "lat": 65.0177,
-        "lng": 25.4812,
+        "lat": 65.018056,
+        "lng": 25.484167,
         "short": "Un centro scientifico interattivo con una torre di osservazione che offre splendide viste sulla città.",
         "shortEN": "An interactive science center with an observation tower offering great city views.",
         "desc": "Tietomaa è il primo centro scientifico della Finlandia, ospitato in un'ex centrale elettrica e torre dell'acqua. Offre mostre interattive che coprono vari campi scientifici, rendendolo molto coinvolgente per i visitatori di tutte le età. La torre di osservazione offre splendide viste panoramiche su Oulu e il centro dispone di un cinema con schermo gigante per film educativi.",
@@ -3070,7 +3683,11 @@
         "src": [
           "Wikipedia: Tietomaa"
         ],
-        "maps": "https://maps.google.com/?q=65.0177,25.4812"
+        "maps": "https://maps.google.com/?q=65.0177,25.4812",
+        "nameES": "Tietomaa",
+        "shortES": "Un centro científico interactivo con una torre de observación que ofrece espléndidas vistas de la ciudad.",
+        "descES": "Tietomaa es el primer centro científico de Finlandia, alojado en una antigua central eléctrica y torre de agua. Ofrece exposiciones interactivas que abarcan diversos campos científicos, lo que lo hace muy atractivo para visitantes de todas las edades. La torre de observación ofrece espléndidas vistas panorámicas de Oulu y el centro dispone de un cine con pantalla gigante para películas educativas.",
+        "tipsES": "Perfecto para familias. La torre es una visita obligada por las vistas panorámicas."
       },
       {
         "id": "oul-9",
@@ -3088,7 +3705,11 @@
         "src": [
           "Wikipedia: Oulu City Hall"
         ],
-        "maps": "https://maps.google.com/?q=65.0137,25.4719"
+        "maps": "https://maps.google.com/?q=65.0137,25.4719",
+        "nameES": "Oulun kaupungintalo",
+        "shortES": "Un espléndido edificio neorrenacentista que sirve como centro administrativo de Oulu.",
+        "descES": "El Ayuntamiento de Oulu es un magnífico edificio neorrenacentista completado en 1886, que originalmente funcionó como restaurante y hotel. Diseñado por el arquitecto sueco Johan Erik Stenberg, es uno de los edificios históricos más bellos del centro de la ciudad. El edificio ha acogido muchos eventos significativos y su elegante fachada es un punto culminante del patrimonio arquitectónico de Oulu.",
+        "tipsES": "Admira la arquitectura desde el exterior; el interior está reservado principalmente para asuntos oficiales."
       },
       {
         "id": "oul-10",
@@ -3106,15 +3727,19 @@
         "src": [
           "Wikipedia: Northern Ostrobothnia Museum"
         ],
-        "maps": "https://maps.google.com/?q=65.0178,25.4745"
+        "maps": "https://maps.google.com/?q=65.0178,25.4745",
+        "nameES": "Pohjois-Pohjanmaan museo",
+        "shortES": "Un museo de historia regional con exposiciones sobre el pasado de Oulu y un modelo a escala de la ciudad de 1938.",
+        "descES": "Situado en el pintoresco parque Ainolan puisto, este museo ilustra la historia cultural de Oulu y de la vecina región de la Ostrobotnia settentrionale. Las amplias exposiciones cubren todo, desde la prehistoria hasta los tiempos modernos, incluido un popular modelo a escala de Oulu de 1938. Ofrece una inmersión profunda en el patrimonio local, en las formas de vida tradicionales y en la evolución de la ciudad.",
+        "tipsES": "Consulta los horarios de apertura actuales. Excelente para combinar con un paseo por el parque circundante."
       },
       {
         "id": "oul-11",
         "name": "Mannerheimin puisto",
         "nameEN": "Mannerheimin puisto",
         "cat": "natura",
-        "lat": 65.0106,
-        "lng": 25.4672,
+        "lat": 65.00954,
+        "lng": 25.468225,
         "short": "Un parco urbano centrale che offre un rifugio tranquillo con splendidi paesaggi.",
         "shortEN": "A central urban park offering a peaceful retreat with beautiful landscaping.",
         "desc": "Il Parco Mannerheim è un popolare spazio verde nel centro di Oulu, intitolato al leader militare e statista finlandese Carl Gustaf Emil Mannerheim. Il parco presenta bellissime aiuole, alberi secolari e un monumento centrale. Funge da oasi di pace per la gente del posto e per i visitatori, offrendo un luogo tranquillo per rilassarsi in mezzo all'ambiente urbano.",
@@ -3124,15 +3749,19 @@
         "src": [
           "Visit Oulu: Parks"
         ],
-        "maps": "https://maps.google.com/?q=65.0106,25.4672"
+        "maps": "https://maps.google.com/?q=65.0106,25.4672",
+        "nameES": "Mannerheimin puisto",
+        "shortES": "Un parque urbano céntrico que ofrece un refugio tranquilo con espléndidos paisajes.",
+        "descES": "El Parco Mannerheim è un popolare spazio verde nel centro di Oulu, intitolato al leader militare e statista finlandese Carl Gustaf Emil Mannerheim. Il parco presenta bellissime aiuole, alberi secolari e un monumento centrale. Funge da oasi di pace per la gente del posto e per i visitatori, offrendo un luogo tranquillo per rilassarsi in mezzo all'ambiente urbano.",
+        "tipsES": "Un bel posto per un rapido riposo o un picnic durante la passeggiata in città."
       },
       {
         "id": "oul-12",
         "name": "Oulun kaupunginkirjasto",
         "nameEN": "Oulun kaupunginkirjasto",
         "cat": "cultura",
-        "lat": 65.0146,
-        "lng": 25.4623,
+        "lat": 65.015382,
+        "lng": 25.46341,
         "short": "Un punto di riferimento architettonico brutalista che funge da biblioteca principale e centro culturale della città.",
         "shortEN": "A brutalist architectural landmark serving as the city's main library and cultural hub.",
         "desc": "La sede principale della Biblioteca Comunale di Oulu è un notevole esempio di architettura moderna finlandese, situata vicino al lungomare. Progettato dagli architetti Marjatta e Martti Jaatinen, l'edificio in cemento brutalista è addolcito da grandi finestre che offrono viste sul mare. All'interno, è un vivace centro culturale con ampie collezioni, aree di lettura e spazi espositivi.",
@@ -3142,7 +3771,11 @@
         "src": [
           "Wikipedia: Oulu City Library"
         ],
-        "maps": "https://maps.google.com/?q=65.0146,25.4623"
+        "maps": "https://maps.google.com/?q=65.0146,25.4623",
+        "nameES": "Oulun kaupunginkirjasto",
+        "shortES": "Un punto di riferimento architettonico brutalista che funge da biblioteca principale e centro culturale della città.",
+        "descES": "La sede principale della Biblioteca Comunale di Oulu è un notevole esempio di architettura moderna finlandese, situata vicino al lungomare. Progettato dagli architetti Marjatta e Martti Jaatinen, l'edificio in cemento brutalista è addolcito da grandi finestre che offrono viste sul mare. All'interno, è un vivace centro culturale con ampie collezioni, aree di lettura e spazi espositivi.",
+        "tipsES": "Ingresso gratuito. Le grandi finestre offrono splendide viste sul lungomare circostante."
       },
       {
         "id": "oul-13",
@@ -3160,7 +3793,11 @@
         "src": [
           "Wikipedia: Oulu Theatre"
         ],
-        "maps": "https://maps.google.com/?q=65.0141,25.4611"
+        "maps": "https://maps.google.com/?q=65.0141,25.4611",
+        "nameES": "Oulun kaupunginteatteri",
+        "shortES": "Il teatro principale della città, ospitato in un suggestivo edificio modernista sul lungomare.",
+        "descES": "Il Teatro di Oulu è un'importante istituzione culturale situata sulla piazza del lungomare, adiacente alla Biblioteca Comunale. L'edificio modernista, progettato anch'esso da Marjatta e Martti Jaatinen, ospita un'ampia varietà di spettacoli tra cui opere teatrali, musical e teatro per bambini. È una pietra miliare della scena delle arti dello spettacolo di Oulu e una caratteristica architettonica chiave dello skyline costiero della città.",
+        "tipsES": "Controlla il loro programma per gli spettacoli, anche se l'edificio stesso merita di essere visto dall'esterno."
       },
       {
         "id": "oul-14",
@@ -3178,9 +3815,16 @@
         "src": [
           "Visit Oulu: Franzén Park"
         ],
-        "maps": "https://maps.google.com/?q=65.0149,25.4736"
+        "maps": "https://maps.google.com/?q=65.0149,25.4736",
+        "nameES": "Franzénin puisto",
+        "shortES": "Un parco storico vicino alla cattedrale, con un monumento al poeta F.M. Franzén.",
+        "descES": "Il Parco Franzén è un parco storico e pittoresco situato vicino alla Cattedrale di Oulu. Prende il nome dal poeta e vescovo Frans Michael Franzén, il cui busto si erge in modo prominente al centro. Il parco è circondato da alcuni degli edifici in legno e pietra più antichi e belli di Oulu, rendendolo un luogo panoramico per una passeggiata rilassante.",
+        "tipsES": "Un posto incantevole dove sedersi dopo aver visitato l'adiacente cattedrale."
       }
-    ]
+    ],
+    "cityES": "Oulu",
+    "countryES": "Finlandia",
+    "introES": "Descubre Oulu, la capital del norte de Finlandia, con un recorrido a pie que une historia, naturaleza y cultura. Desde la animada plaza del mercado hasta los tranquilos parques de las islas, explora el corazón de esta fascinante ciudad costera."
   },
   "tromso": {
     "city": "Tromsø",
@@ -3214,15 +3858,18 @@
           "Wikipedia: Tromsø Cathedral",
           "Visit Tromsø official site"
         ],
-        "maps": "https://maps.google.com/?q=69.6489,18.9569"
+        "maps": "https://maps.google.com/?q=69.6489,18.9569",
+        "nameES": "Cattedrale di Tromsø",
+        "shortES": "Una de las catedrales de madera más grandes de Norvegia, situada en el corazón de la ciudad.",
+        "descES": "Construida en 1861, esta hermosa iglesia de madera amarilla es la única catedral noruega hecha de madera. Está situada en el centro de la ciudad, rodeada de un parque verde. La iglesia está diseñada en estilo neogótico y cuenta con interiores impresionantes. La entrada suele costar alrededor de 50 NOK durante los horarios de visita turística."
       },
       {
         "id": "tro-2",
         "name": "Raketten Bar & Pølse",
         "nameEN": "Raketten Bar & Pølse",
         "cat": "cibo",
-        "lat": 69.6495,
-        "lng": 18.9563,
+        "lat": 69.651428,
+        "lng": 18.957672,
         "short": "Un minuscolo e storico chiosco che serve tradizionali hot dog norvegesi nella piazza principale.",
         "shortEN": "A historic, tiny kiosk serving traditional Norwegian hot dogs in the main square.",
         "desc": "Conosciuto come il bar più piccolo della Norvegia, questo affascinante chiosco risale al 1911. Situato su Storgata, la principale via pedonale, è famoso per servire hot dog di renna e birra locale. È una sosta veloce perfetta per sperimentare la cultura del cibo di strada locale. Aperto tutti i giorni, i prezzi per un hot dog si aggirano intorno alle 100 NOK.",
@@ -3233,7 +3880,10 @@
           "Official site raketten.no",
           "Visit Tromsø: Food and Drink"
         ],
-        "maps": "https://maps.google.com/?q=69.6495,18.9563"
+        "maps": "https://maps.google.com/?q=69.6495,18.9563",
+        "nameES": "Raketten Bar & Pølse",
+        "shortES": "Un minúsculo y histórico quiosco que sirve tradicionales hot dogs noruegos en la plaza principal.",
+        "descES": "Conocido como el bar más pequeño de Norvegia, este encantador quiosco data de 1911. Situado en Storgata, la principal calle peatonal, es famoso por servir hot dogs de reno y cerveza local. Es una parada rápida perfecta para experimentar la cultura de la comida callejera local. Abierto todos los días, los precios de un hot dog rondan los 100 NOK."
       },
       {
         "tier": 1,
@@ -3241,8 +3891,8 @@
         "name": "Museo Polare",
         "nameEN": "The Polar Museum",
         "cat": "cultura",
-        "lat": 69.6521,
-        "lng": 18.9635,
+        "lat": 69.6517,
+        "lng": 18.9556,
         "short": "Un affascinante museo che illustra la storia di Tromsø come porta d'accesso all'Artico.",
         "shortEN": "A fascinating museum detailing Tromsø's history as the gateway to the Arctic.",
         "desc": "Ospitato in una tradizionale dogana degli anni '30 dell'Ottocento sul lungomare, questo museo espone la storia della caccia artica, della caccia alle foche e di famosi esploratori come Roald Amundsen. Offre approfondimenti sulle dure realtà delle spedizioni polari. I biglietti per adulti costano circa 110 NOK. È aperto tutti i giorni, solitamente dalle 11:00 alle 17:00.",
@@ -3253,7 +3903,10 @@
           "UiT The Arctic University of Norway: Polar Museum",
           "Wikipedia: Polar Museum"
         ],
-        "maps": "https://maps.google.com/?q=69.6521,18.9635"
+        "maps": "https://maps.google.com/?q=69.6521,18.9635",
+        "nameES": "Museo Polare",
+        "shortES": "Un fascinante museo que ilustra la historia de Tromsø como puerta de acceso al Ártico.",
+        "descES": "Alojado en una tradicional aduana de los años 30 del siglo XIX en el paseo marítimo, este museo expone la historia de la caza ártica, la caza de focas y de famosos exploradores como Roald Amundsen. Ofrece perspectivas sobre las duras realidades de las expediciones polares. Las entradas para adultos cuestan alrededor de 110 NOK. Está abierto todos los días, habitualmente de 11:00 a 17:00."
       },
       {
         "tier": 1,
@@ -3261,8 +3914,8 @@
         "name": "Ponte di Tromsø",
         "nameEN": "Tromsø Bridge",
         "cat": "panorama",
-        "lat": 69.6514,
-        "lng": 18.975,
+        "lat": 69.6513,
+        "lng": 18.978131,
         "short": "Un ponte stradale a sbalzo che offre viste panoramiche sulla città, sulle montagne e sui fiordi.",
         "shortEN": "A cantilever road bridge offering panoramic views of the city, mountains, and fjords.",
         "desc": "Inaugurato nel 1960, questo ponte lungo 1.036 metri collega l'isola di Tromsøya con la terraferma. Camminare lungo il percorso pedonale offre punti panoramici spettacolari sulla Cattedrale dell'Artico e sul circostante stretto di Tromsøysundet. La passeggiata dura circa 15-20 minuti ed è completamente gratuita. Può essere ventoso, quindi vestitevi pesanti.",
@@ -3273,7 +3926,10 @@
           "Wikipedia: Tromsø Bridge",
           "Visit Norway: Tromsø"
         ],
-        "maps": "https://maps.google.com/?q=69.6514,18.975"
+        "maps": "https://maps.google.com/?q=69.6514,18.975",
+        "nameES": "Ponte di Tromsø",
+        "shortES": "Un puente de carretera en voladizo que ofrece vistas panorámicas de la ciudad, de las montañas y de los fiordos.",
+        "descES": "Inaugurado en 1960, este puente de 1.036 metros conecta la isla de Tromsøya con la tierra firme. Caminar por el paseo peatonal ofrece miradores espectaculares sobre la Cattedrale dell'Artico y el estrecho circundante de Tromsøysundet. El paseo dura unos 15-20 minutos y es completamente gratuito. Puede hacer viento, así que vestíos con ropa de abrigo."
       },
       {
         "tier": 2,
@@ -3293,7 +3949,10 @@
           "Official site ishavskatedralen.no",
           "Wikipedia: Arctic Cathedral"
         ],
-        "maps": "https://maps.google.com/?q=69.6481,18.9875"
+        "maps": "https://maps.google.com/?q=69.6481,18.9875",
+        "nameES": "Cattedrale dell'Artico",
+        "shortES": "Una iglesia modernista sugerente que se ha convertido en el símbolo más icónico de Tromsø.",
+        "descES": "Diseñada por Jan Inge Hovig y completada en 1965, su audaz arquitectura triangular está inspirada en la naturaleza ártica y en los icebergs. La pared oriental presenta un enorme y precioso mosaico de vidrio que brilla de forma asombrosa en la oscuridad. Es una iglesia parroquial activa y un lugar popular para conciertos. La entrada para visitantes cuesta alrededor de 80 NOK."
       },
       {
         "id": "tro-6",
@@ -3312,15 +3971,19 @@
           "Wikipedia: Arctic-Alpine Botanic Garden",
           "UiT The Arctic University of Norway"
         ],
-        "maps": "https://maps.google.com/?q=69.6767,18.9761"
+        "maps": "https://maps.google.com/?q=69.6767,18.9761",
+        "nameES": "Arctic-Alpine Botanic Garden",
+        "shortES": "El jardín botánico más al norte del mundo, con raras plantas árticas y alpinas.",
+        "descES": "Il Giardino Botanico Artico-Alpino di Tromsø es el más al norte del mundo y alberga una extraordinaria colección de plantas procedentes de las regiones polares y de las altas montañas de todos los continentes. Abierto de mayo a octubre, ofrece una explosión de color durante el breve verano ártico, con especies raras como la amapola azul del Himalaya. No hay puertas ni cercas, lo que lo convierte en un parque abierto y accesible para todos en cualquier momento.",
+        "tipsES": "Abierto las 24 horas, entrada gratuita. Los mejores meses son entre junio y agosto."
       },
       {
         "id": "tro-7",
         "name": "Prestvannet",
         "nameEN": "Prestvannet",
         "cat": "natura",
-        "lat": 69.658,
-        "lng": 18.935,
+        "lat": 69.6594,
+        "lng": 18.9359,
         "short": "Un tranquillo lago naturale, ideale per passeggiate e per avvistare l'aurora boreale.",
         "shortEN": "A tranquil natural lake, ideal for walks and spotting the northern lights.",
         "desc": "Prestvannet è un pittoresco lago situato nel punto più alto dell'isola di Tromsøya, circondato da una riserva naturale. Creato originariamente come serbatoio d'acqua nel 1867, oggi è un'oasi di pace amata da locali e turisti per passeggiate e birdwatching. In inverno, il lago ghiacciato e l'assenza di inquinamento luminoso lo rendono uno dei luoghi migliori in città per osservare l'aurora boreale. In estate, è un paradiso verde ricco di avifauna.",
@@ -3330,7 +3993,11 @@
         "src": [
           "Wikipedia: Prestvannet"
         ],
-        "maps": "https://maps.google.com/?q=69.658,18.935"
+        "maps": "https://maps.google.com/?q=69.658,18.935",
+        "nameES": "Prestvannet",
+        "shortES": "Un tranquilo lago natural, ideal para paseos y para avistar la aurora boreal.",
+        "descES": "Prestvannet es un pintoresco lago situado en el punto más alto de la isla de Tromsøya, rodeado por una reserva natural. Creado originalmente como depósito de agua en 1867, hoy es un oasis de paz amado por locales y turistas para paseos y observación de aves. En invierno, el lago helado y la ausencia de contaminación lumínica lo convierten en uno de los mejores lugares de la ciudad para observar la aurora boreal. En verano, es un paraíso verde lleno de avifauna.",
+        "tipsES": "Fácilmente accesible a pie desde el centro con una caminata cuesta arriba de unos 20 minutos."
       },
       {
         "id": "tro-8",
@@ -3348,15 +4015,19 @@
         "src": [
           "Wikipedia: Skansen (Tromsø)"
         ],
-        "maps": "https://maps.google.com/?q=69.6533,18.9622"
+        "maps": "https://maps.google.com/?q=69.6533,18.9622",
+        "nameES": "Skansen",
+        "shortES": "La casa de madera más antigua de la ciudad y una antigua fortificación medieval.",
+        "descES": "Skansen es la más antigua casa de madera de Tromsø, construida en 1789, y la única fortificación histórica de la ciudad, que data de la Edad Media. Rodeada por un pequeño parque y cañones históricos, ofrece una visión fascinante del pasado de Tromsø antes de su desarrollo moderno. El área es tranquila y pintoresca, ideal para un breve paseo cerca del puerto. Hoy la casa acoge eventos culturales y exposiciones temporales.",
+        "tipsES": "El exterior siempre puede visitarse, el interior solo durante eventos específicos."
       },
       {
         "id": "tro-9",
         "name": "Tromsø Public Library",
         "nameEN": "Tromsø Public Library",
         "cat": "cultura",
-        "lat": 69.6518,
-        "lng": 18.9565,
+        "lat": 69.650722,
+        "lng": 18.954693,
         "short": "Una biblioteca dal design moderno e luminoso, vero gioiello architettonico.",
         "shortEN": "A library with a modern and bright design, a true architectural gem.",
         "desc": "La Biblioteca Pubblica di Tromsø è ospitata in un edificio dal design architettonico sorprendente, caratterizzato da ampie vetrate e un tetto curvo che ricorda le vele di una nave. Costruita sotto la struttura originale di un ex cinema, offre un ambiente luminoso e accogliente. È un luogo perfetto per rilassarsi, leggere un libro o semplicemente ammirare l'architettura moderna norvegese. La biblioteca è un importante centro culturale per la comunità locale.",
@@ -3366,15 +4037,19 @@
         "src": [
           "Wikipedia: Tromsø bibliotek og byarkiv"
         ],
-        "maps": "https://maps.google.com/?q=69.6518,18.9565"
+        "maps": "https://maps.google.com/?q=69.6518,18.9565",
+        "nameES": "Tromsø Public Library",
+        "shortES": "Una biblioteca de diseño moderno y luminosa, una verdadera joya arquitectónica.",
+        "descES": "La Biblioteca Pubblica di Tromsø está alojada en un edificio de sorprendente diseño arquitectónico, caracterizado por amplios ventanales y un techo curvo que recuerda las velas de un barco. Construida sobre la estructura original de un antiguo cine, ofrece un ambiente luminoso y acogedor. Es un lugar perfecto para relajarse, leer un libro o simplemente admirar la arquitectura moderna noruega. La biblioteca es un importante centro cultural para la comunidad local.",
+        "tipsES": "Entrada gratuita, excelente refugio en los días fríos."
       },
       {
         "id": "tro-10",
         "name": "Perspektivet Museum",
         "nameEN": "Perspektivet Museum",
         "cat": "cultura",
-        "lat": 69.6508,
-        "lng": 18.9555,
+        "lat": 69.65231,
+        "lng": 18.95924,
         "short": "Museo di fotografia e storia culturale ospitato in un'elegante dimora del XIX secolo.",
         "shortEN": "Photography and cultural history museum housed in an elegant 19th-century mansion.",
         "desc": "Il Perspektivet Museum è situato in una splendida dimora neoclassica del 1838, un tempo casa della scrittrice Cora Sandel. Il museo si concentra sulla fotografia documentaria e sulla storia culturale di Tromsø, esplorando temi di diversità e identità. Le mostre temporanee offrono spunti di riflessione sulla società contemporanea attraverso l'obiettivo di fotografi internazionali e locali. Gli interni storici dell'edificio sono stati magnificamente conservati.",
@@ -3385,7 +4060,11 @@
           "Wikipedia: Perspektivet Museum",
           "Official Website"
         ],
-        "maps": "https://maps.google.com/?q=69.6508,18.9555"
+        "maps": "https://maps.google.com/?q=69.6508,18.9555",
+        "nameES": "Perspektivet Museum",
+        "shortES": "Museo de fotografía e historia cultural alojado en una elegante residencia del siglo XIX.",
+        "descES": "El Perspektivet Museum está situado en una espléndida residencia neoclásica de 1838, en su día casa de la escritora Cora Sandel. El museo se centra en la fotografía documental y en la historia cultural de Tromsø, explorando temas de diversidad e identidad. Las exposiciones temporales ofrecen motivos de reflexión sobre la sociedad contemporánea a través del objetivo de fotógrafos internacionales y locales. Los interiores históricos del edificio se han conservado magníficamente.",
+        "tipsES": "Entrada gratuita. Las exposiciones cambian regularmente."
       },
       {
         "id": "tro-11",
@@ -3404,15 +4083,19 @@
           "Tromsø Municipality",
           "Local Guide"
         ],
-        "maps": "https://maps.google.com/?q=69.6487,18.9588"
+        "maps": "https://maps.google.com/?q=69.6487,18.9588",
+        "nameES": "Roald Amundsen Monument",
+        "shortES": "Estatua dedicada al célebre explorador polar, símbolo del vínculo de la ciudad con el Ártico.",
+        "descES": "Situado en una pequeña plaza cerca del puerto, este monumento está dedicado a Roald Amundsen, el legendario explorador polar noruego. La estatua lo representa con la mirada dirigida al mar, en recuerdo de sus numerosas expediciones que partieron precisamente desde Tromsø, conocida como la \"Porta dell'Artico\". El monumento es un importante símbolo del vínculo histórico de la ciudad con las exploraciones polares y un excelente punto de partida para recorrer el paseo marítimo.",
+        "tipsES": "Excelente punto para sacar fotos con el puerto de fondo."
       },
       {
         "id": "tro-12",
         "name": "Tromsø Harbor",
         "nameEN": "Tromsø Harbor",
         "cat": "panorama",
-        "lat": 69.648,
-        "lng": 18.96,
+        "lat": 69.647105,
+        "lng": 18.9586,
         "short": "Il vivace lungomare della città, con viste spettacolari sui fiordi e sulle montagne.",
         "shortEN": "The city's lively waterfront, with spectacular views of the fjords and mountains.",
         "desc": "Il porto di Tromsø è il cuore pulsante della città, dove si mescolano pescherecci tradizionali, navi da crociera e imbarcazioni per l'esplorazione artica. Passeggiando lungo le banchine si può godere di una vista magnifica sul fiordo, sul ponte di Tromsø e sull'iconica Cattedrale dell'Artico sulla sponda opposta. È un'area vivace, ricca di ristoranti e caffè, perfetta per assaporare l'atmosfera marittima e osservare il viavai delle navi.",
@@ -3422,15 +4105,19 @@
         "src": [
           "Tromsø Port Authority"
         ],
-        "maps": "https://maps.google.com/?q=69.648,18.96"
+        "maps": "https://maps.google.com/?q=69.648,18.96",
+        "nameES": "Tromsø Harbor",
+        "shortES": "El animado paseo marítimo de la ciudad, con vistas espectaculares a los fiordos y a las montañas.",
+        "descES": "El puerto de Tromsø es el corazón palpitante de la ciudad, donde se mezclan barcos pesqueros tradicionales, cruceros y embarcaciones para la exploración ártica. Paseando por los muelles se puede disfrutar de una vista magnífica del fiordo, del puente de Tromsø y de la icónica Cattedrale dell'Artico en la orilla opuesta. Es una zona animada, llena de restaurantes y cafeterías, perfecta para saborear la atmósfera marítima y observar el ir y venir de los barcos.",
+        "tipsES": "Ideal para un paseo vespertino, especialmente durante el sol de medianoche."
       },
       {
         "id": "tro-13",
         "name": "Vår Frue Kirke",
         "nameEN": "Vår Frue Kirke",
         "cat": "cultura",
-        "lat": 69.648,
-        "lng": 18.955,
+        "lat": 69.6517,
+        "lng": 18.9569,
         "short": "La chiesa cattolica più a nord del mondo, un pittoresco edificio in legno del 1861.",
         "shortEN": "The northernmost Catholic church in the world, a picturesque wooden building from 1861.",
         "desc": "La Chiesa di Nostra Signora è una piccola e affascinante chiesa cattolica situata nel cuore di Tromsø, costruita nel 1861. È la sede della prelatura territoriale di Tromsø, la giurisdizione cattolica più a nord del mondo. L'edificio in legno presenta un'architettura neogotica semplice ma elegante, ed è sopravvissuto a vari incendi che hanno colpito la città. L'interno è intimo e accogliente, offrendo un momento di pace nel centro cittadino.",
@@ -3440,15 +4127,19 @@
         "src": [
           "Wikipedia: Church of Our Lady, Tromsø"
         ],
-        "maps": "https://maps.google.com/?q=69.648,18.955"
+        "maps": "https://maps.google.com/?q=69.648,18.955",
+        "nameES": "Vår Frue Kirke",
+        "shortES": "La iglesia católica más al norte del mundo, un pintoresco edificio de madera de 1861.",
+        "descES": "La Chiesa di Nostra Signora es una pequeña y encantadora iglesia católica situada en el corazón de Tromsø, construida en 1861. Es la sede de la prelatura territorial de Tromsø, la jurisdicción católica más al norte del mundo. El edificio de madera presenta una arquitectura neogótica sencilla pero elegante, y ha sobrevivido a varios incendios que han afectado a la ciudad. El interior es íntimo y acogedor, ofreciendo un momento de paz en el centro de la ciudad.",
+        "tipsES": "Abierta durante el día para la oración silenciosa."
       },
       {
         "id": "tro-14",
         "name": "Magic Ice Bar",
         "nameEN": "Magic Ice Bar",
         "cat": "attivita",
-        "lat": 69.6465,
-        "lng": 18.958,
+        "lat": 69.647499,
+        "lng": 18.957404,
         "short": "Un bar interamente di ghiaccio con sculture illuminate e drink serviti in bicchieri gelati.",
         "shortEN": "An all-ice bar with illuminated sculptures and drinks served in frozen glasses.",
         "desc": "Il Magic Ice Bar è un'esperienza unica dove tutto, dai bicchieri alle sculture, è realizzato in puro ghiaccio cristallino. Le sculture di ghiaccio, illuminate da luci suggestive, raccontano storie di esploratori polari e della vita nell'Artico. All'ingresso vengono forniti poncho caldi e guanti per affrontare la temperatura interna mantenuta costantemente sotto lo zero. È un modo divertente e insolito per brindare alla propria avventura norvegese.",
@@ -3458,15 +4149,19 @@
         "src": [
           "Official Website"
         ],
-        "maps": "https://maps.google.com/?q=69.6465,18.958"
+        "maps": "https://maps.google.com/?q=69.6465,18.958",
+        "nameES": "Magic Ice Bar",
+        "shortES": "Un bar íntegramente de hielo con esculturas iluminadas y bebidas servidas en vasos helados.",
+        "descES": "El Magic Ice Bar es una experiencia única donde todo, desde los vasos hasta las esculturas, está hecho de puro hielo cristalino. Las esculturas de hielo, iluminadas por luces sugerentes, cuentan historias de exploradores polares y de la vida en el Ártico. A la entrada se proporcionan ponchos cálidos y guantes para afrontar la temperatura interior, mantenida constantemente por debajo de cero. Es una forma divertida e inusual de brindar por tu aventura noruega.",
+        "tipsES": "La entrada suele incluir una bebida de bienvenida."
       },
       {
         "id": "tro-15",
         "name": "Ølhallen",
         "nameEN": "Ølhallen",
         "cat": "cibo",
-        "lat": 69.6445,
-        "lng": 18.9515,
+        "lat": 69.645921,
+        "lng": 18.950478,
         "short": "Il pub più antico della città, famoso per la sua vasta selezione di birre artigianali.",
         "shortEN": "The city's oldest pub, famous for its vast selection of craft beers.",
         "desc": "Ølhallen è il pub più antico di Tromsø, aperto nel 1928 e storicamente legato alla Mack, che per lungo tempo è stata la birreria più a nord del mondo. Il locale offre un'atmosfera autentica e vanta una selezione di oltre 70 birre norvegesi alla spina. In passato era il punto di ritrovo per cacciatori, pescatori ed esploratori polari che tornavano dalle loro spedizioni. Oggi è una tappa imperdibile per assaporare la cultura locale.",
@@ -3477,7 +4172,11 @@
           "Wikipedia: Mack Brewery",
           "Official Website"
         ],
-        "maps": "https://maps.google.com/?q=69.6445,18.9515"
+        "maps": "https://maps.google.com/?q=69.6445,18.9515",
+        "nameES": "Ølhallen",
+        "shortES": "El pub más antiguo de la ciudad, famoso por su amplia selección de cervezas artesanales.",
+        "descES": "Ølhallen es el pub más antiguo de Tromsø, abierto en 1928 y históricamente vinculado a Mack, que durante mucho tiempo fue la cervecería más al norte del mundo. El local ofrece un ambiente auténtico y cuenta con una selección de más de 70 cervezas noruegas de barril. En el pasado era punto de encuentro para cazadores, pescadores y exploradores polares que regresaban de sus expediciones. Hoy es una parada imprescindible para saborear la cultura local.",
+        "tipsES": "Perfecto para una pausa por la tarde; cierra relativamente pronto por la noche."
       },
       {
         "tier": 1,
@@ -3497,7 +4196,11 @@
           "Wikipedia: Polaria",
           "Official Website"
         ],
-        "maps": "https://maps.google.com/?q=69.6433,18.95"
+        "maps": "https://maps.google.com/?q=69.6433,18.95",
+        "nameES": "Polaria",
+        "shortES": "Un acuario ártico de diseño único dedicado a la fauna y al entorno del norte.",
+        "descES": "Polaria es un acuario y centro educativo dedicado al entorno ártico, situado en un edificio de arquitectura única que recuerda bloques de hielo empujados a la orilla. Ofrece exposiciones interactivas sobre la fauna del norte y el cambio climático. La atracción principal es la piscina de las focas barbudas, donde los visitantes pueden asistir a su adiestramiento y alimentación. Es un lugar ideal para comprender el delicado ecosistema de las regiones polares.",
+        "tipsES": "Consulta los horarios para asistir a la alimentación de las focas. Entrada de pago."
       },
       {
         "tier": 2,
@@ -3517,9 +4220,16 @@
           "Wikipedia: Fjellheisen",
           "Official Website"
         ],
-        "maps": "https://maps.google.com/?q=69.6411,18.9855"
+        "maps": "https://maps.google.com/?q=69.6411,18.9855",
+        "nameES": "Fjellheisen",
+        "shortES": "Teleférico que ofrece vistas impresionantes de la ciudad y de los fiordos circundantes.",
+        "descES": "El teleférico Fjellheisen lleva a los visitantes a la montaña Storsteinen, a 421 metros sobre el nivel del mar, ofreciendo una vista panorámica espectacular de Tromsø, las islas circundantes y los fiordos. Es uno de los mejores lugares para contemplar el sol de medianoche en verano o la aurora boreal en invierno. En la cima hay un restaurante donde calentarse mientras se disfruta del paisaje. El ascenso dura solo unos minutos pero ofrece sensaciones inolvidables.",
+        "tipsES": "Vístete por capas, en la cima suele haber mucho viento."
       }
-    ]
+    ],
+    "cityES": "Tromsø",
+    "countryES": "Norvegia",
+    "introES": "Descubre el encanto ártico de Tromsø con este tour a pie compacto por su centro histórico y a través del fiordo. Desde las catedrales de madera y la historia polar hasta la icónica Cattedrale dell'Artico, este recorrido resalta lo mejor de \"Parigi del Nord\"."
   },
   "trondheim": {
     "city": "Trondheim",
@@ -3553,7 +4263,11 @@
           "Wikipedia \"Nidaros Cathedral\"",
           "nidarosdomen.no"
         ],
-        "maps": "https://maps.google.com/?q=63.42692,10.39611"
+        "maps": "https://maps.google.com/?q=63.42692,10.39611",
+        "nameES": "Cattedrale di Nidaros",
+        "shortES": "La catedral gótica más al norte del mundo.",
+        "descES": "La Cattedrale di Nidaros es el santuario nacional de Norvegia, construida sobre la tumba de Sant'Olav, el rey vikingo que introdujo el cristianismo en el país y murió en la batalla di Stiklestad en 1030. Las obras de construcción comenzaron en 1070 y finalizaron alrededor de 1300, aunque el edificio ha sufrido numerosos incendios y grandes restauraciones a lo largo de los siglos siguientes. Es la catedral gótica más septentrional del mundo y un importantísimo lugar de peregrinación en el Norte de Europa. La magnífica fachada occidental está ricamente decorada con decenas de estatuas de santos, reyes y figuras bíblicas. En el interior, las espectaculares vidrieras de colores crean una atmósfera mística y solemne. Es una obra maestra arquitectónica absolutamente imprescindible y representa el lugar tradicional para la consagración de los reyes noruegos.",
+        "tipsES": "Entrada de pago. Consulta los horarios en línea, varían según la temporada."
       },
       {
         "tier": 1,
@@ -3573,7 +4287,11 @@
           "Wikipedia \"Archbishop's Palace, Trondheim\"",
           "nidarosdomen.no"
         ],
-        "maps": "https://maps.google.com/?q=63.42611,10.39556"
+        "maps": "https://maps.google.com/?q=63.42611,10.39556",
+        "nameES": "Palazzo dell'Arcivescovo",
+        "shortES": "Antigua residencia arzobispal y museo histórico.",
+        "descES": "Situado justo al lado de la Cattedrale di Nidaros, el Palazzo dell'Arcivescovo es uno de los edificios de piedra más antiguos y mejor conservados de toda Escandinavia, que data de la segunda mitad del siglo XII. Hasta la Reforma protestante de 1537, este imponente conjunto fue la sede de los arzobispos noruegos y el centro del poder religioso. Hoy alberga un excelente museo que exhibe esculturas originales de la catedral y fascinantes hallazgos arqueológicos encontrados en el lugar. El patio interior es muy sugestivo y a menudo acoge conciertos y eventos culturales durante el verano. En el conjunto también se encuentran las valiosas joyas de la Corona noruega y el Museo de la Resistencia, ofreciendo a los visitantes una inmersión completa y apasionante en la historia religiosa, política y militar de la región.",
+        "tipsES": "La entrada combinada con la catedral es conveniente. Cerrado los lunes en invierno."
       },
       {
         "tier": 1,
@@ -3593,7 +4311,11 @@
           "Wikipedia \"Old Town Bridge, Trondheim\"",
           "visittrondheim.no"
         ],
-        "maps": "https://maps.google.com/?q=63.42833,10.40139"
+        "maps": "https://maps.google.com/?q=63.42833,10.40139",
+        "nameES": "Ponte della Città Vecchia",
+        "shortES": "Histórico puente rojo conocido como \"Puerta de la Felicidad\".",
+        "descES": "El Ponte della Città Vecchia, o Gamle Bybro, fue construido originalmente en 1681 justo después del devastador gran incendio de Trondheim, como parte integrante de la reconstrucción de la ciudad diseñada por el urbanista Johan Caspar von Cicignon. La actual estructura de madera, caracterizada por los pintorescos portales rojos tallados, data de 1861. Conocido cariñosamente por los residentes como \"Lykkens portal\" (Puerta de la Felicidad), ofrece una de las vistas más icónicas y fotografiadas de todo Trondheim: las coloridas y históricas casas de madera (bryggene) construidas sobre pilotes a lo largo de las orillas del río Nidelva. Es un lugar absolutamente perfecto para un paseo romántico y para admirar el sugerente paisaje urbano que se refleja suavemente en el agua, especialmente durante las mágicas luces del atardecer.",
+        "tipsES": "Acceso gratuito y abierto las 24 horas. Ideal para fotos al atardecer."
       },
       {
         "tier": 2,
@@ -3601,8 +4323,8 @@
         "name": "Bakklandet",
         "nameEN": "Bakklandet",
         "cat": "cibo",
-        "lat": 63.42917,
-        "lng": 10.40306,
+        "lat": 63.428019,
+        "lng": 10.402864,
         "short": "Quartiere pittoresco con case in legno e caffè.",
         "shortEN": "Picturesque neighborhood with wooden houses and cafes.",
         "desc": "Attraversando il Gamle Bybro si entra direttamente a Bakklandet, il quartiere storico più affascinante e vivace di Trondheim. Storicamente era la zona della classe operaia, sviluppatasi nel XVII secolo con piccole e modeste case di legno colorate. Negli anni '60 questo gioiello rischiò di essere completamente demolito per far posto a un'autostrada a quattro corsie, ma fu fortunatamente salvato dalle forti proteste dei cittadini. Oggi le sue pittoresche strade acciottolate sono fiancheggiate da accoglienti caffè, ottimi ristoranti, boutique indipendenti e piccole gallerie d'arte. È il luogo ideale per fermarsi a gustare un caffè caldo e un dolce tradizionale norvegese, immergendosi in un'atmosfera bohémien, sicura e rilassata, che risulta perfetta anche per le famiglie con bambini al seguito.",
@@ -3613,7 +4335,11 @@
           "Wikipedia \"Bakklandet\"",
           "visittrondheim.no"
         ],
-        "maps": "https://maps.google.com/?q=63.42917,10.40306"
+        "maps": "https://maps.google.com/?q=63.42917,10.40306",
+        "nameES": "Bakklandet",
+        "shortES": "Barrio pintoresco con casas de madera y cafés.",
+        "descES": "Al cruzar el Gamle Bybro se entra directamente en Bakklandet, el barrio histórico más encantador y animado de Trondheim. Históricamente fue la zona de la clase trabajadora, desarrollada en el siglo XVII con pequeñas y modestas casas de madera de colores. En los años 60, esta joya estuvo a punto de ser completamente demolida para dar paso a una autovía de cuatro carriles, pero afortunadamente fue salvada por las fuertes protestas de los ciudadanos. Hoy sus pintorescas calles empedradas están flanqueadas por acogedores cafés, excelentes restaurantes, boutiques independientes y pequeñas galerías de arte. Es el lugar ideal para detenerse a tomar un café caliente y un dulce tradicional noruego, sumergiéndose en una atmósfera bohemia, segura y relajada, perfecta también para familias con niños.",
+        "tipsES": "Prueba un \"kanelbolle\" (rollo de canela) en uno de los cafés locales."
       },
       {
         "tier": 1,
@@ -3633,7 +4359,11 @@
           "Wikipedia \"Kristiansten Fortress\"",
           "forsvarsbygg.no"
         ],
-        "maps": "https://maps.google.com/?q=63.42694,10.41056"
+        "maps": "https://maps.google.com/?q=63.42694,10.41056",
+        "nameES": "Fortezza di Kristiansten",
+        "shortES": "Fortaleza histórica con vistas panorámicas sobre la ciudad.",
+        "descES": "La Fortezza di Kristiansten fue construida estratégicamente entre 1681 y 1685 en una colina al este de la ciudad, con el propósito de proteger Trondheim de ataques enemigos. Desempeñó un papel histórico crucial en 1718, cuando logró rechazar con éxito a las fuerzas suecas durante la Gran Guerra del Norte. Hoy esta imponente estructura militar se ha convertido en una zona recreativa muy querida por los locales y perfecta para las familias, ofreciendo amplias áreas verdes cuidadas donde los niños pueden correr y jugar libremente. Los cañones históricos bien conservados y los gruesos muros defensivos blancos fascinan a los visitantes de todas las edades. Desde la fortaleza se disfruta de una vista panorámica espectacular de toda la ciudad, del fiordo brillante y de las montañas circundantes.",
+        "tipsES": "El acceso al recinto es gratuito. Hay una subida empinada para llegar, pero la vista lo compensa."
       },
       {
         "id": "trd-6",
@@ -3652,7 +4382,11 @@
           "Wikipedia: Stiftsgården",
           "Official Site"
         ],
-        "maps": "https://maps.google.com/?q=63.4316,10.3942"
+        "maps": "https://maps.google.com/?q=63.4316,10.3942",
+        "nameES": "Stiftsgården",
+        "shortES": "La majestuosa residencia real de madera de Trondheim.",
+        "descES": "Stiftsgården es la residencia real oficial en Trondheim y uno de los edificios de madera más grandes del Norte de Europa. Construido en 1778 en estilo neoclásico, cuenta con más de 140 habitaciones con interiores ricamente decorados. Durante el verano, los visitantes pueden participar en visitas guiadas para explorar los elegantes salones históricos. Es un símbolo importante de la historia noruega y de la monarquía.",
+        "tipsES": "Abierto para visitas guiadas en verano; los jardines están siempre accesibles."
       },
       {
         "id": "trd-7",
@@ -3670,7 +4404,11 @@
         "src": [
           "Wikipedia: Torvet i Trondheim"
         ],
-        "maps": "https://maps.google.com/?q=63.4305,10.3951"
+        "maps": "https://maps.google.com/?q=63.4305,10.3951",
+        "nameES": "Torvet",
+        "shortES": "La plaza central de la ciudad con la estatua de su fundador.",
+        "descES": "Torvet es la plaza principal de Trondheim, diseñada en el siglo XVII por el general Cicignon. En el centro se alza la imponente estatua de Olav Tryggvason, el fundador de la ciudad, que domina el espacio circundante. La plaza es un animado punto de encuentro, rodeada de cafés, tiendas y un mercado al aire libre. Recientemente renovada, es el corazón de la vida de la ciudad.",
+        "tipsES": "Excelente lugar para relajarse y observar la vida local."
       },
       {
         "id": "trd-8",
@@ -3688,7 +4426,11 @@
         "src": [
           "Wikipedia: Vår Frue Church"
         ],
-        "maps": "https://maps.google.com/?q=63.43,10.3975"
+        "maps": "https://maps.google.com/?q=63.43,10.3975",
+        "nameES": "Vår Frue Kirke",
+        "shortES": "Una antigua iglesia medieval conocida por su ambiente acogedor.",
+        "descES": "La Iglesia de Nuestra Señora es la tercera iglesia medieval más grande de Noruega, con orígenes que se remontan al 1200. Tras varios incendios, fue reconstruida y ampliada a lo largo de los siglos, mezclando estilos románico y gótico. Hoy se la conoce como 'iglesia abierta', ofreciendo un refugio acogedor y un lugar de reflexión para todos. El interior es sencillo pero profundamente sugestivo.",
+        "tipsES": "Entrada gratuita; a menudo ofrece té y café a los visitantes."
       },
       {
         "id": "trd-9",
@@ -3707,7 +4449,11 @@
           "Trondheim Tourism",
           "Wikipedia: Solsiden"
         ],
-        "maps": "https://maps.google.com/?q=63.4344,10.4111"
+        "maps": "https://maps.google.com/?q=63.4344,10.4111",
+        "nameES": "Solsiden",
+        "shortES": "Un animado barrio junto al río, perfecto para cenar y relajarse.",
+        "descES": "Solsiden, que significa 'el lado soleado', es un antiguo astillero transformado en uno de los barrios más animados de Trondheim. La zona está llena de restaurantes, bares y cafeterías situados en viejos edificios industriales de ladrillo a lo largo del río Nidelva. Es el lugar ideal para disfrutar de una comida al aire libre durante las largas noches de verano. La atmósfera une el encanto histórico con el diseño moderno.",
+        "tipsES": "Muy concurrido los fines de semana y en las tardes soleadas."
       },
       {
         "tier": 1,
@@ -3715,8 +4461,8 @@
         "name": "Rockheim",
         "nameEN": "Rockheim",
         "cat": "cultura",
-        "lat": 63.4369,
-        "lng": 10.4011,
+        "lat": 63.438716,
+        "lng": 10.401754,
         "short": "Il museo interattivo dedicato alla musica pop e rock norvegese.",
         "shortEN": "The interactive museum dedicated to Norwegian pop and rock music.",
         "desc": "Rockheim è il museo nazionale norvegese della musica popolare, situato in un edificio iconico con una 'scatola' illuminata sul tetto. Offre mostre interattive che ripercorrono la storia della musica norvegese dagli anni '50 a oggi. I visitatori possono suonare strumenti, mixare brani e immergersi nella cultura pop. È un'esperienza coinvolgente e divertente per tutte le età.",
@@ -3727,7 +4473,11 @@
           "Official Site",
           "Wikipedia: Rockheim"
         ],
-        "maps": "https://maps.google.com/?q=63.4369,10.4011"
+        "maps": "https://maps.google.com/?q=63.4369,10.4011",
+        "nameES": "Rockheim",
+        "shortES": "El museo interactivo dedicado a la música pop y rock noruega.",
+        "descES": "Rockheim es el museo nacional noruego de la música popular, situado en un edificio icónico con una 'caja' iluminada en la azotea. Ofrece exposiciones interactivas que repasan la historia de la música noruega desde los años 50 hasta hoy. Los visitantes pueden tocar instrumentos, mezclar canciones y sumergirse en la cultura pop. Es una experiencia atractiva y divertida para todas las edades.",
+        "tipsES": "Compruebe los horarios de apertura; el restaurante en la última planta ofrece una excelente vista."
       },
       {
         "id": "trd-11",
@@ -3746,7 +4496,11 @@
           "Official Site",
           "Wikipedia: NTNU University Museum"
         ],
-        "maps": "https://maps.google.com/?q=63.4286,10.3872"
+        "maps": "https://maps.google.com/?q=63.4286,10.3872",
+        "nameES": "NTNU University Museum",
+        "shortES": "Un museo fascinante que explora la naturaleza y la historia vikinga.",
+        "descES": "El Museo Universitario NTNU es uno de los principales museos de historia natural y cultural de Noruega. Sus colecciones incluyen restos arqueológicos de la era vikinga, exposiciones sobre la fauna nórdica y fascinantes muestras científicas. Es un lugar excelente para comprender la historia natural de la región de Trøndelag. Las exposiciones están bien cuidadas y son muy instructivas.",
+        "tipsES": "Ideal para familias; entrada de pago."
       },
       {
         "id": "trd-12",
@@ -3764,7 +4518,11 @@
         "src": [
           "Wikipedia: Ravnkloa"
         ],
-        "maps": "https://maps.google.com/?q=63.4333,10.3928"
+        "maps": "https://maps.google.com/?q=63.4333,10.3928",
+        "nameES": "Ravnkloa",
+        "shortES": "El tradicional mercado de pescado con vistas al fiordo.",
+        "descES": "Ravnkloa es la plaza pública más antigua de Trondheim y el tradicional mercado del pescado de la ciudad. Situada al final de Munkegata, ofrece una vista pintoresca del fiordo y de la isla de Munkholmen. Aquí se pueden comprar mariscos frescos o degustar un bocadillo de gambas en un ambiente auténtico. En verano, desde aquí salen los ferries hacia Munkholmen.",
+        "tipsES": "Prueben los mariscos locales en la pescadería histórica."
       },
       {
         "id": "trd-13",
@@ -3782,15 +4540,19 @@
         "src": [
           "Wikipedia: Skansen Bridge"
         ],
-        "maps": "https://maps.google.com/?q=63.4311,10.3808"
+        "maps": "https://maps.google.com/?q=63.4311,10.3808",
+        "nameES": "Skansen Bridge",
+        "shortES": "Un puente ferroviario histórico diseñado por el creador del Golden Gate.",
+        "descES": "El puente de Skansen es un espectacular puente ferroviario basculante, diseñado por Joseph Strauss, el mismo ingeniero del Golden Gate Bridge. Construido en 1918, es el único puente de su tipo en Noruega y sigue en funcionamiento. Su estructura de acero se recorta contra el cielo, ofreciendo una excelente oportunidad fotográfica. Es una obra maestra de la ingeniería industrial.",
+        "tipsES": "Particularmente sugerente al atardecer o cuando se eleva para dejar pasar a los barcos."
       },
       {
         "id": "trd-14",
         "name": "Trondhjems Sjøfartsmuseum",
         "nameEN": "Trondhjems Sjøfartsmuseum",
         "cat": "cultura",
-        "lat": 63.4336,
-        "lng": 10.4022,
+        "lat": 63.434532,
+        "lng": 10.405261,
         "short": "Un museo che esplora la profonda eredità marittima di Trondheim.",
         "shortEN": "A museum exploring Trondheim's deep maritime heritage.",
         "desc": "Il Museo Marittimo di Trondheim è ospitato in un ex edificio carcerario del XVIII secolo. Le sue esposizioni raccontano la ricca storia marittima della città, dalle antiche navi a vela fino all'era del vapore e della navigazione moderna. I visitatori possono ammirare modelli di navi, strumenti di navigazione e affascinanti fotografie storiche. È una visita istruttiva che celebra il legame vitale della Norvegia con il mare.",
@@ -3801,9 +4563,16 @@
           "Official Site",
           "Wikipedia: Trondhjems Sjøfartsmuseum"
         ],
-        "maps": "https://maps.google.com/?q=63.4336,10.4022"
+        "maps": "https://maps.google.com/?q=63.4336,10.4022",
+        "nameES": "Trondhjems Sjøfartsmuseum",
+        "shortES": "Un museo que explora la profunda herencia marítima de Trondheim.",
+        "descES": "El Museo Marittimo di Trondheim está alojado en un antiguo edificio carcelario del siglo XVIII. Sus exposiciones cuentan la rica historia marítima de la ciudad, desde los antiguos veleros hasta la era del vapor y la navegación moderna. Los visitantes pueden admirar maquetas de barcos, instrumentos de navegación y fascinantes fotografías históricas. Es una visita didáctica que celebra el vínculo vital de Norvegia con el mar.",
+        "tipsES": "Situado junto al río, perfecto para un paseo después de la visita."
       }
-    ]
+    ],
+    "cityES": "Trondheim",
+    "countryES": "Norvegia",
+    "introES": "La antigua capital vikinga de Norvegia, famosa por su majestuosa catedral gótica y las coloridas casas de madera a lo largo del río. Una mezcla perfecta de historia, cultura y ambiente acogedor."
   },
   "stavanger": {
     "city": "Stavanger",
@@ -3825,8 +4594,8 @@
         "name": "Gamle Stavanger",
         "nameEN": "Old Stavanger",
         "cat": "cultura",
-        "lat": 58.97033,
-        "lng": 5.72583,
+        "lat": 58.97278,
+        "lng": 5.72528,
         "short": "Passeggia tra le storiche case in legno bianco del XVIII secolo.",
         "shortEN": "Stroll among the historic white wooden houses from the 18th century.",
         "desc": "Gamle Stavanger, o Vecchia Stavanger, è un'area storica situata sul lato ovest del porto di Vågen. Comprende 173 case in legno bianco costruite tra la fine del XVIII e l'inizio del XIX secolo. È considerata l'insediamento di case in legno meglio conservato d'Europa. L'area è in gran parte residenziale, ma ospita anche alcune gallerie e musei. L'ingresso è gratuito e l'area è sempre accessibile.",
@@ -3837,7 +4606,10 @@
           "Wikipedia: Stavanger",
           "Visit Norway: Old Stavanger"
         ],
-        "maps": "https://maps.google.com/?q=58.97033,5.72583"
+        "maps": "https://maps.google.com/?q=58.97033,5.72583",
+        "nameES": "Gamle Stavanger",
+        "shortES": "Pasea entre las históricas casas de madera blanca del siglo XVIII.",
+        "descES": "Gamle Stavanger, o Vecchia Stavanger, es un área histórica situada en el lado oeste del puerto de Vågen. Comprende 173 casas de madera blanca construidas entre finales del siglo XVIII y principios del siglo XIX. Se considera el asentamiento de casas de madera mejor conservado de Europa. La zona es en gran parte residencial, pero también alberga algunas galerías y museos. La entrada es gratuita y el área está siempre accesible."
       },
       {
         "tier": 1,
@@ -3857,7 +4629,10 @@
           "Wikipedia: Stavanger Cathedral",
           "Visit Norway: Stavanger Cathedral"
         ],
-        "maps": "https://maps.google.com/?q=58.96978,5.73316"
+        "maps": "https://maps.google.com/?q=58.96978,5.73316",
+        "nameES": "Cattedrale di Stavanger",
+        "shortES": "Admira la cattedrale más antigua de Norvegia, que data de 1125.",
+        "descES": "La Cattedrale di Stavanger es la catedral más antigua de Norvegia, construida alrededor de 1125. Se encuentra en el centro de la ciudad, cerca del puerto y del lago Breiavatnet. La arquitectura original era de estilo románico, pero posteriormente se añadieron elementos góticos. Es la única catedral noruega que ha mantenido su arquitectura original desde la Edad Media. La entrada suele ser de pago para los turistas, con horarios que varían según la temporada."
       },
       {
         "id": "sta-3",
@@ -3876,7 +4651,10 @@
           "Wikipedia: Breiavatnet",
           "TripAdvisor: Breiavatnet"
         ],
-        "maps": "https://maps.google.com/?q=58.96806,5.733"
+        "maps": "https://maps.google.com/?q=58.96806,5.733",
+        "nameES": "Breiavatnet",
+        "shortES": "Relájate en este pintoresco lago situado en el corazón de la ciudad.",
+        "descES": "Breiavatnet es un pequeño lago natural situado en pleno centro de Stavanger, adyacente a la Cattedrale y a la estación de tren. Es un lugar popular para paseos relajantes y para observar los cisnes y los patos que lo habitan. El parque circundante ofrece bancos y zonas verdes ideales para una breve pausa. Es un oasis de tranquilidad en medio del bullicio de la ciudad. El acceso es libre y está abierto las 24 horas."
       },
       {
         "tier": 1,
@@ -3884,8 +4662,8 @@
         "name": "Øvre Holmegate",
         "nameEN": "Øvre Holmegate",
         "cat": "cultura",
-        "lat": 58.97271,
-        "lng": 5.73125,
+        "lat": 58.97272,
+        "lng": 5.73352,
         "short": "Esplora la strada più colorata di Stavanger, ricca di caffè e boutique.",
         "shortEN": "Explore Stavanger's most colorful street, full of cafes and boutiques.",
         "desc": "Øvre Holmegate, conosciuta anche come Fargegata (la strada dei colori), è una delle strade più vivaci e fotografate di Stavanger. Tutti gli edifici lungo la strada sono dipinti con colori vivaci e accesi, creando un'atmosfera unica e allegra. La strada è pedonale e ospita numerosi caffè, bar, boutique e negozi di artigianato. È il luogo perfetto per fare shopping o gustare un caffè all'aperto. L'accesso alla strada è libero in qualsiasi momento.",
@@ -3896,7 +4674,10 @@
           "Wikidata: Øvre Holmegate",
           "Locationscout: Øvre Holmegate"
         ],
-        "maps": "https://maps.google.com/?q=58.97271,5.73125"
+        "maps": "https://maps.google.com/?q=58.97271,5.73125",
+        "nameES": "Øvre Holmegate",
+        "shortES": "Explora la calle más colorida de Stavanger, repleta de cafés y boutiques.",
+        "descES": "Øvre Holmegate, conocida también como Fargegata (la calle de los colores), es una de las calles más animadas y fotografiadas de Stavanger. Todos los edificios a lo largo de la calle están pintados con colores vivos y llamativos, creando una atmósfera única y alegre. La calle es peatonal y acoge numerosos cafés, bares, boutiques y tiendas de artesanía. Es el lugar perfecto para ir de compras o disfrutar de un café al aire libre. El acceso a la calle es libre en cualquier momento."
       },
       {
         "tier": 2,
@@ -3916,7 +4697,10 @@
           "Wikipedia: Norwegian Petroleum Museum",
           "Official site: norskolje.museum.no"
         ],
-        "maps": "https://maps.google.com/?q=58.97333,5.73472"
+        "maps": "https://maps.google.com/?q=58.97333,5.73472",
+        "nameES": "Museo Norvegese del Petrolio",
+        "shortES": "Descubre la historia de la industria petrolera noruega en este museo interactivo.",
+        "descES": "El Museo Norvegese del Petrolio (Norsk Oljemuseum) documenta la historia de las actividades petroleras y del gas en Noruega. El edificio en sí es un referente arquitectónico, diseñado para asemejarse a una pequeña plataforma petrolífera vista desde el mar. Las exposiciones interactivas explican cómo se forman el petróleo y el gas, cómo se extraen y su impacto en la sociedad noruega. El museo está abierto todos los días en verano (10-19) y de lunes a sábado (10-16) con domingos (10-18) en invierno. Las entradas cuestan alrededor de 150 NOK para los adultos."
       },
       {
         "id": "sta-6",
@@ -3935,15 +4719,19 @@
           "Wikipedia: Valbergtårnet",
           "Region Stavanger"
         ],
-        "maps": "https://maps.google.com/?q=58.9718,5.7315"
+        "maps": "https://maps.google.com/?q=58.9718,5.7315",
+        "nameES": "Valbergtårnet",
+        "shortES": "Una antigua torre de vigilancia que ofrece vistas panorámicas del centro de Stavanger.",
+        "descES": "La Torre Valberg (Valbergtårnet) es una antigua torre de vigilancia construida en 1853, situada en el punto más alto del centro de la ciudad. Originalmente utilizada por los vigilantes para detectar incendios, hoy alberga un pequeño museo dedicado a su historia. Desde la cima se disfruta de una vista panorámica espectacular sobre la ciudad, el puerto de Vågen y las montañas circundantes. Es un hito emblemático y un lugar perfecto para tomar fotografías.",
+        "tipsES": "El acceso a la torre tiene un coste reducido; consulte los horarios de apertura estacionales."
       },
       {
         "id": "sta-7",
         "name": "Norsk Hermetikkmuseum",
         "nameEN": "Norsk Hermetikkmuseum",
         "cat": "cultura",
-        "lat": 58.9733,
-        "lng": 5.7266,
+        "lat": 58.9724,
+        "lng": 5.72517,
         "short": "Un museo affascinante situato in un'ex fabbrica di conserve di sardine.",
         "shortEN": "A fascinating museum located in a former sardine canning factory.",
         "desc": "Situato nel cuore della Città Vecchia (Gamle Stavanger), questo museo unico celebra l'industria conserviera che ha dominato l'economia della città dal 1890 al 1960. Ospitato in un'autentica fabbrica di conserve, mostra i macchinari originali e il processo di affumicatura e inscatolamento delle sardine. I visitatori possono persino assaggiare le sardine appena affumicate in determinati giorni. È un'immersione affascinante nella storia industriale norvegese.",
@@ -3954,15 +4742,19 @@
           "Museum Stavanger (MUST)",
           "Wikipedia: Norwegian Canning Museum"
         ],
-        "maps": "https://maps.google.com/?q=58.9733,5.7266"
+        "maps": "https://maps.google.com/?q=58.9733,5.7266",
+        "nameES": "Norsk Hermetikkmuseum",
+        "shortES": "Un museo fascinante situado en una antigua fábrica de conservas de sardinas.",
+        "descES": "Situado en el corazón de la Città Vecchia (Gamle Stavanger), este museo único celebra la industria conservera que dominó la economía de la ciudad desde 1890 hasta 1960. Alojado en una auténtica fábrica de conservas, muestra las máquinas originales y el proceso de ahumado y enlatado de las sardinas. Los visitantes incluso pueden probar las sardinas recién ahumadas en determinados días. Es una inmersión fascinante en la historia industrial noruega.",
+        "tipsES": "La entrada suele combinarse con el Museo Marittimo y otros museos de la ciudad."
       },
       {
         "id": "sta-8",
         "name": "Stavanger Maritime Museum",
         "nameEN": "Stavanger Maritime Museum",
         "cat": "cultura",
-        "lat": 58.9715,
-        "lng": 5.7285,
+        "lat": 58.97057,
+        "lng": 5.7287,
         "short": "Museo che esplora la ricca storia marittima e commerciale di Stavanger.",
         "shortEN": "Museum exploring Stavanger's rich maritime and commercial history.",
         "desc": "Il Museo Marittimo di Stavanger è ospitato in magazzini mercantili splendidamente conservati lungo il porto di Vågen, risalenti al XVIII e XIX secolo. Le esposizioni illustrano oltre 200 anni di storia marittima locale, tra cui la costruzione navale, il commercio e la vita dei marinai. Gli interni storici, come l'ufficio del mercante e l'emporio, sono stati accuratamente ricostruiti. È una tappa essenziale per comprendere il profondo legame della città con il mare.",
@@ -3973,7 +4765,11 @@
           "Museum Stavanger (MUST)",
           "Wikipedia: Stavanger Maritime Museum"
         ],
-        "maps": "https://maps.google.com/?q=58.9715,5.7285"
+        "maps": "https://maps.google.com/?q=58.9715,5.7285",
+        "nameES": "Stavanger Maritime Museum",
+        "shortES": "Museo que explora la rica historia marítima y comercial de Stavanger.",
+        "descES": "El Stavanger Maritime Museum está alojado en almacenes mercantiles magníficamente conservados a lo largo del puerto de Vågen, que datan de los siglos XVIII y XIX. Las exposiciones ilustran más de 200 años de historia marítima local, incluida la construcción naval, el comercio y la vida de los marineros. Interiores históricos, como la oficina del mercante y el emporio, han sido cuidadosamente reconstruidos. Es una parada esencial para comprender el profundo vínculo de la ciudad con el mar.",
+        "tipsES": "Situado justo en el puerto, es fácilmente accesible a pie desde el centro."
       },
       {
         "tier": 1,
@@ -3993,15 +4789,19 @@
           "Region Stavanger",
           "Wikipedia: Vågen, Stavanger"
         ],
-        "maps": "https://maps.google.com/?q=58.9725,5.73"
+        "maps": "https://maps.google.com/?q=58.9725,5.73",
+        "nameES": "Vågen",
+        "shortES": "El pintoresco puerto histórico, rodeado de antiguos almacenes de madera y locales animados.",
+        "descES": "Vågen es el corazón histórico y marítimo de Stavanger, una ensenada natural alrededor de la cual se desarrolló la ciudad. Sus muelles, en particular Skagenkaien, están flanqueados por coloridos almacenes de madera que hoy albergan bares, restaurantes y clubes animados. Es el lugar ideal para un paseo relajante, para admirar los barcos amarrados y para disfrutar del ambiente vibrante de la ciudad. Durante el verano, la zona se anima con festivales y eventos al aire libre.",
+        "tipsES": "Perfecto para un paseo vespertino o para cenar con vistas al mar."
       },
       {
         "id": "sta-10",
         "name": "Stavanger Museum",
         "nameEN": "Stavanger Museum",
         "cat": "cultura",
-        "lat": 58.9664,
-        "lng": 5.7328,
+        "lat": 58.96472,
+        "lng": 5.73306,
         "short": "Un grande museo che unisce storia naturale, storia culturale e un museo interattivo per bambini.",
         "shortEN": "A large museum combining natural history, cultural history, and an interactive children's museum.",
         "desc": "Fondato nel 1877, lo Stavanger Museum è una delle istituzioni culturali più antiche della città. L'imponente edificio storico ospita due sezioni principali: il museo di storia naturale, con ampie collezioni zoologiche, e il museo di storia culturale, che esplora lo sviluppo di Stavanger. Una delle attrazioni più amate è il Museo dei Bambini (Norsk Barnemuseum), situato all'interno della stessa struttura, che offre mostre interattive sulla storia dell'infanzia.",
@@ -4012,7 +4812,11 @@
           "Museum Stavanger (MUST)",
           "Wikipedia: Stavanger Museum"
         ],
-        "maps": "https://maps.google.com/?q=58.9664,5.7328"
+        "maps": "https://maps.google.com/?q=58.9664,5.7328",
+        "nameES": "Stavanger Museum",
+        "shortES": "Un gran museo que combina historia natural, historia cultural y un museo interactivo para niños.",
+        "descES": "Fundado en 1877, el Stavanger Museum es una de las instituciones culturales más antiguas de la ciudad. El imponente edificio histórico alberga dos secciones principales: el museo de historia natural, con amplias colecciones zoológicas, y el museo de historia cultural, que explora el desarrollo de Stavanger. Una de las atracciones más queridas es el Museo de los Niños (Norsk Barnemuseum), situado en el mismo edificio, que ofrece exposiciones interactivas sobre la historia de la infancia.",
+        "tipsES": "Ideal para los días de lluvia; la entrada incluye acceso a otros museos de la red MUST."
       },
       {
         "id": "sta-11",
@@ -4031,7 +4835,11 @@
           "Museum Stavanger (MUST)",
           "Wikipedia: Ledaal"
         ],
-        "maps": "https://maps.google.com/?q=58.9669,5.7214"
+        "maps": "https://maps.google.com/?q=58.9669,5.7214",
+        "nameES": "Ledaal",
+        "shortES": "Una elegante villa histórica que sirve como residencia real y museo.",
+        "descES": "Ledaal es una magnífica residencia señorial construida entre 1799 y 1803 para la acaudalada familia de mercantes Kielland. Hoy en día funciona como residencia oficial del Rey de Noruega cuando visita Stavanger y está abierta al público como museo. Los interiores lujosos, amueblados con muebles de época, ofrecen un vistazo a la vida de la alta burguesía noruega del siglo XIX. Los jardines circundantes están espléndidamente cuidados y son perfectos para un paseo tranquilo.",
+        "tipsES": "Se encuentra a poca distancia a pie del centro; consulte los horarios de apertura que varían según la temporada."
       },
       {
         "id": "sta-12",
@@ -4050,9 +4858,16 @@
           "Museum Stavanger (MUST)",
           "Wikipedia: Breidablikk (Stavanger)"
         ],
-        "maps": "https://maps.google.com/?q=58.966,5.721"
+        "maps": "https://maps.google.com/?q=58.966,5.721",
+        "nameES": "Breidablikk",
+        "shortES": "Una villa del siglo XIX perfectamente conservada, con mobiliario original y un precioso jardín.",
+        "descES": "Situada justo enfrente de Ledaal, Breidablikk es una villa excepcionalmente bien conservada, construida en 1881 en estilo suizo para un rico armador. A diferencia de muchas casas históricas, Breidablikk ha conservado casi intacto su mobiliario original, las decoraciones e incluso los objetos personales de la familia. La visita ofrece una experiencia auténtica e íntima de la vida burguesa victoriana en Norvegia. La propiedad incluye también un granero histórico y un frondoso jardín al estilo inglés.",
+        "tipsES": "Es posible comprar una entrada combinada para visitar tanto Breidablikk como la cercana Ledaal."
       }
-    ]
+    ],
+    "cityES": "Stavanger",
+    "countryES": "Norvegia",
+    "introES": "Descubre el encanto de Stavanger con este itinerario a pie de medio día. Desde las históricas casas de madera de Gamle Stavanger hasta el moderno Museo del Petrolio, explorarás el vibrante corazón de la ciudad."
   },
   "kristiansand": {
     "city": "Kristiansand",
@@ -4073,8 +4888,8 @@
         "name": "Kilden teater og konserthus",
         "nameEN": "Kilden Performing Arts Centre",
         "cat": "cultura",
-        "lat": 58.14083,
-        "lng": 7.99583,
+        "lat": 58.139215,
+        "lng": 7.99709,
         "short": "Un capolavoro di architettura moderna sul lungomare.",
         "shortEN": "A masterpiece of modern architecture on the waterfront.",
         "desc": "Il Kilden Performing Arts Centre è un punto di riferimento culturale inaugurato nel 2012. La sua iconica facciata in legno ondulato si affaccia sul mare, ospitando teatri e sale da concerto. È il secondo edificio culturale più grande della Norvegia. L'ingresso alle aree pubbliche è gratuito, mentre i biglietti per gli spettacoli variano.",
@@ -4085,7 +4900,10 @@
           "Wikipedia: Kilden Performing Arts Centre",
           "Official site kilden.com"
         ],
-        "maps": "https://maps.google.com/?q=58.14083,7.99583"
+        "maps": "https://maps.google.com/?q=58.14083,7.99583",
+        "nameES": "Kilden teater og konserthus",
+        "shortES": "Una obra maestra de la arquitectura moderna en el paseo marítimo.",
+        "descES": "El Kilden Performing Arts Centre es un referente cultural inaugurado en 2012. Su icónica fachada de madera ondulada da al mar, albergando teatros y salas de conciertos. Es el segundo edificio cultural más grande de Norvegia. La entrada a las zonas públicas es gratuita, mientras que las entradas para los espectáculos varían."
       },
       {
         "tier": 1,
@@ -4093,8 +4911,8 @@
         "name": "Fiskebrygga",
         "nameEN": "Fiskebrygga",
         "cat": "cibo",
-        "lat": 58.14188,
-        "lng": 7.99524,
+        "lat": 58.140845,
+        "lng": 7.995103,
         "short": "Il vivace mercato del pesce e zona di ristorazione.",
         "shortEN": "The lively fish market and dining area.",
         "desc": "Fiskebrygga, l'antico molo del pesce, è stato riqualificato in una vivace area con ristoranti e gelaterie. Qui puoi vedere pesci e crostacei vivi nelle vasche del mercato del pesce. È il luogo ideale per assaggiare specialità di mare locali. I ristoranti sono aperti tutti i giorni, con orari prolungati in estate.",
@@ -4105,7 +4923,10 @@
           "Wikipedia: Fiskebrygga, Kristiansand",
           "Visit Norway: Fiskebrygga"
         ],
-        "maps": "https://maps.google.com/?q=58.14188,7.99524"
+        "maps": "https://maps.google.com/?q=58.14188,7.99524",
+        "nameES": "Fiskebrygga",
+        "shortES": "El animado mercado de pescado y área de restauración.",
+        "descES": "Fiskebrygga, el antiguo muelle pesquero, ha sido remodelado en una animada zona con restaurantes y heladerías. Aquí puedes ver peces y crustáceos vivos en los tanques del mercado del pescado. Es el lugar ideal para probar especialidades marinas locales. Los restaurantes están abiertos todos los días, con horarios ampliados en verano."
       },
       {
         "tier": 1,
@@ -4125,7 +4946,10 @@
           "Wikipedia: Christiansholm Fortress",
           "Visit Norway: Christiansholm Fortress"
         ],
-        "maps": "https://maps.google.com/?q=58.14422,8.00291"
+        "maps": "https://maps.google.com/?q=58.14422,8.00291",
+        "nameES": "Christiansholm Festning",
+        "shortES": "Una fortaleza del siglo XVII que protegía el puerto.",
+        "descES": "Construida en 1672 por orden del rey Federico III, esta fortaleza costera defendía la ciudad. Pasea por los bastiones para admirar los antiguos cañones y la vista al mar. Se encuentra a lo largo del paseo marítimo, cerca de la playa de la ciudad. El acceso a los jardines y a los bastiones es gratuito y está abierto al público."
       },
       {
         "id": "kri-4",
@@ -4144,7 +4968,10 @@
           "Wikipedia: Kristiansand Cathedral",
           "Visit Norway: Kristiansand Cathedral"
         ],
-        "maps": "https://maps.google.com/?q=58.14611,7.99462"
+        "maps": "https://maps.google.com/?q=58.14611,7.99462",
+        "nameES": "Kristiansand Domkirke",
+        "shortES": "Una de las catedrales neogóticas más grandes de Norvegia.",
+        "descES": "Completada en 1885, la Catedral de Kristiansand domina el centro de la ciudad. Es un imponente edificio neogótico con una torre alta 70 metri. La iglesia puede albergar aproximadamente a 1.000 persone y es la iglesia principal de la diócesis. La entrada es gratuita, con horarios de apertura regulares durante el día."
       },
       {
         "tier": 1,
@@ -4164,7 +4991,10 @@
           "Visit Norway: Posebyen",
           "Wikipedia: Kristiansand"
         ],
-        "maps": "https://maps.google.com/?q=58.14833,7.99833"
+        "maps": "https://maps.google.com/?q=58.14833,7.99833",
+        "nameES": "Posebyen",
+        "shortES": "El encantador casco antiguo con casas de madera blancas.",
+        "descES": "Posebyen es el barrio más antiguo de Kristiansand y la única parte que sobrevivió al gran incendio de 1892. Alberga una de las mayores colecciones de antiguas casas de madera blanca del Nord Europa. Pasear por estas calles idílicas ofrece un viaje al pasado. La zona es residencial y se puede explorar libremente a pie."
       },
       {
         "id": "kri-6",
@@ -4183,15 +5013,19 @@
           "Visit Norway",
           "Wikipedia: Torvet i Kristiansand"
         ],
-        "maps": "https://maps.google.com/?q=58.1455,7.9955"
+        "maps": "https://maps.google.com/?q=58.1455,7.9955",
+        "nameES": "Torvet",
+        "shortES": "La animada plaza central de Kristiansand, rodeada de edificios históricos y cafeterías.",
+        "descES": "Torvet es la plaza principal y el corazón latente de Kristiansand, situada en el centro del entramado urbano conocido como Kvadraturen. Rodeada de edificios históricos, entre ellos el Ayuntamiento y la Catedral, la plaza es un animado punto de encuentro. Durante el verano acoge un mercado al aire libre donde se pueden comprar productos locales, flores y artesanía. Es también el lugar ideal para sentarse en uno de los muchos cafés al aire libre y observar la vida de la ciudad.",
+        "tipsES": "Visita la plaza durante los días de mercado para una experiencia más auténtica."
       },
       {
         "id": "kri-7",
         "name": "Bystranda",
         "nameEN": "Bystranda",
         "cat": "natura",
-        "lat": 58.1448,
-        "lng": 8.0065,
+        "lat": 58.145992,
+        "lng": 8.007201,
         "short": "Una bellissima spiaggia sabbiosa cittadina con Bandiera Blu, perfetta per rilassarsi.",
         "shortEN": "A beautiful Blue Flag sandy city beach, perfect for relaxing.",
         "desc": "Bystranda è la spiaggia cittadina di Kristiansand, situata a pochi passi dal centro storico. Questa spiaggia sabbiosa è insignita della Bandiera Blu, garantendo acque pulite e servizi eccellenti per i visitatori. È circondata da un piacevole lungomare, palme che le conferiscono un'atmosfera esotica e sculture all'aperto. Durante l'estate, è un luogo vivace dove locali e turisti si rilassano, nuotano e si godono il sole.",
@@ -4202,7 +5036,11 @@
           "Visit Norway: Bystranda",
           "Wikipedia: Bystranda"
         ],
-        "maps": "https://maps.google.com/?q=58.1448,8.0065"
+        "maps": "https://maps.google.com/?q=58.1448,8.0065",
+        "nameES": "Bystranda",
+        "shortES": "Una hermosa playa urbana de arena con Bandiera Blu, perfecta para relajarse.",
+        "descES": "Bystranda es la playa urbana de Kristiansand, situada a pocos pasos del casco antiguo. Esta playa de arena está galardonada con la Bandiera Blu, lo que garantiza aguas limpias y servicios excelentes para los visitantes. Está rodeada por un agradable paseo marítimo, palmeras que le dan un ambiente exótico y esculturas al aire libre. Durante el verano, es un lugar animado donde locales y turistas se relajan, nadan y disfrutan del sol.",
+        "tipsES": "Muy concurrida en verano; hay baños públicos y duchas disponibles."
       },
       {
         "tier": 2,
@@ -4210,8 +5048,8 @@
         "name": "Kunstsilo",
         "nameEN": "Kunstsilo",
         "cat": "cultura",
-        "lat": 58.13962,
-        "lng": 7.99724,
+        "lat": 58.138279,
+        "lng": 7.997177,
         "short": "Un museo d'arte innovativo ospitato in un ex silo per il grano, con un'incredibile collezione di arte nordica.",
         "shortEN": "An innovative art museum housed in a former grain silo, featuring an incredible collection of Nordic art.",
         "desc": "Il Kunstsilo è un museo d'arte all'avanguardia situato in un ex silo per il grano ristrutturato sull'isola di Odderøya. Inaugurato di recente, ospita la vasta collezione Tangen di arte modernista nordica, oltre a mostre temporanee di arte contemporanea. L'architettura stessa è un'attrazione, combinando il patrimonio industriale con il design moderno. I visitatori possono godere di viste panoramiche sulla città e sull'arcipelago dal tetto dell'edificio.",
@@ -4222,15 +5060,19 @@
           "Wikipedia: Kunstsilo",
           "Official Website"
         ],
-        "maps": "https://maps.google.com/?q=58.13962,7.99724"
+        "maps": "https://maps.google.com/?q=58.13962,7.99724",
+        "nameES": "Kunstsilo",
+        "shortES": "Un museo de arte innovador alojado en un antiguo silo de grano, con una increíble colección de arte nórdico.",
+        "descES": "El Kunstsilo es un museo de arte vanguardista situado en un antiguo silo de grano restaurado en la isla de Odderøya. Inaugurado recientemente, alberga la extensa colección Tangen de arte modernista nórdico, además de exposiciones temporales de arte contemporáneo. La propia arquitectura es una atracción, combinando el patrimonio industrial con el diseño moderno. Los visitantes pueden disfrutar de vistas panorámicas de la ciudad y del archipiélago desde la azotea del edificio.",
+        "tipsES": "Consulta los horarios de apertura en línea; el bar en la azotea ofrece magníficas vistas."
       },
       {
         "id": "kri-9",
         "name": "Odderøya",
         "nameEN": "Odderøya",
         "cat": "natura",
-        "lat": 58.1355,
-        "lng": 7.9986,
+        "lat": 58.135798,
+        "lng": 8.002974,
         "short": "Un'isola pittoresca vicino al centro, ideale per passeggiate nella natura e per esplorare la storia militare.",
         "shortEN": "A picturesque island near the center, ideal for nature walks and exploring military history.",
         "desc": "Odderøya è un'isola idilliaca collegata al centro della città da un ponte, offrendo una fuga perfetta nella natura. Un tempo base navale, l'isola è ora un'area ricreativa popolare con sentieri panoramici, vecchie installazioni militari e calette nascoste. Passeggiando lungo la costa, si possono ammirare viste mozzafiato sul mare e sul faro di Odderøya. L'isola ospita anche caffè affascinanti e studi di artisti locali.",
@@ -4241,15 +5083,19 @@
           "Visit Norway: Odderøya",
           "Wikipedia: Odderøya"
         ],
-        "maps": "https://maps.google.com/?q=58.1355,7.9986"
+        "maps": "https://maps.google.com/?q=58.1355,7.9986",
+        "nameES": "Odderøya",
+        "shortES": "Una isla pintoresca cerca del centro, ideal para paseos por la naturaleza y para explorar la historia militar.",
+        "descES": "Odderøya es una isla idílica conectada al centro de la ciudad por un puente, ofreciendo una escapada perfecta a la naturaleza. Antiguamente base naval, la isla es ahora un área recreativa popular con senderos panorámicos, viejas instalaciones militares y calas escondidas. Paseando por la costa se pueden admirar vistas impresionantes del mar y del faro de Odderøya. La isla también alberga cafés encantadores y estudios de artistas locales.",
+        "tipsES": "Lleva calzado cómodo para caminar; hay excelentes lugares para hacer un picnic."
       },
       {
         "id": "kri-10",
         "name": "Baneheia",
         "nameEN": "Baneheia",
         "cat": "natura",
-        "lat": 58.152,
-        "lng": 7.988,
+        "lat": 58.153579,
+        "lng": 7.984191,
         "short": "Un'area naturale vicino al centro con sentieri, laghetti e punti panoramici.",
         "shortEN": "A natural area near the center with trails, small lakes, and viewpoints.",
         "desc": "Baneheia è una vasta area naturale situata appena a nord del centro di Kristiansand, facilmente raggiungibile a piedi. Offre una rete di sentieri ben curati, perfetti per escursioni leggere, jogging o passeggiate nella foresta. L'area è punteggiata da numerosi laghetti, alcuni dei quali sono popolari per fare il bagno in estate. Dal punto panoramico, si può godere di una vista spettacolare sulla città e sul mare.",
@@ -4260,7 +5106,11 @@
           "Visit Norway: Baneheia",
           "Wikipedia: Baneheia"
         ],
-        "maps": "https://maps.google.com/?q=58.152,7.988"
+        "maps": "https://maps.google.com/?q=58.152,7.988",
+        "nameES": "Baneheia",
+        "shortES": "Un área natural cerca del centro con senderos, lagos pequeños y miradores.",
+        "descES": "Baneheia es una extensa área natural situada justo al norte del centro de Kristiansand, fácilmente accesible a pie. Ofrece una red de senderos bien cuidados, perfectos para caminatas ligeras, running o paseos por el bosque. El área está salpicada de numerosos lagos pequeños, algunos de los cuales son populares para bañarse en verano. Desde el mirador se puede disfrutar de una vista espectacular de la ciudad y del mar.",
+        "tipsES": "Los senderos están bien señalizados; lleva traje de baño en verano para darte un chapuzón en los lagos."
       },
       {
         "tier": 1,
@@ -4268,8 +5118,8 @@
         "name": "Ravnedalen Naturpark",
         "nameEN": "Ravnedalen Naturpark",
         "cat": "natura",
-        "lat": 58.1545,
-        "lng": 7.9755,
+        "lat": 58.155603,
+        "lng": 7.973113,
         "short": "Un romantico parco naturale con laghetti, scogliere e un'atmosfera tranquilla.",
         "shortEN": "A romantic nature park with ponds, cliffs, and a tranquil atmosphere.",
         "desc": "Ravnedalen è un incantevole parco naturale situato a nord-ovest del centro di Kristiansand, noto per i suoi paesaggi romantici e le scogliere scoscese. Creato alla fine del XIX secolo dal generale Joseph Frantz Oscar Wergeland, il parco presenta laghetti tranquilli, ponti pittoreschi e una ricca varietà di alberi e piante. È un luogo amato per passeggiate rilassanti e picnic. Durante l'estate, il parco ospita spesso concerti all'aperto e spettacoli teatrali.",
@@ -4280,7 +5130,11 @@
           "Visit Norway: Ravnedalen",
           "Wikipedia: Ravnedalen"
         ],
-        "maps": "https://maps.google.com/?q=58.1545,7.9755"
+        "maps": "https://maps.google.com/?q=58.1545,7.9755",
+        "nameES": "Ravnedalen Naturpark",
+        "shortES": "Un romántico parque natural con lagos pequeños, acantilados y una atmósfera tranquila.",
+        "descES": "Ravnedalen es un encantador parque natural situado al noroeste del centro de Kristiansand, conocido por sus paisajes románticos y sus escarpados acantilados. Creado a finales del siglo XIX por el general Joseph Frantz Oscar Wergeland, el parque cuenta con estanques tranquilos, puentes pintorescos y una rica variedad de árboles y plantas. Es un lugar apreciado para paseos relajantes y picnics. Durante el verano, el parque suele acoger conciertos al aire libre y espectáculos teatrales.",
+        "tipsES": "El Café Generalen dentro del parque es famoso por sus deliciosas hamburguesas."
       },
       {
         "id": "kri-12",
@@ -4299,9 +5153,16 @@
           "Vest-Agder Museum",
           "Wikipedia: Gimle Gård"
         ],
-        "maps": "https://maps.google.com/?q=58.1585,8.004"
+        "maps": "https://maps.google.com/?q=58.1585,8.004",
+        "nameES": "Gimle Gård",
+        "shortES": "Una elegante residencia histórica del siglo XIX rodeada de espléndidos jardines.",
+        "descES": "Gimle Gård es una magnífica propiedad histórica situada a poca distancia del centro, al otro lado del río Otra. Construida alrededor de 1800 como residencia de verano para un rico mercante, la villa está rodeada por un hermoso jardín inglés. Los interiores se conservan de manera impecable, ofreciendo una mirada fascinante sobre la vida de la alta burguesía noruega en siglos pasados. Hoy forma parte del Museo di Kristiansand y alberga colecciones de muebles de época y pinturas.",
+        "tipsES": "Consulta los horarios de las visitas guiadas para explorar los interiores de la villa."
       }
-    ]
+    ],
+    "cityES": "Kristiansand",
+    "countryES": "Norvegia",
+    "introES": "Descubre el encanto costero de Kristiansand con este itinerario a pie. Desde las históricas casas de madera hasta las modernas arquitecturas junto al mar, explora el corazón del sur de Norvegia."
   },
   "bergen": {
     "city": "Bergen",
@@ -4335,7 +5196,11 @@
           "Wikipedia \"Bergenhus Fortress\"",
           "visitbergen.com"
         ],
-        "maps": "https://maps.google.com/?q=60.40011,5.31785"
+        "maps": "https://maps.google.com/?q=60.40011,5.31785",
+        "nameES": "Fortezza di Bergenhus",
+        "shortES": "Una de las fortalezas más antiguas y mejor conservadas de Norvegia.",
+        "descES": "La Fortezza di Bergenhus es una de las fortificaciones de piedra más antiguas y mejor conservadas de Norvegia, situada estratégicamente a la entrada del puerto de Bergen. Sus orígenes se remontan a 1240, cuando el rey Håkon Håkonsson construyó la Håkonshallen, una magnífica sala para banquetes reales completada en 1261. Otra estructura icónica es la Torre di Rosenkrantz, construida en 1560 por el gobernador Erik Rosenkrantz, que incorpora partes de una torre del homenaje más antigua. La fortaleza ha desempeñado un papel crucial en la historia noruega, sirviendo como residencia real, sede episcopal y base militar. Hoy, los visitantes pueden pasear libremente por los extensos terrenos, explorar las antiguas murallas y disfrutar de vistas panorámicas del puerto, sumergiéndose en siglos de historia medieval y renacentista.",
+        "tipsES": "Abierta todos los días de 06:00 a 23:00. La entrada a los jardines es gratuita."
       },
       {
         "tier": 1,
@@ -4355,7 +5220,11 @@
           "Wikipedia \"St Mary's Church, Bergen\"",
           "visitbergen.com"
         ],
-        "maps": "https://maps.google.com/?q=60.3989,5.32343"
+        "maps": "https://maps.google.com/?q=60.3989,5.32343",
+        "nameES": "Mariakirken",
+        "shortES": "El edificio más antiguo de Bergen, que data del siglo XII.",
+        "descES": "La Mariakirken, o Chiesa di Santa Maria, es el edificio más antiguo que todavía existe en Bergen, cuya construcción comenzó entre 1130 y 1140 y se completó alrededor de 1180. Esta magnífica iglesia románica, caracterizada por dos imponentes torres gemelas, es la única superviviente de las tres iglesias medievales de la ciudad. Durante siglos, desde 1408 hasta 1766, fue la iglesia principal de los mercaderes hanseáticos alemanes que operaban en Bryggen, lo que explica la riqueza de sus interiores, entre los que destaca un púlpito barroco finamente tallado donado por los mercaderes en 1676. La iglesia representa una obra maestra arquitectónica y un símbolo perdurable del rico patrimonio religioso y comercial de Bergen.",
+        "tipsES": "Abierta de lunes a viernes, 10:00-16:00 (horario de verano). Cerrada los fines de semana."
       },
       {
         "tier": 2,
@@ -4375,7 +5244,11 @@
           "UNESCO World Heritage Centre",
           "visitnorway.com"
         ],
-        "maps": "https://maps.google.com/?q=60.39772,5.32293"
+        "maps": "https://maps.google.com/?q=60.39772,5.32293",
+        "nameES": "Bryggen",
+        "shortES": "El histórico barrio hanseático, Patrimonio de la Humanidad de la UNESCO.",
+        "descES": "Bryggen es el icónico barrio portuario de Bergen, famoso por sus pintorescas casas de madera de colores alineadas a lo largo del muelle de Vågen. Este sitio, declarado Patrimonio de la Humanidad por la UNESCO en 1979, da testimonio de la importancia de Bergen como centro del imperio comercial de la Liga Hanseática desde el siglo XIV hasta mediados del siglo XVI. Aunque muchos edificios fueron destruidos por numerosos incendios, en particular el devastador de 1702, la reconstrucción siempre siguió los modelos y métodos tradicionales, preservando el aspecto medieval auténtico. Hoy, los 62 edificios que quedan albergan una animada mezcla de talleres artesanales, estudios de artistas, boutiques y restaurantes. Pasear por los estrechos callejones de madera ofrece un fascinante viaje al pasado.",
+        "tipsES": "Explora los callejones estrechos detrás de las fachadas principales para descubrir talleres artesanales escondidos."
       },
       {
         "tier": 2,
@@ -4395,7 +5268,11 @@
           "visitbergen.com",
           "bergen.kommune.no"
         ],
-        "maps": "https://maps.google.com/?q=60.39469,5.32416"
+        "maps": "https://maps.google.com/?q=60.39469,5.32416",
+        "nameES": "Fisketorget",
+        "shortES": "El animado e histórico mercado del pescado en el corazón de Bergen.",
+        "descES": "El Fisketorget, o Mercato del Pesce, es uno de los lugares más icónicos y animados de Bergen, situado estratégicamente en el corazón de la ciudad, justo al final del puerto de Vågen. Sus orígenes se remontan al 1200, cuando se convirtió en un punto de encuentro crucial para los pescadores locales y los mercaderes que vendían el pescado fresco a los habitantes de la ciudad. Hoy, el mercado ofrece una abundancia de delicias marinas, entre ellas salmón, cangrejo real, gambas y caviar, además de fruta fresca, verdura y productos artesanales locales. Desde 2012, el mercado incluye también la Mathallen, una moderna instalación cubierta que alberga restaurantes y puestos abiertos todo el año, permitiendo a los visitantes degustar mariscos fresquísimos en cualquier temporada.",
+        "tipsES": "El mercado al aire libre está activo de mayo a septiembre; la Mathallen cubierta está abierta todo el año."
       },
       {
         "tier": 2,
@@ -4415,15 +5292,19 @@
           "floyen.no",
           "Wikipedia \"Fløibanen\""
         ],
-        "maps": "https://maps.google.com/?q=60.39641,5.32856"
+        "maps": "https://maps.google.com/?q=60.39641,5.32856",
+        "nameES": "Fløibanen",
+        "shortES": "Funicular que ofrece vistas espectaculares de Bergen desde el Monte Fløyen.",
+        "descES": "La Fløibanen es un histórico funicular que conecta el centro de Bergen con la cima del Monte Fløyen, a 320 metri sobre el nivel del mar. Inaugurado oficialmente en 1918, tras una idea inicial propuesta en 1895, se ha convertido en una de las atracciones turísticas más populares de toda Noruega. El viaje panorámico dura solo de 5 a 8 minutos, pero ofrece una vista impresionante y en constante expansión de la ciudad, del puerto y de los fiordos circundantes. Una vez en la cima, los visitantes pueden disfrutar de un panorama espectacular, explorar numerosos senderos de excursión inmersos en la naturaleza o divertirse con los niños en la mágica Foresta dei Troll. Es una experiencia imprescindible para admirar Bergen desde las alturas.",
+        "tipsES": "Abierta todos los días desde las 07:30 (08:00 los fines de semana) hasta la medianoche. Salidas cada 10-15 minutos."
       },
       {
         "id": "ber-6",
         "name": "Bergen Domkirke",
         "nameEN": "Bergen Domkirke",
         "cat": "cultura",
-        "lat": 60.3944,
-        "lng": 5.3294,
+        "lat": 60.39385,
+        "lng": 5.33096,
         "short": "Storica cattedrale con una palla di cannone incastonata nella facciata.",
         "shortEN": "Historic cathedral with a cannonball embedded in its facade.",
         "desc": "La Cattedrale di Bergen, dedicata a Sant'Olav, vanta una storia lunga quasi 900 anni, segnata da numerosi incendi e ricostruzioni. La sua architettura attuale mescola elementi romanici e gotici, con una facciata imponente e un interno sobrio ma suggestivo. Un dettaglio curioso è la palla di cannone incastrata nella facciata esterna, ricordo della Battaglia di Vågen del 1665 tra flotte inglesi e olandesi. È un luogo di pace e spiritualità nel cuore della città.",
@@ -4433,7 +5314,11 @@
         "src": [
           "Wikipedia: Bergen Cathedral"
         ],
-        "maps": "https://maps.google.com/?q=60.3944,5.3294"
+        "maps": "https://maps.google.com/?q=60.3944,5.3294",
+        "nameES": "Bergen Domkirke",
+        "shortES": "Catedral histórica con una bola de cañón incrustada en la fachada.",
+        "descES": "La Cattedrale di Bergen, dedicada a Sant'Olav, cuenta con una historia de casi 900 años, marcada por numerosos incendios y reconstrucciones. Su arquitectura actual mezcla elementos románicos y góticos, con una fachada imponente y un interior sobrio pero sugerente. Un detalle curioso es la bola de cañón encajada en la fachada exterior, recuerdo de la Battaglia di Vågen del 1665 entre flotas inglesas y neerlandesas. Es un lugar de paz y espiritualidad en el corazón de la ciudad.",
+        "tipsES": "Entrada gratuita, pero los horarios de apertura pueden variar."
       },
       {
         "id": "ber-7",
@@ -4452,7 +5337,11 @@
           "Wikipedia: St. Jørgen's Hospital",
           "KODE Museums"
         ],
-        "maps": "https://maps.google.com/?q=60.3917,5.3325"
+        "maps": "https://maps.google.com/?q=60.3917,5.3325",
+        "nameES": "St. Jørgen's Hospital",
+        "shortES": "Antiguo hospital que cuenta la historia de la investigación sobre la lepra.",
+        "descES": "Il Museo della Lazzaretto se encuentra en el antiguo Ospedale di San Giorgio, uno de los conjuntos hospitalarios de madera mejor conservados de Europa. Bergen fue un centro crucial para la investigación sobre la lepra en el siglo XIX, gracias al trabajo del médico noruego Gerhard Armauer Hansen, que aquí descubrió la bacteria responsable de la enfermedad. El museo narra la conmovedora historia de los pacientes y los avances médicos que cambiaron el mundo. La atmósfera en el interior es solemne y profundamente educativa.",
+        "tipsES": "Abierto principalmente durante los meses de verano."
       },
       {
         "tier": 1,
@@ -4472,7 +5361,11 @@
           "Wikipedia: KODE",
           "Official Site"
         ],
-        "maps": "https://maps.google.com/?q=60.3897,5.3278"
+        "maps": "https://maps.google.com/?q=60.3897,5.3278",
+        "nameES": "KODE Art Museums",
+        "shortES": "Importante complejo museístico con obras de Edvard Munch.",
+        "descES": "El complejo museístico KODE es uno de los mayores centros dedicados al arte, el diseño y la música en los países nórdicos. Situado a orillas del lago Lille Lungegårdsvannet, se divide en cuatro edificios principales (KODE 1, 2, 3 y 4). Alberga colecciones extraordinarias, entre ellas la tercera colección más grande del mundo de obras de Edvard Munch, además de obras maestras de Nikolai Astrup y arte contemporáneo. Una experiencia imprescindible para los amantes del arte y la cultura noruega.",
+        "tipsES": "Una sola entrada permite el acceso a los cuatro edificios durante dos días."
       },
       {
         "id": "ber-9",
@@ -4491,7 +5384,11 @@
           "Wikipedia: Grieg Hall",
           "Official Site"
         ],
-        "maps": "https://maps.google.com/?q=60.3886,5.3283"
+        "maps": "https://maps.google.com/?q=60.3886,5.3283",
+        "nameES": "Grieghallen",
+        "shortES": "Sala de conciertos moderna dedicada a Edvard Grieg.",
+        "descES": "La Grieghallen es la principal sala de conciertos de Bergen, dedicada al célebre compositor noruego Edvard Grieg. El edificio, con su arquitectura moderna y la forma que recuerda a un piano de cola, es un punto de referencia visual y cultural. Es la sede de la Orchestra Filarmonica di Bergen y acoge numerosos eventos, desde ballet hasta ópera y conciertos de música contemporánea. La acústica excepcional convierte cada espectáculo en una experiencia memorable.",
+        "tipsES": "Reserva las entradas con antelación si deseas asistir a un concierto."
       },
       {
         "id": "ber-10",
@@ -4509,7 +5406,11 @@
         "src": [
           "Visit Bergen: Byparken"
         ],
-        "maps": "https://maps.google.com/?q=60.3914,5.3253"
+        "maps": "https://maps.google.com/?q=60.3914,5.3253",
+        "nameES": "Byparken",
+        "shortES": "Elegante parque urbano con un icónico pabellón de música.",
+        "descES": "Byparken es el parque central de Bergen, un elegante espacio verde que conecta el lago Lille Lungegårdsvannet con la plaza Torgallmenningen. Caracterizado por parterres florales, céspedes cuidados y un icónico pabellón de música (Musikkpaviljongen) de estilo morisco, es un lugar de encuentro histórico. Durante el verano, el pabellón suele acoger conciertos gratuitos y actuaciones al aire libre. Es el corazón verde de la ciudad, perfecto para una pausa relajante entre una visita y otra.",
+        "tipsES": "Excelente lugar para relajarse y escuchar música en vivo en verano."
       },
       {
         "id": "ber-11",
@@ -4527,7 +5428,11 @@
         "src": [
           "Wikipedia: Torgallmenningen"
         ],
-        "maps": "https://maps.google.com/?q=60.3928,5.3242"
+        "maps": "https://maps.google.com/?q=60.3928,5.3242",
+        "nameES": "Torgallmenningen",
+        "shortES": "La animada plaza principal y vía peatonal de Bergen.",
+        "descES": "Torgallmenningen es la plaza y la vía peatonal principal de Bergen, el verdadero corazón de la vida urbana. Reconstruida en estilo neoclásico y funcionalista tras el devastador incendio de 1916, está flanqueada por tiendas, cafeterías y grandes almacenes. En el centro destaca el Monumento a los Marineros (Sjømannsmonumentet), que celebra el vínculo histórico de Noruega con el mar. Es el lugar ideal para pasear, ir de compras y observar el ajetreo cotidiano.",
+        "tipsES": "Excelente punto de partida para explorar el centro de la ciudad."
       },
       {
         "id": "ber-12",
@@ -4545,15 +5450,19 @@
         "src": [
           "Wikipedia: Den Nationale Scene"
         ],
-        "maps": "https://maps.google.com/?q=60.3925,5.3197"
+        "maps": "https://maps.google.com/?q=60.3925,5.3197",
+        "nameES": "Den Nationale Scene",
+        "shortES": "Histórico teatro noruego en un elegante edificio Art Nouveau.",
+        "descES": "Den Nationale Scene es el teatro permanente más antiguo de Noruega, fundado originalmente en 1850 por iniciativa del célebre violinista Ole Bull. El edificio actual, un magnífico ejemplo de arquitectura de estilo Art Nouveau, fue inaugurado en 1909. El teatro mantiene un fuerte vínculo con el dramaturgo Henrik Ibsen, que trabajó allí como escritor y director. Incluso sin asistir a una función, la elegancia de la estructura y el parque circundante merecen una visita.",
+        "tipsES": "Consulta el programa para posibles visitas guiadas o espectáculos."
       },
       {
         "id": "ber-13",
         "name": "Johanneskirken",
         "nameEN": "Johanneskirken",
         "cat": "cultura",
-        "lat": 60.3897,
-        "lng": 5.3206,
+        "lat": 60.38857,
+        "lng": 5.31933,
         "short": "La chiesa più grande di Bergen, in stile neogotico.",
         "shortEN": "The largest church in Bergen, built in Neo-Gothic style.",
         "desc": "La Chiesa di San Giovanni, con la sua imponente facciata in mattoni rossi e la torre alta 61 metri, domina lo skyline di Bergen dalla collina di Sydnes. Costruita in stile neogotico alla fine del XIX secolo, è la chiesa più grande della città. L'interno è luminoso e maestoso, caratterizzato da un bellissimo soffitto in legno e un organo imponente. La scalinata che conduce alla chiesa offre anche un'ottima vista panoramica sul centro cittadino.",
@@ -4563,15 +5472,19 @@
         "src": [
           "Wikipedia: St. John's Church, Bergen"
         ],
-        "maps": "https://maps.google.com/?q=60.3897,5.3206"
+        "maps": "https://maps.google.com/?q=60.3897,5.3206",
+        "nameES": "Johanneskirken",
+        "shortES": "La iglesia más grande de Bergen, de estilo neogótico.",
+        "descES": "La iglesia de San Giovanni, con su imponente fachada de ladrillo rojo y la torre alta 61 metri, domina el skyline de Bergen desde la colina de Sydnes. Construida en estilo neogótico a finales del siglo XIX, es la iglesia más grande de la ciudad. El interior es luminoso y majestuoso, caracterizado por un hermoso techo de madera y un imponente órgano. La escalinata que conduce a la iglesia ofrece también una excelente vista panorámica del centro de la ciudad.",
+        "tipsES": "La subida puede resultar agotadora, pero la vista compensa el esfuerzo."
       },
       {
         "id": "ber-14",
         "name": "Nordnesparken",
         "nameEN": "Nordnesparken",
         "cat": "natura",
-        "lat": 60.4008,
-        "lng": 5.3053,
+        "lat": 60.39895,
+        "lng": 5.30333,
         "short": "Parco panoramico sulla punta della penisola di Nordnes.",
         "shortEN": "Scenic park at the tip of the Nordnes peninsula.",
         "desc": "Situato sulla punta della penisola di Nordnes, questo parco offre alcune delle viste più spettacolari sul fiordo e sulle montagne circostanti. Creato alla fine del XIX secolo, il parco è caratterizzato da ampi prati, alberi secolari e un totem donato dalla città gemellata di Seattle. È un luogo molto amato dai locali per rilassarsi, fare il bagno nelle acque del fiordo durante l'estate o ammirare il tramonto. Una passeggiata qui permette di sfuggire al trambusto del centro.",
@@ -4581,7 +5494,11 @@
         "src": [
           "Wikipedia: Nordnes"
         ],
-        "maps": "https://maps.google.com/?q=60.4008,5.3053"
+        "maps": "https://maps.google.com/?q=60.4008,5.3053",
+        "nameES": "Nordnesparken",
+        "shortES": "Parque panorámico en la punta de la península de Nordnes.",
+        "descES": "Situado en la punta de la península di Nordnes, este parque ofrece algunas de las vistas más espectaculares del fiordo y de las montañas circundantes. Creado a finales del siglo XIX, el parque se caracteriza por amplios prados, árboles centenarios y un tótem donado por la ciudad hermanada de Seattle. Es un lugar muy querido por los locales para relajarse, bañarse en las aguas del fiordo durante el verano o contemplar la puesta de sol. Un paseo por aquí permite escapar del bullicio del centro.",
+        "tipsES": "Lleva un bañador en verano para darte un chapuzón en el fiordo."
       },
       {
         "id": "ber-15",
@@ -4600,9 +5517,16 @@
           "Wikipedia: Bergen Aquarium",
           "Official Site"
         ],
-        "maps": "https://maps.google.com/?q=60.3994,5.3044"
+        "maps": "https://maps.google.com/?q=60.3994,5.3044",
+        "nameES": "Akvariet i Bergen",
+        "shortES": "Acuario histórico con fauna marina local, pingüinos y focas.",
+        "descES": "L'Acquario di Bergen, situado cerca de Nordnesparken, es una de las atracciones más populares de la ciudad, ideal para familias y amantes de la naturaleza. Alberga una amplia variedad de especies marinas noruegas e internacionales, además de pingüinos, focas e incluso reptiles. Las exhibiciones interactivas y las sesiones diarias de alimentación ofrecen una experiencia educativa y divertida. Es una excelente oportunidad para conocer de cerca la rica biodiversidad marina de la costa noruega.",
+        "tipsES": "Consulta los horarios de las sesiones de alimentación para no perderlas."
       }
-    ]
+    ],
+    "cityES": "Bergen",
+    "countryES": "Norvegia",
+    "introES": "Bergen, conocida como la puerta de los fiordos, es una ciudad fascinante rodeada por siete montañas. Su centro histórico compacto es perfecto para explorar a pie, ofreciendo una mezcla única de historia hanseática, cultura marítima y naturaleza espectacular."
   },
   "copenhagen": {
     "city": "Copenaghen",
@@ -4636,7 +5560,11 @@
           "Wikipedia \"Nyhavn\"",
           "visitcopenhagen.com"
         ],
-        "maps": "https://maps.google.com/?q=55.67974,12.59089"
+        "maps": "https://maps.google.com/?q=55.67974,12.59089",
+        "nameES": "Nyhavn",
+        "shortES": "Puerto icónico del siglo XVII con casas coloridas.",
+        "descES": "Nyhavn es el célebre puerto canal de Copenaghen, excavado originalmente entre 1671 y 1673 por prisioneros de guerra suecos. Las pintorescas casas adosadas pintadas en colores vivos que bordean el agua datan de los siglos XVII y XVIII. La casa más antigua, en el número 9, fue construida en 1681. El famoso escritor de cuentos Hans Christian Andersen vivió en varias casas a lo largo de este canal, entre ellas los números 18, 20 y 67. Hoy en día, los históricos barcos de madera atracados y los animados cafés crean un ambiente vibrante, convirtiéndolo en el lugar perfecto para comenzar la exploración de la ciudad.",
+        "tipsES": "Siempre abierto y gratuito. Ideal para un paseo matutino para evitar las multitudes."
       },
       {
         "tier": 1,
@@ -4656,7 +5584,11 @@
           "Wikipedia \"Amalienborg\"",
           "kongeligeslotte.dk"
         ],
-        "maps": "https://maps.google.com/?q=55.68396,12.59308"
+        "maps": "https://maps.google.com/?q=55.68396,12.59308",
+        "nameES": "Palacio de Amalienborg",
+        "shortES": "Residencia invernal de la familia real danesa.",
+        "descES": "El Palacio de Amalienborg es la residencia invernal oficial de la familia real danesa. Construido originalmente en 1750 para cuatro familias nobles, el conjunto está formado por cuatro palacios idénticos de estilo rococó dispuestos alrededor de una plaza octogonal. En el centro se alza la monumental estatua ecuestre del rey Federico V, fundador del palacio. La familia real compró la propiedad después de que el Palacio de Christiansborg fuera destruido por un incendio en 1794. Los visitantes pueden presenciar el sugestivo cambio de la guardia real (Den Kongelige Livgarde), que tiene lugar todos los días al mediodía en la plaza.",
+        "tipsES": "El cambio de la guardia tiene lugar todos los días a las 12:00 en la plaza central."
       },
       {
         "tier": 1,
@@ -4676,7 +5608,11 @@
           "Wikipedia \"Rosenborg Castle\"",
           "kongeligeslotte.dk"
         ],
-        "maps": "https://maps.google.com/?q=55.68569,12.57742"
+        "maps": "https://maps.google.com/?q=55.68569,12.57742",
+        "nameES": "Castillo de Rosenborg",
+        "shortES": "Castillo renacentista que alberga las joyas de la corona.",
+        "descES": "El Castillo de Rosenborg es un magnífico edificio renacentista situado en el corazón de los Jardines del Rey (Kongens Have). Construido en 1606 por el rey Cristiano IV, fue concebido originalmente como residencia de verano en el campo. El castillo se utilizó como residencia real hasta 1710 y hoy alberga un fascinante museo dedicado a la historia real danesa. Sus salas ricamente decoradas conservan mobiliario de época, retratos y tesoros invaluables. La principal atracción es la cámara acorazada subterránea, donde se custodian las magníficas Joyas de la Corona Danesa y las insignias reales, algunas de las cuales datan del siglo XVI.",
+        "tipsES": "Entrada de pago (unos 130 DKK). Los jardines circundantes son gratuitos y perfectos para una pausa."
       },
       {
         "tier": 1,
@@ -4696,7 +5632,11 @@
           "Wikipedia \"Torvehallerne\"",
           "torvehallernekbh.dk"
         ],
-        "maps": "https://maps.google.com/?q=55.68387,12.56955"
+        "maps": "https://maps.google.com/?q=55.68387,12.56955",
+        "nameES": "Torvehallerne",
+        "shortES": "Animado mercado cubierto con especialidades locales e internacionales.",
+        "descES": "Torvehallerne es el mercado alimentario más famoso y animado de Copenhague, inaugurado en septiembre de 2011. Situado en la plaza de Israels Plads, el mercado está compuesto por dos grandes pabellones de cristal que albergan más de 60 puestos. Es el lugar ideal para sumergirse en la cultura gastronómica danesa, ofreciendo una amplia gama de productos frescos, quesos artesanos, pescado y dulces tradicionales. Los visitantes pueden degustar el célebre smørrebrød (el típico sándwich abierto danés), saborear café de alta calidad o probar delicias internacionales. La atmósfera informal y la variedad de opciones lo convierten en una parada imprescindible para los amantes de la buena comida.",
+        "tipsES": "Abierto todos los días. Excelente lugar para un almuerzo rápido y sabroso."
       },
       {
         "tier": 1,
@@ -4716,7 +5656,11 @@
           "Wikipedia \"Rundetårn\"",
           "rundetaarn.dk"
         ],
-        "maps": "https://maps.google.com/?q=55.68136,12.57579"
+        "maps": "https://maps.google.com/?q=55.68136,12.57579",
+        "nameES": "Rundetårn",
+        "shortES": "Torre histórica del siglo XVII con rampa en espiral y vista panorámica.",
+        "descES": "Rundetårn, o Torre Redonda, es uno de los monumentos más icónicos de Copenaghen. Construida por el rey Cristiano IV entre 1637 y 1642, fue concebida originalmente como observatorio astronómico para l'Università di Copenaghen. La característica más famosa de la torre es su rampa ecuestre en espiral, larga 209 metri, que asciende suavemente hasta la cima sin escalones, permitiendo antaño a caballos y carruajes transportar equipos pesados. Desde la plataforma panorámica a 34,8 metri de altura, los visitantes pueden disfrutar de una vista espectacular a 360 gradi sobre los tejados rojos del centro histórico de la ciudad.",
+        "tipsES": "Entrada de pago (aprox. 40 DKK). La subida sin escalones es divertida y accesible para los niños."
       },
       {
         "tier": 2,
@@ -4736,7 +5680,11 @@
           "Wikipedia: Tivoli Gardens",
           "Official Website"
         ],
-        "maps": "https://maps.google.com/?q=55.6736,12.5681"
+        "maps": "https://maps.google.com/?q=55.6736,12.5681",
+        "nameES": "Tivoli Gardens",
+        "shortES": "Parque de atracciones histórico en el centro de la ciudad con jardines mágicos y atracciones de época.",
+        "descES": "Los Giardini di Tivoli son uno de los parques de atracciones más antiguos del mundo, inaugurado en 1843. Situado en el corazón de Copenaghen, ofrece una atmósfera mágica con jardines cuidados, arquitecturas exóticas y atracciones históricas. Por la noche, miles de luces de colores iluminan el parque creando un ambiente de cuento. Es un lugar querido tanto por los locales como por los turistas para pasear, cenar y asistir a espectáculos en vivo.",
+        "tipsES": "La entrada es de pago; las atracciones requieren entradas separadas o un pase ilimitado."
       },
       {
         "tier": 1,
@@ -4755,7 +5703,11 @@
         "src": [
           "Wikipedia: Christiansborg Palace"
         ],
-        "maps": "https://maps.google.com/?q=55.6762,12.5806"
+        "maps": "https://maps.google.com/?q=55.6762,12.5806",
+        "nameES": "Christiansborg Palace",
+        "shortES": "Imponente palacio real que alberga el Parlamento danese y suntuosas salas de representación.",
+        "descES": "El Palazzo di Christiansborg se alza en el islote de Slotsholmen y es la sede del Parlamento danese, dell'Ufficio del Primo Ministro y della Corte Suprema. Este imponente edificio histórico es el único en el mundo en albergar los tres poderes del Estado. Los visitantes pueden explorar las suntuosas Sale di Rappresentanza Reali, las ruinas subterráneas de los castillos anteriores y las caballerizas reales. La torre del palacio ofrece además una de las mejores vistas panorámicas de la ciudad.",
+        "tipsES": "La subida a la torre es gratuita, pero las salas reales requieren un billete de entrada."
       },
       {
         "tier": 2,
@@ -4774,7 +5726,11 @@
         "src": [
           "Wikipedia: The Little Mermaid (statue)"
         ],
-        "maps": "https://maps.google.com/?q=55.6928,12.5992"
+        "maps": "https://maps.google.com/?q=55.6928,12.5992",
+        "nameES": "The Little Mermaid",
+        "shortES": "Icónica estatua de bronce inspirada en el célebre cuento de Hans Christian Andersen.",
+        "descES": "La Sirenita es una célebre escultura de bronce creada por Edvard Eriksen en 1913, inspirada en el cuento homónimo de Hans Christian Andersen. Situada en el paseo marítimo de Langelinie, la estatua se ha convertido en el indiscutible símbolo de Copenaghen. A pesar de sus modestas dimensiones, atrae a millones de visitantes cada año. Su posición pintoresca sobre las rocas ofrece una excelente ocasión para pasear por el puerto.",
+        "tipsES": "Visítala a primera hora de la mañana para evitar las grandes multitudes de turistas."
       },
       {
         "id": "cph-9",
@@ -4792,7 +5748,11 @@
         "src": [
           "Wikipedia: Kastellet, Copenhagen"
         ],
-        "maps": "https://maps.google.com/?q=55.6914,12.5936"
+        "maps": "https://maps.google.com/?q=55.6914,12.5936",
+        "nameES": "Kastellet",
+        "shortES": "Antigua fortaleza con forma de estrella, hoy un tranquilo parque con un pintoresco molino de viento.",
+        "descES": "Kastellet es una de las fortalezas en forma de estrella mejor conservadas del Nord Europa, construida en el siglo XVII. Hoy sirve como parque público y zona militar activa, caracterizada por bastiones cubiertos de hierba, fosos pintorescos y un icónico molino de viento rojo. Es el lugar ideal para un paseo relajante, inmerso en la naturaleza y en la historia militar danesa. Los senderos a lo largo de los bastiones ofrecen espléndidas vistas al puerto y a la ciudad.",
+        "tipsES": "La entrada es gratuita; respeta las zonas militares que aún están en uso."
       },
       {
         "id": "cph-10",
@@ -4810,15 +5770,19 @@
         "src": [
           "Wikipedia: Frederik's Church"
         ],
-        "maps": "https://maps.google.com/?q=55.6849,12.5896"
+        "maps": "https://maps.google.com/?q=55.6849,12.5896",
+        "nameES": "Frederik's Church",
+        "shortES": "Majestuosa iglesia con la cúpula más grande de Scandinavia, cercana al palacio real.",
+        "descES": "La Chiesa di Frederik, popularmente conocida como Marmorkirken (Chiesa di Marmo), es un magnífico edificio religioso de estilo rococó. Su imponente cúpula verde, inspirada en la Basilica di San Pietro a Roma, domina el horizonte de Copenaghen y es la más grande de Scandinavia. El interior es igualmente espectacular, con decoraciones elegantes y una atmósfera solemne. Está alineada con el Palazzo di Amalienborg, creando una perspectiva arquitectónica perfecta.",
+        "tipsES": "Es posible subir a la cúpula en horarios específicos para disfrutar de una vista panorámica."
       },
       {
         "id": "cph-11",
         "name": "Strøget",
         "nameEN": "Strøget",
         "cat": "cultura",
-        "lat": 55.6785,
-        "lng": 12.5751,
+        "lat": 55.679972,
+        "lng": 12.583446,
         "short": "La principale via pedonale dello shopping, ricca di negozi, caffè e artisti di strada.",
         "shortEN": "The main pedestrian shopping street, full of shops, cafes, and street performers.",
         "desc": "Strøget è una delle strade pedonali dedicate allo shopping più lunghe d'Europa, situata nel cuore di Copenaghen. Collega la Piazza del Municipio (Rådhuspladsen) a Kongens Nytorv, offrendo un mix vivace di boutique di lusso, negozi di design danese e catene internazionali. Lungo il percorso si incontrano artisti di strada, caffè storici e piazze affascinanti come Amagertorv. È il centro pulsante della vita urbana e commerciale della città.",
@@ -4828,7 +5792,11 @@
         "src": [
           "Wikipedia: Strøget"
         ],
-        "maps": "https://maps.google.com/?q=55.6785,12.5751"
+        "maps": "https://maps.google.com/?q=55.6785,12.5751",
+        "nameES": "Strøget",
+        "shortES": "La principal calle peatonal de compras, llena de tiendas, cafés y artistas callejeros.",
+        "descES": "Strøget es una de las calles peatonales dedicadas a las compras más largas de Europa, situada en el corazón de Copenaghen. Conecta la Piazza del Municipio (Rådhuspladsen) con Kongens Nytorv, ofreciendo una mezcla animada de boutiques de lujo, tiendas de diseño danés y cadenas internacionales. A lo largo del recorrido se encuentran artistas callejeros, cafés históricos y plazas encantadoras como Amagertorv. Es el centro palpitante de la vida urbana y comercial de la ciudad.",
+        "tipsES": "Explora también las callejuelas laterales para encontrar boutiques independientes y cafés menos concurridos."
       },
       {
         "id": "cph-12",
@@ -4846,7 +5814,11 @@
         "src": [
           "Wikipedia: National Museum of Denmark"
         ],
-        "maps": "https://maps.google.com/?q=55.6746,12.5746"
+        "maps": "https://maps.google.com/?q=55.6746,12.5746",
+        "nameES": "National Museum of Denmark",
+        "shortES": "El museo más grande de historia cultural de Danimarca, con excepcionales piezas vikingas.",
+        "descES": "El Museo Nazionale Danese (Nationalmuseet) es la principal institución cultural del país para la historia y la cultura. Alojado en el Palazzo del Principe, un edificio del siglo XVIII, exhibe piezas que van desde la Edad de Piedra, pasando por la época vikinga, hasta la historia moderna danesa. Entre las piezas más célebres están el Carro Solare di Trundholm y las armas vikingas. Es una visita imprescindible para comprender a fondo la evolución de Danimarca.",
+        "tipsES": "El museo es muy amplio; dedica al menos dos o tres horas a la visita."
       },
       {
         "tier": 1,
@@ -4865,7 +5837,11 @@
         "src": [
           "Wikipedia: Ny Carlsberg Glyptotek"
         ],
-        "maps": "https://maps.google.com/?q=55.6722,12.5714"
+        "maps": "https://maps.google.com/?q=55.6722,12.5714",
+        "nameES": "Ny Carlsberg Glyptotek",
+        "shortES": "Elegante museo de arte con esculturas antiguas, pinturas impresionistas y un precioso jardín de invierno.",
+        "descES": "La Ny Carlsberg Glyptotek es un museo de arte fundado por el cervecero Carl Jacobsen, conocido por su excepcional colección de esculturas antiguas y arte moderno. El museo alberga obras maestras de la antigüedad egipcia, griega y romana, además de una importante colección de pinturas impresionistas francesas y del Siglo de Oro danés. El corazón del edificio es un magnífico jardín de invierno cubierto por una cúpula de vidrio, perfecto para una pausa relajante entre palmeras y esculturas.",
+        "tipsES": "La entrada es gratuita el último miércoles del mes."
       },
       {
         "id": "cph-14",
@@ -4883,7 +5859,11 @@
         "src": [
           "Wikipedia: Church of Our Saviour, Copenhagen"
         ],
-        "maps": "https://maps.google.com/?q=55.6729,12.5941"
+        "maps": "https://maps.google.com/?q=55.6729,12.5941",
+        "nameES": "Church of Our Saviour",
+        "shortES": "Iglesia barroca célebre por su aguja en espiral que puede recorrerse por el exterior.",
+        "descES": "La Iglesia de Nuestro Salvador (Vor Frelsers Kirke) es famosa por su extraordinaria aguja en espiral con una escalera exterior que se enrolla hasta la cima. Construida en estilo barroco en el barrio de Christianshavn, ofrece una de las vistas panorámicas más espectaculares sobre Copenaghen. Subir los 400 escalones, de los cuales los últimos 150 están al descubierto, es una experiencia emocionante y vertiginosa. El interior de la iglesia alberga un imponente altar y un grandioso órgano tallado.",
+        "tipsES": "Reserva las entradas con antelación para subir a la torre, especialmente en verano."
       },
       {
         "id": "cph-15",
@@ -4901,7 +5881,11 @@
         "src": [
           "Wikipedia: University of Copenhagen Botanical Garden"
         ],
-        "maps": "https://maps.google.com/?q=55.6869,12.5738"
+        "maps": "https://maps.google.com/?q=55.6869,12.5738",
+        "nameES": "Botanical Garden",
+        "shortES": "Magnífico jardín botánico con invernaderos históricos de vidrio y miles de especies vegetales.",
+        "descES": "El Orto Botanico di Copenaghen es un oasis verde situado en el centro de la ciudad, parte del Museo di Storia Naturale della Danimarca. Está renombrado por su amplio complejo de invernaderos históricos que datan del siglo XIX, entre los que destaca la espectacular Casa delle Palme. El jardín alberga más de 13.000 especies de plantas procedentes de todo el mundo, estanques pintorescos y jardines rocosos. Es el lugar ideal para un paseo tranquilo y para admirar la biodiversidad vegetal.",
+        "tipsES": "El acceso al jardín es gratuito, pero la Casa delle Palme requiere entrada."
       },
       {
         "id": "cph-16",
@@ -4919,7 +5903,11 @@
         "src": [
           "Wikipedia: Black Diamond (library)"
         ],
-        "maps": "https://maps.google.com/?q=55.6735,12.5828"
+        "maps": "https://maps.google.com/?q=55.6735,12.5828",
+        "nameES": "The Black Diamond",
+        "shortES": "Extraordinario edificio moderno de granito negro que alberga la Biblioteca Reale Danese.",
+        "descES": "El Diamante Negro (Den Sorte Diamant) es una extensión moderna de la Biblioteca Reale Danese, situada en el paseo marítimo de Slotsholmen. Su nombre deriva del revestimiento en granito negro de Zimbabwe que refleja magníficamente el agua del puerto. Además de servir como biblioteca, el edificio alberga salas de conciertos, espacios expositivos y un café con vistas panorámicas. La arquitectura contemporánea contrasta de manera fascinante con los edificios históricos circundantes.",
+        "tipsES": "Entra para admirar el atrio luminoso y la vista al canal desde los grandes ventanales."
       },
       {
         "id": "cph-17",
@@ -4937,7 +5925,11 @@
         "src": [
           "Wikipedia: Copenhagen City Hall"
         ],
-        "maps": "https://maps.google.com/?q=55.6753,12.5695"
+        "maps": "https://maps.google.com/?q=55.6753,12.5695",
+        "nameES": "Copenhagen City Hall",
+        "shortES": "Imponente ayuntamiento histórico que alberga un célebre reloj astronómico.",
+        "descES": "El ayuntamiento de Copenaghen (Københavns Rådhus) domina la plaza homónima con su imponente arquitectura en estilo romántico nacional. Construido a principios del siglo XX, está decorado con esculturas de la mitología norrena y detalles intrincados. En el interior se puede admirar el Orologio Mondiale di Jens Olsen, una obra maestra de la ingeniería astronómica. La torre del ayuntamiento, alta 105 metri, es una de las estructuras más altas de la ciudad y ofrece vistas impresionantes.",
+        "tipsES": "La entrada al edificio es gratuita, pero las visitas guiadas y la subida a la torre son de pago."
       },
       {
         "id": "cph-18",
@@ -4955,7 +5947,11 @@
         "src": [
           "Wikipedia: Gefion Fountain"
         ],
-        "maps": "https://maps.google.com/?q=55.6892,12.5975"
+        "maps": "https://maps.google.com/?q=55.6892,12.5975",
+        "nameES": "Gefion Fountain",
+        "shortES": "Monumental fuente que representa a la diosa norrena Gefion y la creación de Zelanda.",
+        "descES": "La Fontana di Gefion es el monumento más grande de Copenaghen, situada cerca del Kastellet y del paseo marítimo. La escultura, de gran dramatismo, representa a la diosa norrena Gefion que conduce a un grupo de bueyes, ilustrando el mito de la creación de la isla de Zelanda, sobre la que se asienta la ciudad. El agua que cae en cascada sobre los escalones de piedra crea un efecto visual y sonoro impresionante. Es un lugar muy fotogénico, especialmente cuando se ilumina por la noche.",
+        "tipsES": "Excelente parada fotográfica mientras te diriges hacia la Sirenetta."
       },
       {
         "id": "cph-19",
@@ -4973,7 +5969,11 @@
         "src": [
           "Wikipedia: Statens Museum for Kunst"
         ],
-        "maps": "https://maps.google.com/?q=55.6888,12.5783"
+        "maps": "https://maps.google.com/?q=55.6888,12.5783",
+        "nameES": "SMK - National Gallery of Denmark",
+        "shortES": "La galería nacional de arte danesa, con obras maestras desde el Renacimiento hasta el arte contemporáneo.",
+        "descES": "El Statens Museum for Kunst (SMK) es la galería nacional de Dinamarca y el museo de arte más grande del país. Su amplia colección abarca más de 700 años de arte, desde el Renacimiento europeo hasta el arte contemporáneo internacional. El museo es especialmente reconocido por su excepcional colección de arte danés y nórdico, además de obras de maestros como Matisse, Picasso y Rembrandt. El edificio en sí es una mezcla interesante de arquitectura clásica y moderna.",
+        "tipsES": "La entrada a la colección permanente es de pago, pero a menudo hay exposiciones temporales interesantes."
       },
       {
         "id": "cph-20",
@@ -4991,7 +5991,11 @@
         "src": [
           "Wikipedia: Kongens Nytorv"
         ],
-        "maps": "https://maps.google.com/?q=55.6805,12.5859"
+        "maps": "https://maps.google.com/?q=55.6805,12.5859",
+        "nameES": "Kongens Nytorv",
+        "shortES": "La plaza más elegante de la ciudad, rodeada de teatros históricos y palacios prestigiosos.",
+        "descES": "Kongens Nytorv (La Nueva Plaza del Rey) es la plaza más grande y prestigiosa de Copenaghen, situada al final de la calle peatonal Strøget. Está rodeada de edificios históricos de gran importancia, entre ellos el Teatro Reale Danese, el Hotel D'Angleterre y el gran almacén Magasin du Nord. En el centro de la plaza se alza una estatua ecuestre del rey Cristiano V. En invierno, la plaza acoge una popular pista de patinaje sobre hielo.",
+        "tipsES": "Excelente punto de partida para explorar el cercano canal de Nyhavn."
       },
       {
         "id": "cph-21",
@@ -5009,9 +6013,16 @@
         "src": [
           "Wikipedia: Designmuseum Denmark"
         ],
-        "maps": "https://maps.google.com/?q=55.6864,12.5932"
+        "maps": "https://maps.google.com/?q=55.6864,12.5932",
+        "nameES": "Designmuseum Denmark",
+        "shortES": "Museo dedicado al célebre diseño danés, con exposiciones de muebles y objetos icónicos.",
+        "descES": "El Designmuseum Danmark es el principal museo danés dedicado al diseño industrial y a las artes aplicadas. Situado en un antiguo hospital del siglo XVIII, ofrece una fascinante panorámica de la historia del diseño danés, famoso en todo el mundo por su funcionalismo y su estética minimalista. Las exposiciones incluyen muebles icónicos, cerámicas, tejidos y objetos de uso cotidiano creados por maestros como Arne Jacobsen y Hans J. Wegner. Es una visita imprescindible para los amantes de la arquitectura y del mobiliario.",
+        "tipsES": "La cafetería del museo es un excelente lugar para relajarse y degustar dulces tradicionales."
       }
-    ]
+    ],
+    "cityES": "Copenaghen",
+    "countryES": "Danimarca",
+    "introES": "Descubre el corazón histórico de Copenaghen, donde la arquitectura real se funde con el diseño moderno y la atmósfera acogedora. Un itinerario perfecto para explorar a pie las maravillas de la capital danesa."
   },
   "bremen": {
     "city": "Brema",
@@ -5045,7 +6056,10 @@
           "Wikipedia: Bremen Market Square",
           "UNESCO: Town Hall and Roland on the Marketplace of Bremen"
         ],
-        "maps": "https://maps.google.com/?q=53.0758,8.8073"
+        "maps": "https://maps.google.com/?q=53.0758,8.8073",
+        "nameES": "Piazza del Mercato y Municipio",
+        "shortES": "El corazón histórico de Brema, con el Municipio y la estatua de Rolando, patrimonio de la UNESCO.",
+        "descES": "La Piazza del Mercato di Brema es una de las plazas públicas más antiguas de la ciudad, rodeada de magníficos edificios históricos. El núcleo es el Municipio de estilo Renacimiento del Weser, construido a principios del siglo XV, y la estatua de Rolando de 1404, ambos declarados Patrimonio de la Humanidad por la UNESCO. Los visitantes pueden admirar la intrincada fachada y explorar el Ratskeller subyacente. Está abierto al público, con visitas guiadas del Municipio disponibles por aproximadamente 8 €."
       },
       {
         "tier": 2,
@@ -5065,7 +6079,10 @@
           "Wikipedia: Town Musicians of Bremen",
           "visitbremen.de: Town Musicians"
         ],
-        "maps": "https://maps.google.com/?q=53.0761,8.8075"
+        "maps": "https://maps.google.com/?q=53.0761,8.8075",
+        "nameES": "I Musicanti di Brema",
+        "shortES": "Una famosa estatua de bronce que representa a los animales del querido cuento de los hermanos Grimm.",
+        "descES": "Situada justo al lado del Municipio, esta icónica escultura de bronce de 1953 de Gerhard Marcks da vida al cuento de los hermanos Grimm. Representa a un asno, un perro, un gato y un gallo de pie unos sobre otros. La tradición dice que frotar las patas delanteras del asno trae buena suerte, por eso están brillantes y pulidas. La estatua puede visitarse gratuitamente y está accesible las 24 horas del día, lo que la convierte en un punto fotográfico imprescindible."
       },
       {
         "tier": 1,
@@ -5085,7 +6102,10 @@
           "Wikipedia: Bremen Cathedral",
           "stpetridom.de"
         ],
-        "maps": "https://maps.google.com/?q=53.0755,8.8088"
+        "maps": "https://maps.google.com/?q=53.0755,8.8088",
+        "nameES": "Catedral de San Pietro",
+        "shortES": "Una imponente iglesia del siglo XI con dos agujas gemelas que dominan el skyline de la ciudad.",
+        "descES": "La Catedral de San Pietro es un magnífico ejemplo de arquitectura románica y gótica, con una historia que abarca más de 1.200 años. En el interior, los visitantes pueden explorar las criptas, ver las momias en el Bleikeller (Cantina de plomo) y admirar las bellísimas vidrieras. Subir a la torre sur ofrece una vista panorámica de Brema por una pequeña tarifa de aproximadamente 2 €. La entrada a la catedral es gratuita y generalmente está abierta todos los días de 10:00 a 16:30."
       },
       {
         "tier": 1,
@@ -5105,7 +6125,10 @@
           "Wikipedia: Böttcherstraße",
           "boettcherstrasse.de"
         ],
-        "maps": "https://maps.google.com/?q=53.075,8.8055"
+        "maps": "https://maps.google.com/?q=53.075,8.8055",
+        "nameES": "Böttcherstraße",
+        "shortES": "Una estrecha calle de 100 metri famosa por su inusual arquitectura expresionista en ladrillo.",
+        "descES": "Construida en los años '20 por el comerciante de café Ludwig Roselius, la Böttcherstraße es un singular complejo arquitectónico de expresionismo en ladrillo. La calle alberga museos de arte, talleres artesanales y un famoso carrillón hecho con campanas de porcelana de Meissen que suena regularmente. Conecta la Piazza del Mercato con el río Weser y es totalmente peatonal. Pasear por la calle es gratuito, aunque los museos (como el Museo Paula Modersohn-Becker) requieren un billete de entrada de aproximadamente 8 €."
       },
       {
         "tier": 1,
@@ -5125,7 +6148,10 @@
           "Wikipedia: Schnoor",
           "bremen.eu: The Schnoor quarter"
         ],
-        "maps": "https://maps.google.com/?q=53.0728,8.8094"
+        "maps": "https://maps.google.com/?q=53.0728,8.8094",
+        "nameES": "Barrio Schnoor",
+        "shortES": "El barrio más antiguo de Brema, caracterizado por un laberinto de callejuelas y encantadoras casas del siglo XV.",
+        "descES": "El Schnoor es la única parte de Brema que ha conservado un carácter medieval, con callejones tortuosos tan estrechos que se pueden tocar ambos lados al mismo tiempo. El nombre deriva de la antigua palabra alemana para \"corda\", ya que las diminutas casas entramadas se alinean como perlas en un hilo. Hoy está lleno de boutiques artesanales, cafés acogedores y restaurantes tradicionales que sirven especialidades locales. Es de libre acceso y perfecto para un agradable paseo y para comprar recuerdos."
       },
       {
         "tier": 1,
@@ -5133,8 +6159,8 @@
         "name": "Schlachte",
         "nameEN": "Schlachte",
         "cat": "cibo",
-        "lat": 53.076465,
-        "lng": 8.799753,
+        "lat": 53.076111,
+        "lng": 8.802222,
         "short": "Vivace passeggiata lungo il fiume Weser con birrerie e navi storiche.",
         "shortEN": "Lively promenade along the Weser River with beer gardens and historic ships.",
         "desc": "La Schlachte è la storica passeggiata lungo il fiume Weser, un tempo porto principale della città. Oggi è il cuore della vita all'aperto di Brema, ricca di birrerie all'aperto, ristoranti e caffè. Passeggiando lungo le sue rive, si possono ammirare antiche navi ormeggiate e godere di un'atmosfera vivace, specialmente in estate. È il luogo ideale per rilassarsi dopo aver esplorato il centro storico.",
@@ -5145,7 +6171,11 @@
           "Wikipedia: Schlachte (Bremen)",
           "Bremen Tourism"
         ],
-        "maps": "https://maps.google.com/?q=53.076465,8.799753"
+        "maps": "https://maps.google.com/?q=53.076465,8.799753",
+        "nameES": "Schlachte",
+        "shortES": "Paseo animado a lo largo del río Weser con cervecerías y embarcaciones históricas.",
+        "descES": "La Schlachte es el histórico paseo junto al río Weser, en su día el principal puerto de la ciudad. Hoy es el corazón de la vida al aire libre de Brema, repleto de cervecerías al aire libre, restaurantes y cafeterías. Paseando por sus orillas se pueden admirar antiguos barcos atracados y disfrutar de un ambiente animado, especialmente en verano. Es el lugar ideal para relajarse después de explorar el centro histórico.",
+        "tipsES": "Muy concurrida las noches de verano; ideal para cenar o tomar una cerveza local."
       },
       {
         "id": "bre-7",
@@ -5164,7 +6194,11 @@
           "Wikipedia: Am Wall Windmill",
           "Bremen Tourism"
         ],
-        "maps": "https://maps.google.com/?q=53.080138,8.806622"
+        "maps": "https://maps.google.com/?q=53.080138,8.806622",
+        "nameES": "Mühle am Wall",
+        "shortES": "Molino de viento histórico rodeado por un hermoso parque urbano.",
+        "descES": "Situato nei pittoreschi giardini Wallanlagen, questo storico mulino a vento è uno dei simboli più fotografati di Brema. Costruito originariamente nel 1699 e ricostruito nel 1898, il mulino è ancora funzionante e ospita un accogliente ristorante. Circondato da fiori e verde, offre un'immagine idilliaca a pochi passi dal trambusto del centro cittadino.",
+        "tipsES": "El restaurante en su interior ofrece excelentes pasteles y cafés con vistas al parque."
       },
       {
         "id": "bre-8",
@@ -5182,7 +6216,11 @@
         "src": [
           "Wikipedia: Bremer Wallanlagen"
         ],
-        "maps": "https://maps.google.com/?q=53.078512,8.810543"
+        "maps": "https://maps.google.com/?q=53.078512,8.810543",
+        "nameES": "Wallanlagen",
+        "shortES": "Parque urbano en forma de anillo creado sobre las antiguas murallas defensivas.",
+        "descES": "I Wallanlagen sono i vecchi bastioni difensivi di Brema, trasformati nel XIX secolo in un magnifico parco pubblico. Questo anello verde circonda il centro storico con i suoi sentieri tortuosi, laghetti tranquilli e sculture interessanti. È un'oasi di pace perfetta per una passeggiata rilassante, offrendo un netto contrasto con l'architettura urbana circostante.",
+        "tipsES": "Ideal para un picnic o un paseo primaveral cuando las flores están en flor."
       },
       {
         "id": "bre-9",
@@ -5201,7 +6239,11 @@
           "Official Website: Übersee-Museum",
           "Wikipedia: Übersee-Museum Bremen"
         ],
-        "maps": "https://maps.google.com/?q=53.082833,8.809415"
+        "maps": "https://maps.google.com/?q=53.082833,8.809415",
+        "nameES": "Übersee-Museum Bremen",
+        "shortES": "Museo etnográfico y de historia natural que explora continentes lejanos.",
+        "descES": "Situado cerca de la estación central, l'Übersee-Museum es un fascinante museo dedicado a la naturaleza, la cultura y el comercio global. Sus exposiciones interactivas transportan a los visitantes a continentes lejanos, desde Asia hasta Oceanía, explorando la biodiversidad y las tradiciones humanas. Es una institución única que refleja la lunga storia marittima e commerciale di Brema.",
+        "tipsES": "Cerrado los lunes. Calculad al menos dos horas para visitar todas las secciones."
       },
       {
         "id": "bre-10",
@@ -5220,15 +6262,19 @@
           "Official Website: Kunsthalle Bremen",
           "Wikipedia: Kunsthalle Bremen"
         ],
-        "maps": "https://maps.google.com/?q=53.072845,8.813612"
+        "maps": "https://maps.google.com/?q=53.072845,8.813612",
+        "nameES": "Kunsthalle Bremen",
+        "shortES": "Prestigioso museo de arte con obras desde la Edad Media hasta la actualidad.",
+        "descES": "La Kunsthalle Bremen è uno dei musei d'arte più importanti della Germania, situato vicino ai Wallanlagen. Ospita una vasta collezione che spazia dal Medioevo all'arte contemporanea, con capolavori di artisti come Dürer, Monet, Van Gogh e Picasso. L'edificio stesso è un'opera d'arte, che combina l'architettura classica con un'elegante estensione moderna.",
+        "tipsES": "Consultad las exposiciones temporales, a menudo de nivel internacional."
       },
       {
         "id": "bre-11",
         "name": "Weserburg Museum für moderne Kunst",
         "nameEN": "Weserburg Museum für moderne Kunst",
         "cat": "cultura",
-        "lat": 53.075312,
-        "lng": 8.798145,
+        "lat": 53.076389,
+        "lng": 8.798889,
         "short": "Museo d'arte contemporanea situato in ex magazzini sul fiume.",
         "shortEN": "Contemporary art museum located in former riverfront warehouses.",
         "desc": "Situato sulla penisola di Teerhof in mezzo al fiume Weser, questo museo è il più grande museo d'arte contemporanea di Brema. È ospitato in ex magazzini industriali, offrendo spazi espositivi ampi e suggestivi. La Weserburg si concentra su collezioni private internazionali, presentando opere all'avanguardia in un contesto architettonico unico.",
@@ -5239,7 +6285,11 @@
           "Official Website: Weserburg",
           "Wikipedia: Weserburg"
         ],
-        "maps": "https://maps.google.com/?q=53.075312,8.798145"
+        "maps": "https://maps.google.com/?q=53.075312,8.798145",
+        "nameES": "Weserburg Museum für moderne Kunst",
+        "shortES": "Museo de arte contemporánea situado en antiguos almacenes junto al río.",
+        "descES": "Situado en la península de Teerhof en medio del río Weser, este museo es el mayor museo de arte contemporáneo de Brema. Está alojado en antiguos almacenes industriales, ofreciendo espacios expositivos amplios y sugerentes. La Weserburg se centra en colecciones privadas internacionales, presentando obras vanguardistas en un contexto arquitectónico único.",
+        "tipsES": "La vista del río desde las ventanas del museo es espectacular."
       },
       {
         "id": "bre-12",
@@ -5257,7 +6307,11 @@
         "src": [
           "Wikipedia: Liebfrauenkirche, Bremen"
         ],
-        "maps": "https://maps.google.com/?q=53.076823,8.807512"
+        "maps": "https://maps.google.com/?q=53.076823,8.807512",
+        "nameES": "Liebfrauenkirche",
+        "shortES": "La iglesia más antigua de Brema, conocida por sus magníficas vidrieras modernas.",
+        "descES": "La Liebfrauenkirche es la iglesia más antigua de Brema, situada justo al lado del Ayuntamiento. Construida originalmente en el siglo XI, presenta una espléndida arquitectura gótica y vidrieras modernas impresionantes realizadas por el artista francés Alfred Manessier. Su cripta histórica es un lugar de silencio y reflexión en el corazón de la ciudad.",
+        "tipsES": "La entrada es gratuita. No os perdáis la cripta subterránea."
       },
       {
         "id": "bre-13",
@@ -5275,7 +6329,11 @@
         "src": [
           "Wikipedia: Stadtwaage (Bremen)"
         ],
-        "maps": "https://maps.google.com/?q=53.075812,8.805845"
+        "maps": "https://maps.google.com/?q=53.075812,8.805845",
+        "nameES": "Stadtwaage",
+        "shortES": "Edificio renacentista histórico que en su día se utilizaba para pesar las mercancías.",
+        "descES": "La Stadtwaage es un magnífico edificio renacentista de ladrillo situado en la Langenstraße. Construido en 1587, servía como balanza pública para las mercancías, garantizando el correcto pago de los impuestos comerciales. Su fachada ricamente decorada con frontones escalonados es un excelente ejemplo de la arquitectura renacentista del Weser.",
+        "tipsES": "Hoy el edificio alberga oficinas, pero la fachada merece sin duda una foto."
       },
       {
         "id": "bre-14",
@@ -5293,7 +6351,11 @@
         "src": [
           "Wikipedia: St. Martin's Church, Bremen"
         ],
-        "maps": "https://maps.google.com/?q=53.074712,8.804245"
+        "maps": "https://maps.google.com/?q=53.074712,8.804245",
+        "nameES": "Martinikirche",
+        "shortES": "Iglesia gótica de ladrillo situada pintorescamente a orillas del río Weser.",
+        "descES": "Con vistas al río Weser, la Martinikirche es una evocadora iglesia gótica de ladrillo que data del siglo XIII. Fue gravemente dañada durante la Segunda Guerra Mundial pero fue fielmente reconstruida. El interior es conocido por su excelente acústica y por el hermoso órgano, frecuentemente utilizado para conciertos de música clásica.",
+        "tipsES": "Consultad el programa para asistir a un concierto de órgano nocturno."
       },
       {
         "id": "bre-15",
@@ -5311,15 +6373,19 @@
         "src": [
           "Wikipedia: Teerhof"
         ],
-        "maps": "https://maps.google.com/?q=53.074512,8.800045"
+        "maps": "https://maps.google.com/?q=53.074512,8.800045",
+        "nameES": "Teerhof",
+        "shortES": "Península peatonal que ofrece vistas espectaculares al casco histórico y al río.",
+        "descES": "El Teerhof es una península situada entre dos brazos del río Weser, antaño utilizada por los constructores de barcos. Hoy es una tranquila zona residencial y cultural peatonal. Paseando por sus orillas se disfruta de una de las mejores vistas panorámicas de la Schlachte y del perfil histórico de la ciudad de Brema.",
+        "tipsES": "El puente peatonal que conecta el Teerhof con la Schlachte es perfecto para las fotos al atardecer."
       },
       {
         "id": "bre-16",
         "name": "Bürgerpark Bremen",
         "nameEN": "Bürgerpark Bremen",
         "cat": "natura",
-        "lat": 53.088012,
-        "lng": 8.823045,
+        "lat": 53.090278,
+        "lng": 8.822222,
         "short": "Vasto e storico parco cittadino con laghetti, boschi e un recinto per animali.",
         "shortEN": "Vast and historic city park with lakes, woods, and an animal enclosure.",
         "desc": "Il Bürgerpark è uno dei parchi cittadini privati più grandi della Germania, situato a breve distanza dal centro. Creato nel XIX secolo grazie alle donazioni dei cittadini, offre ampi prati, boschi ombrosi, laghetti dove noleggiare barche a remi e persino un piccolo recinto con animali. È il polmone verde di Brema, amato dai locali per lo sport e il relax.",
@@ -5329,9 +6395,16 @@
         "src": [
           "Wikipedia: Bürgerpark Bremen"
         ],
-        "maps": "https://maps.google.com/?q=53.088012,8.823045"
+        "maps": "https://maps.google.com/?q=53.088012,8.823045",
+        "nameES": "Bürgerpark Bremen",
+        "shortES": "Amplio y histórico parque urbano con estanques, bosques y un pequeño recinto con animales.",
+        "descES": "El Bürgerpark es uno de los parques urbanos privados más grandes de Germania, situado a poca distancia del centro. Creado en el siglo XIX gracias a las donaciones de los ciudadanos, ofrece amplios prados, bosques sombreados, estanques donde alquilar botes de remos e incluso un pequeño recinto con animales. Es el pulmón verde de Brema, querido por los locales para el deporte y el descanso.",
+        "tipsES": "Alquilad un bote de remos en el lago Emmasee para una experiencia romántica."
       }
-    ]
+    ],
+    "cityES": "Brema",
+    "countryES": "Germania",
+    "introES": "Descubre el encanto histórico de Brema con este itinerario a pie por el corazón de la ciudad. Desde la magnífica Piazza del Mercato hasta los callejones medievales del Schnoor, explorarás siglos de historia, arte y leyendas de cuento de hadas."
   },
   "amiens": {
     "city": "Amiens",
@@ -5353,8 +6426,8 @@
         "name": "Cattedrale di Notre-Dame",
         "nameEN": "Amiens Cathedral",
         "cat": "cultura",
-        "lat": 49.89449,
-        "lng": 2.29587,
+        "lat": 49.89462,
+        "lng": 2.30203,
         "short": "La più grande cattedrale gotica di Francia, un capolavoro architettonico mozzafiato.",
         "shortEN": "The largest Gothic cathedral in France, a breathtaking architectural masterpiece.",
         "desc": "La Cattedrale di Notre-Dame di Amiens è un sito Patrimonio dell'Umanità UNESCO e la più grande cattedrale gotica classica del XIII secolo in Francia. I visitatori possono ammirare le sue magnifiche statue, i dipinti e le vetrate colorate. L'ingresso è gratuito e la cattedrale è aperta tutto l'anno, generalmente dalle 8:30 alle 17:30 o 18:30 a seconda della stagione. Si trova nel cuore della città, rendendola il punto di partenza ideale per la nostra passeggiata.",
@@ -5365,7 +6438,10 @@
           "UNESCO: Amiens Cathedral",
           "Official site cathedrale-amiens.fr"
         ],
-        "maps": "https://maps.google.com/?q=49.89449,2.29587"
+        "maps": "https://maps.google.com/?q=49.89449,2.29587",
+        "nameES": "Catedral de Notre-Dame",
+        "shortES": "La catedral gótica más grande de Francia, una obra maestra arquitectónica impresionante.",
+        "descES": "La Catedral de Notre-Dame de Amiens es un sitio Patrimonio de la Humanidad de la UNESCO y la mayor catedral gótica clásica del siglo XIII en Francia. Los visitantes pueden admirar sus magníficas estatuas, pinturas y vitrales de colores. La entrada es gratuita y la catedral está abierta todo el año, generalmente de 8:30 a 17:30 o 18:30 según la temporada. Se encuentra en el corazón de la ciudad, lo que la convierte en el punto de partida ideal para nuestro paseo."
       },
       {
         "tier": 2,
@@ -5373,8 +6449,8 @@
         "name": "Quartiere Saint-Leu",
         "nameEN": "Quartier Saint-Leu",
         "cat": "cultura",
-        "lat": 49.89698,
-        "lng": 2.30381,
+        "lat": 49.8991,
+        "lng": 2.30054,
         "short": "Un affascinante quartiere medievale con strade acciottolate e case colorate lungo i canali.",
         "shortEN": "A charming medieval district with cobblestone streets and colorful houses along the canals.",
         "desc": "Il Quartiere Saint-Leu è il cuore storico e pittoresco di Amiens, spesso chiamato la 'Piccola Venezia del Nord'. Questo affascinante quartiere medievale è caratterizzato da strette strade acciottolate fiancheggiate da case colorate con persiane, situate lungo una rete di canali. È il luogo perfetto per passeggiare, con numerosi caffè, ristoranti e negozi di artigianato locale. L'area è sempre accessibile e offre un'atmosfera vivace sia di giorno che di sera.",
@@ -5385,7 +6461,10 @@
           "Amiens Tourisme: Le quartier Saint-Leu",
           "Wikipedia: Saint-Leu (Amiens)"
         ],
-        "maps": "https://maps.google.com/?q=49.89698,2.30381"
+        "maps": "https://maps.google.com/?q=49.89698,2.30381",
+        "nameES": "Barrio Saint-Leu",
+        "shortES": "Un encantador barrio medieval con calles empedradas y casas coloridas junto a los canales.",
+        "descES": "Il Quartiere Saint-Leu è il cuore storico e pittoresco di Amiens, spesso chiamato la 'Pequeña Venecia del Norte'. Questo affascinante quartiere medievale è caratterizzato da strette strade acciottolate fiancheggiate da case colorate con persiane, situate lungo una rete di canali. È il luogo perfetto per passeggiare, con numerosi caffè, ristoranti e negozi di artigianato locale. L'area è sempre accessibile e offre un'atmosfera vivace sia di giorno che di sera."
       },
       {
         "id": "ami-3",
@@ -5404,7 +6483,10 @@
           "Wikipedia: Amiens",
           "Amiens Tourisme: Parks and gardens"
         ],
-        "maps": "https://maps.google.com/?q=49.89898,2.30795"
+        "maps": "https://maps.google.com/?q=49.89898,2.30795",
+        "nameES": "Parco Saint-Pierre",
+        "shortES": "Un amplio parque verde en el corazón de la ciudad, ideal para relajarse y para actividades familiares.",
+        "descES": "Il Parco Saint-Pierre è uno spazio verde di 22 ettari situato tra il quartiere Saint-Leu e gli hortillonnages. Questo parco pluripremiato offre un ambiente tranquillo con laghetti, percorsi pedonali e aree gioco per bambini, rendendolo perfetto per una pausa rilassante. L'ingresso è gratuito e il parco è aperto tutti i giorni, offrendo un facile accesso alla natura a pochi passi dal centro città. È un luogo molto amato sia dai residenti che dai turisti."
       },
       {
         "tier": 1,
@@ -5424,7 +6506,10 @@
           "Structurae: Musée de Picardie",
           "Amiens Métropole: Infos pratiques"
         ],
-        "maps": "https://maps.google.com/?q=49.89046,2.29457"
+        "maps": "https://maps.google.com/?q=49.89046,2.29457",
+        "nameES": "Museo della Piccardia",
+        "shortES": "A menudo llamado el 'Pequeño Louvre', alberga una rica colección de arte y arqueología.",
+        "descES": "Il Museo della Piccardia è uno dei più bei musei di provincia in Francia, costruito tra il 1855 e il 1867. L'edificio stesso è un capolavoro architettonico che ospita vaste collezioni che spaziano dall'archeologia alle belle arti. Il museo è aperto dal martedì alla domenica (chiuso il lunedì), generalmente dalle 9:30 alle 18:00, con orari ridotti nel fine settimana. I biglietti d'ingresso sono a pagamento, ma offrono l'accesso a un vero e proprio viaggio attraverso il tempo e le arti."
       },
       {
         "tier": 1,
@@ -5432,8 +6517,8 @@
         "name": "Casa di Jules Verne",
         "nameEN": "Maison de Jules Verne",
         "cat": "cultura",
-        "lat": 49.8885,
-        "lng": 2.2975,
+        "lat": 49.88833,
+        "lng": 2.30194,
         "short": "La casa storica dove il celebre scrittore visse e scrisse molte delle sue opere.",
         "shortEN": "The historic house where the famous writer lived and wrote many of his works.",
         "desc": "La Casa di Jules Verne, situata in 2 rue Charles Dubois, è la residenza dove il famoso autore visse dal 1882 al 1900. Oggi è una casa-museo che permette ai visitatori di esplorare l'universo dello scrittore attraverso le stanze in cui ha vissuto e lavorato. Il museo è aperto tutti i giorni tranne il martedì, solitamente dalle 10:00 alle 12:30 e dalle 14:00 alle 18:30. È un'attrazione imperdibile per gli amanti della letteratura e offre un'esperienza immersiva nella vita di Verne.",
@@ -5444,7 +6529,10 @@
           "Somme Tourisme: Jules Verne in Amiens",
           "Amiens Tourisme: Maison de Jules Verne"
         ],
-        "maps": "https://maps.google.com/?q=49.8885,2.2975"
+        "maps": "https://maps.google.com/?q=49.8885,2.2975",
+        "nameES": "Casa di Jules Verne",
+        "shortES": "La casa storica dove il celebre scrittore visse e scrisse molte delle sue opere.",
+        "descES": "La Casa di Jules Verne, situata in 2 rue Charles Dubois, è la residenza dove il famoso autore visse dal 1882 al 1900. Oggi è una casa-museo che permette ai visitatori di esplorare l'universo dello scrittore attraverso le stanze in cui ha vissuto e lavorato. Il museo è aperto tutti i giorni tranne il martedì, solitamente dalle 10:00 alle 12:30 e dalle 14:00 alle 18:30. È un'attrazione imperdibile per gli amanti della letteratura e offre un'esperienza immersiva nella vita di Verne."
       },
       {
         "tier": 1,
@@ -5452,8 +6540,8 @@
         "name": "Les Hortillonnages d'Amiens",
         "nameEN": "Les Hortillonnages d'Amiens",
         "cat": "natura",
-        "lat": 49.8986,
-        "lng": 2.3169,
+        "lat": 49.8926,
+        "lng": 2.33219,
         "short": "Una vasta rete di storici giardini galleggianti accessibili con barche tradizionali.",
         "shortEN": "A vast network of historic floating gardens accessible by traditional boats.",
         "desc": "Gli Hortillonnages sono una rete unica di giardini galleggianti che si estendono su 300 ettari, intervallati da 65 chilometri di canali. Coltivate fin dal Medioevo, queste paludi offrono un rifugio pacifico dalla città. I visitatori possono esplorare l'area su tradizionali barche a fondo piatto chiamate \"barques à cornet\". È un paradiso per la biodiversità e una testimonianza della tradizionale orticoltura.",
@@ -5463,7 +6551,11 @@
         "src": [
           "Wikipedia: Hortillonnages d'Amiens"
         ],
-        "maps": "https://maps.google.com/?q=49.8986,2.3169"
+        "maps": "https://maps.google.com/?q=49.8986,2.3169",
+        "nameES": "Les Hortillonnages d'Amiens",
+        "shortES": "Una extensa red de históricos jardines flotantes accesibles en embarcaciones tradicionales.",
+        "descES": "Gli Hortillonnages sono una rete unica di giardini galleggianti che si estendono su 300 ettari, intervallati da 65 chilometri di canali. Coltivate fin dal Medioevo, queste paludi offrono un rifugio pacifico dalla città. I visitatori possono esplorare l'area su tradizionali barche a fondo piatto chiamate \"barques à cornet\". È un paradiso per la biodiversità e una testimonianza della tradizionale orticoltura.",
+        "tipsES": "I tour in barca sono disponibili da aprile a ottobre."
       },
       {
         "tier": 1,
@@ -5482,15 +6574,19 @@
         "src": [
           "Wikipedia: Beffroi d'Amiens"
         ],
-        "maps": "https://maps.google.com/?q=49.8954,2.2965"
+        "maps": "https://maps.google.com/?q=49.8954,2.2965",
+        "nameES": "Beffroi d'Amiens",
+        "shortES": "Una torre campanaria medieval declarada patrimonio de la UNESCO que ofrece vistas panorámicas de Amiens.",
+        "descES": "El Beffroi di Amiens es una histórica torre campanaria que data del siglo XII, reconstruida varias veces a lo largo de los siglos. Alta 52 metri, está reconocida como patrimonio de la Humanidad por la UNESCO. La torre simboliza la independencia del municipio medieval de la ciudad. Los visitantes pueden subir los escalones para disfrutar de vistas panorámicas de la ciudad y de la catedral.",
+        "tipsES": "Compruebe los horarios de apertura, ya que el acceso a la cima podría estar limitado o requerir una visita guiada."
       },
       {
         "id": "ami-8",
         "name": "Tour Perret",
         "nameEN": "Tour Perret",
         "cat": "cultura",
-        "lat": 49.8906,
-        "lng": 2.3047,
+        "lat": 49.89105,
+        "lng": 2.30625,
         "short": "Un pionieristico grattacielo in cemento di 110 metri costruito durante la ricostruzione del dopoguerra.",
         "shortEN": "A pioneering 110-meter concrete skyscraper built during post-war reconstruction.",
         "desc": "Progettata dall'architetto Auguste Perret e completata nel 1952, la Torre Perret è stata uno dei primi grattacieli d'Europa. Alto 110 metri, questo edificio residenziale e per uffici in cemento è un capolavoro dell'architettura della ricostruzione del dopoguerra. La sua cima illuminata funge da faro nel cielo notturno. Sebbene sia in gran parte residenziale, il suo esterno è un punto di riferimento sorprendente vicino alla stazione ferroviaria.",
@@ -5500,7 +6596,11 @@
         "src": [
           "Wikipedia: Tour Perret (Amiens)"
         ],
-        "maps": "https://maps.google.com/?q=49.8906,2.3047"
+        "maps": "https://maps.google.com/?q=49.8906,2.3047",
+        "nameES": "Tour Perret",
+        "shortES": "Un pionero rascacielos de hormigón de 110 metri construido durante la reconstrucción de posguerra.",
+        "descES": "Diseñada por el arquitecto Auguste Perret y completada en 1952, la Torre Perret fue uno de los primeros rascacielos de Europa. Alta 110 metri, este edificio residencial y de oficinas en hormigón es una obra maestra de la arquitectura de la reconstrucción de posguerra. Su cima iluminada actúa como un faro en el cielo nocturno. Aunque es en gran parte residencial, su exterior es un llamativo punto de referencia cerca de la estación de tren.",
+        "tipsES": "Se recomienda admirarla preferiblemente desde el exterior; el interior está en gran parte ocupado por apartamentos privados."
       },
       {
         "id": "ami-9",
@@ -5518,15 +6618,19 @@
         "src": [
           "Wikipedia: Cirque Jules-Verne"
         ],
-        "maps": "https://maps.google.com/?q=49.8886,2.2961"
+        "maps": "https://maps.google.com/?q=49.8886,2.2961",
+        "nameES": "Cirque Jules Verne",
+        "shortES": "Un histórico edificio circense permanente inaugurado por Jules Verne en 1889.",
+        "descES": "El Cirque Jules Verne es un magnífico edificio poligonal de ladrillo y piedra inaugurado en 1889 por el propio Jules Verne. Es uno de los pocos circos permanentes aún en funcionamiento en Francia. La arquitectura presenta una sorprendente estructura de hierro fundido diseñada por un discípulo de Gustave Eiffel. Hoy acoge espectáculos de circo contemporáneo, conciertos y eventos culturales.",
+        "tipsES": "Consulte la programación para espectáculos o visitas guiadas del interior."
       },
       {
         "id": "ami-10",
         "name": "Horloge Dewailly et Marie-sans-chemise",
         "nameEN": "Horloge Dewailly et Marie-sans-chemise",
         "cat": "cultura",
-        "lat": 49.8925,
-        "lng": 2.2983,
+        "lat": 49.89406,
+        "lng": 2.2987,
         "short": "Un orologio decorato del XIX secolo con una statua in bronzo un tempo considerata scandalosa.",
         "shortEN": "An ornate 19th-century clock featuring a famously scandalous bronze statue.",
         "desc": "L'Orologio Dewailly è un orologio pubblico decorato creato nel 1892 da Émile Ricquier, accompagnato da una statua in bronzo nota come \"Marie-sans-chemise\" (Marie senza camicia) di Albert Roze. La statua di una donna poco vestita che tiene un ramo di melo causò scandalo quando fu svelata per la prima volta. Oggi è un'amata opera d'arte di strada e un popolare punto di incontro nel centro della città.",
@@ -5536,15 +6640,19 @@
         "src": [
           "Wikipedia: Horloge Dewailly"
         ],
-        "maps": "https://maps.google.com/?q=49.8925,2.2983"
+        "maps": "https://maps.google.com/?q=49.8925,2.2983",
+        "nameES": "Horloge Dewailly et Marie-sans-chemise",
+        "shortES": "Un reloj decorado del siglo XIX con una estatua de bronce que en su momento fue considerada escandalosa.",
+        "descES": "L'Orologio Dewailly es un reloj público decorado creado en 1892 por Émile Ricquier, acompañado de una estatua de bronce conocida como \"Marie-sans-chemise\" (Marie sin camisa) de Albert Roze. La estatua de una mujer poco vestida que sostiene una rama de manzano causó escándalo cuando se desveló por primera vez. Hoy es una querida obra de arte urbana y un popular punto de encuentro en el centro de la ciudad.",
+        "tipsES": "Situado en la intersección entre Rue des Trois Cailloux y Rue Ernest Cauvin."
       },
       {
         "id": "ami-11",
         "name": "Zoo d'Amiens Métropole",
         "nameEN": "Zoo d'Amiens Métropole",
         "cat": "kids",
-        "lat": 49.8994,
-        "lng": 2.2858,
+        "lat": 49.90062,
+        "lng": 2.28212,
         "short": "Un affascinante zoo incentrato sulla conservazione immerso in un ambiente verdeggiante.",
         "shortEN": "A charming, conservation-focused zoo set in a lush green environment.",
         "desc": "Lo Zoo di Amiens è un parco zoologico compatto e splendidamente paesaggistico situato vicino al centro della città. Si concentra sulla conservazione delle specie in via di estinzione e ospita oltre 500 animali provenienti da tutto il mondo. Lo zoo è profondamente integrato nella natura circostante, offrendo percorsi ombreggiati e mostre educative. È una destinazione ideale per famiglie e amanti della natura.",
@@ -5554,15 +6662,19 @@
         "src": [
           "Official Website: Zoo d'Amiens"
         ],
-        "maps": "https://maps.google.com/?q=49.8994,2.2858"
+        "maps": "https://maps.google.com/?q=49.8994,2.2858",
+        "nameES": "Zoo d'Amiens Métropole",
+        "shortES": "Un fascinante zoo centrado en la conservación, inmerso en un entorno frondoso.",
+        "descES": "El Zoo di Amiens es un parque zoológico compacto y bellamente ajardinado situado cerca del centro de la ciudad. Se centra en la conservación de especies en peligro de extinción y alberga más de 500 animales procedentes de todo el mundo. El zoo está profundamente integrado en la naturaleza circundante, ofreciendo senderos sombreados y exposiciones educativas. Es un destino ideal para familias y amantes de la naturaleza.",
+        "tipsES": "Prevea aproximadamente 2 horas para la visita; ideal para niños."
       },
       {
         "id": "ami-12",
         "name": "Église Saint-Germain-l'Écossais",
         "nameEN": "Église Saint-Germain-l'Écossais",
         "cat": "cultura",
-        "lat": 49.8961,
-        "lng": 2.2986,
+        "lat": 49.8964,
+        "lng": 2.29658,
         "short": "Una chiesa gotica del XV secolo famosa per la sua torre leggermente pendente.",
         "shortEN": "A 15th-century Gothic church famous for its slightly leaning tower.",
         "desc": "La Chiesa di Saint-Germain-l'Écossais è una bellissima chiesa gotica risalente al XV secolo. È nota per la sua sorprendente torre pendente e per la sua ricca storia legata alle corporazioni locali. La chiesa ha subito danni durante la Seconda Guerra Mondiale ma è stata accuratamente restaurata. Il suo interno presenta eleganti vetrate e un'atmosfera pacifica lontano dalla folla.",
@@ -5572,15 +6684,19 @@
         "src": [
           "Wikipedia: Église Saint-Germain-l'Écossais d'Amiens"
         ],
-        "maps": "https://maps.google.com/?q=49.8961,2.2986"
+        "maps": "https://maps.google.com/?q=49.8961,2.2986",
+        "nameES": "Église Saint-Germain-l'Écossais",
+        "shortES": "Una iglesia gótica del siglo XV famosa por su torre ligeramente inclinada.",
+        "descES": "La iglesia de Saint-Germain-l'Écossais es una preciosa iglesia gótica que data del siglo XV. Es conocida por su sorprendente torre inclinada y por su rica historia ligada a los gremios locales. La iglesia sufrió daños durante la Segunda Guerra Mundial, pero fue cuidadosamente restaurada. Su interior presenta elegantes vitrales y una atmósfera tranquila alejada de las multitudes.",
+        "tipsES": "A menudo cerrada fuera de los horarios de los servicios religiosos, pero el exterior merece ser admirado."
       },
       {
         "id": "ami-13",
         "name": "Place Gambetta",
         "nameEN": "Place Gambetta",
         "cat": "cultura",
-        "lat": 49.8928,
-        "lng": 2.2997,
+        "lat": 49.89339,
+        "lng": 2.29773,
         "short": "Una vivace piazza centrale pedonale circondata da negozi e caffè.",
         "shortEN": "A lively, pedestrianized central square surrounded by shops and cafes.",
         "desc": "Place Gambetta è una piazza centrale di Amiens, riprogettata per essere un vivace centro pedonale. Circondata da negozi, caffè e architettura storica, funge da cuore pulsante del quartiere commerciale della città. La piazza presenta un paesaggio moderno, giochi d'acqua e aree salotto. È il luogo perfetto per rilassarsi, osservare la gente e immergersi nell'atmosfera locale.",
@@ -5590,15 +6706,19 @@
         "src": [
           "Local Knowledge"
         ],
-        "maps": "https://maps.google.com/?q=49.8928,2.2997"
+        "maps": "https://maps.google.com/?q=49.8928,2.2997",
+        "nameES": "Place Gambetta",
+        "shortES": "Una animada plaza céntrica peatonal rodeada de tiendas y cafeterías.",
+        "descES": "Place Gambetta es una plaza central de Amiens, rediseñada para ser un vibrante centro peatonal. Rodeada de tiendas, cafés y arquitectura histórica, actúa como el corazón del barrio comercial de la ciudad. La plaza ofrece un diseño moderno, juegos de agua y zonas para sentarse. Es el lugar perfecto para relajarse, ver a la gente y sumergirse en el ambiente local.",
+        "tipsES": "Un excelente punto de partida para explorar la principal calle comercial, Rue des Trois Cailloux."
       },
       {
         "id": "ami-14",
         "name": "Cimetière de la Madeleine",
         "nameEN": "Cimetière de la Madeleine",
         "cat": "cultura",
-        "lat": 49.9056,
-        "lng": 2.2811,
+        "lat": 49.91449,
+        "lng": 2.2832,
         "short": "Un cimitero romantico e boscoso famoso per la drammatica tomba di Jules Verne.",
         "shortEN": "A romantic, wooded cemetery famous for the dramatic tomb of Jules Verne.",
         "desc": "Il Cimitero della Madeleine è un cimitero romantico e boscoso spesso paragonato al Père Lachaise di Parigi. È famoso soprattutto per essere l'ultima dimora del celebre autore Jules Verne, la cui tomba presenta una drammatica scultura di lui che esce dalla tomba. Il terreno collinare del cimitero, gli alberi secolari e gli elaborati mausolei del XIX secolo creano un ambiente malinconico e pacifico per una passeggiata.",
@@ -5608,15 +6728,19 @@
         "src": [
           "Wikipedia: Cimetière de la Madeleine (Amiens)"
         ],
-        "maps": "https://maps.google.com/?q=49.9056,2.2811"
+        "maps": "https://maps.google.com/?q=49.9056,2.2811",
+        "nameES": "Cimetière de la Madeleine",
+        "shortES": "Un cementerio romántico y boscoso famoso por la dramática tumba de Jules Verne.",
+        "descES": "Il Cimitero della Madeleine es un cementerio romántico y boscoso a menudo comparado con el Père Lachaise de Parigi. Es famoso sobre todo por ser la última morada del célebre autor Jules Verne, cuya tumba presenta una dramática escultura de él emergiendo del sepulcro. El terreno ondulado del cementerio, los árboles centenarios y los elaborados mausoleos del siglo XIX crean un ambiente melancólico y apacible para un paseo.",
+        "tipsES": "La tumba de Jules Verne está claramente señalizada desde la entrada principal."
       },
       {
         "id": "ami-15",
         "name": "Parc de la Hotoie",
         "nameEN": "Parc de la Hotoie",
         "cat": "natura",
-        "lat": 49.8967,
-        "lng": 2.2822,
+        "lat": 49.89854,
+        "lng": 2.28022,
         "short": "Il più antico parco pubblico di Amiens, caratterizzato da ampi viali e un grande bacino d'acqua.",
         "shortEN": "The oldest public park in Amiens, featuring wide avenues and a large water basin.",
         "desc": "Il Parc de la Hotoie è il più antico parco pubblico di Amiens e offre una vasta distesa verde a ovest del centro città. Istituito nel XV secolo, presenta ampi viali alberati, un grande bacino centrale e ampi prati. Il parco ospita frequentemente fiere, circhi ed eventi pubblici. È un luogo popolare per fare jogging, picnic e passeggiate rilassanti tra la gente del posto.",
@@ -5626,7 +6750,11 @@
         "src": [
           "Wikipedia: Parc de la Hotoie"
         ],
-        "maps": "https://maps.google.com/?q=49.8967,2.2822"
+        "maps": "https://maps.google.com/?q=49.8967,2.2822",
+        "nameES": "Parc de la Hotoie",
+        "shortES": "El parque público más antiguo de Amiens, caracterizado por amplios paseos y un gran estanque.",
+        "descES": "Il Parc de la Hotoie es el parque público más antiguo de Amiens y ofrece una amplia superficie verde al oeste del centro de la ciudad. Establecido en el siglo XV, cuenta con amplios paseos arbolados, un gran estanque central y extensos prados. El parque suele acoger ferias, circos y eventos públicos. Es un lugar popular para correr, hacer picnic y dar paseos relajantes entre la gente local.",
+        "tipsES": "Situado justo al lado del Zoo di Amiens, lo que facilita combinar ambas visitas."
       },
       {
         "id": "ami-16",
@@ -5644,15 +6772,19 @@
         "src": [
           "Wikipedia: Maison du Sagittaire"
         ],
-        "maps": "https://maps.google.com/?q=49.8936,2.2989"
+        "maps": "https://maps.google.com/?q=49.8936,2.2989",
+        "nameES": "Maison du Sagittaire",
+        "shortES": "Una fachada renacentista del siglo XVI conservada y adornada con esculturas intrincadas.",
+        "descES": "La Maison du Sagittaire es una sorprendente fachada de estilo renacentista situada junto a la cattedrale. Originalmente construida en el siglo XVI, la fachada se salvó de la destrucción durante la Segunda Guerra Mundial y fue posteriormente anexada a un edificio moderno. Está adornada con esculturas intrincadas, incluida la figura del Sagitario que le da nombre. Representa un precioso recuerdo del patrimonio arquitectónico prebélico de Amiens.",
+        "tipsES": "Situada en la zona peatonal, fácilmente visible al pasear hacia la cattedrale."
       },
       {
         "id": "ami-17",
         "name": "Église Saint-Leu",
         "nameEN": "Église Saint-Leu",
         "cat": "cultura",
-        "lat": 49.8969,
-        "lng": 2.3019,
+        "lat": 49.8977,
+        "lng": 2.30124,
         "short": "Una chiesa gotica del XV secolo situata nello storico quartiere dei canali.",
         "shortEN": "A 15th-century Gothic church located in the historic canal district.",
         "desc": "La Chiesa di Saint-Leu è una chiesa tardo gotica situata nel cuore del pittoresco quartiere di Saint-Leu. Costruita nel XV secolo, serviva i mugnai, i tessitori e i tintori locali che vivevano lungo i canali. La chiesa presenta una caratteristica volta in legno e una robusta torre campanaria. La sua posizione vicino all'acqua la rende un punto di riferimento altamente fotogenico nel quartiere più antico di Amiens.",
@@ -5662,15 +6794,19 @@
         "src": [
           "Wikipedia: Église Saint-Leu d'Amiens"
         ],
-        "maps": "https://maps.google.com/?q=49.8969,2.3019"
+        "maps": "https://maps.google.com/?q=49.8969,2.3019",
+        "nameES": "Église Saint-Leu",
+        "shortES": "Una iglesia gótica del siglo XV situada en el histórico barrio de los canales.",
+        "descES": "La Chiesa di Saint-Leu es una iglesia gótica tardía situada en el corazón del pintoresco barrio de Saint-Leu. Construida en el siglo XV, atendía a los molineros, los tejedores y los tintoreros locales que vivían a lo largo de los canales. La iglesia presenta una característica bóveda de madera y una robusta torre campanaria. Su posición junto al agua la convierte en un punto de referencia muy fotogénico en el barrio más antiguo de Amiens.",
+        "tipsES": "Las calles circundantes están llenas de cafés y restaurantes con vistas a los canales."
       },
       {
         "id": "ami-18",
         "name": "Jardin des Plantes d'Amiens",
         "nameEN": "Jardin des Plantes d'Amiens",
         "cat": "natura",
-        "lat": 49.9022,
-        "lng": 2.2951,
+        "lat": 49.90082,
+        "lng": 2.29668,
         "short": "Un giardino botanico del XVIII secolo con diverse collezioni di piante e alberi secolari.",
         "shortEN": "An 18th-century botanical garden featuring diverse plant collections and ancient trees.",
         "desc": "Il Jardin des Plantes è uno storico giardino botanico di Amiens, originariamente istituito nel XVIII secolo. Esteso su quasi due ettari, presenta una vasta collezione di piante, aiuole a tema e alberi secolari. Il giardino funge sia da risorsa scientifica che da tranquillo parco pubblico. Le sue serre ben tenute e le disposizioni geometriche lo rendono un luogo delizioso per una passeggiata rilassante.",
@@ -5680,9 +6816,16 @@
         "src": [
           "Wikipedia: Jardin des Plantes d'Amiens"
         ],
-        "maps": "https://maps.google.com/?q=49.9022,2.2951"
+        "maps": "https://maps.google.com/?q=49.9022,2.2951",
+        "nameES": "Jardin des Plantes d'Amiens",
+        "shortES": "Un jardín botánico del siglo XVIII con diversas colecciones de plantas y árboles centenarios.",
+        "descES": "El Jardin des Plantes es un histórico jardín botánico de Amiens, originariamente creado en el siglo XVIII. Extendido en casi dos hectáreas, cuenta con una amplia colección de plantas, parterres temáticos y árboles centenarios. El jardín funciona tanto como recurso científico como tranquilo parque público. Sus invernaderos bien cuidados y sus diseños geométricos lo convierten en un lugar delicioso para un paseo relajante.",
+        "tipsES": "La entrada es gratuita y es un lugar perfecto para una pausa tranquila de las visitas turísticas."
       }
-    ]
+    ],
+    "cityES": "Amiens",
+    "countryES": "Francia",
+    "introES": "Descubre el corazón histórico de Amiens con este itinerario a pie perfecto para familias. Desde la majestuosa catedral gótica hasta los pintorescos canales, explora lo mejor de la ciudad en medio día."
   },
   "sansebastian": {
     "city": "San Sebastián",
@@ -5716,7 +6859,11 @@
           "Wikipedia \"Plaza de la Constitución (San Sebastián)\"",
           "sansebastianturismoa.eus"
         ],
-        "maps": "https://maps.google.com/?q=43.3236,-1.98488"
+        "maps": "https://maps.google.com/?q=43.3236,-1.98488",
+        "nameES": "Plaza de la Constitución",
+        "shortES": "El corazón pulsante de la Parte Vieja.",
+        "descES": "La Plaza de la Constitución es el centro neurálgico de la Parte Vieja (Ciudad Vieja) de San Sebastián. Construida originalmente en 1817 por el arquitecto Pedro Manuel de Ugartemendía después de que un devastador incendio arrasara gran parte de la ciudad en 1813, la plaza se distingue por sus soportales y sus balcones numerados. Estos números, todavía visibles sobre las ventanas, recuerdan la época en que la plaza se utilizaba como arena para las corridas. Hoy es un lugar animado, rodeado de bares de pintxos y cafeterías, donde se celebran las principales fiestas locales, como la famosa Tamborrada el 20 de enero. Es el punto de partida ideal para explorar las estrechas calles históricas y saborear la cultura vasca.",
+        "tipsES": "Abierta las 24 horas. Excelente para probar los pintxos en los bares circundantes."
       },
       {
         "tier": 1,
@@ -5736,7 +6883,11 @@
           "santelmomuseoa.eus",
           "Wikipedia \"San Telmo Museoa\""
         ],
-        "maps": "https://maps.google.com/?q=43.32504,-1.985"
+        "maps": "https://maps.google.com/?q=43.32504,-1.985",
+        "nameES": "Museo San Telmo",
+        "shortES": "El museo más antiguo de los Paesi Baschi.",
+        "descES": "Situado a los pies del Monte Urgull, el Museo San Telmo es la principal institución dedicada a la historia y la cultura de la sociedad vasca. Inaugurado en 1902, es el museo más antiguo de los Paesi Baschi. El conjunto arquitectónico es una fascinante combinación entre un antiguo convento dominico del siglo XVI, caracterizado por un claustro renacentista y una iglesia con frescos de Josep Maria Sert, y una ampliación contemporánea de vanguardia completada en 2011. Las colecciones abarcan desde la arqueología hasta las bellas artes, ofreciendo un viaje inmersivo a través de la evolución de la identidad vasca desde la prehistoria hasta nuestros días. Es una visita imprescindible para comprender en profundidad las raíces de esta región única.",
+        "tipsES": "Cerrado los lunes. Entrada alrededor de 6€, gratis los martes."
       },
       {
         "tier": 2,
@@ -5756,15 +6907,19 @@
           "Wikipedia \"Monte Urgull\"",
           "sansebastianturismoa.eus"
         ],
-        "maps": "https://maps.google.com/?q=43.32504,-1.98889"
+        "maps": "https://maps.google.com/?q=43.32504,-1.98889",
+        "nameES": "Castello della Mota",
+        "shortES": "Fortaleza histórica con vistas impresionantes de la bahía.",
+        "descES": "El Castillo de la Mota corona la cima del Monte Urgull, ofreciendo uno de los panoramas más espectaculares de San Sebastián y la Baia della Concha. Los orígenes de esta fortaleza defensiva se remontan al siglo XII, cuando fue construida para proteger la ciudad de los ataques marítimos. A lo largo de los siglos ha sufrido numerosos asedios y reconstrucciones, en particular durante las guerras carlistas en el siglo XIX. Hoy, sus antiguas murallas albergan la Casa de la Historia, un pequeño museo que narra el pasado militar de la ciudad. En la cima del castillo se alza la monumental estatua del Sagrado Corazón (Sacro Cuore), alta 12 metri y añadida en 1950, que vigila silenciosamente la ciudad de abajo.",
+        "tipsES": "La subida a pie requiere aproximadamente 20-30 minuti. Entrada gratuita."
       },
       {
         "id": "sse-4",
         "name": "Acquario di San Sebastián",
         "nameEN": "San Sebastián Aquarium",
         "cat": "kids",
-        "lat": 43.3229,
-        "lng": -1.99212,
+        "lat": 43.319444,
+        "lng": -1.995556,
         "short": "Uno dei più antichi e famosi acquari d'Europa.",
         "shortEN": "One of Europe's oldest and most famous aquariums.",
         "desc": "Situato nel pittoresco porto peschereccio, l'Acquario di San Sebastián è una delle attrazioni più amate dalle famiglie. Inaugurato nel 1928 su iniziativa della Società Oceanografica di Gipuzkoa, è stato il primo museo di scienze naturali dedicato al mare in Spagna. La struttura è celebre per il suo spettacolare oceanario, attraversato da un tunnel trasparente a 360 gradi che permette ai visitatori di camminare circondati da squali toro, razze e centinaia di specie marine del Mar Cantabrico. Oltre alle vasche, l'acquario ospita un'affascinante sezione storica che illustra il forte legame della città con l'oceano, includendo modelli navali e lo scheletro di una balena franca catturata nel 1878.",
@@ -5775,7 +6930,11 @@
           "aquariumss.com",
           "Wikipedia \"Aquarium of Donostia-San Sebastián\""
         ],
-        "maps": "https://maps.google.com/?q=43.3229,-1.99212"
+        "maps": "https://maps.google.com/?q=43.3229,-1.99212",
+        "nameES": "Acquario di San Sebastián",
+        "shortES": "Uno de los acuarios más antiguos y famosos de Europa.",
+        "descES": "Situado en el pintoresco puerto pesquero, el Acquario di San Sebastián es una de las atracciones más queridas por las familias. Inaugurado en 1928 por iniciativa de la Società Oceanografica di Gipuzkoa, fue el primer museo de ciencias naturales dedicado al mar en Spagna. La instalación es célebre por su espectacular oceanario, atravesado por un túnel transparente a 360 gradi que permite a los visitantes caminar rodeados de tiburones toro, rayas y cientos de especies marinas del Mar Cantabrico. Además de los tanques, el acuario alberga una fascinante sección histórica que ilustra el fuerte vínculo de la ciudad con el océano, incluyendo modelos navales y el esqueleto de una ballena franca capturada en 1878.",
+        "tipsES": "Entrada general aproximadamente 14€. Se recomienda reservar online."
       },
       {
         "tier": 2,
@@ -5795,7 +6954,11 @@
           "Wikipedia \"Beach of La Concha\"",
           "sansebastianturismoa.eus"
         ],
-        "maps": "https://maps.google.com/?q=43.3177,-1.98637"
+        "maps": "https://maps.google.com/?q=43.3177,-1.98637",
+        "nameES": "Spiaggia della Concha",
+        "shortES": "La icónica playa en forma de media luna.",
+        "descES": "La Playa de la Concha es reconocida universalmente como una de las playas urbanas más bellas de Europa. Caracterizada por su perfecta forma de media luna y su arena dorada, se extiende por unos 1,3 chilometri a lo largo de la bahía homónima, protegida por los montes Urgull e Igueldo. Su fama internacional comenzó en 1845, cuando la reina Isabella II di Spagna eligió San Sebastián como residencia veraniega para sus baños de mar terapéuticos, transformando la ciudad en un destino aristocrático. El elegante paseo marítimo, embellecido por la característica barandilla blanca de hierro forjado diseñada por Juan Rafael Alday en 1910, es el lugar perfecto para un paseo relajante al atardecer, disfrutando de la brisa marina y de la atmósfera sofisticada.",
+        "tipsES": "Ideal para un paseo o un baño. Las duchas y los servicios están disponibles en verano."
       },
       {
         "id": "sse-6",
@@ -5813,7 +6976,11 @@
         "src": [
           "Wikipedia: Basilica of Santa María del Coro"
         ],
-        "maps": "https://maps.google.com/?q=43.3241,-1.9866"
+        "maps": "https://maps.google.com/?q=43.3241,-1.9866",
+        "nameES": "Basílica de Santa María del Coro",
+        "shortES": "Una imponente basílica barroca con una espectacular fachada en el corazón de la Città Vecchia.",
+        "descES": "La Basílica de Santa María del Coro es una imponente iglesia barroca situada en el corazón de la Parte Vieja (Città Vecchia) de San Sebastián. Terminada en 1774, presenta una magnífica fachada churrigueresca que capta la atención de los visitantes. El interior es igualmente espectacular, con una nave espaciosa y altares ricamente decorados. La iglesia está dedicada a la patrona de la ciudad y representa uno de los monumentos religiosos más importantes de la región.",
+        "tipsES": "Entrada gratuita, pero las donaciones son bienvenidas. Respeta el silencio durante las funciones."
       },
       {
         "id": "sse-7",
@@ -5831,7 +6998,11 @@
         "src": [
           "Wikipedia: San Vicente Church, San Sebastián"
         ],
-        "maps": "https://maps.google.com/?q=43.3245,-1.9839"
+        "maps": "https://maps.google.com/?q=43.3245,-1.9839",
+        "nameES": "Iglesia de San Vicente",
+        "shortES": "La iglesia más antigua de la ciudad, una obra maestra gótica del siglo XVI.",
+        "descES": "La Iglesia de San Vicente es el edificio más antiguo de San Sebastián, construido a principios del siglo XVI en estilo gótico. Situada en la Parte Vieja, la iglesia se distingue por sus majestuosas bóvedas de crucería y el hermoso retablo mayor románico, obra de Ambrosio de Bengoechea. Sus gruesos muros y los contrafuertes le confieren un aspecto casi fortificado. Es un lugar de gran importancia histórica y espiritual para la comunidad local.",
+        "tipsES": "Abierta todos los días. La iluminación interior realza las espléndidas vidrieras."
       },
       {
         "tier": 1,
@@ -5850,7 +7021,11 @@
         "src": [
           "Official Tourism Website: La Bretxa Market"
         ],
-        "maps": "https://maps.google.com/?q=43.3232,-1.9825"
+        "maps": "https://maps.google.com/?q=43.3232,-1.9825",
+        "nameES": "Mercado de la Bretxa",
+        "shortES": "Mercado histórico cubierto donde encontrar los mejores productos frescos de la gastronomía vasca.",
+        "descES": "El Mercado de la Bretxa es un histórico mercado cubierto situado a los márgenes de la Città Vecchia, que data de 1870. El nombre deriva de la brecha abierta en las murallas de la ciudad por las tropas anglo-portuguesas en 1813. Hoy acoge puestos que venden los mejores productos frescos locales, entre ellos pescado, carne, quesos y verduras. Es el lugar ideal para descubrir los ingredientes que sustentan la renombrada gastronomía vasca.",
+        "tipsES": "Visítalo temprano por la mañana para ver los puestos de pescado más abastecidos."
       },
       {
         "id": "sse-9",
@@ -5868,7 +7043,11 @@
         "src": [
           "Wikipedia: Victoria Eugenia Theater"
         ],
-        "maps": "https://maps.google.com/?q=43.3228,-1.9801"
+        "maps": "https://maps.google.com/?q=43.3228,-1.9801",
+        "nameES": "Teatro Victoria Eugenia",
+        "shortES": "Un elegante teatro de estilo Belle Époque, centro de la vida cultural de la ciudad.",
+        "descES": "El Teatro Victoria Eugenia es uno de los teatros más emblemáticos de España, inaugurado en 1912 en estilo Belle Époque. Situado a orillas del río Urumea, ha acogido durante décadas el Festival Internazionale del Cinema di San Sebastián. El edificio, recientemente restaurado, luce una elegante fachada de piedra arenisca y un interior lujoso con un magnífico techo afrescado. Es el corazón palpitante de la vida cultural de la ciudad.",
+        "tipsES": "Consulta el programa para asistir a un espectáculo o reserva una visita guiada."
       },
       {
         "id": "sse-10",
@@ -5886,7 +7065,11 @@
         "src": [
           "Wikipedia: Cathedral of the Good Shepherd of San Sebastián"
         ],
-        "maps": "https://maps.google.com/?q=43.3168,-1.9815"
+        "maps": "https://maps.google.com/?q=43.3168,-1.9815",
+        "nameES": "Catedral del Buen Pastor",
+        "shortES": "La catedral más grande de la ciudad, un magnífico ejemplo de arquitectura neogótica.",
+        "descES": "La Catedral del Buen Pastor es la iglesia más grande de San Sebastián, construida a finales del siglo XIX en estilo neogótico. Inspirada en las grandes catedrales medievales europeas, como la de Colonia, presenta una torre imponente alta 75 metri que domina lo skyline de la ciudad. El interior es amplio y luminoso, enriquecido con espléndidas vidrieras policromadas y un gran órgano. Se encuentra en el centro de la zona romántica de la ciudad.",
+        "tipsES": "La entrada es gratuita. La plaza delantera es perfecta para tomar fotos de la fachada."
       },
       {
         "id": "sse-11",
@@ -5904,7 +7087,11 @@
         "src": [
           "San Sebastián Tourism: Alderdi Eder"
         ],
-        "maps": "https://maps.google.com/?q=43.3211,-1.9845"
+        "maps": "https://maps.google.com/?q=43.3211,-1.9845",
+        "nameES": "Parque Alderdi Eder",
+        "shortES": "Un precioso parque costero con jardines cuidados, un tiovivo de época y vistas a la bahía.",
+        "descES": "El Parque Alderdi Eder, que en vasco significa 'lugar hermoso', es un encantador jardín público situado frente a la bahía de La Concha y al ayuntamiento. Caracterizado por elegantes tamariscos, parterres floridos y un tiovivo de época, es uno de los lugares más pintorescos de la ciudad. Ofrece una vista espectacular al mar y a la isla de Santa Clara. Es el lugar perfecto para un paseo relajante o para contemplar la puesta de sol.",
+        "tipsES": "Ideal para familias, el tiovivo es una atracción imprescindible para los niños."
       },
       {
         "id": "sse-12",
@@ -5922,7 +7109,11 @@
         "src": [
           "Wikipedia: Miramar Palace"
         ],
-        "maps": "https://maps.google.com/?q=43.3144,-1.9989"
+        "maps": "https://maps.google.com/?q=43.3144,-1.9989",
+        "nameES": "Palacio de Miramar",
+        "shortES": "Antigua residencia de verano real rodeada de espléndidos jardines con vistas impresionantes a la bahía.",
+        "descES": "El Palacio de Miramar es una elegante residencia de estilo inglés construida en 1893 como residencia de verano para la familia real española. Situado en una colina que separa las playas de La Concha y Ondarreta, ofrece algunas de las vistas panorámicas más espectaculares de la bahía. Aunque el interior solo se abre para eventos especiales, los extensos jardines que la rodean están abiertos al público y constituyen un lugar idílico para pasear.",
+        "tipsES": "Los jardines son de acceso gratuito y son perfectos para un picnic."
       },
       {
         "tier": 1,
@@ -5941,7 +7132,11 @@
         "src": [
           "Wikipedia: Comb of the Wind"
         ],
-        "maps": "https://maps.google.com/?q=43.3216,-2.0058"
+        "maps": "https://maps.google.com/?q=43.3216,-2.0058",
+        "nameES": "Peine del Viento",
+        "shortES": "Una icónica escultura de acero incrustada en las rocas donde las olas del océano se estrellan.",
+        "descES": "El Peine del Viento (Peine del Viento) es una de las obras de arte más icónicas de San Sebastián, creada por el escultor vasco Eduardo Chillida y el arquitecto Luis Peña Ganchegui. Situada en el extremo occidental de la bahía, a los pies del Monte Igueldo, la obra está compuesta por tres esculturas macizas de acero incrustadas en las rocas. Cuando el mar está agitado, las olas se estrellan violentamente contra las esculturas, creando un espectáculo natural y artístico único.",
+        "tipsES": "Visita durante la marea alta o en un día ventoso para ver las olas en acción."
       },
       {
         "tier": 1,
@@ -5949,8 +7144,8 @@
         "name": "Monte Igueldo",
         "nameEN": "Monte Igueldo",
         "cat": "panorama",
-        "lat": 43.3219,
-        "lng": -2.0086,
+        "lat": 43.321044,
+        "lng": -2.009651,
         "short": "Una collina accessibile in funicolare che offre la vista più spettacolare sulla baia.",
         "shortEN": "A hill accessible by funicular offering the most spectacular view of the bay.",
         "desc": "Il Monte Igueldo offre la vista panoramica più famosa e fotografata di San Sebastián e della sua baia a forma di conchiglia. Si può raggiungere la cima tramite una storica funicolare in legno inaugurata nel 1912. Sulla sommità si trova un parco divertimenti vintage dal fascino retrò e un'antica torre di avvistamento, il Torreón, che ospita una mostra e offre viste ancora più elevate. È un'esperienza imperdibile per ogni visitatore.",
@@ -5960,15 +7155,19 @@
         "src": [
           "Wikipedia: Monte Igueldo"
         ],
-        "maps": "https://maps.google.com/?q=43.3219,-2.0086"
+        "maps": "https://maps.google.com/?q=43.3219,-2.0086",
+        "nameES": "Monte Igueldo",
+        "shortES": "Una colina accesible en funicular que ofrece la vista más espectacular de la bahía.",
+        "descES": "El Monte Igueldo ofrece la vista panorámica más famosa y fotografiada de San Sebastián y de su bahía con forma de concha. Se puede alcanzar la cima mediante un histórico funicular de madera inaugurado en 1912. En la cima hay un parque de atracciones vintage con encanto retro y una antigua torre de vigilancia, el Torreón, que alberga una exposición y ofrece vistas aún más elevadas. Es una experiencia imprescindible para todo visitante.",
+        "tipsES": "Toma el histórico funicular para subir. La entrada al mirador requiere un pequeño billete."
       },
       {
         "id": "sse-15",
         "name": "Playa de la Zurriola",
         "nameEN": "Playa de la Zurriola",
         "cat": "natura",
-        "lat": 43.3265,
-        "lng": -1.9752,
+        "lat": 43.32675,
+        "lng": -1.972895,
         "short": "La spiaggia dei surfisti, nota per le sue onde e l'atmosfera vivace e giovanile.",
         "shortEN": "The surfers' beach, known for its waves and lively, youthful atmosphere.",
         "desc": "La Playa de la Zurriola è la spiaggia più dinamica e giovanile di San Sebastián, situata nel quartiere di Gros. A differenza della tranquilla baia de La Concha, Zurriola è aperta all'oceano e famosa per le sue onde, rendendola un paradiso per i surfisti di tutto il mondo. La spiaggia è fiancheggiata da un vivace lungomare ed è il luogo ideale per praticare sport, assistere a concerti o semplicemente godersi l'atmosfera vibrante.",
@@ -5978,7 +7177,11 @@
         "src": [
           "San Sebastián Tourism: Zurriola Beach"
         ],
-        "maps": "https://maps.google.com/?q=43.3265,-1.9752"
+        "maps": "https://maps.google.com/?q=43.3265,-1.9752",
+        "nameES": "Playa de la Zurriola",
+        "shortES": "La playa de los surfistas, conocida por sus olas y su ambiente animado y juvenil.",
+        "descES": "La Playa de la Zurriola es la playa más dinámica y juvenil de San Sebastián, situada en el barrio de Gros. A diferencia de la tranquila bahía de La Concha, Zurriola está abierta al océano y es famosa por sus olas, lo que la convierte en un paraíso para surfistas de todo el mundo. La playa está flanqueada por un animado paseo marítimo y es el lugar ideal para practicar deportes, asistir a conciertos o simplemente disfrutar del ambiente vibrante.",
+        "tipsES": "Excelente para tomar clases de surf o ver a los surfistas al atardecer."
       },
       {
         "tier": 1,
@@ -5997,7 +7200,11 @@
         "src": [
           "Wikipedia: Kursaal Palace"
         ],
-        "maps": "https://maps.google.com/?q=43.325,-1.9778"
+        "maps": "https://maps.google.com/?q=43.325,-1.9778",
+        "nameES": "Kursaal",
+        "shortES": "Un moderno centro de congresos formado por dos cubos de vidrio que se iluminan por la noche.",
+        "descES": "El Kursaal es un imponente centro de congresos y auditorio proyectado por el arquitecto Rafael Moneo. Situado en la desembocadura del río Urumea, el edificio está compuesto por dos grandes cubos de vidrio translúcido que recuerdan a rocas arenadas en la playa. Por la noche, los cubos se iluminan creando un efecto visual extraordinario. Es la sede principal del Festival Internazionale del Cinema di San Sebastián y alberga numerosos eventos culturales y conciertos.",
+        "tipsES": "Admira el edificio de noche cuando está iluminado. Consulta la programación para eventos y conciertos."
       },
       {
         "id": "sse-17",
@@ -6015,15 +7222,19 @@
         "src": [
           "Wikipedia: María Cristina Bridge"
         ],
-        "maps": "https://maps.google.com/?q=43.3175,-1.9792"
+        "maps": "https://maps.google.com/?q=43.3175,-1.9792",
+        "nameES": "Puente de María Cristina",
+        "shortES": "Un elegante puente de estilo Belle Époque decorado con cuatro monumentales obeliscos.",
+        "descES": "El Puente de María Cristina es el puente más elegante de San Sebastián; atraviesa el río Urumea conectando el centro de la ciudad con la estación de ferrocarril. Inaugurado en 1905, se distingue por sus cuatro monumentales obeliscos en los extremos, coronados por grupos escultóricos ecuestres. El diseño del puente, con sus ricos detalles ornamentales, refleja el estilo Belle Époque que caracteriza gran parte de la arquitectura de la ciudad.",
+        "tipsES": "Cruza el puente a pie para admirar los detalles escultóricos y la vista del río."
       },
       {
         "id": "sse-18",
         "name": "Plaza de Gipuzkoa",
         "nameEN": "Plaza de Gipuzkoa",
         "cat": "natura",
-        "lat": 43.3218,
-        "lng": -1.9814,
+        "lat": 43.321389,
+        "lng": -1.985556,
         "short": "Una pittoresca piazza con un giardino all'inglese, un laghetto e un orologio floreale.",
         "shortEN": "A picturesque square with an English-style garden, a pond, and a floral clock.",
         "desc": "La Plaza de Gipuzkoa è un'oasi verde nel cuore della zona romantica di San Sebastián. Progettata dal giardiniere francese Pierre Ducasse, la piazza ospita un bellissimo giardino all'inglese con un laghetto, cigni, un ponte di legno e un orologio floreale. È circondata da eleganti edifici porticati, tra cui il Palazzo della Deputazione Forale di Gipuzkoa. È un luogo tranquillo e pittoresco, molto amato dai residenti.",
@@ -6033,7 +7244,11 @@
         "src": [
           "San Sebastián Tourism: Gipuzkoa Square"
         ],
-        "maps": "https://maps.google.com/?q=43.3218,-1.9814"
+        "maps": "https://maps.google.com/?q=43.3218,-1.9814",
+        "nameES": "Plaza de Gipuzkoa",
+        "shortES": "Una pintoresca plaza con un jardín inglés, un estanque y un reloj floral.",
+        "descES": "La Plaza de Gipuzkoa es un oasis verde en el corazón de la zona romántica de San Sebastián. Diseñada por el jardinero francés Pierre Ducasse, la plaza alberga un hermoso jardín inglés con un estanque, cisnes, un puente de madera y un reloj floral. Está rodeada de elegantes edificios porticados, entre los que se encuentra el Palazzo della Deputazione Forale di Gipuzkoa. Es un lugar tranquilo y pintoresco, muy querido por los residentes.",
+        "tipsES": "Perfecta para una pausa relajante a la sombra de los árboles."
       },
       {
         "id": "sse-19",
@@ -6051,7 +7266,11 @@
         "src": [
           "Wikipedia: Tabakalera"
         ],
-        "maps": "https://maps.google.com/?q=43.3164,-1.9765"
+        "maps": "https://maps.google.com/?q=43.3164,-1.9765",
+        "nameES": "Tabakalera",
+        "shortES": "Antigua fábrica de tabaco ahora convertida en un animado centro de cultura contemporánea con una terraza panorámica.",
+        "descES": "Tabakalera es una antigua fábrica de tabaco transformada en un imponente Centro Internacional de Cultura Contemporánea. Situado cerca de la estación de tren, este amplio edificio ofrece espacios expositivos, cines, talleres creativos y una biblioteca. La arquitectura industrial ha sido magníficamente renovada, creando un ambiente estimulante para el arte y la cultura. La terraza en la azotea ofrece una vista panorámica única de la ciudad.",
+        "tipsES": "La entrada al edificio y a muchas exposiciones es gratuita. No te pierdas la vista desde la terraza."
       },
       {
         "id": "sse-20",
@@ -6069,9 +7288,16 @@
         "src": [
           "Wikipedia: San Sebastián City Hall"
         ],
-        "maps": "https://maps.google.com/?q=43.3214,-1.9856"
+        "maps": "https://maps.google.com/?q=43.3214,-1.9856",
+        "nameES": "Ayuntamiento de San Sebastián",
+        "shortES": "El elegante ayuntamiento de la ciudad, antaño un lujoso casino de la Belle Époque.",
+        "descES": "El Ayuntamiento (Municipio) de San Sebastián es uno de los edificios más bonitos de la ciudad, construido originalmente en 1887 como Gran Casino. Durante la Belle Époque, acogió a la alta sociedad europea antes de que el juego de azar fuera prohibido. Situado entre la bahía de La Concha y el Parque Alderdi Eder, el edificio luce una arquitectura elegante y majestuosa. En la fachada aún son visibles los orificios de bala que datan de la Guerra Civil Española.",
+        "tipsES": "Admira el edificio desde el exterior; los jardines circundantes son perfectos para relajarse."
       }
-    ]
+    ],
+    "cityES": "San Sebastián",
+    "countryES": "Spagna",
+    "introES": "San Sebastián, o Donostia en euskera, es una perla costera renombrada por su gastronomía excepcional y sus playas elegantes. Este itinerario a pie explora el corazón histórico y la espectacular bahía de la ciudad."
   },
   "bilbao": {
     "city": "Bilbao",
@@ -6104,7 +7330,11 @@
           "Wikipedia \"Doña Casilda Iturrizar park\"",
           "bilbaoturismo.net"
         ],
-        "maps": "https://maps.google.com/?q=43.26550,-2.94160"
+        "maps": "https://maps.google.com/?q=43.26550,-2.94160",
+        "nameES": "Parco Doña Casilda Iturrizar",
+        "shortES": "Un tranquilo parque de estilo inglés con estanque y tiovivo, perfecto para un relajante paseo en familia.",
+        "descES": "El Parco Doña Casilda Iturrizar es el espacio verde más histórico y querido de Bilbao, ofreciendo un refugio pacífico en el corazón de la ciudad. Diseñado al estilo romántico inglés e inaugurado en 1907, el parque toma el nombre de la rica benefactora que donó el terreno. Cuenta con un hermoso estanque con patos, un carrusel clásico y una majestuosa pérgola que acoge espectáculos ocasionales. Para las familias, el parque es una verdadera delicia, ofreciendo amplios espacios donde los niños pueden jugar e interactuar con los cisnes y los pavos reales residentes. La exuberante variedad botánica y el cercano Museo di Belle Arti lo convierten en un punto de partida perfecto para un paseo. Su atmósfera tranquila contrasta magníficamente con el animado entorno urbano, permitiendo a los visitantes relajarse antes de explorar las maravillas arquitectónicas modernas de la ciudad.",
+        "tipsES": "Entrada gratuita. Abierto 24/7. Situado cerca del Museo di Belle Arti; excelente lugar para un picnic."
       },
       {
         "tier": 2,
@@ -6124,15 +7354,19 @@
           "Wikipedia \"Guggenheim Museum Bilbao\"",
           "guggenheim-bilbao.eus"
         ],
-        "maps": "https://maps.google.com/?q=43.26860,-2.93400"
+        "maps": "https://maps.google.com/?q=43.26860,-2.93400",
+        "nameES": "Museo Guggenheim Bilbao",
+        "shortES": "El icónico museo de arte contemporáneo en titanio de Frank Gehry que ha transformado el skyline de Bilbao.",
+        "descES": "El Museo Guggenheim de Bilbao es una obra maestra de la arquitectura contemporánea que, por sí sola, transformó la imagen global de la ciudad. Diseñado por el célebre arquitecto Frank Gehry y abierto al público el 18 de octubre de 1997, el edificio es famoso por su exterior ondulado revestido en titanio que captura la luz del sol de formas fascinantes. En el interior, el museo alberga una colección de primer nivel de arte moderno y contemporáneo, con obras de gran formato y exposiciones internacionales temporales. En el exterior, los visitantes son recibidos por esculturas icónicas, entre ellas el enorme \"Puppy\" floral de Jeff Koons y la gigantesca araña \"Maman\" de Louise Bourgeois. El museo no solo revitalizó el antiguo frente fluvial industrial de Bilbao, sino que se ha convertido en un símbolo de regeneración urbana en todo el mundo. Explorar sus galerías curvas es una experiencia cultural inolvidable.",
+        "tipsES": "Cerrado los lunes. Reserva las entradas online con antelación para evitar colas. No te pierdas las esculturas exteriores."
       },
       {
         "id": "bil-3",
         "name": "Ponte Zubizuri",
         "nameEN": "Zubizuri Bridge",
         "cat": "panorama",
-        "lat": 43.268,
-        "lng": -2.9275,
+        "lat": 43.266406,
+        "lng": -2.927917,
         "short": "Un suggestivo ponte pedonale a forma di vela progettato da Santiago Calatrava, con viste panoramiche sul fiume Nervión.",
         "shortEN": "A striking, sail-like pedestrian bridge designed by Santiago Calatrava, offering scenic views over the Nervión River.",
         "desc": "Lo Zubizuri, che si traduce in \"ponte bianco\" in lingua basca, è una suggestiva passerella pedonale che attraversa il fiume Nervión. Progettato dall'architetto visionario Santiago Calatrava e inaugurato nel 1997, questo ponte pedonale ad arco tirato presenta un caratteristico arco inclinato e un impalcato curvo in mattoni di vetro. Il suo design futuristico ricorda una vela gonfia, integrandosi perfettamente con l'estetica moderna introdotta dal vicino Museo Guggenheim. Il ponte funge da collegamento vitale e panoramico tra la riva destra di Campo Volantín e la riva sinistra di Uribitarte. Sebbene la superficie in vetro originale si fosse rivelata scivolosa nel clima piovoso di Bilbao, richiedendo l'aggiunta di un tappeto antiscivolo, la struttura rimane un amato punto di riferimento architettonico. Attraversare lo Zubizuri offre fantastiche viste panoramiche sul fiume e sullo skyline in evoluzione della città.",
@@ -6142,7 +7376,11 @@
         "src": [
           "Wikipedia \"Zubizuri\""
         ],
-        "maps": "https://maps.google.com/?q=43.26800,-2.92750"
+        "maps": "https://maps.google.com/?q=43.26800,-2.92750",
+        "nameES": "Ponte Zubizuri",
+        "shortES": "Un sugestivo puente peatonal con forma de vela diseñado por Santiago Calatrava, con vistas panorámicas al río Nervión.",
+        "descES": "El Zubizuri, que se traduce como \"puente blanco\" en lengua vasca, es una sugestiva pasarela peatonal que cruza el río Nervión. Diseñado por el visionario arquitecto Santiago Calatrava e inaugurado en 1997, este puente peatonal atirantado presenta un característico arco inclinado y un tablero curvo de losetas de vidrio. Su diseño futurista recuerda a una vela hinchada, integrándose perfectamente con la estética moderna introducida por el cercano Museo Guggenheim. El puente sirve de conexión vital y panorámica entre la orilla derecha de Campo Volantín y la orilla izquierda de Uribitarte. Aunque la superficie original de vidrio resultó resbaladiza con el clima lluvioso de Bilbao, lo que requirió la adición de una alfombra antideslizante, la estructura sigue siendo un querido punto de referencia arquitectónico. Cruzar el Zubizuri ofrece fantásticas vistas panorámicas del río y del skyline en evolución de la ciudad.",
+        "tipsES": "Cruce gratuito. Ideal para visitarlo al atardecer o por la noche cuando el puente está iluminado."
       },
       {
         "tier": 1,
@@ -6162,7 +7400,11 @@
           "Wikipedia \"Plaza Nueva (Bilbao)\"",
           "bilbaoturismo.net"
         ],
-        "maps": "https://maps.google.com/?q=43.25950,-2.92320"
+        "maps": "https://maps.google.com/?q=43.25950,-2.92320",
+        "nameES": "Plaza Nueva",
+        "shortES": "Una monumental plaza neoclásica en la Città Vecchia, famosa por su ambiente animado y sus exquisitos bares de pintxos.",
+        "descES": "Plaza Nueva es el corazón monumental del Casco Viejo de Bilbao, o Città Vecchia, y ofrece un ambiente vibrante lleno de historia y tradición culinaria. Construida en un riguroso estilo neoclásico, la plaza se completó en 1851 tras décadas de planificación. Está totalmente rodeada de elegantes edificios porticados, que históricamente albergaban al gobierno local y ahora acogen algunas de las tascas tradicionales más famosas de la ciudad. La plaza es el destino ideal para vivir la tradición vasca del \"txikiteo\", moviéndose de un bar a otro para probar exquisitos pintxos acompañados del vino local. Los domingos, la plaza se transforma en un animado mercado de coleccionistas donde la gente del lugar intercambia monedas, sellos y libros. Con su ambiente amplio y peatonal, es un lugar fantástico para que las familias se relajen sumergiéndose en la auténtica cultura local.",
+        "tipsES": "Visítala por la noche para la mejor experiencia de pintxos, o el domingo por la mañana para el tradicional mercado de coleccionistas."
       },
       {
         "tier": 2,
@@ -6170,8 +7412,8 @@
         "name": "Mercado de la Ribera",
         "nameEN": "Mercado de la Ribera",
         "cat": "cibo",
-        "lat": 43.2565,
-        "lng": -2.9244,
+        "lat": 43.255551,
+        "lng": -2.924343,
         "short": "Il più grande mercato coperto d'Europa, con un design Art Déco e una vivace area gastro-bar per degustazioni.",
         "shortEN": "Europe's largest covered food market, featuring an Art Deco design and a lively gastro-bar area for tasting local flavors.",
         "desc": "Situato sulle rive del fiume Nervión, il Mercado de la Ribera è uno spettacolare tempio della gastronomia e una pietra miliare della vita quotidiana di Bilbao. Progettata dall'architetto Pedro Ispizua e costruita nel 1929, questa monumentale struttura in stile Art Déco presenta magnifiche vetrate e vasti spazi aperti inondati di luce naturale. Riconosciuto dal Guinness dei Primati nel 1990 come il più grande mercato alimentare coperto d'Europa, si estende su ben 10.000 metri quadrati. All'interno, i visitatori troveranno una vivace varietà di bancarelle che vendono i prodotti locali, i frutti di mare e le carni più fresche. Recentemente rinnovato, il mercato include ora una vivace area gastro-bar dove è possibile gustare specialità basche preparate al momento ascoltando musica jazz dal vivo. È la tappa finale perfetta per assaporare i sapori autentici di Bilbao.",
@@ -6182,7 +7424,11 @@
           "Wikipedia \"Ribera Market\"",
           "mercadodelaribera.biz"
         ],
-        "maps": "https://maps.google.com/?q=43.25650,-2.92440"
+        "maps": "https://maps.google.com/?q=43.25650,-2.92440",
+        "nameES": "Mercado de la Ribera",
+        "shortES": "El mayor mercado cubierto de Europa, con un diseño Art Déco y una animada zona gastro-bar para degustar.",
+        "descES": "Situado a orillas del río Nervión, el Mercado de la Ribera es un espectacular templo de la gastronomía y un hito de la vida cotidiana de Bilbao. Diseñado por el arquitecto Pedro Ispizua y construido en 1929, esta monumental estructura en estilo Art Déco presenta magníficas vidrieras y amplios espacios abiertos bañados por luz natural. Reconocido por el Guinness dei Primati en 1990 como el mayor mercado alimentario cubierto de Europa, se extiende nada menos que 10.000 metri quadrati. En su interior, los visitantes encontrarán una animada variedad de puestos que venden productos locales, mariscos y las carnes más frescas. Recientemente renovado, el mercado incluye ahora una animada zona gastro-bar donde es posible degustar especialidades vascas preparadas al momento mientras se escucha música jazz en directo. Es la parada final perfecta para degustar los sabores auténticos de Bilbao.",
+        "tipsES": "Los puestos cierran por la tarde, pero los gastro-bar permanecen abiertos hasta tarde. Situado en Erribera Kalea."
       },
       {
         "tier": 1,
@@ -6202,7 +7448,11 @@
           "Wikipedia: Bilbao Cathedral",
           "Official Tourism Website"
         ],
-        "maps": "https://maps.google.com/?q=43.2575,-2.9242"
+        "maps": "https://maps.google.com/?q=43.2575,-2.9242",
+        "nameES": "Catedral de Santiago de Bilbao",
+        "shortES": "Una histórica catedral gótica en el corazón del casco histórico de Bilbao.",
+        "descES": "La Cattedrale di Santiago es el edificio más antiguo de Bilbao, situada en el corazón del Casco Viejo. Construida entre los siglos XIV y XV, presenta un magnífico estilo gótico con un claustro encantador. Está dedicada al apóstol San Giacomo y es una etapa importante en el Cammino di Santiago del Nord. El interior se caracteriza por tres naves y espléndidas capillas laterales.",
+        "tipsES": "La entrada es de pago e incluye la audioguía; consulta los horarios de las misas."
       },
       {
         "tier": 1,
@@ -6222,7 +7472,11 @@
           "Wikipedia: Bilbao Fine Arts Museum",
           "Museo de Bellas Artes official site"
         ],
-        "maps": "https://maps.google.com/?q=43.2661,-2.9383"
+        "maps": "https://maps.google.com/?q=43.2661,-2.9383",
+        "nameES": "Museo de Bellas Artes de Bilbao",
+        "shortES": "Un prestigioso museo que alberga una amplia colección de arte desde la Edad Media hasta la actualidad.",
+        "descES": "El Museo di Belle Arti di Bilbao es uno de los museos de arte más importantes de España. Su vasta colección abarca desde el arte medieval hasta el contemporáneo, incluyendo obras maestras de artistas vascos, españoles y europeos. El propio edificio es una mezcla interesante de arquitectura clásica y moderna. Ofrece una experiencia cultural profunda, complementaria a la del cercano Guggenheim.",
+        "tipsES": "La entrada suele ser gratuita el miércoles por la tarde o los domingos."
       },
       {
         "tier": 1,
@@ -6242,7 +7496,11 @@
           "Wikipedia: Teatro Arriaga",
           "Teatro Arriaga official site"
         ],
-        "maps": "https://maps.google.com/?q=43.2594,-2.9247"
+        "maps": "https://maps.google.com/?q=43.2594,-2.9247",
+        "nameES": "Teatro Arriaga",
+        "shortES": "Un magnífico teatro neo-barroco dedicado al \"Mozart español\".",
+        "descES": "El Teatro Arriaga es un elegante teatro de ópera en estilo neo-barroco situado a orillas del río Nervión. Inaugurado en 1890, está dedicado al compositor vasco Juan Crisóstomo de Arriaga, conocido como el \"Mozart español\". Su imponente fachada y sus lujosos interiores lo convierten en uno de los edificios más icónicos de la ciudad. Alberga regularmente espectáculos teatrales, óperas y conciertos de alto nivel.",
+        "tipsES": "Es posible participar en visitas guiadas los fines de semana."
       },
       {
         "id": "bil-9",
@@ -6261,7 +7519,11 @@
           "Wikipedia: Azkuna Zentroa",
           "Azkuna Zentroa official site"
         ],
-        "maps": "https://maps.google.com/?q=43.26,-2.9375"
+        "maps": "https://maps.google.com/?q=43.26,-2.9375",
+        "nameES": "Azkuna Zentroa",
+        "shortES": "Un antiguo almacén de vino transformado en un moderno centro cultural por Philippe Starck.",
+        "descES": "Azkuna Zentroa, anteriormente conocido como Alhóndiga, es un antiguo almacén de vino transformado en un centro cultural y recreativo vanguardista. Rediseñado por el célebre diseñador Philippe Starck, el edificio es famoso por sus 43 columnas únicas que sostienen la estructura interior. En su interior alberga cines, una biblioteca, espacios expositivos y una piscina con fondo de cristal visible desde la planta baja. Es un ejemplo perfecto de regeneración urbana en Bilbao.",
+        "tipsES": "La entrada al edificio es gratuita; no te pierdas la vista de la piscina desde abajo."
       },
       {
         "tier": 1,
@@ -6269,8 +7531,8 @@
         "name": "Funicular de Artxanda",
         "nameEN": "Funicular de Artxanda",
         "cat": "panorama",
-        "lat": 43.2686,
-        "lng": -2.9228,
+        "lat": 43.274059,
+        "lng": -2.920163,
         "short": "Una storica funicolare che porta al miglior punto panoramico di Bilbao.",
         "shortEN": "A historic funicular leading to the best panoramic viewpoint in Bilbao.",
         "desc": "La Funicolare di Artxanda collega il centro di Bilbao con la cima del Monte Artxanda dal 1915. Il breve viaggio offre un'esperienza storica e pittoresca. Una volta in cima, i visitatori possono godere della migliore vista panoramica sull'intera città e sulla valle circostante. L'area sommitale dispone anche di parchi, sculture e ristoranti tradizionali baschi.",
@@ -6281,7 +7543,11 @@
           "Wikipedia: Artxanda Funicular",
           "Bilbao Turismo"
         ],
-        "maps": "https://maps.google.com/?q=43.2686,-2.9228"
+        "maps": "https://maps.google.com/?q=43.2686,-2.9228",
+        "nameES": "Funicular de Artxanda",
+        "shortES": "Un histórico funicular que lleva al mejor punto panorámico de Bilbao.",
+        "descES": "La Funicolare di Artxanda conecta el centro de Bilbao con la cima del Monte Artxanda desde 1915. El breve viaje ofrece una experiencia histórica y pintoresca. Una vez en la cima, los visitantes pueden disfrutar de la mejor vista panorámica de toda la ciudad y del valle circundante. La zona de la cumbre también dispone de parques, esculturas y restaurantes tradicionales vascos.",
+        "tipsES": "Los trayectos salen cada 15 minuti; puedes usar la tarjeta de transporte Barik."
       },
       {
         "tier": 1,
@@ -6301,7 +7567,11 @@
           "Wikipedia: Basilica of Begoña",
           "Bilbao Turismo"
         ],
-        "maps": "https://maps.google.com/?q=43.2586,-2.9142"
+        "maps": "https://maps.google.com/?q=43.2586,-2.9142",
+        "nameES": "Basílica de Begoña",
+        "shortES": "Un venerado santuario gótico-renacentista dedicado a la patrona de la región.",
+        "descES": "La Basilica di Begoña es un importante santuario dedicado a la patrona de la Biscaglia, la Virgen de Begoña. Construida en el siglo XVI, mezcla elementos góticos y renacentistas. Es un lugar de profunda devoción para los marineros y los ciudadanos locales, que la llaman cariñosamente \"Amatxu\" (madre). La iglesia domina la ciudad desde lo alto y ofrece una atmósfera de gran espiritualidad.",
+        "tipsES": "Se puede llegar a pie desde el Casco Viejo por las escaleras de Mallona o en el ascensor."
       },
       {
         "id": "bil-12",
@@ -6320,7 +7590,11 @@
           "Wikipedia: San Mamés Stadium (2013)",
           "Athletic Club official site"
         ],
-        "maps": "https://maps.google.com/?q=43.2642,-2.9493"
+        "maps": "https://maps.google.com/?q=43.2642,-2.9493",
+        "nameES": "San Mamés Stadium",
+        "shortES": "El espectacular estadio del Athletic Club, conocido como \"La Cattedrale\" del fútbol.",
+        "descES": "El estadio San Mamés es la casa del Athletic Club, uno de los equipos de fútbol más históricos y singulares de España. Conocido como \"La Catedral\" del fútbol español, el nuevo estadio es una obra maestra de la arquitectura deportiva moderna. Ofrece un museo interactivo que cuenta la filosofía única del club, que emplea solo jugadores de origen vasco. El tour del estadio permite visitar los vestuarios, el túnel y el campo.",
+        "tipsES": "Reserva el tour del estadio y del museo con antelación, especialmente los días de partido."
       },
       {
         "id": "bil-13",
@@ -6339,7 +7613,11 @@
           "Wikipedia: Church of San Antón, Bilbao",
           "Bilbao Turismo"
         ],
-        "maps": "https://maps.google.com/?q=43.2553,-2.9236"
+        "maps": "https://maps.google.com/?q=43.2553,-2.9236",
+        "nameES": "Iglesia de San Antón",
+        "shortES": "Una histórica iglesia gótica situada a orillas del río, símbolo de la ciudad.",
+        "descES": "La Iglesia de San Antón es un símbolo tan icónico de Bilbao que aparece en el escudo de la ciudad. Situada justo al lado del puente homónimo y del Mercato della Ribera, fue construida en el siglo XV en estilo gótico. Sus cimientos se asientan sobre las ruinas del antiguo alcázar de la ciudad. El interior alberga un bonito retablo plateresco y restos arqueológicos visibles.",
+        "tipsES": "La entrada suele estar incluida en el billete de la Cattedrale di Santiago."
       },
       {
         "id": "bil-14",
@@ -6358,7 +7636,11 @@
           "Wikipedia: Puente de La Salve",
           "Bilbao Turismo"
         ],
-        "maps": "https://maps.google.com/?q=43.2689,-2.9328"
+        "maps": "https://maps.google.com/?q=43.2689,-2.9328",
+        "nameES": "Puente de La Salve",
+        "shortES": "Un puente icónico con un arco rojo que ofrece vistas espectaculares del Guggenheim.",
+        "descES": "El Puente de La Salve es una estructura icónica que cruza el río Nervión, integrándose perfectamente con el Museo Guggenheim. Construido originalmente en los años '70, fue enriquecido en 2007 con un gran arco rojo diseñado por el artista francés Daniel Buren. El puente ofrece una de las vistas más espectaculares y fotografiadas del museo y del paseo fluvial. Es un punto de paso peatonal muy concurrido.",
+        "tipsES": "Usa los ascensores gratuitos para subir al puente desde el nivel del río."
       },
       {
         "id": "bil-15",
@@ -6377,7 +7659,11 @@
           "Wikipedia: Basque Museum (Bilbao)",
           "Euskal Museoa official site"
         ],
-        "maps": "https://maps.google.com/?q=43.2583,-2.9225"
+        "maps": "https://maps.google.com/?q=43.2583,-2.9225",
+        "nameES": "Euskal Museoa",
+        "shortES": "Un museo dedicado a la rica historia, cultura y tradiciones del pueblo vasco.",
+        "descES": "El Museo Vasco, situado en un antiguo colegio jesuita del siglo XVII en el Casco Viejo, es el lugar ideal para comprender la cultura y la historia de los Países Vascos. Sus exposiciones abarcan la etnografía, la historia marítima, la artesanía y las tradiciones locales. El claustro central alberga el misterioso \"Idolo di Mikeldi\", una escultura de piedra de origen prerromano. Es una visita esencial para quien quiera profundizar en la identidad vasca.",
+        "tipsES": "Consulta los horarios de apertura ya que el museo ha estado recientemente en fase de remodelación."
       },
       {
         "id": "bil-16",
@@ -6396,15 +7682,19 @@
           "Wikipedia: Palacio Chávarri",
           "Bilbao Turismo"
         ],
-        "maps": "https://maps.google.com/?q=43.2631,-2.9361"
+        "maps": "https://maps.google.com/?q=43.2631,-2.9361",
+        "nameES": "Palacio Chávarri",
+        "shortES": "Un fascinante palacio ecléctico conocido por sus ventanas, todas diferentes entre sí.",
+        "descES": "El Palacio Chávarri es uno de los edificios más singulares y eclécticos de Bilbao, situado en Plaza Moyúa. Construido a finales del siglo XIX para un rico industrial, se distingue por su fachada asimétrica, donde ninguna ventana es igual a otra. La arquitectura está fuertemente influenciada por el estilo renacentista flamenco. Actualmente alberga la sede de la representación del gobierno español en Biscaglia.",
+        "tipsES": "El edificio está cerrado al público, pero la fachada merece sin duda una foto."
       },
       {
         "id": "bil-17",
         "name": "Parque Etxebarria",
         "nameEN": "Parque Etxebarria",
         "cat": "natura",
-        "lat": 43.2614,
-        "lng": -2.9189,
+        "lat": 43.26188,
+        "lng": -2.91778,
         "short": "Un grande parco collinare con viste panoramiche, sorto su un'ex area industriale.",
         "shortEN": "A large hilly park with panoramic views, built on a former industrial site.",
         "desc": "Il Parco Etxebarria è il più grande spazio verde pubblico di Bilbao, nato dalla riqualificazione di un'ex area industriale. Situato su una collina che domina il Casco Viejo, offre ampi prati, alberi e percorsi pedonali. L'unico elemento rimasto del suo passato industriale è un'alta ciminiera in mattoni, conservata come monumento. È un luogo perfetto per rilassarsi e godere di splendide viste sulla città.",
@@ -6415,7 +7705,11 @@
           "Wikipedia: Parque Etxebarria",
           "Bilbao Turismo"
         ],
-        "maps": "https://maps.google.com/?q=43.2614,-2.9189"
+        "maps": "https://maps.google.com/?q=43.2614,-2.9189",
+        "nameES": "Parque Etxebarria",
+        "shortES": "Un gran parque en una colina con vistas panorámicas, nacido sobre una antigua zona industrial.",
+        "descES": "El Parque Etxebarria es el mayor espacio verde público de Bilbao, nacido de la rehabilitación de una antigua zona industrial. Situado en una colina que domina el Casco Viejo, ofrece amplios prados, árboles y senderos peatonales. El único elemento que queda de su pasado industrial es una alta chimenea de ladrillo, conservada como monumento. Es un lugar perfecto para relajarse y disfrutar de espléndidas vistas de la ciudad.",
+        "tipsES": "En agosto, el parque acoge las atracciones y los fuegos artificiales durante la Semana Grande."
       },
       {
         "id": "bil-18",
@@ -6434,15 +7728,19 @@
           "Wikipedia: Bilbao City Hall",
           "Bilbao Turismo"
         ],
-        "maps": "https://maps.google.com/?q=43.2636,-2.9233"
+        "maps": "https://maps.google.com/?q=43.2636,-2.9233",
+        "nameES": "Ayuntamiento de Bilbao",
+        "shortES": "El elegante ayuntamiento de la ciudad, famoso por su espectacular Salón Árabe en su interior.",
+        "descES": "El Ayuntamiento de Bilbao es un magnífico edificio inaugurado en 1892, situado a lo largo del estuario del Nervión. Diseñado por el arquitecto Joaquín Rucoba, presenta una elegante fachada de estilo ecléctico con influencias clásicas francesas. El interior es famoso por su lujoso Salón Árabe, decorado con detalles intrincados en estilo neo-mudéjar. El edificio representa la prosperidad económica de la ciudad a finales del siglo XIX.",
+        "tipsES": "Las visitas guiadas gratuitas están disponibles con reserva a través del sitio web del ayuntamiento."
       },
       {
         "id": "bil-19",
         "name": "Estación de Abando Indalecio Prieto",
         "nameEN": "Estación de Abando Indalecio Prieto",
         "cat": "cultura",
-        "lat": 43.2608,
-        "lng": -2.9275,
+        "lat": 43.259844,
+        "lng": -2.928622,
         "short": "La stazione centrale, celebre per la sua monumentale vetrata che racconta la storia basca.",
         "shortEN": "The central station, famous for its monumental stained glass window depicting Basque history.",
         "desc": "La Stazione di Abando è la principale stazione ferroviaria di Bilbao e un importante punto di riferimento architettonico. La sua caratteristica più sorprendente è l'immensa vetrata policroma situata nell'atrio principale. Questa magnifica opera d'arte illustra la storia, l'industria, l'agricoltura e le tradizioni sportive della società basca. Anche se non devi prendere un treno, vale la pena entrare per ammirare questa vetrata.",
@@ -6453,7 +7751,11 @@
           "Wikipedia: Bilbao-Abando railway station",
           "Bilbao Turismo"
         ],
-        "maps": "https://maps.google.com/?q=43.2608,-2.9275"
+        "maps": "https://maps.google.com/?q=43.2608,-2.9275",
+        "nameES": "Estación de Abando Indalecio Prieto",
+        "shortES": "La estación central, célebre por su monumental vidriera que narra la historia vasca.",
+        "descES": "La Estación de Abando es la principal estación ferroviaria de Bilbao y un importante referente arquitectónico. Su rasgo más sorprendente es la inmensa vidriera policroma situada en el vestíbulo principal. Esta magnífica obra de arte ilustra la historia, la industria, la agricultura y las tradiciones deportivas de la sociedad vasca. Aunque no tengas que coger un tren, merece la pena entrar para admirar esta vidriera.",
+        "tipsES": "La vidriera se encuentra en la planta superior, fácilmente accesible desde las escaleras mecánicas."
       },
       {
         "id": "bil-20",
@@ -6472,9 +7774,16 @@
           "Wikipedia: Bilbao Maritime Museum",
           "Itsasmuseum official site"
         ],
-        "maps": "https://maps.google.com/?q=43.2669,-2.9467"
+        "maps": "https://maps.google.com/?q=43.2669,-2.9467",
+        "nameES": "Museo Marítimo Ría de Bilbao",
+        "shortES": "Un museo interactivo que explora el rico patrimonio marítimo e industrial de Bilbao.",
+        "descES": "El Itsasmuseum, o Museo Marittimo di Bilbao, celebra la profunda conexión de la ciudad con el mar y la construcción naval. Situado en los antiguos astilleros Euskalduna, expone maquetas de barcos, instrumentos de navegación y embarcaciones históricas restauradas en los diques di carenaggio esterni. La icónica grúa roja \"Carola\", alta 60 metri, se erige en el exterior como símbolo del pasado industrial de la ría. Es una experiencia fascinante para comprender el desarrollo de Bilbao.",
+        "tipsES": "La entrada es gratuita los martes; el área exterior con los barcos siempre es visible."
       }
-    ]
+    ],
+    "cityES": "Bilbao",
+    "countryES": "Spagna",
+    "introES": "Descubre la extraordinaria transformación de Bilbao de centro industrial a obra maestra moderna, fusionando arquitectura vanguardista con ricas tradiciones vascas."
   },
   "leon": {
     "city": "León",
@@ -6508,7 +7817,11 @@
         ],
         "maps": "https://maps.google.com/?q=42.59900,-5.56640",
         "tier": 2,
-        "id": "leo-1"
+        "id": "leo-1",
+        "nameES": "Cattedrale di León (Santa María)",
+        "shortES": "Obra maestra gótica apodada la \"Casa della Luce\" por sus 1.800 m² de vidrieras medievales.",
+        "descES": "La Cattedrale di Santa María de León es uno de los templos góticos más bellos de Spagna y el monumento símbolo de la ciudad. Iniciada en 1205 y completada en torno a 1302, fue construida sobre los cimientos de antiguas termas romanas y de una iglesia románica. Dos de sus tres arquitectos principales eran franceses, lo que explica su semejanza con las catedrales de Notre-Dame, Reims y Saint-Denis. La fachada presenta dos torres de alturas distintas (65 e 68 metri) separadas por el cuerpo central y un magnífico rosetón policromado. El elemento más extraordinario, sin embargo, son sus 125 vidrieras que cubren aproximadamente 1.800 metri quadrati: junto con la piedra clara de las paredes, dejan filtrar la luz creando un efecto luminoso que le ha valido el apodo de \"Casa della Luce\". En el interior se encuentra el coro de madera más antiguo de Spagna (siglo XV) y el retablo dedicado a San Froilán.",
+        "tipsES": "Entrada aproximadamente 6€ (reducidos 2-4€). Generalmente cerrada 13:30-16:00. Visita el museo y el claustro para ver los tesoros medievales."
       },
       {
         "name": "Plaza de la Regla",
@@ -6526,7 +7839,11 @@
           "checkinblog.it \"León cosa vedere\""
         ],
         "maps": "https://maps.google.com/?q=42.59940,-5.56700",
-        "id": "leo-2"
+        "id": "leo-2",
+        "nameES": "Plaza de la Regla",
+        "shortES": "La plaza dominada por la catedral, con la Antigua Casa de Correos y el Palacio Episcopal.",
+        "descES": "La Plaza de la Regla es el espacio abierto desde el que se contempla en su totalidad la fachada de la Cattedrale di León, y por tanto el mejor lugar para apreciar su majestuosidad gótica. Además de la catedral, en la plaza se asoman otros edificios de relevancia: la Antigua Casa de Correos y Telégrafos (el antiguo edificio de correos), fácilmente reconocible por su torre que recuerda a la de un castillo, y el Palacio Episcopal en el lado opuesto. La plaza es un lugar habitual de descanso para los peregrinos del Cammino di Santiago y para los turistas que fotografían la catedral y la icónica inscripción \"León\" colocada en las cercanías. Es un punto de partida natural para explorar el casco histórico por la Calle Ancha.",
+        "tipsES": "Punto panorámico ideal para fotografiar la catedral. Espacio peatonal, accesible siempre."
       },
       {
         "name": "Calle Ancha",
@@ -6545,14 +7862,18 @@
           "mappingspain.com \"Walking tour of León\""
         ],
         "maps": "https://maps.google.com/?q=42.59820,-5.56880",
-        "id": "leo-3"
+        "id": "leo-3",
+        "nameES": "Calle Ancha",
+        "shortES": "La principal vía peatonal del centro histórico, entre tiendas históricas y edificios modernistas.",
+        "descES": "La Calle Ancha es la arteria principal del casco histórico de León y conecta la Plaza de Santo Domingo con la Plaza de la Regla, frente a la catedral. Completamente peatonal, es el corazón palpitante de la vida cotidiana de residentes y visitantes: en ella hay tiendas y locales de pequeño tamaño, muchos de ellos en funcionamiento desde hace más de medio siglo, además de bares y cafeterías. A lo largo de la calle, paneles informativos señalan los puntos donde se alzaban las puertas y las estructuras romanas de la antigua Legio. Al alzar la vista se descubren espléndidos edificios modernistas de principios del siglo XX, testimonio de la prosperidad de la ciudad en esa época. Recorrerla es la mejor manera de entrar en la atmósfera de León.",
+        "tipsES": "Vía peatonal; ideal para compras y tapas. Conecta los principales monumentos del centro."
       },
       {
         "name": "Casa Botines (Gaudí)",
         "nameEN": "Casa Botines (Gaudí)",
         "cat": "cultura",
-        "lat": 42.5972,
-        "lng": -5.5699,
+        "lat": 42.598488,
+        "lng": -5.570679,
         "short": "Palazzo neogotico di Antoni Gaudí, una delle sue rare opere fuori dalla Catalogna, oggi museo.",
         "shortEN": "Neo-Gothic palace by Antoni Gaudí, one of his rare works outside Catalonia, now a museum.",
         "desc": "La Casa Botines è uno dei monumenti più celebri di León e una delle sole tre opere realizzate da Antoni Gaudí fuori dalla Catalogna. Progettata tra il 1891 e il 1893 per i commercianti Fernández e Andrés, è un edificio in pietra dall'aspetto di fortezza medievale, con torrette laterali ai quattro angoli, un fossato che illumina il piano seminterrato e finestre che si ispirano alle vetrate della vicina cattedrale. Sulla facciata principale spicca la scultura di San Giorgio che uccide il drago. L'edificio servì a lungo come sede bancaria e oggi ospita un museo dedicato a Gaudí, con la ricostruzione del negozio ottocentesco di tessuti, una collezione di dipinti dei secoli XIX-XX (tra cui la \"Divina Commedia\" illustrata da Dalí) e l'accesso alla torretta originale del 1893.",
@@ -6565,14 +7886,18 @@
         ],
         "maps": "https://maps.google.com/?q=42.59720,-5.56990",
         "tier": 2,
-        "id": "leo-4"
+        "id": "leo-4",
+        "nameES": "Casa Botines (Gaudí)",
+        "shortES": "Palacio neogótico de Antoni Gaudí, una de sus raras obras fuera de Catalogna, hoy museo.",
+        "descES": "La Casa Botines es uno de los monumentos más célebres de León y una de las tres únicas obras realizadas por Antoni Gaudí fuera de Catalogna. Diseñada entre 1891 y 1893 para los comerciantes Fernández y Andrés, es un edificio de piedra con aspecto de fortaleza medieval, con torrecillas laterales en las cuatro esquinas, un foso que ilumina la planta semisótano y ventanas inspiradas en los vitrales de la catedral cercana. En la fachada principal destaca la escultura de San Giorgio que mata al dragón. El edificio fue durante mucho tiempo sede bancaria y hoy alberga un museo dedicado a Gaudí, con la reconstrucción de la tienda textil decimonónica, una colección de pinturas de los siglos XIX-XX (entre ellas la \"Divina Commedia\" ilustrada por Dalí) y el acceso a la torrecilla original de 1893.",
+        "tipsES": "Visitas guiadas en inglés/español. Consulta horarios y entradas en casabotines.es."
       },
       {
         "name": "Palacio de los Guzmanes",
         "nameEN": "Palacio de los Guzmanes",
         "cat": "cultura",
-        "lat": 42.5974,
-        "lng": -5.5703,
+        "lat": 42.598414,
+        "lng": -5.569937,
         "short": "Elegante palazzo rinascimentale del XVI secolo, oggi sede della Diputación provinciale.",
         "shortEN": "Elegant 16th-century Renaissance palace, today seat of the provincial government.",
         "desc": "Adiacente alla Casa Botines, in Plaza de San Marcelo, sorge il Palacio de los Guzmanes, un palazzo rinascimentale appartenuto alla nobile famiglia locale dei Guzmán. I lavori iniziarono intorno al 1560 e si conclusero nel secolo XVII. L'edificio presenta una facciata sobria ed elegante, un bel cortile interno porticato e una torre angolare. Oggi è la sede della Diputación de León (il governo provinciale) e in alcune occasioni è visitabile all'interno. Nei giardini affacciati sulla strada si trova un plastico di León che illustra le fasi del suo sviluppo urbano, dall'accampamento romano della Legio VII Gemina fino a oggi, con le mura romane e quelle medievali del XIV secolo chiaramente riconoscibili. Insieme alla Casa Botines forma uno degli angoli più fotografati della città.",
@@ -6583,14 +7908,18 @@
           "checkinblog.it \"León cosa vedere\""
         ],
         "maps": "https://maps.google.com/?q=42.59740,-5.57030",
-        "id": "leo-5"
+        "id": "leo-5",
+        "nameES": "Palacio de los Guzmanes",
+        "shortES": "Elegante palacio renacentista del siglo XVI, hoy sede de la Diputación provincial.",
+        "descES": "Junto a la Casa Botines, en la Plaza de San Marcelo, se alza el Palacio de los Guzmanes, un palacio renacentista que perteneció a la noble familia local de los Guzmán. Las obras comenzaron alrededor de 1560 y se concluyeron en el siglo XVII. El edificio presenta una fachada sobria y elegante, un bonito patio interior porticado y una torre en la esquina. Hoy es la sede de la Diputación de León (el gobierno provincial) y en algunas ocasiones puede visitarse por dentro. En los jardines que dan a la calle hay una maqueta de León que ilustra las fases de su desarrollo urbano, desde el campamento romano de la Legio VII Gemina hasta hoy, con las murallas romanas y las medievales del siglo XIV claramente reconocibles. Junto con la Casa Botines forma uno de los rincones más fotografiados de la ciudad.",
+        "tipsES": "Patio e interiores visitables en determinados horarios/eventos. Exterior siempre admirable."
       },
       {
         "name": "Plaza de San Marcelo & Ayuntamiento",
         "nameEN": "Plaza de San Marcelo & City Hall",
         "cat": "cultura",
-        "lat": 42.5969,
-        "lng": -5.5701,
+        "lat": 42.597608,
+        "lng": -5.574222,
         "short": "Piazza centrale con la chiesa di San Marcelo e l'antico municipio rinascimentale (Casa de Poridad).",
         "shortEN": "Central square with San Marcelo church and the old Renaissance town hall (Casa de Poridad).",
         "desc": "La Plaza de San Marcelo è uno dei nodi nevralgici del centro di León, punto d'incontro tra la Calle Ancha, la Casa Botines e il Palacio de los Guzmanes. Sulla piazza si affaccia la chiesa di San Marcelo, dedicata al patrono militare della città, ricostruita tra il XVI e il XVII secolo con una facciata sobria di gusto classicista. Di fronte si trova l'antico municipio, noto come Casa de Poridad o Ayuntamiento Viejo, un grazioso edificio rinascimentale del XVI secolo con balconi e stemmi. La piazza, animata e centrale, è un ottimo punto per orientarsi e per iniziare o concludere una passeggiata nel cuore storico della città.",
@@ -6601,7 +7930,11 @@
           "checkinblog.it \"León cosa vedere\""
         ],
         "maps": "https://maps.google.com/?q=42.59690,-5.57010",
-        "id": "leo-6"
+        "id": "leo-6",
+        "nameES": "Plaza de San Marcelo & Ayuntamiento",
+        "shortES": "Plaza central con la iglesia de San Marcelo y el antiguo ayuntamiento renacentista (Casa de Poridad).",
+        "descES": "La Plaza de San Marcelo es uno de los puntos neurálgicos del centro de León, punto de encuentro entre la Calle Ancha, la Casa Botines y el Palacio de los Guzmanes. En la plaza se alza la iglesia de San Marcelo, dedicada al patrón militar de la ciudad, reconstruida entre los siglos XVI y XVII con una fachada sobria de gusto clasicista. Enfrente se encuentra el antiguo ayuntamiento, conocido como Casa de Poridad o Ayuntamiento Viejo, un encantador edificio renacentista del siglo XVI con balcones y escudos. La plaza, animada y céntrica, es un excelente punto para orientarse y para empezar o terminar un paseo por el corazón histórico de la ciudad.",
+        "tipsES": "Punto céntrico de paso. Bares y cafés en los alrededores para una parada."
       },
       {
         "name": "Basílica de San Isidoro",
@@ -6621,14 +7954,18 @@
         ],
         "maps": "https://maps.google.com/?q=42.60040,-5.57150",
         "tier": 2,
-        "id": "leo-7"
+        "id": "leo-7",
+        "nameES": "Basílica de San Isidoro",
+        "shortES": "Joya románica con la \"Capilla Sixtina del románico\": el Panteón Real cubierto de frescos.",
+        "descES": "La Real Colegiata Basílica de San Isidoro es una de las máximas obras maestras del arte románico en España. Construida a partir de los siglos X-XI, custodia las reliquias di Sant'Isidoro di Siviglia, importante erudito cristiano, trasladadas aquí en 1063. La basílica conserva muchísima arte medieval, criptas, una biblioteca histórica y sobre todo el célebre Panteón Real, el panteón de los reyes de León, cuyos techos están completamente cubiertos por frescos románicos del siglo XII de extraordinaria viveza cromática, tanto que fue apodado la \"Capilla Sixtina del románico\". En el exterior, la plaza está embellecida con fuentes y estatuas, y en las cercanías se pueden admirar tramos de las antiguas murallas romanas, algunas que datan del siglo III.",
+        "tipsES": "El Panteón Real se visita con la entrada del museo. No hay que perderse los frescos de los techos."
       },
       {
         "name": "Mura Romane di León",
         "nameEN": "Roman Walls of León",
         "cat": "cultura",
-        "lat": 42.6009,
-        "lng": -5.5705,
+        "lat": 42.602281,
+        "lng": -5.567553,
         "short": "Resti delle mura dell'accampamento romano della Legio VII, alcune del III secolo.",
         "shortEN": "Remains of the walls of the Roman camp of Legio VII, some dating from the 3rd century.",
         "desc": "León nacque come accampamento militare romano della Legio VII Gemina, fondata nel I secolo d.C., e conserva ancora oggi notevoli tratti delle sue mura difensive. I resti più antichi e imponenti si trovano nei pressi della basilica di San Isidoro, dove si possono osservare poderosi muraglioni in pietra, alcuni risalenti al III secolo, costruiti per proteggere l'antica città. Altre porzioni di mura, rimaneggiate in epoca medievale, sono visibili in diversi punti del centro storico. Camminare lungo questi resti permette di leggere la stratificazione storica di León, dalla sua origine romana all'espansione medievale del XIV secolo. È un'esperienza affascinante per chi vuole comprendere come la città si sia sviluppata nei secoli.",
@@ -6640,14 +7977,18 @@
         ],
         "maps": "https://maps.google.com/?q=42.60090,-5.57050",
         "tier": 1,
-        "id": "leo-8"
+        "id": "leo-8",
+        "nameES": "Murallas Romanas de León",
+        "shortES": "Restos de las murallas del campamento romano de la Legio VII, algunas del siglo III.",
+        "descES": "León nació como campamento militar romano de la Legio VII Gemina, fundada en el siglo I d.C., y conserva todavía hoy notables tramos de sus murallas defensivas. Los restos más antiguos e imponentes se encuentran cerca de la basílica de San Isidoro, donde se pueden observar poderosos muros de piedra, algunos que datan del siglo III, construidos para proteger la antigua ciudad. Otras porciones de muralla, remodeladas en época medieval, son visibles en varios puntos del casco histórico. Caminar junto a estos restos permite leer la estratificación histórica de León, desde su origen romano hasta la expansión medieval del siglo XIV. Es una experiencia fascinante para quien quiera comprender cómo la ciudad se ha desarrollado a lo largo de los siglos.",
+        "tipsES": "Visibles gratuitamente a lo largo de la calle, sobre todo detrás de San Isidoro. Siempre accesibles."
       },
       {
         "name": "Convento / Parador de San Marcos",
         "nameEN": "Convent / Parador de San Marcos",
         "cat": "cultura",
-        "lat": 42.6024,
-        "lng": -5.579,
+        "lat": 42.60208,
+        "lng": -5.582246,
         "short": "Spettacolare facciata plateresca del Rinascimento spagnolo, oggi lussuoso hotel Parador.",
         "shortEN": "Spectacular Plateresque façade of the Spanish Renaissance, now a luxury Parador hotel.",
         "desc": "L'antico convento di San Marcos è uno degli edifici più belli e celebri di León, considerato uno dei monumenti più rappresentativi del Rinascimento spagnolo. Donato da Ferdinando il Cattolico alla città, il complesso è composto dal convento vero e proprio, oggi trasformato in un lussuoso hotel Parador a cinque stelle, da una chiesa consacrata nel 1541 e da un affascinante museo archeologico. La sua immensa facciata plateresca, lunga e finemente decorata con medaglioni, conchiglie e dettagli scultorei, è uno dei capolavori dello stile. Davanti all'edificio si apre un'ampia piazza con la celebre scultura del pellegrino stanco, simbolo del Cammino di Santiago, che rende questo luogo una tappa imperdibile per i viaggiatori.",
@@ -6659,14 +8000,18 @@
         ],
         "maps": "https://maps.google.com/?q=42.60240,-5.57900",
         "tier": 1,
-        "id": "leo-9"
+        "id": "leo-9",
+        "nameES": "Convento / Parador de San Marcos",
+        "shortES": "Espectacular fachada plateresca del Renacimiento español, hoy lujoso hotel Parador.",
+        "descES": "El antiguo convento de San Marcos es uno de los edificios más bellos y célebres de León, considerado uno de los monumentos más representativos del Renacimiento español. Donado por Ferdinando il Cattolico a la ciudad, el complejo está formado por el convento propiamente dicho, hoy transformado en un lujoso Parador de cinco estrellas, por una iglesia consagrada en 1541 y por un encantador museo arqueológico. Su inmensa fachada plateresca, larga y finamente decorada con medallones, conchas y detalles escultóricos, es una de las obras maestras del estilo. Delante del edificio se abre una amplia plaza con la célebre escultura del peregrino cansado, símbolo del Cammino di Santiago, que convierte este lugar en una parada imprescindible para los viajeros.",
+        "tipsES": "Se puede entrar en el hall del Parador y visitar la iglesia/museo. Bonita la plaza con el peregrino."
       },
       {
         "name": "Plaza Mayor",
         "nameEN": "Plaza Mayor",
         "cat": "cultura",
-        "lat": 42.5965,
-        "lng": -5.568,
+        "lat": 42.597321,
+        "lng": -5.566538,
         "short": "Una delle piazze più antiche di Spagna, porticata, con mercato il mercoledì e il sabato.",
         "shortEN": "One of the oldest squares in Spain, arcaded, with a market on Wednesdays and Saturdays.",
         "desc": "A pochi minuti dalla cattedrale, la Plaza Mayor di León è una delle piazze maggiori più antiche di Spagna ed era il cuore commerciale della città nel Medioevo. Interamente porticata, è circondata da edifici tradizionali con balconi e ospita numerosi bar e ristoranti sotto i suoi loggiati. Ancora oggi, ogni mercoledì e sabato vi si tiene un mercato di prodotti agricoli, mantenendo viva la sua funzione storica. L'edificio più bello della piazza è il Consistorio (detto anche edificio del Mirador), una graziosa costruzione barocca con due torri che fungeva da balconata per le autorità durante le feste cittadine. La Plaza Mayor è il punto d'accesso al Barrio Húmedo ed è uno dei luoghi più caratteristici e vivaci di León.",
@@ -6679,14 +8024,18 @@
         ],
         "maps": "https://maps.google.com/?q=42.59650,-5.56800",
         "tier": 1,
-        "id": "leo-10"
+        "id": "leo-10",
+        "nameES": "Plaza Mayor",
+        "shortES": "Una de las plazas más antiguas de España, porticada, con mercado los miércoles y los sábados.",
+        "descES": "A pocos minutos de la catedral, la Plaza Mayor de León es una de las plazas mayores más antiguas de España y fue el corazón comercial de la ciudad en la Edad Media. Enteramente porticada, está rodeada de edificios tradicionales con balcones y alberga numerosos bares y restaurantes bajo sus pórticos. Aún hoy, cada miércoles y sábado se celebra allí un mercado de productos agrícolas, manteniendo viva su función histórica. El edificio más bonito de la plaza es el Consistorio (también llamado edificio del Mirador), una graciosa construcción barroca con dos torres que servía de balcón para las autoridades durante las fiestas municipales. La Plaza Mayor es el punto de acceso al Barrio Húmedo y es uno de los lugares más característicos y animados de León.",
+        "tipsES": "Mercado miércoles y sábado por la mañana. Excelente para tapas por la noche; puerta de entrada al Barrio Húmedo."
       },
       {
         "name": "Barrio Húmedo",
         "nameEN": "Barrio Húmedo",
         "cat": "cibo",
-        "lat": 42.5972,
-        "lng": -5.5675,
+        "lat": 42.595812,
+        "lng": -5.567874,
         "short": "Il quartiere medievale delle tapas: vicoli pittoreschi pieni di bar dove la tapa è gratis.",
         "shortEN": "The medieval tapas quarter: picturesque alleys full of bars where the tapa is free.",
         "desc": "Il Barrio Húmedo (\"quartiere umido\", così chiamato per l'abbondanza di bar e vino) è l'anima della León medievale e il centro indiscusso della sua celebre vita gastronomica. Si concentra nei vicoli pittoreschi attorno alla Plaza de San Martín, a meno di cinque minuti dalla Plaza Mayor. Le sue stradine acciottolate sono fittamente costellate di bar e taverne, e León è famosa per una tradizione molto amata: ordinando una consumazione (un vino o una birra) si riceve gratuitamente una tapa, spesso abbondante e creativa. Vivacissimo soprattutto la sera e nei weekend, il quartiere è il luogo ideale per vivere il \"tapeo\" leonese, spostandosi di bar in bar tra atmosfere autentiche e affollate. È un'esperienza imperdibile per comprendere la cultura sociale e culinaria della città.",
@@ -6699,7 +8048,11 @@
         ],
         "maps": "https://maps.google.com/?q=42.59720,-5.56750",
         "tier": 1,
-        "id": "leo-11"
+        "id": "leo-11",
+        "nameES": "Barrio Húmedo",
+        "shortES": "El barrio medieval de las tapas: callejuelas pintorescas llenas de bares donde la tapa es gratis.",
+        "descES": "El Barrio Húmedo (\"barrio húmedo\", llamado así por la abundancia de bares y vino) es el alma de la León medieval y el centro indiscutible de su célebre vida gastronómica. Se concentra en las callejuelas pintorescas alrededor de la Plaza de San Martín, a menos de cinco minutos de la Plaza Mayor. Sus calles empedradas están densamente salpicadas de bares y tabernas, y León es famosa por una tradición muy querida: al pedir una consumición (un vino o una cerveza) se recibe gratis una tapa, a menudo abundante y creativa. Muy animado sobre todo por la noche y los fines de semana, el barrio es el lugar ideal para vivir el \"tapeo\" leonés, moviéndose de bar en bar entre atmósferas auténticas y concurridas. Es una experiencia imprescindible para comprender la cultura social y culinaria de la ciudad.",
+        "tipsES": "Muy animado sobre todo por la noche. Pide un vino y recibes una tapa gratis; pasa por varios bares para probar muchas."
       },
       {
         "name": "Plaza del Grano (Santa María del Camino)",
@@ -6717,9 +8070,16 @@
           "mappingspain.com \"Walking tour of León\""
         ],
         "maps": "https://maps.google.com/?q=42.59550,-5.56880",
-        "id": "leo-12"
+        "id": "leo-12",
+        "nameES": "Plaza del Grano (Santa María del Camino)",
+        "shortES": "Pintoresca plaza empedrada de 1789, con fuente y soportales: una de las más queridas de la ciudad.",
+        "descES": "La Plaza del Grano, oficialmente Plaza de Santa María del Camino, es uno de los rincones más sugestivos y queridos de León. Antiguamente sede del mercado del grano, conserva un encanto antiguo y casi rural que la distingue de otras plazas de la ciudad: su pavimento está hecho de cantos rodados irregulares, está rodeada de casas porticadas bajas y tradicionales, y en el centro hay una graciosa fuente. En la plaza se alza la iglesia románica de Nuestra Señora del Mercado (Santa María del Camino). La atmósfera recogida y auténtica del lugar la hace perfecta para una parada tranquila, lejos de la multitud, tal vez para una copa o un café. A menudo se la cita como una de las plazas más bellas y fotogénicas de la ciudad.",
+        "tipsES": "Rincón tranquilo y fotogénico. Mesas agradables al aire libre para una pausa alejada de la multitud."
       }
-    ]
+    ],
+    "cityES": "León",
+    "countryES": "Spagna",
+    "introES": "Antigua capital del Regno di León y etapa fundamental del Cammino di Santiago, León es una ciudad castellana de piedra dorada, rica en arte románico, gótico y modernista. Su casco histórico, pequeño y casi por completo peatonal, alberga la célebre catedral gótica apodada la \"Casa della Luce\", la Casa Botines di Gaudí, la basilica di San Isidoro con sus frescos medievales y el animado Barrio Húmedo, corazón de la vida gastronómica y de las tapas."
   },
   "palencia": {
     "city": "Palencia",
@@ -6753,7 +8113,10 @@
           "Wikipedia: Cristo del Otero",
           "Tripadvisor: Cristo del Otero"
         ],
-        "maps": "https://maps.google.com/?q=42.02833,-4.52944"
+        "maps": "https://maps.google.com/?q=42.02833,-4.52944",
+        "nameES": "Cristo del Otero",
+        "shortES": "Admira una de las estatuas de Cristo más altas del mundo que domina la ciudad.",
+        "descES": "Il Cristo del Otero es una imponente escultura alta 20 metri, símbolo de la ciudad de Palencia. Realizada por el escultor Victorio Macho, es una de las estatuas de Cristo más grandes del mundo. Se encuentra en una colina a unos 3 km del centro, ofreciendo vistas panorámicas espectaculares. Es posible llegar casi hasta la cima en coche o a pie."
       },
       {
         "tier": 2,
@@ -6761,8 +8124,8 @@
         "name": "Cattedrale di Palencia",
         "nameEN": "Palencia Cathedral",
         "cat": "cultura",
-        "lat": 42.01087,
-        "lng": -4.53444,
+        "lat": 42.011216,
+        "lng": -4.537353,
         "short": "Visita la terza cattedrale più grande della Spagna, un capolavoro gotico.",
         "shortEN": "Visit the third largest cathedral in Spain, a Gothic masterpiece.",
         "desc": "La Cattedrale di San Antolín è un imponente edificio in stile gotico, la terza cattedrale più grande della Spagna per superficie. Dedicata a Sant'Antonino di Pamiers, vanta la navata centrale più lunga del paese. L'ingresso costa circa 7 euro e permette di esplorare la magnifica architettura interna ed esterna. Si trova in Plaza de la Inmaculada.",
@@ -6773,7 +8136,10 @@
           "Wikipedia: Palencia Cathedral",
           "Spain.info: Palencia Cathedral"
         ],
-        "maps": "https://maps.google.com/?q=42.01087,-4.53444"
+        "maps": "https://maps.google.com/?q=42.01087,-4.53444",
+        "nameES": "Catedral de Palencia",
+        "shortES": "Visita la tercera catedral más grande de la Spagna, una obra maestra gótica.",
+        "descES": "La Catedral de San Antolín es un imponente edificio de estilo gótico, la tercera catedral más grande de la Spagna por superficie. Dedicada a Sant'Antonino di Pamiers, cuenta con la nave central más larga del país. La entrada cuesta aproximadamente 7 euro y permite explorar la magnífica arquitectura interior y exterior. Se encuentra en Plaza de la Inmaculada."
       },
       {
         "tier": 1,
@@ -6793,7 +8159,10 @@
           "Tripadvisor: Plaza Mayor de Palencia",
           "Mapcarta: Plaza Mayor of Palencia"
         ],
-        "maps": "https://maps.google.com/?q=42.01071,-4.53273"
+        "maps": "https://maps.google.com/?q=42.01071,-4.53273",
+        "nameES": "Plaza Mayor",
+        "shortES": "Relájate en la plaza principal de la ciudad, rodeada de edificios históricos.",
+        "descES": "La Plaza Mayor de Palencia es el corazón pulsante de la ciudad, fácilmente accesible desde Calle Mayor. Aquí se encuentran el Ayuntamiento y el monumento a Berruguete. La plaza está rodeada por varios restaurantes y cafés, lo que la convierte en el lugar ideal para una pausa. Es un típico ejemplo de plaza española, perfecta para observar la vida local."
       },
       {
         "id": "pal-4",
@@ -6812,7 +8181,10 @@
           "Mapcarta: Mercado de Abastos, Palencia",
           "Turismo de Palencia: Food Market"
         ],
-        "maps": "https://maps.google.com/?q=42.01048,-4.53133"
+        "maps": "https://maps.google.com/?q=42.01048,-4.53133",
+        "nameES": "Mercado de Abastos",
+        "shortES": "Explora el mercado tradicional para descubrir los productos locales.",
+        "descES": "El Mercado de Abastos es el mercado tradizionale di Palencia, situado en Calle Felipe Prieto, a soli 100 metri a est di Plaza Mayor. Diseñado nel 1895 dal architetto Juan Agapito y Revilla, es un lugar animado donde comprar productos frescos y locales. Es una excelente parada para sumergirse en la cultura culinaria de la región. El mercado está abierto desde 1895 y continúa sirviendo a la comunidad."
       },
       {
         "tier": 1,
@@ -6832,7 +8204,10 @@
           "Wikipedia: Salón de Isabel II",
           "Turismo de Palencia: Isabel II Hall Park"
         ],
-        "maps": "https://maps.google.com/?q=42.00631,-4.52838"
+        "maps": "https://maps.google.com/?q=42.00631,-4.52838",
+        "nameES": "Parque del Salón de Isabel II",
+        "shortES": "Pasea por este parque romántico del XIX secolo en el centro de la ciudad.",
+        "descES": "Il Parque del Salón de Isabel II es un parque romántico de 30.000 metri quadrati situado en el centro de Palencia. Creado a mediados del XIX secolo en el sitio de un antiguo convento, cuenta con un quiosco de música de hierro fundido de 1911, parterres formales y largos paseos arbolados. Es el lugar perfecto para un paseo relajante después de explorar la ciudad. Se encuentra a pocos pasos de la plaza principal."
       },
       {
         "tier": 1,
@@ -6852,7 +8227,11 @@
           "Wikipedia: Iglesia de San Miguel (Palencia)",
           "Turismo Castilla y León"
         ],
-        "maps": "https://maps.google.com/?q=42.007936,-4.53436"
+        "maps": "https://maps.google.com/?q=42.007936,-4.53436",
+        "nameES": "Iglesia de San Miguel",
+        "shortES": "Iglesia histórica con torre fortificada, ligada a la leyenda del Cid.",
+        "descES": "La Chiesa di San Miguel è uno dei templos más emblemáticos de Palencia, célebre por su imponente torre fortificada que domina el paisaje urbano. Construida entre el siglo XI y el XIII, representa un magnífico ejemplo de transición del románico al gótico. La leyenda cuenta que aquí se celebraron las bodas entre el Cid Campeador y Doña Jimena. En el interior, los visitantes pueden admirar valiosas obras de arte y una atmósfera de profunda espiritualidad.",
+        "tipsES": "L'ingresso è gratuito, ma gli orari di apertura possono variare; meglio visitarla prima o dopo le messe."
       },
       {
         "id": "pal-7",
@@ -6870,15 +8249,19 @@
         "src": [
           "Wikipedia: Monasterio de Santa Clara (Palencia)"
         ],
-        "maps": "https://maps.google.com/?q=42.0094,-4.53083"
+        "maps": "https://maps.google.com/?q=42.0094,-4.53083",
+        "nameES": "Monasterio de Santa Clara",
+        "shortES": "Monastero gotico che custodisce il venerato 'Cristo de las Claras'.",
+        "descES": "Il Monastero di Santa Clara es un importante complejo religioso fundado en el siglo XIV, conocido por su arquitectura gótica y su profundo significado histórico. La iglesia del monasterio alberga el famoso 'Cristo de las Claras', una escultura muy venerada rodeada de leyendas locales. El edificio conserva elementos arquitectónicos de gran valor, entre ellos un hermoso coro y altares finamente decorados. Es un lugar de paz y devoción en el corazón de la ciudad.",
+        "tipsES": "Compruebe los horarios de apertura de la iglesia; suele ser accesible durante las funciones religiosas."
       },
       {
         "id": "pal-8",
         "name": "Museo de Palencia",
         "nameEN": "Museo de Palencia",
         "cat": "cultura",
-        "lat": 42.009167,
-        "lng": -4.535556,
+        "lat": 42.0118,
+        "lng": -4.536905,
         "short": "Museo archeologico situato nella rinascimentale Casa del Cordón.",
         "shortEN": "Archaeological museum located in the Renaissance Casa del Cordón.",
         "desc": "Il Museo di Palencia, noto anche come Museo Archeologico, è ospitato nella storica Casa del Cordón, un edificio rinascimentale del XVI secolo. Le sue collezioni offrono un affascinante viaggio attraverso la storia della provincia, dalla preistoria fino al Medioevo. Tra i pezzi più importanti vi sono reperti celtiberici, mosaici romani e sculture medievali. È una tappa fondamentale per comprendere l'evoluzione culturale e storica della regione.",
@@ -6889,7 +8272,11 @@
           "Wikipedia: Museo de Palencia",
           "Junta de Castilla y León"
         ],
-        "maps": "https://maps.google.com/?q=42.009167,-4.535556"
+        "maps": "https://maps.google.com/?q=42.009167,-4.535556",
+        "nameES": "Museo de Palencia",
+        "shortES": "Museo arqueológico situado en la renacentista Casa del Cordón.",
+        "descES": "Il Museo di Palencia, noto anche come Museo Archeologico, è ospitato nella storica Casa del Cordón, un edificio rinascimentale del XVI secolo. Le sue collezioni offrono un affascinante viaggio attraverso la storia della provincia, dalla preistoria fino al Medioevo. Tra i pezzi più importanti vi sono reperti celtiberici, mosaici romani e sculture medievali. È una tappa fondamentale per comprendere l'evoluzione culturale e storica della regione.",
+        "tipsES": "Cerrado los lunes. La entrada es gratuita los fines de semana."
       },
       {
         "id": "pal-9",
@@ -6907,7 +8294,11 @@
         "src": [
           "Wikipedia: Calle Mayor (Palencia)"
         ],
-        "maps": "https://maps.google.com/?q=42.009197,-4.532801"
+        "maps": "https://maps.google.com/?q=42.009197,-4.532801",
+        "nameES": "Calle Mayor Principal",
+        "shortES": "La vía principal porticada, corazón palpitante de la vida ciudadana.",
+        "descES": "La Calle Mayor Principal es la arteria vital y el corazón comercial de Palencia, extendiéndose por casi un kilómetro a través del casco histórico. Caracterizada por sus icónicos soportales sostenidos por columnas, ofrece refugio y una atmósfera única para pasear. A lo largo de la calle se abren elegantes edificios burgueses de los siglos XIX y XX, tiendas tradicionales y cafés históricos. Es el lugar perfecto para sumergirse en la vida cotidiana palentina.",
+        "tipsES": "Ideal para un paseo vespertino y para ir de compras a cubierto."
       },
       {
         "id": "pal-10",
@@ -6925,7 +8316,11 @@
         "src": [
           "Wikipedia: Puente Mayor (Palencia)"
         ],
-        "maps": "https://maps.google.com/?q=42.008469,-4.537425"
+        "maps": "https://maps.google.com/?q=42.008469,-4.537425",
+        "nameES": "Puente Mayor",
+        "shortES": "Histórico puente de piedra del siglo XVI sobre el río Carrión.",
+        "descES": "El Puente Mayor es un histórico puente de piedra que cruza el río Carrión, conectando el centro de Palencia con los barrios occidentales. Construido originalmente en el siglo XVI y posteriormente ampliado, presenta una estructura robusta con arcos de medio punto. Además de su importancia arquitectónica, ofrece espléndidas vistas al río y a las zonas verdes circundantes. Es un punto de paso pintoresco y lleno de historia.",
+        "tipsES": "Excelente punto para tomar fotos del río y del parque Isla Dos Aguas."
       },
       {
         "id": "pal-11",
@@ -6943,15 +8338,19 @@
         "src": [
           "Wikipedia: Convento de San Pablo (Palencia)"
         ],
-        "maps": "https://maps.google.com/?q=42.014346,-4.536171"
+        "maps": "https://maps.google.com/?q=42.014346,-4.536171",
+        "nameES": "Iglesia de San Pablo",
+        "shortES": "Imponente iglesia gótico-renacentista con valiosas obras de arte.",
+        "descES": "La Iglesia de San Pablo, parte de un antiguo convento dominicano, es un imponente edificio gótico y renacentista situado en el centro de Palencia. Su fachada principal es una obra maestra de la escultura, mientras que el interior de tres naves impresiona por su grandiosidad y luminosidad. Alberga importantes obras de arte, entre ellas la tumba de los marqueses de Poza y un magnífico retablo mayor. Es uno de los monumentos religiosos más significativos de la ciudad.",
+        "tipsES": "No te pierdas la fachada principal y la capilla mayor."
       },
       {
         "id": "pal-12",
         "name": "Parque de la Huerta de Guadián",
         "nameEN": "Parque de la Huerta de Guadián",
         "cat": "natura",
-        "lat": 42.007783,
-        "lng": -4.526012,
+        "lat": 42.007452,
+        "lng": -4.524166,
         "short": "Rilassante parco cittadino che ospita una chiesa romanica recuperata.",
         "shortEN": "Relaxing city park housing a recovered Romanesque church.",
         "desc": "Il Parco della Huerta de Guadián è uno dei polmoni verdi più amati di Palencia, un'oasi di tranquillità ideale per passeggiate e relax. Caratterizzato da ampi viali alberati, giardini curati e sculture moderne, offre un perfetto rifugio dal trambusto cittadino. All'interno del parco si trova anche la suggestiva chiesa romanica di San Juan Bautista, trasferita qui pietra su pietra da un villaggio sommerso. È un luogo perfetto per famiglie e amanti della natura.",
@@ -6962,7 +8361,11 @@
           "Ayuntamiento de Palencia",
           "Wikipedia: Huerta de Guadián"
         ],
-        "maps": "https://maps.google.com/?q=42.007783,-4.526012"
+        "maps": "https://maps.google.com/?q=42.007783,-4.526012",
+        "nameES": "Parque de la Huerta de Guadián",
+        "shortES": "Relajante parque urbano que alberga una iglesia románica recuperada.",
+        "descES": "El Parque de la Huerta de Guadián es uno de los pulmones verdes más queridos de Palencia, un oasis de tranquilidad ideal para paseos y descanso. Caracterizado por amplios paseos arbolados, jardines cuidados y esculturas modernas, ofrece un refugio perfecto del bullicio urbano. Dentro del parque también se encuentra la sugestiva iglesia románica de San Juan Bautista, trasladada aquí piedra a piedra desde un pueblo sumergido. Es un lugar perfecto para familias y amantes de la naturaleza.",
+        "tipsES": "Ideal para un picnic o una pausa relajante durante la visita a la ciudad."
       },
       {
         "id": "pal-13",
@@ -6980,15 +8383,19 @@
         "src": [
           "Wikipedia: Iglesia de San Francisco (Palencia)"
         ],
-        "maps": "https://maps.google.com/?q=42.011417,-4.532143"
+        "maps": "https://maps.google.com/?q=42.011417,-4.532143",
+        "nameES": "Iglesia de San Francisco",
+        "shortES": "Histórica iglesia franciscana con una mezcla de estilos arquitectónicos.",
+        "descES": "La Iglesia de San Francisco es un edificio histórico de gran relevancia, situado cerca de la Plaza Mayor. Fundada en el siglo XIII por los franciscanos, la iglesia ha sufrido varias modificaciones a lo largo de los siglos, mezclando elementos góticos, renacentistas y barrocos. El interior es conocido por sus capillas ricamente decoradas y por el techo artesonado mudéjar. Es un lugar que testimonia la profunda historia religiosa y arquitectónica de Palencia.",
+        "tipsES": "Situada en posición céntrica, se puede visitar fácilmente junto a la Plaza Mayor."
       },
       {
         "id": "pal-14",
         "name": "Palacio de la Diputación",
         "nameEN": "Palacio de la Diputación",
         "cat": "cultura",
-        "lat": 42.01138,
-        "lng": -4.530312,
+        "lat": 42.010044,
+        "lng": -4.531389,
         "short": "Elegante palazzo neorinascimentale, sede del governo provinciale.",
         "shortEN": "Elegant Neo-Renaissance palace, seat of the provincial government.",
         "desc": "Il Palazzo della Deputazione Provinciale è uno degli edifici civili più belli e rappresentativi di Palencia. Costruito all'inizio del XX secolo in stile neorinascimentale, si distingue per la sua facciata elegante e simmetrica, decorata con sculture e dettagli in pietra. L'interno ospita sale di grande pregio artistico, spesso utilizzate per mostre ed eventi culturali. È un simbolo dell'amministrazione e della cultura locale.",
@@ -6998,7 +8405,11 @@
         "src": [
           "Wikipedia: Palacio de la Diputación de Palencia"
         ],
-        "maps": "https://maps.google.com/?q=42.01138,-4.530312"
+        "maps": "https://maps.google.com/?q=42.01138,-4.530312",
+        "nameES": "Palacio de la Diputación",
+        "shortES": "Elegante palacio neorrenacentista, sede del gobierno provincial.",
+        "descES": "Il Palazzo della Deputazione Provinciale es uno de los edificios civiles más bellos y representativos de Palencia. Construido a principios del siglo XX en estilo neorrenacentista, se distingue por su fachada elegante y simétrica, decorada con esculturas y detalles en piedra. El interior alberga salones de gran valor artístico, a menudo utilizados para exposiciones y eventos culturales. Es un símbolo de la administración y de la cultura local.",
+        "tipsES": "Admira los detalles de la fachada; el interior es accesible durante las exposiciones."
       },
       {
         "id": "pal-15",
@@ -7016,7 +8427,11 @@
         "src": [
           "Wikipedia: Iglesia de Nuestra Señora de la Calle"
         ],
-        "maps": "https://maps.google.com/?q=42.009603,-4.534465"
+        "maps": "https://maps.google.com/?q=42.009603,-4.534465",
+        "nameES": "Iglesia de Nuestra Señora de la Calle",
+        "shortES": "Iglesia jesuita que custodia la imagen de la patrona de Palencia.",
+        "descES": "La Iglesia de Nuestra Señora de la Calle, conocida también como La Compañía, es un magnífico templo jesuita del siglo XVI. Su fachada austera esconde un interior sorprendente, donde destaca la venerada imagen de la Virgen de la Calle, patrona de Palencia. El altar mayor y las capillas laterales están ricamente decorados en estilo barroco. Es un centro de gran devoción popular, especialmente durante las festividades patronales.",
+        "tipsES": "Visítela para admirar el altar barroco y la imagen de la patrona."
       },
       {
         "id": "pal-16",
@@ -7034,9 +8449,16 @@
         "src": [
           "Wikipedia: Iglesia de San Lázaro (Palencia)"
         ],
-        "maps": "https://maps.google.com/?q=42.009478,-4.529583"
+        "maps": "https://maps.google.com/?q=42.009478,-4.529583",
+        "nameES": "Iglesia de San Lázaro",
+        "shortES": "Antigua iglesia con un magnífico retablo plateresco y vínculos con El Cid.",
+        "descES": "La Iglesia de San Lázaro es un antiguo templo cuyos orígenes se remontan a un hospital para peregrinos y leprosos fundado por El Cid. El edificio actual presenta una mezcla de estilos, con predominio del gótico y importantes reformas renacentistas. En el interior destaca el magnífico retablo mayor plateresco, obra de renombrados artistas de la escuela castellana. Es un lugar impregnado de historia y leyendas, fundamental para el patrimonio religioso de Palencia.",
+        "tipsES": "Admira los detalles del retablo mayor, uno de los mejores de la ciudad."
       }
-    ]
+    ],
+    "cityES": "Palencia",
+    "countryES": "Spagna",
+    "introES": "Descubre Palencia, una joya escondida de Spagna, con este itinerario a pie. Explora su majestuosa catedral, las plazas históricas y los encantadores parques en medio día."
   },
   "genova": {
     "city": "Genova",
@@ -7070,7 +8492,11 @@
           "Wikipedia \"Aquarium of Genoa\"",
           "acquariodigenova.it"
         ],
-        "maps": "https://maps.google.com/?q=44.41020,8.92655"
+        "maps": "https://maps.google.com/?q=44.41020,8.92655",
+        "nameES": "Acquario di Genova",
+        "shortES": "Sumérgete en la vida marina en el acuario más grande de Italia, una espectacular atracción para familias en el puerto histórico.",
+        "descES": "L'Acquario di Genova es el acuario más grande de Italia y uno de los más extensos en Europa, representando un destino ideal para las familias. Fue construido originalmente para la Expo '92 di Genova, una exposición internacional que celebraba el 500º aniversario del viaje del explorador genovés Cristoforo Colombo hacia las Américas. Diseñada por el arquitecto ganador del Premio Pritzker Renzo Piano, la estructura recuerda a un barco listo para zarpar desde el histórico Porto Antico. En su interior, los visitantes pueden explorar más de 70 tanques que albergan miles de especies marinas, entre ellas delfines, tiburones, pingüinos y manatíes. Las exhibiciones están diseñadas para reproducir los hábitats naturales, desde el Mar Mediterraneo hasta los océanos tropicales. Ofrece una experiencia educativa inmersiva sobre la conservación marina, fascinando tanto a niños como a adultos y subrayando el profundo vínculo histórico de Genova con el mar.",
+        "tipsES": "Reserva las entradas online con antelación para evitar colas. Calcula al menos 2-3 horas para la visita."
       },
       {
         "tier": 2,
@@ -7090,7 +8516,11 @@
           "Wikipedia \"Genoa Cathedral\"",
           "museidigenova.it"
         ],
-        "maps": "https://maps.google.com/?q=44.40766,8.93151"
+        "maps": "https://maps.google.com/?q=44.40766,8.93151",
+        "nameES": "Cattedrale di San Lorenzo",
+        "shortES": "Admira la sugerente fachada en blanco y negro de la catedral principal de Genova, guardiana de reliquias sagradas.",
+        "descES": "La Cattedrale di Genova, dedicada a San Lorenzo, es la iglesia más importante de la ciudad y un espléndido ejemplo de arquitectura medieval. Consagrada en 1118 por Papa Gelasio II, el edificio presenta una sugerente fachada gótica a franjas blancas y negras, símbolo tradicional de nobleza en la Repubblica Genovese. El interior de la catedral es una fascinante mezcla de estilos románico y gótico, adornado con magníficos frescos y esculturas intrincadas. Bajo la iglesia se encuentra el Museo del Tesoro, que custodia reliquias sagradas, entre ellas el Sacro Catino, durante mucho tiempo considerado el Santo Grial, y las cenizas de San Giovanni Battista, patrón de la ciudad. Un notable vestigio histórico en el interior de la catedral es un proyectil perforante británico sin detonar, originario de un bombardeo naval de la Seconda Guerra Mondiale en 1941, expuesto como símbolo de una milagrosa supervivencia.",
+        "tipsES": "La entrada a la iglesia es gratuita, pero se pide vestimenta modesta. El Museo del Tesoro exige el pago de una pequeña entrada."
       },
       {
         "tier": 1,
@@ -7110,7 +8540,11 @@
           "Wikipedia \"Piazza De Ferrari\"",
           "visitgenoa.it"
         ],
-        "maps": "https://maps.google.com/?q=44.40718,8.93398"
+        "maps": "https://maps.google.com/?q=44.40718,8.93398",
+        "nameES": "Piazza De Ferrari",
+        "shortES": "Vive el corazón palpitante de Genova en esta plaza monumental, famosa por la icónica fuente de bronce y la arquitectura histórica.",
+        "descES": "Piazza De Ferrari es la animada plaza principal de Genova, que actúa como corazón comercial y financiero de la ciudad. La plaza es inmediatamente reconocible por su icónica fuente monumental de bronce, diseñada por el arquitecto Giuseppe Crosa di Vergagni e inaugurada en 1936. Rodeada de magníficos edificios históricos, la plaza muestra la grandeza del pasado de Genova y su transición hacia una metrópoli moderna. Los principales hitos que flanquean la plaza incluyen el elegante Teatro Carlo Felice, el principal teatro de ópera de la ciudad reconstruido tras la Seconda Guerra Mondiale, y el imponente Palazzo della Borsa, la antigua bolsa de valores construida a principios del siglo XX. La plaza conecta los estrechos callejones medievales del centro histórico con las calles más amplias y elegantes de la ciudad moderna, convirtiéndola en un perfecto punto de encuentro y en un nudo central para explorar Genova.",
+        "tipsES": "Un excelente lugar para tomar fotos y hacer una rápida pausa para un café en uno de los cafés históricos cercanos."
       },
       {
         "tier": 2,
@@ -7130,7 +8564,11 @@
           "UNESCO \"Genoa: Le Strade Nuove and the system of the Palazzi dei Rolli\"",
           "Wikipedia \"Via Garibaldi (Genoa)\""
         ],
-        "maps": "https://maps.google.com/?q=44.41144,8.93222"
+        "maps": "https://maps.google.com/?q=44.41144,8.93222",
+        "nameES": "Via Garibaldi e Palazzi dei Rolli",
+        "shortES": "Pasea entre magníficos palacios renacentistas en esta calle declarada Patrimonio de la UNESCO, que muestra la inmensa riqueza del Secolo d'Oro genovese.",
+        "descES": "Via Garibaldi es una de las calles más bellas de Europa, renombrada por su extraordinaria colección de palacios renacentistas y barrocos. Originariamente trazada en la década de 1550 como \"Strada Maggiore\", fue diseñada para alojar a las familias aristocráticas más ricas de la Repubblica Genovese. En 2006, la calle y sus magníficas residencias, conocidas como Palazzi dei Rolli, fueron declaradas Patrimonio de la Humanidad por la UNESCO. Estos palacios formaban históricamente parte de un sistema de hospedaje público en el que las familias nobles eran seleccionadas por sorteo para alojar a dignatarios y realeza en visita. Hoy, muchos de estos espléndidos edificios, entre ellos Palazzo Rosso, Palazzo Bianco y Palazzo Tursi, funcionan como museos públicos. Los visitantes pueden pasear por esta elegante calle peatonal para admirar las fachadas ricamente decoradas, los patios escondidos y las espectaculares colecciones de arte que reflejan la inmensa riqueza del Secolo d'Oro genovese.",
+        "tipsES": "Visita los Musei di Strada Nuova para ver los interiores de Palazzo Rosso, Bianco e Tursi con una sola entrada."
       },
       {
         "tier": 1,
@@ -7150,7 +8588,11 @@
           "Wikipedia \"Spianata Castelletto\"",
           "visitgenoa.it"
         ],
-        "maps": "https://maps.google.com/?q=44.41295,8.93280"
+        "maps": "https://maps.google.com/?q=44.41295,8.93280",
+        "nameES": "Spianata Castelletto",
+        "shortES": "Toma un histórico ascensor de estilo Liberty hasta esta terraza panorámica para vistas impresionantes de la ciudad y del mar.",
+        "descES": "Spianata Castelletto es un magnífico mirador elevado que ofrece las vistas panorámicas más impresionantes de toda la ciudad de Genova. Originalmente fue el emplazamiento de una fortaleza estratégica desmantelada en 1849 para evitar que se usara contra los ciudadanos; posteriormente el área se transformó en una hermosa terraza pública. Para llegar a este espectacular punto panorámico, los visitantes pueden tomar un encantador ascensor público de estilo Liberty, conocido como Ascensore Castelletto Levante, inaugurado en 1909 y famoso por haber sido elogiado en un poema del poeta italiano Giorgio Caproni. Desde la terraza arbolada se puede disfrutar de una espléndida vista de 360 grados que abarca el extenso centro histórico con sus tejados de pizarra, el animado puerto, la icónica Lanterna y el brillante Mar Mediterraneo. Es el lugar perfecto para contemplar la puesta de sol y concluir un recorrido a pie por la ciudad.",
+        "tipsES": "El ascensor cuesta lo mismo que un billete normal de autobús AMT. Conviene visitarlo preferiblemente al atardecer para una luz espectacular."
       },
       {
         "tier": 1,
@@ -7170,7 +8612,11 @@
           "Wikipedia: Palazzo Ducale (Genoa)",
           "palazzoducale.genova.it"
         ],
-        "maps": "https://maps.google.com/?q=44.4075,8.933"
+        "maps": "https://maps.google.com/?q=44.4075,8.933",
+        "nameES": "Palazzo Ducale",
+        "shortES": "La antigua sede de los Dogi, hoy corazón palpitante de la cultura genovese.",
+        "descES": "El Palazzo Ducale es uno de los principales edificios históricos y museos de Genova, antaño sede del Doge della Repubblica. Hoy acoge importantes exposiciones de arte, eventos culturales y ciclos internacionales. Su majestuosa arquitectura, con los dos patios y los salones con frescos, atestigua la grandeza pasada de la ciudad.",
+        "tipsES": "La entrada a los patios es gratuita; las exposiciones son de pago."
       },
       {
         "tier": 1,
@@ -7178,8 +8624,8 @@
         "name": "Porto Antico",
         "nameEN": "Porto Antico",
         "cat": "natura",
-        "lat": 44.4092,
-        "lng": 8.9265,
+        "lat": 44.40851,
+        "lng": 8.92393,
         "short": "L'area portuale riqualificata da Renzo Piano, perfetta per passeggiare sul mare.",
         "shortEN": "The port area redeveloped by Renzo Piano, perfect for a seaside stroll.",
         "desc": "Il Porto Antico è il cuore turistico e ricreativo di Genova, riqualificato dall'architetto Renzo Piano nel 1992. Questa vasta area pedonale affacciata sul mare offre passeggiate panoramiche, musei, ristoranti e attrazioni per tutte le età. È il luogo ideale per rilassarsi ammirando le barche e l'orizzonte.",
@@ -7190,7 +8636,11 @@
           "Wikipedia: Porto Antico (Genoa)",
           "portoantico.it"
         ],
-        "maps": "https://maps.google.com/?q=44.4092,8.9265"
+        "maps": "https://maps.google.com/?q=44.4092,8.9265",
+        "nameES": "Porto Antico",
+        "shortES": "El área portuaria rehabilitada por Renzo Piano, perfecta para pasear junto al mar.",
+        "descES": "El Porto Antico es el corazón turístico y recreativo de Genova, rehabilitado por el arquitecto Renzo Piano en 1992. Esta amplia zona peatonal frente al mar ofrece paseos panorámicos, museos, restaurantes y atracciones para todas las edades. Es el lugar ideal para relajarse contemplando los barcos y el horizonte.",
+        "tipsES": "Perfecto para un paseo al atardecer."
       },
       {
         "id": "gen-8",
@@ -7209,7 +8659,11 @@
           "Wikipedia: Galata Museo del Mare",
           "galatamuseodelmare.it"
         ],
-        "maps": "https://maps.google.com/?q=44.4148,8.9238"
+        "maps": "https://maps.google.com/?q=44.4148,8.9238",
+        "nameES": "Galata Museo del Mare",
+        "shortES": "El mayor museo marítimo del Mediterraneo, con un auténtico submarino.",
+        "descES": "El Galata Museo del Mare es el mayor museo marítimo del Mediterráneo, dedicado a la historia de la navegación. A través de reconstrucciones de barcos, instrumentos náuticos y exposiciones interactivas, cuenta el vínculo profundo entre Genova y el mar. Incluye también un verdadero submarino visitable atracado en el exterior.",
+        "tipsES": "Calcula al menos dos horas para la visita completa, incluido el submarino Nazario Sauro."
       },
       {
         "id": "gen-9",
@@ -7228,7 +8682,11 @@
           "Wikipedia: Palazzo Reale (Genoa)",
           "palazzorealegenova.beniculturali.it"
         ],
-        "maps": "https://maps.google.com/?q=44.4149,8.9261"
+        "maps": "https://maps.google.com/?q=44.4149,8.9261",
+        "nameES": "Palazzo Reale",
+        "shortES": "Una lujosa residencia aristocrática con una magnífica Galleria degli Specchi.",
+        "descES": "El Palazzo Reale de Genova es una suntuosa residencia aristocrática que conserva intactos sus muebles originales, frescos y obras de arte. Adquirido por los Savoia en el siglo XIX, cuenta con una magnífica Galleria degli Specchi y un hermoso jardín colgante. Es uno de los palacios más fascinantes de Via Balbi.",
+        "tipsES": "Cerrado los lunes. La entrada incluye la visita a los jardines."
       },
       {
         "tier": 1,
@@ -7248,7 +8706,11 @@
           "Wikipedia: Porta Soprana",
           "Wikipedia: Christopher Columbus's house"
         ],
-        "maps": "https://maps.google.com/?q=44.4055,8.934"
+        "maps": "https://maps.google.com/?q=44.4055,8.934",
+        "nameES": "Porta Soprana e Casa di Colombo",
+        "shortES": "Las imponentes torres medievales y la casa de la infancia de Cristoforo Colombo.",
+        "descES": "Porta Soprana es una de las antiguas puertas de acceso a la ciudad, flanqueada por dos imponentes torres medievales. A pocos pasos se encuentra la Casa di Cristoforo Colombo, una reconstrucción del edificio en el que el célebre navegante vivió su juventud. Este rincón medieval ofrece un fascinante contraste con la ciudad moderna.",
+        "tipsES": "Es posible comprar una entrada combinada para visitar el interior de la casa y las torres."
       },
       {
         "tier": 1,
@@ -7256,8 +8718,8 @@
         "name": "Mercato Orientale",
         "nameEN": "Mercato Orientale",
         "cat": "cibo",
-        "lat": 44.4061,
-        "lng": 8.9392,
+        "lat": 44.4057,
+        "lng": 8.9419,
         "short": "Il vivace mercato storico di Genova, perfetto per scoprire i sapori locali.",
         "shortEN": "Genoa's vibrant historic market, perfect for discovering local flavors.",
         "desc": "Il Mercato Orientale è il mercato coperto più antico e vivace di Genova, situato lungo la centrale Via XX Settembre. Qui i genovesi acquistano prodotti freschi, dal basilico per il pesto al pesce appena pescato. Recentemente è stato arricchito da un'area food court dove gustare specialità locali sul momento.",
@@ -7268,7 +8730,11 @@
           "Wikipedia: Mercato Orientale",
           "moggenova.it"
         ],
-        "maps": "https://maps.google.com/?q=44.4061,8.9392"
+        "maps": "https://maps.google.com/?q=44.4061,8.9392",
+        "nameES": "Mercato Orientale",
+        "shortES": "El animado mercado histórico de Genova, perfecto para descubrir los sabores locales.",
+        "descES": "El Mercato Orientale es el mercado cubierto más antiguo y animado de Genova, situado a lo largo de la central Via XX Settembre. Aquí los genoveses compran productos frescos, desde la albahaca para el pesto hasta el pescado recién capturado. Recientemente se ha enriquecido con una zona de food court donde degustar especialidades locales al momento.",
+        "tipsES": "Perfecto para una pausa de almuerzo rápida y auténtica en el MOG (Mercato Orientale Genova)."
       },
       {
         "id": "gen-12",
@@ -7286,15 +8752,19 @@
         "src": [
           "Wikipedia: Villetta Di Negro"
         ],
-        "maps": "https://maps.google.com/?q=44.411,8.937"
+        "maps": "https://maps.google.com/?q=44.411,8.937",
+        "nameES": "Villetta Di Negro",
+        "shortES": "Un oasis verde en el centro de la ciudad con cascadas y vistas panorámicas.",
+        "descES": "Villetta Di Negro es un parque ubicado en una colina en el corazón de Genova, famoso por sus cascadas artificiales, sus grutas y sus senderos tortuosos. Ofrece una espléndida vista panorámica de la ciudad y del puerto. En el interior del parque también se encuentra el Museo d'Arte Orientale Edoardo Chiossone.",
+        "tipsES": "La entrada al parque es gratuita. Ideal para una pausa relajante."
       },
       {
         "id": "gen-13",
         "name": "Castello d'Albertis",
         "nameEN": "Castello d'Albertis",
         "cat": "cultura",
-        "lat": 44.4172,
-        "lng": 8.9248,
+        "lat": 44.41842,
+        "lng": 8.92461,
         "short": "Un castello neogotico che ospita il Museo delle Culture del Mondo.",
         "shortEN": "A neo-Gothic castle housing the Museum of World Cultures.",
         "desc": "Il Castello d'Albertis è una dimora in stile neogotico costruita dal capitano Enrico Alberto d'Albertis. Oggi ospita il Museo delle Culture del Mondo, esponendo le collezioni etnografiche raccolte dal capitano nei suoi viaggi. Dalle sue terrazze si gode una delle viste più spettacolari sul porto di Genova.",
@@ -7305,7 +8775,11 @@
           "Wikipedia: Castello d'Albertis",
           "museidigenova.it"
         ],
-        "maps": "https://maps.google.com/?q=44.4172,8.9248"
+        "maps": "https://maps.google.com/?q=44.4172,8.9248",
+        "nameES": "Castello d'Albertis",
+        "shortES": "Un castillo neogótico que alberga el Museo delle Culture del Mondo.",
+        "descES": "El Castello d'Albertis es una residencia de estilo neogótico construida por el capitán Enrico Alberto d'Albertis. Hoy alberga el Museo delle Culture del Mondo, exhibiendo las colecciones etnográficas que el capitán reunió en sus viajes. Desde sus terrazas se disfruta una de las vistas más espectaculares del puerto de Genova.",
+        "tipsES": "Accesible fácilmente con el ascensor Montegalletto, una experiencia única que se desplaza tanto en horizontal como en vertical."
       },
       {
         "id": "gen-14",
@@ -7323,15 +8797,19 @@
         "src": [
           "Wikipedia: Palazzo San Giorgio (Genoa)"
         ],
-        "maps": "https://maps.google.com/?q=44.4094,8.9286"
+        "maps": "https://maps.google.com/?q=44.4094,8.9286",
+        "nameES": "Palazzo San Giorgio",
+        "shortES": "Palacio histórico con frescos, en su día prisión de Marco Polo y antigua banca.",
+        "descES": "Palazzo San Giorgio es uno de los edificios históricos más importantes de Genova, situado cerca del Porto Antico. Construido en 1260, fue sede del poder municipal, prisión (donde fue encarcelado Marco Polo) y luego sede del Banco di San Giorgio, uno de los primeros bancos del mundo. Su fachada con frescos es inconfundible.",
+        "tipsES": "El interior se puede visitar solo en ocasiones especiales o durante exposiciones, pero la fachada merece una foto."
       },
       {
         "id": "gen-15",
         "name": "Biosfera",
         "nameEN": "Biosfera",
         "cat": "natura",
-        "lat": 44.4088,
-        "lng": 8.9255,
+        "lat": 44.40984,
+        "lng": 8.92548,
         "short": "Una sfera di vetro sul mare che racchiude una foresta tropicale.",
         "shortEN": "A glass sphere on the sea enclosing a tropical forest.",
         "desc": "La Biosfera, progettata da Renzo Piano, è una spettacolare struttura sferica in vetro e acciaio sospesa sull'acqua nel Porto Antico. Al suo interno ricrea un ambiente tropicale con piante esotiche, uccelli in libertà, rettili e farfalle. È un piccolo ma affascinante ecosistema che sensibilizza sulla biodiversità.",
@@ -7342,7 +8820,11 @@
           "Wikipedia: Biosfera (Genoa)",
           "acquariodigenova.it"
         ],
-        "maps": "https://maps.google.com/?q=44.4088,8.9255"
+        "maps": "https://maps.google.com/?q=44.4088,8.9255",
+        "nameES": "Biosfera",
+        "shortES": "Una esfera de vidrio sobre el mar que alberga una selva tropical.",
+        "descES": "La Biosfera, diseñada por Renzo Piano, es una espectacular estructura esférica de vidrio y acero suspendida sobre el agua en el Porto Antico. En su interior recrea un ambiente tropical con plantas exóticas, aves en libertad, reptiles y mariposas. Es un pequeño pero fascinante ecosistema que sensibiliza sobre la biodiversidad.",
+        "tipsES": "Ideal para las familias. El billete puede combinarse con l'Acquario."
       },
       {
         "id": "gen-16",
@@ -7360,7 +8842,11 @@
         "src": [
           "Wikipedia: Basilica della Santissima Annunziata del Vastato"
         ],
-        "maps": "https://maps.google.com/?q=44.4136,8.9281"
+        "maps": "https://maps.google.com/?q=44.4136,8.9281",
+        "nameES": "Basilica della Santissima Annunziata del Vastato",
+        "shortES": "Una iglesia espectacular con interiores barrocos ricamente decorados.",
+        "descES": "Esta basílica es uno de los ejemplos más brillantes del arte genovés del tardomanierismo y del barroco. A pesar de los graves daños sufridos durante la Segunda Guerra Mundial, el interior ha sido magníficamente restaurado y deslumbra a los visitantes con sus bóvedas pintadas, los estucos dorados y las columnas de mármol. Su fachada neoclásica, añadida en el siglo XIX, oculta un tesoro de inestimable valor artístico.",
+        "tipsES": "Situada en Piazza della Nunziata, la entrada es gratuita."
       },
       {
         "id": "gen-17",
@@ -7378,9 +8864,16 @@
         "src": [
           "Wikipedia: Commenda di San Giovanni di Pré"
         ],
-        "maps": "https://maps.google.com/?q=44.4155,8.9222"
+        "maps": "https://maps.google.com/?q=44.4155,8.9222",
+        "nameES": "Commenda di San Giovanni di Pré",
+        "shortES": "Un antiguo complejo medieval que acogía a peregrinos y cruzados.",
+        "descES": "La Commenda di San Giovanni di Pré es un complejo medieval que data de 1180, originalmente construido como convento y hospital para los peregrinos dirigidos a la Terra Santa. Es un raro ejemplo de arquitectura románica en Genova, compuesto por dos iglesias superpuestas y un edificio conventual, hoy sede museal. Sus gruesos muros de piedra y sus atmósferas silenciosas transportan a los visitantes al pasado.",
+        "tipsES": "Alberga el MEI (Museo Nazionale dell'Emigrazione Italiana)."
       }
-    ]
+    ],
+    "cityES": "Genova",
+    "countryES": "Italia",
+    "introES": "Descubre el encanto de Genova, una histórica ciudad portuaria donde estrechos callejones medievales se encuentran con magníficos palacios renacentistas. Este itinerario a pie te guía a través del corazón marítimo y cultural de la Superba."
   }
 };
   // Expose globally (read by city-itineraries-ui.js)

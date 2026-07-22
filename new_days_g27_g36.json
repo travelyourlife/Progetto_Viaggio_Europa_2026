@@ -1,0 +1,1633 @@
+[
+  {
+    "id": "g27",
+    "date": "21/07",
+    "title": "Halsa → Atlantic Road → Molde",
+    "titleEN": "Halsa → Atlantic Road → Molde",
+    "titleES": "Halsa → Atlantic Road → Molde",
+    "flags": "🇳🇴",
+    "country": "NO",
+    "region": "norvegia",
+    "km": 100,
+    "hours": "2h + traghetto 20m",
+    "tolls": "<a href=\"https://www.autopass.no\" target=\"_blank\" rel=\"noopener\">AutoPASS</a> + traghetto Halsa–Kanestraum (~105 NOK) — 💡 con <strong>AutoPASS-Ferje</strong>: <strong>50% sconto</strong>",
+    "tollLinks": [
+      {
+        "text": "AutoPASS",
+        "url": "https://www.autopass.no",
+        "textEN": "AutoPASS",
+        "textES": "AutoPASS"
+      }
+    ],
+    "meteo": {
+      "lat": 62.7373,
+      "lon": 7.1591,
+      "high": 17,
+      "low": 11,
+      "cond": "Variabile, pioggia possibile",
+      "daylight": "19h di luce",
+      "condEN": "Variable, possible rain",
+      "condES": "Variable, posible lluvia",
+      "daylightEN": "19h of daylight",
+      "daylightES": "19h de luz"
+    },
+    "narrative": "Primo traghetto alle 06:00 da Halsa — sarete sull'<strong>Atlantic Road</strong> alle 07:30, praticamente da soli. 8 ponti bassi tra isolotti sull'oceano aperto, la \"costruzione norvegese del secolo\". Poi proseguimento verso <strong>Molde</strong>, la \"città delle rose\".",
+    "narrativeEN": "First ferry at 06:00 from Halsa — you'll be on the <strong>Atlantic Road</strong> by 07:30, virtually alone. 8 low bridges between islets on the open ocean, the \"Norwegian Construction of the Century\". Then continue to <strong>Molde</strong>, the \"City of Roses\".",
+    "narrativeES": "Primer ferry a las 06:00 desde Halsa — estarán en la <strong>Atlantic Road</strong> a las 07:30, prácticamente solos. 8 puentes bajos entre islotes en el océano abierto, la \"construcción noruega del siglo\". Luego continuar hacia <strong>Molde</strong>, la \"ciudad de las rosas\".",
+    "highlights": [
+      {
+        "icon": "⭐",
+        "title": "Atlantic Road",
+        "titleEN": "Atlantic Road",
+        "titleES": "Atlantic Road",
+        "text": "8 km di ponti sull'oceano — \"costruzione norvegese del secolo\". Sosta a <strong>Eldhusøya</strong> (passerella panoramica) e <strong>Askevågen</strong>",
+        "textEN": "8 km of bridges over the ocean — \"Norwegian Construction of the Century\". Stop at <strong>Eldhusøya</strong> (panoramic boardwalk) and <strong>Askevågen</strong>",
+        "textES": "8 km de puentes sobre el océano — \"construcción noruega del siglo\". Parada en <strong>Eldhusøya</strong> (pasarela panorámica) y <strong>Askevågen</strong>",
+        "maps": "https://maps.google.com/?q=63.017,7.355",
+        "star": true,
+        "familyFriendly": true
+      },
+      {
+        "icon": "🏔️",
+        "title": "Varden (Molde)",
+        "titleEN": "Varden (Molde)",
+        "titleES": "Varden (Molde)",
+        "text": "Belvedere con vista sulle 222 cime del Romsdal",
+        "textEN": "Viewpoint overlooking the 222 peaks of Romsdal",
+        "textES": "Mirador con vista a las 222 cumbres del Romsdal",
+        "maps": "https://maps.google.com/?q=62.7373,7.1591",
+        "star": false,
+        "familyFriendly": true
+      }
+    ],
+    "food": [
+      {
+        "type": "street",
+        "title": "Svele sul traghetto",
+        "titleEN": "Svele on the ferry",
+        "titleES": "Svele en el ferry",
+        "text": "Pancake norvegese tradizionale servito caldo sui traghetti Fjord1 — colazione perfetta!",
+        "textEN": "Traditional Norwegian pancake served hot on Fjord1 ferries — perfect breakfast!",
+        "textES": "Pancake noruego tradicional servido caliente en los ferries Fjord1 — ¡desayuno perfecto!"
+      }
+    ],
+    "scooter": null,
+    "waterSports": null,
+    "trekking": null,
+    "fishing": "Dai ponti dell'Atlantic Road! Spot leggendari per pollack e merluzzo. GRATIS (pesca in mare). Attenzione al vento.",
+    "fishingEN": "From the Atlantic Road bridges! Legendary spots for pollack and cod. FREE (sea fishing). Watch out for wind.",
+    "fishingES": "¡Desde los puentes de la Atlantic Road! Lugares legendarios para el abadejo y el bacalao. GRATIS (pesca en mar). Atención al viento.",
+    "events": [],
+    "alternatives": [
+      {
+        "text": "<strong>Atlantic Road con pioggia è ancora più spettacolare</strong> — onde che scavalcano i ponti! Se tempesta forte, sosta al <strong>Kvernes Stavkirke</strong> (chiesa in legno 1300, indoor)",
+        "textEN": "<strong>Atlantic Road in rain is even more spectacular</strong> — waves jumping over the bridges! If strong storm, stop at <strong>Kvernes Stavkirke</strong> (wooden church from 1300, indoor)",
+        "textES": "<strong>Atlantic Road con lluvia es aún más espectacular</strong> — ¡olas saltando sobre los puentes! Si tormenta fuerte, parada en <strong>Kvernes Stavkirke</strong> (iglesia de madera del 1300, interior)"
+      },
+      {
+        "text": "☔ Se piove → vedi <a href=\"#pioggia\" data-region=\"rain\">Piano Pioggia</a>",
+        "textEN": "☔ If it rains → see <a href=\"#pioggia\" data-region=\"rain\">Rain Plan</a>",
+        "textES": "☔ Si llueve → ver <a href=\"#pioggia\" data-region=\"rain\">Plan de lluvia</a>"
+      }
+    ],
+    "kids": [
+      {
+        "name": "Eldhusøya (Atlantic Road)",
+        "nameEN": "Eldhusøya (Atlantic Road)",
+        "nameES": "Eldhusøya (Atlantic Road)",
+        "desc": "passerella panoramica sopraelevata, sicura e adatta ai passeggini",
+        "descEN": "elevated panoramic boardwalk, safe and suitable for strollers",
+        "descES": "pasarela panorámica elevada, segura y apta para cochecitos",
+        "maps": "https://maps.google.com/?q=Eldhusoya+Atlantic+Road"
+      },
+      {
+        "name": "Romsdal Museum (Molde)",
+        "nameEN": "Romsdal Museum (Molde)",
+        "nameES": "Romsdal Museum (Molde)",
+        "desc": "museo all'aperto con case antiche dove i bambini possono correre",
+        "descEN": "open-air museum with old houses where children can run",
+        "descES": "museo al aire libre con casas antiguas donde los niños pueden correr",
+        "maps": "https://maps.google.com/?q=Romsdal+Museum+Molde"
+      }
+    ],
+    "practical": {
+      "parking": [
+        {
+          "name": "Kviltorp Camping (Molde)",
+          "nameEN": "Kviltorp Camping (Molde)",
+          "nameES": "Kviltorp Camping (Molde)",
+          "address": "Molde",
+          "addressEN": "Molde",
+          "addressES": "Molde",
+          "maps": "https://maps.google.com/?q=62.742,7.2333",
+          "price": "~300-400 NOK/notte",
+          "priceEN": "~300-400 NOK/night",
+          "priceES": "~300-400 NOK/noche",
+          "notes": "Elettricità, acqua, scarico, WiFi, docce, parco giochi. Sul fiordo.",
+          "notesEN": "Electricity, water, waste disposal, WiFi, showers, playground. On the fjord.",
+          "notesES": "Electricidad, agua, vaciado, WiFi, duchas, parque infantil. En el fiordo."
+        }
+      ],
+      "fuel": "Circle K, Shell lungo la E39. Diesel ~27-29 NOK/L (~€2.35-2.55/L).",
+      "fuelEN": "Circle K, Shell along the E39. Diesel ~27-29 NOK/L (~€2.35-2.55/L).",
+      "fuelES": "Circle K, Shell a lo largo de la E39. Diésel ~27-29 NOK/L (~€2.35-2.55/L).",
+      "grocery": [
+        {
+          "name": "REMA 1000, Kiwi (Molde)",
+          "nameEN": "REMA 1000, Kiwi (Molde)",
+          "nameES": "REMA 1000, Kiwi (Molde)",
+          "location": "Molde",
+          "locationEN": "Molde",
+          "locationES": "Molde",
+          "maps": "https://maps.google.com/?q=Supermercati+Molde"
+        }
+      ],
+      "laundry": {
+        "text": "Kviltorp Camping (Molde)",
+        "textEN": "Kviltorp Camping (Molde)",
+        "textES": "Kviltorp Camping (Molde)",
+        "maps": "https://maps.google.com/?q=Kviltorp+Camping+Molde"
+      },
+      "camper": {
+        "text": "Carico acqua e scarico al Kviltorp Camping (Molde)",
+        "textEN": "Water fill and waste disposal at Kviltorp Camping (Molde)",
+        "textES": "Carga de agua y vaciado en Kviltorp Camping (Molde)",
+        "maps": "https://maps.google.com/?q=Kviltorp+Camping+Molde"
+      },
+      "emergency": {
+        "name": "Molde Sjukehus",
+        "nameEN": "Molde Sjukehus",
+        "nameES": "Molde Sjukehus",
+        "maps": "https://maps.google.com/?q=Molde+Sjukehus",
+        "phones": "112 (Polizia), 113 (Ambulanza), 110 (Vigili del fuoco)",
+        "notes": null
+      },
+      "budget": "~€150-180/giorno",
+      "budgetEN": "~€150-180/day",
+      "budgetES": "~€150-180/día"
+    },
+    "tollsEN": "<a href=\"https://www.autopass.no\" target=\"_blank\" rel=\"noopener\">AutoPASS</a> + Halsa–Kanestraum ferry (~105 NOK) — 💡 with <strong>AutoPASS-Ferje</strong>: <strong>50% discount</strong>",
+    "tollsES": "<a href=\"https://www.autopass.no\" target=\"_blank\" rel=\"noopener\">AutoPASS</a> + ferry Halsa–Kanestraum (~105 NOK) — 💡 con <strong>AutoPASS-Ferje</strong>: <strong>50% de descuento</strong>"
+  },
+  {
+    "id": "g28",
+    "date": "22/07",
+    "title": "Molde → Trollstigen → Geiranger",
+    "titleEN": "Molde → Trollstigen → Geiranger",
+    "titleES": "Molde → Trollstigen → Geiranger",
+    "flags": "🇳🇴",
+    "country": "NO",
+    "region": "norvegia",
+    "km": 150,
+    "hours": "3h + traghetti 45m",
+    "tolls": "<a href=\"https://www.autopass.no\" target=\"_blank\" rel=\"noopener\">AutoPASS</a> + traghetto Molde–Vestnes (~120 NOK)",
+    "tollLinks": [
+      {
+        "text": "AutoPASS",
+        "url": "https://www.autopass.no",
+        "textEN": "AutoPASS",
+        "textES": "AutoPASS"
+      }
+    ],
+    "meteo": {
+      "lat": 62.1013,
+      "lon": 7.2059,
+      "high": 16,
+      "low": 10,
+      "cond": "Variabile",
+      "daylight": "19h di luce",
+      "condEN": "Variable",
+      "condES": "Variable",
+      "daylightEN": "19h of daylight",
+      "daylightES": "19h de luz"
+    },
+    "narrative": "Giornata epica: i tornanti di <strong>Trollstigen</strong> (arrivate prima delle 10:00 per evitare i pullman!), poi <strong>Ørnesvingen</strong> con vista sul Geirangerfjord dall'alto, e crociera sul fiordo per vedere le <strong>Sette Sorelle</strong> dal basso.",
+    "narrativeEN": "Epic day: the hairpin turns of <strong>Trollstigen</strong> (arrive before 10:00 to avoid tour buses!), then <strong>Ørnesvingen</strong> with views over the Geirangerfjord from above, and a fjord cruise to see the <strong>Seven Sisters</strong> from below.",
+    "narrativeES": "Día épico: las curvas cerradas de <strong>Trollstigen</strong> (¡lleguen antes de las 10:00 para evitar los autobuses turísticos!), luego <strong>Ørnesvingen</strong> con vistas sobre el Geirangerfjord desde arriba, y crucero por el fiordo para ver las <strong>Siete Hermanas</strong> desde abajo.",
+    "highlights": [
+      {
+        "icon": "⭐",
+        "title": "Trollstigen",
+        "titleEN": "Trollstigen",
+        "titleES": "Trollstigen",
+        "text": "11 tornanti, 850m di dislivello. Piattaforma panoramica in cima con vista vertiginosa. Parcheggio camper GRATUITO in cima.",
+        "textEN": "11 hairpin turns, 850m elevation. Panoramic platform at the top with vertiginous views. FREE motorhome parking at the top.",
+        "textES": "11 curvas cerradas, 850m de desnivel. Plataforma panorámica en la cima con vistas vertiginosas. Aparcamiento para autocaravanas GRATUITO en la cima.",
+        "maps": "https://maps.google.com/?q=62.456,7.670",
+        "star": true,
+        "familyFriendly": true
+      },
+      {
+        "icon": "⭐",
+        "title": "Ørnesvingen",
+        "titleEN": "Ørnesvingen",
+        "titleES": "Ørnesvingen",
+        "text": "Belvedere \"Curva dell'Aquila\" — vista mozzafiato sul Geirangerfjord. ⚠️ Parcheggio camper LIMITATO, arrivate presto!",
+        "textEN": "\"Eagle's Bend\" viewpoint — breathtaking view over Geirangerfjord. ⚠️ Motorhome parking LIMITED, arrive early!",
+        "textES": "Mirador \"Curva del Águila\" — vista impresionante sobre el Geirangerfjord. ⚠️ Aparcamiento para autocaravanas LIMITADO, ¡lleguen temprano!",
+        "maps": "https://maps.google.com/?q=62.126,7.167",
+        "star": true,
+        "familyFriendly": true
+      },
+      {
+        "icon": "🚢",
+        "title": "Crociera Geirangerfjord",
+        "titleEN": "Geirangerfjord Cruise",
+        "titleES": "Crucero Geirangerfjord",
+        "text": "75 min o 2h — cascate delle Sette Sorelle viste dal basso. Da NOK 610/adulto.",
+        "textEN": "75 min or 2h — Seven Sisters waterfall seen from below. From NOK 610/adult.",
+        "textES": "75 min o 2h — cascadas de las Siete Hermanas vistas desde abajo. Desde NOK 610/adulto.",
+        "maps": "https://maps.google.com/?q=62.101,7.206",
+        "star": true,
+        "familyFriendly": true
+      }
+    ],
+    "food": [
+      {
+        "type": "restaurant",
+        "title": "Café Trollstigen",
+        "titleEN": "Café Trollstigen",
+        "titleES": "Café Trollstigen",
+        "text": "In cima al passo — waffle norvegesi con panna e marmellata, vista sui tornanti",
+        "textEN": "At the top of the pass — Norwegian waffles with cream and jam, view over the hairpins",
+        "textES": "En la cima del paso — waffles noruegos con nata y mermelada, vista sobre las curvas"
+      }
+    ],
+    "scooter": null,
+    "waterSports": null,
+    "trekking": null,
+    "fishing": "Fiume <strong>Rauma</strong> (Åndalsnes) — uno dei fiumi da salmone più classici di Norvegia. Richiede <em>fiskekort</em> (acquistabile su <a href=\"https://www.inatur.no\" target=\"_blank\">inatur.no</a>). Alternativa: pesca in mare dal molo del fiordo, GRATIS.",
+    "fishingEN": "<strong>Rauma</strong> river (Åndalsnes) — one of Norway's most classic salmon rivers. Requires <em>fiskekort</em> (available at <a href=\"https://www.inatur.no\" target=\"_blank\">inatur.no</a>). Alternative: sea fishing from the fjord pier, FREE.",
+    "fishingES": "Río <strong>Rauma</strong> (Åndalsnes) — uno de los ríos de salmón más clásicos de Noruega. Requiere <em>fiskekort</em> (disponible en <a href=\"https://www.inatur.no\" target=\"_blank\">inatur.no</a>). Alternativa: pesca en mar desde el muelle del fiordo, GRATIS.",
+    "events": [],
+    "alternatives": [
+      {
+        "text": "Se nebbia/pioggia forte su Trollstigen: <strong>invertire con giorno 23</strong> (trasferimento verso Flåm) e tornare il giorno dopo se il meteo migliora",
+        "textEN": "If heavy fog/rain on Trollstigen: <strong>swap with day 23</strong> (transfer to Flåm) and return next day if weather improves",
+        "textES": "Si niebla/lluvia fuerte en Trollstigen: <strong>intercambiar con el día 23</strong> (traslado a Flåm) y volver al día siguiente si el tiempo mejora"
+      },
+      {
+        "text": "☔ Se piove → vedi <a href=\"#pioggia\" data-region=\"rain\">Piano Pioggia</a>",
+        "textEN": "☔ If it rains → see <a href=\"#pioggia\" data-region=\"rain\">Rain Plan</a>",
+        "textES": "☔ Si llueve → ver <a href=\"#pioggia\" data-region=\"rain\">Plan de lluvia</a>"
+      }
+    ],
+    "kids": [
+      {
+        "name": "Trollstigen Visitor Centre",
+        "nameEN": "Trollstigen Visitor Centre",
+        "nameES": "Trollstigen Visitor Centre",
+        "desc": "piattaforma panoramica sicura con ringhiere, caffè e servizi",
+        "descEN": "safe panoramic platform with railings, café and facilities",
+        "descES": "plataforma panorámica segura con barandillas, cafetería y servicios",
+        "maps": "https://maps.google.com/?q=62.456,7.670"
+      },
+      {
+        "name": "Crociera Geirangerfjord",
+        "nameEN": "Geirangerfjord Cruise",
+        "nameES": "Crucero Geirangerfjord",
+        "desc": "cascate viste dalla barca — emozionante per i bambini",
+        "descEN": "waterfalls seen from the boat — exciting for children",
+        "descES": "cascadas vistas desde el barco — emocionante para los niños",
+        "maps": "https://maps.google.com/?q=Geiranger+Cruise"
+      }
+    ],
+    "practical": {
+      "parking": [
+        {
+          "name": "Geiranger Camping",
+          "nameEN": "Geiranger Camping",
+          "nameES": "Geiranger Camping",
+          "address": "Geiranger",
+          "addressEN": "Geiranger",
+          "addressES": "Geiranger",
+          "maps": "https://maps.google.com/?q=62.101,7.206",
+          "price": "~350-450 NOK/notte",
+          "priceEN": "~350-450 NOK/night",
+          "priceES": "~350-450 NOK/noche",
+          "notes": "Vista sul fiordo, elettricità, acqua, scarico, docce. Prenotare in alta stagione!",
+          "notesEN": "Fjord view, electricity, water, waste disposal, showers. Book in high season!",
+          "notesES": "Vista al fiordo, electricidad, agua, vaciado, duchas. ¡Reservar en temporada alta!"
+        }
+      ],
+      "fuel": "Shell/Circle K a Molde o Åndalsnes. Diesel ~27-29 NOK/L.",
+      "fuelEN": "Shell/Circle K in Molde or Åndalsnes. Diesel ~27-29 NOK/L.",
+      "fuelES": "Shell/Circle K en Molde o Åndalsnes. Diésel ~27-29 NOK/L.",
+      "grocery": [
+        {
+          "name": "Kiwi, REMA 1000 (Åndalsnes)",
+          "nameEN": "Kiwi, REMA 1000 (Åndalsnes)",
+          "nameES": "Kiwi, REMA 1000 (Åndalsnes)",
+          "location": "Åndalsnes",
+          "locationEN": "Åndalsnes",
+          "locationES": "Åndalsnes",
+          "maps": "https://maps.google.com/?q=Supermercati+Andalsnes"
+        }
+      ],
+      "laundry": {
+        "text": "Geiranger Camping",
+        "textEN": "Geiranger Camping",
+        "textES": "Geiranger Camping",
+        "maps": "https://maps.google.com/?q=Geiranger+Camping"
+      },
+      "camper": {
+        "text": "Acqua e scarico al Geiranger Camping o stazione Shell Åndalsnes",
+        "textEN": "Water and waste disposal at Geiranger Camping or Shell station Åndalsnes",
+        "textES": "Agua y vaciado en Geiranger Camping o estación Shell Åndalsnes",
+        "maps": "https://maps.google.com/?q=Geiranger+Camping"
+      },
+      "emergency": {
+        "name": "Ålesund Sjukehus",
+        "nameEN": "Ålesund Sjukehus",
+        "nameES": "Ålesund Sjukehus",
+        "maps": "https://maps.google.com/?q=Alesund+Sjukehus",
+        "phones": "112/113/110",
+        "notes": null
+      },
+      "budget": "~€200-250/giorno",
+      "budgetEN": "~€200-250/day",
+      "budgetES": "~€200-250/día"
+    },
+    "tollsEN": "<a href=\"https://www.autopass.no\" target=\"_blank\" rel=\"noopener\">AutoPASS</a> + Molde–Vestnes ferry (~120 NOK)",
+    "tollsES": "<a href=\"https://www.autopass.no\" target=\"_blank\" rel=\"noopener\">AutoPASS</a> + ferry Molde–Vestnes (~120 NOK)"
+  },
+  {
+    "id": "g29",
+    "date": "23/07",
+    "title": "Geiranger → Flåm",
+    "titleEN": "Geiranger → Flåm",
+    "titleES": "Geiranger → Flåm",
+    "flags": "🇳🇴",
+    "country": "NO",
+    "region": "norvegia",
+    "km": 280,
+    "hours": "5h + traghetto 1h 05m",
+    "tolls": "⛴️ Traghetto Geiranger–Hellesylt (~1.530-1.650 NOK camper+passeggeri) — <strong>PRENOTARE!</strong>",
+    "tollLinks": [
+      {
+        "text": "Fjord1",
+        "url": "https://www.fjord1.no",
+        "textEN": "Fjord1",
+        "textES": "Fjord1"
+      }
+    ],
+    "meteo": {
+      "lat": 60.863,
+      "lon": 7.114,
+      "high": 18,
+      "low": 12,
+      "cond": "Variabile",
+      "daylight": "18h 30m di luce",
+      "condEN": "Variable",
+      "condES": "Variable",
+      "daylightEN": "18h 30m of daylight",
+      "daylightES": "18h 30m de luz"
+    },
+    "narrative": "Giornata di trasferimento lunga ma spettacolare. Il traghetto <strong>Geiranger–Hellesylt</strong> (1h05) è esso stesso un'attrazione: Sette Sorelle, Pretendente e Velo da Sposa visti dal basso. Poi guida attraverso valli e fiordi fino a <strong>Flåm</strong>.",
+    "narrativeEN": "Long but spectacular transfer day. The <strong>Geiranger–Hellesylt</strong> ferry (1h05) is itself an attraction: Seven Sisters, Suitor and Bridal Veil waterfalls seen from below. Then drive through valleys and fjords to <strong>Flåm</strong>.",
+    "narrativeES": "Jornada de traslado larga pero espectacular. El ferry <strong>Geiranger–Hellesylt</strong> (1h05) es en sí mismo una atracción: Siete Hermanas, Pretendiente y Velo de Novia vistos desde abajo. Luego conducir por valles y fiordos hasta <strong>Flåm</strong>.",
+    "highlights": [
+      {
+        "icon": "⛴️",
+        "title": "Traghetto Geiranger–Hellesylt",
+        "titleEN": "Geiranger–Hellesylt Ferry",
+        "titleES": "Ferry Geiranger–Hellesylt",
+        "text": "1h05 sul fiordo UNESCO — cascate delle Sette Sorelle, Pretendente, Velo da Sposa. Fattorie abbandonate sulle pareti. <strong>PRENOTARE per camper!</strong>",
+        "textEN": "1h05 on the UNESCO fjord — Seven Sisters, Suitor, Bridal Veil waterfalls. Abandoned farms on the cliffs. <strong>BOOK for motorhomes!</strong>",
+        "textES": "1h05 en el fiordo UNESCO — cascadas Siete Hermanas, Pretendiente, Velo de Novia. Granjas abandonadas en los acantilados. <strong>¡RESERVAR para autocaravanas!</strong>",
+        "maps": "https://maps.google.com/?q=Geiranger+Ferry",
+        "star": true,
+        "familyFriendly": true
+      }
+    ],
+    "food": [
+      {
+        "type": "restaurant",
+        "title": "Flåm Bakeri",
+        "titleEN": "Flåm Bakeri",
+        "titleES": "Flåm Bakeri",
+        "text": "Pane fresco e kanelboller (rotoli alla cannella) — perfetto dopo una lunga guida",
+        "textEN": "Fresh bread and kanelboller (cinnamon rolls) — perfect after a long drive",
+        "textES": "Pan fresco y kanelboller (rollos de canela) — perfecto después de un largo viaje"
+      }
+    ],
+    "scooter": null,
+    "waterSports": null,
+    "trekking": null,
+    "fishing": "Sognefjord/Aurlandsfjord (zona Flåm): buona pesca di sgombro in estate, spesso a vista dai moli. GRATIS (mare).",
+    "fishingEN": "Sognefjord/Aurlandsfjord (Flåm area): good mackerel fishing in summer, often visible from the piers. FREE (sea).",
+    "fishingES": "Sognefjord/Aurlandsfjord (zona Flåm): buena pesca de caballa en verano, a menudo visible desde los muelles. GRATIS (mar).",
+    "events": [],
+    "alternatives": [
+      {
+        "text": "Se il traghetto Geiranger–Hellesylt è pieno: alternativa via terra RV15/E39 (+2h, ~380 km totali)",
+        "textEN": "If the Geiranger–Hellesylt ferry is full: overland alternative via RV15/E39 (+2h, ~380 km total)",
+        "textES": "Si el ferry Geiranger–Hellesylt está lleno: alternativa por tierra vía RV15/E39 (+2h, ~380 km totales)"
+      },
+      {
+        "text": "☔ Se piove → vedi <a href=\"#pioggia\" data-region=\"rain\">Piano Pioggia</a>",
+        "textEN": "☔ If it rains → see <a href=\"#pioggia\" data-region=\"rain\">Rain Plan</a>",
+        "textES": "☔ Si llueve → ver <a href=\"#pioggia\" data-region=\"rain\">Plan de lluvia</a>"
+      }
+    ],
+    "kids": [
+      {
+        "name": "Traghetto Geiranger–Hellesylt",
+        "nameEN": "Geiranger–Hellesylt Ferry",
+        "nameES": "Ferry Geiranger–Hellesylt",
+        "desc": "cascate enormi viste dalla barca — entusiasmante per i bambini",
+        "descEN": "huge waterfalls seen from the boat — thrilling for children",
+        "descES": "cascadas enormes vistas desde el barco — emocionante para los niños",
+        "maps": "https://maps.google.com/?q=Geiranger+Ferry"
+      }
+    ],
+    "practical": {
+      "parking": [
+        {
+          "name": "Flåm Camping & Hostel",
+          "nameEN": "Flåm Camping & Hostel",
+          "nameES": "Flåm Camping & Hostel",
+          "address": "Flåm",
+          "addressEN": "Flåm",
+          "addressES": "Flåm",
+          "maps": "https://maps.google.com/?q=60.863,7.114",
+          "price": "~350-450 NOK/notte",
+          "priceEN": "~350-450 NOK/night",
+          "priceES": "~350-450 NOK/noche",
+          "notes": "Sul fiordo, vista spettacolare, elettricità, acqua, scarico, docce.",
+          "notesEN": "On the fjord, spectacular view, electricity, water, waste disposal, showers.",
+          "notesES": "En el fiordo, vista espectacular, electricidad, agua, vaciado, duchas."
+        }
+      ],
+      "fuel": "Shell/Circle K a Stryn o Sogndal. Fare il pieno prima di Flåm (poche stazioni).",
+      "fuelEN": "Shell/Circle K in Stryn or Sogndal. Fill up before Flåm (few stations).",
+      "fuelES": "Shell/Circle K en Stryn o Sogndal. Llenar antes de Flåm (pocas estaciones).",
+      "grocery": [
+        {
+          "name": "Joker Flåm",
+          "nameEN": "Joker Flåm",
+          "nameES": "Joker Flåm",
+          "location": "Flåm",
+          "locationEN": "Flåm",
+          "locationES": "Flåm",
+          "maps": "https://maps.google.com/?q=Joker+Flam"
+        }
+      ],
+      "laundry": {
+        "text": "Flåm Camping",
+        "textEN": "Flåm Camping",
+        "textES": "Flåm Camping",
+        "maps": "https://maps.google.com/?q=Flam+Camping"
+      },
+      "camper": {
+        "text": "Acqua e scarico al Flåm Camping",
+        "textEN": "Water and waste disposal at Flåm Camping",
+        "textES": "Agua y vaciado en Flåm Camping",
+        "maps": "https://maps.google.com/?q=Flam+Camping"
+      },
+      "emergency": {
+        "name": "Lærdal Sjukehus",
+        "nameEN": "Lærdal Sjukehus",
+        "nameES": "Lærdal Sjukehus",
+        "maps": "https://maps.google.com/?q=Laerdal+Sjukehus",
+        "phones": "112/113/110",
+        "notes": null
+      },
+      "budget": "~€180-220/giorno",
+      "budgetEN": "~€180-220/day",
+      "budgetES": "~€180-220/día"
+    },
+    "tollsEN": "⛴️ Geiranger–Hellesylt ferry (~1,530-1,650 NOK motorhome+passengers) — <strong>BOOK IN ADVANCE!</strong>",
+    "tollsES": "⛴️ Ferry Geiranger–Hellesylt (~1.530-1.650 NOK autocaravana+pasajeros) — <strong>¡RESERVAR CON ANTELACIÓN!</strong>"
+  },
+  {
+    "id": "g30",
+    "date": "24/07",
+    "title": "Nærøyfjord + Stegastein → Eidfjord",
+    "titleEN": "Nærøyfjord + Stegastein → Eidfjord",
+    "titleES": "Nærøyfjord + Stegastein → Eidfjord",
+    "flags": "🇳🇴",
+    "country": "NO",
+    "region": "norvegia",
+    "km": 120,
+    "hours": "2h guida + crociera 2h",
+    "tolls": "Crociera Nærøyfjord: ~665 NOK/adulto one-way — <strong>PRENOTARE 2 settimane prima!</strong>",
+    "tollLinks": [
+      {
+        "text": "Norway's Best",
+        "url": "https://www.norwaysbest.com",
+        "textEN": "Norway's Best",
+        "textES": "Norway's Best"
+      }
+    ],
+    "meteo": {
+      "lat": 60.419,
+      "lon": 7.153,
+      "high": 19,
+      "low": 12,
+      "cond": "Soleggiato/variabile",
+      "daylight": "18h 30m di luce",
+      "condEN": "Sunny/variable",
+      "condES": "Soleado/variable",
+      "daylightEN": "18h 30m of daylight",
+      "daylightES": "18h 30m de luz"
+    },
+    "narrative": "Le due esperienze \"wow\" del giro: crociera sul <strong>Nærøyfjord</strong> (patrimonio UNESCO, il fiordo più stretto d'Europa — 250m!) su catamarano elettrico silenzioso, poi <strong>Stegastein</strong> — piattaforma sospesa 30m nel vuoto a 650m sul fiordo. GRATUITO.",
+    "narrativeEN": "The two \"wow\" experiences of the trip: cruise on the <strong>Nærøyfjord</strong> (UNESCO heritage, Europe's narrowest fjord — 250m!) on a silent electric catamaran, then <strong>Stegastein</strong> — platform suspended 30m over the void at 650m above the fjord. FREE.",
+    "narrativeES": "Las dos experiencias \"wow\" del viaje: crucero por el <strong>Nærøyfjord</strong> (patrimonio UNESCO, el fiordo más estrecho de Europa — ¡250m!) en catamarán eléctrico silencioso, luego <strong>Stegastein</strong> — plataforma suspendida 30m en el vacío a 650m sobre el fiordo. GRATUITO.",
+    "highlights": [
+      {
+        "icon": "⭐",
+        "title": "Crociera Nærøyfjord",
+        "titleEN": "Nærøyfjord Cruise",
+        "titleES": "Crucero Nærøyfjord",
+        "text": "2h Flåm–Gudvangen su catamarano elettrico. Fiordo largo solo 250m, pareti a 1.700m. Patrimonio UNESCO. <strong>PRENOTARE!</strong>",
+        "textEN": "2h Flåm–Gudvangen on electric catamaran. Fjord only 250m wide, walls rising to 1,700m. UNESCO Heritage. <strong>BOOK!</strong>",
+        "textES": "2h Flåm–Gudvangen en catamarán eléctrico. Fiordo de solo 250m de ancho, paredes de 1.700m. Patrimonio UNESCO. <strong>¡RESERVAR!</strong>",
+        "maps": "https://maps.google.com/?q=60.863,7.114",
+        "star": true,
+        "familyFriendly": true
+      },
+      {
+        "icon": "⭐",
+        "title": "Stegastein Viewpoint",
+        "titleEN": "Stegastein Viewpoint",
+        "titleES": "Mirador Stegastein",
+        "text": "Piattaforma sospesa 30m nel vuoto, 650m sopra l'Aurlandsfjord. GRATUITO. Luglio 2026: Park & Ride da Aurland (50% sconto parcheggio).",
+        "textEN": "Platform suspended 30m over the void, 650m above Aurlandsfjord. FREE. July 2026: Park & Ride from Aurland (50% parking discount).",
+        "textES": "Plataforma suspendida 30m en el vacío, 650m sobre el Aurlandsfjord. GRATUITO. Julio 2026: Park & Ride desde Aurland (50% descuento aparcamiento).",
+        "maps": "https://maps.google.com/?q=60.907,7.255",
+        "star": true,
+        "familyFriendly": true
+      }
+    ],
+    "food": [
+      {
+        "type": "restaurant",
+        "title": "Ægir BrewPub (Flåm)",
+        "titleEN": "Ægir BrewPub (Flåm)",
+        "titleES": "Ægir BrewPub (Flåm)",
+        "text": "Birrificio artigianale in edificio vichingo — pizza e birre locali. Atmosfera unica.",
+        "textEN": "Craft brewery in a Viking building — pizza and local beers. Unique atmosphere.",
+        "textES": "Cervecería artesanal en edificio vikingo — pizza y cervezas locales. Atmósfera única."
+      }
+    ],
+    "scooter": null,
+    "waterSports": null,
+    "trekking": {
+      "title": "Rimstigen (Aurland)",
+      "titleEN": "Rimstigen (Aurland)",
+      "titleES": "Rimstigen (Aurland)",
+      "text": "Sentiero ripido ma breve (2h a/r) con vista panoramica sull'Aurlandsfjord. Alternativa più facile: passeggiata lungo il fiordo a Flåm.",
+      "textEN": "Steep but short trail (2h round trip) with panoramic view over Aurlandsfjord. Easier alternative: walk along the fjord in Flåm.",
+      "textES": "Sendero empinado pero corto (2h ida y vuelta) con vista panorámica sobre el Aurlandsfjord. Alternativa más fácil: paseo a lo largo del fiordo en Flåm.",
+      "link": "https://maps.google.com/?q=Rimstigen+Aurland"
+    },
+    "fishing": "Aurlandsfjord (Flåm): sgombro dai moli in estate, spesso a vista. GRATIS.",
+    "fishingEN": "Aurlandsfjord (Flåm): mackerel from the piers in summer, often visible. FREE.",
+    "fishingES": "Aurlandsfjord (Flåm): caballa desde los muelles en verano, a menudo visible. GRATIS.",
+    "events": [],
+    "alternatives": [
+      {
+        "text": "Se pioggia forte: la crociera è comunque spettacolare (fiordo con nebbia = atmosfera mistica). Stegastein: visibilità ridotta ma la piattaforma è coperta",
+        "textEN": "If heavy rain: the cruise is still spectacular (fjord with mist = mystical atmosphere). Stegastein: reduced visibility but the platform is covered",
+        "textES": "Si lluvia fuerte: el crucero sigue siendo espectacular (fiordo con niebla = atmósfera mística). Stegastein: visibilidad reducida pero la plataforma está cubierta"
+      },
+      {
+        "text": "☔ Se piove → vedi <a href=\"#pioggia\" data-region=\"rain\">Piano Pioggia</a>",
+        "textEN": "☔ If it rains → see <a href=\"#pioggia\" data-region=\"rain\">Rain Plan</a>",
+        "textES": "☔ Si llueve → ver <a href=\"#pioggia\" data-region=\"rain\">Plan de lluvia</a>"
+      }
+    ],
+    "kids": [
+      {
+        "name": "Crociera Nærøyfjord",
+        "nameEN": "Nærøyfjord Cruise",
+        "nameES": "Crucero Nærøyfjord",
+        "desc": "catamarano elettrico silenzioso, fiordo strettissimo — emozionante per i bambini",
+        "descEN": "silent electric catamaran, very narrow fjord — exciting for children",
+        "descES": "catamarán eléctrico silencioso, fiordo muy estrecho — emocionante para los niños",
+        "maps": "https://maps.google.com/?q=Flam+Cruise"
+      },
+      {
+        "name": "Flåm Railway Museum",
+        "nameEN": "Flåm Railway Museum",
+        "nameES": "Flåm Railway Museum",
+        "desc": "museo gratuito sulla ferrovia più ripida del mondo",
+        "descEN": "free museum about the world's steepest railway",
+        "descES": "museo gratuito sobre el ferrocarril más empinado del mundo",
+        "maps": "https://maps.google.com/?q=Flam+Railway+Museum"
+      }
+    ],
+    "practical": {
+      "parking": [
+        {
+          "name": "Eidfjord Camping",
+          "nameEN": "Eidfjord Camping",
+          "nameES": "Eidfjord Camping",
+          "address": "Eidfjord",
+          "addressEN": "Eidfjord",
+          "addressES": "Eidfjord",
+          "maps": "https://maps.google.com/?q=60.464,7.072",
+          "price": "~300-400 NOK/notte",
+          "priceEN": "~300-400 NOK/night",
+          "priceES": "~300-400 NOK/noche",
+          "notes": "Vicino a Vøringsfossen (domani). Elettricità, acqua, scarico.",
+          "notesEN": "Close to Vøringsfossen (tomorrow). Electricity, water, waste disposal.",
+          "notesES": "Cerca de Vøringsfossen (mañana). Electricidad, agua, vaciado."
+        }
+      ],
+      "fuel": "Shell/Circle K a Voss o Aurland.",
+      "fuelEN": "Shell/Circle K in Voss or Aurland.",
+      "fuelES": "Shell/Circle K en Voss o Aurland.",
+      "grocery": [
+        {
+          "name": "Coop Marked Aurland / Joker Flåm",
+          "nameEN": "Coop Marked Aurland / Joker Flåm",
+          "nameES": "Coop Marked Aurland / Joker Flåm",
+          "location": "Aurland/Flåm",
+          "locationEN": "Aurland/Flåm",
+          "locationES": "Aurland/Flåm",
+          "maps": "https://maps.google.com/?q=Coop+Aurland"
+        }
+      ],
+      "laundry": {
+        "text": "Flåm Camping o Eidfjord Camping",
+        "textEN": "Flåm Camping or Eidfjord Camping",
+        "textES": "Flåm Camping o Eidfjord Camping",
+        "maps": "https://maps.google.com/?q=Flam+Camping"
+      },
+      "camper": {
+        "text": "Acqua e scarico al camping",
+        "textEN": "Water and waste disposal at the campsite",
+        "textES": "Agua y vaciado en el camping",
+        "maps": "https://maps.google.com/?q=Eidfjord+Camping"
+      },
+      "emergency": {
+        "name": "Voss Sjukehus",
+        "nameEN": "Voss Sjukehus",
+        "nameES": "Voss Sjukehus",
+        "maps": "https://maps.google.com/?q=Voss+Sjukehus",
+        "phones": "112/113/110",
+        "notes": null
+      },
+      "budget": "~€220-280/giorno (crociera inclusa)",
+      "budgetEN": "~€220-280/day (cruise included)",
+      "budgetES": "~€220-280/día (crucero incluido)"
+    },
+    "tollsEN": "Nærøyfjord cruise: ~665 NOK/adult one-way — <strong>BOOK 2 weeks in advance!</strong>",
+    "tollsES": "Crucero Nærøyfjord: ~665 NOK/adulto solo ida — <strong>¡RESERVAR 2 semanas antes!</strong>"
+  },
+  {
+    "id": "g31",
+    "date": "25/07",
+    "title": "Vøringsfossen → Bergen",
+    "titleEN": "Vøringsfossen → Bergen",
+    "titleES": "Vøringsfossen → Bergen",
+    "flags": "🇳🇴",
+    "country": "NO",
+    "region": "norvegia",
+    "km": 200,
+    "hours": "3h 30m",
+    "tolls": "AutoPASS",
+    "tollLinks": [],
+    "meteo": {
+      "lat": 60.3913,
+      "lon": 5.3221,
+      "high": 18,
+      "low": 12,
+      "cond": "Bergen: pioggia probabile (250 gg/anno!)",
+      "daylight": "18h 30m di luce",
+      "condEN": "Bergen: rain likely (250 days/year!)",
+      "condES": "Bergen: lluvia probable (¡250 días/año!)",
+      "daylightEN": "18h 30m of daylight",
+      "daylightES": "18h 30m de luz"
+    },
+    "narrative": "<strong>Vøringsfossen</strong> la mattina (cascata 182m, completamente GRATUITA — fate ENTRAMBI i viewpoint: alto da Fossli Hotel e basso dal nuovo ponte Fossatromma). Poi guida panoramica lungo l'Hardangerfjord fino a <strong>Bergen</strong> nel pomeriggio: Bryggen e mercato del pesce.",
+    "narrativeEN": "<strong>Vøringsfossen</strong> in the morning (182m waterfall, completely FREE — do BOTH viewpoints: upper from Fossli Hotel and lower from the new Fossatromma bridge). Then scenic drive along the Hardangerfjord to <strong>Bergen</strong> in the afternoon: Bryggen and fish market.",
+    "narrativeES": "<strong>Vøringsfossen</strong> por la mañana (cascada de 182m, completamente GRATUITA — hagan AMBOS miradores: superior desde Fossli Hotel e inferior desde el nuevo puente Fossatromma). Luego conducción panorámica por el Hardangerfjord hasta <strong>Bergen</strong> por la tarde: Bryggen y mercado de pescado.",
+    "highlights": [
+      {
+        "icon": "💧",
+        "title": "Vøringsfossen",
+        "titleEN": "Vøringsfossen",
+        "titleES": "Vøringsfossen",
+        "text": "Cascata 182m — una delle più famose di Norvegia. GRATUITA. Due viewpoint: Fossli (alto) e Fossatromma (basso, nuovo ponte). Parcheggio camper ampio.",
+        "textEN": "182m waterfall — one of Norway's most famous. FREE. Two viewpoints: Fossli (upper) and Fossatromma (lower, new bridge). Large motorhome parking.",
+        "textES": "Cascada de 182m — una de las más famosas de Noruega. GRATUITA. Dos miradores: Fossli (superior) y Fossatromma (inferior, puente nuevo). Amplio aparcamiento para autocaravanas.",
+        "maps": "https://maps.google.com/?q=60.419,7.153",
+        "star": true,
+        "familyFriendly": true
+      },
+      {
+        "icon": "🏘️",
+        "title": "Bryggen (Bergen)",
+        "titleEN": "Bryggen (Bergen)",
+        "titleES": "Bryggen (Bergen)",
+        "text": "Quartiere anseatico UNESCO — case in legno colorate sul porto. Mercato del pesce (Fisketorget) aperto tutti i giorni in estate.",
+        "textEN": "Hanseatic UNESCO quarter — colorful wooden houses on the harbour. Fish market (Fisketorget) open daily in summer.",
+        "textES": "Barrio hanseático UNESCO — casas de madera coloridas en el puerto. Mercado de pescado (Fisketorget) abierto todos los días en verano.",
+        "maps": "https://maps.google.com/?q=Bryggen+Bergen",
+        "star": true,
+        "familyFriendly": true
+      }
+    ],
+    "food": [
+      {
+        "type": "market",
+        "title": "Fisketorget Bergen",
+        "titleEN": "Fisketorget Bergen",
+        "titleES": "Fisketorget Bergen",
+        "text": "Mercato del pesce storico — assaggiare gamberoni freschi, salmone affumicato, zuppa di pesce. Aperto tutti i giorni in estate.",
+        "textEN": "Historic fish market — try fresh prawns, smoked salmon, fish soup. Open daily in summer.",
+        "textES": "Mercado de pescado histórico — probar gambas frescas, salmón ahumado, sopa de pescado. Abierto todos los días en verano."
+      }
+    ],
+    "scooter": null,
+    "waterSports": null,
+    "trekking": null,
+    "fishing": "Hardangerfjord/Eidfjord: trota di mare e merluzzo. Fiume <strong>Bjoreio</strong> vicino a Vøringsfossen per trota selvatica (fiskekort necessario su inatur.no).",
+    "fishingEN": "Hardangerfjord/Eidfjord: sea trout and cod. <strong>Bjoreio</strong> river near Vøringsfossen for wild trout (fiskekort required from inatur.no).",
+    "fishingES": "Hardangerfjord/Eidfjord: trucha de mar y bacalao. Río <strong>Bjoreio</strong> cerca de Vøringsfossen para trucha salvaje (fiskekort necesario en inatur.no).",
+    "events": [],
+    "alternatives": [
+      {
+        "text": "Bergen con pioggia: <strong>Fløibanen</strong> (funicolare, vista anche con nuvole basse), <strong>KODE Art Museum</strong>, <strong>Bergen Aquarium</strong>",
+        "textEN": "Bergen in rain: <strong>Fløibanen</strong> (funicular, views even with low clouds), <strong>KODE Art Museum</strong>, <strong>Bergen Aquarium</strong>",
+        "textES": "Bergen con lluvia: <strong>Fløibanen</strong> (funicular, vistas incluso con nubes bajas), <strong>KODE Art Museum</strong>, <strong>Bergen Aquarium</strong>"
+      },
+      {
+        "text": "☔ Se piove → vedi <a href=\"#pioggia\" data-region=\"rain\">Piano Pioggia</a>",
+        "textEN": "☔ If it rains → see <a href=\"#pioggia\" data-region=\"rain\">Rain Plan</a>",
+        "textES": "☔ Si llueve → ver <a href=\"#pioggia\" data-region=\"rain\">Plan de lluvia</a>"
+      }
+    ],
+    "kids": [
+      {
+        "name": "Bergen Aquarium",
+        "nameEN": "Bergen Aquarium",
+        "nameES": "Bergen Aquarium",
+        "desc": "acquario con foche, pinguini e pesci del Mare del Nord",
+        "descEN": "aquarium with seals, penguins and North Sea fish",
+        "descES": "acuario con focas, pingüinos y peces del Mar del Norte",
+        "maps": "https://maps.google.com/?q=Bergen+Aquarium"
+      },
+      {
+        "name": "Fløibanen",
+        "nameEN": "Fløibanen",
+        "nameES": "Fløibanen",
+        "desc": "funicolare panoramica — in cima parco giochi e sentieri nel bosco",
+        "descEN": "panoramic funicular — playground and forest trails at the top",
+        "descES": "funicular panorámico — parque infantil y senderos en el bosque en la cima",
+        "maps": "https://maps.google.com/?q=Floibanen+Bergen"
+      }
+    ],
+    "practical": {
+      "parking": [
+        {
+          "name": "Bergen Camping Park (Lone)",
+          "nameEN": "Bergen Camping Park (Lone)",
+          "nameES": "Bergen Camping Park (Lone)",
+          "address": "Lone, Bergen",
+          "addressEN": "Lone, Bergen",
+          "addressES": "Lone, Bergen",
+          "maps": "https://maps.google.com/?q=60.356,5.415",
+          "price": "~350-500 NOK/notte",
+          "priceEN": "~350-500 NOK/night",
+          "priceES": "~350-500 NOK/noche",
+          "notes": "Bus per il centro (15 min). Elettricità, acqua, scarico, docce, lavanderia. NON entrare in centro col camper!",
+          "notesEN": "Bus to city centre (15 min). Electricity, water, waste disposal, showers, laundry. Do NOT drive into the centre with a motorhome!",
+          "notesES": "Bus al centro (15 min). Electricidad, agua, vaciado, duchas, lavandería. ¡NO entrar al centro con la autocaravana!"
+        }
+      ],
+      "fuel": "Circle K, Shell (Bergen periferia). NON entrare in centro col camper!",
+      "fuelEN": "Circle K, Shell (Bergen outskirts). Do NOT drive into the centre with a motorhome!",
+      "fuelES": "Circle K, Shell (periferia de Bergen). ¡NO entrar al centro con la autocaravana!",
+      "grocery": [
+        {
+          "name": "Rema 1000, Kiwi, Meny (Bergen)",
+          "nameEN": "Rema 1000, Kiwi, Meny (Bergen)",
+          "nameES": "Rema 1000, Kiwi, Meny (Bergen)",
+          "location": "Bergen",
+          "locationEN": "Bergen",
+          "locationES": "Bergen",
+          "maps": "https://maps.google.com/?q=Supermercati+Bergen"
+        }
+      ],
+      "laundry": {
+        "text": "Bergen Camping Park (Lone)",
+        "textEN": "Bergen Camping Park (Lone)",
+        "textES": "Bergen Camping Park (Lone)",
+        "maps": "https://maps.google.com/?q=Bergen+Camping+Park"
+      },
+      "camper": {
+        "text": "Acqua e scarico al Bergen Camping Park. NON entrare in centro col camper!",
+        "textEN": "Water and waste disposal at Bergen Camping Park. Do NOT drive into the centre!",
+        "textES": "Agua y vaciado en Bergen Camping Park. ¡NO entrar al centro!",
+        "maps": "https://maps.google.com/?q=Bergen+Camping+Park"
+      },
+      "emergency": {
+        "name": "Haukeland University Hospital",
+        "nameEN": "Haukeland University Hospital",
+        "nameES": "Haukeland University Hospital",
+        "maps": "https://maps.google.com/?q=Haukeland+University+Hospital+Bergen",
+        "phones": "112/113/110",
+        "notes": null
+      },
+      "budget": "~€180-220/giorno",
+      "budgetEN": "~€180-220/day",
+      "budgetES": "~€180-220/día"
+    },
+    "tollsEN": "AutoPASS",
+    "tollsES": "AutoPASS"
+  },
+  {
+    "id": "g32",
+    "date": "26/07",
+    "title": "Bergen → Stavanger",
+    "titleEN": "Bergen → Stavanger",
+    "titleES": "Bergen → Stavanger",
+    "flags": "🇳🇴",
+    "country": "NO",
+    "region": "norvegia",
+    "km": 210,
+    "hours": "4h + traghetti 1h 10m",
+    "tolls": "<a href=\"https://www.autopass.no\" target=\"_blank\" rel=\"noopener\">AutoPASS</a> + traghetti interni E39 (~200-300 NOK totali)",
+    "tollLinks": [
+      {
+        "text": "AutoPASS",
+        "url": "https://www.autopass.no",
+        "textEN": "AutoPASS",
+        "textES": "AutoPASS"
+      }
+    ],
+    "meteo": {
+      "lat": 58.97,
+      "lon": 5.7331,
+      "high": 19,
+      "low": 13,
+      "cond": "Variabile",
+      "daylight": "18h di luce",
+      "condEN": "Variable",
+      "condES": "Variable",
+      "daylightEN": "18h of daylight",
+      "daylightES": "18h de luz"
+    },
+    "narrative": "Mezza giornata di guida lungo la E39 con diversi traghetti brevi (drive-on, nessuna prenotazione). Arrivo a <strong>Stavanger</strong> nel pomeriggio — passeggiata nel quartiere storico <strong>Gamle Stavanger</strong> (173 case bianche in legno).",
+    "narrativeEN": "Half-day drive along the E39 with several short ferries (drive-on, no booking needed). Arrive in <strong>Stavanger</strong> in the afternoon — walk through the historic <strong>Gamle Stavanger</strong> quarter (173 white wooden houses).",
+    "narrativeES": "Medio día de conducción por la E39 con varios ferries cortos (drive-on, sin reserva). Llegada a <strong>Stavanger</strong> por la tarde — paseo por el barrio histórico <strong>Gamle Stavanger</strong> (173 casas blancas de madera).",
+    "highlights": [
+      {
+        "icon": "🏘️",
+        "title": "Gamle Stavanger",
+        "titleEN": "Gamle Stavanger",
+        "titleES": "Gamle Stavanger",
+        "text": "173 case bianche in legno del XVIII secolo — il quartiere storico meglio conservato di Norvegia",
+        "textEN": "173 white wooden houses from the 18th century — Norway's best-preserved historic quarter",
+        "textES": "173 casas blancas de madera del siglo XVIII — el barrio histórico mejor conservado de Noruega",
+        "maps": "https://maps.google.com/?q=Gamle+Stavanger",
+        "star": false,
+        "familyFriendly": true
+      },
+      {
+        "icon": "🛢️",
+        "title": "Museo Petrolio Norvegese",
+        "titleEN": "Norwegian Petroleum Museum",
+        "titleES": "Museo del Petróleo Noruego",
+        "text": "Museo interattivo sulla storia del petrolio del Mare del Nord — sorprendentemente interessante anche per i bambini",
+        "textEN": "Interactive museum about North Sea oil history — surprisingly interesting for children too",
+        "textES": "Museo interactivo sobre la historia del petróleo del Mar del Norte — sorprendentemente interesante también para los niños",
+        "maps": "https://maps.google.com/?q=Norwegian+Petroleum+Museum+Stavanger",
+        "star": false,
+        "familyFriendly": true
+      }
+    ],
+    "food": [
+      {
+        "type": "restaurant",
+        "title": "Fisketorget Stavanger",
+        "titleEN": "Fisketorget Stavanger",
+        "titleES": "Fisketorget Stavanger",
+        "text": "Mercato del pesce sul porto — gamberoni, fish & chips, zuppa di pesce fresca",
+        "textEN": "Fish market on the harbour — prawns, fish & chips, fresh fish soup",
+        "textES": "Mercado de pescado en el puerto — gambas, fish & chips, sopa de pescado fresca"
+      }
+    ],
+    "scooter": null,
+    "waterSports": null,
+    "trekking": null,
+    "fishing": "Lysefjord (Stavanger): fiordo profondo, merluzzo e saithe. Uscite in barca organizzate disponibili. Pesca dal molo: GRATIS.",
+    "fishingEN": "Lysefjord (Stavanger): deep fjord, cod and saithe. Organized boat trips available. Pier fishing: FREE.",
+    "fishingES": "Lysefjord (Stavanger): fiordo profundo, bacalao y carbonero. Excursiones en barco organizadas disponibles. Pesca desde el muelle: GRATIS.",
+    "events": [],
+    "alternatives": [
+      {
+        "text": "Se pioggia: <strong>Museo Petrolio Norvegese</strong> (indoor, interattivo) + <strong>Stavanger Kunstmuseum</strong>",
+        "textEN": "If rain: <strong>Norwegian Petroleum Museum</strong> (indoor, interactive) + <strong>Stavanger Art Museum</strong>",
+        "textES": "Si lluvia: <strong>Museo del Petróleo Noruego</strong> (interior, interactivo) + <strong>Stavanger Kunstmuseum</strong>"
+      },
+      {
+        "text": "☔ Se piove → vedi <a href=\"#pioggia\" data-region=\"rain\">Piano Pioggia</a>",
+        "textEN": "☔ If it rains → see <a href=\"#pioggia\" data-region=\"rain\">Rain Plan</a>",
+        "textES": "☔ Si llueve → ver <a href=\"#pioggia\" data-region=\"rain\">Plan de lluvia</a>"
+      }
+    ],
+    "kids": [
+      {
+        "name": "Museo Petrolio Norvegese",
+        "nameEN": "Norwegian Petroleum Museum",
+        "nameES": "Museo del Petróleo Noruego",
+        "desc": "museo interattivo con simulatori — piace molto ai bambini",
+        "descEN": "interactive museum with simulators — children love it",
+        "descES": "museo interactivo con simuladores — les encanta a los niños",
+        "maps": "https://maps.google.com/?q=Norwegian+Petroleum+Museum+Stavanger"
+      }
+    ],
+    "practical": {
+      "parking": [
+        {
+          "name": "Mosvangen Camping (Stavanger)",
+          "nameEN": "Mosvangen Camping (Stavanger)",
+          "nameES": "Mosvangen Camping (Stavanger)",
+          "address": "Stavanger",
+          "addressEN": "Stavanger",
+          "addressES": "Stavanger",
+          "maps": "https://maps.google.com/?q=58.963,5.710",
+          "price": "~350-450 NOK/notte",
+          "priceEN": "~350-450 NOK/night",
+          "priceES": "~350-450 NOK/noche",
+          "notes": "Vicino al centro (2 km), bus frequente. Elettricità, acqua, scarico, docce.",
+          "notesEN": "Close to centre (2 km), frequent bus. Electricity, water, waste disposal, showers.",
+          "notesES": "Cerca del centro (2 km), bus frecuente. Electricidad, agua, vaciado, duchas."
+        }
+      ],
+      "fuel": "Circle K, Shell, Esso (Stavanger).",
+      "fuelEN": "Circle K, Shell, Esso (Stavanger).",
+      "fuelES": "Circle K, Shell, Esso (Stavanger).",
+      "grocery": [
+        {
+          "name": "Rema 1000, Kiwi, Meny (Stavanger)",
+          "nameEN": "Rema 1000, Kiwi, Meny (Stavanger)",
+          "nameES": "Rema 1000, Kiwi, Meny (Stavanger)",
+          "location": "Stavanger",
+          "locationEN": "Stavanger",
+          "locationES": "Stavanger",
+          "maps": "https://maps.google.com/?q=Supermercati+Stavanger"
+        }
+      ],
+      "laundry": {
+        "text": "Mosvangen Camping",
+        "textEN": "Mosvangen Camping",
+        "textES": "Mosvangen Camping",
+        "maps": "https://maps.google.com/?q=Mosvangen+Camping+Stavanger"
+      },
+      "camper": {
+        "text": "Acqua e scarico al Mosvangen Camping",
+        "textEN": "Water and waste disposal at Mosvangen Camping",
+        "textES": "Agua y vaciado en Mosvangen Camping",
+        "maps": "https://maps.google.com/?q=Mosvangen+Camping+Stavanger"
+      },
+      "emergency": {
+        "name": "Stavanger University Hospital",
+        "nameEN": "Stavanger University Hospital",
+        "nameES": "Stavanger University Hospital",
+        "maps": "https://maps.google.com/?q=Stavanger+University+Hospital",
+        "phones": "112/113/110",
+        "notes": null
+      },
+      "budget": "~€180-220/giorno",
+      "budgetEN": "~€180-220/day",
+      "budgetES": "~€180-220/día"
+    },
+    "tollsEN": "<a href=\"https://www.autopass.no\" target=\"_blank\" rel=\"noopener\">AutoPASS</a> + internal E39 ferries (~200-300 NOK total)",
+    "tollsES": "<a href=\"https://www.autopass.no\" target=\"_blank\" rel=\"noopener\">AutoPASS</a> + ferries internos E39 (~200-300 NOK totales)"
+  },
+  {
+    "id": "g33",
+    "date": "27/07",
+    "title": "Preikestolen",
+    "titleEN": "Preikestolen (Pulpit Rock)",
+    "titleES": "Preikestolen",
+    "flags": "🇳🇴",
+    "country": "NO",
+    "region": "norvegia",
+    "km": 50,
+    "hours": "1h guida + 4h escursione",
+    "tolls": "Parcheggio Preikestolen: ~250 NOK",
+    "tollLinks": [],
+    "meteo": {
+      "lat": 58.9863,
+      "lon": 6.1885,
+      "high": 19,
+      "low": 13,
+      "cond": "⚠️ METEO-DIPENDENTE! Controllare previsioni",
+      "daylight": "18h di luce",
+      "condEN": "⚠️ WEATHER-DEPENDENT! Check forecast",
+      "condES": "⚠️ ¡DEPENDE DEL TIEMPO! Consultar previsión",
+      "daylightEN": "18h of daylight",
+      "daylightES": "18h de luz"
+    },
+    "narrative": "⚠️ <strong>Partite alle 06:30!</strong> Il sentiero si riempie dopo le 10:00. Escursione ~4h a/r (8 km), dislivello 350m — fattibile con bambini dai 6 anni. In cima: piattaforma rocciosa piatta sospesa 604m sopra il Lysefjord. <strong>Se pioggia/nebbia forte → scambiare col giorno 28!</strong>",
+    "narrativeEN": "⚠️ <strong>Depart at 06:30!</strong> The trail gets crowded after 10:00. Hike ~4h round trip (8 km), 350m elevation — doable with children from 6 years. At the top: flat rock platform suspended 604m above the Lysefjord. <strong>If heavy rain/fog → swap with day 28!</strong>",
+    "narrativeES": "⚠️ <strong>¡Salgan a las 06:30!</strong> El sendero se llena después de las 10:00. Excursión ~4h ida y vuelta (8 km), 350m de desnivel — factible con niños desde 6 años. En la cima: plataforma rocosa plana suspendida 604m sobre el Lysefjord. <strong>Si lluvia/niebla fuerte → ¡intercambiar con el día 28!</strong>",
+    "highlights": [
+      {
+        "icon": "⭐",
+        "title": "Preikestolen",
+        "titleEN": "Preikestolen (Pulpit Rock)",
+        "titleES": "Preikestolen",
+        "text": "Piattaforma rocciosa 604m sopra il Lysefjord — una delle viste più iconiche al mondo. Escursione 4h a/r, 8 km, 350m dislivello. Parcheggio P1 apre alle 06:00 (250 NOK).",
+        "textEN": "Rock platform 604m above the Lysefjord — one of the world's most iconic views. Hike 4h round trip, 8 km, 350m elevation. Parking P1 opens at 06:00 (250 NOK).",
+        "textES": "Plataforma rocosa 604m sobre el Lysefjord — una de las vistas más icónicas del mundo. Excursión 4h ida y vuelta, 8 km, 350m desnivel. Aparcamiento P1 abre a las 06:00 (250 NOK).",
+        "maps": "https://maps.google.com/?q=58.986,6.190",
+        "star": true,
+        "familyFriendly": true
+      }
+    ],
+    "food": [
+      {
+        "type": "street",
+        "title": "Pranzo al sacco",
+        "titleEN": "Packed lunch",
+        "titleES": "Almuerzo para llevar",
+        "text": "Preparare panini la sera prima! Non ci sono punti ristoro sul sentiero. Portare almeno 1.5L acqua a testa.",
+        "textEN": "Prepare sandwiches the evening before! No refreshment points on the trail. Bring at least 1.5L water per person.",
+        "textES": "¡Preparar bocadillos la noche anterior! No hay puntos de avituallamiento en el sendero. Llevar al menos 1.5L de agua por persona."
+      }
+    ],
+    "scooter": null,
+    "waterSports": null,
+    "trekking": {
+      "title": "Preikestolen",
+      "titleEN": "Preikestolen (Pulpit Rock)",
+      "titleES": "Preikestolen",
+      "text": "8 km a/r, 4h, dislivello 350m. Sentiero ben segnalato ma roccioso — scarpe da trekking obbligatorie. Fattibile con bambini dai 6 anni (con calma). Partire entro le 07:00!",
+      "textEN": "8 km round trip, 4h, 350m elevation. Well-marked but rocky trail — hiking boots mandatory. Doable with children from 6 years (take it easy). Depart by 07:00!",
+      "textES": "8 km ida y vuelta, 4h, 350m desnivel. Sendero bien señalizado pero rocoso — botas de trekking obligatorias. Factible con niños desde 6 años (con calma). ¡Salir antes de las 07:00!",
+      "link": "https://maps.google.com/?q=Preikestolen+Trailhead"
+    },
+    "fishing": null,
+    "events": [],
+    "alternatives": [
+      {
+        "text": "<strong>Se pioggia/nebbia forte → SCAMBIARE col giorno 28!</strong> Preikestolen con visibilità zero non ha senso. Alternativa indoor: <strong>Museo Petrolio Norvegese</strong> (Stavanger) o <strong>Lysefjord cruise</strong> (3h, vede Preikestolen dal basso)",
+        "textEN": "<strong>If heavy rain/fog → SWAP with day 28!</strong> Preikestolen with zero visibility is pointless. Indoor alternative: <strong>Norwegian Petroleum Museum</strong> (Stavanger) or <strong>Lysefjord cruise</strong> (3h, sees Preikestolen from below)",
+        "textES": "<strong>Si lluvia/niebla fuerte → ¡INTERCAMBIAR con el día 28!</strong> Preikestolen con visibilidad cero no tiene sentido. Alternativa interior: <strong>Museo del Petróleo Noruego</strong> (Stavanger) o <strong>crucero Lysefjord</strong> (3h, ve Preikestolen desde abajo)"
+      },
+      {
+        "text": "☔ Se piove → vedi <a href=\"#pioggia\" data-region=\"rain\">Piano Pioggia</a>",
+        "textEN": "☔ If it rains → see <a href=\"#pioggia\" data-region=\"rain\">Rain Plan</a>",
+        "textES": "☔ Si llueve → ver <a href=\"#pioggia\" data-region=\"rain\">Plan de lluvia</a>"
+      }
+    ],
+    "kids": [
+      {
+        "name": "Preikestolen con bambini",
+        "nameEN": "Preikestolen with children",
+        "nameES": "Preikestolen con niños",
+        "desc": "fattibile dai 6 anni — ritmo lento, molte pause, portare snack e giochi. Tenere per mano vicino al bordo!",
+        "descEN": "doable from 6 years — slow pace, many breaks, bring snacks and games. Hold hands near the edge!",
+        "descES": "factible desde 6 años — ritmo lento, muchas pausas, llevar snacks y juegos. ¡Tomar de la mano cerca del borde!",
+        "maps": "https://maps.google.com/?q=Preikestolen"
+      }
+    ],
+    "practical": {
+      "parking": [
+        {
+          "name": "Mosvangen Camping (Stavanger) — stessa notte",
+          "nameEN": "Mosvangen Camping (Stavanger) — same night",
+          "nameES": "Mosvangen Camping (Stavanger) — misma noche",
+          "address": "Stavanger",
+          "addressEN": "Stavanger",
+          "addressES": "Stavanger",
+          "maps": "https://maps.google.com/?q=58.963,5.710",
+          "price": "~350-450 NOK/notte",
+          "priceEN": "~350-450 NOK/night",
+          "priceES": "~350-450 NOK/noche",
+          "notes": "Tornare a Stavanger dopo l'escursione. Riposo meritato!",
+          "notesEN": "Return to Stavanger after the hike. Well-deserved rest!",
+          "notesES": "Volver a Stavanger después de la excursión. ¡Descanso merecido!"
+        }
+      ],
+      "fuel": "Fare il pieno la sera prima a Stavanger.",
+      "fuelEN": "Fill up the evening before in Stavanger.",
+      "fuelES": "Llenar la noche anterior en Stavanger.",
+      "grocery": [
+        {
+          "name": "Preparare pranzo al sacco la sera prima",
+          "nameEN": "Prepare packed lunch the evening before",
+          "nameES": "Preparar almuerzo para llevar la noche anterior",
+          "location": "Stavanger",
+          "locationEN": "Stavanger",
+          "locationES": "Stavanger",
+          "maps": null
+        }
+      ],
+      "laundry": {
+        "text": "Mosvangen Camping",
+        "textEN": "Mosvangen Camping",
+        "textES": "Mosvangen Camping",
+        "maps": "https://maps.google.com/?q=Mosvangen+Camping+Stavanger"
+      },
+      "camper": {
+        "text": "Acqua e scarico al Mosvangen Camping",
+        "textEN": "Water and waste disposal at Mosvangen Camping",
+        "textES": "Agua y vaciado en Mosvangen Camping",
+        "maps": "https://maps.google.com/?q=Mosvangen+Camping+Stavanger"
+      },
+      "emergency": {
+        "name": "Stavanger University Hospital",
+        "nameEN": "Stavanger University Hospital",
+        "nameES": "Stavanger University Hospital",
+        "maps": "https://maps.google.com/?q=Stavanger+University+Hospital",
+        "phones": "112/113/110",
+        "notes": null
+      },
+      "budget": "~€120-150/giorno",
+      "budgetEN": "~€120-150/day",
+      "budgetES": "~€120-150/día"
+    },
+    "tollsEN": "Preikestolen parking: ~250 NOK",
+    "tollsES": "Aparcamiento Preikestolen: ~250 NOK"
+  },
+  {
+    "id": "g34",
+    "date": "28/07",
+    "title": "Stavanger → Kristiansand",
+    "titleEN": "Stavanger → Kristiansand",
+    "titleES": "Stavanger → Kristiansand",
+    "flags": "🇳🇴",
+    "country": "NO",
+    "region": "norvegia",
+    "km": 230,
+    "hours": "3h 30m",
+    "tolls": "AutoPASS (tunnel a pedaggio)",
+    "tollLinks": [],
+    "meteo": {
+      "lat": 58.146,
+      "lon": 7.996,
+      "high": 20,
+      "low": 14,
+      "cond": "Soleggiato/variabile",
+      "daylight": "17h 30m di luce",
+      "condEN": "Sunny/variable",
+      "condES": "Soleado/variable",
+      "daylightEN": "17h 30m of daylight",
+      "daylightES": "17h 30m de luz"
+    },
+    "narrative": "Trasferimento verso <strong>Kristiansand</strong> — margine prima del traghetto. Tappe facoltative: <strong>Lindesnes Fyr</strong> (faro al punto più a sud della Norvegia, parcheggio gratuito di giorno) o <strong>Mandal</strong> (spiaggia di Sjøsanden, la più bella di Norvegia). Primo sacrificio se si accumula ritardo.",
+    "narrativeEN": "Transfer to <strong>Kristiansand</strong> — buffer before the ferry. Optional stops: <strong>Lindesnes Fyr</strong> (lighthouse at Norway's southernmost point, free daytime parking) or <strong>Mandal</strong> (Sjøsanden beach, Norway's finest). First sacrifice if running behind schedule.",
+    "narrativeES": "Traslado a <strong>Kristiansand</strong> — margen antes del ferry. Paradas opcionales: <strong>Lindesnes Fyr</strong> (faro en el punto más al sur de Noruega, aparcamiento diurno gratuito) o <strong>Mandal</strong> (playa de Sjøsanden, la más bonita de Noruega). Primer sacrificio si se acumula retraso.",
+    "highlights": [
+      {
+        "icon": "🏠",
+        "title": "Lindesnes Fyr",
+        "titleEN": "Lindesnes Lighthouse",
+        "titleES": "Lindesnes Fyr",
+        "text": "Punto più a sud della Norvegia (57°58'N). Faro + museo + sentieri costieri. Parcheggio gratuito di giorno. Facoltativo — primo sacrificio se in ritardo.",
+        "textEN": "Norway's southernmost point (57°58'N). Lighthouse + museum + coastal paths. Free daytime parking. Optional — first sacrifice if behind schedule.",
+        "textES": "Punto más al sur de Noruega (57°58'N). Faro + museo + senderos costeros. Aparcamiento diurno gratuito. Opcional — primer sacrificio si hay retraso.",
+        "maps": "https://maps.google.com/?q=57.983,7.048",
+        "star": false,
+        "familyFriendly": true
+      },
+      {
+        "icon": "🏖️",
+        "title": "Mandal (Sjøsanden)",
+        "titleEN": "Mandal (Sjøsanden Beach)",
+        "titleES": "Mandal (Sjøsanden)",
+        "text": "La spiaggia più bella della Norvegia — sabbia bianca, acqua (fredda!) cristallina. Facoltativa.",
+        "textEN": "Norway's finest beach — white sand, crystal clear (cold!) water. Optional.",
+        "textES": "La playa más bonita de Noruega — arena blanca, agua cristalina (¡fría!). Opcional.",
+        "maps": "https://maps.google.com/?q=Sjosanden+Mandal",
+        "star": false,
+        "familyFriendly": true
+      }
+    ],
+    "food": [
+      {
+        "type": "restaurant",
+        "title": "Fiskebrygga (Kristiansand)",
+        "titleEN": "Fiskebrygga (Kristiansand)",
+        "titleES": "Fiskebrygga (Kristiansand)",
+        "text": "Quartiere del pesce sul porto — ristoranti e bancarelle con pesce freschissimo. Cena perfetta all'arrivo.",
+        "textEN": "Fish quarter on the harbour — restaurants and stalls with very fresh fish. Perfect dinner on arrival.",
+        "textES": "Barrio del pescado en el puerto — restaurantes y puestos con pescado freschísimo. Cena perfecta a la llegada."
+      }
+    ],
+    "scooter": null,
+    "waterSports": null,
+    "trekking": null,
+    "fishing": "Sørlandet (Mandal/Kristiansand): pesca estiva allo sgombro dai moli — molto amata dalle famiglie locali. Canna semplice ed esca artificiale bastano. GRATIS.",
+    "fishingEN": "Sørlandet (Mandal/Kristiansand): summer mackerel fishing from the piers — very popular with local families. Simple rod and artificial bait are enough. FREE.",
+    "fishingES": "Sørlandet (Mandal/Kristiansand): pesca estival de caballa desde los muelles — muy popular entre las familias locales. Caña simple y cebo artificial son suficientes. GRATIS.",
+    "events": [],
+    "alternatives": [
+      {
+        "text": "Se Preikestolen era impossibile ieri per meteo: <strong>fare Preikestolen oggi</strong> e trasferirsi a Kristiansand domani mattina presto (il traghetto è il 30 alle 8:00, c'è margine)",
+        "textEN": "If Preikestolen was impossible yesterday due to weather: <strong>do Preikestolen today</strong> and transfer to Kristiansand early tomorrow morning (ferry is on the 30th at 8:00, there's margin)",
+        "textES": "Si Preikestolen fue imposible ayer por el tiempo: <strong>hacer Preikestolen hoy</strong> y trasladarse a Kristiansand mañana temprano (el ferry es el 30 a las 8:00, hay margen)"
+      },
+      {
+        "text": "☔ Se piove → vedi <a href=\"#pioggia\" data-region=\"rain\">Piano Pioggia</a>",
+        "textEN": "☔ If it rains → see <a href=\"#pioggia\" data-region=\"rain\">Rain Plan</a>",
+        "textES": "☔ Si llueve → ver <a href=\"#pioggia\" data-region=\"rain\">Plan de lluvia</a>"
+      }
+    ],
+    "kids": [
+      {
+        "name": "Kristiansand Dyrepark",
+        "nameEN": "Kristiansand Zoo",
+        "nameES": "Kristiansand Dyrepark",
+        "desc": "zoo + parco divertimenti — se avete tempo il 29 (giorno di riposo)",
+        "descEN": "zoo + amusement park — if you have time on the 29th (rest day)",
+        "descES": "zoo + parque de atracciones — si tienen tiempo el 29 (día de descanso)",
+        "maps": "https://maps.google.com/?q=Kristiansand+Dyrepark"
+      },
+      {
+        "name": "Sjøsanden (Mandal)",
+        "nameEN": "Sjøsanden Beach (Mandal)",
+        "nameES": "Sjøsanden (Mandal)",
+        "desc": "spiaggia di sabbia bianca — perfetta per i bambini",
+        "descEN": "white sand beach — perfect for children",
+        "descES": "playa de arena blanca — perfecta para los niños",
+        "maps": "https://maps.google.com/?q=Sjosanden+Mandal"
+      }
+    ],
+    "practical": {
+      "parking": [
+        {
+          "name": "Kristiansand Feriesenter (Dvergsnestangen)",
+          "nameEN": "Kristiansand Feriesenter (Dvergsnestangen)",
+          "nameES": "Kristiansand Feriesenter (Dvergsnestangen)",
+          "address": "Kristiansand",
+          "addressEN": "Kristiansand",
+          "addressES": "Kristiansand",
+          "maps": "https://maps.google.com/?q=58.136,8.030",
+          "price": "~350-500 NOK/notte",
+          "priceEN": "~350-500 NOK/night",
+          "priceES": "~350-500 NOK/noche",
+          "notes": "Vicino al porto Color Line (15 min). Elettricità, acqua, scarico, docce, spiaggia privata.",
+          "notesEN": "Close to Color Line port (15 min). Electricity, water, waste disposal, showers, private beach.",
+          "notesES": "Cerca del puerto Color Line (15 min). Electricidad, agua, vaciado, duchas, playa privada."
+        }
+      ],
+      "fuel": "Fare il pieno a Kristiansand — ultimo rifornimento norvegese (diesel più caro in DK).",
+      "fuelEN": "Fill up in Kristiansand — last Norwegian refuelling (diesel more expensive in DK).",
+      "fuelES": "Llenar en Kristiansand — último repostaje noruego (diésel más caro en DK).",
+      "grocery": [
+        {
+          "name": "Rema 1000, Kiwi, Meny (Kristiansand)",
+          "nameEN": "Rema 1000, Kiwi, Meny (Kristiansand)",
+          "nameES": "Rema 1000, Kiwi, Meny (Kristiansand)",
+          "location": "Kristiansand",
+          "locationEN": "Kristiansand",
+          "locationES": "Kristiansand",
+          "maps": "https://maps.google.com/?q=Supermercati+Kristiansand"
+        }
+      ],
+      "laundry": {
+        "text": "Kristiansand Feriesenter",
+        "textEN": "Kristiansand Feriesenter",
+        "textES": "Kristiansand Feriesenter",
+        "maps": "https://maps.google.com/?q=Kristiansand+Feriesenter"
+      },
+      "camper": {
+        "text": "Acqua e scarico al Kristiansand Feriesenter. Ultimo scarico prima della Danimarca!",
+        "textEN": "Water and waste disposal at Kristiansand Feriesenter. Last dump before Denmark!",
+        "textES": "Agua y vaciado en Kristiansand Feriesenter. ¡Último vaciado antes de Dinamarca!",
+        "maps": "https://maps.google.com/?q=Kristiansand+Feriesenter"
+      },
+      "emergency": {
+        "name": "Sørlandet Sykehus (Kristiansand)",
+        "nameEN": "Sørlandet Sykehus (Kristiansand)",
+        "nameES": "Sørlandet Sykehus (Kristiansand)",
+        "maps": "https://maps.google.com/?q=Sorlandet+Sykehus+Kristiansand",
+        "phones": "112/113/110",
+        "notes": null
+      },
+      "budget": "~€150-180/giorno",
+      "budgetEN": "~€150-180/day",
+      "budgetES": "~€150-180/día"
+    },
+    "tollsEN": "AutoPASS (toll tunnels)",
+    "tollsES": "AutoPASS (túneles de peaje)"
+  },
+  {
+    "id": "g35",
+    "date": "29/07",
+    "title": "Kristiansand (riposo)",
+    "titleEN": "Kristiansand (rest day)",
+    "titleES": "Kristiansand (descanso)",
+    "flags": "🇳🇴",
+    "country": "NO",
+    "region": "norvegia",
+    "km": 0,
+    "hours": "—",
+    "tolls": "—",
+    "tollLinks": [],
+    "meteo": {
+      "lat": 58.146,
+      "lon": 7.996,
+      "high": 21,
+      "low": 14,
+      "cond": "Soleggiato",
+      "daylight": "17h 30m di luce",
+      "condEN": "Sunny",
+      "condES": "Soleado",
+      "daylightEN": "17h 30m of daylight",
+      "daylightES": "17h 30m de luz"
+    },
+    "narrative": "Giorno di riposo e preparazione prima del traghetto di domani (30/07 ore 8:00). Opzioni: <strong>Posebyen</strong> (quartiere storico con case bianche), <strong>Kristiansand Dyrepark</strong> (zoo + parco divertimenti, perfetto per i bambini), o semplicemente relax in spiaggia.",
+    "narrativeEN": "Rest day and preparation before tomorrow's ferry (30/07 at 8:00). Options: <strong>Posebyen</strong> (historic quarter with white houses), <strong>Kristiansand Dyrepark</strong> (zoo + amusement park, perfect for children), or simply beach relaxation.",
+    "narrativeES": "Día de descanso y preparación antes del ferry de mañana (30/07 a las 8:00). Opciones: <strong>Posebyen</strong> (barrio histórico con casas blancas), <strong>Kristiansand Dyrepark</strong> (zoo + parque de atracciones, perfecto para los niños), o simplemente relax en la playa.",
+    "highlights": [
+      {
+        "icon": "🦁",
+        "title": "Kristiansand Dyrepark",
+        "titleEN": "Kristiansand Zoo & Amusement Park",
+        "titleES": "Kristiansand Dyrepark",
+        "text": "Zoo nordico + parco divertimenti + Cardamom Town (dal libro per bambini). Giornata intera per famiglie. ~500 NOK/adulto.",
+        "textEN": "Nordic zoo + amusement park + Cardamom Town (from children's book). Full day for families. ~500 NOK/adult.",
+        "textES": "Zoo nórdico + parque de atracciones + Cardamom Town (del libro infantil). Día completo para familias. ~500 NOK/adulto.",
+        "maps": "https://maps.google.com/?q=Kristiansand+Dyrepark",
+        "star": false,
+        "familyFriendly": true
+      },
+      {
+        "icon": "🏘️",
+        "title": "Posebyen",
+        "titleEN": "Posebyen",
+        "titleES": "Posebyen",
+        "text": "Quartiere storico con case bianche in legno — passeggiata tranquilla, caffè e negozi artigianali",
+        "textEN": "Historic quarter with white wooden houses — quiet walk, cafés and artisan shops",
+        "textES": "Barrio histórico con casas blancas de madera — paseo tranquilo, cafeterías y tiendas artesanales",
+        "maps": "https://maps.google.com/?q=Posebyen+Kristiansand",
+        "star": false,
+        "familyFriendly": true
+      }
+    ],
+    "food": [
+      {
+        "type": "restaurant",
+        "title": "Fiskebrygga (Kristiansand)",
+        "titleEN": "Fiskebrygga (Kristiansand)",
+        "titleES": "Fiskebrygga (Kristiansand)",
+        "text": "Quartiere del pesce — ultimo pesce norvegese fresco prima della Danimarca!",
+        "textEN": "Fish quarter — last fresh Norwegian fish before Denmark!",
+        "textES": "Barrio del pescado — ¡último pescado noruego fresco antes de Dinamarca!"
+      }
+    ],
+    "scooter": null,
+    "waterSports": null,
+    "trekking": null,
+    "fishing": "Sgombro dai moli di Kristiansand — perfetto per i bambini, canna semplice. GRATIS.",
+    "fishingEN": "Mackerel from Kristiansand piers — perfect for children, simple rod. FREE.",
+    "fishingES": "Caballa desde los muelles de Kristiansand — perfecto para los niños, caña simple. GRATIS.",
+    "events": [],
+    "alternatives": [
+      {
+        "text": "Se Preikestolen non è stato fatto il 27: oggi è l'<strong>ultima possibilità</strong> — partire alle 05:00, fare l'escursione, tornare a Kristiansand entro sera. Domani traghetto alle 8:00.",
+        "textEN": "If Preikestolen wasn't done on the 27th: today is the <strong>last chance</strong> — depart at 05:00, do the hike, return to Kristiansand by evening. Tomorrow ferry at 8:00.",
+        "textES": "Si Preikestolen no se hizo el 27: hoy es la <strong>última oportunidad</strong> — salir a las 05:00, hacer la excursión, volver a Kristiansand por la noche. Mañana ferry a las 8:00."
+      }
+    ],
+    "kids": [
+      {
+        "name": "Kristiansand Dyrepark",
+        "nameEN": "Kristiansand Zoo",
+        "nameES": "Kristiansand Dyrepark",
+        "desc": "zoo + Cardamom Town + giostre — giornata intera perfetta per i bambini",
+        "descEN": "zoo + Cardamom Town + rides — perfect full day for children",
+        "descES": "zoo + Cardamom Town + atracciones — día completo perfecto para los niños",
+        "maps": "https://maps.google.com/?q=Kristiansand+Dyrepark"
+      },
+      {
+        "name": "Spiaggia Bystranda",
+        "nameEN": "Bystranda Beach",
+        "nameES": "Playa Bystranda",
+        "desc": "spiaggia in centro città con parco giochi",
+        "descEN": "city centre beach with playground",
+        "descES": "playa en el centro de la ciudad con parque infantil",
+        "maps": "https://maps.google.com/?q=Bystranda+Kristiansand"
+      }
+    ],
+    "practical": {
+      "parking": [
+        {
+          "name": "Kristiansand Feriesenter (stessa notte)",
+          "nameEN": "Kristiansand Feriesenter (same night)",
+          "nameES": "Kristiansand Feriesenter (misma noche)",
+          "address": "Kristiansand",
+          "addressEN": "Kristiansand",
+          "addressES": "Kristiansand",
+          "maps": "https://maps.google.com/?q=58.136,8.030",
+          "price": "~350-500 NOK/notte",
+          "priceEN": "~350-500 NOK/night",
+          "priceES": "~350-500 NOK/noche",
+          "notes": "⚠️ Domani traghetto alle 08:00! Check-in Color Line entro le 07:00. Dal camping al porto: 15 min.",
+          "notesEN": "⚠️ Tomorrow ferry at 08:00! Color Line check-in by 07:00. From campsite to port: 15 min.",
+          "notesES": "⚠️ ¡Mañana ferry a las 08:00! Check-in Color Line antes de las 07:00. Del camping al puerto: 15 min."
+        }
+      ],
+      "fuel": "Fare il pieno OGGI — ultimo rifornimento norvegese!",
+      "fuelEN": "Fill up TODAY — last Norwegian refuelling!",
+      "fuelES": "¡Llenar HOY — último repostaje noruego!",
+      "grocery": [
+        {
+          "name": "Fare scorta per il traghetto e la guida in Danimarca",
+          "nameEN": "Stock up for the ferry and driving in Denmark",
+          "nameES": "Abastecerse para el ferry y la conducción en Dinamarca",
+          "location": "Kristiansand",
+          "locationEN": "Kristiansand",
+          "locationES": "Kristiansand",
+          "maps": null
+        }
+      ],
+      "laundry": {
+        "text": "Kristiansand Feriesenter — ultimo bucato prima della Danimarca",
+        "textEN": "Kristiansand Feriesenter — last laundry before Denmark",
+        "textES": "Kristiansand Feriesenter — última colada antes de Dinamarca",
+        "maps": "https://maps.google.com/?q=Kristiansand+Feriesenter"
+      },
+      "camper": {
+        "text": "Acqua e scarico al Kristiansand Feriesenter. ULTIMO SCARICO prima della Danimarca!",
+        "textEN": "Water and waste disposal at Kristiansand Feriesenter. LAST DUMP before Denmark!",
+        "textES": "Agua y vaciado en Kristiansand Feriesenter. ¡ÚLTIMO VACIADO antes de Dinamarca!",
+        "maps": "https://maps.google.com/?q=Kristiansand+Feriesenter"
+      },
+      "emergency": {
+        "name": "Sørlandet Sykehus",
+        "nameEN": "Sørlandet Sykehus",
+        "nameES": "Sørlandet Sykehus",
+        "maps": "https://maps.google.com/?q=Sorlandet+Sykehus+Kristiansand",
+        "phones": "112/113/110",
+        "notes": null
+      },
+      "budget": "~€100-150/giorno (riposo)",
+      "budgetEN": "~€100-150/day (rest)",
+      "budgetES": "~€100-150/día (descanso)"
+    },
+    "tollsEN": "—",
+    "tollsES": "—"
+  },
+  {
+    "id": "g36",
+    "date": "30/07",
+    "title": "K.sand → Hirtshals → Copenhagen",
+    "titleEN": "K.sand → Hirtshals → Copenhagen",
+    "titleES": "K.sand → Hirtshals → Copenhagen",
+    "flags": "🇳🇴➔🇩🇰",
+    "country": "DK",
+    "region": "danimarca",
+    "km": 480,
+    "hours": "5h guida + traghetto 3h 15m",
+    "tolls": "⛴️ <a href=\"https://www.colorline.com\" target=\"_blank\" rel=\"noopener\">Color Line</a> K.sand–Hirtshals (~€250-400 camper+passeggeri) + Storebælt bridge (~€55)",
+    "tollLinks": [
+      {
+        "text": "Color Line",
+        "url": "https://www.colorline.com",
+        "textEN": "Color Line",
+        "textES": "Color Line"
+      }
+    ],
+    "meteo": {
+      "lat": 55.6761,
+      "lon": 12.5683,
+      "high": 22,
+      "low": 15,
+      "cond": "Soleggiato/variabile",
+      "daylight": "17h di luce",
+      "condEN": "Sunny/variable",
+      "condES": "Soleado/variable",
+      "daylightEN": "17h of daylight",
+      "daylightES": "17h de luz"
+    },
+    "narrative": "⚠️ <strong>Check-in Color Line entro le 07:00!</strong> Traghetto 08:00, arrivo Hirtshals ~11:15. Poi ~470 km / 5h fino a <strong>Copenhagen</strong> (arrivo ~16:30). Attraversamento ponte Storebælt (€55 pedaggio). Serata libera: <strong>Nyhavn</strong> per cena.",
+    "narrativeEN": "⚠️ <strong>Color Line check-in by 07:00!</strong> Ferry 08:00, arrive Hirtshals ~11:15. Then ~470 km / 5h to <strong>Copenhagen</strong> (arrive ~16:30). Cross Storebælt bridge (€55 toll). Free evening: <strong>Nyhavn</strong> for dinner.",
+    "narrativeES": "⚠️ <strong>¡Check-in Color Line antes de las 07:00!</strong> Ferry 08:00, llegada Hirtshals ~11:15. Luego ~470 km / 5h hasta <strong>Copenhagen</strong> (llegada ~16:30). Cruzar puente Storebælt (€55 peaje). Noche libre: <strong>Nyhavn</strong> para cenar.",
+    "highlights": [
+      {
+        "icon": "⛴️",
+        "title": "Color Line SuperSpeed",
+        "titleEN": "Color Line SuperSpeed",
+        "titleES": "Color Line SuperSpeed",
+        "text": "3h15 di traversata — ristorante, duty-free, area giochi bambini a bordo. Arrivo Hirtshals 11:15.",
+        "textEN": "3h15 crossing — restaurant, duty-free, children's play area on board. Arrive Hirtshals 11:15.",
+        "textES": "3h15 de travesía — restaurante, duty-free, área de juegos infantil a bordo. Llegada Hirtshals 11:15.",
+        "maps": "https://maps.google.com/?q=Color+Line+Terminal+Kristiansand",
+        "star": false,
+        "familyFriendly": true
+      },
+      {
+        "icon": "🏘️",
+        "title": "Nyhavn (Copenhagen)",
+        "titleEN": "Nyhavn (Copenhagen)",
+        "titleES": "Nyhavn (Copenhagen)",
+        "text": "Canale iconico con case colorate — cena all'aperto sul porto la prima sera a Copenhagen",
+        "textEN": "Iconic canal with colorful houses — outdoor dinner on the harbour on your first evening in Copenhagen",
+        "textES": "Canal icónico con casas coloridas — cena al aire libre en el puerto la primera noche en Copenhagen",
+        "maps": "https://maps.google.com/?q=Nyhavn+Copenhagen",
+        "star": true,
+        "familyFriendly": true
+      }
+    ],
+    "food": [
+      {
+        "type": "restaurant",
+        "title": "Nyhavn",
+        "titleEN": "Nyhavn",
+        "titleES": "Nyhavn",
+        "text": "Cena all'aperto sul canale — smørrebrød (tartine danesi), birra Carlsberg, atmosfera unica",
+        "textEN": "Outdoor dinner on the canal — smørrebrød (Danish open sandwiches), Carlsberg beer, unique atmosphere",
+        "textES": "Cena al aire libre en el canal — smørrebrød (tartinas danesas), cerveza Carlsberg, atmósfera única"
+      }
+    ],
+    "scooter": null,
+    "waterSports": null,
+    "trekking": null,
+    "fishing": null,
+    "events": [],
+    "alternatives": [
+      {
+        "text": "Se arrivo tardi a Copenhagen: saltare Nyhavn stasera e andare direttamente al camping. Copenhagen si visita domani.",
+        "textEN": "If arriving late in Copenhagen: skip Nyhavn tonight and go directly to the campsite. Copenhagen is for tomorrow.",
+        "textES": "Si llegan tarde a Copenhagen: saltarse Nyhavn esta noche e ir directamente al camping. Copenhagen es para mañana."
+      },
+      {
+        "text": "☔ Se piove → vedi <a href=\"#pioggia\" data-region=\"rain\">Piano Pioggia</a>",
+        "textEN": "☔ If it rains → see <a href=\"#pioggia\" data-region=\"rain\">Rain Plan</a>",
+        "textES": "☔ Si llueve → ver <a href=\"#pioggia\" data-region=\"rain\">Plan de lluvia</a>"
+      }
+    ],
+    "kids": [
+      {
+        "name": "Area giochi Color Line",
+        "nameEN": "Color Line Play Area",
+        "nameES": "Área de juegos Color Line",
+        "desc": "area giochi dedicata ai bambini a bordo del traghetto",
+        "descEN": "dedicated children's play area on board the ferry",
+        "descES": "área de juegos dedicada a los niños a bordo del ferry",
+        "maps": null
+      }
+    ],
+    "practical": {
+      "parking": [
+        {
+          "name": "Copenhagen Camping (Absalon)",
+          "nameEN": "Copenhagen Camping (Absalon)",
+          "nameES": "Copenhagen Camping (Absalon)",
+          "address": "Korsdalsvej 132, Rødovre",
+          "addressEN": "Korsdalsvej 132, Rødovre",
+          "addressES": "Korsdalsvej 132, Rødovre",
+          "maps": "https://maps.google.com/?q=55.6600,12.4400",
+          "price": "~300-400 DKK/notte (~€40-55)",
+          "priceEN": "~300-400 DKK/night (~€40-55)",
+          "priceES": "~300-400 DKK/noche (~€40-55)",
+          "notes": "Bus/metro per il centro (20 min). Elettricità, acqua, scarico, docce, WiFi.",
+          "notesEN": "Bus/metro to city centre (20 min). Electricity, water, waste disposal, showers, WiFi.",
+          "notesES": "Bus/metro al centro (20 min). Electricidad, agua, vaciado, duchas, WiFi."
+        }
+      ],
+      "fuel": "OK, Q8, Shell (Danimarca). Diesel ~12-13 DKK/L (~€1.65-1.80/L) — più economico della Norvegia!",
+      "fuelEN": "OK, Q8, Shell (Denmark). Diesel ~12-13 DKK/L (~€1.65-1.80/L) — cheaper than Norway!",
+      "fuelES": "OK, Q8, Shell (Dinamarca). Diésel ~12-13 DKK/L (~€1.65-1.80/L) — ¡más barato que Noruega!",
+      "grocery": [
+        {
+          "name": "Netto, Føtex, Rema 1000 (Danimarca)",
+          "nameEN": "Netto, Føtex, Rema 1000 (Denmark)",
+          "nameES": "Netto, Føtex, Rema 1000 (Dinamarca)",
+          "location": "lungo la E45/E20",
+          "locationEN": "along the E45/E20",
+          "locationES": "a lo largo de la E45/E20",
+          "maps": null
+        }
+      ],
+      "laundry": {
+        "text": "Copenhagen Camping (Absalon)",
+        "textEN": "Copenhagen Camping (Absalon)",
+        "textES": "Copenhagen Camping (Absalon)",
+        "maps": "https://maps.google.com/?q=Absalon+Camping+Copenhagen"
+      },
+      "camper": {
+        "text": "Acqua e scarico al Copenhagen Camping",
+        "textEN": "Water and waste disposal at Copenhagen Camping",
+        "textES": "Agua y vaciado en Copenhagen Camping",
+        "maps": "https://maps.google.com/?q=Absalon+Camping+Copenhagen"
+      },
+      "emergency": {
+        "name": "Rigshospitalet (Copenhagen)",
+        "nameEN": "Rigshospitalet (Copenhagen)",
+        "nameES": "Rigshospitalet (Copenhagen)",
+        "maps": "https://maps.google.com/?q=Rigshospitalet+Copenhagen",
+        "phones": "112 (tutti i servizi)",
+        "notes": null
+      },
+      "budget": "~€200-250/giorno (traghetto + pedaggio + carburante)",
+      "budgetEN": "~€200-250/day (ferry + toll + fuel)",
+      "budgetES": "~€200-250/día (ferry + peaje + combustible)"
+    },
+    "tollsEN": "⛴️ <a href=\"https://www.colorline.com\" target=\"_blank\" rel=\"noopener\">Color Line</a> K.sand–Hirtshals (~€250-400 motorhome+passengers) + Storebælt bridge (~€55)",
+    "tollsES": "⛴️ <a href=\"https://www.colorline.com\" target=\"_blank\" rel=\"noopener\">Color Line</a> K.sand–Hirtshals (~€250-400 autocaravana+pasajeros) + puente Storebælt (~€55)"
+  }
+]

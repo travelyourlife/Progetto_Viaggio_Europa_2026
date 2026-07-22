@@ -5800,9 +5800,9 @@ var DAYS_DATA = [
     "events": [],
     "alternatives": [
       {
-        "text": "Se nebbia/pioggia forte su Trollstigen: <strong>invertire con giorno 23</strong> (trasferimento verso Flåm) e tornare il giorno dopo se il meteo migliora",
-        "textEN": "If heavy fog/rain on Trollstigen: <strong>swap with day 23</strong> (transfer to Flåm) and return next day if weather improves",
-        "textES": "Si niebla/lluvia fuerte en Trollstigen: <strong>intercambiar con el día 23</strong> (traslado a Flåm) y volver al día siguiente si el tiempo mejora"
+        "text": "Se nebbia/pioggia forte su Trollstigen: prendere la <strong>via alternativa Ørnevegen</strong> (Molde → ferry Vestnes → Eidsdal → Eagle Road → Geiranger, +1h). Bonus: vista spettacolare sul Geirangerfjord dall'alto! Se chiusa anche Ørnevegen: aspettare ad Åndalsnes (la nebbia spesso si alza entro le 10:00)",
+        "textEN": "If heavy fog/rain on Trollstigen: take the <strong>alternative Ørnevegen route</strong> (Molde → Vestnes ferry → Eidsdal → Eagle Road → Geiranger, +1h). Bonus: spectacular views of Geirangerfjord from above! If Ørnevegen also closed: wait in Åndalsnes (fog often lifts by 10:00)",
+        "textES": "Si niebla/lluvia fuerte en Trollstigen: tomar la <strong>ruta alternativa Ørnevegen</strong> (Molde → ferry Vestnes → Eidsdal → Eagle Road → Geiranger, +1h). Bonus: ¡vistas espectaculares del Geirangerfjord desde arriba! Si Ørnevegen también cerrada: esperar en Åndalsnes (la niebla suele disiparse antes de las 10:00)"
       },
       {
         "text": "☔ Se piove → vedi <a href=\"#pioggia\" data-region=\"rain\">Piano Pioggia</a>",
@@ -6742,9 +6742,9 @@ var DAYS_DATA = [
       "daylightEN": "18h of daylight",
       "daylightES": "18h de luz"
     },
-    "narrative": "⚠️ <strong>Partite alle 06:30!</strong> Il sentiero si riempie dopo le 10:00. Escursione ~4h a/r (8 km), dislivello 350m — fattibile con bambini dai 6 anni. In cima: piattaforma rocciosa piatta sospesa 604m sopra il Lysefjord. <strong>Se pioggia/nebbia forte → scambiare col giorno 28!</strong>",
-    "narrativeEN": "⚠️ <strong>Depart at 06:30!</strong> The trail gets crowded after 10:00. Hike ~4h round trip (8 km), 350m elevation — doable with children from 6 years. At the top: flat rock platform suspended 604m above the Lysefjord. <strong>If heavy rain/fog → swap with day 28!</strong>",
-    "narrativeES": "⚠️ <strong>¡Salgan a las 06:30!</strong> El sendero se llena después de las 10:00. Excursión ~4h ida y vuelta (8 km), 350m de desnivel — factible con niños desde 6 años. En la cima: plataforma rocosa plana suspendida 604m sobre el Lysefjord. <strong>Si lluvia/niebla fuerte → ¡intercambiar con el día 28!</strong>",
+    "narrative": "⚠️ <strong>Partite alle 06:30!</strong> Il sentiero si riempie dopo le 10:00. Escursione ~4h a/r (8 km), dislivello 350m — fattibile con bambini dai 6 anni. In cima: piattaforma rocciosa piatta sospesa 604m sopra il Lysefjord. <strong>Se pioggia/nebbia forte → rimandare a G35 mattina</strong> (Preikestolen 06:30, poi guida verso Kristiansand)",
+    "narrativeEN": "⚠️ <strong>Depart at 06:30!</strong> The trail gets crowded after 10:00. Hike ~4h round trip (8 km), 350m elevation — doable with children from 6 years. At the top: flat rock platform suspended 604m above the Lysefjord. <strong>If heavy rain/fog → postpone to G35 morning</strong> (Preikestolen 06:30, then drive to Kristiansand)",
+    "narrativeES": "⚠️ <strong>¡Salgan a las 06:30!</strong> El sendero se llena después de las 10:00. Excursión ~4h ida y vuelta (8 km), 350m de desnivel — factible con niños desde 6 años. En la cima: plataforma rocosa plana suspendida 604m sobre el Lysefjord. <strong>Si lluvia/niebla fuerte → posponer a G35 por la mañana</strong> (Preikestolen 06:30, luego conducir a Kristiansand)",
     "highlights": [
       {
         "icon": "⭐",
@@ -6785,9 +6785,9 @@ var DAYS_DATA = [
     "events": [],
     "alternatives": [
       {
-        "text": "<strong>Se pioggia/nebbia forte → SCAMBIARE col giorno 33!</strong> Preikestolen con visibilità zero non ha senso. Alternativa indoor: <strong>Museo Petrolio Norvegese</strong> (Stavanger) o <strong>Lysefjord cruise</strong> (3h, vede Preikestolen dal basso)",
-        "textEN": "<strong>If heavy rain/fog → SWAP with day 33!</strong> Preikestolen with zero visibility is pointless. Indoor alternative: <strong>Norwegian Petroleum Museum</strong> (Stavanger) or <strong>Lysefjord cruise</strong> (3h, sees Preikestolen from below)",
-        "textES": "<strong>Si lluvia/niebla fuerte → ¡INTERCAMBIAR con el día 33!</strong> Preikestolen con visibilidad cero no tiene sentido. Alternativa interior: <strong>Museo del Petróleo Noruego</strong> (Stavanger) o <strong>crucero Lysefjord</strong> (3h, ve Preikestolen desde abajo)"
+        "text": "<strong>Se pioggia/nebbia forte → rimandare a G35 mattina!</strong> Preikestolen con visibilità zero non ha senso. Oggi: <strong>Museo Petrolio Norvegese</strong> (Stavanger) o <strong>Lysefjord cruise</strong> (3h, vede Preikestolen dal basso). Domani: Preikestolen 06:30 → Kristiansand",
+        "textEN": "<strong>If heavy rain/fog → postpone to G35 morning!</strong> Preikestolen with zero visibility is pointless. Today: <strong>Norwegian Petroleum Museum</strong> (Stavanger) or <strong>Lysefjord cruise</strong> (3h, sees Preikestolen from below). Tomorrow: Preikestolen 06:30 → Kristiansand",
+        "textES": "<strong>Si lluvia/niebla fuerte → ¡posponer a G35 por la mañana!</strong> Preikestolen con visibilidad cero no tiene sentido. Hoy: <strong>Museo del Petróleo Noruego</strong> (Stavanger) o <strong>crucero Lysefjord</strong> (3h, ve Preikestolen desde abajo). Mañana: Preikestolen 06:30 → Kristiansand"
       },
       {
         "text": "☔ Se piove → vedi <a href=\"#pioggia\" data-region=\"rain\">Piano Pioggia</a>",
