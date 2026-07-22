@@ -61,10 +61,10 @@
 <link href="./icon.png" rel="apple-touch-icon" sizes="167x167"/>
 <title>Quo Vadis — V4.90</title>
 <link crossorigin="" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" rel="stylesheet"/>
-<link href="style.css?v=5.05" rel="stylesheet"/>
-<link href="home-variants.css?v=5.05" rel="stylesheet"/>
-<link href="unified-map.css?v=5.05" rel="stylesheet"/>
-<link href="modern-pages.css?v=5.05" rel="stylesheet"/>
+<link href="style.css?v=5.07" rel="stylesheet"/>
+<link href="home-variants.css?v=5.07" rel="stylesheet"/>
+<link href="unified-map.css?v=5.07" rel="stylesheet"/>
+<link href="modern-pages.css?v=5.07" rel="stylesheet"/>
 <link crossorigin="" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" rel="stylesheet"/>
 <link crossorigin="" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" rel="stylesheet"/>
 <!-- Firebase SDK (compat mode for single-file app) -->
@@ -81,7 +81,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = "5.05";
+  var EXPECTED_VERSION = "5.07";
   window.IS_PROD = true; // v2.96: parità con index.html — disabilita debug overlay in produzione
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
@@ -148,23 +148,23 @@
   });
 })();
 </script>
-<script defer="" src="data.js?v=5.05"></script>
-<script defer="" src="days-data.js?v=5.05"></script>
-<script defer="" src="days-renderer.js?v=5.05"></script>
+<script defer="" src="data.js?v=5.07"></script>
+<script defer="" src="days-data.js?v=5.07"></script>
+<script defer="" src="days-renderer.js?v=5.07"></script>
 <!-- wiki-links.js: lazy-loaded on first open of Culture/Activity tab (34KB) — parity with index.html -->
-<script defer="" src="weather-coords.js?v=5.05"></script>
+<script defer="" src="weather-coords.js?v=5.07"></script>
 <script crossorigin="" defer="" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script crossorigin="" defer="" src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
-<script defer="" src="poi-data.js?v=5.05"></script>
-<script defer="" src="app.js?v=5.05"></script>
-<script defer="" src="curiosita-data.js?v=5.05"></script>
+<script defer="" src="poi-data.js?v=5.07"></script>
+<script defer="" src="app.js?v=5.07"></script>
+<script defer="" src="curiosita-data.js?v=5.07"></script>
 <script>window.QV_CURIOSITA_SERVER_SIDE = true; window.QV_RECAP_SERVER_SIDE = true;</script>
-<script defer="" src="curiosita-scheduler.js?v=5.05"></script>
-<script defer="" src="quiz-fun.js?v=5.05"></script>
-<script defer="" src="unified-map.js?v=5.05"></script>
-<script defer="" src="city-itineraries.js?v=5.05"></script>
-<script defer="" src="city-itineraries-ui.js?v=5.05"></script>
-<script defer="" src="home-variants.js?v=5.05"></script>
+<script defer="" src="curiosita-scheduler.js?v=5.07"></script>
+<script defer="" src="quiz-fun.js?v=5.07"></script>
+<script defer="" src="unified-map.js?v=5.07"></script>
+<script defer="" src="city-itineraries.js?v=5.07"></script>
+<script defer="" src="city-itineraries-ui.js?v=5.07"></script>
+<script defer="" src="home-variants.js?v=5.07"></script>
 </head>
 <body class="on-home">
 <!-- ─── Splash Screen ─── -->
@@ -659,7 +659,7 @@
 <p>➕ <strong>Mirador Dalsnibba</strong> (+1h): vista aérea del fiordo desde 1,500 m <a href="https://maps.google.com/?q=62.04885,7.26931" rel="noopener noreferrer" target="_blank">📍 Mapas</a></p>
 <p>➕ <strong>Flåm Railway</strong> (1 day): uno de los trenes panorámicos más hermosos del mundo <a href="https://maps.google.com/?q=60.863,7.1138" rel="noopener noreferrer" target="_blank">📍 Mapas</a></p>
 <h3 id="b6">Dinamarca</h3>
-<p><strong>Conexiones:</strong> <a href="#g34">D34</a>, <a href="#g37">D37</a></p>
+<p><strong>Conexiones:</strong> <a href="#g36">D36</a>, <a href="#g37">D37</a></p>
 <p>➕ <strong>Oceanario Hirtshals</strong> 🇩🇰: el acuario más grande del norte de Europa <a href="https://maps.google.com/?q=57.5866903,9.9802239" rel="noopener noreferrer" target="_blank">📍 Mapas</a></p>
 <p>➕ <strong>Odense</strong> 🇩🇰: museo H.C. Andersen (parada de camino a Billund) <a href="https://maps.google.com/?q=55.39955352,10.39189909" rel="noopener noreferrer" target="_blank">📍 Mapas</a></p>
 <p>➕ <strong>Møns Klint</strong> 🇩🇰: acantilados blancos (desvío desde Copenhagen) <a href="https://maps.google.com/?q=54.9841,12.5437" rel="noopener noreferrer" target="_blank">📍 Mapas</a></p>
@@ -874,7 +874,7 @@
 <tr>
 <td data-label="Day"><a href="#g7">D7</a></td>
 <td data-label="Location">Helsinki 🇫🇮</td>
-<td data-label="Indoor Activities"><strong>Heureka</strong> <a href="https://maps.google.com/?q=60.2876,25.0507" rel="noopener noreferrer" target="_blank">📍 Mapas</a> (centro de ciencias, Vantaa), <strong>Sea Life</strong> <a href="https://maps.google.com/?q=60.189096113360016,24.93905" rel="noopener noreferrer" target="_blank">📍 Mapas</a>, <strong>Amos Rex</strong> <a href="https://maps.google.com/?q=60.1706865,24.9364447" rel="noopener noreferrer" target="_blank">📍 Mapas</a> (arte contemporáneo)</td>
+<td data-label="Indoor Activities"><strong>Heureka</strong> <a href="https://maps.google.com/?q=60.2876,25.0707" rel="noopener noreferrer" target="_blank">📍 Mapas</a> (centro de ciencias, Vantaa), <strong>Sea Life</strong> <a href="https://maps.google.com/?q=60.189096113360016,24.93905" rel="noopener noreferrer" target="_blank">📍 Mapas</a>, <strong>Amos Rex</strong> <a href="https://maps.google.com/?q=60.1706865,24.9364447" rel="noopener noreferrer" target="_blank">📍 Mapas</a> (arte contemporáneo)</td>
 <td data-label="Notes">Heureka: campamentos científicos de verano</td>
 </tr>
 <tr>
@@ -928,7 +928,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="norvegia-centro-sud-g24g32">Centro-sur de Noruega (D25–D33)</h3>
+<h3 id="norvegia-centro-sud-g24g33">Centro-sur de Noruega (D25–D34)</h3>
 <table class="no-responsive">
 <thead>
 <tr>
@@ -940,7 +940,7 @@
 </thead>
 <tbody>
 <tr>
-<td data-label="Day"><a href="#g27">D27</a></td>
+<td data-label="Day"><a href="#g26">D26</a></td>
 <td data-label="Location">Trondheim 🇳🇴</td>
 <td data-label="Indoor Activities"><strong>Vitensenteret</strong> <a href="https://maps.google.com/?q=63.4303,10.3992" rel="noopener noreferrer" target="_blank">📍 Mapas</a> (centro de ciencias, Sound Lab), <strong>Ringve Music Museum</strong> <a href="https://maps.google.com/?q=63.4473,10.4546" rel="noopener noreferrer" target="_blank">📍 Mapas</a>, <strong>Pirbadet</strong> <a href="https://maps.google.com/?q=63.4408,10.4011" rel="noopener noreferrer" target="_blank">📍 Mapas</a> (parque acuático)</td>
 <td data-label="Notes">Pirbadet: el mayor de Noruega</td>
@@ -952,20 +952,20 @@
 <td data-label="Notes">Opciones limitadas — conducir a Ålesund</td>
 </tr>
 <tr>
-<td data-label="Day"><a href="#g31">D31</a></td>
+<td data-label="Day"><a href="#g32">D32</a></td>
 <td data-label="Location">Bergen 🇳🇴</td>
 <td data-label="Indoor Activities"><strong>VilVite</strong> <a href="https://maps.google.com/?q=60.3813,5.3292" rel="noopener noreferrer" target="_blank">📍 Mapas</a> (centro de ciencias), <strong>Bergen Aquarium</strong> <a href="https://maps.google.com/?q=60.3996913,5.303371" rel="noopener noreferrer" target="_blank">📍 Mapas</a>, <strong>Bryggen Museums</strong>, <strong>KODE Art Museum</strong> <a href="https://maps.google.com/?q=60.3892166,5.3289825" rel="noopener noreferrer" target="_blank">📍 Mapas</a></td>
 <td data-label="Notes">VilVite: perfecto para niños</td>
 </tr>
 <tr>
-<td data-label="Day"><a href="#g32">D32</a>-<a href="#g33">D33</a></td>
+<td data-label="Day"><a href="#g33">D33</a>-<a href="#g34">D34</a></td>
 <td data-label="Location">Stavanger 🇳🇴</td>
 <td data-label="Indoor Activities"><strong>Petroleum Museum</strong> <a href="https://maps.google.com/?q=58.9708,5.7342" rel="noopener noreferrer" target="_blank">📍 Mapas</a> (interactivo), <strong>Can Factory Museum</strong> <a href="https://maps.google.com/?q=58.97203715700807,5.724052428441055" rel="noopener noreferrer" target="_blank">📍 Mapas</a>, <strong>Stavanger Svømmehall</strong> (piscina)</td>
 <td data-label="Notes">Petroleum Museum: simuladores de plataforma</td>
 </tr>
 </tbody>
 </table>
-<h3 id="danimarca-piano-pioggia-g33g39">Dinamarca — Plan de lluvia (D34–D40)</h3>
+<h3 id="danimarca-piano-pioggia-g33g39">Dinamarca — Plan de lluvia (D36–D40)</h3>
 <table class="no-responsive">
 <thead>
 <tr>
@@ -977,19 +977,19 @@
 </thead>
 <tbody>
 <tr>
-<td data-label="Day"><a href="#g34">D34</a></td>
+<td data-label="Day"><a href="#g36">D36</a></td>
 <td data-label="Location">Aalborg 🇩🇰</td>
 <td data-label="Indoor Activities"><strong>Kunsten Museum</strong> <a href="https://maps.google.com/?q=57.0427,9.9058" rel="noopener noreferrer" target="_blank">📍 Mapas</a>, <strong>Aalborg Zoo</strong> <a href="https://maps.google.com/?q=57.0368,9.8982" rel="noopener noreferrer" target="_blank">📍 Mapas</a> (zonas cubiertas), <strong>Springeren Maritime Museum</strong> <a href="https://maps.google.com/?q=57.058889,9.893889" rel="noopener noreferrer" target="_blank">📍 Mapas</a></td>
 <td data-label="Notes">Zoo: acuario + casa de reptiles cubiertos</td>
 </tr>
 <tr>
-<td data-label="Day"><a href="#g35">D35</a>-<a href="#g36">D36</a></td>
+<td data-label="Day"><a href="#g36">D36</a>-<a href="#g37">D37</a></td>
 <td data-label="Location">Copenhagen 🇩🇰</td>
 <td data-label="Indoor Activities"><strong>Experimentarium</strong> <a href="https://maps.google.com/?q=55.7267,12.5801" rel="noopener noreferrer" target="_blank">📍 Mapas</a> (ciencia interactiva), <strong>The Blue Planet</strong> <a href="https://maps.google.com/?q=55.6381,12.6561" rel="noopener noreferrer" target="_blank">📍 Mapas</a> (acuario), <strong>National Museum</strong> (Museo de los Niños), <strong>Tivoli</strong> (atracciones cubiertas)</td>
 <td data-label="Notes">Experimentarium: mejor para 6-8 años</td>
 </tr>
 <tr>
-<td data-label="Day"><a href="#g37">D37</a>-<a href="#g39">D39</a></td>
+<td data-label="Day"><a href="#g38">D38</a>-<a href="#g40">D40</a></td>
 <td data-label="Location">Billund 🇩🇰</td>
 <td data-label="Indoor Activities"><strong>LEGO House</strong> <a href="https://maps.google.com/?q=55.730687,9.1149443" rel="noopener noreferrer" target="_blank">📍 Mapas</a> (4 zonas coloridas, cine 4D), <strong>Lalandia</strong> <a href="https://maps.google.com/?q=55.7335,9.1374" rel="noopener noreferrer" target="_blank">📍 Mapas</a> (enorme parque acuático cubierto), <strong>LEGOLAND</strong> <a href="https://maps.google.com/?q=55.73556,9.12611" rel="noopener noreferrer" target="_blank">📍 Mapas</a> (zonas cubiertas)</td>
 <td data-label="Notes">LEGO House: todo el día en interiores</td>
@@ -1035,7 +1035,7 @@
 <tr>
 <td data-label="Day"><a href="#g44">D44</a></td>
 <td data-label="Location">Picos de Europa 🇪🇸</td>
-<td data-label="Indoor Activities"><strong>Cuevas de Covadonga</strong> <a href="https://maps.google.com/?q=43.3089,-5.0564" rel="noopener noreferrer" target="_blank">📍 Mapas</a> (cuevas), <strong>Museo Minero</strong> <a href="https://maps.google.com/?q=43.2872,-5.6483" rel="noopener noreferrer" target="_blank">📍 Mapas</a> (Asturias)</td>
+<td data-label="Indoor Activities"><strong>Cuevas de Covadonga</strong> <a href="https://maps.google.com/?q=43.3089,-5.0764" rel="noopener noreferrer" target="_blank">📍 Mapas</a> (cuevas), <strong>Museo Minero</strong> <a href="https://maps.google.com/?q=43.2872,-5.6483" rel="noopener noreferrer" target="_blank">📍 Mapas</a> (Asturias)</td>
 <td data-label="Notes">Cuevas: siempre secas en el interior</td>
 </tr>
 <tr>
@@ -4658,7 +4658,7 @@ Colinas morrénicas con forma de gota alargada (de hasta un kilómetro de largo 
 <p>🏛️ <strong>Puukko</strong> — cuchillo tradicional lapón con mango de abedul (para padres)</p>
 <p>🏛️ <strong>Arándanos y regaliz salado</strong> (salmiakki) — el regaliz salado es un gusto adquirido!</p>
 <hr/>
-<h2 id="norvegia-g16-g34">🇳🇴 Noruega (D16-D34)</h2>
+<h2 id="norvegia-g16-g34">🇳🇴 Noruega (D16-D35)</h2>
 <h3 id="timeline_7">⏳ Línea del tiempo</h3>
 <table class="no-responsive">
 <thead>
@@ -4687,7 +4687,7 @@ Colinas morrénicas con forma de gota alargada (de hasta un kilómetro de largo 
 <tr>
 <td data-label="Period">1030</td>
 <td data-label="Event">Batalla de Stiklestad — Noruega se convierte al cristianismo</td>
-<td data-label="Where to see it">Cerca de Trondheim (D27)</td>
+<td data-label="Where to see it">Cerca de Trondheim (D26)</td>
 </tr>
 <tr>
 <td data-label="Period">1349</td>
@@ -5048,7 +5048,7 @@ Cada invierno (de noviembre a febrero), cientos de orcas y jorobadas siguen los 
 <p>🏛️ <strong>Jersey Marius</strong> — el clásico jersey noruego de patrones (caro pero dura toda la vida)</p>
 <p>🏛️ <strong>Stockfish</strong> — si te gusta el baccalà, cómpralo directamente en Lofoten</p>
 <hr/>
-<h2 id="danimarca-g35-g39">🇩🇰 Dinamarca (D35-D39)</h2>
+<h2 id="danimarca-g35-g39">🇩🇰 Dinamarca (D36-D40)</h2>
 <h3 id="timeline_8">⏳ Línea del tiempo</h3>
 <table class="no-responsive">
 <thead>
@@ -5543,7 +5543,7 @@ Dónde: Tønder Marsk, Ribe. Llegar 1–2 h antes del ocaso; guías locales actu
 <p>🏛️ <strong>Lakrids by Bülow</strong> — regaliz gourmet cubierto de chocolate</p>
 <p>🏛️ <strong>Smørrebrød para llevar</strong> — en los mercados, perfecto para el almuerzo en la autocaravana</p>
 <hr/>
-<h2 id="germania-g40-transito-via-brema">🇩🇪 Alemania (D40 — tránsito vía Bremen)</h2>
+<h2 id="germania-g40-transito-via-brema">🇩🇪 Alemania (D41 — tránsito vía Bremen)</h2>
 <h3 id="timeline_9">⏳ Línea del tiempo</h3>
 <table class="no-responsive">
 <thead>
@@ -7221,13 +7221,13 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 <td data-label="Title"><strong>Cuentos de los hermanos Grimm</strong> (audiolibro)</td>
 <td data-label="Type">Audiolibro</td>
 <td data-label="Duration">5h+</td>
-<td data-label="For which stage"><a href="#g40">D40</a> (Alemania)</td>
+<td data-label="For which stage"><a href="#g41">D41</a> (Alemania)</td>
 </tr>
 <tr>
 <td data-label="Title"><strong>Las aventuras de Pippi</strong> (audiolibro)</td>
 <td data-label="Type">Audiolibro</td>
 <td data-label="Duration">4h</td>
-<td data-label="For which stage"><a href="#g16">D16</a>-<a href="#g34">D34</a> (Escandinavia)</td>
+<td data-label="For which stage"><a href="#g16">D16</a>-<a href="#g35">D35</a> (Escandinavia)</td>
 </tr>
 <tr>
 <td data-label="Title"><strong>Historias vikingas para niños</strong></td>
@@ -7239,25 +7239,25 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 <td data-label="Title"><strong>Geronimo Stilton — Viaje a Noruega</strong></td>
 <td data-label="Type">Audiolibro</td>
 <td data-label="Duration">1h 30m</td>
-<td data-label="For which stage"><a href="#g16">D16</a>-<a href="#g34">D34</a></td>
+<td data-label="For which stage"><a href="#g16">D16</a>-<a href="#g35">D35</a></td>
 </tr>
 <tr>
 <td data-label="Title"><strong>Cuentos de Andersen</strong> (audiolibro)</td>
 <td data-label="Type">Audiolibro</td>
 <td data-label="Duration">4h</td>
-<td data-label="For which stage"><a href="#g35">D35</a>-<a href="#g39">D39</a> (Dinamarca)</td>
+<td data-label="For which stage"><a href="#g36">D36</a>-<a href="#g40">D40</a> (Dinamarca)</td>
 </tr>
 <tr>
 <td data-label="Title"><strong>Veinte mil leguas de viaje submarino</strong> (versión juvenil)</td>
 <td data-label="Type">Audiolibro</td>
 <td data-label="Duration">3h</td>
-<td data-label="For which stage"><a href="#g41">D41</a> (hacia Amiens/Jules Verne)</td>
+<td data-label="For which stage"><a href="#g42">D42</a> (hacia Amiens/Jules Verne)</td>
 </tr>
 <tr>
 <td data-label="Title"><strong>Leonardo da Vinci Historias para niños</strong></td>
 <td data-label="Type">Podcast</td>
 <td data-label="Duration">30 min</td>
-<td data-label="For which stage"><a href="#g42">D42</a>-<a href="#g43">D43</a> (Loire)</td>
+<td data-label="For which stage"><a href="#g43">D43</a>-<a href="#g44">D44</a> (Loire)</td>
 </tr>
 </tbody>
 </table>
@@ -7288,7 +7288,7 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 <td data-label="Title"><strong>Dan Carlin's Hardcore History</strong> — "Thor's Angels"</td>
 <td data-label="Type">Podcast</td>
 <td data-label="Duration">4h</td>
-<td data-label="For which stage"><a href="#g16">D16</a>-<a href="#g34">D34</a> (Vikings)</td>
+<td data-label="For which stage"><a href="#g16">D16</a>-<a href="#g35">D35</a> (Vikings)</td>
 </tr>
 <tr>
 <td data-label="Title"><strong>Radiolab</strong> — "From Tree to Shining Tree"</td>
@@ -7312,7 +7312,7 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 <td data-label="Title"><strong>Fall of Civilizations</strong> — "The Vikings"</td>
 <td data-label="Type">Podcast</td>
 <td data-label="Duration">3h</td>
-<td data-label="For which stage"><a href="#g16">D16</a>-<a href="#g34">D34</a></td>
+<td data-label="For which stage"><a href="#g16">D16</a>-<a href="#g35">D35</a></td>
 </tr>
 </tbody>
 </table>
@@ -7355,7 +7355,7 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 <td data-label="Film"><strong>LEGO Movie</strong></td>
 <td data-label="Age">6+</td>
 <td data-label="Duration">1h 40m</td>
-<td data-label="When to watch">La noche antes de Legoland (D37)</td>
+<td data-label="When to watch">La noche antes de Legoland (D38)</td>
 </tr>
 <tr>
 <td data-label="Film"><strong>LEGO Movie 2</strong></td>
@@ -7367,7 +7367,7 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 <td data-label="Film"><strong>Ratatouille</strong></td>
 <td data-label="Age">6+</td>
 <td data-label="Duration">1h 51m</td>
-<td data-label="When to watch">La noche anterior a Francia (D40)</td>
+<td data-label="When to watch">La noche anterior a Francia (D41)</td>
 </tr>
 <tr>
 <td data-label="Film"><strong>The Little Mermaid</strong></td>
@@ -7772,7 +7772,7 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 <li>El agua del grifo es excelente en todas partes</li>
 </ul>
 <hr/>
-<h2 id="cucina-norvegese-g15-g34">🇳🇴 Cocina noruega (D15-D34)</h2>
+<h2 id="cucina-norvegese-g15-g34">🇳🇴 Cocina noruega (D15-D35)</h2>
 <h4 id="storia-cucina-norvegese">📜 Historia de la cocina noruega</h4>
 <p>La cocina noruega (<a href="https://en.wikipedia.org/wiki/Norwegian_cuisine" rel="noopener noreferrer" target="_blank">📚 Wikipedia</a>) está moldeada por los fiordos y el clima extremo. Los vikingos inventaron <strong>conservación</strong>: pescado seco (tørrfisk/stockfish), ahumado (røkelaks) y fermentado (rakfisk). <strong>Stockfish</strong> (<a href="https://en.wikipedia.org/wiki/Stockfish" rel="noopener noreferrer" target="_blank">📚 Wikipedia</a>) secado en las islas Lofoten fue la "moneda" vikinga — exportado por toda Europa (¡incluida Italia para el baccalà!). <strong>Brunost</strong> (queso marrón) fue inventado en 1863 por una campesina, Anne Hov, que tuvo la idea de añadir crema al suero. Hoy es el queso nacional. <strong>Salmón noruego</strong> es el pescado más exportado del mundo — el sushi de salmón fue "inventado" por noruegos que convencieron a los japoneses en los años 80!</p>
 <h4 id="extra-piatti-norvegia">🍽️ Más platos para probar</h4>
@@ -7827,7 +7827,7 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 <li>Trae pasta y arroz desde Italia (o cómpralos en Polonia) — aquí cuestan el doble</li>
 </ul>
 <hr/>
-<h2 id="cucina-danese-g34-g39">🇩🇰 Cocina danesa (D34-D39)</h2>
+<h2 id="cucina-danese-g34-g39">🇩🇰 Cocina danesa (D36-D40)</h2>
 <h4 id="storia-cucina-danese">📜 Historia de la cocina danesa</h4>
 <p>La cocina danesa (<a href="https://en.wikipedia.org/wiki/Danish_cuisine" rel="noopener noreferrer" target="_blank">📚 Wikipedia</a>) ha experimentado una revolución: desde la tradicional <strong>smørrebrød</strong> (sándwiches abiertos) hasta el "New Nordic" de René Redzepi (Noma, 4 veces el mejor restaurante del mundo). <strong>Smørrebrød</strong> (<a href="https://en.wikipedia.org/wiki/Sm%C3%B8rrebr%C3%B8d" rel="noopener noreferrer" target="_blank">📚 Wikipedia</a>) se originó en la época medieval: el pan de centeno era el "plato" sobre el que se colocaba la comida. <strong>Bollería danesa</strong> ¡(wienerbrød) en realidad fueron traídos por panaderos austríacos en 1850 durante una huelga de panaderos daneses! <strong>Carlsberg</strong> fue fundada en 1847 y su laboratorio descubrió la levadura pura para la cerveza lager — compartió el descubrimiento con el mundo de forma gratuita.</p>
 <h4 id="extra-piatti-danimarca">🍽️ Más platos para probar</h4>
@@ -7873,7 +7873,7 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 <li><strong>Pølsevogn</strong> (los puestos rojos) están por todas partes y son la opción más barata para familias</li>
 </ul>
 <hr/>
-<h2 id="cucina-tedesca-g40-transito-brema">🇩🇪 Cocina alemana (D40 — tránsito por Bremen)</h2>
+<h2 id="cucina-tedesca-g40-transito-brema">🇩🇪 Cocina alemana (D41 — tránsito por Bremen)</h2>
 <h4 id="storia-cucina-tedesca">📜 Historia de la cocina alemana</h4>
 <p>Cocina alemana (<a href="https://en.wikipedia.org/wiki/German_cuisine" rel="noopener noreferrer" target="_blank">📚 Wikipedia</a>) varía enormemente según la región. Bremen, una ciudad hanseática, tiene tradición marítima: arenque, anguila ahumada, Labskaus (estofado de marineros). El  <strong>Reinheitsgebot</strong> (<a href="https://en.wikipedia.org/wiki/Reinheitsgebot" rel="noopener noreferrer" target="_blank">📚 Wikipedia</a>) de 1516 es la ley de pureza cervecera más antigua del mundo: solo agua, malta, lúpulo y levadura. ¡Alemania tiene 1,500+ cervecerías y 5,000+ cervezas diferentes! <strong>Brot</strong> (pan alemán) es patrimonio de la UNESCO: más de 3,000 variedades registradas, más que ningún otro país.</p>
 <h4 id="extra-piatti-germania">🍽️ Más platos para probar</h4>
@@ -7909,11 +7909,11 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 </ul>
 <h4 id="tips_7">💡 Consejos</h4>
 <ul>
-<li>Bremen es solo tránsito (D40) — <strong>haz acopio en el supermercado alemán</strong> para los días siguientes en Francia. ¡Los precios alemanes son mucho más bajos!</li>
+<li>Bremen es solo tránsito (D41) — <strong>haz acopio en el supermercado alemán</strong> para los días siguientes en Francia. ¡Los precios alemanes son mucho más bajos!</li>
 <li>El pan alemán es el mejor de Europa — compra Vollkornbrot (dura varios días) para el viaje</li>
 </ul>
 <hr/>
-<h2 id="cucina-francese-g40-g43-g51-g52">🇫🇷 Cocina francesa (D40-D43, D51-D52)</h2>
+<h2 id="cucina-francese-g40-g43-g51-g52">🇫🇷 Cocina francesa (D42-D44, D52-D53)</h2>
 <h4 id="storia-cucina-francese">📜 Historia de la cocina francesa</h4>
 <p>La cocina francesa (<a href="https://en.wikipedia.org/wiki/French_cuisine" rel="noopener noreferrer" target="_blank">📚 Wikipedia</a>) es Patrimonio de la UNESCO desde 2010. <strong>Auguste Escoffier</strong> (<a href="https://en.wikipedia.org/wiki/Auguste_Escoffier" rel="noopener noreferrer" target="_blank">📚 Wikipedia</a>) codificó la cocina moderna en 1903 con "Le Guide Culinaire". El <strong>baguette</strong> (<a href="https://en.wikipedia.org/wiki/Baguette" rel="noopener noreferrer" target="_blank">📚 Wikipedia</a>) se convirtió en Patrimonio de la UNESCO en 2022 — ¡los franceses consumen 10 billion al año! La <strong>fromage</strong> (queso) la tradición cuenta con 1,200+ variedades — De Gaulle dijo: "¿Cómo se puede gobernar un país con 246 quesos diferentes?". El <strong>croissant</strong> es en realidad austríaco (Kipferl), llevado a París en 1838. Bretaña y Normandía (en tu ruta) son famosas por crêpes, sidra, mantequilla salada y ostras.</p>
 <h4 id="extra-piatti-francia">🍽️ Más platos para probar</h4>
@@ -8247,7 +8247,7 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 <tr>
 <td data-label="#">4</td>
 <td data-label="Trek"><strong>Vidden Trail</strong> (Bergen)</td>
-<td data-label="Day"><a href="#g31">D31</a></td>
+<td data-label="Day"><a href="#g32">D32</a></td>
 <td data-label="Duration">5-7h</td>
 <td data-label="Elevation gain">400m</td>
 <td data-label="Why">Cruce Ulriken-Floyen, 15 km en altitud.</td>
@@ -8286,7 +8286,7 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 <tr>
 <td data-label="#">2</td>
 <td data-label="Trek"><strong>Fløyen Troll Forest</strong> (Bergen)</td>
-<td data-label="Day"><a href="#g31">D31</a></td>
+<td data-label="Day"><a href="#g32">D32</a></td>
 <td data-label="Duration">1h</td>
 <td data-label="Difficulty">Fácil</td>
 <td data-label="Why">Teleférico + senda mágica con trolls de madera.</td>
@@ -8294,7 +8294,7 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 <tr>
 <td data-label="#">3</td>
 <td data-label="Trek"><strong>Preikestolen</strong> (Stavanger)</td>
-<td data-label="Day"><a href="#g33">D33</a></td>
+<td data-label="Day"><a href="#g34">D34</a></td>
 <td data-label="Duration">5-6h ida y vuelta</td>
 <td data-label="Difficulty">350m, moderado</td>
 <td data-label="Why">El clásico. Viable con niños 6+. ¡Sin barandilla!</td>
@@ -8513,7 +8513,7 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 <p>🥾 Inicio del sendero: <a href="https://maps.google.com/?q=62.4533,7.6627" rel="noopener noreferrer" target="_blank">📍 Cima de Trollstigen</a>
 <a href="https://maps.google.com/?q=62.0900,7.0700" rel="noopener noreferrer" target="_blank">📍 Flydalsjuvet</a>
 <a href="https://maps.google.com/?q=62.1100,7.0400" rel="noopener noreferrer" target="_blank">📍 Skageflå</a></p>
-<h4 id="trek-bergen">🇳🇴 Bergen (D31)</h4>
+<h4 id="trek-bergen">🇳🇴 Bergen (D32)</h4>
 <table class="no-responsive">
 <thead>
 <tr>
@@ -8546,7 +8546,7 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 </table>
 <p>🥾 Inicio del sendero: <a href="https://maps.google.com/?q=60.3960,5.3285" rel="noopener noreferrer" target="_blank">📍 Base de Fløibanen</a>
 <a href="https://maps.google.com/?q=60.3770,5.3890" rel="noopener noreferrer" target="_blank">📍 Teleférico de Ulriken</a></p>
-<h4 id="trek-stavanger">🇳🇴 Stavanger (D33)</h4>
+<h4 id="trek-stavanger">🇳🇴 Stavanger (D34)</h4>
 <table class="no-responsive">
 <thead>
 <tr>
@@ -8672,7 +8672,7 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 </tbody>
 </table>
 <p>🥾 Inicio del sendero: <a href="https://maps.google.com/?q=43.1431,-4.8126" rel="noopener noreferrer" target="_blank">📍 Teleférico de Fuente Dé</a>
-<a href="https://maps.google.com/?q=43.2700,-5.0500" rel="noopener noreferrer" target="_blank">📍 Lagos de Covadonga</a>
+<a href="https://maps.google.com/?q=43.2700,-5.0700" rel="noopener noreferrer" target="_blank">📍 Lagos de Covadonga</a>
 <a href="https://maps.google.com/?q=43.2480,-4.8380" rel="noopener noreferrer" target="_blank">📍 Ruta del Cares (Poncebos)</a></p>
 <hr/>
 <h3 id="consigli-pratici">🎯 Consejos prácticos</h3>
@@ -8841,7 +8841,7 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 <p>🎣 <strong>D14 Lago Inari:</strong> trucha de lago y salvelino ártico. Permiso local ~€10/día en eraluvat.fi.</p>
 <p>🎣 <strong>D15 Kilpisjärvi:</strong> Salvelino ártico. Permiso ~€8/día en el centro de visitantes.</p>
 <p><strong>Equipo recomendado:</strong> Caña telescópica 2.4m + carrete pequeño + señuelos spinner 5-10g (para lucio/perca) + boyas y anzuelos para mato-onki (niños).</p>
-<h3 id="pesca-norvegia">🇳🇴 Noruega (D16–D34)</h3>
+<h3 id="pesca-norvegia">🇳🇴 Noruega (D16–D35)</h3>
 <p>Noruega es el <strong>sueño</strong>: la pesca en el mar es GRATIS para todos, sin licencia, sin límite de edad. Y los fiordos están llenos de peces.</p>
 <p><strong>Qué pescar (mar):</strong> Bacalao ártico (torsk), pollack (sei), caballa (makrell), fletán (kveite), coal cod (lyr).</p>
 <p><strong>Los 5 lugares imprescindibles:</strong></p>
@@ -8856,10 +8856,10 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 <p><strong>D23 Reine</strong> — pesca con cabañas rorbu rojas de fondo. Icónico.</p>
 </li>
 <li>
-<p><strong>D28 Atlantic Road</strong> — pesca DESDE LOS PUENTES sobre el océano. Pollack y bacalao.</p>
+<p><strong>D27 Atlantic Road</strong> — pesca DESDE LOS PUENTES sobre el océano. Pollack y bacalao.</p>
 </li>
 <li>
-<p><strong>D31 Bergen</strong> — muelle Bryggen, caballa en julio (pico estacional).</p>
+<p><strong>D32 Bergen</strong> — muelle Bryggen, caballa en julio (pico estacional).</p>
 </li>
 </ol>
 <p><strong>Normas:</strong></p>
@@ -8868,25 +8868,25 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 <p>Salmón/trucha de mar: tasa estatal obligatoria en elveguiden.no + licencia local</p>
 <p>Exportación: máx <strong>15 kg</strong> pescado por persona desde 2026 (solo si se captura en una instalación turística registrada; pesca por cuenta propia = 0 kg exportables)</p>
 <p><strong>Equipo:</strong> Lo mismo que en Finlandia funciona a la perfección. Para bacalao desde los muelles: plomo de 50-100g + señuelo artificial (jig) o filete de caballa.</p>
-<h3 id="pesca-danimarca">🇩🇰 Dinamarca (D34–D40)</h3>
+<h3 id="pesca-danimarca">🇩🇰 Dinamarca (D36–D40)</h3>
 <p>Licencia obligatoria (<strong>Fisketegn</strong>) pero fácil de obtener en línea.</p>
 <p><strong>Lugares en la ruta:</strong></p>
-<p>🎣 <strong>D34 Hirtshals</strong> (si paras): muelle del puerto — caballa, bacalao. Ideal para niños.</p>
-<p>🎣 <strong>D37 zona de Billund:</strong> lagos y ríos — trucha, lucio. También se requiere permiso local para el lago.</p>
+<p>🎣 <strong>D36 Hirtshals</strong> (si paras): muelle del puerto — caballa, bacalao. Ideal para niños.</p>
+<p>🎣 <strong>D38 zona de Billund:</strong> lagos y ríos — trucha, lucio. También se requiere permiso local para el lago.</p>
 <p><strong>Compra:</strong> <a href="https://fisketegn.dk/en" rel="noopener noreferrer" target="_blank">fisketegn.dk/en</a> — DKK 46 (~€6.2)/day, DKK 150 (~€20)/week. Niños &lt;18 gratis.</p>
-<h3 id="pesca-germania">🇩🇪 Alemania (D40–D41)</h3>
+<h3 id="pesca-germania">🇩🇪 Alemania (D41–D42)</h3>
 <p><strong>⚠️ No recomendado.</strong> Alemania exige un examen (Fischereischein) para pescar. Algunos Länder ofrecen licencias turísticas, pero Bremen (en tu ruta) no está entre ellos. Evita pescar aquí — tendrás muchas oportunidades antes y después.</p>
 <h3 id="pesca-francia">🇫🇷 Francia (D41–D43, D51)</h3>
 <p><strong>Mar:</strong> pesca desde costa GRATIS, sin licencia (como en Italia).</p>
 <p><strong>Agua dulce:</strong> Carte de pêche (~€15/day) requerida, comprable en <a href="https://www.cartedepeche.fr" rel="noopener noreferrer" target="_blank">cartedepeche.fr</a>. Niños &lt;12 gratis.</p>
 <p><strong>Lugares:</strong></p>
-<p>🎣 <strong>D43 Loire:</strong> Río Cher cerca de Chenonceau — lucio, perca. Se requiere Carte de pêche.</p>
+<p>🎣 <strong>D44 Loire:</strong> Río Cher cerca de Chenonceau — lucio, perca. Se requiere Carte de pêche.</p>
 <p>🎣 <strong>D51 Riviera Francesa:</strong> muelles de Antibes, Cannes, Menton — dorada, sargo. GRATIS.</p>
 <h3 id="pesca-spagna">🇪🇸 España (D44–D50)</h3>
 <p><strong>Mar:</strong> ⚠️ <strong>Licencia de pesca recreativa marítima</strong> obligatoria en todas las Comunidades Autónomas (País Vasco, Cantabria, Cataluña). Coste: ~€43/3 years en línea en <a href="https://www.fishinglicensespain.com" rel="noopener noreferrer" target="_blank">fishinglicensespain.com</a> (cubre toda España). Multas sin licencia: €60-600!</p>
 <p><strong>Agua dulce:</strong> se requiere licencia regional adicional (varía según la Comunidad Autónoma, ~€10-15/day en línea).</p>
 <p><strong>Lugares:</strong></p>
-<p>🎣 <strong>D44 San Sebastián:</strong> muelle del puerto o acantilados de Igueldo — dorada, caballa.</p>
+<p>🎣 <strong>D45 San Sebastián:</strong> muelle del puerto o acantilados de Igueldo — dorada, caballa.</p>
 <p>🎣 <strong>D45 Getxo</strong> (cerca de Bilbao): puerto antiguo — lubina, dorada.</p>
 <p>🎣 <strong>D46 Picos de Europa:</strong> Río Deva — trucha marrón! Licencia de Cantabria ~€15/day en <a href="https://www.medioambientecantabria.es" rel="noopener noreferrer" target="_blank">medioambientecantabria.es</a>. Muchas zonas de captura y suelta.</p>
 <p>🎣 <strong>D50 Costa Brava:</strong> Cap de Creus, muelle de Cadaqués — dorada, lubina.</p>
@@ -8992,19 +8992,19 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 <td data-label="Notes">Henningsvær, Reine</td>
 </tr>
 <tr>
-<td data-label="Days"><a href="#g27">D27</a></td>
+<td data-label="Days"><a href="#g26">D26</a></td>
 <td data-label="Location">Trondheim 🇳🇴</td>
 <td data-label="Why ideal">Centro peatonal, Bakklandet, paseo marítimo</td>
 <td data-label="Notes">Plano junto al fiordo</td>
 </tr>
 <tr>
-<td data-label="Days"><a href="#g31">D31</a></td>
+<td data-label="Days"><a href="#g32">D32</a></td>
 <td data-label="Location">Bergen 🇳🇴</td>
 <td data-label="Why ideal">Bryggen y paseo marítimo (centro llano)</td>
 <td data-label="Notes">Evitar cuestas</td>
 </tr>
 <tr>
-<td data-label="Days"><a href="#g35">D35-D39</a></td>
+<td data-label="Days"><a href="#g36">D36-D40</a></td>
 <td data-label="Location">Copenhagen + Billund 🇩🇰</td>
 <td data-label="Why ideal">Muy llano, carriles bici por todas partes</td>
 <td data-label="Notes">Aceras por ley</td>
@@ -9057,21 +9057,21 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 <td data-label="Notes">Senderos asfaltados en el bosque</td>
 </tr>
 <tr>
-<td data-label="Days"><a href="#g27">D27</a></td>
+<td data-label="Days"><a href="#g26">D26</a></td>
 <td data-label="Location">Trondheim 🇳🇴</td>
 <td data-label="Where to rent"><a href="https://trondheimbysykkel.no/en" rel="noopener noreferrer" target="_blank">Trondheim City Bike</a> (app, 700 bicicletas)</td>
 <td data-label="Approximate cost">NOK 175/30 días (~€15)</td>
 <td data-label="Notes">67 estaciones, desbloqueo con app</td>
 </tr>
 <tr>
-<td data-label="Days"><a href="#g32">D32</a></td>
+<td data-label="Days"><a href="#g33">D33</a></td>
 <td data-label="Location">Stavanger 🇳🇴</td>
 <td data-label="Where to rent"><a href="https://norwaybikeexperience.no/" rel="noopener noreferrer" target="_blank">Norway Bike Experience</a></td>
 <td data-label="Approximate cost">~NOK 400/día (~€35)</td>
 <td data-label="Notes">E-bikes también disponibles</td>
 </tr>
 <tr>
-<td data-label="Days"><a href="#g35">D35-D36</a></td>
+<td data-label="Days"><a href="#g36">D36-D37</a></td>
 <td data-label="Location">Copenhagen 🇩🇰</td>
 <td data-label="Where to rent"><a href="https://www.familybike.dk/" rel="noopener noreferrer" target="_blank">Bici familiar</a> (bicicleta de carga)</td>
 <td data-label="Approximate cost">~DKK 400/día (~€54)</td>
@@ -9141,7 +9141,7 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 <td data-label="Notes">Kayak doble, tour guiado 3h, apto para familias</td>
 </tr>
 <tr>
-<td data-label="Days"><a href="#g31">D31</a></td>
+<td data-label="Days"><a href="#g32">D32</a></td>
 <td data-label="Location">Bergen 🇳🇴</td>
 <td data-label="Where to rent">Ado Arena (centro de la ciudad)</td>
 <td data-label="Approximate cost">~NOK 300/h (~€26)</td>
@@ -9183,14 +9183,14 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 <td data-label="Notes">Lago tranquilo, ideal para principiantes</td>
 </tr>
 <tr>
-<td data-label="Days"><a href="#g31">D31</a></td>
+<td data-label="Days"><a href="#g32">D32</a></td>
 <td data-label="Location">Bergen 🇳🇴</td>
 <td data-label="Where to rent"><a href="https://www.tripadvisor.com/Attraction_Review-g190502-d24859057" rel="noopener noreferrer" target="_blank">Solheimsviken SUP</a></td>
 <td data-label="Approximate cost">~NOK 250/h (~€22)</td>
 <td data-label="Notes">Código QR, no se requiere experiencia</td>
 </tr>
 <tr>
-<td data-label="Days"><a href="#g31">D31</a></td>
+<td data-label="Days"><a href="#g32">D32</a></td>
 <td data-label="Location">Fløyen (Bergen) 🇳🇴</td>
 <td data-label="Where to rent"><a href="https://www.floyen.no/en/activities/paddleboard" rel="noopener noreferrer" target="_blank">Skomakerdiket Lake</a></td>
 <td data-label="Approximate cost">~NOK 200/h (~€17)</td>
@@ -9322,14 +9322,14 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 <tr>
 <td data-label="Location"><strong>Møns Klint (GeoCenter)</strong></td>
 <td data-label="Country">🇩🇰 Dinamarca (isla de Møn)</td>
-<td data-label="Day"><a href="#g35">D35</a>–<a href="#g36">D36</a> (desvío ~1.5h desde Copenhagen)</td>
+<td data-label="Day"><a href="#g36">D36</a>–<a href="#g37">D37</a> (desvío ~1.5h desde Copenhagen)</td>
 <td data-label="What">Fósiles marinos (erizos de mar, belemnites, conchas) en acantilados de tiza blanca</td>
 <td data-label="Info">Visitas guiadas ~1h, DKK 25 + entrada al GeoCenter. Playa libre para búsqueda independiente. <a href="https://moensklint.dk/en/fossil-hunting/" rel="noopener" target="_blank">moensklint.dk</a></td>
 </tr>
 <tr>
 <td data-label="Location"><strong>Gram Clay Pit (Lergrav)</strong></td>
 <td data-label="Country">🇩🇰 Dinamarca (Jutlandia del Sur)</td>
-<td data-label="Day"><a href="#g40">D40</a> (desvío ~45 min desde Billund→Bremen)</td>
+<td data-label="Day"><a href="#g41">D41</a> (desvío ~45 min desde Billund→Bremen)</td>
 <td data-label="What">Fósiles marinos de 10 millones de años: dientes de tiburón, conchas, huesos de ballena</td>
 <td data-label="Info">Museo + excavación libre en la cantera. ~DKK 100 adultos. Quédate con los fósiles comunes. <a href="https://msj.dk/en/gram-lergrav-palaeontology/" rel="noopener" target="_blank">msj.dk</a></td>
 </tr>
@@ -9572,7 +9572,7 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 </tr>
 <tr>
 <td data-label="Zone">🇳🇴 Helgelandskysten — costa remota</td>
-<td data-label="Days"><a href="#g26">D26</a>–<a href="#g27">D27</a></td>
+<td data-label="Days"><a href="#g25">D25</a>–<a href="#g26">D26</a></td>
 <td data-label="Risk">⚠️ Medio (islas, fiordos)</td>
 <td data-label="Advice">Activa si sales de las carreteras principales</td>
 </tr>
@@ -13039,13 +13039,13 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 <tr>
 <td data-label="Currency">Corona noruega</td>
 <td data-label="Code">NOK</td>
-<td data-label="Countries crossed">Noruega (D16–D34)</td>
+<td data-label="Countries crossed">Noruega (D16–D35)</td>
 <td data-label="Exchange rate (1 EUR ≈)">10.8 NOK</td>
 </tr>
 <tr>
 <td data-label="Currency">Corona danesa</td>
 <td data-label="Code">DKK</td>
-<td data-label="Countries crossed">Dinamarca (D34–D39)</td>
+<td data-label="Countries crossed">Dinamarca (D36–D40)</td>
 <td data-label="Exchange rate (1 EUR ≈)">7.46 DKK</td>
 </tr>
 </tbody>
@@ -13055,7 +13055,7 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 </blockquote>
 <hr/>
 <h2 id="cards">🎫 Tarjetas turísticas — Pases y descuentos por país</h2>
-<h3 id="norvegia-autopass-skyttelpass-g15g33">🇳🇴 Noruega — AutoPASS / SkyttelPASS (D16–D34)</h3>
+<h3 id="norvegia-autopass-skyttelpass-g15g33">🇳🇴 Noruega — AutoPASS / SkyttelPASS (D16–D35)</h3>
 <p>El sistema de peajes noruego cubre <strong>all</strong> cabinas de peaje, puentes, túneles y la mayoría de los ferris internos. Para turistas extranjeros con vehículo propio:</p>
 <table class="no-responsive">
 <thead>
@@ -13092,7 +13092,7 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 <p>🔗 <a href="https://skyttelpass.no/en/" rel="noopener noreferrer" target="_blank">skyttelpass.no</a>
 <a href="https://autopassferje.no/en/" rel="noopener noreferrer" target="_blank">autopassferje.no</a>
 <a href="https://www.autopass.no/en/user/foreign-vehicles-2/" rel="noopener noreferrer" target="_blank">autopass.no/en/user/foreign-vehicles</a></p>
-<h3 id="danimarca-copenhagen-card-discover-g33g35">🇩🇰 Dinamarca — Copenhagen Card DISCOVER (D34–D36)</h3>
+<h3 id="danimarca-copenhagen-card-discover-g33g35">🇩🇰 Dinamarca — Copenhagen Card DISCOVER (D36–D37)</h3>
 <p>The <a href="https://copenhagencard.com/" rel="noopener noreferrer" target="_blank">Copenhagen Card</a> incluye 80+ atracciones + transporte ilimitado en la Región Capital.</p>
 <table class="no-responsive">
 <thead>
@@ -13125,11 +13125,11 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 </tbody>
 </table>
 <p><strong>Atracciones incluidas</strong>: Tivoli Gardens, Experimentarium, Canal Tour, Rundetårn, Zoo, Rosenborg, Amalienborg, Christiansborg, y 70+ más.</p>
-<p><strong>Tip</strong>: el <strong>48h</strong> (€268 para 4 pax) cubre D35–D36 con Tivoli + Experimentarium + canal tour + transporte. Sin la tarjeta, estas atracciones costarían ~€350+. <strong>Ahorro: ~€80+</strong>.</p>
+<p><strong>Tip</strong>: el <strong>48h</strong> (€268 para 4 pax) cubre D36–D37 con Tivoli + Experimentarium + canal tour + transporte. Sin la tarjeta, estas atracciones costarían ~€350+. <strong>Ahorro: ~€80+</strong>.</p>
 <p>⚠️ Legoland y LEGO House (Billund) están <strong>NOT</strong> incluidas en la Copenhagen Card.</p>
 <p>🔗 <a href="https://copenhagencard.com/" rel="noopener noreferrer" target="_blank">copenhagencard.com</a></p>
 <h3 id="altre-citta-permanenza-breve">Otras ciudades (estancia corta)</h3>
-<p>Para Viena (D2), Helsinki (D7), Tallinn (D6), Riga (D5), Tromsø (D16), Bergen (D31), Bilbao (D45): la estancia es demasiado corta (1 día o menos) para justificar una tarjeta de ciudad. Compra entradas sueltas para las atracciones elegidas.</p>
+<p>Para Viena (D2), Helsinki (D7), Tallinn (D6), Riga (D5), Tromsø (D16), Bergen (D32), Bilbao (D45): la estancia es demasiado corta (1 día o menos) para justificar una tarjeta de ciudad. Compra entradas sueltas para las atracciones elegidas.</p>
 <hr/>
 <h2 id="rischi">⚠️ Riesgos logísticos — Puntos críticos</h2>
 <h3 id="1-la-maratona-baltica-g2g5">1. "El maratón báltico" (D3–D6)</h3>
@@ -13140,7 +13140,7 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 <p>🚗 <strong>D6:</strong> Riga ➔ Pärnu ➔ Haapsalu ➔ Tallinn (390 km, 5h)</p>
 <p><strong>El problema:</strong> Recorrerás aproximadamente 1,870 km repartidos en 4 días de conducción (D3–D6), con D7 como día de descanso en Tallinn. Teniendo en cuenta paradas para el baño, comidas y el tráfico, los tiempos reales de viaje aumentarán un 20-30%. Los niños pasarán la mayor parte del tiempo sujetos en sus sillas de coche.</p>
 <p><strong>Solución:</strong> Siempre salid al amanecer (p. ej. 5:00 o 6:00 AM). Los niños dormirán las primeras 3-4 horas de viaje, lo que os permitirá "hacer kilómetros" en paz y llegar al destino a la hora de comer, dejando las tardes para parques y exploraciones.</p>
-<h3 id="2-luscita-dalle-lofoten-g25-lofoten-mo-i-rana">2. Salida de Lofoten (D25: Lofoten → Mo i Rana)</h3>
+<h3 id="2-luscita-dalle-lofoten-g25-lofoten-mo-i-rana">2. Salida de Lofoten (D26: Lofoten → Mo i Rana)</h3>
 <p>La tabla muestra 330 km, 4h + ferry 3h 15m. Ten cuidado: esta estimación es optimista:</p>
 <p>El ferry Moskenes–Bodø dura aproximadamente 3.5–4 hours</p>
 <p>Debes presentarte en el embarque al menos 1 hour (o 2) antes</p>
@@ -13149,8 +13149,8 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 <h3 id="3-lincognita-dei-traghetti-prenotazioni-obbligatorie">3. Incertidumbre de los ferries (reservas obligatorias)</h3>
 <p>El viaje depende de algunos ferries cruciales (Tallinn–Helsinki, Moskenes–Bodø, Kristiansand–Hirtshals).</p>
 <p>En agosto y finales de julio, la ruta Moskenes–Bodø está desbordada por viajeros en autocaravana de toda Europa. Si te presentas en el embarque sin reserva, podrías tener que esperar 24 o 48 horas en la fila (en la "vía de espera").</p>
-<p>⚠️ <strong>Debes reservar absolutamente estos ferries con 2-3 meses de antelación</strong>, lo que te obligará a seguir estrictamente el itinerario hasta D25.</p>
-<p>El ferry Kristiansand–Hirtshals (D34) es menos crítico, pero se recomienda reservar también en temporada alta.</p>
+<p>⚠️ <strong>Debes reservar absolutamente estos ferries con 2-3 meses de antelación</strong>, lo que te obligará a seguir estrictamente el itinerario hasta D26.</p>
+<p>El ferry Kristiansand–Hirtshals (D36) es menos crítico, pero se recomienda reservar también en temporada alta.</p>
 <h3 id="4-ferragosto-a-genova-g50g52">4. Ferragosto in Genoa (D51–D53)</h3>
 <p>Como se indica en el archivo, la autopista A10 en Ferragosto es un infierno. Estar en Genoa el 17/08 (D53) te evita el pico absoluto, pero espera retenciones muy fuertes en Liguria.</p>
 <p><strong>Consejo:</strong> El 16/08 (D52) de Camargue a Genoa (450 km, A8/A10) — salid a las 7:00 AM para evitar la mayor parte del tráfico de retorno. Considerad parar en Savona/Finale Ligure si el tráfico está bloqueado.</p>
@@ -14189,77 +14189,77 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 <td data-label="Weather risk">⚠️ Lluvias frecuentes y viento</td>
 </tr>
 <tr>
-<td data-label="Days"><a href="#g25">D25</a>-<a href="#g26">D26</a> (20-21/07)</td>
-<td data-label="Area">Mo i Rana → Trondheim 🇳🇴</td>
-<td data-label="T max">17-19°C</td>
-<td data-label="T min">10-12°C</td>
+<td data-label="Days"><a href="#g25">D25</a>-<a href="#g26">D26</a> (19-20/07)</td>
+<td data-label="Area">Bodø → Halsa 🇳🇴</td>
+<td data-label="T max">16-18°C</td>
+<td data-label="T min">10-11°C</td>
 <td data-label="Rain (mm/month)">~70</td>
 <td data-label="Rain days">10</td>
-<td data-label="Daylight">20h</td>
-<td data-label="Weather risk">Posible lluvia</td>
+<td data-label="Daylight">24h (sol de medianoche)</td>
+<td data-label="Weather risk">Lluvia posible</td>
 </tr>
 <tr>
-<td data-label="Days"><a href="#g27">D27</a> (22/07)</td>
-<td data-label="Area">Trondheim 🇳🇴</td>
-<td data-label="T max">19°C</td>
+<td data-label="Days"><a href="#g27">D27</a> (21/07)</td>
+<td data-label="Area">Atlantic Road → Molde 🇳🇴</td>
+<td data-label="T max">16°C</td>
 <td data-label="T min">11°C</td>
-<td data-label="Rain (mm/month)">~70</td>
-<td data-label="Rain days">10</td>
-<td data-label="Daylight">20h</td>
-<td data-label="Weather risk">Variable</td>
+<td data-label="Rain (mm/month)">~80</td>
+<td data-label="Rain days">12</td>
+<td data-label="Daylight">19h 30m</td>
+<td data-label="Weather risk">⚠️ Viento fuerte en la costa</td>
 </tr>
 <tr>
-<td data-label="Days"><a href="#g28">D28</a>-<a href="#g30">D30</a> (23-25/07)</td>
-<td data-label="Area">Atlantic Rd → Bergen 🇳🇴</td>
-<td data-label="T max">16-17°C</td>
-<td data-label="T min">11°C</td>
-<td data-label="Rain (mm/month)">~150-170</td>
-<td data-label="Rain days">15-17</td>
+<td data-label="Days"><a href="#g28">D28</a>-<a href="#g29">D29</a> (22-23/07)</td>
+<td data-label="Area">Trollstigen → Geiranger → Flåm 🇳🇴</td>
+<td data-label="T max">15-17°C</td>
+<td data-label="T min">9-11°C</td>
+<td data-label="Rain (mm/month)">~100</td>
+<td data-label="Rain days">13</td>
 <td data-label="Daylight">19h</td>
-<td data-label="Weather risk">⚠️ Bergen: lluvia casi segura</td>
+<td data-label="Weather risk">⚠️ Niebla en altura, lluvia en fiordos</td>
 </tr>
 <tr>
-<td data-label="Days"><a href="#g31">D31</a> (26/07)</td>
-<td data-label="Area">Bergen 🇳🇴</td>
-<td data-label="T max">17°C</td>
+<td data-label="Days"><a href="#g30">D30</a>-<a href="#g32">D32</a> (24-26/07)</td>
+<td data-label="Area">Nærøyfjord → Bergen 🇳🇴</td>
+<td data-label="T max">16-17°C</td>
 <td data-label="T min">11°C</td>
 <td data-label="Rain (mm/month)">~170</td>
 <td data-label="Rain days">17</td>
-<td data-label="Daylight">19h</td>
-<td data-label="Weather risk">⚠️ Lluvia muy probable</td>
+<td data-label="Daylight">18h 30m</td>
+<td data-label="Weather risk">⚠️ Bergen: lluvia casi segura</td>
 </tr>
 <tr>
-<td data-label="Days"><a href="#g32">D32</a>-<a href="#g33">D33</a> (27-28/07)</td>
-<td data-label="Area">Stavanger → K.sand 🇳🇴</td>
+<td data-label="Days"><a href="#g33">D33</a>-<a href="#g34">D34</a> (27-28/07)</td>
+<td data-label="Area">Stavanger + Preikestolen 🇳🇴</td>
 <td data-label="T max">17-18°C</td>
 <td data-label="T min">11-12°C</td>
 <td data-label="Rain (mm/month)">~100</td>
 <td data-label="Rain days">12</td>
 <td data-label="Daylight">18h 30m</td>
-<td data-label="Weather risk">50% nublado</td>
+<td data-label="Weather risk">Nublado 50%, viento</td>
 </tr>
 <tr>
-<td data-label="Days"><a href="#g34">D34</a> (29/07)</td>
-<td data-label="Area">Ferry → Copenhague 🇩🇰</td>
+<td data-label="Days"><a href="#g35">D35</a> (29/07)</td>
+<td data-label="Area">Kristiansand 🇳🇴</td>
+<td data-label="T max">20-21°C</td>
+<td data-label="T min">13-14°C</td>
+<td data-label="Rain (mm/month)">~80</td>
+<td data-label="Rain days">10</td>
+<td data-label="Daylight">18h</td>
+<td data-label="Weather risk">Generalmente bueno</td>
+</tr>
+<tr>
+<td data-label="Days"><a href="#g36">D36</a> (30/07)</td>
+<td data-label="Area">Ferry → Copenhagen 🇩🇰</td>
 <td data-label="T max">22°C</td>
 <td data-label="T min">14°C</td>
 <td data-label="Rain (mm/month)">~60</td>
 <td data-label="Rain days">9</td>
 <td data-label="Daylight">17h</td>
-<td data-label="Weather risk">Chubascos esporádicos</td>
+<td data-label="Weather risk">Lluvias esporádicas</td>
 </tr>
 <tr>
-<td data-label="Days"><a href="#g35">D35</a>-<a href="#g36">D36</a> (30-31/07)</td>
-<td data-label="Area">Copenhagen 🇩🇰</td>
-<td data-label="T max">22°C</td>
-<td data-label="T min">14°C</td>
-<td data-label="Rain (mm/month)">~60</td>
-<td data-label="Rain days">9</td>
-<td data-label="Daylight">17h</td>
-<td data-label="Weather risk">Chubascos esporádicos</td>
-</tr>
-<tr>
-<td data-label="Days"><a href="#g37">D37</a>-<a href="#g39">D39</a> (01-03/08)</td>
+<td data-label="Days"><a href="#g38">D38</a>-<a href="#g40">D40</a> (01-03/08)</td>
 <td data-label="Area">Billund 🇩🇰</td>
 <td data-label="T max">21°C</td>
 <td data-label="T min">13°C</td>
@@ -14269,7 +14269,7 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 <td data-label="Weather risk">Variable</td>
 </tr>
 <tr>
-<td data-label="Days"><a href="#g40">D40</a> (04/08)</td>
+<td data-label="Days"><a href="#g41">D41</a> (04/08)</td>
 <td data-label="Area">Bremen 🇩🇪</td>
 <td data-label="T max">22°C</td>
 <td data-label="T min">13°C</td>
@@ -14426,88 +14426,83 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 <div class="wc-bar" style="width:29%;background:#3182ce"></div>
 <span class="wc-temp">15°</span>
 </div>
-<div class="wc-bar-wrap" title="Mo→Trondheim 🇳🇴: 18°C máx., 11°C mín., 10 días de lluvia">
-<span class="wc-label">D25-D26</span>
-<div class="wc-bar" style="width:41%;background:#38a169"></div>
-<span class="wc-temp">18°</span>
+<div class="wc-bar-wrap" title="Bodø→Halsa 🇳🇴: 17°C máx., 10°C mín., 10 días de lluvia">
+    <span class="wc-label">D24-D26</span>
+    <div class="wc-bar" style="width:37%;background:#38a169"></div>
+    <span class="wc-temp">17°</span>
 </div>
-<div class="wc-bar-wrap" title="Trondheim 🇳🇴: 19°C máx., 11°C mín., 10 días de lluvia">
-<span class="wc-label">D27</span>
-<div class="wc-bar" style="width:45%;background:#38a169"></div>
-<span class="wc-temp">19°</span>
+<div class="wc-bar-wrap" title="Atlantic Rd→Geiranger 🇳🇴: 16°C máx., 10°C mín., 13 días de lluvia">
+    <span class="wc-label">D27-D28</span>
+    <div class="wc-bar" style="width:33%;background:#3182ce"></div>
+    <span class="wc-temp">16°</span>
 </div>
-<div class="wc-bar-wrap" title="Atlantic→Bergen 🇳🇴: 17°C máx., 11°C mín., 16 días de lluvia">
-<span class="wc-label">D28-D30</span>
-<div class="wc-bar" style="width:37%;background:#3182ce"></div>
-<span class="wc-temp">17°</span>
-</div>
-<div class="wc-bar-wrap" title="Bergen 🇳🇴: 17°C máx., 11°C mín., 17 días de lluvia">
-<span class="wc-label">D31</span>
-<div class="wc-bar" style="width:37%;background:#3182ce"></div>
-<span class="wc-temp">17°</span>
+<div class="wc-bar-wrap" title="Fiordos→Bergen 🇳🇴: 17°C máx., 11°C mín., 16 días de lluvia">
+    <span class="wc-label">D29-D32</span>
+    <div class="wc-bar" style="width:37%;background:#3182ce"></div>
+    <span class="wc-temp">17°</span>
 </div>
 <div class="wc-bar-wrap" title="Stavanger 🇳🇴: 18°C máx., 12°C mín., 12 días de lluvia">
-<span class="wc-label">D32-D33</span>
-<div class="wc-bar" style="width:41%;background:#38a169"></div>
-<span class="wc-temp">18°</span>
+    <span class="wc-label">D33-D34</span>
+    <div class="wc-bar" style="width:41%;background:#38a169"></div>
+    <span class="wc-temp">18°</span>
+</div>
+<div class="wc-bar-wrap" title="Kristiansand 🇳🇴: 20°C máx., 13°C mín., 10 días de lluvia">
+    <span class="wc-label">D35</span>
+    <div class="wc-bar" style="width:50%;background:#38a169"></div>
+    <span class="wc-temp">20°</span>
 </div>
 <div class="wc-bar-wrap" title="→Copenhagen 🇩🇰: 22°C máx., 14°C mín., 9 días de lluvia">
-<span class="wc-label">D34</span>
-<div class="wc-bar" style="width:58%;background:#38a169"></div>
-<span class="wc-temp">22°</span>
+    <span class="wc-label">D36</span>
+    <div class="wc-bar" style="width:58%;background:#38a169"></div>
+    <span class="wc-temp">22°</span>
 </div>
 <div class="wc-bar-wrap" title="Copenhagen 🇩🇰: 22°C máx., 14°C mín., 9 días de lluvia">
-<span class="wc-label">D35-D36</span>
+<span class="wc-label">D37</span>
 <div class="wc-bar" style="width:58%;background:#38a169"></div>
 <span class="wc-temp">22°</span>
 </div>
 <div class="wc-bar-wrap" title="Billund 🇩🇰: 20°C máx., 12°C mín., 10 días de lluvia">
-<span class="wc-label">D37-D38</span>
+<span class="wc-label">D38-D40</span>
 <div class="wc-bar" style="width:50%;background:#38a169"></div>
 <span class="wc-temp">20°</span>
 </div>
 <div class="wc-bar-wrap" title="Hamburg→Amiens: 22°C máx., 13°C mín., 9 días de lluvia">
-<span class="wc-label">D39-D40</span>
+<span class="wc-label">D41-D42</span>
 <div class="wc-bar" style="width:58%;background:#38a169"></div>
 <span class="wc-temp">22°</span>
 </div>
-<div class="wc-bar-wrap" title="Amiens 🇫🇷: 23°C máx., 13°C mín., 8 días de lluvia">
-<span class="wc-label">D41</span>
-<div class="wc-bar" style="width:62%;background:#d69e2e"></div>
-<span class="wc-temp">23°</span>
-</div>
 <div class="wc-bar-wrap" title="Loire 🇫🇷: 26°C máx., 14°C mín., 7 días de lluvia">
-<span class="wc-label">D42-D43</span>
+<span class="wc-label">D43-D44</span>
 <div class="wc-bar" style="width:75%;background:#d69e2e"></div>
 <span class="wc-temp">26°</span>
 </div>
 <div class="wc-bar-wrap" title="San Sebastián 🇪🇸: 26°C máx., 17°C mín., 9 días de lluvia">
-<span class="wc-label">D44</span>
-<div class="wc-bar" style="width:75%;background:#d69e2e"></div>
-<span class="wc-temp">26°</span>
-</div>
-<div class="wc-bar-wrap" title="Bilbao 🇪🇸: 26°C máx., 17°C mín., 7 días de lluvia">
 <span class="wc-label">D45</span>
 <div class="wc-bar" style="width:75%;background:#d69e2e"></div>
 <span class="wc-temp">26°</span>
 </div>
-<div class="wc-bar-wrap" title="Picos 🇪🇸: 23°C máx., 11°C mín., 7 días de lluvia">
+<div class="wc-bar-wrap" title="Bilbao 🇪🇸: 26°C máx., 17°C mín., 7 días de lluvia">
 <span class="wc-label">D46</span>
+<div class="wc-bar" style="width:75%;background:#d69e2e"></div>
+<span class="wc-temp">26°</span>
+</div>
+<div class="wc-bar-wrap" title="Picos 🇪🇸: 23°C máx., 11°C mín., 7 días de lluvia">
+<span class="wc-label">D47</span>
 <div class="wc-bar" style="width:62%;background:#d69e2e"></div>
 <span class="wc-temp">23°</span>
 </div>
 <div class="wc-bar-wrap" title="Palencia 🇪🇸: 30°C máx., 14°C mín., 3 días de lluvia">
-<span class="wc-label">D47-D49</span>
+<span class="wc-label">D48-D50</span>
 <div class="wc-bar" style="width:91%;background:#e53e3e"></div>
 <span class="wc-temp">30°</span>
 </div>
 <div class="wc-bar-wrap" title="Costa Brava 🇪🇸: 29°C máx., 20°C mín., 4 días de lluvia">
-<span class="wc-label">D50-D51</span>
+<span class="wc-label">D51-D52</span>
 <div class="wc-bar" style="width:87%;background:#e53e3e"></div>
 <span class="wc-temp">29°</span>
 </div>
 <div class="wc-bar-wrap" title="→Genoa→Casa 🇫🇷🇮🇹: 30°C máx., 20°C mín., 4 días de lluvia">
-<span class="wc-label">D52-D54</span>
+<span class="wc-label">D53-D55</span>
 <div class="wc-bar" style="width:91%;background:#e53e3e"></div>
 <span class="wc-temp">30°</span>
 </div>
@@ -14720,7 +14715,7 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 <script>
 // Load home-variants_es.html templates into the page
 (function(){
-  fetch('./home-variants_es.html?v=5.05').then(function(r){return r.text();}).then(function(html){
+  fetch('./home-variants_es.html?v=5.07').then(function(r){return r.text();}).then(function(html){
     var div = document.getElementById('hv-templates');
     if(div) div.innerHTML = html;
     // Move templates to document body for proper <template> access
@@ -14730,8 +14725,8 @@ Dónde/cuándo verla: Estuarios de Loira y Sena (juveniles “civelles”); estr
 })();
 </script>
 <!-- Debug Overlay (v2.47 diagnostic) -->
-<script defer="" src="debug-overlay.js?v=5.05"></script>
+<script defer="" src="debug-overlay.js?v=5.07"></script>
 <!-- Capacitor GPS Bridge (only activates inside native app, ignored in browser) -->
-<script defer="" src="capacitor-gps-bridge.js?v=5.05"></script>
+<script defer="" src="capacitor-gps-bridge.js?v=5.07"></script>
 </body>
 </html>

@@ -76,10 +76,10 @@
     <link rel="apple-touch-icon" sizes="167x167" href="./icon.png">
     <title>Quo Vadis — V4.92</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
-    <link rel="stylesheet" href="style.css?v=5.05">
-    <link rel="stylesheet" href="home-variants.css?v=5.05">
-    <link rel="stylesheet" href="unified-map.css?v=5.05">
-    <link rel="stylesheet" href="modern-pages.css?v=5.05">
+    <link rel="stylesheet" href="style.css?v=5.07">
+    <link rel="stylesheet" href="home-variants.css?v=5.07">
+    <link rel="stylesheet" href="unified-map.css?v=5.07">
+    <link rel="stylesheet" href="modern-pages.css?v=5.07">
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" crossorigin="">
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" crossorigin="">
 <!-- Firebase SDK (compat mode for single-file app) -->
@@ -96,7 +96,7 @@
 // Fetches version.json from network. On mismatch, installs new SW first,
 // then reloads — avoids blank page by ensuring new SW is ready.
 (function(){
-  var EXPECTED_VERSION = "5.05";
+  var EXPECTED_VERSION = "5.07";
   window.IS_PROD = true; // v2.71: disabilita debug overlay in produzione
     window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
@@ -163,25 +163,25 @@
   });
 })();
 </script>
-<script src="data.js?v=5.05" defer></script>
-<script src="days-data.js?v=5.05" defer></script>
-<script src="days-renderer.js?v=5.05" defer></script>
+<script src="data.js?v=5.07" defer></script>
+<script src="days-data.js?v=5.07" defer></script>
+<script src="days-renderer.js?v=5.07" defer></script>
 <!-- wiki-links.js: caricato lazy alla prima apertura tab Cultura/Attività (34KB) -->
-<script src="weather-coords.js?v=5.05" defer></script>
+<script src="weather-coords.js?v=5.07" defer></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
 <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js" crossorigin="" defer></script>
-<script src="poi-data.js?v=5.05" defer></script>
+<script src="poi-data.js?v=5.07" defer></script>
 <!-- poi-data.js caricato sopra con defer — 161KB, usato da UnifiedMap e tab Luoghi -->
 <!-- wiki-links.js lazy: caricato solo alla prima apertura tab Cultura/Attività -->
-<script src="app.js?v=5.05" defer></script>
-<script src="curiosita-data.js?v=5.05" defer></script>
+<script src="app.js?v=5.07" defer></script>
+<script src="curiosita-data.js?v=5.07" defer></script>
 <script>window.QV_CURIOSITA_SERVER_SIDE = true; window.QV_RECAP_SERVER_SIDE = true;</script>
-<script src="curiosita-scheduler.js?v=5.05" defer></script>
-<script src="quiz-fun.js?v=5.05" defer></script>
-<script src="unified-map.js?v=5.05" defer></script>
-<script src="city-itineraries.js?v=5.05" defer></script>
-<script src="city-itineraries-ui.js?v=5.05" defer></script>
-<script src="home-variants.js?v=5.05" defer></script>
+<script src="curiosita-scheduler.js?v=5.07" defer></script>
+<script src="quiz-fun.js?v=5.07" defer></script>
+<script src="unified-map.js?v=5.07" defer></script>
+<script src="city-itineraries.js?v=5.07" defer></script>
+<script src="city-itineraries-ui.js?v=5.07" defer></script>
+<script src="home-variants.js?v=5.07" defer></script>
 </head>
 <body class="on-home">
 
@@ -703,7 +703,7 @@
 <p>➕ <strong>Dalsnibba viewpoint</strong> (+1h): vista aerea sul fiordo da 1.500 m <a href="https://maps.google.com/?q=62.04885,7.26931" target="_blank" rel="noopener noreferrer">📍 Maps</a></p>
 <p>➕ <strong>Flåm Railway</strong> (1 giorno): treno panoramico tra i più belli al mondo <a href="https://maps.google.com/?q=60.863,7.1138" target="_blank" rel="noopener noreferrer">📍 Maps</a></p>
 <h3 id="b6">Danimarca</h3>
-<p><strong>Agganci:</strong> <a href="#g34">G34</a>, <a href="#g37">G37</a></p>
+<p><strong>Agganci:</strong> <a href="#g36">G36</a>, <a href="#g37">G37</a></p>
 <p>➕ <strong>Oceanarium Hirtshals</strong> 🇩🇰: il più grande acquario del Nord Europa <a href="https://maps.google.com/?q=57.5866903,9.9802239" target="_blank" rel="noopener noreferrer">📍 Maps</a></p>
 <p>➕ <strong>Odense</strong> 🇩🇰: museo H.C. Andersen (sosta sulla strada per Billund) <a href="https://maps.google.com/?q=55.39955352,10.39189909" target="_blank" rel="noopener noreferrer">📍 Maps</a></p>
 <p>➕ <strong>Møns Klint</strong> 🇩🇰: scogliere bianche (deviazione da Copenhagen) <a href="https://maps.google.com/?q=54.9841,12.5437" target="_blank" rel="noopener noreferrer">📍 Maps</a></p>
@@ -918,7 +918,7 @@
 <tr>
 <td data-label="Giorno"><a href="#g7">G7</a></td>
 <td data-label="Luogo">Helsinki 🇫🇮</td>
-<td data-label="Attività indoor"><strong>Heureka</strong> <a href="https://maps.google.com/?q=60.2876,25.0507" target="_blank" rel="noopener noreferrer">📍</a> (centro scientifico, Vantaa), <strong>Sea Life</strong> <a href="https://maps.google.com/?q=60.189096113360016,24.93905" target="_blank" rel="noopener noreferrer">📍</a>, <strong>Amos Rex</strong> <a href="https://maps.google.com/?q=60.1706865,24.9364447" target="_blank" rel="noopener noreferrer">📍</a> (arte contemporanea)</td>
+<td data-label="Attività indoor"><strong>Heureka</strong> <a href="https://maps.google.com/?q=60.2876,25.0707" target="_blank" rel="noopener noreferrer">📍</a> (centro scientifico, Vantaa), <strong>Sea Life</strong> <a href="https://maps.google.com/?q=60.189096113360016,24.93905" target="_blank" rel="noopener noreferrer">📍</a>, <strong>Amos Rex</strong> <a href="https://maps.google.com/?q=60.1706865,24.9364447" target="_blank" rel="noopener noreferrer">📍</a> (arte contemporanea)</td>
 <td data-label="Note">Heureka: camp scientifici estivi</td>
 </tr>
 <tr>
@@ -972,7 +972,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="norvegia-centro-sud-g24g32">Norvegia Centro-Sud (G25–G33)</h3>
+<h3 id="norvegia-centro-sud-g24g33">Norvegia Centro-Sud (G25–G34)</h3>
 <table>
 <thead>
 <tr>
@@ -984,7 +984,7 @@
 </thead>
 <tbody>
 <tr>
-<td data-label="Giorno"><a href="#g27">G27</a></td>
+<td data-label="Giorno"><a href="#g26">G26</a></td>
 <td data-label="Luogo">Trondheim 🇳🇴</td>
 <td data-label="Attività indoor"><strong>Vitensenteret</strong> <a href="https://maps.google.com/?q=63.4303,10.3992" target="_blank" rel="noopener noreferrer">📍</a> (centro scientifico, Sound Lab), <strong>Ringve Music Museum</strong> <a href="https://maps.google.com/?q=63.4473,10.4546" target="_blank" rel="noopener noreferrer">📍</a>, <strong>Pirbadet</strong> <a href="https://maps.google.com/?q=63.4408,10.4011" target="_blank" rel="noopener noreferrer">📍</a> (parco acquatico)</td>
 <td data-label="Note">Pirbadet: il più grande della Norvegia</td>
@@ -996,20 +996,20 @@
 <td data-label="Note">Opzioni limitate — guidare verso Ålesund</td>
 </tr>
 <tr>
-<td data-label="Giorno"><a href="#g31">G31</a></td>
+<td data-label="Giorno"><a href="#g32">G32</a></td>
 <td data-label="Luogo">Bergen 🇳🇴</td>
 <td data-label="Attività indoor"><strong>VilVite</strong> <a href="https://maps.google.com/?q=60.3813,5.3292" target="_blank" rel="noopener noreferrer">📍</a> (centro scientifico), <strong>Bergen Aquarium</strong> <a href="https://maps.google.com/?q=60.3996913,5.303371" target="_blank" rel="noopener noreferrer">📍</a>, <strong>Musei di Bryggen <a href="https://maps.google.com/?q=60.3983664,5.3228055" target="_blank" rel="noopener noreferrer">📍</a></strong>, <strong>KODE Art Museum</strong> <a href="https://maps.google.com/?q=60.3892166,5.3289825" target="_blank" rel="noopener noreferrer">📍</a></td>
 <td data-label="Note">VilVite: perfetto per bambini</td>
 </tr>
 <tr>
-<td data-label="Giorno"><a href="#g32">G32</a>-<a href="#g33">G33</a></td>
+<td data-label="Giorno"><a href="#g33">G33</a>-<a href="#g34">G34</a></td>
 <td data-label="Luogo">Stavanger 🇳🇴</td>
 <td data-label="Attività indoor"><strong>Museo del Petrolio</strong> <a href="https://maps.google.com/?q=58.9708,5.7342" target="_blank" rel="noopener noreferrer">📍</a> (interattivo), <strong>Museo delle Conserve</strong> <a href="https://maps.google.com/?q=58.97203715700807,5.724052428441055" target="_blank" rel="noopener noreferrer">📍</a>, <strong>Stavanger Svømmehall</strong> (piscina)</td>
 <td data-label="Note">Museo Petrolio: simulatori piattaforma</td>
 </tr>
 </tbody>
 </table>
-<h3 id="danimarca-piano-pioggia-g33g39">Danimarca — Piano Pioggia (G34–G40)</h3>
+<h3 id="danimarca-piano-pioggia-g33g39">Danimarca — Piano Pioggia (G36–G40)</h3>
 <table>
 <thead>
 <tr>
@@ -1021,19 +1021,19 @@
 </thead>
 <tbody>
 <tr>
-<td data-label="Giorno"><a href="#g34">G34</a></td>
+<td data-label="Giorno"><a href="#g36">G36</a></td>
 <td data-label="Luogo">Aalborg 🇩🇰</td>
 <td data-label="Attività indoor"><strong>Kunsten Museum</strong> <a href="https://maps.google.com/?q=57.0427,9.9058" target="_blank" rel="noopener noreferrer">📍</a>, <strong>Aalborg Zoo</strong> <a href="https://maps.google.com/?q=57.0368,9.8982" target="_blank" rel="noopener noreferrer">📍</a> (parti coperte), <strong>Springeren Maritime Museum</strong> <a href="https://maps.google.com/?q=57.058889,9.893889" target="_blank" rel="noopener noreferrer">📍</a></td>
 <td data-label="Note">Zoo: acquario + rettilario coperti</td>
 </tr>
 <tr>
-<td data-label="Giorno"><a href="#g35">G35</a>-<a href="#g36">G36</a></td>
+<td data-label="Giorno"><a href="#g36">G36</a>-<a href="#g37">G37</a></td>
 <td data-label="Luogo">Copenhagen 🇩🇰</td>
 <td data-label="Attività indoor"><strong>Experimentarium</strong> <a href="https://maps.google.com/?q=55.7267,12.5801" target="_blank" rel="noopener noreferrer">📍</a> (scienza interattiva), <strong>The Blue Planet</strong> <a href="https://maps.google.com/?q=55.6381,12.6561" target="_blank" rel="noopener noreferrer">📍</a> (acquario), <strong>Museo Nazionale</strong> (Children's Museum), <strong>Tivoli</strong> (giostre coperte)</td>
 <td data-label="Note">Experimentarium: il migliore per 6-8 anni</td>
 </tr>
 <tr>
-<td data-label="Giorno"><a href="#g37">G37</a>-<a href="#g39">G39</a></td>
+<td data-label="Giorno"><a href="#g38">G38</a>-<a href="#g40">G40</a></td>
 <td data-label="Luogo">Billund 🇩🇰</td>
 <td data-label="Attività indoor"><strong>LEGO House</strong> <a href="https://maps.google.com/?q=55.730687,9.1149443" target="_blank" rel="noopener noreferrer">📍</a> (4 zone colorate, cinema 4D), <strong>Lalandia</strong> <a href="https://maps.google.com/?q=55.7335,9.1374" target="_blank" rel="noopener noreferrer">📍</a> (parco acquatico coperto enorme), <strong>LEGOLAND</strong> <a href="https://maps.google.com/?q=55.73556,9.12611" target="_blank" rel="noopener noreferrer">📍</a> (parti coperte)</td>
 <td data-label="Note">LEGO House: intera giornata al coperto</td>
@@ -1079,7 +1079,7 @@
 <tr>
 <td data-label="Giorno"><a href="#g44">G44</a></td>
 <td data-label="Luogo">Picos de Europa 🇪🇸</td>
-<td data-label="Attività indoor"><strong>Cuevas de Covadonga</strong> <a href="https://maps.google.com/?q=43.3089,-5.0564" target="_blank" rel="noopener noreferrer">📍</a> (grotte), <strong>Museo della Miniera</strong> <a href="https://maps.google.com/?q=43.2872,-5.6483" target="_blank" rel="noopener noreferrer">📍</a> (Asturie)</td>
+<td data-label="Attività indoor"><strong>Cuevas de Covadonga</strong> <a href="https://maps.google.com/?q=43.3089,-5.0764" target="_blank" rel="noopener noreferrer">📍</a> (grotte), <strong>Museo della Miniera</strong> <a href="https://maps.google.com/?q=43.2872,-5.6483" target="_blank" rel="noopener noreferrer">📍</a> (Asturie)</td>
 <td data-label="Note">Grotte: sempre asciutte dentro</td>
 </tr>
 <tr>
@@ -5306,7 +5306,7 @@ Colline moreniche a forma di goccia allungata (lunghe fino a un chilometro ma al
 <p>🏛️ <strong>Puukko</strong> — coltello tradizionale lappone con manico in betulla (per i genitori)</p>
 <p>🏛️ <strong>Mirtilli e liquirizia salata</strong> (salmiakki) — la liquirizia salata è un gusto acquisito!</p>
 <hr>
-<h2 id="norvegia-g16-g34">🇳🇴 Norvegia (G16-G34)</h2>
+<h2 id="norvegia-g16-g34">🇳🇴 Norvegia (G16-G35)</h2>
 <h3 id="timeline_7">⏳ Timeline</h3>
 <table>
 <thead>
@@ -5335,7 +5335,7 @@ Colline moreniche a forma di goccia allungata (lunghe fino a un chilometro ma al
 <tr>
 <td data-label="Periodo">1030</td>
 <td data-label="Evento">Battaglia di Stiklestad — la Norvegia diventa cristiana</td>
-<td data-label="Dove lo vedete">Vicino a Trondheim (G27)</td>
+<td data-label="Dove lo vedete">Vicino a Trondheim (G26)</td>
 </tr>
 <tr>
 <td data-label="Periodo">1349</td>
@@ -5759,7 +5759,7 @@ Ogni inverno (da novembre a febbraio), centinaia di orche e megattere seguono gl
 <p>🏛️ <strong>Maglione Marius</strong> — il classico maglione norvegese a pattern (costoso ma dura una vita)</p>
 <p>🏛️ <strong>Stoccafisso</strong> — se vi piace il baccalà, compratelo direttamente alle Lofoten</p>
 <hr>
-<h2 id="danimarca-g35-g39">🇩🇰 Danimarca (G35-G39)</h2>
+<h2 id="danimarca-g35-g39">🇩🇰 Danimarca (G36-G40)</h2>
 <h3 id="timeline_8">⏳ Timeline</h3>
 <table>
 <thead>
@@ -6373,7 +6373,7 @@ Ogni inverno (da novembre a febbraio), centinaia di orche e megattere seguono gl
 <p>🏛️ <strong>Lakrids by Bülow</strong> — liquirizia gourmet ricoperta di cioccolato</p>
 <p>🏛️ <strong>Smørrebrød to go</strong> — nei mercati, perfetto per il pranzo in furgone</p>
 <hr>
-<h2 id="germania-g40-transito-via-brema">🇩🇪 Germania (G40 — transito via Brema)</h2>
+<h2 id="germania-g40-transito-via-brema">🇩🇪 Germania (G41 — transito via Brema)</h2>
 <h3 id="timeline_9">⏳ Timeline</h3>
 <table>
 <thead>
@@ -8297,7 +8297,7 @@ Etica whale-watching: distanza >60 m, mai tagliare la rotta; max 30 min; evitare
 <td data-label="Titolo"><strong>Le Avventure di Pippi</strong> (audiolibro)</td>
 <td data-label="Tipo">Audiolibro</td>
 <td data-label="Durata">4h</td>
-<td data-label="Per quale tappa"><a href="#g16">G16</a>-<a href="#g34">G34</a> (Scandinavia)</td>
+<td data-label="Per quale tappa"><a href="#g16">G16</a>-<a href="#g35">G35</a> (Scandinavia)</td>
 </tr>
 <tr>
 <td data-label="Titolo"><strong>Storie di Vichinghi per bambini</strong></td>
@@ -8309,31 +8309,31 @@ Etica whale-watching: distanza >60 m, mai tagliare la rotta; max 30 min; evitare
 <td data-label="Titolo"><strong>Geronimo Stilton — Viaggio in Norvegia</strong></td>
 <td data-label="Tipo">Audiolibro</td>
 <td data-label="Durata">1h 30m</td>
-<td data-label="Per quale tappa"><a href="#g16">G16</a>-<a href="#g34">G34</a></td>
+<td data-label="Per quale tappa"><a href="#g16">G16</a>-<a href="#g35">G35</a></td>
 </tr>
 <tr>
 <td data-label="Titolo"><strong>Le Fiabe di Andersen</strong> (audiolibro)</td>
 <td data-label="Tipo">Audiolibro</td>
 <td data-label="Durata">4h</td>
-<td data-label="Per quale tappa"><a href="#g35">G35</a>-<a href="#g39">G39</a> (Danimarca)</td>
+<td data-label="Per quale tappa"><a href="#g36">G36</a>-<a href="#g40">G40</a> (Danimarca)</td>
 </tr>
 <tr>
 <td data-label="Titolo"><strong>Le Fiabe dei Fratelli Grimm</strong> (audiolibro)</td>
 <td data-label="Tipo">Audiolibro</td>
 <td data-label="Durata">5h+</td>
-<td data-label="Per quale tappa"><a href="#g40">G40</a> (Germania)</td>
+<td data-label="Per quale tappa"><a href="#g41">G41</a> (Germania)</td>
 </tr>
 <tr>
 <td data-label="Titolo"><strong>20.000 Leghe sotto i Mari</strong> (versione ragazzi)</td>
 <td data-label="Tipo">Audiolibro</td>
 <td data-label="Durata">3h</td>
-<td data-label="Per quale tappa"><a href="#g41">G41</a> (verso Amiens/Jules Verne)</td>
+<td data-label="Per quale tappa"><a href="#g42">G42</a> (verso Amiens/Jules Verne)</td>
 </tr>
 <tr>
 <td data-label="Titolo"><strong>Storie di Leonardo da Vinci per bambini</strong></td>
 <td data-label="Tipo">Podcast</td>
 <td data-label="Durata">30 min</td>
-<td data-label="Per quale tappa"><a href="#g42">G42</a>-<a href="#g43">G43</a> (Loira)</td>
+<td data-label="Per quale tappa"><a href="#g43">G43</a>-<a href="#g44">G44</a> (Loira)</td>
 </tr>
 </tbody>
 </table>
@@ -8364,13 +8364,13 @@ Etica whale-watching: distanza >60 m, mai tagliare la rotta; max 30 min; evitare
 <td data-label="Titolo"><strong>Dan Carlin's Hardcore History</strong> — "Thor's Angels"</td>
 <td data-label="Tipo">Podcast</td>
 <td data-label="Durata">4h</td>
-<td data-label="Per quale tappa"><a href="#g16">G16</a>-<a href="#g34">G34</a> (Vichinghi)</td>
+<td data-label="Per quale tappa"><a href="#g16">G16</a>-<a href="#g35">G35</a> (Vichinghi)</td>
 </tr>
 <tr>
 <td data-label="Titolo"><strong>Fall of Civilizations</strong> — "The Vikings"</td>
 <td data-label="Tipo">Podcast</td>
 <td data-label="Durata">3h</td>
-<td data-label="Per quale tappa"><a href="#g16">G16</a>-<a href="#g34">G34</a></td>
+<td data-label="Per quale tappa"><a href="#g16">G16</a>-<a href="#g35">G35</a></td>
 </tr>
 <tr>
 <td data-label="Titolo"><strong>Revolutions</strong> (Mike Duncan) — French Revolution</td>
@@ -8431,13 +8431,13 @@ Etica whale-watching: distanza >60 m, mai tagliare la rotta; max 30 min; evitare
 <td data-label="Film"><strong>La Sirenetta</strong></td>
 <td data-label="Età">5+</td>
 <td data-label="Durata">1h 23m</td>
-<td data-label="Quando guardarlo">Sera a Copenhagen (G35-G36)</td>
+<td data-label="Quando guardarlo">Sera a Copenhagen (G36-G37)</td>
 </tr>
 <tr>
 <td data-label="Film"><strong>LEGO Movie</strong></td>
 <td data-label="Età">6+</td>
 <td data-label="Durata">1h 40m</td>
-<td data-label="Quando guardarlo">La sera prima di Legoland (G37)</td>
+<td data-label="Quando guardarlo">La sera prima di Legoland (G38)</td>
 </tr>
 <tr>
 <td data-label="Film"><strong>LEGO Movie 2</strong></td>
@@ -8449,7 +8449,7 @@ Etica whale-watching: distanza >60 m, mai tagliare la rotta; max 30 min; evitare
 <td data-label="Film"><strong>Ratatouille</strong></td>
 <td data-label="Età">6+</td>
 <td data-label="Durata">1h 51m</td>
-<td data-label="Quando guardarlo">La sera prima della Francia (G40)</td>
+<td data-label="Quando guardarlo">La sera prima della Francia (G41)</td>
 </tr>
 <tr>
 <td data-label="Film"><strong>Brave</strong></td>
@@ -8849,7 +8849,7 @@ Etica whale-watching: distanza >60 m, mai tagliare la rotta; max 30 min; evitare
 <li>L'acqua del rubinetto è eccellente ovunque</li>
 </ul>
 <hr>
-<h2 id="cucina-norvegese-g15-g34">🇳🇴 Cucina Norvegese (G15-G34)</h2>
+<h2 id="cucina-norvegese-g15-g34">🇳🇴 Cucina Norvegese (G15-G35)</h2>
 <h4 id="storia-cucina-norvegese">📜 Storia della cucina norvegese</h4>
 <p>La cucina norvegese (<a href="https://it.wikipedia.org/wiki/Cucina_norvegese" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) è plasmata dai fiordi e dal clima estremo. I Vichinghi inventarono la <strong>conservazione</strong>: pesce essiccato (tørrfisk/stoccafisso), affumicato (røkelaks) e fermentato (rakfisk). Lo <strong>stoccafisso</strong> (<a href="https://it.wikipedia.org/wiki/Stoccafisso" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) essiccato alle Lofoten era la "valuta" dei Vichinghi — lo esportavano in tutta Europa (anche in Italia per il baccalà!). Il <strong>brunost</strong> (formaggio marrone) fu inventato nel 1863 da una ragazza di fattoria, Anne Hov, che ebbe l'idea di aggiungere panna al siero. Oggi è il formaggio nazionale. Il <strong>salmone norvegese</strong> è il pesce più esportato al mondo — il sushi di salmone fu "inventato" dai norvegesi che convinsero i giapponesi negli anni '80!</p>
 <h4 id="extra-piatti-norvegia">🍽️ Altri piatti da provare</h4>
@@ -8904,7 +8904,7 @@ Etica whale-watching: distanza >60 m, mai tagliare la rotta; max 30 min; evitare
 <li>Portare pasta e riso dall'Italia (o comprare in Polonia) — costano il doppio qui</li>
 </ul>
 <hr>
-<h2 id="cucina-danese-g34-g39">🇩🇰 Cucina Danese (G34-G39)</h2>
+<h2 id="cucina-danese-g34-g39">🇩🇰 Cucina Danese (G36-G40)</h2>
 <h4 id="storia-cucina-danese">📜 Storia della cucina danese</h4>
 <p>La cucina danese (<a href="https://it.wikipedia.org/wiki/Cucina_danese" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) ha vissuto una rivoluzione: dal tradizionale <strong>smørrebrød</strong> (tartine aperte) al "New Nordic" di René Redzepi (Noma, 4 volte miglior ristorante del mondo). Lo <strong>smørrebrød</strong> (<a href="https://it.wikipedia.org/wiki/Sm%C3%B8rrebr%C3%B8d" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) nasce nel medioevo: il pane di segale era il "piatto" su cui si metteva il cibo. I <strong>Danish pastries</strong> (wienerbrød) in realtà furono portati da fornai austriaci nel 1850 durante uno sciopero dei panettieri danesi! Il <strong>Carlsberg</strong> fu fondato nel 1847 e il suo laboratorio scoprì il lievito puro per la birra lager — regalando la scoperta al mondo intero.</p>
 <h4 id="extra-piatti-danimarca">🍽️ Altri piatti da provare</h4>
@@ -8950,7 +8950,7 @@ Etica whale-watching: distanza >60 m, mai tagliare la rotta; max 30 min; evitare
 <li>I <strong>pølsevogn</strong> (chioschi rossi) sono ovunque e sono l'opzione più economica per famiglie</li>
 </ul>
 <hr>
-<h2 id="cucina-tedesca-g40-transito-brema">🇩🇪 Cucina Tedesca (G40 — transito Brema)</h2>
+<h2 id="cucina-tedesca-g40-transito-brema">🇩🇪 Cucina Tedesca (G41 — transito Brema)</h2>
 <h4 id="storia-cucina-tedesca">📜 Storia della cucina tedesca</h4>
 <p>La cucina tedesca (<a href="https://it.wikipedia.org/wiki/Cucina_tedesca" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) varia enormemente da regione a regione. Brema, città anseatica, ha una tradizione marinara: aringhe, anguille affumicate, Labskaus (stufato di marinai). La <strong>Reinheitsgebot</strong> (<a href="https://it.wikipedia.org/wiki/Reinheitsgebot" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) del 1516 è la legge sulla purezza della birra più antica del mondo: solo acqua, malto, luppolo e lievito. La Germania ha 1.500+ birrifici e 5.010+ birre diverse! Il <strong>Brot</strong> (pane tedesco) è Patrimonio UNESCO: oltre 3.000 varietà registrate, più di qualsiasi altro paese.</p>
 <h4 id="extra-piatti-germania">🍽️ Altri piatti da provare</h4>
@@ -8986,11 +8986,11 @@ Etica whale-watching: distanza >60 m, mai tagliare la rotta; max 30 min; evitare
 </ul>
 <h4 id="tips_7">💡 Tips</h4>
 <ul>
-<li>Brema è solo un transito (G40) — <strong>fare scorta al supermercato tedesco</strong> per i giorni successivi in Francia. I prezzi tedeschi sono molto più bassi!</li>
+<li>Brema è solo un transito (G41) — <strong>fare scorta al supermercato tedesco</strong> per i giorni successivi in Francia. I prezzi tedeschi sono molto più bassi!</li>
 <li>Il pane tedesco è il migliore d'Europa — comprare Vollkornbrot (dura giorni) per il viaggio</li>
 </ul>
 <hr>
-<h2 id="cucina-francese-g40-g43-g51-g52">🇫🇷 Cucina Francese (G40-G43, G51-G52)</h2>
+<h2 id="cucina-francese-g40-g43-g51-g52">🇫🇷 Cucina Francese (G42-G44, G52-G53)</h2>
 <h4 id="storia-cucina-francese">📜 Storia della cucina francese</h4>
 <p>La cucina francese (<a href="https://it.wikipedia.org/wiki/Cucina_francese" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) è Patrimonio UNESCO dal 2010. <strong>Auguste Escoffier</strong> (<a href="https://it.wikipedia.org/wiki/Auguste_Escoffier" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) codificò la cucina moderna nel 1903 con "Le Guide Culinaire". La <strong>baguette</strong> (<a href="https://it.wikipedia.org/wiki/Baguette" target="_blank" rel="noopener noreferrer">📚 Wikipedia</a>) è Patrimonio UNESCO dal 2022 — i francesi ne consumano 10 miliardi l'anno! La tradizione del <strong>fromage</strong> (formaggio) conta 1.220+ varietà — De Gaulle disse: "Come si può governare un paese con 246 formaggi diversi?". Il <strong>croissant</strong> in realtà è austriaco (Kipferl), portato a Parigi nel 1838. La Bretagna e la Normandia (sul vostro percorso) sono famose per crêpes, sidro, burro salato e ostriche.</p>
 <h4 id="extra-piatti-francia">🍽️ Altri piatti da provare</h4>
@@ -9326,7 +9326,7 @@ Etica whale-watching: distanza >60 m, mai tagliare la rotta; max 30 min; evitare
 <tr>
 <td data-label="#">4</td>
 <td data-label="Trek"><strong>Vidden Trail</strong> (Bergen)</td>
-<td data-label="Giorno"><a href="#g31">G31</a></td>
+<td data-label="Giorno"><a href="#g32">G32</a></td>
 <td data-label="Durata">5-7h</td>
 <td data-label="Dislivello">400m</td>
 <td data-label="Perché">Traversata Ulriken-Floyen, 15 km in quota.</td>
@@ -9365,7 +9365,7 @@ Etica whale-watching: distanza >60 m, mai tagliare la rotta; max 30 min; evitare
 <tr>
 <td data-label="#">2</td>
 <td data-label="Trek"><strong>Fløyen Troll Forest</strong> (Bergen)</td>
-<td data-label="Giorno"><a href="#g31">G31</a></td>
+<td data-label="Giorno"><a href="#g32">G32</a></td>
 <td data-label="Durata">1h</td>
 <td data-label="Difficoltà">Facile</td>
 <td data-label="Perché">Funivia + sentiero magico con troll di legno.</td>
@@ -9373,7 +9373,7 @@ Etica whale-watching: distanza >60 m, mai tagliare la rotta; max 30 min; evitare
 <tr>
 <td data-label="#">3</td>
 <td data-label="Trek"><strong>Preikestolen</strong> (Stavanger)</td>
-<td data-label="Giorno"><a href="#g33">G33</a></td>
+<td data-label="Giorno"><a href="#g34">G34</a></td>
 <td data-label="Durata">5-6h A/R</td>
 <td data-label="Difficoltà">350m, moderato</td>
 <td data-label="Perché">Il classico. Fattibile con bambini 6+. Nessun parapetto!</td>
@@ -9592,7 +9592,7 @@ Etica whale-watching: distanza >60 m, mai tagliare la rotta; max 30 min; evitare
 <p>🥾 Trailhead: <a href="https://maps.google.com/?q=62.4533,7.6627" target="_blank" rel="noopener noreferrer">📍 Trollstigen top</a>
 <a href="https://maps.google.com/?q=62.0900,7.0700" target="_blank" rel="noopener noreferrer">📍 Flydalsjuvet</a>
 <a href="https://maps.google.com/?q=62.1100,7.0400" target="_blank" rel="noopener noreferrer">📍 Skageflå</a></p>
-<h4 id="trek-bergen">🇳🇴 Bergen (G31)</h4>
+<h4 id="trek-bergen">🇳🇴 Bergen (G32)</h4>
 <table>
 <thead>
 <tr>
@@ -9625,7 +9625,7 @@ Etica whale-watching: distanza >60 m, mai tagliare la rotta; max 30 min; evitare
 </table>
 <p>🥾 Trailhead: <a href="https://maps.google.com/?q=60.3960,5.3285" target="_blank" rel="noopener noreferrer">📍 Fløibanen base</a>
 <a href="https://maps.google.com/?q=60.3770,5.3890" target="_blank" rel="noopener noreferrer">📍 Ulriken cable car</a></p>
-<h4 id="trek-stavanger">🇳🇴 Stavanger (G33)</h4>
+<h4 id="trek-stavanger">🇳🇴 Stavanger (G34)</h4>
 <table>
 <thead>
 <tr>
@@ -9751,7 +9751,7 @@ Etica whale-watching: distanza >60 m, mai tagliare la rotta; max 30 min; evitare
 </tbody>
 </table>
 <p>🥾 Trailhead: <a href="https://maps.google.com/?q=43.1431,-4.8126" target="_blank" rel="noopener noreferrer">📍 Fuente Dé cable car</a>
-<a href="https://maps.google.com/?q=43.2700,-5.0500" target="_blank" rel="noopener noreferrer">📍 Lagos de Covadonga</a>
+<a href="https://maps.google.com/?q=43.2700,-5.0700" target="_blank" rel="noopener noreferrer">📍 Lagos de Covadonga</a>
 <a href="https://maps.google.com/?q=43.2480,-4.8380" target="_blank" rel="noopener noreferrer">📍 Ruta del Cares (Poncebos)</a></p>
 <hr>
 <h3 id="consigli-pratici">🎯 Consigli pratici</h3>
@@ -9920,7 +9920,7 @@ Etica whale-watching: distanza >60 m, mai tagliare la rotta; max 30 min; evitare
 <p>🎣 <strong>G14 Lago Inari:</strong> trota lacustre e salmerino. Permesso locale ~€10/gg su eraluvat.fi.</p>
 <p>🎣 <strong>G15 Kilpisjärvi:</strong> salmerino artico. Permesso ~€8/gg al centro visitatori.</p>
 <p><strong>Attrezzatura consigliata:</strong> canna telescopica 2.4m + mulinello piccolo + cucchiaini rotanti 5-10g (per luccio/persico) + galleggianti e ami per mato-onki (bambini).</p>
-<h3 id="pesca-norvegia">🇳🇴 Norvegia (G16–G34)</h3>
+<h3 id="pesca-norvegia">🇳🇴 Norvegia (G16–G35)</h3>
 <p>La Norvegia è il <strong>sogno di ogni pescatore</strong>: la pesca in mare è GRATIS per tutti, senza licenza, senza limiti di età. E i fiordi sono pieni di pesce.</p>
 <p><strong>Cosa pescare (mare):</strong> merluzzo artico (torsk), pollack (sei), sgombro (makrell), halibut (kveite), merluzzo carbonaro (lyr).</p>
 <p><strong>I 5 spot imperdibili:</strong></p>
@@ -9935,10 +9935,10 @@ Etica whale-watching: distanza >60 m, mai tagliare la rotta; max 30 min; evitare
 <p><strong>G23 Reine</strong> — pescare con i rorbu rossi sullo sfondo. Iconico.</p>
 </li>
 <li>
-<p><strong>G28 Atlantic Road</strong> — pescare DAI PONTI sull'oceano. Pollack e merluzzo.</p>
+<p><strong>G27 Atlantic Road</strong> — pescare DAI PONTI sull'oceano. Pollack e merluzzo.</p>
 </li>
 <li>
-<p><strong>G31 Bergen</strong> — molo di Bryggen, sgombro a luglio (picco stagionale).</p>
+<p><strong>G32 Bergen</strong> — molo di Bryggen, sgombro a luglio (picco stagionale).</p>
 </li>
 </ol>
 <p><strong>Regole:</strong></p>
@@ -9947,25 +9947,25 @@ Etica whale-watching: distanza >60 m, mai tagliare la rotta; max 30 min; evitare
 <p>Salmone/trota di mare: fee statale obbligatoria su elveguiden.no + licenza locale</p>
 <p>Export: max <strong>15 kg</strong> pesce a persona dal 2026 (solo se pescato presso struttura turistica registrata; pesca autonoma = 0 kg esportabili)</p>
 <p><strong>Attrezzatura:</strong> la stessa della Finlandia funziona perfettamente. Per il merluzzo dai moli: piombo 50-100g + esca artificiale (jig) o filetto di sgombro.</p>
-<h3 id="pesca-danimarca">🇩🇰 Danimarca (G34–G40)</h3>
+<h3 id="pesca-danimarca">🇩🇰 Danimarca (G36–G40)</h3>
 <p>Licenza obbligatoria (<strong>Fisketegn</strong>) ma facile da ottenere online.</p>
 <p><strong>Spot sul percorso:</strong></p>
-<p>🎣 <strong>G34 Hirtshals</strong> (se fate sosta): molo del porto — sgombro, merluzzo. Ottimo con bambini.</p>
-<p>🎣 <strong>G37 area Billund:</strong> laghi e fiumi — trota, luccio. Serve anche permesso locale del lago.</p>
+<p>🎣 <strong>G36 Hirtshals</strong> (se fate sosta): molo del porto — sgombro, merluzzo. Ottimo con bambini.</p>
+<p>🎣 <strong>G38 area Billund:</strong> laghi e fiumi — trota, luccio. Serve anche permesso locale del lago.</p>
 <p><strong>Acquisto:</strong> <a href="https://fisketegn.dk/en" target="_blank" rel="noopener noreferrer">fisketegn.dk/en</a> — DKK 46 (~€6.2)/giorno, DKK 150 (~€20)/settimana. Bambini &lt;18 gratis.</p>
-<h3 id="pesca-germania">🇩🇪 Germania (G40–G41)</h3>
+<h3 id="pesca-germania">🇩🇪 Germania (G41–G42)</h3>
 <p><strong>⚠️ Sconsigliato.</strong> La Germania richiede un esame (Fischereischein) per pescare. Alcuni Länder offrono licenze turistiche, ma Brema (sul vostro percorso) non è tra questi. Saltate la pesca qui — avrete abbondanza di opportunità prima e dopo.</p>
 <h3 id="pesca-francia">🇫🇷 Francia (G41–G43, G51)</h3>
 <p><strong>Mare:</strong> pesca da riva GRATIS, nessuna licenza (come in Italia).</p>
 <p><strong>Acqua dolce:</strong> serve la Carte de pêche (~€15/giorno) acquistabile su <a href="https://www.cartedepeche.fr" target="_blank" rel="noopener noreferrer">cartedepeche.fr</a>. Bambini &lt;12 gratis.</p>
 <p><strong>Spot:</strong></p>
-<p>🎣 <strong>G43 Loira:</strong> fiume Cher vicino a Chenonceau — luccio, persico. Carte de pêche necessaria.</p>
+<p>🎣 <strong>G44 Loira:</strong> fiume Cher vicino a Chenonceau — luccio, persico. Carte de pêche necessaria.</p>
 <p>🎣 <strong>G51 Costa Azzurra:</strong> moli di Antibes, Cannes, Menton — orata, sarago. GRATIS.</p>
 <h3 id="pesca-spagna">🇪🇸 Spagna (G44–G50)</h3>
 <p><strong>Mare:</strong> ⚠️ Serve <strong>licencia de pesca marítima recreativa</strong> in tutte le Comunità Autonome (Paesi Baschi, Cantabria, Catalogna). Costo: ~€43/3 anni online su <a href="https://www.fishinglicensespain.com" target="_blank" rel="noopener noreferrer">fishinglicensespain.com</a> (copre tutta la Spagna). Sanzioni senza licenza: €60-600!</p>
 <p><strong>Acqua dolce:</strong> licenza regionale aggiuntiva necessaria (varia per Comunità Autonoma, ~€10-15/giorno online).</p>
 <p><strong>Spot:</strong></p>
-<p>🎣 <strong>G44 San Sebastián:</strong> molo del porto o scogliere di Igueldo — sarago, sgombro.</p>
+<p>🎣 <strong>G45 San Sebastián:</strong> molo del porto o scogliere di Igueldo — sarago, sgombro.</p>
 <p>🎣 <strong>G45 Getxo</strong> (vicino Bilbao): porto vecchio — spigola, sarago.</p>
 <p>🎣 <strong>G46 Picos de Europa:</strong> fiume Deva — trota fario! Licenza Cantabria ~€15/gg su <a href="https://www.medioambientecantabria.es" target="_blank" rel="noopener noreferrer">medioambientecantabria.es</a>. Molte zone catch &amp; release.</p>
 <p>🎣 <strong>G50 Costa Brava:</strong> Cap de Creus, molo Cadaqués — orata, spigola.</p>
@@ -10071,19 +10071,19 @@ Etica whale-watching: distanza >60 m, mai tagliare la rotta; max 30 min; evitare
 <td data-label="Note">Henningsvær, Reine</td>
 </tr>
 <tr>
-<td data-label="Giorni"><a href="#g27">G27</a></td>
+<td data-label="Giorni"><a href="#g26">G26</a></td>
 <td data-label="Luogo">Trondheim 🇳🇴</td>
 <td data-label="Perché ideale">Centro pedonale, Bakklandet, lungomare</td>
 <td data-label="Note">Piatto lungo il fiordo</td>
 </tr>
 <tr>
-<td data-label="Giorni"><a href="#g31">G31</a></td>
+<td data-label="Giorni"><a href="#g32">G32</a></td>
 <td data-label="Luogo">Bergen 🇳🇴</td>
 <td data-label="Perché ideale">Bryggen e lungomare (centro piano)</td>
 <td data-label="Note">Evitare colline</td>
 </tr>
 <tr>
-<td data-label="Giorni"><a href="#g35">G35-G39</a></td>
+<td data-label="Giorni"><a href="#g36">G36-G40</a></td>
 <td data-label="Luogo">Copenhagen + Billund 🇩🇰</td>
 <td data-label="Perché ideale">Piattissima, piste ciclabili ovunque</td>
 <td data-label="Note">Marciapiede per legge</td>
@@ -10136,21 +10136,21 @@ Etica whale-watching: distanza >60 m, mai tagliare la rotta; max 30 min; evitare
 <td data-label="Note">Piste asfaltate nel bosco</td>
 </tr>
 <tr>
-<td data-label="Giorni"><a href="#g27">G27</a></td>
+<td data-label="Giorni"><a href="#g26">G26</a></td>
 <td data-label="Luogo">Trondheim 🇳🇴</td>
 <td data-label="Dove noleggiare"><a href="https://trondheimbysykkel.no/en" target="_blank" rel="noopener noreferrer">Trondheim City Bike</a> (app, 700 bici)</td>
 <td data-label="Costo indicativo">NOK 175/30gg (~€15)</td>
 <td data-label="Note">67 stazioni, sbloccio via app</td>
 </tr>
 <tr>
-<td data-label="Giorni"><a href="#g32">G32</a></td>
+<td data-label="Giorni"><a href="#g33">G33</a></td>
 <td data-label="Luogo">Stavanger 🇳🇴</td>
 <td data-label="Dove noleggiare"><a href="https://norwaybikeexperience.no/" target="_blank" rel="noopener noreferrer">Norway Bike Experience</a></td>
 <td data-label="Costo indicativo">~NOK 400/giorno (~€35)</td>
 <td data-label="Note">Anche e-bike disponibili</td>
 </tr>
 <tr>
-<td data-label="Giorni"><a href="#g35">G35-G36</a></td>
+<td data-label="Giorni"><a href="#g36">G36-G37</a></td>
 <td data-label="Luogo">Copenhagen 🇩🇰</td>
 <td data-label="Dove noleggiare"><a href="https://www.familybike.dk/" target="_blank" rel="noopener noreferrer">Family Bike</a> (cargo bike)</td>
 <td data-label="Costo indicativo">~DKK 400/giorno (~€54)</td>
@@ -10220,7 +10220,7 @@ Etica whale-watching: distanza >60 m, mai tagliare la rotta; max 30 min; evitare
 <td data-label="Note">Double kayak, tour guidato 3h, famiglie OK</td>
 </tr>
 <tr>
-<td data-label="Giorni"><a href="#g31">G31</a></td>
+<td data-label="Giorni"><a href="#g32">G32</a></td>
 <td data-label="Luogo">Bergen 🇳🇴</td>
 <td data-label="Dove noleggiare">Ado Arena (centro città)</td>
 <td data-label="Costo indicativo">~NOK 300/h (~€26)</td>
@@ -10262,14 +10262,14 @@ Etica whale-watching: distanza >60 m, mai tagliare la rotta; max 30 min; evitare
 <td data-label="Note">Lago calmo, ideale per iniziare</td>
 </tr>
 <tr>
-<td data-label="Giorni"><a href="#g31">G31</a></td>
+<td data-label="Giorni"><a href="#g32">G32</a></td>
 <td data-label="Luogo">Bergen 🇳🇴</td>
 <td data-label="Dove noleggiare"><a href="https://www.tripadvisor.com/Attraction_Review-g190502-d24859057" target="_blank" rel="noopener noreferrer">Solheimsviken SUP</a></td>
 <td data-label="Costo indicativo">~NOK 250/h (~€22)</td>
 <td data-label="Note">QR code, nessuna esperienza richiesta</td>
 </tr>
 <tr>
-<td data-label="Giorni"><a href="#g31">G31</a></td>
+<td data-label="Giorni"><a href="#g32">G32</a></td>
 <td data-label="Luogo">Fløyen (Bergen) 🇳🇴</td>
 <td data-label="Dove noleggiare"><a href="https://www.floyen.no/en/activities/paddleboard" target="_blank" rel="noopener noreferrer">Lago Skomakerdiket</a></td>
 <td data-label="Costo indicativo">~NOK 200/h (~€17)</td>
@@ -10403,14 +10403,14 @@ Etica whale-watching: distanza >60 m, mai tagliare la rotta; max 30 min; evitare
 <tr>
 <td data-label="Luogo"><strong>Møns Klint (GeoCenter)</strong></td>
 <td data-label="Paese">🇩🇰 Danimarca (isola di Møn)</td>
-<td data-label="Giorno"><a href="#g35">G35</a>–<a href="#g36">G36</a> (deviazione ~1,5h da Copenhagen)</td>
+<td data-label="Giorno"><a href="#g36">G36</a>–<a href="#g37">G37</a> (deviazione ~1,5h da Copenhagen)</td>
 <td data-label="Cosa">Fossili marini (ricci di mare, belemniti, conchiglie) nelle scogliere di gesso bianco</td>
 <td data-label="Info">Tour guidati ~1h, DKK 25 + ingresso GeoCenter. Spiaggia libera per ricerca autonoma. <a href="https://moensklint.dk/en/fossil-hunting/" target="_blank" rel="noopener">moensklint.dk</a></td>
 </tr>
 <tr>
 <td data-label="Luogo"><strong>Gram Lergrav (Clay Pit)</strong></td>
 <td data-label="Paese">🇩🇰 Danimarca (Jutland sud)</td>
-<td data-label="Giorno"><a href="#g40">G40</a> (deviazione ~45 min da Billund→Brema)</td>
+<td data-label="Giorno"><a href="#g41">G41</a> (deviazione ~45 min da Billund→Brema)</td>
 <td data-label="Cosa">Fossili marini di 10 milioni di anni: denti di squalo, conchiglie, ossa di balena</td>
 <td data-label="Info">Museo + scavo libero nella cava. ~DKK 100 adulti. Si tengono i fossili comuni. <a href="https://msj.dk/en/gram-lergrav-palaeontology/" target="_blank" rel="noopener">msj.dk</a></td>
 </tr>
@@ -10684,7 +10684,7 @@ Etica whale-watching: distanza >60 m, mai tagliare la rotta; max 30 min; evitare
 </tr>
 <tr>
 <td data-label="Zona">🇳🇴 Helgelandskysten — costa remota</td>
-<td data-label="Giorni"><a href="#g26">G26</a>–<a href="#g27">G27</a></td>
+<td data-label="Giorni"><a href="#g25">G25</a>–<a href="#g26">G26</a></td>
 <td data-label="Rischio">⚠️ Medio (isole, fiordi)</td>
 <td data-label="Consiglio">Attivare se si esce dalle strade principali</td>
 </tr>
@@ -14441,13 +14441,13 @@ Etica whale-watching: distanza >60 m, mai tagliare la rotta; max 30 min; evitare
 <tr>
 <td data-label="Valuta">Corona norvegese</td>
 <td data-label="Codice">NOK</td>
-<td data-label="Paesi attraversati">Norvegia (G16–G34)</td>
+<td data-label="Paesi attraversati">Norvegia (G16–G35)</td>
 <td data-label="Cambio (1 EUR ≈)">10,8 NOK</td>
 </tr>
 <tr>
 <td data-label="Valuta">Corona danese</td>
 <td data-label="Codice">DKK</td>
-<td data-label="Paesi attraversati">Danimarca (G34–G39)</td>
+<td data-label="Paesi attraversati">Danimarca (G36–G40)</td>
 <td data-label="Cambio (1 EUR ≈)">7,46 DKK</td>
 </tr>
 </tbody>
@@ -14457,7 +14457,7 @@ Etica whale-watching: distanza >60 m, mai tagliare la rotta; max 30 min; evitare
 </blockquote>
 <hr>
 <h2 id="cards">🎫 Card Turistiche — Pass e Sconti per Paese</h2>
-<h3 id="norvegia-autopass-skyttelpass-g15g33">🇳🇴 Norvegia — AutoPASS / SkyttelPASS (G16–G34)</h3>
+<h3 id="norvegia-autopass-skyttelpass-g15g33">🇳🇴 Norvegia — AutoPASS / SkyttelPASS (G16–G35)</h3>
 <p>Il sistema di telepedaggio norvegese copre <strong>tutti</strong> i caselli stradali, ponti, tunnel e la maggior parte dei traghetti interni. Per turisti stranieri con veicolo proprio:</p>
 <table>
 <thead>
@@ -14494,7 +14494,7 @@ Etica whale-watching: distanza >60 m, mai tagliare la rotta; max 30 min; evitare
 <p>🔗 <a href="https://skyttelpass.no/en/" target="_blank" rel="noopener noreferrer">skyttelpass.no</a>
 <a href="https://autopassferje.no/en/" target="_blank" rel="noopener noreferrer">autopassferje.no</a>
 <a href="https://www.autopass.no/en/user/foreign-vehicles-2/" target="_blank" rel="noopener noreferrer">autopass.no/en/user/foreign-vehicles</a></p>
-<h3 id="danimarca-copenhagen-card-discover-g33g35">🇩🇰 Danimarca — Copenhagen Card DISCOVER (G34–G36)</h3>
+<h3 id="danimarca-copenhagen-card-discover-g33g35">🇩🇰 Danimarca — Copenhagen Card DISCOVER (G36–G37)</h3>
 <p>La <a href="https://copenhagencard.com/" target="_blank" rel="noopener noreferrer">Copenhagen Card</a> include 80+ attrazioni + trasporti illimitati nella Capital Region.</p>
 <table>
 <thead>
@@ -14527,11 +14527,11 @@ Etica whale-watching: distanza >60 m, mai tagliare la rotta; max 30 min; evitare
 </tbody>
 </table>
 <p><strong>Attrazioni incluse</strong>: Tivoli Gardens, Experimentarium, Canal Tour, Rundetårn, Zoo, Rosenborg, Amalienborg, Christiansborg, e 70+ altre.</p>
-<p><strong>Consiglio</strong>: la <strong>48h</strong> (€268 per 4 pax) copre G35–G36 con Tivoli + Experimentarium + canal tour + trasporti. Senza card queste attrazioni costerebbero ~€350+. <strong>Risparmio: ~€80+</strong>.</p>
+<p><strong>Consiglio</strong>: la <strong>48h</strong> (€268 per 4 pax) copre G36–G37 con Tivoli + Experimentarium + canal tour + trasporti. Senza card queste attrazioni costerebbero ~€350+. <strong>Risparmio: ~€80+</strong>.</p>
 <p>⚠️ Legoland e LEGO House (Billund) <strong>NON</strong> sono inclusi nella Copenhagen Card.</p>
 <p>🔗 <a href="https://copenhagencard.com/" target="_blank" rel="noopener noreferrer">copenhagencard.com</a></p>
 <h3 id="altre-citta-permanenza-breve">Altre città (permanenza breve)</h3>
-<p>Per Vienna (G2), Helsinki (G7), Tallinn (G6), Riga (G5), Tromsø (G16), Bergen (G31), Bilbao (G45): la permanenza è troppo breve (1 giorno o meno) per giustificare una city card. Acquistare biglietti singoli per le attrazioni scelte.</p>
+<p>Per Vienna (G2), Helsinki (G7), Tallinn (G6), Riga (G5), Tromsø (G16), Bergen (G32), Bilbao (G45): la permanenza è troppo breve (1 giorno o meno) per giustificare una city card. Acquistare biglietti singoli per le attrazioni scelte.</p>
 <hr>
 <h2 id="rischi">⚠️ Rischi Logistici — I Punti Critici</h2>
 <h3 id="1-la-maratona-baltica-g2g5">1. "La Maratona Baltica" (G3–G6)</h3>
@@ -14542,7 +14542,7 @@ Etica whale-watching: distanza >60 m, mai tagliare la rotta; max 30 min; evitare
 <p>🚗 <strong>G6:</strong> Riga ➔ Pärnu ➔ Haapsalu ➔ Tallinn (390 km, 5h)</p>
 <p><strong>Il problema:</strong> Farete circa 1.870 km in 4 giorni di guida (G3–G6), con G7 giorno di sosta a Tallinn. Considerate le pause bagno, i pranzi e il traffico, i tempi di percorrenza reali aumenteranno del 20-30%. I bambini passeranno la maggior parte del tempo legati ai seggiolini.</p>
 <p><strong>Soluzione:</strong> Partite sempre all'alba (es. 5:00 o 6:00 del mattino). I bambini dormiranno per le prime 3-4 ore di viaggio, permettendovi di "mangiare chilometri" in pace e arrivare a destinazione per l'ora di pranzo, salvando i pomeriggi per i parchi e le esplorazioni.</p>
-<h3 id="2-luscita-dalle-lofoten-g25-lofoten-mo-i-rana">2. L'Uscita dalle Lofoten (G25: Lofoten → Mo i Rana)</h3>
+<h3 id="2-luscita-dalle-lofoten-g25-lofoten-mo-i-rana">2. L'Uscita dalle Lofoten (G26: Lofoten → Mo i Rana)</h3>
 <p>La tabella segna 330 km, 4h + traghetto 3h 15m. Attenzione perché questa stima è ottimistica:</p>
 <p>Il traghetto Moskenes–Bodø dura circa 3,5–4 ore</p>
 <p>Dovete essere all'imbarco almeno 1 ora (o 2) prima</p>
@@ -14551,8 +14551,8 @@ Etica whale-watching: distanza >60 m, mai tagliare la rotta; max 30 min; evitare
 <h3 id="3-lincognita-dei-traghetti-prenotazioni-obbligatorie">3. L'Incognita dei Traghetti (Prenotazioni Obbligatorie)</h3>
 <p>Il viaggio fa affidamento su alcuni traghetti cruciali (Tallinn–Helsinki, Moskenes–Bodø, Kristiansand–Hirtshals).</p>
 <p>Ad agosto e fine luglio, la rotta Moskenes–Bodø è presa d'assalto dai camperisti di tutta Europa. Se vi presentate all'imbarco senza prenotazione, potreste dover aspettare 24 o 48 ore in coda (nella "standby lane")</p>
-<p>⚠️ <strong>Dovrete assolutamente prenotare questi traghetti con 2-3 mesi di anticipo</strong>, il che vi legherà a rispettare rigorosamente la tabella di marcia fino al G25</p>
-<p>Il traghetto Kristiansand–Hirtshals (G34) è meno critico ma comunque consigliato prenotare in alta stagione</p>
+<p>⚠️ <strong>Dovrete assolutamente prenotare questi traghetti con 2-3 mesi di anticipo</strong>, il che vi legherà a rispettare rigorosamente la tabella di marcia fino al G26</p>
+<p>Il traghetto Kristiansand–Hirtshals (G36) è meno critico ma comunque consigliato prenotare in alta stagione</p>
 <h3 id="4-ferragosto-a-genova-g50g52">4. Ferragosto a Genova (G51–G53)</h3>
 <p>Come annotato nel file, la A10 a Ferragosto è un inferno. Essere a Genova il 17/08 (G53) vi salva dal picco assoluto, ma aspettatevi comunque fortissimi rallentamenti in Liguria.</p>
 <p><strong>Consiglio:</strong> Il 16/08 (G52) dalla Camargue a Genova (450 km, A8/A10) — partite alle 7:00 del mattino per evitare il grosso del traffico del rientro. Considerate la possibilità di fermarvi a Savona/Finale Ligure se il traffico è bloccato.</p>
@@ -15636,57 +15636,67 @@ Etica whale-watching: distanza >60 m, mai tagliare la rotta; max 30 min; evitare
 <td data-label="Rischio meteo">⚠️ Pioggia frequente, vento</td>
 </tr>
 <tr>
-<td data-label="Giorni"><a href="#g25">G25</a>-<a href="#g26">G26</a> (20-21/07)</td>
-<td data-label="Zona">Mo i Rana → Trondheim 🇳🇴</td>
-<td data-label="T max">17-19°C</td>
-<td data-label="T min">10-12°C</td>
+<td data-label="Giorni"><a href="#g25">G25</a>-<a href="#g26">G26</a> (19-20/07)</td>
+<td data-label="Zona">Bodø → Halsa 🇳🇴</td>
+<td data-label="T max">16-18°C</td>
+<td data-label="T min">10-11°C</td>
 <td data-label="Pioggia (mm/mese)">~70</td>
 <td data-label="Gg pioggia">10</td>
-<td data-label="Ore luce">20h</td>
+<td data-label="Ore luce">24h (sole di mezzanotte)</td>
 <td data-label="Rischio meteo">Pioggia possibile</td>
 </tr>
 <tr>
-<td data-label="Giorni"><a href="#g27">G27</a> (22/07)</td>
-<td data-label="Zona">Trondheim 🇳🇴</td>
-<td data-label="T max">19°C</td>
+<td data-label="Giorni"><a href="#g27">G27</a> (21/07)</td>
+<td data-label="Zona">Atlantic Road → Molde 🇳🇴</td>
+<td data-label="T max">16°C</td>
 <td data-label="T min">11°C</td>
-<td data-label="Pioggia (mm/mese)">~70</td>
-<td data-label="Gg pioggia">10</td>
-<td data-label="Ore luce">20h</td>
-<td data-label="Rischio meteo">Variabile</td>
+<td data-label="Pioggia (mm/mese)">~80</td>
+<td data-label="Gg pioggia">12</td>
+<td data-label="Ore luce">19h 30m</td>
+<td data-label="Rischio meteo">⚠️ Vento forte sulla costa</td>
 </tr>
 <tr>
-<td data-label="Giorni"><a href="#g28">G28</a>-<a href="#g30">G30</a> (23-25/07)</td>
-<td data-label="Zona">Atlantic Rd → Bergen 🇳🇴</td>
-<td data-label="T max">16-17°C</td>
-<td data-label="T min">11°C</td>
-<td data-label="Pioggia (mm/mese)">~150-170</td>
-<td data-label="Gg pioggia">15-17</td>
+<td data-label="Giorni"><a href="#g28">G28</a>-<a href="#g29">G29</a> (22-23/07)</td>
+<td data-label="Zona">Trollstigen → Geiranger → Flåm 🇳🇴</td>
+<td data-label="T max">15-17°C</td>
+<td data-label="T min">9-11°C</td>
+<td data-label="Pioggia (mm/mese)">~100</td>
+<td data-label="Gg pioggia">13</td>
 <td data-label="Ore luce">19h</td>
-<td data-label="Rischio meteo">⚠️ Bergen: pioggia quasi certa</td>
+<td data-label="Rischio meteo">⚠️ Nebbia in quota, pioggia fiordi</td>
 </tr>
 <tr>
-<td data-label="Giorni"><a href="#g31">G31</a> (26/07)</td>
-<td data-label="Zona">Bergen 🇳🇴</td>
-<td data-label="T max">17°C</td>
+<td data-label="Giorni"><a href="#g30">G30</a>-<a href="#g32">G32</a> (24-26/07)</td>
+<td data-label="Zona">Nærøyfjord → Bergen 🇳🇴</td>
+<td data-label="T max">16-17°C</td>
 <td data-label="T min">11°C</td>
 <td data-label="Pioggia (mm/mese)">~170</td>
 <td data-label="Gg pioggia">17</td>
-<td data-label="Ore luce">19h</td>
-<td data-label="Rischio meteo">⚠️ Pioggia molto probabile</td>
+<td data-label="Ore luce">18h 30m</td>
+<td data-label="Rischio meteo">⚠️ Bergen: pioggia quasi certa</td>
 </tr>
 <tr>
-<td data-label="Giorni"><a href="#g32">G32</a>-<a href="#g33">G33</a> (27-28/07)</td>
-<td data-label="Zona">Stavanger → K.sand 🇳🇴</td>
+<td data-label="Giorni"><a href="#g33">G33</a>-<a href="#g34">G34</a> (27-28/07)</td>
+<td data-label="Zona">Stavanger + Preikestolen 🇳🇴</td>
 <td data-label="T max">17-18°C</td>
 <td data-label="T min">11-12°C</td>
 <td data-label="Pioggia (mm/mese)">~100</td>
 <td data-label="Gg pioggia">12</td>
 <td data-label="Ore luce">18h 30m</td>
-<td data-label="Rischio meteo">Nuvoloso 50%</td>
+<td data-label="Rischio meteo">Nuvoloso 50%, vento</td>
 </tr>
 <tr>
-<td data-label="Giorni"><a href="#g34">G34</a> (29/07)</td>
+<td data-label="Giorni"><a href="#g35">G35</a> (29/07)</td>
+<td data-label="Zona">Kristiansand 🇳🇴</td>
+<td data-label="T max">20-21°C</td>
+<td data-label="T min">13-14°C</td>
+<td data-label="Pioggia (mm/mese)">~80</td>
+<td data-label="Gg pioggia">10</td>
+<td data-label="Ore luce">18h</td>
+<td data-label="Rischio meteo">Generalmente buono</td>
+</tr>
+<tr>
+<td data-label="Giorni"><a href="#g36">G36</a> (30/07)</td>
 <td data-label="Zona">Traghetto → Copenhagen 🇩🇰</td>
 <td data-label="T max">22°C</td>
 <td data-label="T min">14°C</td>
@@ -15696,17 +15706,7 @@ Etica whale-watching: distanza >60 m, mai tagliare la rotta; max 30 min; evitare
 <td data-label="Rischio meteo">Piogge sporadiche</td>
 </tr>
 <tr>
-<td data-label="Giorni"><a href="#g35">G35</a>-<a href="#g36">G36</a> (30-31/07)</td>
-<td data-label="Zona">Copenhagen 🇩🇰</td>
-<td data-label="T max">22°C</td>
-<td data-label="T min">14°C</td>
-<td data-label="Pioggia (mm/mese)">~60</td>
-<td data-label="Gg pioggia">9</td>
-<td data-label="Ore luce">17h</td>
-<td data-label="Rischio meteo">Piogge sporadiche</td>
-</tr>
-<tr>
-<td data-label="Giorni"><a href="#g37">G37</a>-<a href="#g39">G39</a> (01-03/08)</td>
+<td data-label="Giorni"><a href="#g38">G38</a>-<a href="#g40">G40</a> (01-03/08)</td>
 <td data-label="Zona">Billund 🇩🇰</td>
 <td data-label="T max">21°C</td>
 <td data-label="T min">13°C</td>
@@ -15716,7 +15716,7 @@ Etica whale-watching: distanza >60 m, mai tagliare la rotta; max 30 min; evitare
 <td data-label="Rischio meteo">Variabile</td>
 </tr>
 <tr>
-<td data-label="Giorni"><a href="#g40">G40</a> (04/08)</td>
+<td data-label="Giorni"><a href="#g41">G41</a> (04/08)</td>
 <td data-label="Zona">Brema 🇩🇪</td>
 <td data-label="T max">22°C</td>
 <td data-label="T min">13°C</td>
@@ -15726,7 +15726,7 @@ Etica whale-watching: distanza >60 m, mai tagliare la rotta; max 30 min; evitare
 <td data-label="Rischio meteo">Variabile</td>
 </tr>
 <tr>
-<td data-label="Giorni"><a href="#g41">G41</a> (05/08)</td>
+<td data-label="Giorni"><a href="#g42">G42</a> (05/08)</td>
 <td data-label="Zona">Amiens 🇫🇷</td>
 <td data-label="T max">23°C</td>
 <td data-label="T min">13°C</td>
@@ -15736,7 +15736,7 @@ Etica whale-watching: distanza >60 m, mai tagliare la rotta; max 30 min; evitare
 <td data-label="Rischio meteo">Piogge brevi</td>
 </tr>
 <tr>
-<td data-label="Giorni"><a href="#g42">G42</a>-<a href="#g43">G43</a> (06-07/08)</td>
+<td data-label="Giorni"><a href="#g43">G43</a>-<a href="#g44">G44</a> (06-07/08)</td>
 <td data-label="Zona">Loira 🇫🇷</td>
 <td data-label="T max">25-26°C</td>
 <td data-label="T min">13-14°C</td>
@@ -15746,7 +15746,7 @@ Etica whale-watching: distanza >60 m, mai tagliare la rotta; max 30 min; evitare
 <td data-label="Rischio meteo">Bello</td>
 </tr>
 <tr>
-<td data-label="Giorni"><a href="#g44">G44</a> (08/08)</td>
+<td data-label="Giorni"><a href="#g45">G45</a> (08/08)</td>
 <td data-label="Zona">San Sebastián 🇪🇸</td>
 <td data-label="T max">24-27°C</td>
 <td data-label="T min">16-18°C</td>
@@ -15874,89 +15874,84 @@ Etica whale-watching: distanza >60 m, mai tagliare la rotta; max 30 min; evitare
             <div class="wc-bar" style="width:29%;background:#3182ce"></div>
             <span class="wc-temp">15°</span>
         </div>
-        <div class="wc-bar-wrap" title="Mo→Trondheim 🇳🇴: 18°C max, 11°C min, 10 rain days">
-            <span class="wc-label">D24-D25</span>
-            <div class="wc-bar" style="width:41%;background:#38a169"></div>
-            <span class="wc-temp">18°</span>
-        </div>
-        <div class="wc-bar-wrap" title="Trondheim 🇳🇴: 19°C max, 11°C min, 10 rain days">
-            <span class="wc-label">D26</span>
-            <div class="wc-bar" style="width:45%;background:#38a169"></div>
-            <span class="wc-temp">19°</span>
-        </div>
-        <div class="wc-bar-wrap" title="Atlantic→Bergen 🇳🇴: 17°C max, 11°C min, 16 rain days">
-            <span class="wc-label">D27-D29</span>
-            <div class="wc-bar" style="width:37%;background:#3182ce"></div>
+        <div class="wc-bar-wrap" title="Bodø→Halsa 🇳🇴: 17°C max, 10°C min, 10 rain days">
+            <span class="wc-label">D24-D26</span>
+            <div class="wc-bar" style="width:37%;background:#38a169"></div>
             <span class="wc-temp">17°</span>
         </div>
-        <div class="wc-bar-wrap" title="Bergen 🇳🇴: 17°C max, 11°C min, 17 rain days">
-            <span class="wc-label">D30</span>
+        <div class="wc-bar-wrap" title="Atlantic Rd→Geiranger 🇳🇴: 16°C max, 10°C min, 13 rain days">
+            <span class="wc-label">D27-D28</span>
+            <div class="wc-bar" style="width:33%;background:#3182ce"></div>
+            <span class="wc-temp">16°</span>
+        </div>
+        <div class="wc-bar-wrap" title="Fiordi→Bergen 🇳🇴: 17°C max, 11°C min, 16 rain days">
+            <span class="wc-label">D29-D32</span>
             <div class="wc-bar" style="width:37%;background:#3182ce"></div>
             <span class="wc-temp">17°</span>
         </div>
         <div class="wc-bar-wrap" title="Stavanger 🇳🇴: 18°C max, 12°C min, 12 rain days">
-            <span class="wc-label">D31-D32</span>
+            <span class="wc-label">D33-D34</span>
             <div class="wc-bar" style="width:41%;background:#38a169"></div>
             <span class="wc-temp">18°</span>
         </div>
+        <div class="wc-bar-wrap" title="Kristiansand 🇳🇴: 20°C max, 13°C min, 10 rain days">
+            <span class="wc-label">D35</span>
+            <div class="wc-bar" style="width:50%;background:#38a169"></div>
+            <span class="wc-temp">20°</span>
+        </div>
         <div class="wc-bar-wrap" title="→Copenhagen 🇩🇰: 22°C max, 14°C min, 9 rain days">
-            <span class="wc-label">D33</span>
+            <span class="wc-label">D36</span>
             <div class="wc-bar" style="width:58%;background:#38a169"></div>
             <span class="wc-temp">22°</span>
         </div>
         <div class="wc-bar-wrap" title="Copenhagen 🇩🇰: 22°C max, 14°C min, 9 rain days">
-            <span class="wc-label">D34-D35</span>
+            <span class="wc-label">D37</span>
             <div class="wc-bar" style="width:58%;background:#38a169"></div>
             <span class="wc-temp">22°</span>
         </div>
         <div class="wc-bar-wrap" title="Billund 🇩🇰: 20°C max, 12°C min, 10 rain days">
-            <span class="wc-label">D36-D37</span>
+            <span class="wc-label">D38-D40</span>
             <div class="wc-bar" style="width:50%;background:#38a169"></div>
             <span class="wc-temp">20°</span>
         </div>
-        <div class="wc-bar-wrap" title="Hamburg→Amiens: 22°C max, 13°C min, 9 rain days">
-            <span class="wc-label">D38-D39</span>
+        <div class="wc-bar-wrap" title="Brema→Amiens: 22°C max, 13°C min, 9 rain days">
+            <span class="wc-label">D41-D42</span>
             <div class="wc-bar" style="width:58%;background:#38a169"></div>
             <span class="wc-temp">22°</span>
         </div>
-        <div class="wc-bar-wrap" title="Amiens 🇫🇷: 23°C max, 13°C min, 8 rain days">
-            <span class="wc-label">D40</span>
-            <div class="wc-bar" style="width:62%;background:#d69e2e"></div>
-            <span class="wc-temp">23°</span>
-        </div>
         <div class="wc-bar-wrap" title="Loire 🇫🇷: 26°C max, 14°C min, 7 rain days">
-            <span class="wc-label">D41-D42</span>
+            <span class="wc-label">D43-D44</span>
             <div class="wc-bar" style="width:75%;background:#d69e2e"></div>
             <span class="wc-temp">26°</span>
         </div>
         <div class="wc-bar-wrap" title="San Sebastián 🇪🇸: 26°C max, 17°C min, 9 rain days">
-            <span class="wc-label">D43</span>
+            <span class="wc-label">D45</span>
             <div class="wc-bar" style="width:75%;background:#d69e2e"></div>
             <span class="wc-temp">26°</span>
         </div>
         <div class="wc-bar-wrap" title="Bilbao 🇪🇸: 26°C max, 17°C min, 7 rain days">
-            <span class="wc-label">D44</span>
+            <span class="wc-label">D46</span>
             <div class="wc-bar" style="width:75%;background:#d69e2e"></div>
             <span class="wc-temp">26°</span>
         </div>
         <div class="wc-bar-wrap" title="Picos 🇪🇸: 23°C max, 11°C min, 7 rain days">
-            <span class="wc-label">D45</span>
+            <span class="wc-label">D47</span>
             <div class="wc-bar" style="width:62%;background:#d69e2e"></div>
             <span class="wc-temp">23°</span>
         </div>
         <div class="wc-bar-wrap" title="Palencia 🇪🇸: 30°C max, 14°C min, 3 rain days">
-            <span class="wc-label">D46-D48</span>
-            <div class="wc-bar" style="width:91%;background:#e53e3e"></div>
+            <span class="wc-label">D48-D50</span>
+            <div class="wc-bar" style="width:87%;background:#e53e3e"></div>
             <span class="wc-temp">30°</span>
         </div>
         <div class="wc-bar-wrap" title="Costa Brava 🇪🇸: 29°C max, 20°C min, 4 rain days">
-            <span class="wc-label">D49-D50</span>
-            <div class="wc-bar" style="width:87%;background:#e53e3e"></div>
+            <span class="wc-label">D51-D52</span>
+            <div class="wc-bar" style="width:83%;background:#e53e3e"></div>
             <span class="wc-temp">29°</span>
         </div>
         <div class="wc-bar-wrap" title="→Genoa→Home 🇫🇷🇮🇹: 30°C max, 20°C min, 4 rain days">
-            <span class="wc-label">D51-D53</span>
-            <div class="wc-bar" style="width:91%;background:#e53e3e"></div>
+            <span class="wc-label">D53-D55</span>
+            <div class="wc-bar" style="width:87%;background:#e53e3e"></div>
             <span class="wc-temp">30°</span>
         </div>
     </div>
@@ -16179,7 +16174,7 @@ Etica whale-watching: distanza >60 m, mai tagliare la rotta; max 30 min; evitare
 <script>
 // Load home-variants.html templates into the page
 (function(){
-  fetch('./home-variants.html?v=5.05').then(function(r){return r.text();}).then(function(html){
+  fetch('./home-variants.html?v=5.07').then(function(r){return r.text();}).then(function(html){
     var div = document.getElementById('hv-templates');
     if(div) div.innerHTML = html;
     // Move templates to document body for proper <template> access
@@ -16195,12 +16190,12 @@ Etica whale-watching: distanza >60 m, mai tagliare la rotta; max 30 min; evitare
 <script>
   if (typeof window.IS_PROD === 'undefined' || window.IS_PROD !== true) {
     var _dbgScript = document.createElement('script');
-    _dbgScript.src = 'debug-overlay.js?v=5.05';
+    _dbgScript.src = 'debug-overlay.js?v=5.07';
     _dbgScript.defer = true;
     document.head.appendChild(_dbgScript);
   }
 </script>
 <!-- Capacitor GPS Bridge (only activates inside native app, ignored in browser) -->
-<script src="capacitor-gps-bridge.js?v=5.05" defer></script>
+<script src="capacitor-gps-bridge.js?v=5.07" defer></script>
 </body>
 </html>

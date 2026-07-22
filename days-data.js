@@ -1,5 +1,3 @@
-/* Quo Vadis — Days Data v1.50 */
-/* Auto-generated — do not edit manually */
 var DAYS_DATA = [
   {
     "id": "g1",
@@ -6221,9 +6219,186 @@ var DAYS_DATA = [
   {
     "id": "g31",
     "date": "25/07",
-    "title": "Vøringsfossen → Bergen",
-    "titleEN": "Vøringsfossen → Bergen",
-    "titleES": "Vøringsfossen → Bergen",
+    "title": "Eidfjord (giorno di riposo)",
+    "titleEN": "Eidfjord (rest day)",
+    "titleES": "Eidfjord (día de descanso)",
+    "flags": "🇳🇴",
+    "country": "NO",
+    "region": "norvegia",
+    "km": 20,
+    "hours": "Giornata libera",
+    "tolls": "—",
+    "tollLinks": [],
+    "meteo": {
+      "lat": 60.464,
+      "lon": 7.072,
+      "high": 20,
+      "low": 12,
+      "cond": "Soleggiato/variabile",
+      "daylight": "18h 30m di luce",
+      "condEN": "Sunny/variable",
+      "condES": "Soleado/variable",
+      "daylightEN": "18h 30m of daylight",
+      "daylightES": "18h 30m de luz"
+    },
+    "narrative": "Giornata di <strong>vero riposo</strong> nel cuore dell'Hardanger. Mattina lenta: ciliegie e mele di stagione dai frutteti lungo il fiordo (Hardanger è il frutteto della Norvegia!). Il <strong>Troll Train</strong> (55 min, ~150 NOK/adulto) porta i bambini tra siti vichinghi e viste sul fiordo. Pomeriggio: pesca dal molo (GRATIS) o relax al camping.",
+    "narrativeEN": "A <strong>true rest day</strong> in the heart of Hardanger. Slow morning: seasonal cherries and apples from the orchards along the fjord (Hardanger is Norway's orchard!). The <strong>Troll Train</strong> (55 min, ~150 NOK/adult) takes the kids past Viking sites and fjord views. Afternoon: pier fishing (FREE) or campsite relaxation.",
+    "narrativeES": "Día de <strong>verdadero descanso</strong> en el corazón de Hardanger. Mañana tranquila: cerezas y manzanas de temporada de los huertos a lo largo del fiordo (¡Hardanger es el huerto de Noruega!). El <strong>Troll Train</strong> (55 min, ~150 NOK/adulto) lleva a los niños por sitios vikingos y vistas al fiordo. Tarde: pesca desde el muelle (GRATIS) o relax en el camping.",
+    "highlights": [
+      {
+        "icon": "🍒",
+        "title": "Frutteti dell'Hardanger",
+        "titleEN": "Hardanger Orchards",
+        "titleES": "Huertos de Hardanger",
+        "text": "Luglio = stagione delle ciliegie e prime mele! Bancarelle self-service lungo la strada (onesty box). Assaggiare sidro locale nei farm shop.",
+        "textEN": "July = cherry and early apple season! Self-service roadside stalls (honesty box). Try local cider at farm shops.",
+        "textES": "¡Julio = temporada de cerezas y primeras manzanas! Puestos de autoservicio en la carretera (caja de honestidad). Probar sidra local en las tiendas de granja.",
+        "maps": "https://maps.google.com/?q=Hardanger+fruit+farms",
+        "star": true,
+        "familyFriendly": true
+      },
+      {
+        "icon": "🚂",
+        "title": "Troll Train",
+        "titleEN": "Troll Train",
+        "titleES": "Troll Train",
+        "text": "Trenino su ruote (55 min) attraverso Eidfjord: siti di sepoltura vichinghi, chiesa medievale (1309), terrazza Hæreid con vista fiordo. ~150 NOK/adulto, bambini ~80 NOK.",
+        "textEN": "Road train (55 min) through Eidfjord: Viking burial sites, medieval church (1309), Hæreid terrace with fjord views. ~150 NOK/adult, children ~80 NOK.",
+        "textES": "Trenecito sobre ruedas (55 min) por Eidfjord: sitios de enterramiento vikingos, iglesia medieval (1309), terraza Hæreid con vistas al fiordo. ~150 NOK/adulto, niños ~80 NOK.",
+        "maps": "https://maps.google.com/?q=Trolltrain+Eidfjord",
+        "star": false,
+        "familyFriendly": true
+      },
+      {
+        "icon": "🎣",
+        "title": "Pesca dal molo",
+        "titleEN": "Pier fishing",
+        "titleES": "Pesca desde el muelle",
+        "text": "Pesca in mare dal molo di Eidfjord: merluzzo, trota di mare. GRATIS (nessuna licenza per pesca in mare). Attrezzatura semplice sufficiente.",
+        "textEN": "Sea fishing from Eidfjord pier: cod, sea trout. FREE (no licence for sea fishing). Simple tackle is enough.",
+        "textES": "Pesca en mar desde el muelle de Eidfjord: bacalao, trucha de mar. GRATIS (sin licencia para pesca en mar). Equipo simple es suficiente.",
+        "maps": "https://maps.google.com/?q=Eidfjord+pier",
+        "star": false,
+        "familyFriendly": true
+      }
+    ],
+    "food": [
+      {
+        "type": "local",
+        "title": "Frutta fresca + sidro Hardanger",
+        "titleEN": "Fresh fruit + Hardanger cider",
+        "titleES": "Fruta fresca + sidra Hardanger",
+        "text": "Bancarelle self-service lungo la RV7. Sidro artigianale nei farm shop (Agatunet, Steinsto). Marmellate e succhi locali.",
+        "textEN": "Self-service stalls along RV7. Craft cider at farm shops (Agatunet, Steinsto). Local jams and juices.",
+        "textES": "Puestos de autoservicio a lo largo de la RV7. Sidra artesanal en tiendas de granja (Agatunet, Steinsto). Mermeladas y zumos locales."
+      }
+    ],
+    "scooter": null,
+    "waterSports": null,
+    "trekking": "🚶 Sentiero facile lungo il fiordo da Eidfjord (2-3 km, pianeggiante, adatto ai bambini). Vista sulle montagne circostanti.",
+    "trekkingEN": "🚶 Easy trail along the fjord from Eidfjord (2-3 km, flat, suitable for children). Views of surrounding mountains.",
+    "trekkingES": "🚶 Sendero fácil a lo largo del fiordo desde Eidfjord (2-3 km, llano, apto para niños). Vistas de las montañas circundantes.",
+    "fishing": "Hardangerfjord/Eidfjord: pesca in mare dal molo — merluzzo, trota di mare. GRATIS. Fiume <strong>Bjoreio</strong> per trota selvatica (fiskekort su <a href=\"https://www.inatur.no\" target=\"_blank\">inatur.no</a>).",
+    "fishingEN": "Hardangerfjord/Eidfjord: sea fishing from the pier — cod, sea trout. FREE. <strong>Bjoreio</strong> river for wild trout (fiskekort from <a href=\"https://www.inatur.no\" target=\"_blank\">inatur.no</a>).",
+    "fishingES": "Hardangerfjord/Eidfjord: pesca en mar desde el muelle — bacalao, trucha de mar. GRATIS. Río <strong>Bjoreio</strong> para trucha salvaje (fiskekort en <a href=\"https://www.inatur.no\" target=\"_blank\">inatur.no</a>).",
+    "events": [],
+    "alternatives": [
+      {
+        "text": "Se volete più azione: kayak sull'Hardangerfjord (~500 NOK/2h) o escursione a <strong>Kjeåsen</strong> (fattoria di montagna, sentiero ripido ma panoramico, 3h a/r)",
+        "textEN": "If you want more action: kayak on the Hardangerfjord (~500 NOK/2h) or hike to <strong>Kjeåsen</strong> (mountain farm, steep but scenic trail, 3h round trip)",
+        "textES": "Si quieren más acción: kayak en el Hardangerfjord (~500 NOK/2h) o excursión a <strong>Kjeåsen</strong> (granja de montaña, sendero empinado pero panorámico, 3h ida y vuelta)"
+      },
+      {
+        "text": "☔ Se piove → vedi <a href=\"#pioggia\" data-region=\"rain\">Piano Pioggia</a>",
+        "textEN": "☔ If it rains → see <a href=\"#pioggia\" data-region=\"rain\">Rain Plan</a>",
+        "textES": "☔ Si llueve → ver <a href=\"#pioggia\" data-region=\"rain\">Plan de lluvia</a>"
+      }
+    ],
+    "kids": [
+      {
+        "name": "Troll Train",
+        "nameEN": "Troll Train",
+        "nameES": "Troll Train",
+        "desc": "trenino turistico 55 min — siti vichinghi e vista fiordo, perfetto per i piccoli",
+        "descEN": "tourist road train 55 min — Viking sites and fjord views, perfect for little ones",
+        "descES": "trenecito turístico 55 min — sitios vikingos y vistas al fiordo, perfecto para los pequeños",
+        "maps": "https://maps.google.com/?q=Trolltrain+Eidfjord"
+      },
+      {
+        "name": "Hardangervidda Natursenter",
+        "nameEN": "Hardangervidda Nature Centre",
+        "nameES": "Hardangervidda Natursenter",
+        "desc": "centro natura interattivo con film panoramico e mostra sulla fauna artica",
+        "descEN": "interactive nature centre with panoramic film and Arctic wildlife exhibit",
+        "descES": "centro de naturaleza interactivo con película panorámica y exposición de fauna ártica",
+        "maps": "https://maps.google.com/?q=Hardangervidda+Natursenter+Eidfjord"
+      }
+    ],
+    "practical": {
+      "parking": [
+        {
+          "name": "Eidfjord Camping (seconda notte)",
+          "nameEN": "Eidfjord Camping (second night)",
+          "nameES": "Eidfjord Camping (segunda noche)",
+          "address": "Eidfjord",
+          "addressEN": "Eidfjord",
+          "addressES": "Eidfjord",
+          "maps": "https://maps.google.com/?q=60.464,7.072",
+          "price": "~300-400 NOK/notte",
+          "priceEN": "~300-400 NOK/night",
+          "priceES": "~300-400 NOK/noche",
+          "notes": "Stessa posizione di ieri sera. Elettricità, acqua, scarico. Domani: Vøringsfossen è a 20 min!",
+          "notesEN": "Same spot as last night. Electricity, water, waste disposal. Tomorrow: Vøringsfossen is 20 min away!",
+          "notesES": "Mismo sitio que anoche. Electricidad, agua, vaciado. Mañana: ¡Vøringsfossen está a 20 min!"
+        }
+      ],
+      "fuel": "Shell/Circle K a Eidfjord o Bu (RV7).",
+      "fuelEN": "Shell/Circle K in Eidfjord or Bu (RV7).",
+      "fuelES": "Shell/Circle K en Eidfjord o Bu (RV7).",
+      "grocery": [
+        {
+          "name": "Joker Eidfjord",
+          "nameEN": "Joker Eidfjord",
+          "nameES": "Joker Eidfjord",
+          "location": "Eidfjord centro",
+          "locationEN": "Eidfjord centre",
+          "locationES": "Centro de Eidfjord",
+          "maps": "https://maps.google.com/?q=Joker+Eidfjord"
+        }
+      ],
+      "laundry": {
+        "text": "Eidfjord Camping",
+        "textEN": "Eidfjord Camping",
+        "textES": "Eidfjord Camping",
+        "maps": "https://maps.google.com/?q=Eidfjord+Camping"
+      },
+      "camper": {
+        "text": "Acqua e scarico al camping. Giornata perfetta per manutenzione camper.",
+        "textEN": "Water and waste disposal at the campsite. Perfect day for motorhome maintenance.",
+        "textES": "Agua y vaciado en el camping. Día perfecto para mantenimiento de la autocaravana.",
+        "maps": "https://maps.google.com/?q=Eidfjord+Camping"
+      },
+      "emergency": {
+        "name": "Voss Sjukehus",
+        "nameEN": "Voss Sjukehus",
+        "nameES": "Voss Sjukehus",
+        "maps": "https://maps.google.com/?q=Voss+Sjukehus",
+        "phones": "112/113/110",
+        "notes": null
+      },
+      "budget": "~€80-120/giorno (riposo)",
+      "budgetEN": "~€80-120/day (rest)",
+      "budgetES": "~€80-120/día (descanso)"
+    },
+    "tollsEN": "—",
+    "tollsES": "—"
+  },
+  {
+    "id": "g32",
+    "date": "26/07",
+    "title": "Eidfjord → Vøringsfossen → Bergen",
+    "titleEN": "Eidfjord → Vøringsfossen → Bergen",
+    "titleES": "Eidfjord → Vøringsfossen → Bergen",
     "flags": "🇳🇴",
     "country": "NO",
     "region": "norvegia",
@@ -6243,9 +6418,9 @@ var DAYS_DATA = [
       "daylightEN": "18h 30m of daylight",
       "daylightES": "18h 30m de luz"
     },
-    "narrative": "<strong>Vøringsfossen</strong> la mattina (cascata 182m, completamente GRATUITA — fate ENTRAMBI i viewpoint: alto da Fossli Hotel e basso dal nuovo ponte Fossatromma). Poi guida panoramica lungo l'Hardangerfjord fino a <strong>Bergen</strong> nel pomeriggio: Bryggen e mercato del pesce.",
-    "narrativeEN": "<strong>Vøringsfossen</strong> in the morning (182m waterfall, completely FREE — do BOTH viewpoints: upper from Fossli Hotel and lower from the new Fossatromma bridge). Then scenic drive along the Hardangerfjord to <strong>Bergen</strong> in the afternoon: Bryggen and fish market.",
-    "narrativeES": "<strong>Vøringsfossen</strong> por la mañana (cascada de 182m, completamente GRATUITA — hagan AMBOS miradores: superior desde Fossli Hotel e inferior desde el nuevo puente Fossatromma). Luego conducción panorámica por el Hardangerfjord hasta <strong>Bergen</strong> por la tarde: Bryggen y mercado de pescado.",
+    "narrative": "Partenza da Eidfjord: <strong>Vøringsfossen</strong> è a soli 20 min! (cascata 182m, completamente GRATUITA — fate ENTRAMBI i viewpoint: alto da Fossli Hotel e basso dal nuovo ponte Fossatromma). Poi guida panoramica lungo l'Hardangerfjord fino a <strong>Bergen</strong> nel pomeriggio: Bryggen e mercato del pesce.",
+    "narrativeEN": "Departure from Eidfjord: <strong>Vøringsfossen</strong> is just 20 min away! (182m waterfall, completely FREE — do BOTH viewpoints: upper from Fossli Hotel and lower from the new Fossatromma bridge). Then scenic drive along the Hardangerfjord to <strong>Bergen</strong> in the afternoon: Bryggen and fish market.",
+    "narrativeES": "Salida desde Eidfjord: <strong>Vøringsfossen</strong> está a solo 20 min! (cascada de 182m, completamente GRATUITA — hagan AMBOS miradores: superior desde Fossli Hotel e inferior desde el nuevo puente Fossatromma). Luego conducción panorámica por el Hardangerfjord hasta <strong>Bergen</strong> por la tarde: Bryggen y mercado de pescado.",
     "highlights": [
       {
         "icon": "💧",
@@ -6382,8 +6557,8 @@ var DAYS_DATA = [
     "tollsES": "AutoPASS"
   },
   {
-    "id": "g32",
-    "date": "26/07",
+    "id": "g33",
+    "date": "27/07",
     "title": "Bergen → Stavanger",
     "titleEN": "Bergen → Stavanger",
     "titleES": "Bergen → Stavanger",
@@ -6543,8 +6718,8 @@ var DAYS_DATA = [
     "tollsES": "<a href=\"https://www.autopass.no\" target=\"_blank\" rel=\"noopener\">AutoPASS</a> + ferries internos E39 (~200-300 NOK totales)"
   },
   {
-    "id": "g33",
-    "date": "27/07",
+    "id": "g34",
+    "date": "28/07",
     "title": "Preikestolen",
     "titleEN": "Preikestolen (Pulpit Rock)",
     "titleES": "Preikestolen",
@@ -6610,9 +6785,9 @@ var DAYS_DATA = [
     "events": [],
     "alternatives": [
       {
-        "text": "<strong>Se pioggia/nebbia forte → SCAMBIARE col giorno 28!</strong> Preikestolen con visibilità zero non ha senso. Alternativa indoor: <strong>Museo Petrolio Norvegese</strong> (Stavanger) o <strong>Lysefjord cruise</strong> (3h, vede Preikestolen dal basso)",
-        "textEN": "<strong>If heavy rain/fog → SWAP with day 28!</strong> Preikestolen with zero visibility is pointless. Indoor alternative: <strong>Norwegian Petroleum Museum</strong> (Stavanger) or <strong>Lysefjord cruise</strong> (3h, sees Preikestolen from below)",
-        "textES": "<strong>Si lluvia/niebla fuerte → ¡INTERCAMBIAR con el día 28!</strong> Preikestolen con visibilidad cero no tiene sentido. Alternativa interior: <strong>Museo del Petróleo Noruego</strong> (Stavanger) o <strong>crucero Lysefjord</strong> (3h, ve Preikestolen desde abajo)"
+        "text": "<strong>Se pioggia/nebbia forte → SCAMBIARE col giorno 33!</strong> Preikestolen con visibilità zero non ha senso. Alternativa indoor: <strong>Museo Petrolio Norvegese</strong> (Stavanger) o <strong>Lysefjord cruise</strong> (3h, vede Preikestolen dal basso)",
+        "textEN": "<strong>If heavy rain/fog → SWAP with day 33!</strong> Preikestolen with zero visibility is pointless. Indoor alternative: <strong>Norwegian Petroleum Museum</strong> (Stavanger) or <strong>Lysefjord cruise</strong> (3h, sees Preikestolen from below)",
+        "textES": "<strong>Si lluvia/niebla fuerte → ¡INTERCAMBIAR con el día 33!</strong> Preikestolen con visibilidad cero no tiene sentido. Alternativa interior: <strong>Museo del Petróleo Noruego</strong> (Stavanger) o <strong>crucero Lysefjord</strong> (3h, ve Preikestolen desde abajo)"
       },
       {
         "text": "☔ Se piove → vedi <a href=\"#pioggia\" data-region=\"rain\">Piano Pioggia</a>",
@@ -6691,180 +6866,17 @@ var DAYS_DATA = [
     "tollsES": "Aparcamiento Preikestolen: ~250 NOK"
   },
   {
-    "id": "g34",
-    "date": "28/07",
-    "title": "Stavanger → Kristiansand",
-    "titleEN": "Stavanger → Kristiansand",
-    "titleES": "Stavanger → Kristiansand",
+    "id": "g35",
+    "date": "29/07",
+    "title": "Stavanger → Kristiansand + Dyrepark",
+    "titleEN": "Stavanger → Kristiansand + Zoo",
+    "titleES": "Stavanger → Kristiansand + Dyrepark",
     "flags": "🇳🇴",
     "country": "NO",
     "region": "norvegia",
     "km": 230,
-    "hours": "3h 30m",
+    "hours": "3h 30m + pomeriggio libero",
     "tolls": "AutoPASS (tunnel a pedaggio)",
-    "tollLinks": [],
-    "meteo": {
-      "lat": 58.146,
-      "lon": 7.996,
-      "high": 20,
-      "low": 14,
-      "cond": "Soleggiato/variabile",
-      "daylight": "17h 30m di luce",
-      "condEN": "Sunny/variable",
-      "condES": "Soleado/variable",
-      "daylightEN": "17h 30m of daylight",
-      "daylightES": "17h 30m de luz"
-    },
-    "narrative": "Trasferimento verso <strong>Kristiansand</strong> — margine prima del traghetto. Tappe facoltative: <strong>Lindesnes Fyr</strong> (faro al punto più a sud della Norvegia, parcheggio gratuito di giorno) o <strong>Mandal</strong> (spiaggia di Sjøsanden, la più bella di Norvegia). Primo sacrificio se si accumula ritardo.",
-    "narrativeEN": "Transfer to <strong>Kristiansand</strong> — buffer before the ferry. Optional stops: <strong>Lindesnes Fyr</strong> (lighthouse at Norway's southernmost point, free daytime parking) or <strong>Mandal</strong> (Sjøsanden beach, Norway's finest). First sacrifice if running behind schedule.",
-    "narrativeES": "Traslado a <strong>Kristiansand</strong> — margen antes del ferry. Paradas opcionales: <strong>Lindesnes Fyr</strong> (faro en el punto más al sur de Noruega, aparcamiento diurno gratuito) o <strong>Mandal</strong> (playa de Sjøsanden, la más bonita de Noruega). Primer sacrificio si se acumula retraso.",
-    "highlights": [
-      {
-        "icon": "🏠",
-        "title": "Lindesnes Fyr",
-        "titleEN": "Lindesnes Lighthouse",
-        "titleES": "Lindesnes Fyr",
-        "text": "Punto più a sud della Norvegia (57°58'N). Faro + museo + sentieri costieri. Parcheggio gratuito di giorno. Facoltativo — primo sacrificio se in ritardo.",
-        "textEN": "Norway's southernmost point (57°58'N). Lighthouse + museum + coastal paths. Free daytime parking. Optional — first sacrifice if behind schedule.",
-        "textES": "Punto más al sur de Noruega (57°58'N). Faro + museo + senderos costeros. Aparcamiento diurno gratuito. Opcional — primer sacrificio si hay retraso.",
-        "maps": "https://maps.google.com/?q=57.983,7.048",
-        "star": false,
-        "familyFriendly": true
-      },
-      {
-        "icon": "🏖️",
-        "title": "Mandal (Sjøsanden)",
-        "titleEN": "Mandal (Sjøsanden Beach)",
-        "titleES": "Mandal (Sjøsanden)",
-        "text": "La spiaggia più bella della Norvegia — sabbia bianca, acqua (fredda!) cristallina. Facoltativa.",
-        "textEN": "Norway's finest beach — white sand, crystal clear (cold!) water. Optional.",
-        "textES": "La playa más bonita de Noruega — arena blanca, agua cristalina (¡fría!). Opcional.",
-        "maps": "https://maps.google.com/?q=Sjosanden+Mandal",
-        "star": false,
-        "familyFriendly": true
-      }
-    ],
-    "food": [
-      {
-        "type": "restaurant",
-        "title": "Fiskebrygga (Kristiansand)",
-        "titleEN": "Fiskebrygga (Kristiansand)",
-        "titleES": "Fiskebrygga (Kristiansand)",
-        "text": "Quartiere del pesce sul porto — ristoranti e bancarelle con pesce freschissimo. Cena perfetta all'arrivo.",
-        "textEN": "Fish quarter on the harbour — restaurants and stalls with very fresh fish. Perfect dinner on arrival.",
-        "textES": "Barrio del pescado en el puerto — restaurantes y puestos con pescado freschísimo. Cena perfecta a la llegada."
-      }
-    ],
-    "scooter": null,
-    "waterSports": null,
-    "trekking": null,
-    "fishing": "Sørlandet (Mandal/Kristiansand): pesca estiva allo sgombro dai moli — molto amata dalle famiglie locali. Canna semplice ed esca artificiale bastano. GRATIS.",
-    "fishingEN": "Sørlandet (Mandal/Kristiansand): summer mackerel fishing from the piers — very popular with local families. Simple rod and artificial bait are enough. FREE.",
-    "fishingES": "Sørlandet (Mandal/Kristiansand): pesca estival de caballa desde los muelles — muy popular entre las familias locales. Caña simple y cebo artificial son suficientes. GRATIS.",
-    "events": [],
-    "alternatives": [
-      {
-        "text": "Se Preikestolen era impossibile ieri per meteo: <strong>fare Preikestolen oggi</strong> e trasferirsi a Kristiansand domani mattina presto (il traghetto è il 30 alle 8:00, c'è margine)",
-        "textEN": "If Preikestolen was impossible yesterday due to weather: <strong>do Preikestolen today</strong> and transfer to Kristiansand early tomorrow morning (ferry is on the 30th at 8:00, there's margin)",
-        "textES": "Si Preikestolen fue imposible ayer por el tiempo: <strong>hacer Preikestolen hoy</strong> y trasladarse a Kristiansand mañana temprano (el ferry es el 30 a las 8:00, hay margen)"
-      },
-      {
-        "text": "☔ Se piove → vedi <a href=\"#pioggia\" data-region=\"rain\">Piano Pioggia</a>",
-        "textEN": "☔ If it rains → see <a href=\"#pioggia\" data-region=\"rain\">Rain Plan</a>",
-        "textES": "☔ Si llueve → ver <a href=\"#pioggia\" data-region=\"rain\">Plan de lluvia</a>"
-      }
-    ],
-    "kids": [
-      {
-        "name": "Kristiansand Dyrepark",
-        "nameEN": "Kristiansand Zoo",
-        "nameES": "Kristiansand Dyrepark",
-        "desc": "zoo + parco divertimenti — se avete tempo il 29 (giorno di riposo)",
-        "descEN": "zoo + amusement park — if you have time on the 29th (rest day)",
-        "descES": "zoo + parque de atracciones — si tienen tiempo el 29 (día de descanso)",
-        "maps": "https://maps.google.com/?q=Kristiansand+Dyrepark"
-      },
-      {
-        "name": "Sjøsanden (Mandal)",
-        "nameEN": "Sjøsanden Beach (Mandal)",
-        "nameES": "Sjøsanden (Mandal)",
-        "desc": "spiaggia di sabbia bianca — perfetta per i bambini",
-        "descEN": "white sand beach — perfect for children",
-        "descES": "playa de arena blanca — perfecta para los niños",
-        "maps": "https://maps.google.com/?q=Sjosanden+Mandal"
-      }
-    ],
-    "practical": {
-      "parking": [
-        {
-          "name": "Kristiansand Feriesenter (Dvergsnestangen)",
-          "nameEN": "Kristiansand Feriesenter (Dvergsnestangen)",
-          "nameES": "Kristiansand Feriesenter (Dvergsnestangen)",
-          "address": "Kristiansand",
-          "addressEN": "Kristiansand",
-          "addressES": "Kristiansand",
-          "maps": "https://maps.google.com/?q=58.136,8.030",
-          "price": "~350-500 NOK/notte",
-          "priceEN": "~350-500 NOK/night",
-          "priceES": "~350-500 NOK/noche",
-          "notes": "Vicino al porto Color Line (15 min). Elettricità, acqua, scarico, docce, spiaggia privata.",
-          "notesEN": "Close to Color Line port (15 min). Electricity, water, waste disposal, showers, private beach.",
-          "notesES": "Cerca del puerto Color Line (15 min). Electricidad, agua, vaciado, duchas, playa privada."
-        }
-      ],
-      "fuel": "Fare il pieno a Kristiansand — ultimo rifornimento norvegese (diesel più caro in DK).",
-      "fuelEN": "Fill up in Kristiansand — last Norwegian refuelling (diesel more expensive in DK).",
-      "fuelES": "Llenar en Kristiansand — último repostaje noruego (diésel más caro en DK).",
-      "grocery": [
-        {
-          "name": "Rema 1000, Kiwi, Meny (Kristiansand)",
-          "nameEN": "Rema 1000, Kiwi, Meny (Kristiansand)",
-          "nameES": "Rema 1000, Kiwi, Meny (Kristiansand)",
-          "location": "Kristiansand",
-          "locationEN": "Kristiansand",
-          "locationES": "Kristiansand",
-          "maps": "https://maps.google.com/?q=Supermercati+Kristiansand"
-        }
-      ],
-      "laundry": {
-        "text": "Kristiansand Feriesenter",
-        "textEN": "Kristiansand Feriesenter",
-        "textES": "Kristiansand Feriesenter",
-        "maps": "https://maps.google.com/?q=Kristiansand+Feriesenter"
-      },
-      "camper": {
-        "text": "Acqua e scarico al Kristiansand Feriesenter. Ultimo scarico prima della Danimarca!",
-        "textEN": "Water and waste disposal at Kristiansand Feriesenter. Last dump before Denmark!",
-        "textES": "Agua y vaciado en Kristiansand Feriesenter. ¡Último vaciado antes de Dinamarca!",
-        "maps": "https://maps.google.com/?q=Kristiansand+Feriesenter"
-      },
-      "emergency": {
-        "name": "Sørlandet Sykehus (Kristiansand)",
-        "nameEN": "Sørlandet Sykehus (Kristiansand)",
-        "nameES": "Sørlandet Sykehus (Kristiansand)",
-        "maps": "https://maps.google.com/?q=Sorlandet+Sykehus+Kristiansand",
-        "phones": "112/113/110",
-        "notes": null
-      },
-      "budget": "~€150-180/giorno",
-      "budgetEN": "~€150-180/day",
-      "budgetES": "~€150-180/día"
-    },
-    "tollsEN": "AutoPASS (toll tunnels)",
-    "tollsES": "AutoPASS (túneles de peaje)"
-  },
-  {
-    "id": "g35",
-    "date": "29/07",
-    "title": "Kristiansand (riposo)",
-    "titleEN": "Kristiansand (rest day)",
-    "titleES": "Kristiansand (descanso)",
-    "flags": "🇳🇴",
-    "country": "NO",
-    "region": "norvegia",
-    "km": 0,
-    "hours": "—",
-    "tolls": "—",
     "tollLinks": [],
     "meteo": {
       "lat": 58.146,
@@ -6878,31 +6890,43 @@ var DAYS_DATA = [
       "daylightEN": "17h 30m of daylight",
       "daylightES": "17h 30m de luz"
     },
-    "narrative": "Giorno di riposo e preparazione prima del traghetto di domani (30/07 ore 8:00). Opzioni: <strong>Posebyen</strong> (quartiere storico con case bianche), <strong>Kristiansand Dyrepark</strong> (zoo + parco divertimenti, perfetto per i bambini), o semplicemente relax in spiaggia.",
-    "narrativeEN": "Rest day and preparation before tomorrow's ferry (30/07 at 8:00). Options: <strong>Posebyen</strong> (historic quarter with white houses), <strong>Kristiansand Dyrepark</strong> (zoo + amusement park, perfect for children), or simply beach relaxation.",
-    "narrativeES": "Día de descanso y preparación antes del ferry de mañana (30/07 a las 8:00). Opciones: <strong>Posebyen</strong> (barrio histórico con casas blancas), <strong>Kristiansand Dyrepark</strong> (zoo + parque de atracciones, perfecto para los niños), o simplemente relax en la playa.",
+    "narrative": "Partenza presto da Stavanger (08:00). Sosta facoltativa a <strong>Lindesnes Fyr</strong> (punto più a sud della Norvegia, +40 min deviazione). Arrivo a Kristiansand entro le 12:30 → pomeriggio al <strong>Kristiansand Dyrepark</strong> (zoo + Cardamom Town + giostre). Il parco è aperto fino alle 19:00-20:00 in estate. Parcheggio camper dedicato al Dyrepark!",
+    "narrativeEN": "Early departure from Stavanger (08:00). Optional stop at <strong>Lindesnes Fyr</strong> (Norway's southernmost point, +40 min detour). Arrive in Kristiansand by 12:30 → afternoon at <strong>Kristiansand Dyrepark</strong> (zoo + Cardamom Town + rides). Park open until 19:00-20:00 in summer. Dedicated motorhome parking at Dyrepark!",
+    "narrativeES": "Salida temprana de Stavanger (08:00). Parada opcional en <strong>Lindesnes Fyr</strong> (punto más al sur de Noruega, +40 min desvío). Llegada a Kristiansand antes de las 12:30 → tarde en el <strong>Kristiansand Dyrepark</strong> (zoo + Cardamom Town + atracciones). Parque abierto hasta las 19:00-20:00 en verano. ¡Aparcamiento dedicado para autocaravanas en el Dyrepark!",
     "highlights": [
+      {
+        "icon": "🏠",
+        "title": "Lindesnes Fyr",
+        "titleEN": "Lindesnes Lighthouse",
+        "titleES": "Lindesnes Fyr",
+        "text": "Punto più a sud della Norvegia (57°58'N). Faro dal 1656 + museo + sentieri costieri. Parcheggio gratuito di giorno. Deviazione di ~40 min dalla E39.",
+        "textEN": "Norway's southernmost point (57°58'N). Lighthouse since 1656 + museum + coastal paths. Free daytime parking. ~40 min detour from E39.",
+        "textES": "Punto más al sur de Noruega (57°58'N). Faro desde 1656 + museo + senderos costeros. Aparcamiento diurno gratuito. Desvío de ~40 min desde la E39.",
+        "maps": "https://maps.google.com/?q=57.983,7.048",
+        "star": false,
+        "familyFriendly": true
+      },
       {
         "icon": "🦁",
         "title": "Kristiansand Dyrepark",
         "titleEN": "Kristiansand Zoo & Amusement Park",
         "titleES": "Kristiansand Dyrepark",
-        "text": "Zoo nordico + parco divertimenti + Cardamom Town (dal libro per bambini). Giornata intera per famiglie. ~500 NOK/adulto.",
-        "textEN": "Nordic zoo + amusement park + Cardamom Town (from children's book). Full day for families. ~500 NOK/adult.",
-        "textES": "Zoo nórdico + parque de atracciones + Cardamom Town (del libro infantil). Día completo para familias. ~500 NOK/adulto.",
+        "text": "Zoo + Cardamom Town (Kardemomme By) + Badeland (parco acquatico) + giostre. Aperto 09:00-19:00/20:00 in estate. Biglietto: ~310-490 NOK/adulto, bambini ~250-390 NOK. Parcheggio camper dedicato (~315 NOK/notte con elettricità).",
+        "textEN": "Zoo + Cardamom Town (Kardemomme By) + Badeland (water park) + rides. Open 09:00-19:00/20:00 in summer. Ticket: ~310-490 NOK/adult, children ~250-390 NOK. Dedicated motorhome parking (~315 NOK/night with electricity).",
+        "textES": "Zoo + Cardamom Town (Kardemomme By) + Badeland (parque acuático) + atracciones. Abierto 09:00-19:00/20:00 en verano. Entrada: ~310-490 NOK/adulto, niños ~250-390 NOK. Aparcamiento dedicado para autocaravanas (~315 NOK/noche con electricidad).",
         "maps": "https://maps.google.com/?q=Kristiansand+Dyrepark",
-        "star": false,
+        "star": true,
         "familyFriendly": true
       },
       {
-        "icon": "🏘️",
-        "title": "Posebyen",
-        "titleEN": "Posebyen",
-        "titleES": "Posebyen",
-        "text": "Quartiere storico con case bianche in legno — passeggiata tranquilla, caffè e negozi artigianali",
-        "textEN": "Historic quarter with white wooden houses — quiet walk, cafés and artisan shops",
-        "textES": "Barrio histórico con casas blancas de madera — paseo tranquilo, cafeterías y tiendas artesanales",
-        "maps": "https://maps.google.com/?q=Posebyen+Kristiansand",
+        "icon": "🏖️",
+        "title": "Fiskebrygga (Kristiansand)",
+        "titleEN": "Fiskebrygga (Kristiansand)",
+        "titleES": "Fiskebrygga (Kristiansand)",
+        "text": "Quartiere del pesce sul porto — ristoranti e bancarelle con pesce freschissimo. Ultimo pesce norvegese fresco prima della Danimarca! Cena perfetta.",
+        "textEN": "Fish quarter on the harbour — restaurants and stalls with very fresh fish. Last fresh Norwegian fish before Denmark! Perfect dinner.",
+        "textES": "Barrio del pescado en el puerto — restaurantes y puestos con pescado freschísimo. ¡Último pescado noruego fresco antes de Dinamarca! Cena perfecta.",
+        "maps": "https://maps.google.com/?q=Fiskebrygga+Kristiansand",
         "star": false,
         "familyFriendly": true
       }
@@ -6910,9 +6934,9 @@ var DAYS_DATA = [
     "food": [
       {
         "type": "restaurant",
-        "title": "Fiskebrygga (Kristiansand)",
-        "titleEN": "Fiskebrygga (Kristiansand)",
-        "titleES": "Fiskebrygga (Kristiansand)",
+        "title": "Fiskebrygga",
+        "titleEN": "Fiskebrygga",
+        "titleES": "Fiskebrygga",
         "text": "Quartiere del pesce — ultimo pesce norvegese fresco prima della Danimarca!",
         "textEN": "Fish quarter — last fresh Norwegian fish before Denmark!",
         "textES": "Barrio del pescado — ¡último pescado noruego fresco antes de Dinamarca!"
@@ -6921,15 +6945,20 @@ var DAYS_DATA = [
     "scooter": null,
     "waterSports": null,
     "trekking": null,
-    "fishing": "Sgombro dai moli di Kristiansand — perfetto per i bambini, canna semplice. GRATIS.",
-    "fishingEN": "Mackerel from Kristiansand piers — perfect for children, simple rod. FREE.",
-    "fishingES": "Caballa desde los muelles de Kristiansand — perfecto para los niños, caña simple. GRATIS.",
+    "fishing": "Sørlandet (Kristiansand): pesca estiva allo sgombro dai moli — molto amata dalle famiglie locali. Canna semplice ed esca artificiale bastano. GRATIS.",
+    "fishingEN": "Sørlandet (Kristiansand): summer mackerel fishing from the piers — very popular with local families. Simple rod and artificial bait are enough. FREE.",
+    "fishingES": "Sørlandet (Kristiansand): pesca estival de caballa desde los muelles — muy popular entre las familias locales. Caña simple y cebo artificial son suficientes. GRATIS.",
     "events": [],
     "alternatives": [
       {
-        "text": "Se Preikestolen non è stato fatto il 27: oggi è l'<strong>ultima possibilità</strong> — partire alle 05:00, fare l'escursione, tornare a Kristiansand entro sera. Domani traghetto alle 8:00.",
-        "textEN": "If Preikestolen wasn't done on the 27th: today is the <strong>last chance</strong> — depart at 05:00, do the hike, return to Kristiansand by evening. Tomorrow ferry at 8:00.",
-        "textES": "Si Preikestolen no se hizo el 27: hoy es la <strong>última oportunidad</strong> — salir a las 05:00, hacer la excursión, volver a Kristiansand por la noche. Mañana ferry a las 8:00."
+        "text": "Se Preikestolen non è stato fatto ieri: oggi è l'<strong>ultima possibilità</strong> — partire alle 05:00 da Stavanger, fare l'escursione, poi guidare a Kristiansand (arrivo ~16:00). Dyrepark sacrificato.",
+        "textEN": "If Preikestolen wasn't done yesterday: today is the <strong>last chance</strong> — depart at 05:00 from Stavanger, do the hike, then drive to Kristiansand (arrive ~16:00). Dyrepark sacrificed.",
+        "textES": "Si Preikestolen no se hizo ayer: hoy es la <strong>última oportunidad</strong> — salir a las 05:00 de Stavanger, hacer la excursión, luego conducir a Kristiansand (llegada ~16:00). Dyrepark sacrificado."
+      },
+      {
+        "text": "☔ Se piove → Dyrepark ha attrazioni coperte (Badeland, Cardamom Town indoor). Lindesnes Fyr suggestivo anche con pioggia.",
+        "textEN": "☔ If it rains → Dyrepark has indoor attractions (Badeland, indoor Cardamom Town). Lindesnes Fyr atmospheric even in rain.",
+        "textES": "☔ Si llueve → Dyrepark tiene atracciones cubiertas (Badeland, Cardamom Town interior). Lindesnes Fyr atmosférico incluso con lluvia."
       }
     ],
     "kids": [
@@ -6937,27 +6966,42 @@ var DAYS_DATA = [
         "name": "Kristiansand Dyrepark",
         "nameEN": "Kristiansand Zoo",
         "nameES": "Kristiansand Dyrepark",
-        "desc": "zoo + Cardamom Town + giostre — giornata intera perfetta per i bambini",
-        "descEN": "zoo + Cardamom Town + rides — perfect full day for children",
-        "descES": "zoo + Cardamom Town + atracciones — día completo perfecto para los niños",
+        "desc": "zoo + Cardamom Town + Badeland + giostre — giornata intera perfetta per i bambini",
+        "descEN": "zoo + Cardamom Town + Badeland + rides — perfect full day for children",
+        "descES": "zoo + Cardamom Town + Badeland + atracciones — día completo perfecto para los niños",
         "maps": "https://maps.google.com/?q=Kristiansand+Dyrepark"
       },
       {
         "name": "Spiaggia Bystranda",
         "nameEN": "Bystranda Beach",
         "nameES": "Playa Bystranda",
-        "desc": "spiaggia in centro città con parco giochi",
-        "descEN": "city centre beach with playground",
-        "descES": "playa en el centro de la ciudad con parque infantil",
+        "desc": "spiaggia in centro città con parco giochi — se avanza tempo la sera",
+        "descEN": "city centre beach with playground — if time allows in the evening",
+        "descES": "playa en el centro de la ciudad con parque infantil — si queda tiempo por la noche",
         "maps": "https://maps.google.com/?q=Bystranda+Kristiansand"
       }
     ],
     "practical": {
       "parking": [
         {
-          "name": "Kristiansand Feriesenter (stessa notte)",
-          "nameEN": "Kristiansand Feriesenter (same night)",
-          "nameES": "Kristiansand Feriesenter (misma noche)",
+          "name": "Dyreparken Bobilparkering",
+          "nameEN": "Dyreparken Motorhome Park",
+          "nameES": "Dyreparken Aparcamiento Autocaravanas",
+          "address": "Kristiansand Dyrepark",
+          "addressEN": "Kristiansand Dyrepark",
+          "addressES": "Kristiansand Dyrepark",
+          "maps": "https://maps.google.com/?q=58.194,8.037",
+          "price": "~315 NOK/notte",
+          "priceEN": "~315 NOK/night",
+          "priceES": "~315 NOK/noche",
+          "notes": "25 posti camper con elettricità e acqua. Ingresso al parco a piedi! ⚠️ Domani traghetto alle 08:00 — dal Dyrepark al porto Color Line: 20 min. Check-in entro le 07:00.",
+          "notesEN": "25 motorhome spots with electricity and water. Walk-in park access! ⚠️ Tomorrow ferry at 08:00 — from Dyrepark to Color Line port: 20 min. Check-in by 07:00.",
+          "notesES": "25 plazas para autocaravanas con electricidad y agua. ¡Acceso al parque a pie! ⚠️ Mañana ferry a las 08:00 — del Dyrepark al puerto Color Line: 20 min. Check-in antes de las 07:00."
+        },
+        {
+          "name": "Kristiansand Feriesenter (alternativa)",
+          "nameEN": "Kristiansand Feriesenter (alternative)",
+          "nameES": "Kristiansand Feriesenter (alternativa)",
           "address": "Kristiansand",
           "addressEN": "Kristiansand",
           "addressES": "Kristiansand",
@@ -6965,14 +7009,14 @@ var DAYS_DATA = [
           "price": "~350-500 NOK/notte",
           "priceEN": "~350-500 NOK/night",
           "priceES": "~350-500 NOK/noche",
-          "notes": "⚠️ Domani traghetto alle 08:00! Check-in Color Line entro le 07:00. Dal camping al porto: 15 min.",
-          "notesEN": "⚠️ Tomorrow ferry at 08:00! Color Line check-in by 07:00. From campsite to port: 15 min.",
-          "notesES": "⚠️ ¡Mañana ferry a las 08:00! Check-in Color Line antes de las 07:00. Del camping al puerto: 15 min."
+          "notes": "Più vicino al porto Color Line (15 min). Elettricità, acqua, scarico, docce, lavanderia.",
+          "notesEN": "Closer to Color Line port (15 min). Electricity, water, waste disposal, showers, laundry.",
+          "notesES": "Más cerca del puerto Color Line (15 min). Electricidad, agua, vaciado, duchas, lavandería."
         }
       ],
-      "fuel": "Fare il pieno OGGI — ultimo rifornimento norvegese!",
-      "fuelEN": "Fill up TODAY — last Norwegian refuelling!",
-      "fuelES": "¡Llenar HOY — último repostaje noruego!",
+      "fuel": "Fare il pieno OGGI — ultimo rifornimento norvegese prima della Danimarca!",
+      "fuelEN": "Fill up TODAY — last Norwegian refuelling before Denmark!",
+      "fuelES": "¡Llenar HOY — último repostaje noruego antes de Dinamarca!",
       "grocery": [
         {
           "name": "Fare scorta per il traghetto e la guida in Danimarca",
@@ -6991,9 +7035,9 @@ var DAYS_DATA = [
         "maps": "https://maps.google.com/?q=Kristiansand+Feriesenter"
       },
       "camper": {
-        "text": "Acqua e scarico al Kristiansand Feriesenter. ULTIMO SCARICO prima della Danimarca!",
-        "textEN": "Water and waste disposal at Kristiansand Feriesenter. LAST DUMP before Denmark!",
-        "textES": "Agua y vaciado en Kristiansand Feriesenter. ¡ÚLTIMO VACIADO antes de Dinamarca!",
+        "text": "Acqua e scarico al camping. ULTIMO SCARICO prima della Danimarca!",
+        "textEN": "Water and waste disposal at the campsite. LAST DUMP before Denmark!",
+        "textES": "Agua y vaciado en el camping. ¡ÚLTIMO VACIADO antes de Dinamarca!",
         "maps": "https://maps.google.com/?q=Kristiansand+Feriesenter"
       },
       "emergency": {
@@ -7004,12 +7048,12 @@ var DAYS_DATA = [
         "phones": "112/113/110",
         "notes": null
       },
-      "budget": "~€100-150/giorno (riposo)",
-      "budgetEN": "~€100-150/day (rest)",
-      "budgetES": "~€100-150/día (descanso)"
+      "budget": "~€200-280/giorno (Dyrepark incluso)",
+      "budgetEN": "~€200-280/day (Dyrepark included)",
+      "budgetES": "~€200-280/día (Dyrepark incluido)"
     },
-    "tollsEN": "—",
-    "tollsES": "—"
+    "tollsEN": "AutoPASS (toll tunnel)",
+    "tollsES": "AutoPASS (túnel de peaje)"
   },
   {
     "id": "g36",

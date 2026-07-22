@@ -31,11 +31,11 @@ var TRIP_COORDS = [
   { lat: 62.1013, lng: 7.2059, city: "Geiranger", cityEn: "Geiranger", country: "Norvegia", flag: "🇳🇴" },         // G28 Trollstigen → Geiranger
   { lat: 60.8630, lng: 7.1140, city: "Flåm", cityEn: "Flåm", country: "Norvegia", flag: "🇳🇴" },               // G29 Geiranger → Flåm
   { lat: 60.4190, lng: 7.1530, city: "Eidfjord", cityEn: "Eidfjord", country: "Norvegia", flag: "🇳🇴" },           // G30 Nærøyfjord → Eidfjord
-  { lat: 60.3913, lng: 5.3221, city: "Bergen", cityEn: "Bergen", country: "Norvegia", flag: "🇳🇴" },               // G31 Vøringsfossen → Bergen
-  { lat: 58.9700, lng: 5.7331, city: "Stavanger", cityEn: "Stavanger", country: "Norvegia", flag: "🇳🇴" },         // G32 Bergen → Stavanger
-  { lat: 58.9700, lng: 5.7331, city: "Stavanger", cityEn: "Stavanger", country: "Norvegia", flag: "🇳🇴" },         // G33 Preikestolen (notte Stavanger)
-  { lat: 58.1460, lng: 7.9960, city: "Kristiansand", cityEn: "Kristiansand", country: "Norvegia", flag: "🇳🇴" },   // G34 Stavanger → Kristiansand
-  { lat: 58.1460, lng: 7.9960, city: "Kristiansand", cityEn: "Kristiansand", country: "Norvegia", flag: "🇳🇴" },   // G35 Kristiansand (riposo)
+  { lat: 60.4190, lng: 7.1530, city: "Eidfjord", cityEn: "Eidfjord", country: "Norvegia", flag: "🇳🇴" },           // G31 Eidfjord (riposo)
+  { lat: 60.3913, lng: 5.3221, city: "Bergen", cityEn: "Bergen", country: "Norvegia", flag: "🇳🇴" },               // G32 Eidfjord → Vøringsfossen → Bergen
+  { lat: 58.9700, lng: 5.7331, city: "Stavanger", cityEn: "Stavanger", country: "Norvegia", flag: "🇳🇴" },         // G33 Bergen → Stavanger
+  { lat: 58.9700, lng: 5.7331, city: "Stavanger", cityEn: "Stavanger", country: "Norvegia", flag: "🇳🇴" },         // G34 Preikestolen (notte Stavanger)
+  { lat: 58.1460, lng: 7.9960, city: "Kristiansand", cityEn: "Kristiansand", country: "Norvegia", flag: "🇳🇴" },   // G35 Stavanger → Kristiansand + Dyrepark
   { lat: 55.6761, lng: 12.5683, city: "Copenhagen", cityEn: "Copenhagen", country: "Danimarca", flag: "🇩🇰" },     // G36 K.sand → Copenhagen
   { lat: 55.6761, lng: 12.5683, city: "Copenhagen", cityEn: "Copenhagen", country: "Danimarca", flag: "🇩🇰" },   // G37
   { lat: 55.7308, lng: 9.1153, city: "Billund", cityEn: "Billund", country: "Danimarca", flag: "🇩🇰" },          // G38
