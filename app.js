@@ -3724,6 +3724,7 @@ document.addEventListener('DOMContentLoaded', function() {
         var CI_KEY = KEYS.CHECKINS;
         var GEOFENCE_RADIUS = 0.5; // km — auto check-in radius
         var MIN_TRACK_DIST = 0.1; // km — v4.80: raised from 0.05 to reduce GPS jitter accumulation
+        var ACCURACY_THRESHOLD = 30; // meters — v5.03: discard fixes with accuracy > 30m
         var IDLE_TIMEOUT = 10 * 60 * 1000; // 10 minutes for auto-stop
 // v2.70 FIX: GPS interval constants at global scope (were inside IIFE, out-of-scope at L4141)
 var ECO_INTERVAL    = 30000;  // 30s — risparmio batteria
@@ -3982,6 +3983,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                     if (ci) {
                         html += '<div class="pos-card-info">✅ ' + ci.time;
                         if (ci.lat) html += ' · <a href="https://maps.google.com/?q=' + ci.lat + ',' + ci.lng + '" target="_blank">📍</a>';
+                        if (isOwner) html += ' <button class="pos-edit-btn ci-edit" data-ciidx="' + idx + '" title="' + T('Modifica', 'Edit', 'Editar') + '">✏️</button>';
                         if (isOwner) html += ' <button class="pos-del-btn ci-del" data-ciidx="' + idx + '" title="' + (LANG3 === 'es' ? 'Quitar' : isEN ? 'Uncheck' : 'Rimuovi') + '">🗑️</button>';
                         html += '</div>';
                     }
@@ -4005,11 +4007,31 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                     chtml += '</div>';
                     chtml += '<div class="pos-card-info">' + escapeHtml(item.time || item.date || '');
                     if (item.lat) chtml += ' · <a href="https://maps.google.com/?q=' + item.lat + ',' + item.lng + '" target="_blank" style="text-decoration:none;">📍</a>';
+                    if (isOwner) chtml += ' <button class="pos-edit-btn cc-edit" data-ckey="' + ckey + '" title="' + T('Modifica', 'Edit', 'Editar') + '">✏️</button>';
                     if (isOwner) chtml += ' <button class="pos-del-btn cc-del" data-ckey="' + ckey + '" title="' + (LANG3 === 'es' ? 'Eliminar' : isEN ? 'Delete' : 'Elimina') + '">🗑️</button>';
                     chtml += '</div>';
                     ccard.innerHTML = chtml;
                     listContainer.appendChild(ccard);
                 }
+            });
+            // v5.03: Edit handler for itinerary check-ins
+            listContainer.querySelectorAll('.ci-edit[data-ciidx]').forEach(function(btn) {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    var cidx = parseInt(btn.getAttribute('data-ciidx'), 10);
+                    showEditItinCheckinModal(cidx);
+                });
+            });
+            // v5.03: Edit handler for custom (free) stops
+            listContainer.querySelectorAll('.cc-edit[data-ckey]').forEach(function(btn) {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    var ckey = btn.getAttribute('data-ckey');
+                    var item = (typeof customCheckins !== 'undefined' && customCheckins) ? customCheckins[ckey] : null;
+                    if (item) showEditCheckinModal(ckey, item, 'custom');
+                });
             });
             // Delete handler for check-ins (unchecks the stop)
             listContainer.querySelectorAll('.ci-del[data-ciidx]').forEach(function(btn) {
@@ -5100,6 +5122,12 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             var gpsOpts = { enableHighAccuracy: true, maximumAge: isEco ? ECO_INTERVAL : NORMAL_INTERVAL, timeout: isEco ? 60000 : 30000 };
 
             liveWatchId = navigator.geolocation.watchPosition(function(pos) {
+                // v5.03: Accuracy filter — discard low-quality fixes (tunnels, urban canyons)
+                var _acc = pos.coords.accuracy || 0;
+                if (_acc > ACCURACY_THRESHOLD) {
+                    console.log('[GPS] Fix discarded: accuracy=' + _acc.toFixed(0) + 'm > ' + ACCURACY_THRESHOLD + 'm');
+                    return;
+                }
                 var lat = pos.coords.latitude;
                 var lng = pos.coords.longitude;
                 var speed = pos.coords.speed != null ? pos.coords.speed * 3.6 : 0; // m/s → km/h
@@ -5139,7 +5167,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                     } else if (timeSinceLast > GAP_MIN_TIME && dist > GAP_MIN_DIST) {
                         estimateGapDistance(last, lat, lng);
                         pushTrackPoint(pt);
-                    } else if (dist >= MIN_TRACK_DIST) {
+                    } else if (dist >= Math.max(MIN_TRACK_DIST, (_acc || 10) / 1000 * 1.5)) {
                         todayKm += dist;
                         pushTrackPoint(pt);
                         // Update session km for resume
@@ -5336,6 +5364,12 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                     var _reEco = optEco && optEco.checked;
                     var _reOpts = { enableHighAccuracy: true, maximumAge: _reEco ? ECO_INTERVAL : NORMAL_INTERVAL, timeout: _reEco ? 60000 : 30000 };
                     liveWatchId = navigator.geolocation.watchPosition(function(pos) {
+                        // v5.03: Accuracy filter
+                        var _acc = pos.coords.accuracy || 0;
+                        if (_acc > ACCURACY_THRESHOLD) {
+                            console.log('[GPS Resume] Fix discarded: accuracy=' + _acc.toFixed(0) + 'm');
+                            return;
+                        }
                         var lat = pos.coords.latitude;
                         var lng = pos.coords.longitude;
                         var speed = pos.coords.speed != null ? pos.coords.speed * 3.6 : 0;
@@ -5360,13 +5394,13 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                             } else if (timeSinceLast > GAP_MIN_TIME && dist > GAP_MIN_DIST) {
                                 estimateGapDistance(last, lat, lng);
                                 pushTrackPoint(pt);
-                            } else if (dist >= MIN_TRACK_DIST) {
-                                todayKm += dist;
-                                pushTrackPoint(pt);
-                                var sessKmRef = getFamilyRef('liveSession/' + (firebaseUser ? firebaseUser.uid : 'driver') + '/todayKm');
-                                if (sessKmRef) sessKmRef.set(todayKm);
-                                var trackRef = getFamilyRef('tracks/' + todayStr() + '/points');
-                                if (trackRef) trackRef.push(pt).catch(function(e) { console.warn('[Track] push failed:', e.message); });
+                    } else if (dist >= Math.max(MIN_TRACK_DIST, (_acc || 10) / 1000 * 1.5)) {
+                        todayKm += dist;
+                        pushTrackPoint(pt);
+                        var sessKmRef = getFamilyRef('liveSession/' + (firebaseUser ? firebaseUser.uid : 'driver') + '/todayKm');
+                        if (sessKmRef) sessKmRef.set(todayKm);
+                        var trackRef = getFamilyRef('tracks/' + todayStr() + '/points');
+                        if (trackRef) trackRef.push(pt).catch(function(e) { console.warn('[Track] push failed:', e.message); });
                                 if (map) {
                                     if (!trackLine) {
                                         var latlngs = todayPoints.map(function(p) { return [p.lat, p.lng]; });
@@ -5793,6 +5827,145 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             });
         }
 
+        // ─── v5.03: Edit modal for custom checkins & parking ───
+        function showEditCheckinModal(ckey, item, type) {
+            // type: 'custom' (customCheckins) or 'parking'
+            if (!isOwner) return;
+            var overlay = document.createElement('div');
+            overlay.className = 'qv-modal-overlay';
+            var isParking = (type === 'parking');
+            var title = isParking
+                ? T('Modifica parcheggio', 'Edit parking', 'Editar estacionamiento')
+                : T('Modifica tappa', 'Edit stop', 'Editar parada');
+            var html = '<div class="pos-edit-modal">';
+            html += '<h3 style="margin:0 0 16px;font-size:17px;font-weight:700;">' + title + '</h3>';
+            html += '<label>' + T('Nome', 'Name', 'Nombre') + '</label>';
+            html += '<input type="text" id="pos-edit-name" value="' + escapeHtml(item.name || '') + '">';
+            html += '<label>' + T('Data', 'Date', 'Fecha') + '</label>';
+            html += '<input type="date" id="pos-edit-date" value="' + escapeHtml(item.date || '') + '">';
+            html += '<label>' + T('Ora', 'Time', 'Hora') + '</label>';
+            html += '<input type="text" id="pos-edit-time" value="' + escapeHtml(item.time || '') + '" placeholder="dd/mm/yyyy, HH:MM:SS">';
+            html += '<label>' + T('Latitudine', 'Latitude', 'Latitud') + '</label>';
+            html += '<input type="text" id="pos-edit-lat" value="' + (item.lat != null ? item.lat : '') + '" placeholder="45.1234" inputmode="decimal">';
+            html += '<label>' + T('Longitudine', 'Longitude', 'Longitud') + '</label>';
+            html += '<input type="text" id="pos-edit-lng" value="' + (item.lng != null ? item.lng : '') + '" placeholder="11.5678" inputmode="decimal">';
+            if (isParking) {
+                html += '<label>' + T('Valutazione (1-5)', 'Rating (1-5)', 'Valoración (1-5)') + '</label>';
+                html += '<input type="number" id="pos-edit-rating" min="1" max="5" value="' + (item.rating || 3) + '">';
+            }
+            html += '<div class="pos-edit-actions">';
+            html += '<button class="pos-edit-cancel-btn">' + T('Annulla', 'Cancel', 'Cancelar') + '</button>';
+            html += '<button class="pos-edit-gps-btn" title="' + T('Usa GPS attuale', 'Use current GPS', 'Usar GPS actual') + '">📍 GPS</button>';
+            html += '<button class="pos-edit-save-btn">' + T('Salva', 'Save', 'Guardar') + '</button>';
+            html += '</div></div>';
+            overlay.innerHTML = html;
+            document.body.appendChild(overlay);
+            requestAnimationFrame(function() { overlay.classList.add('open'); });
+            function closeModal() { overlay.classList.remove('open'); setTimeout(function() { overlay.remove(); }, 200); }
+            overlay.querySelector('.pos-edit-cancel-btn').addEventListener('click', closeModal);
+            overlay.addEventListener('click', function(e) { if (e.target === overlay) closeModal(); });
+            // GPS button
+            overlay.querySelector('.pos-edit-gps-btn').addEventListener('click', function() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function(pos) {
+                        document.getElementById('pos-edit-lat').value = pos.coords.latitude.toFixed(6);
+                        document.getElementById('pos-edit-lng').value = pos.coords.longitude.toFixed(6);
+                        showToast('📍 GPS OK', 'success');
+                    }, function() {
+                        showToast(T('GPS non disponibile', 'GPS unavailable', 'GPS no disponible'), 'info');
+                    }, { enableHighAccuracy: true, timeout: 10000 });
+                }
+            });
+            // Save button
+            overlay.querySelector('.pos-edit-save-btn').addEventListener('click', function() {
+                var newName = document.getElementById('pos-edit-name').value.trim();
+                var newDate = document.getElementById('pos-edit-date').value.trim();
+                var newTime = document.getElementById('pos-edit-time').value.trim();
+                var newLat = document.getElementById('pos-edit-lat').value.trim();
+                var newLng = document.getElementById('pos-edit-lng').value.trim();
+                var update = {};
+                update.name = newName || item.name || '';
+                update.date = newDate || item.date || '';
+                update.time = newTime || item.time || '';
+                update.lat = newLat ? parseFloat(newLat) : null;
+                update.lng = newLng ? parseFloat(newLng) : null;
+                if (isParking) {
+                    var r = parseInt(document.getElementById('pos-edit-rating').value, 10);
+                    if (isNaN(r) || r < 1) r = 1; if (r > 5) r = 5;
+                    update.rating = r;
+                }
+                var path = isParking ? ('parking/' + ckey) : ('customCheckins/' + ckey);
+                var ref = getFamilyRef(path);
+                if (ref) ref.update(update);
+                // Update local cache for custom checkins
+                if (!isParking && typeof customCheckins !== 'undefined') {
+                    customCheckins[ckey] = Object.assign({}, customCheckins[ckey] || {}, update);
+                    saveLocal(KEYS.CUSTOM_CHECKINS, customCheckins);
+                    _refreshUnifiedStops();
+                }
+                showToast('✏️ ' + T('Aggiornato!', 'Updated!', '¡Actualizado!'), 'success');
+                closeModal();
+                if (isParking) renderParkingList();
+                updateMapMarkers();
+            });
+        }
+        // ─── v5.03: Edit modal for itinerary check-ins ───
+        function showEditItinCheckinModal(idx) {
+            if (!isOwner) return;
+            var ci = checkins[idx];
+            if (!ci) return;
+            var p = places[idx];
+            var overlay = document.createElement('div');
+            overlay.className = 'qv-modal-overlay';
+            var title = T('Modifica check-in', 'Edit check-in', 'Editar check-in');
+            var html = '<div class="pos-edit-modal">';
+            html += '<h3 style="margin:0 0 16px;font-size:17px;font-weight:700;">' + title + '</h3>';
+            html += '<p style="font-size:13px;color:var(--text-muted);margin:0 0 12px;"><strong>' + (p ? p.day : '') + '</strong> · ' + (p ? p.place : '') + '</p>';
+            html += '<label>' + T('Ora', 'Time', 'Hora') + '</label>';
+            html += '<input type="text" id="pos-edit-time" value="' + escapeHtml(ci.time || '') + '" placeholder="dd/mm/yyyy, HH:MM:SS">';
+            html += '<label>' + T('Latitudine', 'Latitude', 'Latitud') + '</label>';
+            html += '<input type="text" id="pos-edit-lat" value="' + (ci.lat != null ? ci.lat : '') + '" placeholder="45.1234" inputmode="decimal">';
+            html += '<label>' + T('Longitudine', 'Longitude', 'Longitud') + '</label>';
+            html += '<input type="text" id="pos-edit-lng" value="' + (ci.lng != null ? ci.lng : '') + '" placeholder="11.5678" inputmode="decimal">';
+            html += '<div class="pos-edit-actions">';
+            html += '<button class="pos-edit-cancel-btn">' + T('Annulla', 'Cancel', 'Cancelar') + '</button>';
+            html += '<button class="pos-edit-gps-btn" title="' + T('Usa GPS attuale', 'Use current GPS', 'Usar GPS actual') + '">📍 GPS</button>';
+            html += '<button class="pos-edit-save-btn">' + T('Salva', 'Save', 'Guardar') + '</button>';
+            html += '</div></div>';
+            overlay.innerHTML = html;
+            document.body.appendChild(overlay);
+            requestAnimationFrame(function() { overlay.classList.add('open'); });
+            function closeModal() { overlay.classList.remove('open'); setTimeout(function() { overlay.remove(); }, 200); }
+            overlay.querySelector('.pos-edit-cancel-btn').addEventListener('click', closeModal);
+            overlay.addEventListener('click', function(e) { if (e.target === overlay) closeModal(); });
+            overlay.querySelector('.pos-edit-gps-btn').addEventListener('click', function() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function(pos) {
+                        document.getElementById('pos-edit-lat').value = pos.coords.latitude.toFixed(6);
+                        document.getElementById('pos-edit-lng').value = pos.coords.longitude.toFixed(6);
+                        showToast('📍 GPS OK', 'success');
+                    }, function() {
+                        showToast(T('GPS non disponibile', 'GPS unavailable', 'GPS no disponible'), 'info');
+                    }, { enableHighAccuracy: true, timeout: 10000 });
+                }
+            });
+            overlay.querySelector('.pos-edit-save-btn').addEventListener('click', function() {
+                var newTime = document.getElementById('pos-edit-time').value.trim();
+                var newLat = document.getElementById('pos-edit-lat').value.trim();
+                var newLng = document.getElementById('pos-edit-lng').value.trim();
+                var update = {};
+                update.time = newTime || ci.time || '';
+                update.lat = newLat ? parseFloat(newLat) : null;
+                update.lng = newLng ? parseFloat(newLng) : null;
+                if (ci.auto) update.auto = true;
+                saveCheckin(idx, update);
+                renderPlaces(document.getElementById('pos-search') ? document.getElementById('pos-search').value : '');
+                updateStats(); updateMapMarkers();
+                showToast('✏️ ' + T('Aggiornato!', 'Updated!', '¡Actualizado!'), 'success');
+                closeModal();
+            });
+        }
+
         var _parkingRef = null;
         function renderParkingList() {
             var container = document.getElementById('pos-parking-list');
@@ -5821,22 +5994,13 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                     card.innerHTML = html;
                     container.appendChild(card);
                 });
-                // Edit handler
+                // v5.03: Edit handler — uses full modal instead of prompt()
                 container.querySelectorAll('.pos-edit-btn[data-pkey]').forEach(function(btn) {
                     btn.addEventListener('click', function() {
                         var pkey = btn.getAttribute('data-pkey');
                         var spot = spots[pkey];
                         if (!spot) return;
-                        var newName = prompt(LANG3 === 'es' ? 'Editar nombre:' : isEN ? 'Edit name:' : 'Modifica nome:', spot.name || '');
-                        if (newName === null) return; // cancelled
-                        var newRatingStr = prompt(LANG3 === 'es' ? 'Valoración (1-5 estrellas):' : isEN ? 'Rating (1-5 stars):' : 'Valutazione (1-5 stelle):', String(spot.rating || 3));
-                        if (newRatingStr === null) return;
-                        var newRating = parseInt(newRatingStr, 10);
-                        if (isNaN(newRating) || newRating < 1) newRating = 1;
-                        if (newRating > 5) newRating = 5;
-                        var pRef = getFamilyRef('parking/' + pkey);
-                        if (pRef) pRef.update({ name: newName.trim() || spot.name, rating: newRating });
-                        showToast('✏️ ' + (LANG3 === 'es' ? '¡Actualizado!' : isEN ? 'Updated!' : 'Aggiornato!'), 'success');
+                        showEditCheckinModal(pkey, spot, 'parking');
                     });
                 });
                 // Delete handler
@@ -6653,6 +6817,12 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             var gpsOpts = { enableHighAccuracy: true, maximumAge: isEco ? ECO_INTERVAL : NORMAL_INTERVAL, timeout: isEco ? 60000 : 30000 };
 
             liveWatchId = navigator.geolocation.watchPosition(function(pos) {
+                // v5.03: Accuracy filter
+                var _acc = pos.coords.accuracy || 0;
+                if (_acc > ACCURACY_THRESHOLD) {
+                    console.log('[GPS CapResume] Fix discarded: accuracy=' + _acc.toFixed(0) + 'm');
+                    return;
+                }
                 var lat = pos.coords.latitude;
                 var lng = pos.coords.longitude;
                 var speed = pos.coords.speed != null ? pos.coords.speed * 3.6 : 0;
@@ -6673,7 +6843,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                     } else if (timeSinceLast > GAP_MIN_TIME && dist > GAP_MIN_DIST) {
                         estimateGapDistance(last, lat, lng);
                         pushTrackPoint(pt);
-                    } else if (dist >= MIN_TRACK_DIST) {
+                    } else if (dist >= Math.max(MIN_TRACK_DIST, (_acc || 10) / 1000 * 1.5)) {
                         todayKm += dist;
                         pushTrackPoint(pt);
                         var sessKmRef = getFamilyRef('liveSession/' + (firebaseUser ? firebaseUser.uid : 'driver') + '/todayKm');
@@ -12663,6 +12833,7 @@ window.injectAllWikiLinks = function() {
             if (_gpxKm >= existingKm) {
               // Case 1: GPX >= live → always overwrite
               updates.km = Math.round(_gpxKm * 10) / 10;
+              updates.odometerKm = updates.km; // v5.03: protect from future remerge
               if (_gpxTime > 0 && _gpxAvg >= 10) {
                 updates.time = _gpxTime;
                 updates.avgSpeed = _gpxKm / (_gpxTime / 3600000);
@@ -12673,6 +12844,7 @@ window.injectAllWikiLinks = function() {
               if (diff <= 0.10) {
                 // Case 2: GPX < live but within 10% → overwrite silently (live likely overestimated)
                 updates.km = Math.round(_gpxKm * 10) / 10;
+                updates.odometerKm = updates.km; // v5.03: protect from future remerge
                 if (_gpxTime > 0 && _gpxAvg >= 10) {
                   updates.time = _gpxTime;
                   updates.avgSpeed = _gpxKm / (_gpxTime / 3600000);
@@ -12774,6 +12946,7 @@ window.injectAllWikiLinks = function() {
     overlay.querySelector('#gpx-conflict-use-gpx').addEventListener('click', function() {
       conflicts.forEach(function(c) {
         var upd = { km: Math.round(c.gpxKm * 10) / 10, source: 'gpx_import' };
+        upd.odometerKm = upd.km; // v5.03: protect from future remerge
         if (c.gpxTime > 0 && c.gpxAvg >= 10) {
           upd.time = c.gpxTime;
           upd.avgSpeed = c.gpxKm / (c.gpxTime / 3600000);
@@ -15223,16 +15396,12 @@ window.injectAllWikiLinks = function() {
         var dayData = dayMap[dateStr];
         if (dayData.photos.length === 0) return;
 
-        // Sort photos within day: respect manual order first, then chronological
+        // v5.02: Gallery always shows photos in reverse chronological order
+        // (manual order from timeline drag-and-drop is ignored here)
         dayData.photos.sort(function(a, b) {
-          var oa = (typeof a.order === 'number') ? a.order : null;
-          var ob = (typeof b.order === 'number') ? b.order : null;
-          if (oa !== null && ob === null) return -1;
-          if (oa === null && ob !== null) return 1;
-          if (oa !== null && ob !== null && oa !== ob) return oa - ob;
           var tsA = a.ts || 0;
           var tsB = b.ts || 0;
-          if (tsA !== tsB) return tsA - tsB;
+          if (tsA !== tsB) return tsB - tsA; // newest first
           return String(a.photoKey).localeCompare(String(b.photoKey));
         });
 
@@ -16618,6 +16787,11 @@ window.injectAllWikiLinks = function() {
     // Comments container (collapsed by default)
     h += '<div class="diario-comments" data-key="' + key + '">';
     h += renderCommentsList(key, comments);
+    // v5.02: Reply banner (hidden by default, shown when user clicks Reply)
+    h += '<div class="diario-comment-reply-banner" data-key="' + key + '" style="display:none;">' +
+         '<span class="reply-banner-text">\u21A9 <span class="reply-banner-name"></span></span>' +
+         '<button type="button" class="reply-banner-close" data-key="' + key + '">\u2715</button>' +
+         '</div>';
     // Comment form (v4.00: added photo button)
     h += '<div class="diario-comment-form">' +
          '<input type="text" class="diario-comment-input" data-key="' + key + '" maxlength="2000" placeholder="' +
@@ -16648,6 +16822,11 @@ window.injectAllWikiLinks = function() {
       out += '<div class="diario-comment-body">';
       out += '<span class="diario-comment-author">' + escapeHtml(c.name || (LANG3 === 'es' ? 'Invitado' : isEN ? 'Guest' : 'Ospite')) + '</span>';
       out += '<span class="diario-comment-time">' + escapeHtml(_formatCommentTime(c.ts)) + '</span>';
+      // v5.02: Reply-to quote block
+      if (c.replyTo && c.replyTo.name) {
+        var replyText = c.replyTo.text ? (c.replyTo.text.length > 60 ? c.replyTo.text.substring(0, 60) + '\u2026' : c.replyTo.text) : (c.replyTo.photoUrl ? '\uD83D\uDCF7' : '');
+        out += '<div class="diario-comment-reply-quote"><span class="reply-quote-author">\u21A9 ' + escapeHtml(c.replyTo.name) + '</span> <span class="reply-quote-text">' + escapeHtml(replyText) + '</span></div>';
+      }
       if (c.photoUrl) {
         out += '<img src="' + escapeHtml(c.photoUrl) + '" class="diario-comment-photo-img" loading="lazy" onclick="window.open(this.src,\'_blank\')" alt="">';
       }
@@ -16655,9 +16834,15 @@ window.injectAllWikiLinks = function() {
         out += '<span class="diario-comment-text">' + escapeHtml(c.text) + '</span>';
       }
       out += '</div>';
+      // v5.02: Reply + Delete buttons
+      out += '<div class="diario-comment-actions">';
+      if (myUid) {
+        out += '<button type="button" class="diario-comment-reply" data-key="' + key + '" data-cid="' + cid + '" data-author="' + escapeHtml(c.name || '') + '" data-text="' + escapeHtml((c.text || '').substring(0, 60)) + '" data-photo="' + (c.photoUrl ? '1' : '') + '" title="' + (LANG3 === 'es' ? 'Responder' : isEN ? 'Reply' : 'Rispondi') + '">\u21A9</button>';
+      }
       if (canDelete) {
         out += '<button type="button" class="diario-comment-del" data-key="' + key + '" data-cid="' + cid + '" title="' + (LANG3 === 'es' ? 'Eliminar' : isEN ? 'Delete' : 'Elimina') + '">\uD83D\uDDD1\uFE0F</button>';
       }
+      out += '</div>';
       // v4.00 Feature #Extra: Comment reactions
       var cReactions = c.reactions || {};
       var cReactCounts = {};
@@ -16695,7 +16880,8 @@ window.injectAllWikiLinks = function() {
       if (currentEmoji === emoji) {
         return ref.remove();
       }
-      return ref.set({ emoji: emoji, timestamp: firebase.database.ServerValue.TIMESTAMP });
+      // v5.02 FIX: write emoji as plain string (Security Rules .validate expects string, not object)
+      return ref.set(emoji);
     }).catch(function(err) {
       console.warn('[Diario] Comment reaction failed:', err.message);
       if (window.showToast) showToast(LANG3 === 'es' ? 'No se pudo guardar la reacción' : isEN ? 'Could not save reaction' : 'Impossibile salvare la reazione', 'danger');
@@ -16737,7 +16923,8 @@ window.injectAllWikiLinks = function() {
 
   // v4.18: toggleWasThere() removed ("Ci sono stato!" feature removed per user request)
 
-  function sendComment(key, text, photoUrl) {
+  // v5.02: added replyTo parameter for reply-to-comment feature
+  function sendComment(key, text, photoUrl, replyTo) {
     var user = _socialUser();
     if (!user || !user.uid) {
       if (window.showToast) showToast(LANG3 === 'es' ? 'Inicia sesión para comentar' : isEN ? 'Sign in to comment' : 'Accedi per commentare', 'info');
@@ -16754,6 +16941,7 @@ window.injectAllWikiLinks = function() {
       ts: Date.now()
     };
     if (photoUrl) payload.photoUrl = photoUrl;
+    if (replyTo) payload.replyTo = replyTo;
     return commentsRef.push(payload).then(function() {
       if (!isOwner && window.queuePushNotification) {
         queuePushNotification('diary_comment', {
@@ -16834,6 +17022,35 @@ window.injectAllWikiLinks = function() {
         if (box) box.classList.toggle('open');
         return;
       }
+      // v5.02: Reply button handler
+      var replyBtn = e.target.closest('.diario-comment-reply');
+      if (replyBtn) {
+        var k = replyBtn.getAttribute('data-key');
+        var author = replyBtn.getAttribute('data-author');
+        var txt = replyBtn.getAttribute('data-text');
+        var hasPhoto = replyBtn.getAttribute('data-photo');
+        var cid = replyBtn.getAttribute('data-cid');
+        var banner = timelineEl.querySelector('.diario-comment-reply-banner[data-key="' + k + '"]');
+        if (banner) {
+          banner.style.display = 'flex';
+          banner.querySelector('.reply-banner-name').textContent = author;
+          banner.setAttribute('data-reply-cid', cid);
+          banner.setAttribute('data-reply-author', author);
+          banner.setAttribute('data-reply-text', txt || '');
+          banner.setAttribute('data-reply-photo', hasPhoto || '');
+        }
+        var input = timelineEl.querySelector('.diario-comment-input[data-key="' + k + '"]');
+        if (input) input.focus();
+        return;
+      }
+      // v5.02: Reply banner close
+      var replyClose = e.target.closest('.reply-banner-close');
+      if (replyClose) {
+        var k = replyClose.getAttribute('data-key');
+        var banner = timelineEl.querySelector('.diario-comment-reply-banner[data-key="' + k + '"]');
+        if (banner) { banner.style.display = 'none'; banner.removeAttribute('data-reply-cid'); }
+        return;
+      }
       // Send comment
       var sb = e.target.closest('.diario-comment-send');
       if (sb) {
@@ -16841,7 +17058,22 @@ window.injectAllWikiLinks = function() {
         var input = timelineEl.querySelector('.diario-comment-input[data-key="' + k + '"]');
         if (input && input.value.trim()) {
           sb.disabled = true;
-          sendComment(k, input.value).then(function() { input.value = ''; sb.disabled = false; });
+          // v5.02: Check if replying to a comment
+          var replyTo = null;
+          var banner = timelineEl.querySelector('.diario-comment-reply-banner[data-key="' + k + '"]');
+          if (banner && banner.getAttribute('data-reply-cid')) {
+            replyTo = {
+              cid: banner.getAttribute('data-reply-cid'),
+              name: banner.getAttribute('data-reply-author') || '',
+              text: banner.getAttribute('data-reply-text') || '',
+              photoUrl: banner.getAttribute('data-reply-photo') ? true : null
+            };
+            if (!replyTo.photoUrl) delete replyTo.photoUrl;
+          }
+          sendComment(k, input.value, null, replyTo).then(function() {
+            input.value = ''; sb.disabled = false;
+            if (banner) { banner.style.display = 'none'; banner.removeAttribute('data-reply-cid'); }
+          });
         }
         return;
       }
@@ -16970,7 +17202,22 @@ window.injectAllWikiLinks = function() {
       e.preventDefault();
       var k = input.getAttribute('data-key');
       if (input.value.trim()) {
-        sendComment(k, input.value).then(function() { input.value = ''; });
+        // v5.02: include replyTo if banner is active
+        var replyTo = null;
+        var banner = timelineEl.querySelector('.diario-comment-reply-banner[data-key="' + k + '"]');
+        if (banner && banner.getAttribute('data-reply-cid')) {
+          replyTo = {
+            cid: banner.getAttribute('data-reply-cid'),
+            name: banner.getAttribute('data-reply-author') || '',
+            text: banner.getAttribute('data-reply-text') || '',
+            photoUrl: banner.getAttribute('data-reply-photo') ? true : null
+          };
+          if (!replyTo.photoUrl) delete replyTo.photoUrl;
+        }
+        sendComment(k, input.value, null, replyTo).then(function() {
+          input.value = '';
+          if (banner) { banner.style.display = 'none'; banner.removeAttribute('data-reply-cid'); }
+        });
       }
     });
   }

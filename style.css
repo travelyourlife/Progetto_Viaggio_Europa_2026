@@ -6294,3 +6294,177 @@ body.dark-mode .ci-tier-1 { border-color: #8a6a3a; }
     padding-bottom: 8px;
     border-bottom: 2px solid #d4e8d4;
 }
+
+/* v5.02: Reply-to-comment styles */
+.diario-comment-reply-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  margin: 4px 0;
+  background: #e8f4fd;
+  border-left: 3px solid var(--accent, #1976d2);
+  border-radius: 6px;
+  font-size: 13px;
+  color: #1976d2;
+}
+.reply-banner-text {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.reply-banner-name {
+  font-weight: 600;
+}
+.reply-banner-close {
+  background: none;
+  border: none;
+  font-size: 16px;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+}
+.reply-banner-close:hover {
+  color: #ef4444;
+}
+.diario-comment-reply-quote {
+  background: #f1f5f9;
+  border-left: 2px solid #94a3b8;
+  border-radius: 4px;
+  padding: 3px 8px;
+  margin: 2px 0 4px;
+  font-size: 12px;
+  color: #64748b;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.reply-quote-author {
+  font-weight: 600;
+  color: #475569;
+}
+.reply-quote-text {
+  font-style: italic;
+}
+.diario-comment-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.diario-comment-reply {
+  background: none;
+  border: none;
+  font-size: 14px;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 4px;
+  line-height: 1;
+}
+.diario-comment-reply:hover {
+  color: var(--accent, #1976d2);
+  background: #f1f5f9;
+}
+
+/* ─── v5.03: Edit modal for check-ins & parking ─── */
+.pos-edit-modal {
+  background: var(--bg-card, #fff);
+  border-radius: 16px;
+  padding: 24px;
+  width: 90%;
+  max-width: 380px;
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  color: var(--text, #1a1a2e);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  transform: scale(0.9);
+  transition: transform 0.2s ease;
+}
+.qv-modal-overlay.open .pos-edit-modal { transform: scale(1); }
+.pos-edit-modal label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted, #64748b);
+  margin: 12px 0 4px;
+}
+.pos-edit-modal input[type="text"],
+.pos-edit-modal input[type="date"],
+.pos-edit-modal input[type="number"] {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border, #e2e8f0);
+  border-radius: 8px;
+  font-size: 14px;
+  box-sizing: border-box;
+  background: var(--bg, #f8fafc);
+  color: var(--text, #1a1a2e);
+  transition: border-color 0.15s ease;
+}
+.pos-edit-modal input:focus {
+  outline: none;
+  border-color: var(--accent, #2563eb);
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+}
+.pos-edit-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  justify-content: flex-end;
+}
+.pos-edit-cancel-btn {
+  padding: 10px 16px;
+  border: 1px solid var(--border, #e2e8f0);
+  border-radius: 8px;
+  background: var(--bg-alt, #f1f5f9);
+  color: var(--text, #1a1a2e);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.pos-edit-gps-btn {
+  padding: 10px 14px;
+  border: 1px solid var(--border, #e2e8f0);
+  border-radius: 8px;
+  background: var(--bg-alt, #f1f5f9);
+  color: var(--accent, #2563eb);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.pos-edit-save-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  background: var(--primary, #2563eb);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.pos-edit-save-btn:hover { background: #1d4ed8; }
+.pos-edit-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 2px 4px;
+  opacity: 0.7;
+  transition: opacity 0.15s ease;
+}
+.pos-edit-btn:hover { opacity: 1; }
+/* Dark mode for edit modal */
+@media (prefers-color-scheme: dark) {
+  .pos-edit-modal { background: #2d3748; color: #e2e8f0; }
+  .pos-edit-modal label { color: #a0aec0; }
+  .pos-edit-modal input[type="text"],
+  .pos-edit-modal input[type="date"],
+  .pos-edit-modal input[type="number"] { background: #1a202c; border-color: #4a5568; color: #e2e8f0; }
+  .pos-edit-cancel-btn { background: #4a5568; color: #e2e8f0; border-color: #4a5568; }
+  .pos-edit-gps-btn { background: #4a5568; color: #63b3ed; border-color: #4a5568; }
+}

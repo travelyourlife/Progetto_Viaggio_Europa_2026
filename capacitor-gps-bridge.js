@@ -227,6 +227,13 @@
 
       if (!location) return;
 
+      // v5.03: Accuracy filter — discard low-quality fixes
+      var _acc = location.accuracy || 0;
+      if (_acc > 30) {
+        console.log('[CapGPS] Fix discarded: accuracy=' + _acc.toFixed(0) + 'm > 30m');
+        return;
+      }
+
       var lat = location.latitude;
       var lng = location.longitude;
       var speed = location.speed != null ? location.speed * 3.6 : 0; // m/s → km/h
@@ -236,7 +243,9 @@
       // Calculate distance
       if (bgLastLat !== null && bgLastLng !== null) {
         var dist = haversineKm(bgLastLat, bgLastLng, lat, lng);
-        if (dist > 0.1 && dist < 5) { // filter noise (100m-5km) — v4.85: raised from 5m to match app.js MIN_TRACK_DIST
+        // v5.03: dynamic threshold based on accuracy (replaces fixed 0.1)
+        var distMin = Math.max(0.1, (_acc || 10) / 1000 * 1.5);
+        if (dist >= distMin && dist < 5) {
           bgTodayKm += dist;
         }
       }

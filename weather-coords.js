@@ -27,16 +27,16 @@ var TRIP_COORDS = [
   { lat: 67.9333, lng: 13.0833, city: "Reine", cityEn: "Reine", country: "Norvegia", flag: "🇳🇴" },             // G24
   { lat: 68.0333, lng: 13.3500, city: "Lofoten Sud", cityEn: "South Lofoten", country: "Norvegia", flag: "🇳🇴" },// G25
   { lat: 66.5633, lng: 15.3117, city: "Saltstraumen", cityEn: "Saltstraumen", country: "Norvegia", flag: "🇳🇴" },// G26
-  { lat: 63.4305, lng: 10.3951, city: "Trondheim", cityEn: "Trondheim", country: "Norvegia", flag: "🇳🇴" },     // G27
-  { lat: 63.4305, lng: 10.3951, city: "Trondheim", cityEn: "Trondheim", country: "Norvegia", flag: "🇳🇴" },     // G28
-  { lat: 63.0167, lng: 7.3500, city: "Atlanterhavsveien", cityEn: "Atlantic Road", country: "Norvegia", flag: "🇳🇴" }, // G29
-  { lat: 62.4567, lng: 7.6700, city: "Trollstigen", cityEn: "Trollstigen", country: "Norvegia", flag: "🇳🇴" },  // G30
-  { lat: 60.3913, lng: 5.3221, city: "Bergen", cityEn: "Bergen", country: "Norvegia", flag: "🇳🇴" },             // G31
-  { lat: 60.3913, lng: 5.3221, city: "Bergen", cityEn: "Bergen", country: "Norvegia", flag: "🇳🇴" },             // G32
-  { lat: 58.9700, lng: 5.7331, city: "Stavanger", cityEn: "Stavanger", country: "Norvegia", flag: "🇳🇴" },       // G33
-  { lat: 58.9863, lng: 6.1885, city: "Preikestolen", cityEn: "Preikestolen", country: "Norvegia", flag: "🇳🇴" }, // G34
-  { lat: 55.6761, lng: 12.5683, city: "Copenhagen", cityEn: "Copenhagen", country: "Danimarca", flag: "🇩🇰" },   // G35
-  { lat: 55.6761, lng: 12.5683, city: "Copenhagen", cityEn: "Copenhagen", country: "Danimarca", flag: "🇩🇰" },   // G36
+  { lat: 62.7373, lng: 7.1591, city: "Molde", cityEn: "Molde", country: "Norvegia", flag: "🇳🇴" },               // G27 Atlantic Road → Molde
+  { lat: 62.1013, lng: 7.2059, city: "Geiranger", cityEn: "Geiranger", country: "Norvegia", flag: "🇳🇴" },         // G28 Trollstigen → Geiranger
+  { lat: 60.8630, lng: 7.1140, city: "Flåm", cityEn: "Flåm", country: "Norvegia", flag: "🇳🇴" },               // G29 Geiranger → Flåm
+  { lat: 60.4190, lng: 7.1530, city: "Eidfjord", cityEn: "Eidfjord", country: "Norvegia", flag: "🇳🇴" },           // G30 Nærøyfjord → Eidfjord
+  { lat: 60.3913, lng: 5.3221, city: "Bergen", cityEn: "Bergen", country: "Norvegia", flag: "🇳🇴" },               // G31 Vøringsfossen → Bergen
+  { lat: 58.9700, lng: 5.7331, city: "Stavanger", cityEn: "Stavanger", country: "Norvegia", flag: "🇳🇴" },         // G32 Bergen → Stavanger
+  { lat: 58.9700, lng: 5.7331, city: "Stavanger", cityEn: "Stavanger", country: "Norvegia", flag: "🇳🇴" },         // G33 Preikestolen (notte Stavanger)
+  { lat: 58.1460, lng: 7.9960, city: "Kristiansand", cityEn: "Kristiansand", country: "Norvegia", flag: "🇳🇴" },   // G34 Stavanger → Kristiansand
+  { lat: 58.1460, lng: 7.9960, city: "Kristiansand", cityEn: "Kristiansand", country: "Norvegia", flag: "🇳🇴" },   // G35 Kristiansand (riposo)
+  { lat: 55.6761, lng: 12.5683, city: "Copenhagen", cityEn: "Copenhagen", country: "Danimarca", flag: "🇩🇰" },     // G36 K.sand → Copenhagen
   { lat: 55.6761, lng: 12.5683, city: "Copenhagen", cityEn: "Copenhagen", country: "Danimarca", flag: "🇩🇰" },   // G37
   { lat: 55.7308, lng: 9.1153, city: "Billund", cityEn: "Billund", country: "Danimarca", flag: "🇩🇰" },          // G38
   { lat: 55.7308, lng: 9.1153, city: "Legoland", cityEn: "Legoland", country: "Danimarca", flag: "🇩🇰" },        // G39
