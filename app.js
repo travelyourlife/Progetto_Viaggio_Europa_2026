@@ -394,7 +394,7 @@ try {
 
   // v3.94 FIX Audit #8: Always include User-Agent header (Nominatim ToS requirement)
   // v4.08 FIX: Use runtime version from EXPECTED_VERSION instead of hardcoded
-  var _appVer = (typeof EXPECTED_VERSION !== 'undefined') ? EXPECTED_VERSION : '4.08';
+  var _appVer = (typeof EXPECTED_VERSION !== 'undefined') ? EXPECTED_VERSION : '5.11';
   var _defaultHeaders = { 'User-Agent': 'QuoVadis-TripApp/' + _appVer + ' (family-trip-pwa)' };
 
   function _drain() {
@@ -4105,7 +4105,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             var navBtn = e.target.closest('.pos-nav-btn');
             if (navBtn) {
                 var place = decodeURIComponent(navBtn.getAttribute('data-place'));
-                window.open('https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(place), '_blank');
+                window.open('https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(place), '_blank', 'noopener,noreferrer');
             }
         });
 
@@ -4941,23 +4941,38 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                         }
                 });
             }
-            // Live dot status
+            // Live dot status — v5.09: improved messaging for followers
             var liveTabDotEl = document.getElementById('liveTabDot');
             var dot = document.getElementById('pos-live-dot');
             var label = document.getElementById('pos-live-label');
-            var isRecent = (d.time || d.ts) && (Date.now() - (d.time || d.ts)) < 300000; // 5 min
+            var _posAge = (d.time || d.ts) ? (Date.now() - (d.time || d.ts)) : Infinity;
+            var isRecent = _posAge < 300000; // <5 min
+            var isSemiRecent = _posAge < 1800000; // <30 min
             if (dot && isRecent) {
                 if (d.status === 'moving' || d.speed > 3) {
                     dot.className = 'pos-live-indicator pos-live-on';
                     if (label) label.textContent = LANG3 === 'es' ? 'En viaje' : isEN ? 'Travelling' : 'In viaggio';
-                } else if (d.status === 'stopped') {
+                } else {
                     dot.className = 'pos-live-indicator pos-live-on';
                     if (label) label.textContent = LANG3 === 'es' ? 'Viaje activo (detenido)' : isEN ? 'Trip active (stopped)' : 'Viaggio attivo (fermo)';
                 }
                 if (liveTabDotEl) liveTabDotEl.classList.add('active');
-            } else if (dot && !isRecent) {
+            } else if (dot && isSemiRecent) {
+                // Position is 5-30 min old — show as recent but not live
+                dot.className = 'pos-live-indicator pos-live-stale';
+                var _minAgo = Math.round(_posAge / 60000);
+                if (label) label.textContent = LANG3 === 'es' ? 'Posición reciente (' + _minAgo + ' min)' : isEN ? 'Recent position (' + _minAgo + ' min)' : 'Posizione recente (' + _minAgo + ' min)';
+                if (liveTabDotEl) liveTabDotEl.classList.add('active');
+            } else if (dot) {
+                // Position is >30 min old — show last known position age
                 dot.className = 'pos-live-indicator pos-live-off';
-                if (label) label.textContent = LANG3 === 'es' ? 'Viaje no activo' : isEN ? 'Trip not active' : 'Viaggio non attivo';
+                if (_posAge < Infinity) {
+                    var _hAgo = Math.round(_posAge / 3600000);
+                    var _ageLabel = _hAgo < 1 ? (Math.round(_posAge / 60000) + ' min') : (_hAgo + 'h');
+                    if (label) label.textContent = LANG3 === 'es' ? 'Última posición: ' + _ageLabel + ' atrás' : isEN ? 'Last position: ' + _ageLabel + ' ago' : 'Ultima posizione: ' + _ageLabel + ' fa';
+                } else {
+                    if (label) label.textContent = LANG3 === 'es' ? 'Posición no disponible' : isEN ? 'Position unavailable' : 'Posizione non disponibile';
+                }
                 if (liveTabDotEl) liveTabDotEl.classList.remove('active');
             }
         }
@@ -5030,10 +5045,19 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                 liveSessionRef.once('value', function(snap) {
                     var sessions = snap.val() || {};
                     var otherActive = null;
+                    var STALE_TIMEOUT_MS = 12 * 60 * 60 * 1000; // 12 hours
                     Object.keys(sessions).forEach(function(uid) {
                         if (uid !== firebaseUser.uid && sessions[uid] && sessions[uid].active === true) {
-                            otherActive = sessions[uid];
-                            otherActive.uid = uid;
+                            // v4.09: Auto-expire stale sessions (>12h without update)
+                            var sessionAge = Date.now() - (sessions[uid].startTime || 0);
+                            if (sessionAge > STALE_TIMEOUT_MS) {
+                                // Session is stale — auto-deactivate it
+                                liveSessionRef.child(uid).update({ active: false, stoppedAt: Date.now(), expiredReason: 'stale_timeout_12h' });
+                                console.log('[LiveSession] Auto-expired stale session from', sessions[uid].name || uid, '(age:', Math.round(sessionAge / 3600000), 'h)');
+                            } else {
+                                otherActive = sessions[uid];
+                                otherActive.uid = uid;
+                            }
                         }
                     });
                     if (otherActive) {
@@ -5562,8 +5586,8 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             // UI
             if (startBtn) startBtn.style.display = '';
             if (stopBtn) stopBtn.style.display = 'none';
-            if (liveDot) liveDot.className = 'pos-live-indicator pos-live-off';
-            if (liveLabel) liveLabel.textContent = LANG3 === 'es' ? 'Viaje no activo' : isEN ? 'Trip not active' : 'Viaggio non attivo';
+            if (liveDot) liveDot.className = 'pos-live-indicator pos-live-stale';
+            if (liveLabel) liveLabel.textContent = LANG3 === 'es' ? 'Seguimiento detenido' : isEN ? 'Tracking stopped' : 'Tracciamento fermato';
             var _ltd = document.getElementById('liveTabDot'); if (_ltd) _ltd.classList.remove('active');
             updateLiveUI(0, 0, todayKm, formatTime(_prevElapsed + (Date.now() - (liveStartTime || Date.now()))), 'off');
 
@@ -5605,6 +5629,9 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                         // Preserve an already-saved country if present.
                         if (existing.country) summary.country = existing.country;
                         if (existing.countryCode) summary.countryCode = existing.countryCode;
+                        // v5.09 FIX: Preserve odometerKm from GPX import (source of truth)
+                        if (existing.odometerKm != null) summary.odometerKm = existing.odometerKm;
+                        if (existing.source === 'gpx_import') summary.source = existing.source;
                         sumRef.set(summary).then(function() {
                             // v3.93: Save country (offline lookup + Nominatim fallback)
                             if (todayPoints.length === 0) return;
@@ -6634,7 +6661,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                     // Fallback: ask GPS
                     if (navigator.geolocation) {
                         navigator.geolocation.getCurrentPosition(function(pos) {
-                            window.open('https://www.google.com/maps/@' + pos.coords.latitude + ',' + pos.coords.longitude + ',17z/data=!3m1!1e1', '_blank');
+                            window.open('https://www.google.com/maps/@' + pos.coords.latitude + ',' + pos.coords.longitude + ',17z/data=!3m1!1e1', '_blank', 'noopener,noreferrer');
                         }, function() {
                             showToast(LANG3 === 'es' ? 'GPS no disponible.' : isEN ? 'GPS not available.' : 'GPS non disponibile.', 'info');
                         });
@@ -6645,7 +6672,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                 }
                 // Google Maps satellite URL with appropriate zoom
                 var gZoom = Math.min(Math.max(zoom + 2, 14), 20);
-                window.open('https://www.google.com/maps/@' + lat + ',' + lng + ',' + gZoom + 'z/data=!3m1!1e1', '_blank');
+                window.open('https://www.google.com/maps/@' + lat + ',' + lng + ',' + gZoom + 'z/data=!3m1!1e1', '_blank', 'noopener,noreferrer');
             });
         }
 
@@ -6734,6 +6761,17 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
         // ─── Init ───
         loadCheckins();
         updateStats();
+
+        // v5.11: Periodic stats refresh (60s) — keeps km, countries, country up-to-date
+        var _posStatsInterval = setInterval(updateStats, 60000);
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden) {
+                clearInterval(_posStatsInterval);
+            } else {
+                updateStats();
+                _posStatsInterval = setInterval(updateStats, 60000);
+            }
+        });
 
         // v3.50 Patch 4: GPS stale badge — shows real GPS state, not just button state
         setInterval(function() {
@@ -7529,16 +7567,18 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             // G1-G3: Central Europe (Austria, Poland)
             // G4-G7: Baltic States (Lithuania, Latvia x2, Estonia)
             // G8-G16: Finland (Lappeenranta → Kilpisjärvi)
-            // G17-G34: Norway (Tromsø → Kristiansand)
-            // G35-G41: Denmark + Legoland
+            // G17-G35: Norway (Tromsø → Kristiansand)
+            // G36-G40: Denmark (Copenhagen + Legoland)
+            // G41: Germany (Brema)
             // G42-G44: France (Amiens, Loire)
             // G45-G51: Spain (San Sebastián → Costa Brava)
             // G52-G55: Return (French Riviera, Genova, home)
             if (day <= 3) region = 'central';
             else if (day <= 7) region = 'baltic';
             else if (day <= 16) region = 'finland';
-            else if (day <= 34) region = 'norway';
-            else if (day <= 41) region = 'denmark';
+            else if (day <= 35) region = 'norway';
+            else if (day <= 40) region = 'denmark';
+            else if (day <= 41) region = 'germany';
             else if (day <= 44) region = 'france';
             else if (day <= 51) region = 'spain';
             else if (day <= 52) region = 'france';
@@ -7569,17 +7609,24 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
         // Insert timeline before the first accordion header
         headers[0].parentNode.insertBefore(timeline, headers[0]);
 
-        // Region labels (IT / EN)
-        var isENLocal = document.documentElement.lang === 'en' || window.location.pathname.indexOf('_en') !== -1;
+        // Region labels (IT / EN / ES)
+        var _lang3Local = (function() {
+            var l = (document.documentElement.lang || '').toLowerCase();
+            var p = (window.location.pathname || '').toLowerCase();
+            if (l === 'es' || p.indexOf('_es') !== -1) return 'es';
+            if (l === 'en' || p.indexOf('_en') !== -1) return 'en';
+            return 'it';
+        })();
         var regionLabels = {
-            central: { flags: '🇮🇹🇦🇹', it: 'Europa Centrale', en: 'Central Europe' },
-            baltic:  { flags: '🇵🇱🇱🇹🇱🇻🇪🇪', it: 'Paesi Baltici', en: 'Baltic States' },
-            finland: { flags: '🇫🇮', it: 'Finlandia', en: 'Finland' },
-            norway:  { flags: '🇳🇴', it: 'Norvegia', en: 'Norway' },
-            denmark: { flags: '🇩🇰', it: 'Danimarca', en: 'Denmark' },
-            france:  { flags: '🇫🇷', it: 'Francia', en: 'France' },
-            spain:   { flags: '🇪🇸', it: 'Spagna', en: 'Spain' },
-            'return': { flags: '🇮🇹', it: 'Ritorno', en: 'Return' }
+            central: { flags: '🇮🇹🇦🇹', it: 'Europa Centrale', en: 'Central Europe', es: 'Europa Central' },
+            baltic:  { flags: '🇵🇱🇱🇹🇱🇻🇪🇪', it: 'Paesi Baltici', en: 'Baltic States', es: 'Países Bálticos' },
+            finland: { flags: '🇫🇮', it: 'Finlandia', en: 'Finland', es: 'Finlandia' },
+            norway:  { flags: '🇳🇴', it: 'Norvegia', en: 'Norway', es: 'Noruega' },
+            denmark: { flags: '🇩🇰', it: 'Danimarca', en: 'Denmark', es: 'Dinamarca' },
+            germany: { flags: '🇩🇪', it: 'Germania', en: 'Germany', es: 'Alemania' },
+            france:  { flags: '🇫🇷', it: 'Francia', en: 'France', es: 'Francia' },
+            spain:   { flags: '🇪🇸', it: 'Spagna', en: 'Spain', es: 'España' },
+            'return': { flags: '🇮🇹', it: 'Ritorno', en: 'Return', es: 'Regreso' }
         };
 
         var lastRegion = '';
@@ -7592,7 +7639,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                 sep.setAttribute('data-region', region);
                 var label = regionLabels[region];
                 if (label) {
-                    sep.innerHTML = '<span class="region-flags">' + label.flags + '</span> ' + (isENLocal ? label.en : label.it);
+                    sep.innerHTML = '<span class="region-flags">' + label.flags + '</span> ' + (label[_lang3Local] || label.en);
                 }
                 timeline.appendChild(sep);
                 lastRegion = region;
@@ -7617,14 +7664,15 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
         var iqnToggle = null;
 
         var regionDefs = [
-            { id: 'central', flags: '🇮🇹🇦🇹🇵🇱', it: 'Centrale', en: 'Central', days: 'G1-G3', daysEn: 'D1-D3' },
-            { id: 'baltic',  flags: '🇱🇹🇱🇻🇪🇪', it: 'Baltici', en: 'Baltic', days: 'G4-G7', daysEn: 'D4-D7' },
-            { id: 'finland', flags: '🇫🇮', it: 'Finlandia', en: 'Finland', days: 'G8-G16', daysEn: 'D8-D16' },
-            { id: 'norway',  flags: '🇳🇴', it: 'Norvegia', en: 'Norway', days: 'G17-G34', daysEn: 'D17-D34' },
-            { id: 'denmark', flags: '🇩🇰', it: 'Danimarca', en: 'Denmark', days: 'G35-G41', daysEn: 'D35-D41' },
-            { id: 'france',  flags: '🇫🇷', it: 'Francia', en: 'France', days: 'G42-G44', daysEn: 'D42-D44' },
-            { id: 'spain',   flags: '🇪🇸', it: 'Spagna', en: 'Spain', days: 'G45-G51', daysEn: 'D45-D51' },
-            { id: 'return',  flags: '🇮🇹', it: 'Ritorno', en: 'Return', days: 'G52-G55', daysEn: 'D52-D55' }
+            { id: 'central', flags: '🇮🇹🇦🇹🇵🇱', it: 'Centrale', en: 'Central', es: 'Central', days: 'G1-G3', daysEn: 'D1-D3' },
+            { id: 'baltic',  flags: '🇱🇹🇱🇻🇪🇪', it: 'Baltici', en: 'Baltic', es: 'Bálticos', days: 'G4-G7', daysEn: 'D4-D7' },
+            { id: 'finland', flags: '🇫🇮', it: 'Finlandia', en: 'Finland', es: 'Finlandia', days: 'G8-G16', daysEn: 'D8-D16' },
+            { id: 'norway',  flags: '🇳🇴', it: 'Norvegia', en: 'Norway', es: 'Noruega', days: 'G17-G35', daysEn: 'D17-D35' },
+            { id: 'denmark', flags: '🇩🇰', it: 'Danimarca', en: 'Denmark', es: 'Dinamarca', days: 'G36-G40', daysEn: 'D36-D40' },
+            { id: 'germany', flags: '🇩🇪', it: 'Germania', en: 'Germany', es: 'Alemania', days: 'G41', daysEn: 'D41' },
+            { id: 'france',  flags: '🇫🇷', it: 'Francia', en: 'France', es: 'Francia', days: 'G42-G44', daysEn: 'D42-D44' },
+            { id: 'spain',   flags: '🇪🇸', it: 'Spagna', en: 'Spain', es: 'España', days: 'G45-G51', daysEn: 'D45-D51' },
+            { id: 'return',  flags: '🇮🇹', it: 'Ritorno', en: 'Return', es: 'Regreso', days: 'G52-G55', daysEn: 'D52-D55' }
         ];
 
         // Scroll lock flag to prevent IntersectionObserver from interfering during programmatic scrolls
@@ -7846,12 +7894,46 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             });
         });
     }
-    // v3.53: Altro page lang switch
+    // v5.10: Altro page 3-way language picker (IT/EN/ES)
     var altroLangBtn = document.getElementById('altro-lang-switch');
     if (altroLangBtn) {
-        altroLangBtn.addEventListener('click', function() {
-            var targetLang = (altroLangBtn.href.indexOf('index_es') > -1) ? 'es' : (altroLangBtn.href.indexOf('index_en') > -1) ? 'en' : 'it';
-            localStorage.setItem('quo-vadis-lang', targetLang);
+        // Convert single link into a 3-option inline picker
+        var _currentLang = LANG3 || 'it';
+        var _langOptions = [
+            { code: 'it', flag: '\uD83C\uDDEE\uD83C\uDDF9', label: 'Italiano', file: 'index.html' },
+            { code: 'en', flag: '\uD83C\uDDEC\uD83C\uDDE7', label: 'English', file: 'index_en.html' },
+            { code: 'es', flag: '\uD83C\uDDEA\uD83C\uDDF8', label: 'Espa\u00f1ol', file: 'index_es.html' }
+        ];
+        // Replace the single link with a row showing current lang + dropdown
+        var _currentOpt = _langOptions.find(function(o) { return o.code === _currentLang; }) || _langOptions[0];
+        altroLangBtn.innerHTML = '<span class="altro-setting-icon">' + _currentOpt.flag + '</span>' +
+            '<span class="altro-setting-label">' + _currentOpt.label + '</span>' +
+            '<span class="altro-setting-value">\u203A</span>';
+        altroLangBtn.removeAttribute('href');
+        altroLangBtn.style.cursor = 'pointer';
+        // Build dropdown
+        var _langDropdown = document.createElement('div');
+        _langDropdown.className = 'altro-lang-dropdown';
+        _langDropdown.style.cssText = 'display:none;background:var(--bg-card,#fff);border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.15);overflow:hidden;margin:-8px 0 8px;';
+        _langOptions.forEach(function(opt) {
+            var row = document.createElement('a');
+            row.href = './' + opt.file;
+            row.className = 'altro-setting-row';
+            row.style.cssText = 'display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:inherit;' + (opt.code === _currentLang ? 'background:var(--bg-hover,rgba(0,0,0,0.04));font-weight:600;' : '');
+            row.innerHTML = '<span style="font-size:20px;">' + opt.flag + '</span>' +
+                '<span style="flex:1;">' + opt.label + '</span>' +
+                (opt.code === _currentLang ? '<span style="color:var(--primary,#2c5282);">\u2713</span>' : '');
+            row.addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.setItem('quo-vadis-lang', opt.code);
+                window.location.href = './' + opt.file;
+            });
+            _langDropdown.appendChild(row);
+        });
+        altroLangBtn.parentNode.insertBefore(_langDropdown, altroLangBtn.nextSibling);
+        altroLangBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            _langDropdown.style.display = _langDropdown.style.display === 'none' ? 'block' : 'none';
         });
     }
 
@@ -8333,7 +8415,7 @@ async function fetchForecast(lat, lon, date, _retry) {
           // v3.14: make meteo clickable → open yr.no
           el.style.cursor = 'pointer';
           el.onclick = function() {
-            window.open('https://www.yr.no/en/forecast/daily-table/' + lat.toFixed(4) + ',' + lon.toFixed(4), '_blank');
+            window.open('https://www.yr.no/en/forecast/daily-table/' + lat.toFixed(4) + ',' + lon.toFixed(4), '_blank', 'noopener,noreferrer');
           };
         }
     }
@@ -8649,6 +8731,8 @@ async function fetchForecast(lat, lon, date, _retry) {
         }
       });
       showSyncStatus(LANG3 === 'es' ? '☁️ Sincronizado' : isEN ? '☁️ Synced' : '☁️ Sincronizzato', 'ok');
+      // v5.11: Refresh stats after remote sync
+      if (typeof window._posUpdateStats === 'function') try { window._posUpdateStats(); } catch(e) {}
     }
   });
 
@@ -12207,7 +12291,7 @@ window.injectAllWikiLinks = function() {
     if (_placeReverseCache[key]) { callback(_placeReverseCache[key]); return; }
     // v2.58: routed through global throttle (1 req/s Nominatim limit)
     window._nominatimFetch('https://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat + '&lon=' + lng + '&zoom=16&addressdetails=1', {
-      headers: { 'Accept-Language': LANG === 'en' ? 'en' : 'it' }
+      headers: { 'Accept-Language': LANG3 === 'es' ? 'es' : LANG3 === 'en' ? 'en' : 'it' }
     }).then(function(data) {
       var name = '';
       if (data.address) {
@@ -13332,7 +13416,7 @@ window.injectAllWikiLinks = function() {
 
     // Date separator
     var msgDate = new Date(msg.timestamp || 0);
-    var dateStr = msgDate.toLocaleDateString(LANG3 === 'es' ? 'es-ES' : LANG === 'en' ? 'en-GB' : 'it-IT', {
+    var dateStr = msgDate.toLocaleDateString(LANG3 === 'es' ? 'es-ES' : LANG3 === 'en' ? 'en-GB' : 'it-IT', {
       weekday: 'short', day: 'numeric', month: 'short'
     });
     if (dateStr !== lastDateShown) {
@@ -13372,12 +13456,14 @@ window.injectAllWikiLinks = function() {
       var name = document.createElement('span');
       name.className = 'chat-msg-name';
       var authorName = msg.displayName || (LANG3 === 'es' ? 'Anónimo' : isEN ? 'Anonymous' : 'Anonimo');
+      // v5.09: translate bot displayName for non-IT languages
+      if (authorName === 'Diario di bordo') authorName = (LANG3 === 'es') ? 'Diario de a bordo' : isEN ? 'Logbook' : authorName;
       name.textContent = authorName;
       name.style.color = getAuthorColor(authorName);
       header.appendChild(name);
       var time = document.createElement('span');
       time.className = 'chat-msg-time';
-      time.textContent = msgDate.toLocaleTimeString(LANG3 === 'es' ? 'es-ES' : LANG === 'en' ? 'en-GB' : 'it-IT', { hour: '2-digit', minute: '2-digit' });
+      time.textContent = msgDate.toLocaleTimeString(LANG3 === 'es' ? 'es-ES' : LANG3 === 'en' ? 'en-GB' : 'it-IT', { hour: '2-digit', minute: '2-digit' });
       header.appendChild(time);
       div.appendChild(header);
     }
@@ -13398,7 +13484,7 @@ window.injectAllWikiLinks = function() {
         img.src = msg.mediaUrl;
         img.alt = LANG3 === 'es' ? 'Foto compartida' : isEN ? 'Shared photo' : 'Foto condivisa';
         img.loading = 'lazy';
-        img.addEventListener('click', function() { window.open(msg.mediaUrl, '_blank'); });
+        img.addEventListener('click', function() { window.open(msg.mediaUrl, '_blank', 'noopener,noreferrer'); });
         mediaWrap.appendChild(img);
         var dlBtn = document.createElement('a');
         dlBtn.className = 'chat-msg-download';
@@ -13474,7 +13560,7 @@ window.injectAllWikiLinks = function() {
       var timeOwn = document.createElement('span');
       timeOwn.className = 'chat-msg-time';
       timeOwn.style.cssText = 'display:block; text-align:right; margin-top:2px; font-size:10px; opacity:0.7;';
-      timeOwn.textContent = msgDate.toLocaleTimeString(LANG3 === 'es' ? 'es-ES' : LANG === 'en' ? 'en-GB' : 'it-IT', { hour: '2-digit', minute: '2-digit' });
+      timeOwn.textContent = msgDate.toLocaleTimeString(LANG3 === 'es' ? 'es-ES' : LANG3 === 'en' ? 'en-GB' : 'it-IT', { hour: '2-digit', minute: '2-digit' });
       bubble.appendChild(timeOwn);
     }
 
@@ -14018,6 +14104,42 @@ window.injectAllWikiLinks = function() {
         overlay.remove();
       });
       actions.appendChild(copyBtn);
+    }
+
+    // v5.09: Translate (only for non-IT users and if there's text)
+    if (msgText && LANG3 !== 'it') {
+      var translateBtn = document.createElement('button');
+      translateBtn.innerHTML = '<span>\uD83C\uDF10</span><span>' + (LANG3 === 'es' ? 'Traducir' : 'Translate') + '</span>';
+      bindTap(translateBtn, function() {
+        overlay.remove();
+        if (!msgTextEl) return;
+        // Toggle: if already translated, restore original
+        if (msgTextEl.dataset.translated === '1') {
+          msgTextEl.innerHTML = linkify(escapeHtml(msgTextEl.dataset.original).replace(/\n/g, '<br>'));
+          msgTextEl.dataset.translated = '0';
+          return;
+        }
+        msgTextEl.dataset.original = msgText;
+        msgTextEl.innerHTML = '<em style="opacity:0.6;">' + (LANG3 === 'es' ? 'Traduciendo...' : 'Translating...') + '</em>';
+        var _tLang = (LANG3 === 'es') ? 'es' : 'en';
+        if (typeof firebase !== 'undefined' && firebase.functions) {
+          var translateFn = firebase.app().functions('europe-west1').httpsCallable('translatePost');
+          translateFn({ text: msgText, targetLang: _tLang, familyId: (typeof FAMILY_ID !== 'undefined' ? FAMILY_ID : 'viaggio-europa-2026') }).then(function(result) {
+            var translated = result.data && (result.data.translated || result.data['text' + _tLang.charAt(0).toUpperCase() + _tLang.slice(1)]);
+            if (translated) {
+              msgTextEl.innerHTML = linkify(escapeHtml(translated).replace(/\n/g, '<br>'));
+              msgTextEl.dataset.translated = '1';
+            } else {
+              msgTextEl.innerHTML = linkify(escapeHtml(msgText).replace(/\n/g, '<br>'));
+              if (window.showToast) showToast(LANG3 === 'es' ? 'Traducci\u00f3n no disponible' : 'Translation unavailable', 'error');
+            }
+          }).catch(function() {
+            msgTextEl.innerHTML = linkify(escapeHtml(msgText).replace(/\n/g, '<br>'));
+            if (window.showToast) showToast(LANG3 === 'es' ? 'Error de traducci\u00f3n' : 'Translation error', 'error');
+          });
+        }
+      });
+      actions.appendChild(translateBtn);
     }
 
     // Delete (only for own messages or owner)
@@ -15240,14 +15362,81 @@ window.injectAllWikiLinks = function() {
   var showToast = function(msg, type, dur) { if (window.showToast) window.showToast(msg, type, dur); };
 
   // v4.90 FIX: _lg at IIFE level so renderSocialBlock/renderPhotoSocial can access it
-  var _lg = (typeof LANG3 !== 'undefined') ? LANG3 : (LANG3 === 'es' ? 'es' : isEN ? 'en' : 'it');
+  var _lg = (typeof LANG3 !== 'undefined') ? LANG3 : (isEN ? 'en' : 'it');
 
   var diarioRef = firebase.database().ref('trips/' + FAMILY_ID + '/diary');
   var approvedRef = firebase.database().ref('trips/' + FAMILY_ID + '/approvedUsers');
   var pendingRef = firebase.database().ref('trips/' + FAMILY_ID + '/pendingUsers');
   var dailySummRef = firebase.database().ref('trips/' + FAMILY_ID + '/dailySummaries');
   var activitiesRef = firebase.database().ref('trips/' + FAMILY_ID + '/activities');
-  var storageRef = (firebase.storage) ? firebase.storage().ref('diary/' + FAMILY_ID) : null;
+    var storageRef = (firebase.storage) ? firebase.storage().ref('diary/' + FAMILY_ID) : null;
+
+  // v5.10: Auto-translate diary entry to EN + ES on publish.
+  // Saves textEn, textEs, titleEn, titleEs to Firebase so the Home feed
+  // and Diary tab show translated content without manual intervention.
+  function _autoTranslateDiaryEntry(entryKey, text, title) {
+    if (!text || typeof firebase === 'undefined' || !firebase.functions) return;
+    var translateFn = firebase.app().functions('europe-west1').httpsCallable('translatePost');
+    var _fid = (typeof FAMILY_ID !== 'undefined') ? FAMILY_ID : 'viaggio-europa-2026';
+    // Translate to English
+    translateFn({ text: text, title: title || '', key: entryKey, familyId: _fid, targetLang: 'en' }).then(function(result) {
+      if (result.data) {
+        var updates = {};
+        if (result.data.textEn) updates.textEn = result.data.textEn;
+        if (result.data.titleEn) updates.titleEn = result.data.titleEn;
+        if (Object.keys(updates).length > 0) {
+          diarioRef.child(entryKey).update(updates);
+          console.log('[Diario] Auto-translated to EN:', entryKey);
+        }
+      }
+    }).catch(function(e) { console.warn('[Diario] Auto-translate EN failed:', e.message); });
+    // Translate to Spanish
+    translateFn({ text: text, title: title || '', key: entryKey, familyId: _fid, targetLang: 'es' }).then(function(result) {
+      if (result.data) {
+        var updates = {};
+        if (result.data.textEs) updates.textEs = result.data.textEs;
+        if (result.data.titleEs) updates.titleEs = result.data.titleEs;
+        if (Object.keys(updates).length > 0) {
+          diarioRef.child(entryKey).update(updates);
+          console.log('[Diario] Auto-translated to ES:', entryKey);
+        }
+      }
+    }).catch(function(e) { console.warn('[Diario] Auto-translate ES failed:', e.message); });
+  }
+  // Expose for auto-publish flow
+    window._autoTranslateDiaryEntry = _autoTranslateDiaryEntry;
+
+  // v5.10: One-time batch translation of existing published entries that lack textEn/textEs.
+  // Runs only for the owner, max 5 entries per session to avoid rate-limiting.
+  // Once translated, the fields are saved to Firebase and won't be re-translated.
+  (function _batchTranslateExisting() {
+    if (typeof isOwner === 'undefined' || !isOwner) return;
+    // Delay to avoid blocking app startup
+    setTimeout(function() {
+      diarioRef.once('value', function(snap) {
+        var entries = snap.val();
+        if (!entries) return;
+        var untranslated = [];
+        Object.keys(entries).forEach(function(key) {
+          var e = entries[key];
+          if (!e.draft && e.text && (!e.textEn || !e.textEs)) {
+            untranslated.push({ key: key, text: e.text, title: e.customLabel || e.title || '' });
+          }
+        });
+        // Translate max 5 per session (rate limit protection)
+        var batch = untranslated.slice(0, 5);
+        batch.forEach(function(item, idx) {
+          // Stagger requests by 1.5s each to avoid overwhelming the CF
+          setTimeout(function() {
+            _autoTranslateDiaryEntry(item.key, item.text, item.title);
+          }, idx * 1500);
+        });
+        if (batch.length > 0) {
+          console.log('[Diario] Batch auto-translating', batch.length, 'entries (of', untranslated.length, 'untranslated)');
+        }
+      });
+    }, 8000); // 8s delay after app load
+  })();
 
   // Bridge: expose published diary entries for home feed (replaces old _preTripPostsOverride)
   // v2.45 FIX: Use registerFirebaseListener for proper cleanup on tab switch
@@ -16125,6 +16314,10 @@ window.injectAllWikiLinks = function() {
               .then(function() {
                 _qvLog.info('[Diario] Auto-published scheduled post:', key, entry.title || '');
                 if (window.showToast) showToast('📖 ' + (entry.title || 'Post') + ' — ' + (LANG3 === 'es' ? '¡publicado!' : isEN ? 'published!' : 'pubblicato!'), 'success');
+                // v5.10: Auto-translate on auto-publish
+                if (entry.text && !entry.textEn && typeof window._autoTranslateDiaryEntry === 'function') {
+                  window._autoTranslateDiaryEntry(key, entry.text, entry.customLabel || entry.title || '');
+                }
               });
           }
         });
@@ -16828,7 +17021,7 @@ window.injectAllWikiLinks = function() {
         out += '<div class="diario-comment-reply-quote"><span class="reply-quote-author">\u21A9 ' + escapeHtml(c.replyTo.name) + '</span> <span class="reply-quote-text">' + escapeHtml(replyText) + '</span></div>';
       }
       if (c.photoUrl) {
-        out += '<img src="' + escapeHtml(c.photoUrl) + '" class="diario-comment-photo-img" loading="lazy" onclick="window.open(this.src,\'_blank\')" alt="">';
+        out += '<img src="' + escapeHtml(c.photoUrl) + '" class="diario-comment-photo-img" loading="lazy" onclick="window.open(this.src,'_blank','noopener,noreferrer')" alt="">';
       }
       if (c.text) {
         out += '<span class="diario-comment-text">' + escapeHtml(c.text) + '</span>';
@@ -18309,6 +18502,10 @@ window.injectAllWikiLinks = function() {
             if (window.showToast) showToast(LANG3 === 'es' ? '\ud83d\udd52 Programado para ' + dateVal : isEN ? '\ud83d\udd52 Scheduled for ' + dateVal : '\ud83d\udd52 Programmato per ' + dateVal, 'success');
           } else if (publishNow) {
             if (window.showToast) showToast(LANG3 === 'es' ? '\\u2705 Publicado!' : isEN ? '\u2705 Published!' : '\u2705 Pubblicato!', 'success');
+            // v5.10: Auto-translate on publish (EN + ES) so Home feed shows translated text
+            if (text && typeof firebase !== 'undefined' && firebase.functions) {
+              _autoTranslateDiaryEntry(dayKey, text, customLabel);
+            }
           } else {
             if (window.showToast) showToast(LANG3 === 'es' ? '\\ud83d\\udcdd Borrador guardado' : isEN ? '\ud83d\udcdd Draft saved' : '\ud83d\udcdd Bozza salvata', 'success');
           }

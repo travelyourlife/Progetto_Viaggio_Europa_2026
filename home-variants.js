@@ -440,13 +440,14 @@
         e.preventDefault();
         var bodyEl = link.closest('.hv-feed-item').querySelector('.hv-feed-body');
         if (!bodyEl) return;
+        var _isEs = (_lang3 === 'es');
         if (link.dataset.showing === 'original') {
           bodyEl.textContent = link.dataset.translated;
-          link.textContent = 'See original';
+          link.textContent = _isEs ? 'Ver original' : 'See original';
           link.dataset.showing = 'translated';
         } else {
           bodyEl.textContent = link.dataset.original;
-          link.textContent = 'See translation';
+          link.textContent = _isEs ? 'Ver traducci\u00f3n' : 'See translation';
           link.dataset.showing = 'original';
         }
       });
@@ -454,7 +455,8 @@
 
     var translateBtns = container.querySelectorAll('.hv-feed-translate-btn');
     translateBtns.forEach(function(btn) {
-      btn.addEventListener('click', function() {
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation(); // prevent navigating to diary tab
         var textToTranslate = btn.getAttribute('data-text');
         if (!textToTranslate) return;
         var bodyEl = btn.previousElementSibling; // .hv-feed-body
@@ -468,13 +470,27 @@
         btn.disabled = true;
         // Call translatePost Cloud Function
         if (typeof firebase !== 'undefined' && firebase.functions) {
-          var translateFn = firebase.functions().httpsCallable('translatePost');
-          translateFn({ text: textToTranslate, from: 'it', to: 'en' }).then(function(result) {
-            if (result.data && result.data.translated) {
-              bodyEl.textContent = result.data.translated;
+          var translateFn = firebase.app().functions('europe-west1').httpsCallable('translatePost');
+          var _targetLang = btn.getAttribute('data-lang') || 'en';
+          var _entryKey = btn.closest('.hv-feed-item') ? btn.closest('.hv-feed-item').getAttribute('data-entry-key') : '';
+          var _fid = (typeof FAMILY_ID !== 'undefined') ? FAMILY_ID : 'viaggio-europa-2026';
+          translateFn({ text: textToTranslate, key: _entryKey, familyId: _fid, targetLang: _targetLang }).then(function(result) {
+            var _field = _targetLang === 'es' ? 'textEs' : 'textEn';
+            var translatedText = result.data && (result.data.translated || result.data[_field]);
+            if (translatedText) {
+              bodyEl.textContent = translatedText;
               btn.dataset.translated = '1';
+              btn.textContent = '\uD83C\uDDEE\uD83C\uDDF9'; // IT flag to toggle back
+              btn.title = _targetLang === 'es' ? 'Ver original' : 'Show original';
+              // v5.10: Save translation to Firebase so it persists
+              if (_entryKey && typeof firebase !== 'undefined' && firebase.database) {
+                var updates = {};
+                updates[_field] = translatedText;
+                firebase.database().ref('trips/' + _fid + '/diary/' + _entryKey).update(updates);
+              }
+            } else {
+              btn.textContent = '\uD83C\uDF10';
             }
-            btn.textContent = '\uD83C\uDF10';
             btn.disabled = false;
           }).catch(function() {
             btn.textContent = '\uD83C\uDF10';
@@ -1078,19 +1094,19 @@
   function renderRealPost(post, lang) {
     var html = '';
     var CUSTOM_TYPE_MAP_HOME = {
-      'checkin': '\ud83d\udccd Check-in', 'tappa': '\ud83d\udea9 Tappa', 'highlight': '\u2b50 Highlight',
-      'photo': '\ud83d\udcf7 Foto', 'video': '\ud83c\udfac Video', 'audio': '\ud83c\udfa4 Audio',
-      'recap': '\ud83d\udcdd Riepilogo', 'message': '\ud83d\udcac Messaggio',
-      'cibo': '\ud83c\udf5d Cibo', 'cultura': '\ud83c\udfdb\ufe0f Cultura', 'attivita': '\ud83e\udd7e Attivit\u00e0'
+      'checkin': '\ud83d\udccd Check-in', 'tappa': '\ud83d\udea9 ' + (lang === 'es' ? 'Etapa' : lang === 'en' ? 'Stage' : 'Tappa'), 'highlight': '\u2b50 Highlight',
+      'photo': '\ud83d\udcf7 ' + (lang === 'es' ? 'Foto' : lang === 'en' ? 'Photo' : 'Foto'), 'video': '\ud83c\udfac Video', 'audio': '\ud83c\udfa4 Audio',
+      'recap': '\ud83d\udcdd ' + (lang === 'es' ? 'Resumen' : lang === 'en' ? 'Recap' : 'Riepilogo'), 'message': '\ud83d\udcac ' + (lang === 'es' ? 'Mensaje' : lang === 'en' ? 'Message' : 'Messaggio'),
+      'cibo': '\ud83c\udf5d ' + (lang === 'es' ? 'Comida' : lang === 'en' ? 'Food' : 'Cibo'), 'cultura': '\ud83c\udfdb\ufe0f ' + (lang === 'es' ? 'Cultura' : lang === 'en' ? 'Culture' : 'Cultura'), 'attivita': '\ud83e\udd7e ' + (lang === 'es' ? 'Actividad' : lang === 'en' ? 'Activity' : 'Attivit\u00e0')
     };
     var badge = post.customType ? (CUSTOM_TYPE_MAP_HOME[post.customType] || '') : '';
-    html += '<div class="hv-feed-item" data-hv-action="tab:diario" style="cursor:pointer;">';
+    html += '<div class="hv-feed-item" data-hv-action="tab:diario" data-entry-key="' + (post._key || '') + '" style="cursor:pointer;">';
     html += '  <div class="hv-feed-header">';
     html += '    <div class="hv-feed-time">' + formatHybridDate(post.date, lang) + '</div>';
     if (badge) html += '    <span class="hv-feed-type hv-type-' + (post.customType || 'update') + '">' + badge + '</span>';
     html += '  </div>';
     if (post.customLabel) {
-      var feedTitle = (lang === 'en' && post.titleEn) ? post.titleEn : post.customLabel;
+      var feedTitle = (lang === 'es' && post.titleEs) ? post.titleEs : (lang === 'en' && post.titleEn) ? post.titleEn : post.customLabel;
       html += '  <div class="hv-feed-title" style="font-weight:600;margin:4px 0;">' + escHtml(feedTitle) + '</div>';
     }
     if (post.photos && Object.keys(post.photos).length > 0) {
@@ -1103,15 +1119,21 @@
         html += '  <div class="hv-feed-photo"><img src="' + safeFeedPhotoUrl + '" loading="lazy" alt=""></div>';
       }
     }
-    var bodyText = (lang === 'en' && post.textEn) ? post.textEn : (post.text || '');
+    var bodyText = (lang === 'es' && post.textEs) ? post.textEs : (lang === 'en' && post.textEn) ? post.textEn : (post.text || '');
     html += '  <div class="hv-feed-body">' + escHtml(bodyText) + '</div>';
-    // v2.22: Auto-translation disclaimer in feed
+    // v5.09: Auto-translation disclaimer in feed (EN + ES)
     if (lang === 'en' && post.textEn && post.text) {
       html += '  <span class="diario-auto-tl">Translated automatically \u00b7 <a href="#" class="diario-see-original" data-original="' + escHtml(post.text).replace(/"/g, '&quot;') + '" data-translated="' + escHtml(post.textEn).replace(/"/g, '&quot;') + '">See original</a></span>';
     }
-    // Translate button for EN followers (non-owner) — only if no auto-translation
-    if (lang === 'en' && post.text && !post.textEn && !(typeof isOwner !== 'undefined' && isOwner)) {
-      html += '  <button class="hv-feed-translate-btn" data-text="' + escHtml(post.text).replace(/"/g, '&quot;') + '" title="Translate to English">\uD83C\uDF10</button>';
+    if (lang === 'es' && post.textEs && post.text) {
+      html += '  <span class="diario-auto-tl">Traducido autom\u00e1ticamente \u00b7 <a href="#" class="diario-see-original" data-original="' + escHtml(post.text).replace(/"/g, '&quot;') + '" data-translated="' + escHtml(post.textEs).replace(/"/g, '&quot;') + '">Ver original</a></span>';
+    }
+    // v5.10: Translate button for ANY non-IT user (including owner viewing in ES/EN)
+    if (lang === 'en' && post.text && !post.textEn) {
+      html += '  <button class="hv-feed-translate-btn" data-text="' + escHtml(post.text).replace(/"/g, '&quot;') + '" data-lang="en" title="Translate to English">\uD83C\uDF10</button>';
+    }
+    if (lang === 'es' && post.text && !post.textEs) {
+      html += '  <button class="hv-feed-translate-btn" data-text="' + escHtml(post.text).replace(/"/g, '&quot;') + '" data-lang="es" title="Traducir al espa\u00f1ol">\uD83C\uDF10</button>';
     }
     html += '</div>';
     return html;

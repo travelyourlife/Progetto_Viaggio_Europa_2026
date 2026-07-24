@@ -745,6 +745,30 @@ var CURIOSITA_DATA = [
   },
   {
     "day": 6,
+    "emoji": "🏰",
+    "text": "Il centro storico di Tallinn è uno dei meglio conservati d'Europa medievale — le mura del XIII secolo circondano ancora la città vecchia con 26 torri di guardia superstiti.",
+    "source": "UNESCO",
+    "textEN": "Tallinn's Old Town is one of the best-preserved medieval cities in Europe — 13th-century walls still surround the old city with 26 surviving watchtowers.",
+    "textES": "El casco antiguo de Tallin es uno de los mejor conservados de la Europa medieval — las murallas del siglo XIII aún rodean la ciudad vieja con 26 torres de vigilancia."
+  },
+  {
+    "day": 6,
+    "emoji": "💊",
+    "text": "La farmacia del Municipio di Tallinn (Raeapteek) è una delle più antiche d'Europa ancora in attività — aperta dal 1422, vendeva rimedi come succo di lumaca e polvere di unicorno.",
+    "source": "Visit Estonia",
+    "textEN": "Tallinn's Town Hall Pharmacy (Raeapteek) is one of Europe's oldest still operating — open since 1422, it once sold snail juice and unicorn powder as remedies.",
+    "textES": "La farmacia del Ayuntamiento de Tallin (Raeapteek) es una de las más antiguas de Europa aún en funcionamiento — abierta desde 1422, vendía jugo de caracol y polvo de unicornio."
+  },
+  {
+    "day": 6,
+    "emoji": "🎵",
+    "text": "Ogni 5 anni Tallinn ospita il Festival del Canto (Laulupidu) con 30.000 cantori sul palco — fu attraverso il canto che l'Estonia riconquistò l'indipendenza nel 1991 (Rivoluzione Cantata).",
+    "source": "UNESCO ICH",
+    "textEN": "Every 5 years Tallinn hosts the Song Festival with 30,000 singers on stage — Estonia regained independence in 1991 through the Singing Revolution.",
+    "textES": "Cada 5 años Tallin acoge el Festival de la Canción con 30.000 cantantes en el escenario — Estonia recuperó su independencia en 1991 a través de la Revolución Cantada."
+  },
+  {
+    "day": 7,
     "emoji": "🧖",
     "text": "In Finlandia ci sono 3,3 milioni di saune per 5,5 milioni di abitanti — più saune che automobili!",
     "source": "Finnish Sauna Society",
@@ -752,7 +776,7 @@ var CURIOSITA_DATA = [
     "textES": "En Finlandia hay 3,3 millones de saunas para 5,5 millones de habitantes — ¡más saunas que coches!"
   },
   {
-    "day": 6,
+    "day": 7,
     "emoji": "🏝️",
     "text": "La Finlandia ha 187.888 laghi (con superficie > 500 m²) — è davvero il \"Paese dei mille laghi\", anzi dei quasi duecentomila!",
     "source": "Finnish Environment Institute",
@@ -760,7 +784,7 @@ var CURIOSITA_DATA = [
     "textES": "Finlandia tiene 187.888 lagos (con superficie > 500 m²) — es realmente el 'País de los mil lagos', ¡más bien casi doscientos mil!"
   },
   {
-    "day": 6,
+    "day": 7,
     "emoji": "☕",
     "text": "I finlandesi sono i maggiori consumatori di caffè al mondo: 12 kg pro capite all'anno — il doppio degli italiani!",
     "source": "International Coffee Organization",
@@ -768,7 +792,7 @@ var CURIOSITA_DATA = [
     "textES": "Los finlandeses son los mayores consumidores de café del mundo: 12 kg per cápita al año — ¡el doble que los italianos!"
   },
   {
-    "day": 7,
+    "day": 8,
     "emoji": "🌲",
     "text": "La cresta di Punkaharju è una formazione glaciale lunga 7 km tra due laghi — lo Zar Alessandro I la dichiarò paesaggio protetto nel 1803.",
     "source": "Metsähallitus Finland",
@@ -776,7 +800,7 @@ var CURIOSITA_DATA = [
     "textES": "La cresta de Punkaharju es una formación glacial de 7 km de longitud entre dos lagos — el zar Alessandro I la declaró paisaje protegido en 1803."
   },
   {
-    "day": 7,
+    "day": 8,
     "emoji": "🎨",
     "text": "Punkaharju ospita il Retretti Art Centre, un museo d'arte costruito dentro grotte naturali — l'acustica è così perfetta che ci fanno concerti.",
     "source": "Visit Saimaa",
@@ -784,7 +808,7 @@ var CURIOSITA_DATA = [
     "textES": "Punkaharju alberga el Retretti Art Centre, un museo de arte construido dentro de cuevas naturales — la acústica es tan perfecta que celebran conciertos allí."
   },
   {
-    "day": 7,
+    "day": 8,
     "emoji": "🌅",
     "text": "Il lago Saimaa è il quarto lago più grande d'Europa (4.380 km²) e ha oltre 13.000 isole — più isole che in molti arcipelaghi marini!",
     "source": "Finnish Environment Institute",
@@ -792,7 +816,7 @@ var CURIOSITA_DATA = [
     "textES": "El lago Saimaa es el cuarto lago más grande de Europa (4.380 km²) y tiene más de 13.000 islas — ¡más islas que en muchos archipiélagos marinos!"
   },
   {
-    "day": 8,
+    "day": 9,
     "emoji": "🦭",
     "text": "Nel lago Saimaa vive la foca degli anelli più rara del mondo: ne restano solo ~480 esemplari, intrappolati qui dalla fine dell'era glaciale.",
     "source": "WWF Finland",
@@ -800,7 +824,7 @@ var CURIOSITA_DATA = [
     "textES": "En el lago Saimaa vive la foca anillada más rara del mundo: solo quedan ~480 ejemplares, atrapados aquí desde el final de la era glacial."
   },
   {
-    "day": 8,
+    "day": 9,
     "emoji": "🛶",
     "text": "Il sistema lacustre di Saimaa ha oltre 14.000 km di costa — più della costa marittima di molti paesi europei!",
     "source": "Finnish Environment Institute",
@@ -808,7 +832,7 @@ var CURIOSITA_DATA = [
     "textES": "El sistema lacustre de Saimaa tiene más de 14.000 km de costa — ¡más que la costa marítima de muchos países europeos!"
   },
   {
-    "day": 8,
+    "day": 9,
     "emoji": "🌌",
     "text": "D'estate in Finlandia il cielo non diventa mai completamente buio — il fenomeno delle \"notti bianche\" dura da maggio ad agosto.",
     "source": "Visit Finland",
@@ -816,7 +840,7 @@ var CURIOSITA_DATA = [
     "textES": "En verano en Finlandia el cielo nunca se vuelve completamente oscuro — el fenómeno de las 'noches blancas' dura desde mayo hasta agosto."
   },
   {
-    "day": 9,
+    "day": 10,
     "emoji": "🎸",
     "text": "Oulu ospita ogni anno i Campionati Mondiali di Air Guitar — sì, è una competizione seria dal 1996!",
     "source": "Air Guitar World Championships",
@@ -824,7 +848,7 @@ var CURIOSITA_DATA = [
     "textES": "Oulu acoge cada año los Campeonatos Mundiales de Air Guitar — ¡sí, es una competición seria desde 1996!"
   },
   {
-    "day": 9,
+    "day": 10,
     "emoji": "🚴",
     "text": "Oulu è la città ciclabile più a nord del mondo: ha 600 km di piste ciclabili usate anche a -30°C con pneumatici chiodati!",
     "source": "City of Oulu",
@@ -832,7 +856,7 @@ var CURIOSITA_DATA = [
     "textES": "Oulu es la ciudad ciclista más al norte del mundo: tiene 600 km de carriles bici usados incluso a -30°C con neumáticos con clavos!"
   },
   {
-    "day": 9,
+    "day": 10,
     "emoji": "📡",
     "text": "Oulu è la \"Silicon Valley del Nord\": Nokia vi ha il più grande centro di ricerca, e la città ha più ingegneri pro capite di qualsiasi città finlandese.",
     "source": "Business Oulu",
@@ -840,7 +864,7 @@ var CURIOSITA_DATA = [
     "textES": "Oulu es la 'Silicon Valley del Norte': Nokia tiene allí su mayor centro de investigación, y la ciudad tiene más ingenieros per cápita que cualquier ciudad finlandesa."
   },
   {
-    "day": 10,
+    "day": 11,
     "emoji": "🐻‍❄️",
     "text": "Lo zoo artico di Ranua è l'unico zoo al mondo dove si possono vedere gli orsi polari a queste latitudini in un habitat quasi naturale.",
     "source": "Ranua Wildlife Park",
@@ -848,7 +872,7 @@ var CURIOSITA_DATA = [
     "textES": "El zoo ártico de Ranua es el único zoo del mundo donde se pueden ver osos polares a estas latitudes en un hábitat casi natural."
   },
   {
-    "day": 10,
+    "day": 11,
     "emoji": "🦉",
     "text": "A Ranua vivono oltre 50 specie artiche tra cui il gufo delle nevi, la volpe artica e il ghiottone — animali quasi impossibili da vedere in natura.",
     "source": "Ranua Wildlife Park",
@@ -856,7 +880,7 @@ var CURIOSITA_DATA = [
     "textES": "En Ranua viven más de 50 especies árticas entre las que se encuentran el búho nival, el zorro ártico y el glotón — animales casi imposibles de ver en la naturaleza."
   },
   {
-    "day": 10,
+    "day": 11,
     "emoji": "❄️",
     "text": "D'inverno a Ranua la temperatura può scendere a -45°C — ma d'estate (quando sarete voi) può superare i 25°C. Un'escursione termica di 70 gradi!",
     "source": "Finnish Meteorological Institute",
@@ -864,7 +888,7 @@ var CURIOSITA_DATA = [
     "textES": "En invierno en Ranua la temperatura puede bajar a -45°C — pero en verano (cuando estéis vosotros) puede superar los 25°C. ¡Una oscilación térmica de 70 grados!"
   },
   {
-    "day": 11,
+    "day": 12,
     "emoji": "🎅",
     "text": "Rovaniemi riceve ogni anno oltre 500.000 lettere indirizzate a Babbo Natale da bambini di 198 paesi diversi.",
     "source": "Santa Claus Main Post Office",
@@ -872,7 +896,7 @@ var CURIOSITA_DATA = [
     "textES": "Rovaniemi recibe cada año más de 500.000 cartas dirigidas a Babbo Natale de niños de 198 países diferentes."
   },
   {
-    "day": 11,
+    "day": 12,
     "emoji": "🏗️",
     "text": "Rovaniemi fu completamente distrutta dai tedeschi nel 1944 e ricostruita su progetto di Alvar Aalto — la pianta della città vista dall'alto ha la forma di una renna!",
     "source": "City of Rovaniemi",
@@ -880,7 +904,7 @@ var CURIOSITA_DATA = [
     "textES": "Rovaniemi fue completamente destruida por los alemanes en 1944 y reconstruida según un proyecto de Alvar Aalto — ¡la planta de la ciudad vista desde arriba tiene la forma de un reno!"
   },
   {
-    "day": 11,
+    "day": 12,
     "emoji": "🌡️",
     "text": "Rovaniemi detiene il record finlandese di escursione termica annuale: da -45°C in inverno a +33°C in estate — 78 gradi di differenza!",
     "source": "Finnish Meteorological Institute",
@@ -888,7 +912,7 @@ var CURIOSITA_DATA = [
     "textES": "Rovaniemi tiene el récord finlandés de oscilación térmica anual: de -45°C en invierno a +33°C en verano — 78 gradi di differenza!"
   },
   {
-    "day": 12,
+    "day": 13,
     "emoji": "📐",
     "text": "Il Circolo Polare Artico (66°33'N) passa esattamente attraverso il Santa Claus Village — c'è una linea dipinta sul pavimento dove puoi attraversarlo!",
     "source": "Arctic Circle marking, Rovaniemi",
@@ -896,7 +920,7 @@ var CURIOSITA_DATA = [
     "textES": "El Circolo Polare Artico (66°33'N) pasa exactamente por Santa Claus Village — hay una línea pintada en el suelo donde puedes cruzarlo."
   },
   {
-    "day": 12,
+    "day": 13,
     "emoji": "🏛️",
     "text": "L'Arktikum di Rovaniemi è un museo scientifico con un tunnel di vetro lungo 172 metri che punta verso il Polo Nord — di notte si illumina come un'aurora.",
     "source": "Arktikum Museum",
@@ -904,7 +928,7 @@ var CURIOSITA_DATA = [
     "textES": "L'Arktikum di Rovaniemi es un museo científico con un tunnel di vetro lungo 172 metri que apunta hacia el Polo Nord — de noche se ilumina como una aurora."
   },
   {
-    "day": 12,
+    "day": 13,
     "emoji": "📮",
     "text": "L'ufficio postale di Babbo Natale ha un timbro speciale con il Circolo Polare Artico — ogni cartolina spedita da qui arriva con quel timbro unico.",
     "source": "Santa Claus Main Post Office",
@@ -912,7 +936,7 @@ var CURIOSITA_DATA = [
     "textES": "La oficina postal de Babbo Natale tiene un sello especial con el Circolo Polare Artico — cada postal enviada desde aquí llega con ese sello único."
   },
   {
-    "day": 13,
+    "day": 14,
     "emoji": "🦌",
     "text": "Il popolo Sami è l'unico popolo indigeno riconosciuto dell'UE. La loro lingua ha oltre 300 parole diverse per descrivere la neve e il ghiaccio.",
     "source": "Sámi Parliament Finland",
@@ -920,7 +944,7 @@ var CURIOSITA_DATA = [
     "textES": "El pueblo Sami es el único pueblo indígena reconocido por la UE. Su lengua tiene más de 300 palabras diferentes para describir la nieve y el hielo."
   },
   {
-    "day": 13,
+    "day": 14,
     "emoji": "🌊",
     "text": "Il lago Inari è il terzo lago più grande della Finlandia (1.040 km²) e ha oltre 3.000 isole — molte considerate sacre dai Sami.",
     "source": "Metsähallitus",
@@ -928,7 +952,7 @@ var CURIOSITA_DATA = [
     "textES": "El lago Inari es el tercer lago más grande de Finlandia (1.040 km²) y tiene más de 3.000 islas — muchas consideradas sagradas por los Sami."
   },
   {
-    "day": 13,
+    "day": 14,
     "emoji": "🏔️",
     "text": "Il museo Siida a Inari documenta 10.000 anni di cultura Sami — il popolo che ha abitato queste terre dall'ultima era glaciale.",
     "source": "Siida Museum",
@@ -936,7 +960,7 @@ var CURIOSITA_DATA = [
     "textES": "El museo Siida en Inari documenta 10.000 años de cultura Sami — el pueblo que ha habitado estas tierras desde la última era glacial."
   },
   {
-    "day": 14,
+    "day": 15,
     "emoji": "🪨",
     "text": "A Kilpisjärvi c'è il Treriksröset: il punto dove si incontrano i confini di Finlandia, Svezia e Norvegia. Puoi stare in 3 paesi contemporaneamente!",
     "source": "Kilpisjärvi Biological Station",
@@ -944,7 +968,7 @@ var CURIOSITA_DATA = [
     "textES": "En Kilpisjärvi está el Treriksröset: el punto donde se encuentran las fronteras de Finlandia, Suecia y Noruega. ¡Puedes estar en 3 países a la vez!"
   },
   {
-    "day": 14,
+    "day": 15,
     "emoji": "🌿",
     "text": "Kilpisjärvi è il punto più a nord-ovest della Finlandia — qui la tundra artica inizia e gli alberi smettono di crescere (treeline).",
     "source": "University of Helsinki",
@@ -952,7 +976,7 @@ var CURIOSITA_DATA = [
     "textES": "Kilpisjärvi es el punto más noroeste de Finlandia — aquí comienza la tundra ártica y los árboles dejan de crecer (límite de árboles)."
   },
   {
-    "day": 14,
+    "day": 15,
     "emoji": "🦅",
     "text": "Nella zona di Kilpisjärvi nidifica l'aquila reale artica — una delle popolazioni più settentrionali del mondo.",
     "source": "BirdLife Finland",
@@ -960,7 +984,7 @@ var CURIOSITA_DATA = [
     "textES": "En la zona de Kilpisjärvi anida el águila real ártica — una de las poblaciones más septentrionales del mundo."
   },
   {
-    "day": 15,
+    "day": 16,
     "emoji": "⛪",
     "text": "La Cattedrale Artica di Tromsø (Ishavskatedralen) ha una vetrata di 140 m² — una delle più grandi d'Europa, visibile anche di notte col sole di mezzanotte.",
     "source": "Ishavskatedralen",
@@ -968,7 +992,7 @@ var CURIOSITA_DATA = [
     "textES": "La Cattedrale Artica di Tromsø (Ishavskatedralen) tiene una vidriera de 140 m² — una de las más grandes de Europa, visible incluso de noche con el sol de medianoche."
   },
   {
-    "day": 15,
+    "day": 16,
     "emoji": "🍺",
     "text": "Tromsø ha lo storico birrificio Mack (fondato nel 1877), uno dei più settentrionali del mondo, e la più alta concentrazione di pub pro capite della Norvegia.",
     "source": "Mack Bryggeri",
@@ -976,7 +1000,7 @@ var CURIOSITA_DATA = [
     "textES": "Tromsø tiene la histórica cervecera Mack (fundada en 1877), una de las más septentrionales del mundo, y la mayor concentración de pubs per cápita de Noruega."
   },
   {
-    "day": 15,
+    "day": 16,
     "emoji": "🌅",
     "text": "A Tromsø il sole di mezzanotte dura dal 20 maggio al 22 luglio — quando sarete lì, il sole NON tramonterà mai. Nemmeno a mezzanotte!",
     "source": "Visit Tromsø",
@@ -984,7 +1008,7 @@ var CURIOSITA_DATA = [
     "textES": "En Tromsø el sol de medianoche dura del 20 de mayo al 22 de julio — cuando estés allí, el sol NO se pondrá nunca. ¡Ni siquiera a medianoche!"
   },
   {
-    "day": 16,
+    "day": 17,
     "emoji": "👹",
     "text": "Senja ospita il Troll più grande del mondo: Senjatrollet, alto 18 metri, con una grotta-museo dentro la pancia!",
     "source": "Senjatrollet",
@@ -992,7 +1016,7 @@ var CURIOSITA_DATA = [
     "textES": "Senja alberga al Troll más grande del mundo: Senjatrollet, alto 18 metri, con una cueva-museo dentro de la barriga."
   },
   {
-    "day": 16,
+    "day": 17,
     "emoji": "🏝️",
     "text": "Senja è la seconda isola più grande della Norvegia (1.586 km²) — i norvegesi la chiamano \"la Norvegia in miniatura\" perché ha fiordi, montagne e spiagge.",
     "source": "Visit Senja",
@@ -1000,7 +1024,7 @@ var CURIOSITA_DATA = [
     "textES": "Senja es la segunda isla más grande de Noruega (1.586 km²) — los noruegos la llaman \"la Norvegia in miniatura\" porque tiene fiordos, montañas y playas."
   },
   {
-    "day": 16,
+    "day": 17,
     "emoji": "🦅",
     "text": "Le aquile di mare (Havørn) di Senja hanno un'apertura alare di 2,5 metri — sono le più grandi aquile d'Europa e si vedono facilmente dalla strada.",
     "source": "Norwegian Nature Inspectorate",
@@ -1008,7 +1032,7 @@ var CURIOSITA_DATA = [
     "textES": "Las águilas marinas (Havørn) de Senja tienen una envergadura de 2,5 metri — son las águilas más grandes de Europa y se ven fácilmente desde la carretera."
   },
   {
-    "day": 17,
+    "day": 18,
     "emoji": "🚀",
     "text": "Ad Andøya c'è una base spaziale attiva — la Andøya Space, da cui vengono lanciati razzi di ricerca scientifica nell'atmosfera dal 1962.",
     "source": "Andøya Space",
@@ -1016,7 +1040,7 @@ var CURIOSITA_DATA = [
     "textES": "En Andøya hay una base espacial activa — Andøya Space, desde la que se lanzan cohetes de investigación científica a la atmósfera desde 1962."
   },
   {
-    "day": 17,
+    "day": 18,
     "emoji": "🐟",
     "text": "Andenes era il centro della caccia alle balene in Norvegia — oggi le balene si osservano solo per turismo, con un tasso di avvistamento del 95%.",
     "source": "Whalesafari Andenes",
@@ -1024,7 +1048,7 @@ var CURIOSITA_DATA = [
     "textES": "Andenes fue el centro de la caza de ballenas en Noruega — hoy las ballenas se observan solo por turismo, con una tasa de avistamiento del 95%."
   },
   {
-    "day": 17,
+    "day": 18,
     "emoji": "🌊",
     "text": "La fossa oceanica al largo di Andenes scende a 2.500 metri a soli 7 km dalla costa — ecco perché i capodogli vengono così vicini!",
     "source": "Institute of Marine Research, Norway",
@@ -1032,7 +1056,7 @@ var CURIOSITA_DATA = [
     "textES": "La fosa oceánica frente a Andenes desciende a 2.500 metri a solo 7 km de la costa — ¡por eso los cachalotes se acercan tanto!"
   },
   {
-    "day": 18,
+    "day": 19,
     "emoji": "🐋",
     "text": "I capodogli di Andenes si immergono fino a 2.000 metri di profondità per cacciare calamari giganti — trattengono il respiro per 90 minuti!",
     "source": "Whalesafari Andenes",
@@ -1040,7 +1064,7 @@ var CURIOSITA_DATA = [
     "textES": "Los cachalotes de Andenes se sumergen hasta 2.000 metri de profundidad para cazar calamares gigantes — ¡aguantan la respiración durante 90 minuti!"
   },
   {
-    "day": 18,
+    "day": 19,
     "emoji": "🧠",
     "text": "Il cervello del capodoglio pesa 7,8 kg — il più grande di qualsiasi animale mai esistito sulla Terra, 5 volte quello umano.",
     "source": "National Geographic",
@@ -1048,7 +1072,7 @@ var CURIOSITA_DATA = [
     "textES": "El cerebro del cachalote pesa 7,8 kg — el más grande de cualquier animal que haya existido en la Tierra, 5 veces el de un humano."
   },
   {
-    "day": 18,
+    "day": 19,
     "emoji": "📡",
     "text": "I capodogli comunicano con \"click\" che viaggiano per chilometri sott'acqua — ogni individuo ha un pattern unico, come un'impronta digitale sonora.",
     "source": "Whale Research Institute",
@@ -1056,7 +1080,7 @@ var CURIOSITA_DATA = [
     "textES": "Los cachalotes se comunican con \"click\" que viajan por kilómetros bajo el agua — cada individuo tiene un patrón único, como una huella dactilar sonora."
   },
   {
-    "day": 19,
+    "day": 20,
     "emoji": "🐟",
     "text": "Le Lofoten producono il 70% di tutto lo stoccafisso norvegese — il merluzzo viene essiccato all'aria aperta sui caratteristici hjell da oltre 1.000 anni.",
     "source": "Norwegian Seafood Council",
@@ -1064,7 +1088,7 @@ var CURIOSITA_DATA = [
     "textES": "Las Lofoten producen el 70% de todo el stoccafisso noruego — el bacalao se seca al aire en los característicos hjell desde hace más de 1.000 anni."
   },
   {
-    "day": 19,
+    "day": 20,
     "emoji": "🌡️",
     "text": "Le Lofoten hanno la più grande anomalia termica positiva del mondo per la loro latitudine: sono a 68°N ma d'inverno non scendono mai sotto -5°C grazie alla Corrente del Golfo.",
     "source": "Norwegian Meteorological Institute",
@@ -1072,7 +1096,7 @@ var CURIOSITA_DATA = [
     "textES": "Las Lofoten tienen la mayor anomalía térmica positiva del mundo para su latitud: están a 68°N pero en invierno nunca bajan de -5°C gracias a la Corrente del Golfo."
   },
   {
-    "day": 19,
+    "day": 20,
     "emoji": "🎨",
     "text": "Svolvær è la \"capitale artistica\" delle Lofoten — ha più gallerie d'arte pro capite di qualsiasi città norvegese.",
     "source": "Visit Lofoten",
@@ -1080,7 +1104,7 @@ var CURIOSITA_DATA = [
     "textES": "Svolvær es la \"capital artística\" de las Lofoten — tiene más galerías de arte per cápita que cualquier ciudad noruega."
   },
   {
-    "day": 20,
+    "day": 21,
     "emoji": "⚽",
     "text": "Henningsvær ha il campo da calcio più scenografico del mondo: costruito su un isolotto tra le montagne, circondato dal mare su tutti i lati.",
     "source": "Henningsvær Idrettslag",
@@ -1088,7 +1112,7 @@ var CURIOSITA_DATA = [
     "textES": "Henningsvær tiene el campo de fútbol más espectacular del mundo: construido en un islote entre las montañas, rodeado por el mar por todos lados."
   },
   {
-    "day": 20,
+    "day": 21,
     "emoji": "🎣",
     "text": "Henningsvær era il più grande villaggio di pescatori delle Lofoten — durante la stagione del merluzzo (gen-apr) la popolazione triplicava.",
     "source": "Lofoten Museum",
@@ -1096,7 +1120,7 @@ var CURIOSITA_DATA = [
     "textES": "Henningsvær fue el mayor pueblo pesquero de las Lofoten — durante la temporada del bacalao (ene-abr) la población se triplicaba."
   },
   {
-    "day": 20,
+    "day": 21,
     "emoji": "🌅",
     "text": "Le Lofoten sono state votate come la terza isola più bella del mondo da National Geographic — davanti a Bali e alle Maldive!",
     "source": "National Geographic Traveler",
@@ -1104,7 +1128,7 @@ var CURIOSITA_DATA = [
     "textES": "Las Lofoten fueron votadas como la tercera isla más hermosa del mundo por National Geographic — ¡por delante de Bali y las Maldivas!"
   },
   {
-    "day": 21,
+    "day": 22,
     "emoji": "🏖️",
     "text": "Haukland Beach alle Lofoten è stata votata tra le 10 spiagge più belle del mondo — con sabbia bianca e acqua turchese... a 68° Nord!",
     "source": "National Geographic",
@@ -1112,7 +1136,7 @@ var CURIOSITA_DATA = [
     "textES": "Haukland Beach en las Lofoten fue votada entre las 10 playas más bellas del mundo — con arena blanca y agua turquesa... ¡a 68° Nord!"
   },
   {
-    "day": 21,
+    "day": 22,
     "emoji": "🏄",
     "text": "Unstad Beach alle Lofoten è il surf spot più a nord del mondo — i surfisti cavalcano onde artiche con temperature dell'acqua di 6°C!",
     "source": "Unstad Arctic Surf",
@@ -1120,7 +1144,7 @@ var CURIOSITA_DATA = [
     "textES": "Unstad Beach en las Lofoten es el spot de surf más al norte del mundo — los surfistas cabalgan olas árticas con temperaturas del agua de 6°C!"
   },
   {
-    "day": 21,
+    "day": 22,
     "emoji": "🌊",
     "text": "Le spiagge delle Lofoten hanno sabbia bianca formata da coralli e conchiglie triturate — non da quarzo come la maggior parte delle spiagge.",
     "source": "Norwegian Geological Survey",
@@ -1128,7 +1152,7 @@ var CURIOSITA_DATA = [
     "textES": "Las playas de las Lofoten tienen arena blanca formada por corales y conchas trituradas — no por cuarzo como la mayoría de las playas."
   },
   {
-    "day": 22,
+    "day": 23,
     "emoji": "📸",
     "text": "Reine è stata eletta \"villaggio più bello della Norvegia\" dalla rivista Allers nel 1970 — da allora è diventata l'immagine iconica delle Lofoten.",
     "source": "Lofoten Tourism",
@@ -1136,7 +1160,7 @@ var CURIOSITA_DATA = [
     "textES": "Reine fue elegida \"el pueblo más bonito de Noruega\" por la revista Allers en 1970 — desde entonces se ha convertido en la imagen icónica de las Lofoten."
   },
   {
-    "day": 22,
+    "day": 23,
     "emoji": "🏔️",
     "text": "Il Reinebringen (448m) offre la vista più fotografata della Norvegia — la salita dura 1h ma la vista su Reine vale ogni passo.",
     "source": "Visit Norway",
@@ -1144,7 +1168,7 @@ var CURIOSITA_DATA = [
     "textES": "El Reinebringen (448m) ofrece la vista más fotografiada de Noruega — la subida dura 1h pero la vista sobre Reine vale cada paso."
   },
   {
-    "day": 22,
+    "day": 23,
     "emoji": "🎬",
     "text": "Le Lofoten sono state location per film e serie TV internazionali grazie alla luce unica — il sole basso crea un'\"ora d'oro\" che dura ore.",
     "source": "Nordnorsk Filmsenter",
@@ -1152,7 +1176,7 @@ var CURIOSITA_DATA = [
     "textES": "Las Lofoten han sido localización para películas y series de TV internacionales gracias a la luz única — el sol bajo crea una \"hora dorada\" que dura horas."
   },
   {
-    "day": 23,
+    "day": 24,
     "emoji": "🏚️",
     "text": "Nusfjord è uno dei villaggi di pescatori meglio conservati della Norvegia — le sue rorbu (capanne rosse) risalgono al 1800 e sono Patrimonio UNESCO.",
     "source": "Nusfjord Arctic Resort",
@@ -1160,7 +1184,7 @@ var CURIOSITA_DATA = [
     "textES": "Nusfjord es uno de los pueblos pesqueros mejor conservados de Noruega — sus rorbu (cabañas rojas) datan de 1800 y son Patrimonio de la UNESCO."
   },
   {
-    "day": 23,
+    "day": 24,
     "emoji": "🔴",
     "text": "Le rorbu rosse delle Lofoten devono il colore al \"rødfarge\" — una vernice a base di olio di fegato di merluzzo e ossido di ferro, usata da 500 anni.",
     "source": "Norwegian Cultural Heritage",
@@ -1168,7 +1192,7 @@ var CURIOSITA_DATA = [
     "textES": "Las rorbu rojas de las Lofoten deben su color al \"rødfarge\" — una pintura a base de aceite de hígado de bacalao y óxido de hierro, usada desde hace 500 anni."
   },
   {
-    "day": 23,
+    "day": 24,
     "emoji": "🐙",
     "text": "Le acque delle Lofoten ospitano il più grande calamaro mai pescato in Norvegia: 12 metri di lunghezza, trovato nel 2017.",
     "source": "University of Tromsø",
@@ -1176,7 +1200,7 @@ var CURIOSITA_DATA = [
     "textES": "Las aguas de las Lofoten albergan el calamar más grande jamás pescado en Noruega: 12 metri de longitud, encontrado en 2017."
   },
   {
-    "day": 24,
+    "day": 25,
     "emoji": "🌀",
     "text": "Il Saltstraumen vicino a Mo i Rana è la corrente di marea più forte del mondo: 400 milioni di m³ d'acqua passano in un canale stretto a 37 km/h!",
     "source": "Visit Bodø",
@@ -1184,7 +1208,7 @@ var CURIOSITA_DATA = [
     "textES": "El Saltstraumen cerca de Mo i Rana es la corriente de marea más fuerte del mundo: 400 milioni di m³ de agua pasan por un canal estrecho a 37 km/h!"
   },
   {
-    "day": 24,
+    "day": 25,
     "emoji": "🦀",
     "text": "Il Saltstraumen attira enormi quantità di pesce — i pescatori locali catturano merluzzi di 20+ kg grazie ai nutrienti portati dalla corrente.",
     "source": "Norwegian Fisheries",
@@ -1192,7 +1216,7 @@ var CURIOSITA_DATA = [
     "textES": "El Saltstraumen atrae enormes cantidades de peces — los pescadores locales capturan bacalaos de 20+ kg gracias a los nutrientes traídos por la corriente."
   },
   {
-    "day": 24,
+    "day": 25,
     "emoji": "🧊",
     "text": "Il ghiacciaio Svartisen vicino a Mo i Rana è il secondo più grande della Norvegia (370 km²) — e uno dei pochi al mondo raggiungibile in barca.",
     "source": "Norwegian Water Resources and Energy Directorate",
@@ -1248,7 +1272,7 @@ var CURIOSITA_DATA = [
     "textES": "Trondheim es la ciudad universitaria de Noruega — NTNU tiene 40.000 estudiantes, lo que convierte a la ciudad en una de las más jóvenes y vibrantes del país."
   },
   {
-    "day": 27,
+    "day": 26,
     "emoji": "🌊",
     "text": "L'Atlanterhavsveien (Strada dell'Atlantico) è lunga solo 8,3 km ma ha 8 ponti che saltano da un isolotto all'altro — votata \"strada del secolo\" in Norvegia.",
     "source": "Norwegian Public Roads Administration",
@@ -1256,7 +1280,7 @@ var CURIOSITA_DATA = [
     "textES": "El Atlanterhavsveien (Carretera del Atlántico) mide solo 8,3 km pero tiene 8 puentes que saltan de un islote a otro — votada \"carretera del siglo\" en Noruega."
   },
   {
-    "day": 27,
+    "day": 26,
     "emoji": "🎬",
     "text": "L'Atlanterhavsveien è stata usata in pubblicità automobilistiche e film — durante le tempeste le onde scavalcano la strada creando scene spettacolari.",
     "source": "Visit Northwest",
@@ -1264,7 +1288,7 @@ var CURIOSITA_DATA = [
     "textES": "El Atlanterhavsveien se ha usado en anuncios de coches y en películas — durante las tormentas las olas cruzan la carretera creando escenas espectaculares."
   },
   {
-    "day": 27,
+    "day": 26,
     "emoji": "🌹",
     "text": "Molde è chiamata \"la città delle rose\" — ha un roseto con 2.000 piante e una vista panoramica su 222 cime innevate dall'altra parte del fiordo.",
     "source": "Visit Molde",
@@ -1272,7 +1296,7 @@ var CURIOSITA_DATA = [
     "textES": "Molde se llama \"la ciudad de las rosas\" — tiene un rosal con 2.000 plantas y una vista panorámica de 222 cumbres nevadas al otro lado del fiordo."
   },
   {
-    "day": 28,
+    "day": 27,
     "emoji": "🐉",
     "text": "La Trollstigen (Scala dei Troll) ha 11 tornanti con pendenza del 10% e una cascata che attraversa la strada — aperta solo da maggio a ottobre.",
     "source": "Visit Norway",
@@ -1280,7 +1304,7 @@ var CURIOSITA_DATA = [
     "textES": "La Trollstigen (Escalera de los Trolls) tiene 11 curvas de herradura con una pendiente del 10% y una cascada que atraviesa la carretera — abierta solo de mayo a octubre."
   },
   {
-    "day": 28,
+    "day": 27,
     "emoji": "🌊",
     "text": "La cascata Stigfossen sulla Trollstigen cade per 240 metri — l'acqua nebulizzata bagna le auto che passano sotto. Chiudete i finestrini!",
     "source": "Norwegian Public Roads Administration",
@@ -1288,7 +1312,7 @@ var CURIOSITA_DATA = [
     "textES": "La cascada Stigfossen en la Trollstigen cae 240 metri — la niebla empapa los coches que pasan por debajo. ¡Cerrar las ventanillas!"
   },
   {
-    "day": 28,
+    "day": 27,
     "emoji": "👹",
     "text": "Secondo la leggenda norvegese, i troll si pietrificano alla luce del sole — le montagne frastagliate della Trollstigen sarebbero troll trasformati in roccia.",
     "source": "Norwegian Folklore",
@@ -1296,7 +1320,7 @@ var CURIOSITA_DATA = [
     "textES": "Según la leyenda noruega, los trolls se petrifican a la luz del sol — las montañas escarpadas de la Trollstigen serían trolls convertidos en roca."
   },
   {
-    "day": 29,
+    "day": 28,
     "emoji": "💎",
     "text": "Il Geirangerfjord è Patrimonio UNESCO dal 2005 — le cascate \"Sette Sorelle\" cadono per 250 metri direttamente nel fiordo.",
     "source": "UNESCO World Heritage",
@@ -1304,7 +1328,7 @@ var CURIOSITA_DATA = [
     "textES": "El Geirangerfjord es Patrimonio de la UNESCO desde 2005 — las cascadas \"Sette Sorelle\" caen 250 metri directamente en el fiordo."
   },
   {
-    "day": 29,
+    "day": 28,
     "emoji": "🚢",
     "text": "Il Geirangerfjord è lungo 15 km e profondo 260 m — le navi da crociera che ci entrano sembrano giocattoli tra le pareti rocciose alte 1.400 m.",
     "source": "Geiranger Fjordservice",
@@ -1312,7 +1336,7 @@ var CURIOSITA_DATA = [
     "textES": "El Geirangerfjord mide 15 km de largo y 260 m de profundidad — los cruceros que entran parecen juguetes entre las paredes rocosas de 1.400 m de altura."
   },
   {
-    "day": 29,
+    "day": 28,
     "emoji": "🏚️",
     "text": "Sulle pareti del Geirangerfjord ci sono fattorie abbandonate raggiungibili solo in barca o con scale a pioli — ci vivevano famiglie fino agli anni '60.",
     "source": "Geiranger World Heritage",
@@ -1320,25 +1344,52 @@ var CURIOSITA_DATA = [
     "textES": "En las laderas del Geirangerfjord hay granjas abandonadas accesibles solo en barco o por escaleras de mano — vivieron familias allí hasta los años '60."
   },
   {
-    "day": 30,
+    "day": 29,
+    "emoji": "🏔️",
     "text": "Il Nærøyfjord è il fiordo più stretto della Norvegia — in alcuni punti è largo appena 250 metri con pareti verticali di 1.700 m. È Patrimonio UNESCO dal 2005.",
     "source": "UNESCO World Heritage",
     "textEN": "The Nærøyfjord is Norway's narrowest fjord — at some points it's only 250 meters wide with 1,700m vertical walls. It's been a UNESCO World Heritage Site since 2005.",
     "textES": "El Nærøyfjord es el fiordo más estrecho de Noruega — en algunos puntos tiene solo 250 metros de ancho con paredes verticales de 1.700 m. Es Patrimonio UNESCO desde 2005."
   },
   {
-    "day": 30,
+    "day": 29,
+    "emoji": "👁️",
     "text": "La piattaforma panoramica Stegastein sporge 30 metri nel vuoto sopra l'Aurlandsfjord a 650 m di altezza — il pavimento in vetro permette di guardare direttamente nel fiordo sotto i piedi.",
     "source": "Nasjonale turistveger",
     "textEN": "The Stegastein viewpoint juts 30 meters out into the void above the Aurlandsfjord at 650m altitude — the glass floor lets you look straight down into the fjord beneath your feet.",
     "textES": "El mirador Stegastein sobresale 30 metros en el vacío sobre el Aurlandsfjord a 650 m de altitud — el suelo de cristal permite mirar directamente al fiordo bajo los pies."
   },
   {
-    "day": 30,
+    "day": 29,
+    "emoji": "🚂",
     "text": "Flåm ha una delle ferrovie più ripide del mondo senza cremagliera: la Flåmsbana sale 866 m in soli 20 km con pendenze fino al 5,5%. Ogni anno trasporta quasi un milione di passeggeri.",
     "source": "Flåm Railway",
     "textEN": "Flåm has one of the world's steepest railways without rack rail: the Flåmsbana climbs 866m in just 20km with gradients up to 5.5%. It carries nearly one million passengers each year.",
     "textES": "Flåm tiene uno de los ferrocarriles más empinados del mundo sin cremallera: el Flåmsbana sube 866 m en solo 20 km con pendientes de hasta el 5,5%. Transporta casi un millón de pasajeros al año."
+  },
+  {
+    "day": 30,
+    "emoji": "🌊",
+    "text": "Eidfjord è un villaggio di soli 900 abitanti circondato da cascate e montagne — il Hardangerfjord su cui si affaccia è il secondo fiordo più lungo della Norvegia (179 km).",
+    "source": "Visit Norway",
+    "textEN": "Eidfjord is a village of just 900 inhabitants surrounded by waterfalls and mountains — the Hardangerfjord it overlooks is Norway's second-longest fjord (179 km).",
+    "textES": "Eidfjord es un pueblo de solo 900 habitantes rodeado de cascadas y montañas — el Hardangerfjord que domina es el segundo fiordo más largo de Noruega (179 km)."
+  },
+  {
+    "day": 30,
+    "emoji": "🍎",
+    "text": "L'Hardangerfjord è il 'frutteto della Norvegia': il microclima mite permette la coltivazione di mele, ciliegie e pere — a maggio la fioritura dei frutteti è uno spettacolo imperdibile.",
+    "source": "Hardanger Tourism",
+    "textEN": "The Hardangerfjord is Norway's 'fruit garden': the mild microclimate allows growing apples, cherries and pears — in May the orchard blossoms are a must-see spectacle.",
+    "textES": "El Hardangerfjord es el 'huerto de Noruega': el microclima suave permite cultivar manzanas, cerezas y peras — en mayo la floración de los frutales es un espectáculo imperdible."
+  },
+  {
+    "day": 30,
+    "emoji": "🏛️",
+    "text": "Il Hardangervidda Nature Centre a Eidfjord ha un cinema panoramico a 5 schermi che proietta filmati dell'altopiano in tutte le stagioni — il modo migliore per vedere renne e volpi artiche senza scalare montagne.",
+    "source": "Hardangervidda Natursenter",
+    "textEN": "The Hardangervidda Nature Centre in Eidfjord has a 5-screen panoramic cinema showing footage of the plateau in all seasons — the best way to see reindeer and arctic foxes without climbing mountains.",
+    "textES": "El Centro de Naturaleza Hardangervidda en Eidfjord tiene un cine panorámico de 5 pantallas que proyecta imágenes de la meseta en todas las estaciones — la mejor forma de ver renos y zorros árticos sin escalar montañas."
   },
   {
     "day": 31,
@@ -1405,7 +1456,7 @@ var CURIOSITA_DATA = [
     "textES": "En Stavanger hay tres espadas gigantes de 10 metri clavadas en la roca (Sverd i fjell) — conmemoran la batalla que unificó Norvegia en 872."
   },
   {
-    "day": 34,
+    "day": 33,
     "emoji": "🧗",
     "text": "Il Preikestolen (Pulpito) è una piattaforma rocciosa piatta di 25×25 metri sospesa a 604 metri sopra il Lysefjord — senza ringhiere!",
     "source": "Stavanger Turistforening",
@@ -1413,7 +1464,7 @@ var CURIOSITA_DATA = [
     "textES": "El Preikestolen (Púlpito) es una plataforma rocosa plana de 25×25 metri suspendida a 604 metri sobre el Lysefjord — ¡sin barandillas!"
   },
   {
-    "day": 34,
+    "day": 33,
     "emoji": "⛰️",
     "text": "Il Kjeragbolten è un masso di 5 m³ incastrato tra due pareti rocciose a 984 metri d'altezza — la foto in piedi sopra è un classico (vertiginoso!) norvegese.",
     "source": "Visit Norway",
@@ -1421,28 +1472,31 @@ var CURIOSITA_DATA = [
     "textES": "El Kjeragbolten es un peñasco de 5 m³ encajado entre dos paredes rocosas a 984 metri de altura — la foto de pie sobre él es un clásico (¡vertiginoso!) noruego."
   },
   {
-    "day": 35,
+    "day": 34,
+    "emoji": "🏮",
     "text": "Il faro di Lindesnes è il punto più a sud della Norvegia continentale (57°58'N) — da qui alla punta nord (Capo Nord) ci sono esattamente 2.518 km di costa. Il faro è attivo dal 1656.",
     "source": "Lindesnes Fyr Museum",
     "textEN": "Lindesnes Lighthouse is the southernmost point of mainland Norway (57°58'N) — from here to the northern tip (North Cape) it's exactly 2,518 km of coastline. The lighthouse has been active since 1656.",
     "textES": "El faro de Lindesnes es el punto más al sur de la Noruega continental (57°58'N) — desde aquí hasta la punta norte (Cabo Norte) hay exactamente 2.518 km de costa. El faro está activo desde 1656."
   },
   {
-    "day": 35,
+    "day": 34,
+    "emoji": "⛵",
     "text": "La costa sud della Norvegia tra Stavanger e Kristiansand è chiamata 'Sørlandet' (terra del sud) — ha il clima più mite del paese e le spiagge più calde, con acqua che raggiunge i 20°C in estate.",
     "source": "Visit Sørlandet",
     "textEN": "Norway's south coast between Stavanger and Kristiansand is called 'Sørlandet' (Southland) — it has the country's mildest climate and warmest beaches, with water reaching 20°C in summer.",
     "textES": "La costa sur de Noruega entre Stavanger y Kristiansand se llama 'Sørlandet' (tierra del sur) — tiene el clima más suave del país y las playas más cálidas, con agua que alcanza los 20°C en verano."
   },
   {
-    "day": 35,
+    "day": 34,
+    "emoji": "🏮",
     "text": "Under è il primo ristorante sottomarino d'Europa, vicino a Lindesnes — la struttura affonda 5 metri sotto il livello del mare e ha una vetrata panoramica di 11×4 m sul fondale marino.",
     "source": "Snøhetta Architects",
     "textEN": "Under is Europe's first underwater restaurant, near Lindesnes — the structure sinks 5 meters below sea level and has an 11×4m panoramic window onto the seabed.",
     "textES": "Under es el primer restaurante submarino de Europa, cerca de Lindesnes — la estructura se hunde 5 metros bajo el nivel del mar y tiene una ventana panorámica de 11×4 m sobre el fondo marino."
   },
   {
-    "day": 35,
+    "day": 34,
     "emoji": "🏖️",
     "text": "Kristiansand è la \"Riviera norvegese\" — ha le temperature estive più alte della Norvegia e spiagge di sabbia bianca dove i norvegesi vanno in vacanza.",
     "source": "Visit Kristiansand",
@@ -1450,7 +1504,7 @@ var CURIOSITA_DATA = [
     "textES": "Kristiansand es la \"Riviera noruega\" — tiene las temperaturas veraniegas más altas de Norvegia y playas de arena blanca donde los noruegos van de vacaciones."
   },
   {
-    "day": 35,
+    "day": 34,
     "emoji": "🦁",
     "text": "Lo zoo di Kristiansand è il più grande della Norvegia e l'unico con animali africani — ha anche un parco acquatico e un villaggio di Capitan Sabertooth.",
     "source": "Kristiansand Dyrepark",
@@ -1458,7 +1512,7 @@ var CURIOSITA_DATA = [
     "textES": "El zoológico de Kristiansand es el más grande de Norvegia y el único con animales africanos — también tiene un parque acuático y un pueblo de Capitan Sabertooth."
   },
   {
-    "day": 36,
+    "day": 35,
     "emoji": "🚢",
     "text": "Il traghetto Kristiansand-Hirtshals attraversa lo Skagerrak in ~2h30 — lo stesso stretto dove nel 1940 affondò l'incrociatore tedesco Blücher.",
     "source": "Color Line",
@@ -1466,7 +1520,7 @@ var CURIOSITA_DATA = [
     "textES": "El ferry Kristiansand-Hirtshals cruza el Skagerrak en ~2h30 — el mismo estrecho donde en 1940 se hundió el crucero alemán Blücher."
   },
   {
-    "day": 36,
+    "day": 35,
     "emoji": "🌊",
     "text": "Lo Skagerrak è il punto dove Mare del Nord e Mar Baltico si incontrano — le correnti creano onde particolari visibili dalla nave.",
     "source": "Danish Meteorological Institute",
@@ -1474,7 +1528,7 @@ var CURIOSITA_DATA = [
     "textES": "El Skagerrak es el punto donde se encuentran Mare del Nord y Mar Baltico — las corrientes crean olas particulares visibles desde el barco."
   },
   {
-    "day": 36,
+    "day": 35,
     "emoji": "🇩🇰",
     "text": "La Danimarca è composta da 443 isole (di cui 78 abitate) — il paese è così piatto che il punto più alto è solo 170 metri!",
     "source": "Visit Denmark",
@@ -1482,7 +1536,7 @@ var CURIOSITA_DATA = [
     "textES": "Danimarca está compuesta por 443 islas (de las cuales 78 están habitadas) — el país es tan llano que el punto más alto tiene solo 170 metri!"
   },
   {
-    "day": 37,
+    "day": 36,
     "emoji": "🎢",
     "text": "I Giardini di Tivoli a Copenhagen, aperti nel 1843, sono il secondo parco divertimenti più antico del mondo — e ispirarono Walt Disney per Disneyland!",
     "source": "Tivoli Gardens",
@@ -1490,7 +1544,7 @@ var CURIOSITA_DATA = [
     "textES": "I Giardini di Tivoli en Copenhagen, abiertos en 1843, son el segundo parque de atracciones más antiguo del mundo — ¡y sirvieron de inspiración a Walt Disney para Disneyland!"
   },
   {
-    "day": 37,
+    "day": 36,
     "emoji": "🧜‍♀️",
     "text": "La Sirenetta di Copenhagen è alta solo 1,25 metri — è una delle attrazioni più piccole e più fotografate del mondo (dal 1913).",
     "source": "Visit Copenhagen",
@@ -1498,7 +1552,7 @@ var CURIOSITA_DATA = [
     "textES": "La Sirenetta di Copenhagen mide solo 1,25 metri — es una de las atracciones más pequeñas y más fotografiadas del mundo (desde 1913)."
   },
   {
-    "day": 37,
+    "day": 36,
     "emoji": "🏰",
     "text": "Il Castello di Rosenborg a Copenhagen custodisce i gioielli della corona danese — inclusa una corona con 2.500 diamanti e una spada del 1551.",
     "source": "Rosenborg Castle",
@@ -1506,7 +1560,7 @@ var CURIOSITA_DATA = [
     "textES": "Il Castello di Rosenborg a Copenhagen guarda las joyas de la corona danesa — incluida una corona con 2.500 diamantes y una espada de 1551."
   },
   {
-    "day": 37,
+    "day": 36,
     "emoji": "🚲",
     "text": "A Copenhagen ci sono più biciclette che abitanti: 675.000 bici per 630.000 persone. Il 49% dei residenti va al lavoro in bici ogni giorno.",
     "source": "City of Copenhagen",
@@ -1514,7 +1568,7 @@ var CURIOSITA_DATA = [
     "textES": "En Copenhagen hay más bicicletas que habitantes: 675.000 bicicletas para 630.000 personas. El 49% de los residentes va al trabajo en bici cada día."
   },
   {
-    "day": 37,
+    "day": 36,
     "emoji": "🏘️",
     "text": "Nyhavn, il porto colorato di Copenhagen, fu costruito nel 1671 come porto commerciale — Hans Christian Andersen visse qui ai numeri 18, 20 e 67.",
     "source": "Visit Copenhagen",
@@ -1522,7 +1576,7 @@ var CURIOSITA_DATA = [
     "textES": "Nyhavn, el puerto colorido de Copenhagen, fue construido en 1671 como puerto comercial — Hans Christian Andersen vivió aquí en los números 18, 20 y 67."
   },
   {
-    "day": 37,
+    "day": 36,
     "emoji": "♻️",
     "text": "Copenhagen punta a diventare la prima capitale carbon-neutral del mondo. L'inceneritore Amager Bakke ha una pista da sci sul tetto!",
     "source": "City of Copenhagen",
@@ -1530,7 +1584,7 @@ var CURIOSITA_DATA = [
     "textES": "Copenhagen aspira a convertirse en la primera capital carbono-neutral del mundo. ¡La incineradora Amager Bakke tiene una pista de esquí en la azotea!"
   },
   {
-    "day": 37,
+    "day": 36,
     "emoji": "🏗️",
     "text": "LEGOLAND Billund ha un modello del Monte Rushmore fatto con 1,5 milioni di mattoncini — ci sono voluti 3 anni per costruirlo!",
     "source": "LEGOLAND Billund",
@@ -1538,7 +1592,7 @@ var CURIOSITA_DATA = [
     "textES": "LEGOLAND Billund tiene un modelo del Monte Rushmore hecho con 1,5 milioni di bricks — ¡se tardó 3 anni en construirlo!"
   },
   {
-    "day": 37,
+    "day": 36,
     "emoji": "🤖",
     "text": "Il Miniland di LEGOLAND Billund riproduce monumenti di tutto il mondo con 20 milioni di mattoncini — i modelli si muovono, hanno luci e suoni.",
     "source": "LEGOLAND Billund",
@@ -1546,12 +1600,36 @@ var CURIOSITA_DATA = [
     "textES": "El Miniland de LEGOLAND Billund reproduce monumentos de todo el mundo con 20 milioni di bricks — los modelos se mueven y tienen luces y sonidos."
   },
   {
-    "day": 37,
+    "day": 36,
     "emoji": "📏",
     "text": "Il mattoncino LEGO è prodotto con una tolleranza di 0,002 mm — più preciso di un orologio svizzero. Ecco perché i pezzi del 1958 si incastrano ancora con quelli di oggi.",
     "source": "LEGO Group",
     "textEN": "The LEGO brick is produced with a tolerance of 0,002 mm — more precise than a Swiss watch. That's why pieces from 1958 still click together with today's.",
     "textES": "El ladrillo LEGO se fabrica con una tolerancia de 0,002 mm — más preciso que un reloj suizo. Por eso las piezas de 1958 todavía encajan con las de hoy."
+  },
+  {
+    "day": 37,
+    "emoji": "🚗",
+    "text": "Il viaggio da Copenhagen a Billund attraversa la Danimarca da est a ovest — 260 km di pianure, mulini a vento e il Grande Belt, il ponte sospeso più lungo d'Europa (1.624 m di campata).",
+    "source": "Visit Denmark",
+    "textEN": "The drive from Copenhagen to Billund crosses Denmark east to west — 260 km of plains, windmills and the Great Belt Bridge, Europe's longest suspension bridge (1,624 m span).",
+    "textES": "El viaje de Copenhague a Billund cruza Dinamarca de este a oeste — 260 km de llanuras, molinos de viento y el puente del Gran Belt, el puente colgante más largo de Europa (1.624 m de luz)."
+  },
+  {
+    "day": 37,
+    "emoji": "🏰",
+    "text": "Lungo la strada per Billund si passa vicino a Odense, città natale di Hans Christian Andersen — lo scrittore di fiabe che ha inventato La Sirenetta, Il Brutto Anatroccolo e La Regina delle Nevi.",
+    "source": "Visit Odense",
+    "textEN": "On the way to Billund you pass near Odense, birthplace of Hans Christian Andersen — the fairy tale writer who created The Little Mermaid, The Ugly Duckling and The Snow Queen.",
+    "textES": "De camino a Billund se pasa cerca de Odense, ciudad natal de Hans Christian Andersen — el escritor de cuentos que creó La Sirenita, El Patito Feo y La Reina de las Nieves."
+  },
+  {
+    "day": 37,
+    "emoji": "🌬️",
+    "text": "La Danimarca produce il 50% della sua elettricità dall'eolico — il paese è così piatto che i parchi eolici sono visibili praticamente ovunque durante il viaggio.",
+    "source": "Danish Energy Agency",
+    "textEN": "Denmark produces 50% of its electricity from wind power — the country is so flat that wind farms are visible practically everywhere during the drive.",
+    "textES": "Dinamarca produce el 50% de su electricidad con energía eólica — el país es tan llano que los parques eólicos son visibles prácticamente en todas partes durante el viaje."
   },
   {
     "day": 38,
@@ -1603,6 +1681,30 @@ var CURIOSITA_DATA = [
   },
   {
     "day": 39,
+    "emoji": "🧱",
+    "text": "La LEGO House a Billund ha 25 milioni di mattoncini e un albero di 15 metri costruito interamente in LEGO — ci sono voluti 6.316 ore di lavoro per assemblarlo pezzo per pezzo.",
+    "source": "LEGO House",
+    "textEN": "LEGO House in Billund has 25 million bricks and a 15-meter tree built entirely from LEGO — it took 6,316 hours of work to assemble it piece by piece.",
+    "textES": "La LEGO House en Billund tiene 25 millones de ladrillos y un árbol de 15 metros construido enteramente con LEGO — se necesitaron 6.316 horas de trabajo para ensamblarlo pieza a pieza."
+  },
+  {
+    "day": 39,
+    "emoji": "🏊",
+    "text": "Lalandia è il più grande parco acquatico coperto della Scandinavia — con scivoli, onde artificiali e una temperatura tropicale di 30°C anche in pieno inverno danese.",
+    "source": "Lalandia",
+    "textEN": "Lalandia is Scandinavia's largest indoor water park — with slides, wave pools and a tropical 30°C temperature even in the middle of Danish winter.",
+    "textES": "Lalandia es el parque acuático cubierto más grande de Escandinavia — con toboganes, piscinas de olas y una temperatura tropical de 30°C incluso en pleno invierno danés."
+  },
+  {
+    "day": 39,
+    "emoji": "🎨",
+    "text": "Nella LEGO House c'è una zona dove un robot fotografa la tua faccia e la ricrea in mattoncini LEGO in tempo reale — il ritratto viene poi aggiunto a una galleria permanente di volti.",
+    "source": "LEGO House",
+    "textEN": "In LEGO House there's a zone where a robot photographs your face and recreates it in LEGO bricks in real time — the portrait is then added to a permanent gallery of faces.",
+    "textES": "En la LEGO House hay una zona donde un robot fotografía tu cara y la recrea en ladrillos LEGO en tiempo real — el retrato se añade luego a una galería permanente de rostros."
+  },
+  {
+    "day": 40,
     "emoji": "🐴",
     "text": "I Musicanti di Brema (asino, cane, gatto e gallo) non arrivarono mai a Brema nella fiaba dei Grimm — si fermarono prima! La statua in città è del 1953.",
     "source": "Bremen Tourism",
@@ -1610,7 +1712,7 @@ var CURIOSITA_DATA = [
     "textES": "Los Musicanti di Brema (burro, perro, gato y gallo) nunca llegaron a Brema en el cuento de los Grimm — ¡se detuvieron antes! La estatua en la ciudad es de 1953."
   },
   {
-    "day": 39,
+    "day": 40,
     "emoji": "🤞",
     "text": "Toccare le zampe dell'asino nella statua dei Musicanti di Brema porta fortuna — sono lucide per i milioni di mani che le hanno strofinate!",
     "source": "Bremen Tourism",
@@ -1618,7 +1720,7 @@ var CURIOSITA_DATA = [
     "textES": "Tocar las patas del burro en la estatua de los Musicanti di Brema trae suerte — están brillantes por los millones de manos que las han frotado!"
   },
   {
-    "day": 39,
+    "day": 40,
     "emoji": "🚀",
     "text": "Brema è una città-stato (come Berlino e Amburgo) ed è sede dell'Airbus Defence & Space — qui si costruiscono moduli della Stazione Spaziale Internazionale.",
     "source": "Airbus Bremen",
@@ -1626,7 +1728,7 @@ var CURIOSITA_DATA = [
     "textES": "Brema es una ciudad-estado (como Berlino y Amburgo) y alberga a Airbus Defence & Space — aquí se construyen módulos de la Stazione Spaziale Internazionale."
   },
   {
-    "day": 40,
+    "day": 41,
     "emoji": "⛪",
     "text": "La cattedrale di Amiens è la più grande cattedrale gotica di Francia per volume (200.000 m³) — ci entrerebbero 2 Notre-Dame di Parigi!",
     "source": "UNESCO / Cathédrale Notre-Dame d'Amiens",
@@ -1634,7 +1736,7 @@ var CURIOSITA_DATA = [
     "textES": "La cattedrale di Amiens es la catedral gótica más grande de Francia por volumen (200.000 m³) — ¡entrarían 2 Notre-Dame di Parigi!"
   },
   {
-    "day": 40,
+    "day": 41,
     "emoji": "💡",
     "text": "Di notte la cattedrale di Amiens viene illuminata con i colori originali medievali — nel Medioevo le cattedrali erano dipinte a colori vivaci, non grigie!",
     "source": "Amiens Métropole",
@@ -1642,7 +1744,7 @@ var CURIOSITA_DATA = [
     "textES": "De noche La cattedrale di Amiens se ilumina con los colores medievales originales — ¡en la Edad Media las catedrales estaban pintadas con colores vivos, no grises!"
   },
   {
-    "day": 40,
+    "day": 41,
     "emoji": "📖",
     "text": "Jules Verne visse ad Amiens per 34 anni e scrisse qui la maggior parte dei suoi romanzi — la sua casa è ora un museo con 15.000 documenti.",
     "source": "Maison de Jules Verne",
@@ -1650,7 +1752,7 @@ var CURIOSITA_DATA = [
     "textES": "Jules Verne vivió en Amiens durante 34 años y aquí escribió la mayor parte de sus novelas — su casa es ahora un museo con 15.000 documentos."
   },
   {
-    "day": 41,
+    "day": 42,
     "emoji": "🏰",
     "text": "La Valle della Loira ha oltre 300 castelli in 280 km — più castelli per km² di qualsiasi altra regione al mondo.",
     "source": "Val de Loire UNESCO",
@@ -1658,7 +1760,7 @@ var CURIOSITA_DATA = [
     "textES": "La Valle della Loira tiene más de 300 castillos en 280 km — más castillos por km² que cualquier otra región del mundo."
   },
   {
-    "day": 41,
+    "day": 42,
     "emoji": "🏰",
     "text": "Il Castello di Chambord ha 440 stanze, 365 camini e una scala a doppia elica progettata (forse) da Leonardo da Vinci — due persone salgono senza mai incontrarsi.",
     "source": "Château de Chambord",
@@ -1666,7 +1768,7 @@ var CURIOSITA_DATA = [
     "textES": "Il Castello di Chambord tiene 440 habitaciones, 365 chimeneas y una escalera de doble hélice diseñada (quizá) por Leonardo da Vinci — dos personas suben sin llegar a encontrarse."
   },
   {
-    "day": 41,
+    "day": 42,
     "emoji": "🌹",
     "text": "Il Castello di Villandry ha i giardini rinascimentali più belli di Francia — 52.000 piante vengono sostituite due volte l'anno per mantenere i disegni geometrici.",
     "source": "Château de Villandry",
@@ -1674,7 +1776,7 @@ var CURIOSITA_DATA = [
     "textES": "Il Castello di Villandry tiene los jardines renacentistas más bonitos de Francia — 52.000 plantas se sustituyen dos veces al año para mantener los diseños geométricos."
   },
   {
-    "day": 42,
+    "day": 43,
     "emoji": "🎨",
     "text": "Leonardo da Vinci trascorse gli ultimi 3 anni della sua vita al Clos Lucé, invitato da Francesco I. Morì qui nel 1519 — portò con sé la Gioconda dall'Italia!",
     "source": "Château du Clos Lucé",
@@ -1682,7 +1784,7 @@ var CURIOSITA_DATA = [
     "textES": "Leonardo da Vinci pasó los últimos 3 años de su vida en el Clos Lucé, invitado por Francesco I. Murió aquí en 1519 — ¡trajo consigo la Gioconda desde Italia!"
   },
   {
-    "day": 42,
+    "day": 43,
     "emoji": "👸",
     "text": "Il Castello di Chenonceau è chiamato \"il castello delle donne\" — fu costruito, ampliato e salvato da 6 donne diverse in 400 anni.",
     "source": "Château de Chenonceau",
@@ -1690,7 +1792,7 @@ var CURIOSITA_DATA = [
     "textES": "Il Castello di Chenonceau se llama \"il castello delle donne\" — fue construido, ampliado y salvado por 6 mujeres distintas en 400 años."
   },
   {
-    "day": 42,
+    "day": 43,
     "emoji": "🌉",
     "text": "Chenonceau è l'unico castello costruito su un fiume — il suo ponte-galleria sul Cher fu usato come via di fuga durante la Seconda Guerra Mondiale.",
     "source": "Château de Chenonceau",
@@ -1698,7 +1800,7 @@ var CURIOSITA_DATA = [
     "textES": "Chenonceau es el único castillo construido sobre un río — su puente-galería sobre el Cher se utilizó como vía de escape durante la Seconda Guerra Mondiale."
   },
   {
-    "day": 43,
+    "day": 44,
     "emoji": "🍽️",
     "text": "San Sebastián ha la più alta concentrazione di stelle Michelin per metro quadrato al mondo — 19 stelle in una città di 180.000 abitanti.",
     "source": "Michelin Guide",
@@ -1706,7 +1808,7 @@ var CURIOSITA_DATA = [
     "textES": "San Sebastián tiene la mayor concentración de estrellas Michelin por metro cuadrado del mundo — 19 estrellas en una ciudad de 180.000 habitantes."
   },
   {
-    "day": 43,
+    "day": 44,
     "emoji": "🍢",
     "text": "I pintxos di San Sebastián non sono tapas — sono mini-capolavori gastronomici serviti su stuzzicadenti. Un giro dei bar del centro è un'esperienza obbligatoria!",
     "source": "San Sebastián Turismo",
@@ -1714,7 +1816,7 @@ var CURIOSITA_DATA = [
     "textES": "Los pintxos de San Sebastián no son tapas — son mini obras maestras gastronómicas servidas en palillos. ¡Un recorrido por los bares del centro es una experiencia obligatoria!"
   },
   {
-    "day": 43,
+    "day": 44,
     "emoji": "🏖️",
     "text": "La Playa de la Concha di San Sebastián è stata votata la spiaggia urbana più bella d'Europa — una mezzaluna perfetta nel centro della città.",
     "source": "TripAdvisor",
@@ -1722,7 +1824,7 @@ var CURIOSITA_DATA = [
     "textES": "La Playa de la Concha di San Sebastián fue votada la playa urbana más bonita de Europa — una media luna perfecta en el centro de la ciudad."
   },
   {
-    "day": 44,
+    "day": 45,
     "emoji": "🐕",
     "text": "\"Puppy\" davanti al Guggenheim di Bilbao è un cane di 12 metri ricoperto da 37.000 piante fiorite — viene ripiantato due volte l'anno!",
     "source": "Guggenheim Bilbao",
@@ -1730,7 +1832,7 @@ var CURIOSITA_DATA = [
     "textES": "\"Puppy\" frente al Guggenheim di Bilbao es un perro de 12 metros cubierto por 37.000 plantas en flor — ¡se vuelve a plantar dos veces al año!"
   },
   {
-    "day": 44,
+    "day": 45,
     "emoji": "🏗️",
     "text": "Il Guggenheim di Bilbao ha trasformato una città industriale in declino in una meta turistica mondiale — l'\"effetto Bilbao\" è studiato nelle università.",
     "source": "Guggenheim Bilbao",
@@ -1738,7 +1840,7 @@ var CURIOSITA_DATA = [
     "textES": "Il Guggenheim di Bilbao transformó una ciudad industrial en declive en un destino turístico mundial — el \"effetto Bilbao\" se estudia en las universidades."
   },
   {
-    "day": 44,
+    "day": 45,
     "emoji": "🕷️",
     "text": "\"Maman\", il ragno gigante di Louise Bourgeois davanti al Guggenheim, è alto 9 metri e pesa 8 tonnellate — sotto la pancia ha 26 uova di marmo.",
     "source": "Guggenheim Bilbao",
@@ -1746,7 +1848,7 @@ var CURIOSITA_DATA = [
     "textES": "\"Maman\", la araña gigante de Louise Bourgeois frente al Guggenheim, mide 9 metros de alto y pesa 8 toneladas — bajo la barriga tiene 26 huevos de mármol."
   },
   {
-    "day": 45,
+    "day": 46,
     "emoji": "🚡",
     "text": "La funivia di Fuente Dé sale 753 metri in soli 4 minuti — è una delle più ripide d'Europa, con una vista a 360° sui Picos de Europa.",
     "source": "Cantur",
@@ -1754,7 +1856,7 @@ var CURIOSITA_DATA = [
     "textES": "El funicular de Fuente Dé sube 753 metri en solo 4 minuti — es uno de los más empinados de Europa, con una vista a 360° de los Picos de Europa."
   },
   {
-    "day": 45,
+    "day": 46,
     "emoji": "🐺",
     "text": "I Picos de Europa ospitano lupi, orsi bruni e avvoltoi — è una delle ultime aree selvagge dell'Europa occidentale.",
     "source": "Parque Nacional Picos de Europa",
@@ -1762,7 +1864,7 @@ var CURIOSITA_DATA = [
     "textES": "Los Picos de Europa albergan lobos, osos pardos y buitres — es una de las últimas áreas salvajes de la Europa occidental."
   },
   {
-    "day": 45,
+    "day": 46,
     "emoji": "🧀",
     "text": "Il formaggio Cabrales dei Picos de Europa viene stagionato in grotte naturali a 1.000m di altitudine — il suo sapore intenso è famoso in tutto il mondo.",
     "source": "DOP Cabrales",
@@ -1770,7 +1872,7 @@ var CURIOSITA_DATA = [
     "textES": "El queso Cabrales de los Picos de Europa se cura en cuevas naturales a 1.000m de altitud — su sabor intenso es famoso en todo el mundo."
   },
   {
-    "day": 46,
+    "day": 47,
     "emoji": "✝️",
     "text": "Il Cristo del Otero a Palencia è alto 20 metri — fu la seconda statua di Cristo più alta del mondo quando fu costruita nel 1931 (dopo il Corcovado di Rio).",
     "source": "Ayuntamiento de Palencia",
@@ -1778,7 +1880,7 @@ var CURIOSITA_DATA = [
     "textES": "El Cristo del Otero en Palencia mide 20 metri — fue la segunda estatua de Cristo más alta del mundo cuando se construyó en 1931 (después del Corcovado di Rio)."
   },
   {
-    "day": 46,
+    "day": 47,
     "emoji": "🏛️",
     "text": "Palencia ha la prima università della Spagna, fondata nel 1208 — 10 anni prima di Salamanca. Fu chiusa dopo soli 55 anni e dimenticata dalla storia.",
     "source": "Universidad de Palencia",
@@ -1786,7 +1888,7 @@ var CURIOSITA_DATA = [
     "textES": "Palencia tiene la primera universidad de España, fundada en 1208 — 10 años antes que Salamanca. Fue cerrada tras solo 55 años y olvidada por la historia."
   },
   {
-    "day": 46,
+    "day": 47,
     "emoji": "🌾",
     "text": "La Meseta castigliana intorno a Palencia è il \"granaio della Spagna\" — campi di grano a perdita d'occhio a 800m di altitudine, con tramonti spettacolari.",
     "source": "Junta de Castilla y León",
@@ -1794,7 +1896,7 @@ var CURIOSITA_DATA = [
     "textES": "La Meseta castigliana alrededor de Palencia es el \"granaio della Spagna\" — campos de trigo hasta el horizonte a 800m de altitud, con atardeceres espectaculares."
   },
   {
-    "day": 47,
+    "day": 48,
     "emoji": "🌑",
     "text": "L'eclissi del 12 agosto 2026 sarà totale per ~1 min 50 sec a Palencia. La prossima eclissi totale visibile dalla Spagna sarà nel 2090 — tra 64 anni!",
     "source": "NASA Eclipse Predictions",
@@ -1802,7 +1904,7 @@ var CURIOSITA_DATA = [
     "textES": "El eclipse del 12 agosto 2026 será total durante ~1 min 50 sec en Palencia. El próximo eclipse total visible desde España será en 2090 — ¡dentro de 64 años!"
   },
   {
-    "day": 47,
+    "day": 48,
     "emoji": "⭐",
     "text": "Durante la totalità dell'eclissi vedrete la corona solare — un alone di plasma a 2 milioni di gradi, visibile solo quando la Luna copre il disco solare.",
     "source": "NASA",
@@ -1810,7 +1912,7 @@ var CURIOSITA_DATA = [
     "textES": "Durante la totalidad del eclipse verás la corona solar — un halo de plasma a 2 milioni di gradi, visible solo cuando la Luna cubre el disco solar."
   },
   {
-    "day": 47,
+    "day": 48,
     "emoji": "🌡️",
     "text": "Durante un'eclissi totale la temperatura può calare di 5-10°C in pochi minuti — gli animali si confondono e pensano sia notte!",
     "source": "Royal Astronomical Society",
@@ -1818,7 +1920,7 @@ var CURIOSITA_DATA = [
     "textES": "Durante un eclipse total la temperatura puede bajar 5-10°C en pocos minutos — los animales se confunden y creen que es de noche!"
   },
   {
-    "day": 48,
+    "day": 49,
     "emoji": "🗿",
     "text": "Cap de Creus è il punto più orientale della penisola iberica — le sue rocce erose dal vento ispirarono i paesaggi surreali di Salvador Dalí.",
     "source": "Parc Natural de Cap de Creus",
@@ -1826,7 +1928,7 @@ var CURIOSITA_DATA = [
     "textES": "Cap de Creus es el punto más oriental de la penisola iberica — sus rocas erosionadas por el viento inspiraron los paisajes surrealistas de Salvador Dalí."
   },
   {
-    "day": 48,
+    "day": 49,
     "emoji": "💨",
     "text": "La Tramontana a Cap de Creus può soffiare a 150 km/h — il vento ha scolpito le rocce in forme così strane che Dalí le dipingeva nei suoi quadri.",
     "source": "Servei Meteorològic de Catalunya",
@@ -1834,7 +1936,7 @@ var CURIOSITA_DATA = [
     "textES": "La Tramontana en Cap de Creus puede soplar a 150 km/h — el viento ha esculpido las rocas en formas tan extrañas que Dalí las pintaba en sus cuadros."
   },
   {
-    "day": 48,
+    "day": 49,
     "emoji": "🐙",
     "text": "La Costa Brava ha una riserva marina protetta a Cap de Creus — con posidonia, cernie giganti e corallo rosso a pochi metri dalla riva.",
     "source": "Parc Natural de Cap de Creus",
@@ -1842,7 +1944,7 @@ var CURIOSITA_DATA = [
     "textES": "La Costa Brava tiene una reserva marina protegida en Cap de Creus — con posidonia, cernias gigantes y coral rojo a pocos metri de la orilla."
   },
   {
-    "day": 49,
+    "day": 50,
     "emoji": "🎨",
     "text": "Cadaqués fu il rifugio di Dalí per 50 anni. La sua casa-museo a Portlligat ha uova giganti sul tetto e un labirinto di stanze surreali.",
     "source": "Fundació Dalí",
@@ -1850,7 +1952,7 @@ var CURIOSITA_DATA = [
     "textES": "Cadaqués fue el refugio de Dalí durante 50 años. Su casa-museo en Portlligat tiene huevos gigantes en el techo y un laberinto de habitaciones surrealistas."
   },
   {
-    "day": 49,
+    "day": 50,
     "emoji": "🎭",
     "text": "Il Teatro-Museo Dalí a Figueres è il museo più visitato della Spagna dopo il Prado — Dalí è sepolto sotto il palcoscenico, come volle lui.",
     "source": "Fundació Dalí",
@@ -1858,7 +1960,7 @@ var CURIOSITA_DATA = [
     "textES": "El Teatro-Museo Dalí en Figueres es el museo más visitado de España después del Prado — Dalí está enterrado bajo el escenario, como él quiso."
   },
   {
-    "day": 49,
+    "day": 50,
     "emoji": "🐟",
     "text": "Cadaqués era un villaggio di pescatori così isolato (raggiungibile solo via mare) che sviluppò un dialetto catalano unico, ancora parlato oggi.",
     "source": "Ajuntament de Cadaqués",
@@ -1866,7 +1968,7 @@ var CURIOSITA_DATA = [
     "textES": "Cadaqués era un pueblo de pescadores tan aislado (accesible solo por mar) que desarrolló un dialecto catalán único, todavía hablado hoy."
   },
   {
-    "day": 50,
+    "day": 51,
     "emoji": "🏎️",
     "text": "La Costa Azzurra prende il nome dal libro \"La Côte d'Azur\" (1887) dello scrittore Stéphen Liégeard — prima si chiamava semplicemente \"Riviera\".",
     "source": "Office de Tourisme Côte d'Azur",
@@ -1874,7 +1976,7 @@ var CURIOSITA_DATA = [
     "textES": "La Costa Azzurra toma su nombre del libro \"La Côte d'Azur\" (1887) del escritor Stéphen Liégeard — antes se llamaba simplemente \"Riviera\"."
   },
   {
-    "day": 50,
+    "day": 51,
     "emoji": "🎬",
     "text": "Il Festival di Cannes proietta circa 200 film in 12 giorni — ma solo 20 competono per la Palma d'Oro. Il red carpet è lungo 60 metri.",
     "source": "Festival de Cannes",
@@ -1882,7 +1984,7 @@ var CURIOSITA_DATA = [
     "textES": "El Festival de Cannes proyecta alrededor de 200 películas en 12 días — pero solo 20 compiten por la Palma d'Oro. La alfombra roja tiene 60 metri de largo."
   },
   {
-    "day": 50,
+    "day": 51,
     "emoji": "🌿",
     "text": "Grasse, nell'entroterra della Costa Azzurra, è la capitale mondiale del profumo — produce il 66% dei profumi francesi da oltre 400 anni.",
     "source": "Ville de Grasse",
@@ -1890,7 +1992,7 @@ var CURIOSITA_DATA = [
     "textES": "Grasse, en el interior de la Costa Azzurra, es la capital mundial del perfume — produce el 66% de los perfumes franceses desde hace más de 400 años."
   },
   {
-    "day": 51,
+    "day": 52,
     "emoji": "🐬",
     "text": "L'Acquario di Genova è il più grande d'Italia e il secondo in Europa: 70 vasche, 12.000 animali di 600 specie, e una vasca tattile dove toccare le razze!",
     "source": "Acquario di Genova",
@@ -1898,7 +2000,7 @@ var CURIOSITA_DATA = [
     "textES": "El Acquario di Genova es el más grande de Italia y el segundo de Europa: 70 tanques, 12.000 animales de 600 especies, y un tanque táctil donde tocar a las rayas!"
   },
   {
-    "day": 51,
+    "day": 52,
     "emoji": "🌐",
     "text": "L'Acquario di Genova fu costruito da Renzo Piano per l'Expo 1992 (500 anni dalla scoperta dell'America) — la struttura sembra una nave in porto.",
     "source": "Acquario di Genova",
@@ -1906,7 +2008,7 @@ var CURIOSITA_DATA = [
     "textES": "El Acquario di Genova fue construido por Renzo Piano para la Expo 1992 (500 años desde el descubrimiento de América) — la estructura parece un barco en el puerto."
   },
   {
-    "day": 51,
+    "day": 52,
     "emoji": "🦈",
     "text": "L'Acquario di Genova ha la più grande vasca di squali del Mediterraneo — con squali martello, mante e una ricostruzione della barriera corallina.",
     "source": "Acquario di Genova",
@@ -1914,7 +2016,7 @@ var CURIOSITA_DATA = [
     "textES": "L'Acquario di Genova tiene la mayor pecera de tiburones del Mediterráneo — con tiburones martillo, mantas y una reconstrucción de la barrera coralina."
   },
   {
-    "day": 52,
+    "day": 53,
     "emoji": "⛵",
     "text": "Genova fu la \"Superba\" — la repubblica marinara più ricca del Medioevo. Cristoforo Colombo nacque qui nel 1451, e la sua casa è ancora visitabile.",
     "source": "Comune di Genova",
@@ -1922,7 +2024,7 @@ var CURIOSITA_DATA = [
     "textES": "Genova fue la \"Superba\" — la república marinera más rica de la Edad Media. Cristoforo Colombo nació aquí en 1451 y su casa todavía puede visitarse."
   },
   {
-    "day": 52,
+    "day": 53,
     "emoji": "🍝",
     "text": "Il pesto alla genovese ha solo 7 ingredienti (basilico DOP, pinoli, aglio, parmigiano, pecorino, olio, sale) — e il basilico DEVE essere di Prà, un quartiere di Genova.",
     "source": "Consorzio del Pesto Genovese",
@@ -1930,7 +2032,7 @@ var CURIOSITA_DATA = [
     "textES": "El pesto alla genovese tiene solo 7 ingredientes (basilico DOP, piñones, ajo, parmigiano, pecorino, aceite, sal) — y la albahaca DEBE ser de Prà, un barrio de Genova."
   },
   {
-    "day": 52,
+    "day": 53,
     "emoji": "🏘️",
     "text": "I \"caruggi\" di Genova formano il centro storico medievale più grande d'Europa — un labirinto di 5 km² dove il sole non entra mai.",
     "source": "Comune di Genova",
@@ -1971,12 +2073,12 @@ var CURIOSITA_DATA = [
   },
   {
     "day": 54,
-    "city": "Genova → Selvazzano",
-    "cityEn": "Genoa → Selvazzano",
+    "emoji": "🏠",
     "fact": "Genova ha dato i natali a Cristoforo Colombo e a Giuseppe Garibaldi. La città possiede il più grande centro storico medievale d'Europa — 4,5 km² di caruggi, più esteso di quello di Venezia.",
     "factEn": "Genoa is the birthplace of Christopher Columbus and Giuseppe Garibaldi. The city has the largest medieval historic center in Europe — 4.5 km² of narrow lanes, larger than Venice's.",
     "factES": "Génova es la cuna de Cristóbal Colón y Giuseppe Garibaldi. La ciudad posee el mayor centro histórico medieval de Europa — 4,5 km² de callejones, más extenso que el de Venecia.",
-    "emoji": "🏠",
+    "city": "Genova → Selvazzano",
+    "cityEn": "Genoa → Selvazzano",
     "cityES": "Genova → Selvazzano"
   },
   {
