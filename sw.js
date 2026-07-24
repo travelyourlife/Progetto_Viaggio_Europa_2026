@@ -26,7 +26,7 @@ var messaging = firebase.messaging();
 // ─── CACHING CONFIG ───
 // ═══════════════════════════════════════════════════════════════
 
-const CACHE_NAME = 'quo-vadis-v5.11';
+const CACHE_NAME = 'quo-vadis-v5.12';
 const IMAGE_CACHE_NAME = 'quo-vadis-images-v1';
 const IMAGE_CACHE_LIMIT = 80;
 const STATIC_ASSETS = [
@@ -315,6 +315,10 @@ function cacheFirst(request) {
 // ─── Message handling ───
 self.addEventListener('message', function(event) {
   if (event.data === 'skipWaiting') {
+    self.skipWaiting();
+  }
+  // v5.12: support object-form message from the new auto-update script
+  if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting();
   }
   if (event.data === 'checkUpdate') {

@@ -394,7 +394,7 @@ try {
 
   // v3.94 FIX Audit #8: Always include User-Agent header (Nominatim ToS requirement)
   // v4.08 FIX: Use runtime version from EXPECTED_VERSION instead of hardcoded
-  var _appVer = (typeof EXPECTED_VERSION !== 'undefined') ? EXPECTED_VERSION : '5.11';
+  var _appVer = (typeof EXPECTED_VERSION !== 'undefined') ? EXPECTED_VERSION : '5.12';
   var _defaultHeaders = { 'User-Agent': 'QuoVadis-TripApp/' + _appVer + ' (family-trip-pwa)' };
 
   function _drain() {
@@ -17021,7 +17021,7 @@ window.injectAllWikiLinks = function() {
         out += '<div class="diario-comment-reply-quote"><span class="reply-quote-author">\u21A9 ' + escapeHtml(c.replyTo.name) + '</span> <span class="reply-quote-text">' + escapeHtml(replyText) + '</span></div>';
       }
       if (c.photoUrl) {
-        out += '<img src="' + escapeHtml(c.photoUrl) + '" class="diario-comment-photo-img" loading="lazy" onclick="window.open(this.src,'_blank','noopener,noreferrer')" alt="">';
+        out += '<img src="' + escapeHtml(c.photoUrl) + '" class="diario-comment-photo-img" loading="lazy" onclick="window.open(this.src,\'_blank\',\'noopener,noreferrer\')" alt="">';
       }
       if (c.text) {
         out += '<span class="diario-comment-text">' + escapeHtml(c.text) + '</span>';
