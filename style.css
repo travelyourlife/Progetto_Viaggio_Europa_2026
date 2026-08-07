@@ -1809,9 +1809,10 @@ table { max-width: 100%; }
 
 
 /* Previene che l'indice sticky copra il contenuto quando si cliccano i link */
-.accordion-header, h2[id], span[id^="g"], span[id="meteo"],
-details.admin-accordion, details.pos-accordion,
-span[id^="admin-sec"] {
+.accordion-header, h2[id], h3[id], summary[id], span[id^="g"], span[id="meteo"], span[id="mappa"],
+details.admin-accordion, details.pos-accordion, details.legenda-itinerario-details,
+span[id^="admin-sec"], .natura-country-block,
+#pos-info-card, #pos-map, #pos-stats-content, .pos-garmin-card, #pos-weather-panel {
     scroll-margin-top: 150px;
 }
 

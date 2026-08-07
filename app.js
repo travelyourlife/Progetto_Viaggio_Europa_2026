@@ -394,7 +394,7 @@ try {
 
   // v3.94 FIX Audit #8: Always include User-Agent header (Nominatim ToS requirement)
   // v4.08 FIX: Use runtime version from EXPECTED_VERSION instead of hardcoded
-  var _appVer = (typeof EXPECTED_VERSION !== 'undefined') ? EXPECTED_VERSION : '5.32';
+  var _appVer = (typeof EXPECTED_VERSION !== 'undefined') ? EXPECTED_VERSION : '5.37';
   var _defaultHeaders = { 'User-Agent': 'QuoVadis-TripApp/' + _appVer + ' (family-trip-pwa)' };
 
   function _drain() {
@@ -1828,17 +1828,39 @@ function initRouteMap() {
     // now they're fetched on demand from content-<tab>-<lang>.html, same idea as
     // the wiki-links.js lazy load just below. Falls back to a visible retry message
     // if the fetch fails (e.g. no signal), instead of leaving the tab blank forever.
+    // v5.37: static map of every id inside the 4 lazy-loaded tabs (cultura/
+    // natura/attivita/cibo), generated at build time. Needed because links in
+    // EAGERLY-loaded content (like the Giorni-tab icon legend, which links to
+    // "Guida Pesca"/"Guida Trekking" inside Attivita) can be clicked before
+    // the target tab has ever been opened — at that point the target element
+    // does not exist in the DOM yet and anchorTabMap has no entry for it either,
+    // so the click would silently do nothing. This map lets the click handler
+    // recognize "this id belongs to tab X" even before X has been loaded, so
+    // it can load X first and then jump, instead of failing silently.
+    window.LAZY_TAB_ANCHORS = {"storia":"cultura","austria-g1-g2":"cultura","timeline":"cultura","personaggi-da-conoscere":"cultura","cosa-osservare-nellarchitettura":"cultura","tradizioni-vive-in-estate-luglio":"cultura","parole-utili":"cultura","musica-arte-austria":"cultura","quiz-per-i-bambini":"cultura","cosa-comprare-souvenir-autentici":"cultura","repubblica-ceca-g2-transito-via-brno":"cultura","timeline_1":"cultura","personaggi-da-conoscere_1":"cultura","cosa-osservare-nellarchitettura_1":"cultura","tradizioni-vive-in-estate":"cultura","parole-utili_1":"cultura","natura-fauna-ceca":"cultura","musica-arte-ceca":"cultura","quiz-per-i-bambini_1":"cultura","cosa-comprare":"cultura","polonia-g3-g4":"cultura","timeline_2":"cultura","personaggi-da-conoscere_2":"cultura","cosa-osservare-nellarchitettura_2":"cultura","tradizioni-vive-in-estate_1":"cultura","parole-utili_2":"cultura","musica-arte-polonia":"cultura","quiz-per-i-bambini_2":"cultura","cosa-comprare_1":"cultura","lituania-g4-g5":"cultura","timeline_3":"cultura","personaggi-da-conoscere_3":"cultura","cosa-osservare-nellarchitettura_3":"cultura","tradizioni-vive-in-estate_2":"cultura","parole-utili_3":"cultura","musica-arte-lituania":"cultura","quiz-per-i-bambini_3":"cultura","cosa-comprare_2":"cultura","lettonia-g5-g6":"cultura","timeline_4":"cultura","personaggi-da-conoscere_4":"cultura","cosa-osservare-nellarchitettura_4":"cultura","tradizioni-vive-in-estate_3":"cultura","parole-utili_4":"cultura","musica-arte-lettonia":"cultura","quiz-per-i-bambini_4":"cultura","cosa-comprare_3":"cultura","estonia-g6-g7":"cultura","timeline_5":"cultura","personaggi-da-conoscere_5":"cultura","cosa-osservare-nellarchitettura_5":"cultura","tradizioni-vive-in-estate_4":"cultura","parole-utili_5":"cultura","musica-arte-estonia":"cultura","quiz-per-i-bambini_5":"cultura","cosa-comprare_4":"cultura","finlandia-g7-g15":"cultura","timeline_6":"cultura","personaggi-da-conoscere_6":"cultura","cosa-osservare-nellarchitettura_6":"cultura","tradizioni-vive-in-estate_5":"cultura","parole-utili_6":"cultura","natura-fauna-finlandia":"cultura","musica-arte-finlandia":"cultura","quiz-per-i-bambini_6":"cultura","cosa-comprare_5":"cultura","norvegia-g16-g34":"cultura","timeline_7":"cultura","personaggi-da-conoscere_7":"cultura","cosa-osservare-nellarchitettura_7":"cultura","tradizioni-vive-in-estate_6":"cultura","parole-utili_7":"cultura","natura-fauna-norvegia":"cultura","musica-arte-norvegia":"cultura","quiz-per-i-bambini_7":"cultura","cosa-comprare_6":"cultura","danimarca-g35-g39":"cultura","timeline_8":"cultura","personaggi-da-conoscere_8":"cultura","cosa-osservare-nellarchitettura_8":"cultura","tradizioni-vive-in-estate_7":"cultura","parole-utili_8":"cultura","musica-arte-danimarca":"cultura","quiz-per-i-bambini_8":"cultura","cosa-comprare_7":"cultura","germania-g40-transito-via-brema":"cultura","timeline_9":"cultura","personaggi-da-conoscere_9":"cultura","cosa-osservare-nellarchitettura_9":"cultura","parole-utili_9":"cultura","tradizioni-vive-in-estate_8":"cultura","natura-fauna-germania":"cultura","musica-arte-germania":"cultura","quiz-per-i-bambini_9":"cultura","cosa-comprare_8":"cultura","francia-g41-g43-g51-g54":"cultura","timeline_10":"cultura","personaggi-da-conoscere_10":"cultura","cosa-osservare-nellarchitettura_10":"cultura","tradizioni-vive-in-estate_9":"cultura","parole-utili_10":"cultura","musica-arte-francia":"cultura","quiz-per-i-bambini_10":"cultura","cosa-comprare_9":"cultura","spagna-g44-g50":"cultura","timeline_11":"cultura","personaggi-da-conoscere_11":"cultura","cosa-osservare-nellarchitettura_11":"cultura","tradizioni-vive-in-estate_10":"cultura","parole-utili_11":"cultura","musica-arte-spagna":"cultura","quiz-per-i-bambini_11":"cultura","cosa-comprare_10":"cultura","italia-g52-g54":"cultura","timeline_12":"cultura","personaggi-da-conoscere_12":"cultura","cosa-osservare-nellarchitettura_12":"cultura","tradizioni-vive-in-estate_11":"cultura","parole-utili_12":"cultura","natura-fauna-italia":"cultura","musica-arte-italia":"cultura","quiz-per-i-bambini_12":"cultura","cosa-comprare_11":"cultura","libri-film":"cultura","prima-della-partenza-da-leggerevedere-a-casa":"cultura","per-i-bambini-6-8-anni":"cultura","per-i-genitori":"cultura","in-viaggio-podcast-e-audiolibri-per-le-tappe-lunghe":"cultura","per-i-bambini-da-ascoltare-in-furgone":"cultura","per-i-genitori-quando-i-bambini-dormono-o-con-cuffie":"cultura","film-da-tablet-per-la-sera-dopo-cena-nel-furgone":"cultura","natura-austria":"natura","natura-polonia":"natura","natura-lituania":"natura","natura-lettonia":"natura","natura-estonia":"natura","natura-finlandia":"natura","natura-norvegia":"natura","natura-danimarca":"natura","natura-francia":"natura","natura-spagna":"natura","campeggio":"attivita","trekking":"attivita","top-5-solo-partenza-alba":"attivita","top-5-con-bambini":"attivita","dettaglio-per-zona":"attivita","trek-tromso":"attivita","trek-senja":"attivita","trek-vesteralen":"attivita","trek-lofoten":"attivita","trek-geiranger":"attivita","trek-bergen":"attivita","trek-stavanger":"attivita","trek-finlandia":"attivita","trek-baschi":"attivita","trek-picos":"attivita","consigli-pratici":"attivita","preparazione-e-sicurezza-in-montagna":"attivita","pesca":"attivita","pesca-riepilogo-licenze":"attivita","pesca-dettaglio-per-zona":"attivita","pesca-finlandia":"attivita","pesca-norvegia":"attivita","pesca-danimarca":"attivita","pesca-germania":"attivita","pesca-francia":"attivita","pesca-spagna":"attivita","pesca-italia":"attivita","pesca-cosa-portare":"attivita","noleggi":"attivita","monopattini-muscolari-propri":"attivita","noleggio-bici":"attivita","noleggio-kayak-e-canoa":"attivita","noleggio-sup-stand-up-paddle":"attivita","consigli-pratici-noleggi":"attivita","legenda-icone-attivita":"attivita","minerali-fossili":"attivita","drone":"attivita","inreach":"attivita","food":"cibo","gastronomia-tabella-per-paese":"cibo","cucina-austriaca-g1-g2":"cibo","storia-cucina-austria":"cibo","extra-piatti-austria":"cibo","street-food-chioschi-take-away":"cibo","da-comprare-al-supermercato":"cibo","ricette-da-furgone":"cibo","da-provare-al-locale":"cibo","tips":"cibo","cucina-ceca-g2-g3-transito":"cibo","storia-cucina-ceca":"cibo","extra-piatti-ceca":"cibo","street-food-chioschi-take-away_1":"cibo","da-comprare-al-supermercato_1":"cibo","ricette-da-furgone_1":"cibo","da-provare-al-locale_1":"cibo","tips_1":"cibo","cucina-polacca-g3-g4":"cibo","storia-cucina-polacca":"cibo","extra-piatti-polonia":"cibo","street-food-chioschi-take-away_2":"cibo","da-comprare-al-supermercato_2":"cibo","ricette-da-furgone_2":"cibo","da-provare-al-locale_2":"cibo","tips_2":"cibo","cucina-baltica-g4-g7":"cibo","storia-cucina-baltica":"cibo","extra-piatti-baltici":"cibo","street-food-chioschi-take-away_3":"cibo","da-comprare-al-supermercato_3":"cibo","ricette-da-furgone_3":"cibo","da-provare-al-locale_3":"cibo","tips_3":"cibo","cucina-finlandese-g7-g15":"cibo","storia-cucina-finlandese":"cibo","extra-piatti-finlandia":"cibo","street-food-chioschi-take-away_4":"cibo","da-comprare-al-supermercato_4":"cibo","ricette-da-furgone_4":"cibo","griglia":"cibo","da-provare-al-locale_4":"cibo","tips_4":"cibo","cucina-norvegese-g15-g34":"cibo","storia-cucina-norvegese":"cibo","extra-piatti-norvegia":"cibo","street-food-chioschi-take-away_5":"cibo","da-comprare-al-supermercato_5":"cibo","ricette-da-furgone_5":"cibo","griglia_1":"cibo","da-provare-al-locale_5":"cibo","tips_5":"cibo","cucina-danese-g34-g39":"cibo","storia-cucina-danese":"cibo","extra-piatti-danimarca":"cibo","street-food-chioschi-take-away_6":"cibo","da-comprare-al-supermercato_6":"cibo","ricette-da-furgone_6":"cibo","da-provare-al-locale_6":"cibo","tips_6":"cibo","cucina-tedesca-g40-transito-brema":"cibo","storia-cucina-tedesca":"cibo","extra-piatti-germania":"cibo","street-food-chioschi-take-away_7":"cibo","da-comprare-al-supermercato_7":"cibo","ricette-da-furgone_7":"cibo","da-provare-al-locale_7":"cibo","tips_7":"cibo","cucina-francese-g40-g43-g51-g52":"cibo","storia-cucina-francese":"cibo","extra-piatti-francia":"cibo","street-food-chioschi-take-away_8":"cibo","da-comprare-al-supermercato_8":"cibo","ricette-da-furgone_8":"cibo","da-provare-al-locale_8":"cibo","tips_8":"cibo","cucina-spagnola-g44-g50":"cibo","storia-cucina-spagnola":"cibo","extra-piatti-spagna":"cibo","street-food-chioschi-take-away_9":"cibo","da-comprare-al-supermercato_9":"cibo","ricette-da-furgone_9":"cibo","da-provare-al-locale_9":"cibo","tips_9":"cibo","cucina-italiana-rientro-g51-g54":"cibo","storia-cucina-italiana":"cibo","extra-piatti-italia":"cibo","street-food-chioschi-take-away_10":"cibo","da-comprare-al-supermercato_10":"cibo","ricette-da-furgone_10":"cibo","da-provare-al-locale_10":"cibo","tips_10":"cibo","gastronomia-consigli-cucina-in-furgone":"cibo","legenda-icone-cucina":"cibo"};
+
     window._lazyContentLoaded = window._lazyContentLoaded || {};
     function _loadLazyTabContent(tabId) {
         if (window._lazyContentLoaded[tabId]) return;
         var target = document.getElementById('tab-' + tabId);
         if (!target) return; // e.g. tab-natura doesn't exist in EN yet
         window._lazyContentLoaded[tabId] = true;
-        var url = './content-' + tabId + '-' + LANG3 + '.html?v=5.32';
+        var url = './content-' + tabId + '-' + LANG3 + '.html?v=5.37';
         fetch(url, { cache: 'no-store' })
             .then(function(res) { if (!res.ok) throw new Error('HTTP ' + res.status); return res.text(); })
             .then(function(html) {
                 target.innerHTML = html;
+                // v5.34: anchorTabMap (built once at page load, before this tab's
+                // content existed) has no entries for ids inside this fragment —
+                // e.g. the Natura country index links (#natura-austria etc.) were
+                // resolving to nothing, which then fell through to whatever the
+                // click/back-button fallback logic defaults to (Home). Register
+                // this fragment's ids now that they actually exist.
+                if (window._registerAnchorTab) {
+                    target.querySelectorAll('[id]').forEach(function(el) {
+                        window._registerAnchorTab(el.id, tabId);
+                    });
+                }
                 // Re-run wiki-link injection now that content actually exists in the DOM
                 if (typeof window.injectAllWikiLinks === 'function') {
                     try { window.injectAllWikiLinks(); } catch (e) { /* noop */ }
@@ -1854,6 +1876,7 @@ function initRouteMap() {
                 if (_qvLog) _qvLog.error('[Lazy] failed to load ' + url, err);
             });
     }
+    window._loadLazyTabContent = _loadLazyTabContent;
     // Also load immediately if one of these tabs is already active on page load (deep link/refresh)
     document.addEventListener('DOMContentLoaded', function() {
         ['cultura', 'natura', 'attivita', 'cibo'].forEach(function(t) {
@@ -1874,7 +1897,7 @@ function initRouteMap() {
         if (typeof WIKI_LINKS === 'undefined' && !window._wikiLinksLoading) {
             window._wikiLinksLoading = true;
             var s = document.createElement('script');
-            s.src = './wiki-links.js?v=5.32';
+            s.src = './wiki-links.js?v=5.37';
             s.defer = true;
             s.onload = function() { _qvLog.info('[Lazy] wiki-links.js loaded'); };
             document.head.appendChild(s);
@@ -3105,6 +3128,9 @@ document.addEventListener('DOMContentLoaded', function() {
             anchorTabMap[el.id] = tabId;
         });
     });
+    // v5.34: let lazy-loaded tab content (fetched after this initial scan) register
+    // its own ids once it actually exists in the DOM — see _loadLazyTabContent.
+    window._registerAnchorTab = function(id, tabId) { anchorTabMap[id] = tabId; };
 
     // ─── FIX v1.50: Firebase Listener Registry & Cleanup ───
     // Prevents memory leaks by detaching .on() listeners when leaving a tab
@@ -3317,6 +3343,30 @@ document.addEventListener('DOMContentLoaded', function() {
                 switchTab(targetTab, targetId);
                 history.pushState(null, '', href);
             }
+        } else if (window.LAZY_TAB_ANCHORS && window.LAZY_TAB_ANCHORS[targetId]) {
+            // v5.37: target belongs to a lazy tab that hasn't been opened yet —
+            // anchorTabMap has no entry for it and the element doesn't exist in
+            // the DOM yet either, so without this the click would do nothing.
+            // Switch to that tab (which triggers the lazy fetch), then poll
+            // briefly for the element to actually appear before scrolling.
+            e.preventDefault();
+            var lazyTab = window.LAZY_TAB_ANCHORS[targetId];
+            var _activeTab2 = document.querySelector('.tab-content.active');
+            var _activeTabId2 = _activeTab2 ? _activeTab2.id.replace('tab-', '') : '';
+            history.replaceState(null, '', '#tab-' + _activeTabId2);
+            switchTab(lazyTab);
+            var _tries = 0;
+            (function _waitAndScroll() {
+                var el = document.getElementById(targetId);
+                if (el) {
+                    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    history.pushState(null, '', href);
+                    if (window._registerAnchorTab) window._registerAnchorTab(targetId, lazyTab);
+                } else if (_tries < 40) {
+                    _tries++;
+                    setTimeout(_waitAndScroll, 150);
+                }
+            })();
         }
     });
 
@@ -3337,7 +3387,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (_bootTab !== 'home') { try { history.pushState(null, '', '#tab-' + _bootTab); } catch(e) {} }
         }
         else {
-            var tid = hash.substring(1); var tt = anchorTabMap[tid];
+            var tid = hash.substring(1); var tt = anchorTabMap[tid] || (window.LAZY_TAB_ANCHORS && window.LAZY_TAB_ANCHORS[tid]);
             if (tt) { switchTab(tt, tid); if (tt !== 'home') { try { history.pushState(null, '', hash); } catch(e) {} } }
         }
     } else {
@@ -3385,7 +3435,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // If hash points to an anchor inside a tab, switch to that tab
         if (_popHash.length > 1) {
             var _anchorId = _popHash.substring(1);
-            var _anchorTab = anchorTabMap[_anchorId];
+            var _anchorTab = anchorTabMap[_anchorId] || (window.LAZY_TAB_ANCHORS && window.LAZY_TAB_ANCHORS[_anchorId]);
             if (_anchorTab) {
                 switchTab(_anchorTab, _anchorId);
                 return;
