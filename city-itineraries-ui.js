@@ -272,6 +272,40 @@
     if (b) { ev.preventDefault(); openStopDetail(b.getAttribute('data-stop-id')); }
   }, true);
 
+  // ---- Lazy-load the CITY_ITINERARIES data file itself (v5.25) -----------
+  // city-itineraries.js is ~1.1MB and used to be loaded unconditionally on
+  // every page load via <script defer>, even for users who never open this
+  // tab. Now it's fetched only the first time the tab is actually opened.
+  var _dataLoading = false;
+  function ensureDataLoaded(cb) {
+    if (typeof window.CITY_ITINERARIES !== 'undefined') { cb(); return; }
+    if (_dataLoading) {
+      var waitId = setInterval(function () {
+        if (typeof window.CITY_ITINERARIES !== 'undefined') {
+          clearInterval(waitId);
+          cb();
+        }
+      }, 100);
+      return;
+    }
+    _dataLoading = true;
+    var s = document.createElement('script');
+    s.src = './city-itineraries.js?v=5.31';
+    s.defer = true;
+    s.onload = function () { _dataLoading = false; cb(); };
+    s.onerror = function () {
+      _dataLoading = false;
+      var sec = document.getElementById('tab-itinerari');
+      if (sec) {
+        sec.innerHTML = '<div style="padding:40px 20px;text-align:center;color:#c00;">' +
+          (window.LANG3 === 'es' ? 'No se pudieron cargar los itinerarios. Comprueba la conexión y vuelve a abrir esta pestaña.'
+           : window.isEN ? 'Could not load the city itineraries. Check your connection and reopen this tab.'
+           : 'Impossibile caricare gli itinerari città. Controlla la connessione e riapri questa scheda.') + '</div>';
+      }
+    };
+    document.head.appendChild(s);
+  }
+
   // ---- Build the section shell -------------------------------------------
   function ensureShell() {
     var sec = document.getElementById('tab-itinerari');
@@ -825,16 +859,18 @@
 
   // ---- Public init: called when the tab is shown -------------------------
   function init() {
-    ensureShell();
+    ensureDataLoaded(ensureShell);
   }
   window.CityItineraries = { init: init, destroyMap: destroyMap };
 
   // Build when the itinerari tab is switched to
   window.addEventListener('tabSwitched', function (e) {
     if (e && e.detail === 'itinerari') {
-      ensureShell();
-      // (re)size any open map
-      setTimeout(function () { if (mapInstance) mapInstance.invalidateSize(); }, 150);
+      ensureDataLoaded(function () {
+        ensureShell();
+        // (re)size any open map
+        setTimeout(function () { if (mapInstance) mapInstance.invalidateSize(); }, 150);
+      });
     } else {
       // Leaving the tab: stop the GPS watch to save battery, keep DOM
       if (liveWatchId != null && navigator.geolocation) {
@@ -848,7 +884,9 @@
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function () {
       if (document.getElementById('tab-itinerari') &&
-          document.getElementById('tab-itinerari').classList.contains('active')) init();
+          document.getElementById('tab-itinerari').classList.contains('active')) {
+        ensureDataLoaded(ensureShell);
+      }
     });
   }
 })();

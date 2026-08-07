@@ -394,7 +394,7 @@ try {
 
   // v3.94 FIX Audit #8: Always include User-Agent header (Nominatim ToS requirement)
   // v4.08 FIX: Use runtime version from EXPECTED_VERSION instead of hardcoded
-  var _appVer = (typeof EXPECTED_VERSION !== 'undefined') ? EXPECTED_VERSION : '5.16';
+  var _appVer = (typeof EXPECTED_VERSION !== 'undefined') ? EXPECTED_VERSION : '5.31';
   var _defaultHeaders = { 'User-Agent': 'QuoVadis-TripApp/' + _appVer + ' (family-trip-pwa)' };
 
   function _drain() {
@@ -1834,7 +1834,7 @@ function initRouteMap() {
         var target = document.getElementById('tab-' + tabId);
         if (!target) return; // e.g. tab-natura doesn't exist in EN yet
         window._lazyContentLoaded[tabId] = true;
-        var url = './content-' + tabId + '-' + LANG3 + '.html?v=5.16';
+        var url = './content-' + tabId + '-' + LANG3 + '.html?v=5.31';
         fetch(url, { cache: 'no-store' })
             .then(function(res) { if (!res.ok) throw new Error('HTTP ' + res.status); return res.text(); })
             .then(function(html) {
@@ -1874,7 +1874,7 @@ function initRouteMap() {
         if (typeof WIKI_LINKS === 'undefined' && !window._wikiLinksLoading) {
             window._wikiLinksLoading = true;
             var s = document.createElement('script');
-            s.src = './wiki-links.js?v=5.16';
+            s.src = './wiki-links.js?v=5.31';
             s.defer = true;
             s.onload = function() { _qvLog.info('[Lazy] wiki-links.js loaded'); };
             document.head.appendChild(s);
@@ -8032,7 +8032,9 @@ if ('serviceWorker' in navigator) {
                 });
             });
             // Also check for updates periodically (every 60 seconds)
-            setInterval(function() { reg.update(); }, 60000);
+            // v5.19: skip while backgrounded — checking for updates while the app
+            // isn't visible has no benefit and just wakes the JS engine for nothing.
+            setInterval(function() { if (document.hidden) return; reg.update(); }, 60000);
         }).catch(function(err) {
             // v2.92: log visibile (warn) per diagnosi, invece di debug silenzioso
             console.warn('[App] SW errore registrazione:', err);
@@ -8519,7 +8521,8 @@ async function fetchForecast(lat, lon, date, _retry) {
   }
 
   // v3.79: refresh itinerary weather every 30 minutes
-  setInterval(updateMeteo, 1800000);
+  // v5.19: skip while backgrounded — resumes via the visibilitychange listener below anyway
+  setInterval(function() { if (!document.hidden) updateMeteo(); }, 1800000);
 
   // v3.79: refresh when user returns to the app
   document.addEventListener('visibilitychange', function() {
@@ -8657,7 +8660,8 @@ async function fetchForecast(lat, lon, date, _retry) {
   }
 
   // v3.79: refresh every 30 minutes
-  setInterval(loadPosWeather, 1800000);
+  // v5.19: skip while backgrounded — resumes via the visibilitychange listener below anyway
+  setInterval(function() { if (!document.hidden) loadPosWeather(); }, 1800000);
 
   // v3.79: refresh when user returns to the app (visibility change)
   document.addEventListener('visibilitychange', function() {
@@ -10196,7 +10200,8 @@ async function fetchForecast(lat, lon, date, _retry) {
 
     // Fetch on load and refresh every 30 minutes
     fetchWeather();
-    setInterval(fetchWeather, 1800000);
+    // v5.19: skip while backgrounded — resumes via the existing visibilitychange handling anyway
+    setInterval(function() { if (!document.hidden) fetchWeather(); }, 1800000);
 
     // ─── Clickable hero city → opens "In Viaggio" tab ───
     var heroCityLink = document.getElementById('hero-city-link');
@@ -17653,7 +17658,7 @@ window.injectAllWikiLinks = function() {
         // Caption editor (owner only)
         (isOwner ? '<div class="diario-lightbox-caption-row" style="display:flex;gap:8px;margin:8px 0;align-items:center;">' +
           '<input id="diario-caption-input" type="text" placeholder="' + (LANG3 === 'es' ? 'Añadir una leyenda...' : isEN ? 'Add a caption...' : 'Aggiungi una didascalia...') + '" ' +
-          'value="' + (caption || '').replace(/"/g, '&quot;') + '" ' +
+          'value="' + escapeHtml(caption || '') + '" ' +
           'style="flex:1;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:var(--bg-card);color:var(--text);">' +
           '<button class="diario-lightbox-caption-save pos-btn" style="white-space:nowrap;font-size:13px;padding:8px 12px;">' +
           (LANG3 === 'es' ? '💾 Guardar' : isEN ? '💾 Save' : '💾 Salva') + '</button></div>' : '') +
