@@ -1834,7 +1834,7 @@ function initRouteMap() {
         var target = document.getElementById('tab-' + tabId);
         if (!target) return; // e.g. tab-natura doesn't exist in EN yet
         window._lazyContentLoaded[tabId] = true;
-        var url = './content-' + tabId + '-' + LANG3 + '.html?v=5.14';
+        var url = './content-' + tabId + '-' + LANG3 + '.html?v=5.15';
         fetch(url, { cache: 'no-store' })
             .then(function(res) { if (!res.ok) throw new Error('HTTP ' + res.status); return res.text(); })
             .then(function(html) {
@@ -1874,7 +1874,7 @@ function initRouteMap() {
         if (typeof WIKI_LINKS === 'undefined' && !window._wikiLinksLoading) {
             window._wikiLinksLoading = true;
             var s = document.createElement('script');
-            s.src = './wiki-links.js?v=5.14';
+            s.src = './wiki-links.js?v=5.15';
             s.defer = true;
             s.onload = function() { _qvLog.info('[Lazy] wiki-links.js loaded'); };
             document.head.appendChild(s);
