@@ -135,6 +135,20 @@ def main():
         f.write(f'{{"version": "{new_version}"}}')
     print(f"  version.json: impostato a {new_version}")
 
+    # 6b. <title> tag — found to be a hardcoded string never touched by any
+    # previous version bump (stuck at V4.92/V4.62/V4.90, three different
+    # stale values across the 3 language files, unrelated to the real
+    # deployed version). Keep it in sync from now on.
+    for fname in EXPECTED_VERSION_FILES:
+        content = open(fname, encoding='utf-8').read()
+        new_content, n = re.subn(
+            r'<title>Quo Vadis — V[\d.]+</title>',
+            f'<title>Quo Vadis — V{new_version}</title>',
+            content
+        )
+        open(fname, 'w', encoding='utf-8').write(new_content)
+        print(f"  {fname}: <title> aggiornato ({n})")
+
     # 7. VERIFICA ESAUSTIVA — rilegge tutto, cerca QUALSIASI versione diversa da quella nuova
     print("\nVerifica esaustiva...")
     check_files = list(set(VERSIONED_QS_FILES + EXPECTED_VERSION_FILES)) + ['version.json']
@@ -144,6 +158,7 @@ def main():
         r'|quo-vadis-v\d+\.\d+'
         r"|EXPECTED_VERSION : '\d+\.\d+'"
         r'|"version": "\d+\.\d+"'
+        r'|<title>Quo Vadis — V[\d.]+</title>'
     )
     stale_found = []
     for fname in check_files:

@@ -290,7 +290,7 @@
     }
     _dataLoading = true;
     var s = document.createElement('script');
-    s.src = './city-itineraries.js?v=5.37';
+    s.src = './city-itineraries.js?v=5.40';
     s.defer = true;
     s.onload = function () { _dataLoading = false; cb(); };
     s.onerror = function () {
@@ -363,9 +363,11 @@
     setTimeout(function () {
       var activeChip = sec.querySelector('.ci-chip.active');
       if (activeChip) scrollChipIntoView(activeChip);
-      // Only auto-scroll the panel when the initial city is NOT the first one,
-      // so a normal first-time open of "Leoben" doesn't jump the page.
-      if (initialKey !== keys[0]) scrollCityPanelIntoView(true);
+      // v5.40: no longer auto-scrolling the panel into view on initial open —
+      // the user wants the city index (pills) always visible on first open,
+      // with the current-day city simply pre-selected and rendered below it,
+      // matching the picker's normal layout. Manual chip clicks still scroll
+      // (see the click handler above), just not this automatic initial jump.
     }, 120);
     return sec;
   }

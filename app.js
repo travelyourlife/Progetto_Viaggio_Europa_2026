@@ -394,7 +394,7 @@ try {
 
   // v3.94 FIX Audit #8: Always include User-Agent header (Nominatim ToS requirement)
   // v4.08 FIX: Use runtime version from EXPECTED_VERSION instead of hardcoded
-  var _appVer = (typeof EXPECTED_VERSION !== 'undefined') ? EXPECTED_VERSION : '5.37';
+  var _appVer = (typeof EXPECTED_VERSION !== 'undefined') ? EXPECTED_VERSION : '5.40';
   var _defaultHeaders = { 'User-Agent': 'QuoVadis-TripApp/' + _appVer + ' (family-trip-pwa)' };
 
   function _drain() {
@@ -1051,6 +1051,28 @@ var isHardcodedOwner = false;
 var _dynamicOwners = {}; // cache of ownerUsers from database
 function checkOwnerStatus() {
   if (typeof firebase !== 'undefined' && firebase.auth) {
+    // v5.38: fast-path — firebase.auth().currentUser is synchronous and is
+    // often already populated from the device's cached session before the
+    // async onAuthStateChanged callback fires. For the common case (a fixed,
+    // hardcoded owner — no extra database read needed), resolve immediately
+    // instead of waiting ~2s for the async event. The async listener below
+    // still runs as normal and will simply re-confirm the same result; this
+    // only ever sets isOwner=true early, never false, so it can't race ahead
+    // of the real check with a wrong answer.
+    try {
+      var _cachedUser = firebase.auth().currentUser;
+      if (_cachedUser && typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.indexOf(_cachedUser.uid) !== -1) {
+        firebaseUser = _cachedUser;
+        isHardcodedOwner = true;
+        isOwner = true;
+        try { localStorage.setItem('qv-owner-hint', '1'); } catch(e) {}
+        _qvLog.info('[Auth] Owner mode (hardcoded, instant from cached session): ' + _cachedUser.displayName);
+        AuthManager._notify(_cachedUser, true);
+        window.dispatchEvent(new CustomEvent('authStateChanged', { detail: { user: _cachedUser, isOwner: true } }));
+        updateProtectedTabsUI(_cachedUser);
+      }
+    } catch (e) { /* noop — fall through to the normal async check below */ }
+
     firebase.auth().onAuthStateChanged(function(user) {
       firebaseUser = user;
       isHardcodedOwner = !!(user && typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.indexOf(user.uid) !== -1);
@@ -1845,7 +1867,7 @@ function initRouteMap() {
         var target = document.getElementById('tab-' + tabId);
         if (!target) return; // e.g. tab-natura doesn't exist in EN yet
         window._lazyContentLoaded[tabId] = true;
-        var url = './content-' + tabId + '-' + LANG3 + '.html?v=5.37';
+        var url = './content-' + tabId + '-' + LANG3 + '.html?v=5.40';
         fetch(url, { cache: 'no-store' })
             .then(function(res) { if (!res.ok) throw new Error('HTTP ' + res.status); return res.text(); })
             .then(function(html) {
@@ -1897,7 +1919,7 @@ function initRouteMap() {
         if (typeof WIKI_LINKS === 'undefined' && !window._wikiLinksLoading) {
             window._wikiLinksLoading = true;
             var s = document.createElement('script');
-            s.src = './wiki-links.js?v=5.37';
+            s.src = './wiki-links.js?v=5.40';
             s.defer = true;
             s.onload = function() { _qvLog.info('[Lazy] wiki-links.js loaded'); };
             document.head.appendChild(s);
