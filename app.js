@@ -1823,15 +1823,58 @@ function initRouteMap() {
         setTimeout(ensureMapBuilt, 300);
     }
 
+    // v5.14: lazy load heavy tab content (cultura/natura/attivita/cibo) on first open.
+    // These 4 tabs used to be inlined in index.html (~80% of the file's weight);
+    // now they're fetched on demand from content-<tab>-<lang>.html, same idea as
+    // the wiki-links.js lazy load just below. Falls back to a visible retry message
+    // if the fetch fails (e.g. no signal), instead of leaving the tab blank forever.
+    window._lazyContentLoaded = window._lazyContentLoaded || {};
+    function _loadLazyTabContent(tabId) {
+        if (window._lazyContentLoaded[tabId]) return;
+        var target = document.getElementById('tab-' + tabId);
+        if (!target) return; // e.g. tab-natura doesn't exist in EN yet
+        window._lazyContentLoaded[tabId] = true;
+        var url = './content-' + tabId + '-' + LANG3 + '.html?v=5.14';
+        fetch(url, { cache: 'no-store' })
+            .then(function(res) { if (!res.ok) throw new Error('HTTP ' + res.status); return res.text(); })
+            .then(function(html) {
+                target.innerHTML = html;
+                // Re-run wiki-link injection now that content actually exists in the DOM
+                if (typeof window.injectAllWikiLinks === 'function') {
+                    try { window.injectAllWikiLinks(); } catch (e) { /* noop */ }
+                }
+                if (_qvLog) _qvLog.info('[Lazy] ' + url + ' loaded');
+            })
+            .catch(function(err) {
+                window._lazyContentLoaded[tabId] = false; // allow retry on next tab switch
+                var msg = LANG3 === 'es' ? 'No se pudo cargar el contenido. Comprueba la conexión y vuelve a abrir esta pestaña.'
+                         : isEN ? 'Could not load content. Check your connection and reopen this tab.'
+                         : 'Impossibile caricare il contenuto. Controlla la connessione e riapri questa scheda.';
+                target.innerHTML = '<div class="lazy-tab-loading" style="padding:60px 20px;text-align:center;color:#c00;font-size:15px;">' + msg + '</div>';
+                if (_qvLog) _qvLog.error('[Lazy] failed to load ' + url, err);
+            });
+    }
+    // Also load immediately if one of these tabs is already active on page load (deep link/refresh)
+    document.addEventListener('DOMContentLoaded', function() {
+        ['cultura', 'natura', 'attivita', 'cibo'].forEach(function(t) {
+            var el = document.getElementById('tab-' + t);
+            if (el && el.classList.contains('active')) _loadLazyTabContent(t);
+        });
+    });
+
     // Build/refresh map when Itinerario tab becomes visible
     window.addEventListener('tabSwitched', function(e) {
+    // v5.14: lazy load the tab's own content fragment first
+    if (['cultura', 'natura', 'attivita', 'cibo'].indexOf(e.detail) !== -1) {
+        _loadLazyTabContent(e.detail);
+    }
     // v2.70: lazy load wiki-links.js on first open of cultura/attivita tab
     var _lazyTabs = ['cultura', 'attivita'];
     if (_lazyTabs.indexOf(e.detail) !== -1) {
         if (typeof WIKI_LINKS === 'undefined' && !window._wikiLinksLoading) {
             window._wikiLinksLoading = true;
             var s = document.createElement('script');
-            s.src = './wiki-links.js?v=5.13';
+            s.src = './wiki-links.js?v=5.14';
             s.defer = true;
             s.onload = function() { _qvLog.info('[Lazy] wiki-links.js loaded'); };
             document.head.appendChild(s);
