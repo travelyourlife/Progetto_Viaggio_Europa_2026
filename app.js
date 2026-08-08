@@ -43,18 +43,31 @@ window.T = T;
 
 // ─── v4.61: Ferry legs overlay (red dashed) — single source of truth ───
 // TRIP_COORDS index (0-based) of days whose leg arrives BY SEA (ferry).
-// G8 Tallinn→Helsinki(idx7), G19 Gryllefjord→Andenes(idx18), G21 Vesterålen(idx20),
-// G26 Moskenes→Bodø(idx25), G33 internal ferries(idx32), G35 Kristiansand→Hirtshals(idx34).
-window.FERRY_DAY_IDX = [7, 18, 20, 25, 32, 34];
+// v5.42 FIX: this list was calibrated before the mid-trip itinerary
+// compression (Bergen→Kristiansand→Denmark done faster than planned) shifted
+// every subsequent day by one or more slots. Confirmed and corrected:
+// G36 Kristiansand→Hirtshals→Copenhagen is now at idx35 (was wrongly idx34,
+// which today is "Stavanger→Kristiansand", a coastal drive, not a ferry).
+// The other entries (idx7 Tallinn ferry, idx18/idx20 Vesterålen/Lofoten
+// ferries, idx25 Lofoten→Mo i Rana, idx32 Bergen area) still need to be
+// checked against the current day-by-day itinerary before trusting them.
+window.FERRY_DAY_IDX = [7, 18, 20, 25, 32, 35];
 // Draws the ferry segments: red dashed for past, blue dashed for future.
 // routeCoords must be [HOME, day0, day1, ...] (HOME prepended), matching the app's route arrays.
 window._drawFerryLegs = function(map, routeCoords) {
   try {
     if (!map || typeof L === 'undefined' || !Array.isArray(routeCoords)) return;
     // Determine current day for past/future coloring
-    var now = new Date();
-    var tripStart = typeof TRIP_START !== 'undefined' ? TRIP_START : new Date(2026, 5, 25);
-    var currentDay = Math.floor((now - tripStart) / 86400000);
+    // v5.43 FIX: this used to always compute "today" from the real date, while
+    // the main planned-route line (unified-map.js addPlannedRouteOverlay)
+    // respects the session-only day-override testing tool. When an override
+    // was left active (as it would be after testing on the owner's own
+    // session), the two overlays disagreed on which day it "is", drawing an
+    // inconsistent map — exactly the kind of admin-only glitch a follower
+    // session (no override) would never see. Now every map-drawing spot in
+    // the app calls this same shared helper.
+    var currentDay = (typeof window.getCurrentTripDay === 'function') ? window.getCurrentTripDay() :
+      Math.floor((new Date() - (typeof TRIP_START !== 'undefined' ? TRIP_START : new Date(2026, 5, 25))) / 86400000);
     window.FERRY_DAY_IDX.forEach(function(di) {
       // day di (0-based TRIP_COORDS) sits at routeCoords[di+1] because HOME is prepended.
       var iTo = di + 1;
@@ -394,7 +407,7 @@ try {
 
   // v3.94 FIX Audit #8: Always include User-Agent header (Nominatim ToS requirement)
   // v4.08 FIX: Use runtime version from EXPECTED_VERSION instead of hardcoded
-  var _appVer = (typeof EXPECTED_VERSION !== 'undefined') ? EXPECTED_VERSION : '5.40';
+  var _appVer = (typeof EXPECTED_VERSION !== 'undefined') ? EXPECTED_VERSION : '5.49';
   var _defaultHeaders = { 'User-Agent': 'QuoVadis-TripApp/' + _appVer + ' (family-trip-pwa)' };
 
   function _drain() {
@@ -1515,9 +1528,7 @@ window.openMapFullscreen = function openMapFullscreen(mapInstance, title) {
         if (typeof TRIP_COORDS !== 'undefined') {
             var HOME_COORDS = [45.39, 11.85];
             var routeCoords = [HOME_COORDS].concat(TRIP_COORDS.map(function(c) { return [c.lat, c.lng]; }));
-            var now = new Date();
-            var tripStart = typeof TRIP_START !== 'undefined' ? TRIP_START : new Date(2026, 5, 25);
-            var currentDay = Math.floor((now - tripStart) / 86400000);
+            var currentDay = getCurrentTripDay(); // v5.43 FIX: shared helper, respects day-override
             var totalDays = typeof TRIP_DAYS !== 'undefined' ? TRIP_DAYS : 55;
             if (currentDay >= totalDays) {
                 L.polyline(routeCoords, { color: '#38a169', weight: 3, opacity: 0.8, lineJoin: 'round' }).addTo(fsMap);
@@ -1867,7 +1878,7 @@ function initRouteMap() {
         var target = document.getElementById('tab-' + tabId);
         if (!target) return; // e.g. tab-natura doesn't exist in EN yet
         window._lazyContentLoaded[tabId] = true;
-        var url = './content-' + tabId + '-' + LANG3 + '.html?v=5.40';
+        var url = './content-' + tabId + '-' + LANG3 + '.html?v=5.49';
         fetch(url, { cache: 'no-store' })
             .then(function(res) { if (!res.ok) throw new Error('HTTP ' + res.status); return res.text(); })
             .then(function(html) {
@@ -1919,7 +1930,7 @@ function initRouteMap() {
         if (typeof WIKI_LINKS === 'undefined' && !window._wikiLinksLoading) {
             window._wikiLinksLoading = true;
             var s = document.createElement('script');
-            s.src = './wiki-links.js?v=5.40';
+            s.src = './wiki-links.js?v=5.49';
             s.defer = true;
             s.onload = function() { _qvLog.info('[Lazy] wiki-links.js loaded'); };
             document.head.appendChild(s);
@@ -1954,9 +1965,12 @@ function initRouteMap() {
         var routeCoords = [HOME_COORDS].concat(TRIP_COORDS.map(function(c) { return [c.lat, c.lng]; }));
 
         // Determine current trip day for coloring
-        var now = new Date();
-        var tripStart = typeof TRIP_START !== 'undefined' ? TRIP_START : new Date(2026, 5, 25);
-        var currentDay = Math.floor((now - tripStart) / 86400000);
+        // v5.43 FIX: use the shared getCurrentTripDay() (respects the
+        // session-only day-override testing tool and clamps the range)
+        // instead of recomputing independently — this was the second of
+        // three places in the map code that disagreed with each other
+        // whenever a day override was active.
+        var currentDay = getCurrentTripDay();
         var tripDays = typeof TRIP_DAYS !== 'undefined' ? TRIP_DAYS : 55;
         var tripActive = currentDay >= 0 && currentDay < tripDays;
 
@@ -4530,9 +4544,11 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                 var routeCoords = [[HOME_COORDS.lat, HOME_COORDS.lng]];
                 TRIP_COORDS.forEach(function(c) { routeCoords.push([c.lat, c.lng]); });
 
-                var now = new Date();
-                var tripStart = typeof TRIP_START !== 'undefined' ? TRIP_START : new Date(2026, 5, 25);
-                var currentDay = Math.floor((now - tripStart) / 86400000);
+                // v5.43 FIX: use the shared getCurrentTripDay() (respects the
+                // day-override testing tool) instead of recomputing from the
+                // real date — the third of three map-drawing spots that used
+                // to disagree with each other whenever an override was active.
+                var currentDay = getCurrentTripDay();
                 var totalDays = typeof TRIP_DAYS !== 'undefined' ? TRIP_DAYS : 55;
 
                 if (currentDay >= totalDays) {
@@ -4891,6 +4907,14 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                 console.warn('[Historical tracks] load error:', e);
             });
         }
+        // v5.44: expose a way to force-refresh the historical (red) track line
+        // from outside this closure — needed so a GPX import (which lives in a
+        // different scope, far away in the file) can trigger a redraw instead
+        // of leaving the map frozen at whatever it looked like on first load.
+        window._refreshHistoricalTracks = function() {
+            _historicalLoaded = false;
+            loadHistoricalTracks();
+        };
 
         // ─── Listen to live positions of family members ───
         var _livePositionsRef = null;
@@ -13095,9 +13119,25 @@ window.injectAllWikiLinks = function() {
                 source: 'gpx_import'
               });
               // v3.93: Update unified /currentLocation with most recent imported point
-              if (window.writeCurrentLocation) window.writeCurrentLocation(lastPt.lat, lastPt.lng);
+              // v5.45 FIX: writeCurrentLocation() always stamps updatedAt with the
+              // import time (now), not the GPS point's real recorded time. A GPX
+              // covering older/backfilled days would then silently overwrite the
+              // real current position with a stale one that LOOKS fresh — exactly
+              // what happened here (an old Barbotan-les-Thermes point clobbered the
+              // real live position). Only update if this point is actually recent.
+              var _lastPtAgeMs = Date.now() - (lastPt.time || 0);
+              var _sixHoursMs = 6 * 60 * 60 * 1000;
+              if (window.writeCurrentLocation && _lastPtAgeMs < _sixHoursMs) {
+                window.writeCurrentLocation(lastPt.lat, lastPt.lng);
+              }
             }
             showToast((LANG3 === 'es' ? '\\u2705 Trayecto GPS importado para ' : isEN ? '\u2705 GPS track imported for ' : '\u2705 Tracciato GPS importato per ') + imported + (LANG3 === 'es' ? ' días' : isEN ? ' days' : ' giorni'), 'success');
+            // v5.44 FIX: the historical track line (red, on the map) was loaded
+            // only ONCE per session (a guard against duplicate OSRM calls) and
+            // never refreshed afterwards — so a GPX import done while the app
+            // was already open never showed up on the map until a full reload.
+            // Force it to redraw now that new points have actually been saved.
+            if (window._refreshHistoricalTracks) window._refreshHistoricalTracks();
             // v3.92: Show conflict resolution prompt if GPX < live by >10%
             if (window._gpxConflicts && window._gpxConflicts.length > 0) {
               setTimeout(function() { _showGpxConflictPrompt(); }, 800);
@@ -20332,6 +20372,176 @@ window.injectAllWikiLinks = function() {
       loadSchedule();
     }, 3000);
   }
+})();
+
+
+// ═══════════════════════════════════════════════════════════════
+// RIEPILOGO — Live Trip Statistics (v5.41)
+// Days elapsed, real km driven (reuses window.computeTotalKm), and
+// distinct countries crossed so far — all computed live, not the
+// static pre-trip estimates already shown in the "Sintesi" section.
+// ═══════════════════════════════════════════════════════════════
+(function() {
+  'use strict';
+  var container = document.getElementById('riepilogo-stats');
+  if (!container) return;
+
+  // Build a flag emoji from a 2-letter ISO country code (no hardcoded table).
+  function flagFromCode(code) {
+    if (!code || code.length !== 2) return '';
+    var A = 0x1F1E6, base = 'A'.charCodeAt(0);
+    var c = code.toUpperCase();
+    return String.fromCodePoint(A + (c.charCodeAt(0) - base)) +
+           String.fromCodePoint(A + (c.charCodeAt(1) - base));
+  }
+
+  function renderStats() {
+    var days = (typeof window.DAYS_DATA !== 'undefined') ? window.DAYS_DATA
+             : (typeof DAYS_DATA !== 'undefined' ? DAYS_DATA : []);
+    var tripDays = (typeof window.TRIP_DAYS !== 'undefined') ? window.TRIP_DAYS
+                 : (typeof TRIP_DAYS !== 'undefined' ? TRIP_DAYS : days.length);
+    var currentDay = (typeof window.getCurrentTripDay === 'function') ? window.getCurrentTripDay() : -1;
+    // currentDay is 0-based, -1 before the trip starts, clamped to tripDays-1 after
+    var dayNumber = Math.max(0, Math.min(currentDay + 1, tripDays));
+    var pct = tripDays > 0 ? Math.round((dayNumber / tripDays) * 100) : 0;
+
+    // Distinct countries crossed up to and including today
+    var seen = {};
+    var flags = [];
+    for (var i = 0; i <= currentDay && i < days.length; i++) {
+      var cc = days[i] && days[i].country;
+      if (cc && !seen[cc]) {
+        seen[cc] = true;
+        var f = flagFromCode(cc);
+        if (f) flags.push(f);
+      }
+    }
+    var countryCount = flags.length;
+
+    var dayLabel = LANG3 === 'es' ? 'Día' : isEN ? 'Day' : 'Giorno';
+    var ofLabel = LANG3 === 'es' ? 'de' : isEN ? 'of' : 'di';
+    var kmLabel = LANG3 === 'es' ? 'reales recorridos' : isEN ? 'actually driven' : 'realmente percorsi';
+    var countriesLabel = LANG3 === 'es' ? 'países atravesados hasta hoy' : isEN ? 'countries crossed so far' : 'paesi attraversati finora';
+    var calcKm = LANG3 === 'es' ? 'Calculando km...' : isEN ? 'Calculating km...' : 'Calcolo km...';
+
+    var html = '';
+    html += '<p><strong>📅 ' + dayLabel + ' ' + dayNumber + ' ' + ofLabel + ' ' + tripDays + '</strong> (' + pct + '%)</p>';
+    html += '<div style="background:var(--bg-alt);border-radius:8px;height:10px;overflow:hidden;margin:4px 0 12px;">' +
+            '<div style="background:var(--primary);height:100%;width:' + pct + '%;"></div></div>';
+    html += '<p id="riepilogo-stats-km">🛣️ <strong>' + calcKm + '</strong></p>';
+    html += '<p>🌍 <strong>' + countryCount + '</strong> ' + countriesLabel + ': ' + flags.join(' ') + '</p>';
+
+    container.innerHTML = html;
+
+    // Real km is fetched separately (may need a Firebase round-trip)
+    if (typeof window.computeTotalKm === 'function') {
+      window.computeTotalKm(function(totalKm) {
+        var kmEl = document.getElementById('riepilogo-stats-km');
+        if (!kmEl) return;
+        var kmStr = Math.round(totalKm).toLocaleString(LANG3 === 'es' ? 'es-ES' : isEN ? 'en-GB' : 'it-IT');
+        kmEl.innerHTML = '🛣️ <strong>' + kmStr + ' km</strong> ' + kmLabel;
+      });
+    }
+  }
+
+  renderStats();
+  // Recompute if the accordion is opened later (covers cases where DAYS_DATA
+  // or getCurrentTripDay were not yet ready on the very first render)
+  var det = document.getElementById('statistiche-viaggio-details');
+  if (det) det.addEventListener('toggle', function() { if (det.open) renderStats(); });
+})();
+
+
+// ═══════════════════════════════════════════════════════════════
+// RIEPILOGO — Printable Trip Recap (v5.41)
+// Builds a print-only page (diary entries + photos, chronological)
+// and triggers window.print() — the person then saves it as PDF or
+// prints it from their phone's normal print/share sheet. No PDF
+// library needed: the browser's own print-to-PDF does the work.
+// ═══════════════════════════════════════════════════════════════
+(function() {
+  'use strict';
+  var btn = document.getElementById('genera-ricordo-btn');
+  if (!btn) return;
+
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function buildAndPrint(diaryData) {
+    var days = (typeof window.DAYS_DATA !== 'undefined') ? window.DAYS_DATA
+             : (typeof DAYS_DATA !== 'undefined' ? DAYS_DATA : []);
+    var dateKeys = Object.keys(diaryData).sort(); // YYYY-MM-DD sorts chronologically as text
+
+    var title = LANG3 === 'es' ? 'Nuestro viaje por Europa' : isEN ? 'Our European trip' : 'Il nostro viaggio in Europa';
+    var subtitle = (typeof TRIP_START !== 'undefined' && typeof TRIP_END !== 'undefined')
+      ? TRIP_START.toLocaleDateString(LANG3 === 'es' ? 'es-ES' : isEN ? 'en-GB' : 'it-IT') + ' — ' +
+        TRIP_END.toLocaleDateString(LANG3 === 'es' ? 'es-ES' : isEN ? 'en-GB' : 'it-IT')
+      : '';
+    var noEntries = LANG3 === 'es' ? 'Sin entradas del diario todavía.' : isEN ? 'No diary entries yet.' : 'Nessuna voce di diario ancora.';
+    var dayLabelPrefix = LANG3 === 'es' ? 'Día' : isEN ? 'Day' : 'Giorno';
+    var kmLabel = LANG3 === 'es' ? 'km' : isEN ? 'km' : 'km';
+
+    var html = '<div class="qv-recap-cover"><h1>🚐 ' + esc(title) + '</h1><p>' + esc(subtitle) + '</p></div>';
+
+    if (!dateKeys.length) {
+      html += '<p>' + esc(noEntries) + '</p>';
+    } else {
+      dateKeys.forEach(function(dateKey) {
+        var entry = diaryData[dateKey];
+        if (!entry) return;
+        var dayTitle = (entry.dayNumber && days[entry.dayNumber - 1]) ? days[entry.dayNumber - 1].title : '';
+        html += '<div class="qv-recap-day">';
+        html += '<h2>' + (entry.dayNumber ? dayLabelPrefix + ' ' + esc(entry.dayNumber) + ' — ' : '') + esc(dayTitle) + '</h2>';
+        var metaParts = [esc(dateKey)];
+        if (entry.kmDriven) metaParts.push(esc(entry.kmDriven) + ' ' + kmLabel);
+        html += '<div class="qv-recap-meta">' + metaParts.join(' · ') + '</div>';
+        if (entry.highlight) html += '<p class="qv-recap-text"><strong>⭐ ' + esc(entry.highlight) + '</strong></p>';
+        if (entry.text) html += '<p class="qv-recap-text">' + esc(entry.text) + '</p>';
+        if (entry.photos) {
+          html += '<div class="qv-recap-photos">';
+          Object.values(entry.photos).forEach(function(p) {
+            if (p && p.url) html += '<img src="' + esc(p.url) + '" alt="">';
+          });
+          html += '</div>';
+        }
+        html += '</div>';
+      });
+    }
+
+    var container = document.getElementById('qv-print-recap');
+    if (!container) {
+      container = document.createElement('div');
+      container.id = 'qv-print-recap';
+      document.body.appendChild(container);
+    }
+    container.innerHTML = html;
+
+    // Give the browser a moment to start loading the <img> tags before
+    // opening the print dialog, so photos aren't missing on the first try.
+    setTimeout(function() { window.print(); }, 300);
+  }
+
+  btn.addEventListener('click', function() {
+    if (typeof firebase === 'undefined' || !firebase.database) {
+      if (window.showToast) showToast(LANG3 === 'es' ? 'Sin conexión' : isEN ? 'No connection' : 'Nessuna connessione', 'error');
+      return;
+    }
+    btn.disabled = true;
+    var origText = btn.textContent;
+    btn.textContent = LANG3 === 'es' ? '⏳ Preparando...' : isEN ? '⏳ Preparing...' : '⏳ Preparazione...';
+    firebase.database().ref('trips/' + (window.FAMILY_ID || FAMILY_ID) + '/diary').once('value', function(snap) {
+      buildAndPrint(snap.val() || {});
+      btn.disabled = false;
+      btn.textContent = origText;
+    }, function(err) {
+      console.error('[Recap] load failed:', err);
+      btn.disabled = false;
+      btn.textContent = origText;
+      if (window.showToast) showToast(LANG3 === 'es' ? 'Error al cargar el diario' : isEN ? 'Failed to load diary' : 'Errore nel caricare il diario', 'error');
+    });
+  });
 })();
 
 

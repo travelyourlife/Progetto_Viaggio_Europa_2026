@@ -26,7 +26,7 @@ var messaging = firebase.messaging();
 // ─── CACHING CONFIG ───
 // ═══════════════════════════════════════════════════════════════
 
-const CACHE_NAME = 'quo-vadis-v5.40';
+const CACHE_NAME = 'quo-vadis-v5.49';
 const IMAGE_CACHE_NAME = 'quo-vadis-images-v1';
 const IMAGE_CACHE_LIMIT = 80;
 const STATIC_ASSETS = [
@@ -34,15 +34,15 @@ const STATIC_ASSETS = [
   './index.html',
   './index_en.html',
   './index_es.html',
-  './style.css?v=5.40',
-  './data.js?v=5.40',
-  './days-data.js?v=5.40',
-  './days-renderer.js?v=5.40',
+  './style.css?v=5.49',
+  './data.js?v=5.49',
+  './days-data.js?v=5.49',
+  './days-renderer.js?v=5.49',
   // wiki-links.js: NOT precached — lazy-loaded on first open of Cultura/Attività tab
   // content-{cultura,natura,attivita,cibo}-{it,en,es}.html: NOT precached (v5.14) —
   // lazy-loaded on first open of each tab, fetched fresh each time (cache: no-store)
-  './weather-coords.js?v=5.40',
-  './app.js?v=5.40',
+  './weather-coords.js?v=5.49',
+  './app.js?v=5.49',
   './manifest.json',
   './icon.png',
   './icon-192.png',
@@ -51,22 +51,22 @@ const STATIC_ASSETS = [
   './icon-maskable-512.png',
   './icons/van-marker.svg',
   './firebase-messaging-sw.js',
-  './capacitor-gps-bridge.js?v=5.40',
+  './capacitor-gps-bridge.js?v=5.49',
   './offline.html',
   './home-variants.html',
   './home-variants_en.html',
   './home-variants_es.html',
   './home-variants.css',
-  './home-variants.js?v=5.40',
-  './unified-map.js?v=5.40',
+  './home-variants.js?v=5.49',
+  './unified-map.js?v=5.49',
   './unified-map.css',
-  './poi-data.js?v=5.40',
+  './poi-data.js?v=5.49',
   './modern-pages.css',
-  './curiosita-data.js?v=5.40',
-  './curiosita-scheduler.js?v=5.40',
-  './quiz-fun.js?v=5.40',
+  './curiosita-data.js?v=5.49',
+  './curiosita-scheduler.js?v=5.49',
+  './quiz-fun.js?v=5.49',
   // city-itineraries.js: NOT precached (v5.25) — lazy-loaded on first open of Itinerari città tab
-  './city-itineraries-ui.js?v=5.40',
+  './city-itineraries-ui.js?v=5.49',
   // debug-overlay.js: rimosso — caricato on-demand solo da Admin
   // v2.70: immagini placeholder per Home offline
   './img/placeholder/bridge-coast.jpg',

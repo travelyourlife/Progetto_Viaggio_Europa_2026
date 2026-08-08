@@ -721,7 +721,7 @@
       data.distanceFromHome = '';
     } else {
       var _td = (typeof TRIP_DAYS !== 'undefined') ? TRIP_DAYS : 55;
-      data.progressText = _dayPrefix + (currentDay + 1) + '/' + _td + ' \u00b7 ' + data.totalKm + ' km \u00b7 ' + data.totalCountries + _hvT('/13 paesi', '/13 countries', '/13 pa\u00edses');
+      data.progressText = _dayPrefix + (currentDay + 1) + '/' + _td + ' \u00b7 ' + data.totalKm + ' km \u00b7 ' + data.totalCountries + _hvT('/12 paesi', '/12 countries', '/12 pa\u00edses');
       data.kmBar = Math.min(100, Math.round((parseInt(data.totalKm.replace(/\./g, '')) || 0) / 12000 * 100));
       data.lastUpdate = '';
 
@@ -1916,10 +1916,16 @@
     window._hvCurrentLocRef.on('value', function(snap) {
       var cl = snap.val();
       if (cl && cl.lat && cl.lng) {
-        var ageMs = Date.now() - (cl.updatedAt || 0);
-        var isFresh = ageMs < 86400000; // < 24 hours (v4.01: was 60 min, too strict)
+        // v5.46 FIX: this used to only update the displayed city if data was
+        // < 24h old (v4.01), silently leaving the initial TRIP_COORDS-based
+        // placeholder (the PLANNED city, not the real one) on screen whenever
+        // it wasn't. That's the exact same bug the 60min→24h change was meant
+        // to fix, just with a longer gap (32h) than the new threshold covers.
+        // The Posizione tab never had this gate — it always shows the real
+        // last-known position with an honest "updated Xh ago" instead of
+        // hiding it. Home now does the same: always show the real city.
         var container = document.getElementById('hv-container');
-        if (container && isFresh && cl.city) {
+        if (container && cl.city) {
           container.querySelectorAll('[data-hv="city"]').forEach(function(el) { el.textContent = cl.city; });
           if (cl.country) { container.querySelectorAll('[data-hv="country"]').forEach(function(el) { el.textContent = cl.country; }); }
           if (cl.flag) { container.querySelectorAll('[data-hv="flag"]').forEach(function(el) { el.textContent = cl.flag; }); }
