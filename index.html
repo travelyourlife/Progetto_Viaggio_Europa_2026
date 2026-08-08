@@ -74,12 +74,12 @@
     <link rel="apple-touch-icon" sizes="152x152" href="./icon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="./icon.png">
     <link rel="apple-touch-icon" sizes="167x167" href="./icon.png">
-    <title>Quo Vadis — V5.49</title>
+    <title>Quo Vadis — V5.58</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
-    <link rel="stylesheet" href="style.css?v=5.49">
-    <link rel="stylesheet" href="home-variants.css?v=5.49">
-    <link rel="stylesheet" href="unified-map.css?v=5.49">
-    <link rel="stylesheet" href="modern-pages.css?v=5.49">
+    <link rel="stylesheet" href="style.css?v=5.58">
+    <link rel="stylesheet" href="home-variants.css?v=5.58">
+    <link rel="stylesheet" href="unified-map.css?v=5.58">
+    <link rel="stylesheet" href="modern-pages.css?v=5.58">
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" crossorigin="">
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" crossorigin="">
 <!-- Firebase SDK (compat mode for single-file app) -->
@@ -97,7 +97,7 @@
 // Se la rete cade a metà update, l'app resta usabile con la versione vecchia
 // invece di bloccarsi (fix strutturale del bug emerso nella 5.11).
 (function(){
-  var EXPECTED_VERSION = "5.49";
+  var EXPECTED_VERSION = "5.58";
   window.IS_PROD = true; // disabilita debug overlay in produzione
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
@@ -232,24 +232,24 @@
   }, 6000);
 })();
 </script>
-<script src="data.js?v=5.49" defer></script>
-<script src="days-data.js?v=5.49" defer></script>
-<script src="days-renderer.js?v=5.49" defer></script>
+<script src="data.js?v=5.58" defer></script>
+<script src="days-data.js?v=5.58" defer></script>
+<script src="days-renderer.js?v=5.58" defer></script>
 <!-- wiki-links.js: caricato lazy alla prima apertura tab Cultura/Attività (34KB) -->
-<script src="weather-coords.js?v=5.49" defer></script>
+<script src="weather-coords.js?v=5.58" defer></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
 <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js" crossorigin="" defer></script>
-<script src="poi-data.js?v=5.49" defer></script>
+<script src="poi-data.js?v=5.58" defer></script>
 <!-- poi-data.js caricato sopra con defer — 161KB, usato da UnifiedMap e tab Luoghi -->
 <!-- wiki-links.js lazy: caricato solo alla prima apertura tab Cultura/Attività -->
-<script src="app.js?v=5.49" defer></script>
-<script src="curiosita-data.js?v=5.49" defer></script>
+<script src="app.js?v=5.58" defer></script>
+<script src="curiosita-data.js?v=5.58" defer></script>
 <script>window.QV_CURIOSITA_SERVER_SIDE = true; window.QV_RECAP_SERVER_SIDE = true;</script>
-<script src="curiosita-scheduler.js?v=5.49" defer></script>
-<script src="quiz-fun.js?v=5.49" defer></script>
-<script src="unified-map.js?v=5.49" defer></script>
-<script src="city-itineraries-ui.js?v=5.49" defer></script>
-<script src="home-variants.js?v=5.49" defer></script>
+<script src="curiosita-scheduler.js?v=5.58" defer></script>
+<script src="quiz-fun.js?v=5.58" defer></script>
+<script src="unified-map.js?v=5.58" defer></script>
+<script src="city-itineraries-ui.js?v=5.58" defer></script>
+<script src="home-variants.js?v=5.58" defer></script>
 </head>
 <body class="on-home">
 
@@ -257,7 +257,7 @@
 <div class="splash-screen" id="splash">
     <img src="./icon.png" alt="" class="splash-logo">
     <div class="splash-title">Quo Vadis</div>
-    <div class="splash-sub">55 giorni · 13 paesi · 12.000 km</div>
+    <div class="splash-sub">55 giorni · 14 paesi · 12.000 km</div>
 </div>
 
 <!-- ─── Offline Banner ─── -->
@@ -408,7 +408,7 @@
     <span style="font-size:24px;">🗺️</span>
     <div>
       <div style="font-weight:700;font-size:15px;">Il nostro percorso</div>
-      <div id="route-banner-stats" style="font-size:12px;color:var(--text-muted,#64748b);">G <span id="hs-day">0</span>/55 · <span id="hs-km">0</span> km · <span id="hs-countries">0</span>/12 paesi · <span id="hs-checkins">0</span> check-in</div>
+      <div id="route-banner-stats" style="font-size:12px;color:var(--text-muted,#64748b);">G <span id="hs-day">0</span>/55 · <span id="hs-km">0</span> km · <span id="hs-countries">0</span>/14 paesi · <span id="hs-checkins">0</span> check-in</div>
     </div>
   </div>
     <span style="font-size:20px;color:var(--text-muted,#64748b);">⛶</span>
@@ -419,7 +419,7 @@
   <!-- Riga unica: label + dettaglio a sinistra · percentuale a destra -->
   <div id="minibar-header-row" style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:10px;flex-wrap:wrap;cursor:pointer;-webkit-tap-highlight-color:transparent;">
     <span style="font-size:14px;color:var(--text-color,#1a1a2e);min-width:0;line-height:1.4;">
-      <span id="minibar-label" style="font-weight:600;">Partenza tra 12 giorni</span><span id="minibar-sep" style="color:var(--text-muted,#64748b);"> · </span><span id="minibar-detail" style="color:var(--text-muted,#64748b);" data-trip-meta="summaryIT">55 giorni · 13 paesi · 12.000 km</span>
+      <span id="minibar-label" style="font-weight:600;">Partenza tra 12 giorni</span><span id="minibar-sep" style="color:var(--text-muted,#64748b);"> · </span><span id="minibar-detail" style="color:var(--text-muted,#64748b);" data-trip-meta="summaryIT">55 giorni · 14 paesi · 12.000 km</span>
     </span>
     <span id="minibar-pct" style="font-size:14px;font-weight:700;color:#3b82f6;display:none;white-space:nowrap;">0%</span>
   </div>
@@ -2696,7 +2696,7 @@
         <span class="pos-stat-icon">🌍</span>
         <div class="pos-stat-number" id="stat-countries">0</div>
         <div class="pos-stat-label">Paesi</div>
-        <div class="pos-stat-sub">/ 12</div>
+        <div class="pos-stat-sub">/ 14</div>
     </div>
     <div class="pos-stat-card-v2 pos-stat-clickable" data-scroll-target="pos-garmin-card" title="Vai ad Attività Sportive">
         <span class="pos-stat-icon">🥾</span>
@@ -3459,7 +3459,7 @@
 <script>
 // Load home-variants.html templates into the page
 (function(){
-  fetch('./home-variants.html?v=5.49').then(function(r){return r.text();}).then(function(html){
+  fetch('./home-variants.html?v=5.58').then(function(r){return r.text();}).then(function(html){
     var div = document.getElementById('hv-templates');
     if(div) div.innerHTML = html;
     // Move templates to document body for proper <template> access
@@ -3475,12 +3475,12 @@
 <script>
   if (typeof window.IS_PROD === 'undefined' || window.IS_PROD !== true) {
     var _dbgScript = document.createElement('script');
-    _dbgScript.src = 'debug-overlay.js?v=5.49';
+    _dbgScript.src = 'debug-overlay.js?v=5.58';
     _dbgScript.defer = true;
     document.head.appendChild(_dbgScript);
   }
 </script>
 <!-- Capacitor GPS Bridge (only activates inside native app, ignored in browser) -->
-<script src="capacitor-gps-bridge.js?v=5.49" defer></script>
+<script src="capacitor-gps-bridge.js?v=5.58" defer></script>
 </body>
 </html>

@@ -146,8 +146,11 @@
     if (typeof TRIP_COORDS === 'undefined') return;
 
     var HOME_COORDS = [45.39, 11.85];
-    var routeCoords = [HOME_COORDS];
-    TRIP_COORDS.forEach(function(c) { routeCoords.push([c.lat, c.lng]); });
+    // v5.52: shared builder (includes the Hirtshals fix) instead of an
+    // independent copy of this same array-building logic.
+    var routeCoords = (typeof window._buildRouteCoordsForDrawing === 'function')
+      ? window._buildRouteCoordsForDrawing(HOME_COORDS)
+      : [HOME_COORDS].concat(TRIP_COORDS.map(function(c) { return [c.lat, c.lng]; }));
 
     var now = new Date();
     var tripStart = typeof TRIP_START !== 'undefined' ? TRIP_START : new Date(2026, 5, 25);

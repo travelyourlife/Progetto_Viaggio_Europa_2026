@@ -26,10 +26,10 @@ var CURIOSITA_DATA = [
   {
     "day": -24,
     "emoji": "🌍",
-    "text": "Attraverserete 13 paesi in 55 giorni — una media di un paese nuovo ogni 4 giorni! Quanti passaporti servirebbero senza l'UE?",
+    "text": "Attraverserete 14 paesi in 55 giorni — una media di un paese nuovo ogni 4 giorni! Quanti passaporti servirebbero senza l'UE?",
     "source": "Calcolo itinerario",
-    "textEN": "You'll cross 13 countries in 55 days — an average of a new country every 4 days! How many passports would you need without the EU?",
-    "textES": "Atravesaréis 13 países en 55 días — ¡una media de un país nuevo cada 4 días! ¿Cuántos pasaportes harían falta sin la UE?"
+    "textEN": "You'll cross 14 countries in 55 days — an average of a new country every 4 days! How many passports would you need without the EU?",
+    "textES": "Atravesaréis 14 países en 55 días — ¡una media de un país nuevo cada 4 días! ¿Cuántos pasaportes harían falta sin la UE?"
   },
   {
     "day": -24,
@@ -42,10 +42,10 @@ var CURIOSITA_DATA = [
   {
     "day": -24,
     "emoji": "💶",
-    "text": "Dei 13 paesi del viaggio, non tutti usano l'euro: Polonia (złoty), Danimarca (corona danese), Norvegia (corona norvegese) e Svezia hanno valute proprie.",
+    "text": "Dei 14 paesi del viaggio, non tutti usano l'euro: Polonia (złoty), Danimarca (corona danese) e Norvegia (corona norvegese) hanno valute proprie.",
     "source": "European Central Bank",
-    "textEN": "Of the 13 countries on the trip, not all use the euro: Polonia (złoty), Danimarca (Danish krone), Norvegia (Norwegian krone) and Svezia have their own currencies.",
-    "textES": "De los 13 países del viaje, no todos usan el euro: Polonia (złoty), Danimarca (corona danesa), Norvegia (corona noruega) y Svezia tienen monedas propias."
+    "textEN": "Of the 14 countries on the trip, not all use the euro: Poland (złoty), Denmark (Danish krone) and Norway (Norwegian krone) have their own currencies.",
+    "textES": "De los 14 países del viaje, no todos usan el euro: Polonia (złoty), Dinamarca (corona danesa) y Noruega (corona noruega) tienen monedas propias."
   },
   {
     "day": -23,
@@ -578,10 +578,10 @@ var CURIOSITA_DATA = [
   {
     "day": -1,
     "emoji": "🚐",
-    "text": "Domani si parte! 55 giorni, 13 paesi, 12.000 km. L'avventura della vita inizia tra poche ore!",
+    "text": "Domani si parte! 55 giorni, 14 paesi, 12.000 km. L'avventura della vita inizia tra poche ore!",
     "source": "Quo Vadis",
-    "textEN": "We're leaving tomorrow! 55 days, 13 countries, 12.000 km. The adventure of a lifetime starts in a few hours!",
-    "textES": "¡Mañana salimos! 55 días, 13 países, 12.000 km. ¡La aventura de la vida comienza en unas pocas horas!"
+    "textEN": "We're leaving tomorrow! 55 days, 14 countries, 12.000 km. The adventure of a lifetime starts in a few hours!",
+    "textES": "¡Mañana salimos! 55 días, 14 países, 12.000 km. ¡La aventura de la vida comienza en unas pocas horas!"
   },
   {
     "day": -1,
@@ -594,10 +594,10 @@ var CURIOSITA_DATA = [
   {
     "day": -1,
     "emoji": "🗺️",
-    "text": "13 paesi, 4 mari e 2 oceani vi aspettano: dall'Adriatico al Baltico, dall'Artico al Mediterraneo. Si parte!",
+    "text": "14 paesi, 4 mari e 2 oceani vi aspettano: dall'Adriatico al Baltico, dall'Artico al Mediterraneo. Si parte!",
     "source": "Quo Vadis",
-    "textEN": "13 countries, 4 seas and 2 oceans await you: from the Adriatico to the Baltico, from the Artico to the Mediterraneo. Let's go!",
-    "textES": "13 países, 4 mares y 2 océanos os esperan: del Adriatico al Baltico, del Artico al Mediterraneo. ¡Se parte!"
+    "textEN": "14 countries, 4 seas and 2 oceans await you: from the Adriatico to the Baltico, from the Artico to the Mediterraneo. Let's go!",
+    "textES": "14 países, 4 mares y 2 océanos os esperan: del Adriatico al Baltico, del Artico al Mediterraneo. ¡Se parte!"
   },
   {
     "day": 0,
@@ -2066,10 +2066,10 @@ var CURIOSITA_DATA = [
   {
     "day": 54,
     "emoji": "🏠",
-    "text": "Dopo 55 giorni, ~12.000 km e 13 paesi, il cerchio si chiude. La parola \"nostos\" (ritorno) + \"algos\" (dolore) dà \"nostalgia\" — ma voi tornate con 55 giorni di ricordi!",
+    "text": "Dopo 55 giorni, ~12.000 km e 14 paesi, il cerchio si chiude. La parola \"nostos\" (ritorno) + \"algos\" (dolore) dà \"nostalgia\" — ma voi tornate con 55 giorni di ricordi!",
     "source": "Etimologia greca",
-    "textEN": "After 55 days, ~12,000 km and 13 countries, the circle closes. The word \"nostos\" (return) + \"algos\" (pain) gives \"nostalgia\" — but you return with 55 days of memories!",
-    "textES": "Tras 55 días, ~12.000 km y 13 países, el círculo se cierra. La palabra \"nostos\" (retorno) + \"algos\" (dolor) da \"nostalgia\" — ¡pero volvéis con 55 días de recuerdos!"
+    "textEN": "After 55 days, ~12,000 km and 14 countries, the circle closes. The word \"nostos\" (return) + \"algos\" (pain) gives \"nostalgia\" — but you return with 55 days of memories!",
+    "textES": "Tras 55 días, ~12.000 km y 14 países, el círculo se cierra. La palabra \"nostos\" (retorno) + \"algos\" (dolor) da \"nostalgia\" — ¡pero volvéis con 55 días de recuerdos!"
   },
   {
     "day": 54,

@@ -715,7 +715,7 @@ window._haversineKm = function(lat1, lng1, lat2, lng2) {
     rangeIT:     fmtIT(s) + ' – ' + fmtIT(e),          // "25 giugno 2026 – 18 agosto 2026"
     shortRangeIT: pad(s.getDate())+'/'+pad(s.getMonth()+1)+' → '+pad(e.getDate())+'/'+pad(e.getMonth()+1),
     daysIT:      days + ' giorni',                      // "55 giorni"
-    summaryIT:   days + ' giorni · 13 paesi · 12.000 km',
+    summaryIT:   days + ' giorni · 14 paesi · 12.000 km',
     periodIT:    fmtShort(s) + ' (pomeriggio) → ' + fmtShort(e) + ' (sera) — ' + days + ' giorni',
     // English
     startEN:     fmtEN(s),                              // "June 25, 2026"
@@ -723,7 +723,7 @@ window._haversineKm = function(lat1, lng1, lat2, lng2) {
     rangeEN:     fmtEN(s) + ' – ' + fmtEN(e),
     shortRangeEN: pad(s.getDate())+'/'+pad(s.getMonth()+1)+' → '+pad(e.getDate())+'/'+pad(e.getMonth()+1),
     daysEN:      days + ' days',
-    summaryEN:   days + ' days · 13 countries · 12,000 km',
+    summaryEN:   days + ' days · 14 countries · 12,000 km',
     periodEN:    fmtShort(s) + ' (afternoon) → ' + fmtShort(e) + ' (evening) — ' + days + ' days',
   };
 })();

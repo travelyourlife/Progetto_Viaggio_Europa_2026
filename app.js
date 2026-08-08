@@ -88,7 +88,23 @@ window._drawFerryLegs = function(map, routeCoords) {
   } catch (e) { if (window._qvLog) window._qvLog.warn('ferry legs draw failed', e); }
 };
 
-// ─── v4.41 (Audit Option A): SINGLE SOURCE OF TRUTH for per-day COORDINATES ───
+// ─── v5.52: SHARED route-drawing coordinates builder ───
+// Consolidates 4 previously-independent copies of "build routeCoords from
+// TRIP_COORDS" (unified-map.js, the Itinerario tab map, the Posizione tab
+// map, and the standalone fullscreen map) into one function.
+// v5.54 REVERT: the Hirtshals waypoint patch added here has been removed.
+// It "fixed" the planned/future line cutting across Sweden between
+// Kristiansand and Copenhagen — but that line is only ever drawn for
+// FUTURE days; once a day is in the past, only the real GPS track (red)
+// is shown for it, which is already correct. The patch was solving a
+// problem that self-resolves as the trip progresses; not needed.
+window._buildRouteCoordsForDrawing = function(homeCoords) {
+  var HOME = homeCoords || [45.39, 11.85];
+  var out = [HOME];
+  if (typeof TRIP_COORDS === 'undefined' || !Array.isArray(TRIP_COORDS)) return out;
+  TRIP_COORDS.forEach(function(c) { out.push([c.lat, c.lng]); });
+  return out;
+};
 // Problem (from the data-architecture audit): each trip day stored its coordinates
 // in THREE separate places — itinerario[].mapsUrl (data.js), DAYS_DATA[].meteo
 // (days-data.js) and TRIP_COORDS[] (weather-coords.js). When one was updated and
@@ -407,7 +423,7 @@ try {
 
   // v3.94 FIX Audit #8: Always include User-Agent header (Nominatim ToS requirement)
   // v4.08 FIX: Use runtime version from EXPECTED_VERSION instead of hardcoded
-  var _appVer = (typeof EXPECTED_VERSION !== 'undefined') ? EXPECTED_VERSION : '5.49';
+  var _appVer = (typeof EXPECTED_VERSION !== 'undefined') ? EXPECTED_VERSION : '5.58';
   var _defaultHeaders = { 'User-Agent': 'QuoVadis-TripApp/' + _appVer + ' (family-trip-pwa)' };
 
   function _drain() {
@@ -1527,7 +1543,8 @@ window.openMapFullscreen = function openMapFullscreen(mapInstance, title) {
         // Draw route from TRIP_COORDS
         if (typeof TRIP_COORDS !== 'undefined') {
             var HOME_COORDS = [45.39, 11.85];
-            var routeCoords = [HOME_COORDS].concat(TRIP_COORDS.map(function(c) { return [c.lat, c.lng]; }));
+            var routeCoords = window._buildRouteCoordsForDrawing ? window._buildRouteCoordsForDrawing(HOME_COORDS)
+              : [HOME_COORDS].concat(TRIP_COORDS.map(function(c) { return [c.lat, c.lng]; }));
             var currentDay = getCurrentTripDay(); // v5.43 FIX: shared helper, respects day-override
             var totalDays = typeof TRIP_DAYS !== 'undefined' ? TRIP_DAYS : 55;
             if (currentDay >= totalDays) {
@@ -1878,7 +1895,7 @@ function initRouteMap() {
         var target = document.getElementById('tab-' + tabId);
         if (!target) return; // e.g. tab-natura doesn't exist in EN yet
         window._lazyContentLoaded[tabId] = true;
-        var url = './content-' + tabId + '-' + LANG3 + '.html?v=5.49';
+        var url = './content-' + tabId + '-' + LANG3 + '.html?v=5.58';
         fetch(url, { cache: 'no-store' })
             .then(function(res) { if (!res.ok) throw new Error('HTTP ' + res.status); return res.text(); })
             .then(function(html) {
@@ -1930,7 +1947,7 @@ function initRouteMap() {
         if (typeof WIKI_LINKS === 'undefined' && !window._wikiLinksLoading) {
             window._wikiLinksLoading = true;
             var s = document.createElement('script');
-            s.src = './wiki-links.js?v=5.49';
+            s.src = './wiki-links.js?v=5.58';
             s.defer = true;
             s.onload = function() { _qvLog.info('[Lazy] wiki-links.js loaded'); };
             document.head.appendChild(s);
@@ -1962,7 +1979,8 @@ function initRouteMap() {
 
         // Build route polyline from TRIP_COORDS
         var HOME_COORDS = [45.3900, 11.8500];
-        var routeCoords = [HOME_COORDS].concat(TRIP_COORDS.map(function(c) { return [c.lat, c.lng]; }));
+        var routeCoords = window._buildRouteCoordsForDrawing ? window._buildRouteCoordsForDrawing(HOME_COORDS)
+          : [HOME_COORDS].concat(TRIP_COORDS.map(function(c) { return [c.lat, c.lng]; }));
 
         // Determine current trip day for coloring
         // v5.43 FIX: use the shared getCurrentTripDay() (respects the
@@ -2382,7 +2400,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         } else {
             dayEl.textContent = '✅';
-            infoEl.innerHTML = LANG3 === 'es' ? '<strong>¡Viaje completado!</strong><br>' + TRIP_DAYS + ' días · 13 países · 12.000 km' : isEN ? '<strong>Trip completed!</strong><br>' + TRIP_DAYS + ' days · 13 countries · 12,000 km' : '<strong>Viaggio completato!</strong><br>' + TRIP_DAYS + ' giorni · 13 paesi · 12.000 km';
+            infoEl.innerHTML = LANG3 === 'es' ? '<strong>¡Viaje completado!</strong><br>' + TRIP_DAYS + ' días · 14 países · 12.000 km' : isEN ? '<strong>Trip completed!</strong><br>' + TRIP_DAYS + ' days · 14 countries · 12,000 km' : '<strong>Viaggio completato!</strong><br>' + TRIP_DAYS + ' giorni · 14 paesi · 12.000 km';
             if (progressFill) progressFill.style.width = '100%';
             if (progressText) progressText.textContent = LANG3 === 'es' ? '¡Completado!' : isEN ? 'Completed!' : 'Completato!';
         }
@@ -2493,7 +2511,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // v2.73: dettaglio card unificata.
-        // Pre-partenza: lascia TRIP_META (summary "55 giorni · 13 paesi · 12.000 km").
+        // Pre-partenza: lascia TRIP_META (summary "55 giorni · 14 paesi · 12.000 km").
         // Durante il viaggio: la label già mostra "Giorno X/55 — Titolo", quindi il
         // dettaglio mostra solo i km percorsi oggi (evita la ridondanza "G X/55").
         var miniSep = document.getElementById('minibar-sep');
@@ -3902,6 +3920,22 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             var timeDiff = Date.now() - (lastPt.time || 0);
             var straightDist = haversine(lastPt.lat, lastPt.lng, newLat, newLng);
             if (timeDiff < GAP_MIN_TIME || straightDist < GAP_MIN_DIST) return;
+            // v5.53 FIX: the >1h check below is a reasonable general heuristic,
+            // but it's a timing coincidence away from failing on a REAL ferry —
+            // e.g. Kristiansand→Hirtshals takes ~1h05, so a GPS gap of 50-59
+            // minutes around boarding/landing would slip through this check.
+            // When that happens, OSRM (a DRIVING router with no ferry awareness)
+            // computes the only land route it can find — which for this crossing
+            // detours through Sweden via the Öresund bridge — and those fake
+            // coordinates get saved as real track points (pushTrackPoint below),
+            // so a GPX upload for a DIFFERENT day never touches or fixes them.
+            // Cross-check today against the known ferry-day list first, and
+            // skip OSRM unconditionally on those days regardless of gap length.
+            var _todayDayIdx = (typeof getCurrentTripDay === 'function') ? getCurrentTripDay() : -1;
+            if (typeof window.FERRY_DAY_IDX !== 'undefined' && window.FERRY_DAY_IDX.indexOf(_todayDayIdx) !== -1) {
+                _qvLog.info('[GPS Gap] Skipped — today (G' + (_todayDayIdx + 1) + ') is a known ferry day. Not estimating via road route.');
+                return;
+            }
             // v4.80 FIX: If gap > 1 hour, it's a deliberate stop (lunch, overnight,
             // ferry), not a GPS suspension. Do NOT estimate km for long pauses.
             if (timeDiff > 3600000) {
@@ -4541,8 +4575,8 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             // ─── Past route line from TRIP_COORDS ───
             if (typeof TRIP_COORDS !== 'undefined') {
                 var HOME_COORDS = { lat: 45.39, lng: 11.85 };
-                var routeCoords = [[HOME_COORDS.lat, HOME_COORDS.lng]];
-                TRIP_COORDS.forEach(function(c) { routeCoords.push([c.lat, c.lng]); });
+                var routeCoords = window._buildRouteCoordsForDrawing ? window._buildRouteCoordsForDrawing([HOME_COORDS.lat, HOME_COORDS.lng])
+                  : (function() { var rc = [[HOME_COORDS.lat, HOME_COORDS.lng]]; TRIP_COORDS.forEach(function(c) { rc.push([c.lat, c.lng]); }); return rc; })();
 
                 // v5.43 FIX: use the shared getCurrentTripDay() (respects the
                 // day-override testing tool) instead of recomputing from the
@@ -8287,6 +8321,25 @@ function _fillGapsOSRM(points) {
     if (!points || points.length < 2) {
         return Promise.resolve((points || []).map(function(p) { return [p.lat, p.lng]; }));
     }
+    // v5.55 FIX: this used to call OSRM (a pure DRIVING router, no ferry
+    // awareness) for ANY gap between 3-600 km, then always trust whatever
+    // route it returned. A real, confirmed case: the Kristiansand→Hirtshals
+    // ferry gap (~136 km, ~3h46 recorded) falls squarely in that range —
+    // OSRM's only possible answer is a driving detour, which for this
+    // crossing goes via Sweden and the Öresund bridge since there's no road.
+    // That phantom detour got drawn fresh on every render (this function
+    // never touches Firebase — the stored GPS data was always clean,
+    // confirmed across all 38 real GPX files for this trip).
+    // First attempt (checked against the real numbers, then discarded): flag
+    // gaps covered "too fast to be a road trip". Doesn't work — the real
+    // recorded gap implies just ~36 km/h average, unremarkable on its own.
+    // Working fix: after OSRM answers, compare its route distance to the
+    // straight-line distance. A ferry-only crossing forces OSRM into a huge
+    // detour (Kristiansand→Hirtshals by road via Sweden is several times the
+    // ~136 km straight line); reject those and draw a direct line instead —
+    // geographically correct for a sea crossing, unlike a phantom detour.
+    // (Same "reject if route > straight-line × factor" pattern already used
+    // and proven in the live-tracking gap estimator, estimateGapDistance.)
     // Build ordered list of segments: 'direct' runs and 'osrm' gap bridges.
     var segments = [];
     var current = [[points[0].lat, points[0].lng]];
@@ -8295,7 +8348,7 @@ function _fillGapsOSRM(points) {
         var dist = window._haversineKm(prev.lat, prev.lng, curr.lat, curr.lng);
         if (dist > GAP_DRAW_KM && dist < GAP_MAX_KM) {
             if (current.length > 0) { segments.push({ type: 'direct', latlngs: current }); current = []; }
-            segments.push({ type: 'osrm', from: [prev.lat, prev.lng], to: [curr.lat, curr.lng], latlngs: null });
+            segments.push({ type: 'osrm', from: [prev.lat, prev.lng], to: [curr.lat, curr.lng], straightKm: dist, latlngs: null });
             current = [[curr.lat, curr.lng]];
         } else {
             current.push([curr.lat, curr.lng]);
@@ -8303,14 +8356,50 @@ function _fillGapsOSRM(points) {
     }
     if (current.length > 0) segments.push({ type: 'direct', latlngs: current });
 
+    // v5.58 FIX: the v5.57 OR-based check (ratio > 2.5 OR extraKm > 150) was
+    // still too aggressive — a real 20 km fjord/mountain gap needing a 55 km
+    // road (ratio 2.75, extra 35 km) would be wrongly rejected by ratio alone,
+    // even though 55 km of winding road for 20 km direct is completely
+    // normal in Norway. Fixed with an adaptive check (caught via a second
+    // AI's independent review, then verified against real numbers below):
+    // - extraKm alone > 150 km: reject regardless of ratio (a detour that
+    //   large is implausible for genuine road geometry on any normal gap).
+    // - OR: direct distance >= 50 km AND ratio > 2.5 AND extraKm > 75 km —
+    //   requires ALL THREE signals together, so a short gap with a high
+    //   ratio (typical of mountain roads) is never rejected on ratio alone.
+    var MAX_ABSOLUTE_DETOUR_KM = 150;
+    var MIN_DIRECT_KM_FOR_RATIO_CHECK = 50;
+    var MAX_ROUTE_VS_STRAIGHT_RATIO = 2.5;
+    var MIN_EXTRA_KM_FOR_RATIO_CHECK = 75;
+    function _isImplausibleDetour(routeKm, straightKm) {
+        if (routeKm === null || !(straightKm > 0)) return false;
+        var extraKm = routeKm - straightKm;
+        var ratio = routeKm / straightKm;
+        if (extraKm > MAX_ABSOLUTE_DETOUR_KM) return true;
+        if (straightKm >= MIN_DIRECT_KM_FOR_RATIO_CHECK && ratio > MAX_ROUTE_VS_STRAIGHT_RATIO && extraKm > MIN_EXTRA_KM_FOR_RATIO_CHECK) return true;
+        return false;
+    }
+
     var osrmPromises = segments.map(function(seg) {
         if (seg.type === 'direct') return Promise.resolve(seg);
-        var cacheKey = 'rmgap:' + seg.from[0].toFixed(4) + ',' + seg.from[1].toFixed(4) + ';' +
+        // v5.58: cache format now stores routeKm alongside geometry (was
+        // geometry-only, requiring an O(n) polyline-length recompute on every
+        // read to validate it). 'rmgap3:' bumped again since the stored shape
+        // changed (old 'rmgap2:' entries are plain arrays, not {g,km} objects).
+        var cacheKey = 'rmgap3:' + seg.from[0].toFixed(4) + ',' + seg.from[1].toFixed(4) + ';' +
                        seg.to[0].toFixed(4) + ',' + seg.to[1].toFixed(4);
         var cached = null;
         try { cached = sessionStorage.getItem(cacheKey); } catch (e) {}
         if (cached) {
-            try { seg.latlngs = JSON.parse(cached); return Promise.resolve(seg); } catch (e) {}
+            try {
+                var cachedEntry = JSON.parse(cached);
+                // v5.57/58: re-validate cached geometry too, don't trust it blindly.
+                if (cachedEntry && cachedEntry.g && !_isImplausibleDetour(cachedEntry.km, seg.straightKm)) {
+                    seg.latlngs = cachedEntry.g;
+                    return Promise.resolve(seg);
+                }
+                try { sessionStorage.removeItem(cacheKey); } catch (e2) {}
+            } catch (e) {}
         }
         var url = 'https://router.project-osrm.org/route/v1/driving/' +
                   seg.from[1] + ',' + seg.from[0] + ';' + seg.to[1] + ',' + seg.to[0] +
@@ -8318,10 +8407,13 @@ function _fillGapsOSRM(points) {
         return fetchWithTimeout(url, {}, 6000)
             .then(function(r) { return r.ok ? r.json() : null; })
             .then(function(data) {
-                if (data && data.code === 'Ok' && data.routes && data.routes[0] && data.routes[0].geometry) {
+                var routeKm = (data && data.routes && data.routes[0]) ? data.routes[0].distance / 1000 : null;
+                var unreasonableDetour = _isImplausibleDetour(routeKm, seg.straightKm);
+                if (data && data.code === 'Ok' && data.routes && data.routes[0] && data.routes[0].geometry && !unreasonableDetour) {
                     seg.latlngs = data.routes[0].geometry.coordinates.map(function(c) { return [c[1], c[0]]; });
-                    try { sessionStorage.setItem(cacheKey, JSON.stringify(seg.latlngs)); } catch (e) {}
+                    try { sessionStorage.setItem(cacheKey, JSON.stringify({ g: seg.latlngs, km: routeKm })); } catch (e) {}
                 } else {
+                    if (unreasonableDetour && _qvLog) _qvLog.info('[GapFill] OSRM detour ' + routeKm.toFixed(0) + 'km vs ' + seg.straightKm.toFixed(0) + 'km straight — rejected, likely a ferry. Drawing direct line.');
                     seg.latlngs = _linearInterp(seg.from, seg.to);
                 }
                 return seg;
@@ -16615,7 +16707,7 @@ window.injectAllWikiLinks = function() {
         date: today,
         customLabel: 'Pre-viaggio',
         customType: 'recap',
-        text: LANG3 === 'es' ? '¡La ruta está lista! 55 días, 13 países, 12.000 km en una furgoneta con toda la familia.' : isEN ? 'The route is ready! 55 days, 13 countries, 12,000 km in a van with the whole family.' : 'Il percorso \u00e8 pronto! 55 giorni, 13 paesi, 12.000 km in furgone con tutta la famiglia.',
+        text: LANG3 === 'es' ? '¡La ruta está lista! 55 días, 14 países, 12.000 km en una furgoneta con toda la familia.' : isEN ? 'The route is ready! 55 days, 14 countries, 12,000 km in a van with the whole family.' : 'Il percorso \u00e8 pronto! 55 giorni, 14 paesi, 12.000 km in furgone con tutta la famiglia.',
         draft: true,
         createdAt: firebase.database.ServerValue.TIMESTAMP
       }
@@ -20935,17 +21027,22 @@ window.injectAllWikiLinks = function() {
 (function() {
   'use strict';
 
-  // ─── Exchange rates (approximate, updated manually) ───
-  // TODO: aggiornare i tassi prima della partenza (25/06/2026) da ECB o xe.com
+  // ─── Exchange rates (approximate, manually updated) ───
+  // v5.51 FIX: the TODO below said "update before departure (25/06/2026)" and
+  // was never actioned — these were still the original planning-time estimates
+  // on 08/08/2026, six weeks into the trip. Refreshed with real rates verified
+  // via web search on this date (source: Yahoo Finance, OFX, XE — EUR base).
+  // NOK/SEK/CHF had drifted 2.4-4.7%; DKK/GBP/PLN/CZK were already close.
+  // Still a manual snapshot, not live — will drift again over time.
   var FX_RATES = {
     EUR: 1,
-    NOK: 11.5,
-    SEK: 11.2,
-    DKK: 7.46,
-    PLN: 4.3,
-    CZK: 25.2,
-    GBP: 0.86,
-    CHF: 0.97
+    NOK: 10.98,
+    SEK: 10.93,
+    DKK: 7.48,
+    PLN: 4.29,
+    CZK: 25.13,
+    GBP: 0.857,
+    CHF: 0.934
   };
 
   // ─── Subcategories map ───

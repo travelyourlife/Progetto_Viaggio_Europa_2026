@@ -721,7 +721,7 @@
       data.distanceFromHome = '';
     } else {
       var _td = (typeof TRIP_DAYS !== 'undefined') ? TRIP_DAYS : 55;
-      data.progressText = _dayPrefix + (currentDay + 1) + '/' + _td + ' \u00b7 ' + data.totalKm + ' km \u00b7 ' + data.totalCountries + _hvT('/12 paesi', '/12 countries', '/12 pa\u00edses');
+      data.progressText = _dayPrefix + (currentDay + 1) + '/' + _td + ' \u00b7 ' + data.totalKm + ' km \u00b7 ' + data.totalCountries + _hvT('/14 paesi', '/14 countries', '/14 pa\u00edses');
       data.kmBar = Math.min(100, Math.round((parseInt(data.totalKm.replace(/\./g, '')) || 0) / 12000 * 100));
       data.lastUpdate = '';
 
@@ -796,7 +796,7 @@
       data.storyHeroBg = placeholderPhotos[randIdx];
       data.photoBg = placeholderPhotos[(randIdx + 1) % placeholderPhotos.length];
       data.photoCaption = _en ? 'Trip preview' : 'Anteprima del viaggio';
-      data.photoMeta = (typeof window.TRIP_META !== 'undefined') ? window.TRIP_META.summaryIT : '55 giorni · 13 paesi · 12.000 km';
+      data.photoMeta = (typeof window.TRIP_META !== 'undefined') ? window.TRIP_META.summaryIT : '55 giorni · 14 paesi · 12.000 km';
       data.photoCount = placeholderPhotos.length;
     }
 
@@ -1212,7 +1212,7 @@
       html += '    <div class="hv-diary-preview-time">' + (lang === 'es' ? 'Salida en ' + daysUntilStr : lang === 'en' ? 'Departure in ' + daysUntilStr : 'Partenza tra ' + daysUntilStr) + '</div>';
       html += '  </div>';
       html += '</div>';
-      html += '<div class="hv-diary-preview-highlight">\u2b50 ' + (lang === 'es' ? '55 d\u00edas, 13 pa\u00edses, 12.000 km en furgoneta con toda la familia!' : lang === 'en' ? '55 days, 13 countries, 12,000 km in a van with the whole family!' : '55 giorni, 13 paesi, 12.000 km in furgone con tutta la famiglia!') + '</div>';
+      html += '<div class="hv-diary-preview-highlight">\u2b50 ' + (lang === 'es' ? '55 d\u00edas, 14 pa\u00edses, 12.000 km en furgoneta con toda la familia!' : lang === 'en' ? '55 days, 14 countries, 12,000 km in a van with the whole family!' : '55 giorni, 14 paesi, 12.000 km in furgone con tutta la famiglia!') + '</div>';
       if (latestPost && latestPost.text) {
         var bodyText = (latestPost.text || '').substring(0, 120);
         html += '<div class="hv-diary-preview-text">' + escHtml(bodyText) + '</div>';
