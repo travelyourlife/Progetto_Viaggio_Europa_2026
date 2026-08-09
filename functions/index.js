@@ -155,6 +155,30 @@ exports.processNotificationQueue = onValueCreated(
     }
 
     const { title, body, target, url, tag, senderUid } = payload;
+    const familyId = event.params.familyId;
+
+    // QV-011/012/013 FIX: device.role is written by the client (Rules only
+    // validate the 'token' field, per QV-012), so any user could set their
+    // own role to 'owner' in fcm_tokens/{uid}/{device} and receive
+    // owner-targeted pushes. Also, a pending (unapproved) user was being
+    // classified as 'family' client-side with no approvedUsers/bannedUsers
+    // check at all (QV-013). Fix: derive the real role server-side, once per
+    // uid, from the same authoritative nodes the Realtime Database Rules
+    // themselves trust — never from the client-supplied device.role.
+    const [ownerUsersSnap, approvedUsersSnap, bannedUsersSnap] = await Promise.all([
+      db.ref(`trips/${familyId}/ownerUsers`).once('value'),
+      db.ref(`trips/${familyId}/approvedUsers`).once('value'),
+      db.ref(`trips/${familyId}/bannedUsers`).once('value'),
+    ]);
+    const ownerUsersVal = ownerUsersSnap.val() || {};
+    const approvedUsersVal = approvedUsersSnap.val() || {};
+    const bannedUsersVal = bannedUsersSnap.val() || {};
+    function realRoleFor(uid) {
+      if (bannedUsersVal[uid]) return 'visitor'; // banned = not a member, regardless of anything else
+      if (OWNER_UIDS.includes(uid) || ownerUsersVal[uid] === true) return 'owner';
+      if (approvedUsersVal[uid]) return 'family';
+      return 'visitor'; // pending or unknown — never 'family'/'owner'
+    }
 
     // Load all FCM tokens
     const tokensSnap = await db.ref('fcm_tokens').once('value');
@@ -166,10 +190,10 @@ exports.processNotificationQueue = onValueCreated(
       // Never notify the sender
       if (senderUid && uid === senderUid) return;
 
+      const role = realRoleFor(uid); // server-derived — device.role is ignored entirely
+
       Object.values(devices).forEach(device => {
         if (!device || !device.token) return;
-
-        const role = device.role || 'visitor';
 
         // Target filter
         if (target === 'owner'   && role !== 'owner')  return;
@@ -2076,6 +2100,63 @@ exports.updateUserDisplayName = onCall({ memory: '256MiB' }, async (request) => 
   }
 });
 
+// ─────────────────────────────────────────────────────────────────────────────
+// QV-006 FIX: Storage Rules cannot read the Realtime Database, so they used
+// to fall back to "authenticated == allowed", meaning ANY Google account —
+// even one still sitting in pendingUsers, never approved — could read (and
+// in some paths write) diary photos, chat media and expense screenshots.
+// Fix: set a custom claim on the user's Auth token when they're approved
+// (claims ARE readable from Storage Rules via request.auth.token.approved),
+// and clear it when they're rejected/banned/removed. This callable is the
+// ONLY place that should ever set trips/{familyId}/approvedUsers/{uid} now —
+// the client used to write that RTDB node directly; it must call this
+// function instead so the two stay in sync. See setUserApproved(false, ...)
+// below for the reverse (ban/reject/remove) path.
+// ─────────────────────────────────────────────────────────────────────────────
+exports.setUserApproved = onCall({ memory: '256MiB' }, async (request) => {
+  if (!request.auth) {
+    throw new HttpsError('unauthenticated', 'Must be logged in.');
+  }
+  if (!OWNER_UIDS.includes(request.auth.uid)) {
+    throw new HttpsError('permission-denied', 'Only the trip owner can approve or remove members.');
+  }
+
+  const { uid, approved, displayName, email, photoURL } = request.data;
+  if (!uid || typeof uid !== 'string') {
+    throw new HttpsError('invalid-argument', 'Missing or invalid uid.');
+  }
+  if (typeof approved !== 'boolean') {
+    throw new HttpsError('invalid-argument', 'approved must be true or false.');
+  }
+
+  try {
+    // The custom claim is what Storage Rules actually check. It's merged
+    // with any other existing claims (e.g. none currently in use, but this
+    // avoids silently clobbering something added later for another purpose).
+    const existing = (await admin.auth().getUser(uid)).customClaims || {};
+    await admin.auth().setCustomUserClaims(uid, Object.assign({}, existing, { approved: approved }));
+
+    const familyRef = db.ref(`trips/${FAMILY_ID}`);
+    if (approved) {
+      await familyRef.child(`approvedUsers/${uid}`).set({
+        email: email || '',
+        displayName: displayName || '',
+        photoURL: photoURL || '',
+        approvedAt: admin.database.ServerValue.TIMESTAMP,
+      });
+      await familyRef.child(`pendingUsers/${uid}`).remove();
+    } else {
+      await familyRef.child(`approvedUsers/${uid}`).remove();
+    }
+
+    logger.log(`[setUserApproved] ${request.auth.uid} set approved=${approved} for ${uid}`);
+    return { success: true, uid: uid, approved: approved };
+  } catch (error) {
+    logger.error('[setUserApproved] Error:', error.message);
+    throw new HttpsError('internal', 'Failed to update approval: ' + error.message);
+  }
+});
+
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 15. NOTIFY NEW POSTCARD — REMOVED in v4.08 (postcard feature deprecated in v4.06)
@@ -2090,8 +2171,13 @@ exports.updateUserDisplayName = onCall({ memory: '256MiB' }, async (request) => 
 // Strava credentials stored in: stravaTokens/{FAMILY_ID}/
 // ─────────────────────────────────────────────────────────────────────────────
 
-const STRAVA_CLIENT_ID = '253349';
-const STRAVA_CLIENT_SECRET = '43e868cd4816efbcc66ddc6f009e4e171c02a2f0';
+const STRAVA_CLIENT_ID = '253349'; // public OAuth client id, not sensitive
+// QV-001 FIX: was hardcoded in plain text (STRAVA_CLIENT_SECRET = '43e868c...').
+// Moved to Secret Manager via defineSecret, matching the existing openaiKey
+// pattern. The OLD hardcoded value must still be rotated on Strava's side
+// (https://www.strava.com/settings/api) — this code change alone does not
+// invalidate a secret that was already exposed in prior deploy packages.
+const stravaClientSecret = defineSecret('STRAVA_CLIENT_SECRET');
 
 /**
  * Refresh Strava access token if expired.
@@ -2121,7 +2207,7 @@ async function refreshStravaToken() {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       client_id: STRAVA_CLIENT_ID,
-      client_secret: STRAVA_CLIENT_SECRET,
+      client_secret: stravaClientSecret.value(),
       grant_type: 'refresh_token',
       refresh_token: tokens.refresh_token,
     }),
@@ -2218,6 +2304,7 @@ exports.stravaSync = onSchedule({
   schedule: 'every 6 hours',
   timeZone: 'Europe/Rome',
   memory: '256MiB',
+  secrets: [stravaClientSecret],
 }, async (event) => {
   try {
     const result = await syncStravaActivities();
@@ -2230,6 +2317,7 @@ exports.stravaSync = onSchedule({
 // Manual trigger (callable from app — owner only)
 exports.stravaSyncManual = onCall({
   memory: '256MiB',
+  secrets: [stravaClientSecret],
 }, async (request) => {
   // Only owners can trigger manual sync
   if (!request.auth || !OWNER_UIDS.includes(request.auth.uid)) {
@@ -2259,6 +2347,7 @@ exports.stravaOAuthCallback = onRequest({
   region: 'europe-west1',
   memory: '256MiB',
   cors: false,
+  secrets: [stravaClientSecret],
 }, async (req, res) => {
   try {
     const code = req.query.code;
@@ -2281,7 +2370,7 @@ exports.stravaOAuthCallback = onRequest({
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         client_id: STRAVA_CLIENT_ID,
-        client_secret: STRAVA_CLIENT_SECRET,
+        client_secret: stravaClientSecret.value(),
         code: code,
         grant_type: 'authorization_code',
       }),

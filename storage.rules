@@ -10,10 +10,17 @@ service firebase.storage {
       );
     }
 
-    // Helper: check if user is approved (via Realtime DB not available in Storage rules,
-    // so we rely on auth != null + path structure)
-    function isAuthenticated() {
-      return request.auth != null;
+    // Helper: check if user is approved
+    // QV-006 FIX: previously fell back to "authenticated == allowed" because
+    // Storage Rules can't read the Realtime Database. Custom claims (set by
+    // the setUserApproved Cloud Function whenever the owner approves/removes
+    // a member) ARE readable here, so this now actually enforces membership
+    // instead of letting any Google account in. Owners are also approved by
+    // definition, so isOwner() is included as a fallback for them even before
+    // any claim exists on their token.
+    function isApproved() {
+      return request.auth != null &&
+        (request.auth.token.approved == true || isOwner());
     }
 
     // Helper: max file size
@@ -34,21 +41,21 @@ service firebase.storage {
     // Diary uploads: diary/{familyId}/{dayKey}/{filename}
     // Owner can upload diary post media (images, audio)
     match /diary/{familyId}/{dayKey}/{filename} {
-      allow read: if isAuthenticated();
+      allow read: if isApproved();
       allow write: if isOwner() && (isImage() || isAudio()) && maxSize(10);
     }
 
     // v4.01: Comment photos: diary/{familyId}/{postKey}/comments/{filename}
     // Any authenticated user can upload comment photos (max 5MB)
     match /diary/{familyId}/{postKey}/comments/{filename} {
-      allow read: if isAuthenticated();
-      allow write: if isAuthenticated() && isImage() && maxSize(5);
+      allow read: if isApproved();
+      allow write: if isApproved() && isImage() && maxSize(5);
     }
 
     // Chat uploads: chat/{filename}
     match /chat/{allPaths=**} {
-      allow read: if isAuthenticated();
-      allow write: if isAuthenticated() && (isImage() || isAudio()) && maxSize(10);
+      allow read: if isApproved();
+      allow write: if isApproved() && (isImage() || isAudio()) && maxSize(10);
     }
 
     // v4.08: Postcard storage rule removed (feature deprecated in v4.06)
@@ -57,7 +64,7 @@ service firebase.storage {
     // Admin-only feature (Importa da Screenshot) — owner uploads bank-app
     // screenshots for AI OCR. Read for authenticated users, write for owners only.
     match /expenses/{familyId}/{filename} {
-      allow read: if isAuthenticated();
+      allow read: if isApproved();
       allow write: if isOwner() && isImage() && maxSize(10);
     }
 

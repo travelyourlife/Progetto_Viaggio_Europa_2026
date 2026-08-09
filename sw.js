@@ -26,7 +26,7 @@ var messaging = firebase.messaging();
 // ─── CACHING CONFIG ───
 // ═══════════════════════════════════════════════════════════════
 
-const CACHE_NAME = 'quo-vadis-v5.58';
+const CACHE_NAME = 'quo-vadis-v5.67';
 const IMAGE_CACHE_NAME = 'quo-vadis-images-v1';
 const IMAGE_CACHE_LIMIT = 80;
 const STATIC_ASSETS = [
@@ -34,15 +34,15 @@ const STATIC_ASSETS = [
   './index.html',
   './index_en.html',
   './index_es.html',
-  './style.css?v=5.58',
-  './data.js?v=5.58',
-  './days-data.js?v=5.58',
-  './days-renderer.js?v=5.58',
+  './style.css?v=5.67',
+  './data.js?v=5.67',
+  './days-data.js?v=5.67',
+  './days-renderer.js?v=5.67',
   // wiki-links.js: NOT precached — lazy-loaded on first open of Cultura/Attività tab
   // content-{cultura,natura,attivita,cibo}-{it,en,es}.html: NOT precached (v5.14) —
   // lazy-loaded on first open of each tab, fetched fresh each time (cache: no-store)
-  './weather-coords.js?v=5.58',
-  './app.js?v=5.58',
+  './weather-coords.js?v=5.67',
+  './app.js?v=5.67',
   './manifest.json',
   './icon.png',
   './icon-192.png',
@@ -51,22 +51,22 @@ const STATIC_ASSETS = [
   './icon-maskable-512.png',
   './icons/van-marker.svg',
   './firebase-messaging-sw.js',
-  './capacitor-gps-bridge.js?v=5.58',
+  './capacitor-gps-bridge.js?v=5.67',
   './offline.html',
   './home-variants.html',
   './home-variants_en.html',
   './home-variants_es.html',
   './home-variants.css',
-  './home-variants.js?v=5.58',
-  './unified-map.js?v=5.58',
+  './home-variants.js?v=5.67',
+  './unified-map.js?v=5.67',
   './unified-map.css',
-  './poi-data.js?v=5.58',
+  './poi-data.js?v=5.67',
   './modern-pages.css',
-  './curiosita-data.js?v=5.58',
-  './curiosita-scheduler.js?v=5.58',
-  './quiz-fun.js?v=5.58',
+  './curiosita-data.js?v=5.67',
+  './curiosita-scheduler.js?v=5.67',
+  './quiz-fun.js?v=5.67',
   // city-itineraries.js: NOT precached (v5.25) — lazy-loaded on first open of Itinerari città tab
-  './city-itineraries-ui.js?v=5.58',
+  './city-itineraries-ui.js?v=5.67',
   // debug-overlay.js: rimosso — caricato on-demand solo da Admin
   // v2.70: immagini placeholder per Home offline
   './img/placeholder/bridge-coast.jpg',
@@ -93,14 +93,32 @@ const CDN_ASSETS = [
 ];
 
 // ─── Install: pre-cache both CDN and STATIC assets ───
-// v2.11 FIX: Removed automatic skipWaiting() to prevent mid-navigation breakage.
-// The new SW waits until the user accepts the update via the client-side banner.
+// v2.11 FIX (comment was already here, but the code below contradicted it —
+// QV-002 from the audit): skipWaiting() was still being called
+// unconditionally, activating every new SW immediately instead of leaving it
+// in 'waiting' state. index.html's commitUpdate() already correctly checks
+// for newReg.waiting and only messages it once the user/version-check
+// commits to the update — but that check almost never found anything
+// waiting, because this line had already skipped straight past it. Removed;
+// the message handler below (self.addEventListener('message', ...)) is the
+// only thing that should call skipWaiting() now, triggered by that same
+// commitUpdate() flow.
 self.addEventListener('install', function(event) {
-  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then(function(cache) {
       console.log('[SW] Installing — caching all assets (CDN + Static)');
-      return cache.addAll(CDN_ASSETS.concat(STATIC_ASSETS));
+      // v5.65 FIX (QV-008): cache.addAll() is all-or-nothing — a single
+      // failed request (CDN hiccup, CORS, timeout, 404) used to fail the
+      // ENTIRE install, leaving every other asset uncached too and blocking
+      // the update indefinitely. Especially relevant for an app used over
+      // patchy mobile signal on the road. Now each asset is cached
+      // independently; one failure only loses that one asset, not the batch.
+      var allAssets = CDN_ASSETS.concat(STATIC_ASSETS);
+      return Promise.all(allAssets.map(function(url) {
+        return cache.add(url).catch(function(err) {
+          console.warn('[SW] Failed to cache (skipped, not fatal):', url, err.message);
+        });
+      }));
     })
   );
 });

@@ -129,8 +129,8 @@
         "chat": {
             "$familyId": {
                 ".read": "auth != null && (auth.uid === 'RxlVlsfeaEeSwFUVYbKQujEsbBo1' || auth.uid === 'Mh8BOeFPnFe7WObcsUoP6wyRgPw1' || root.child('trips/' + $familyId + '/ownerUsers/' + auth.uid).val() === true || (root.child('trips/' + $familyId + '/approvedUsers/' + auth.uid).exists() && !root.child('trips/' + $familyId + '/bannedUsers/' + auth.uid).exists()))",
-                ".write": "auth != null && (auth.uid === 'RxlVlsfeaEeSwFUVYbKQujEsbBo1' || auth.uid === 'Mh8BOeFPnFe7WObcsUoP6wyRgPw1' || root.child('trips/' + $familyId + '/ownerUsers/' + auth.uid).val() === true || (root.child('trips/' + $familyId + '/approvedUsers/' + auth.uid).exists() && !root.child('trips/' + $familyId + '/bannedUsers/' + auth.uid).exists()))",
                 "$messageId": {
+                    ".write": "auth != null && ((!data.exists() && (auth.uid === 'RxlVlsfeaEeSwFUVYbKQujEsbBo1' || auth.uid === 'Mh8BOeFPnFe7WObcsUoP6wyRgPw1' || root.child('trips/' + $familyId + '/ownerUsers/' + auth.uid).val() === true || (root.child('trips/' + $familyId + '/approvedUsers/' + auth.uid).exists() && !root.child('trips/' + $familyId + '/bannedUsers/' + auth.uid).exists()))) || (data.exists() && (auth.uid === data.child('uid').val() || auth.uid === 'RxlVlsfeaEeSwFUVYbKQujEsbBo1' || auth.uid === 'Mh8BOeFPnFe7WObcsUoP6wyRgPw1' || root.child('trips/' + $familyId + '/ownerUsers/' + auth.uid).val() === true)))",
                     ".validate": "newData.hasChildren(['uid', 'timestamp']) && (!newData.hasChild('text') || newData.child('text').val().length <= 5000)",
                     "uid": {
                         ".validate": "!data.exists() ? newData.val() === auth.uid : newData.val() === data.val()"

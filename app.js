@@ -423,7 +423,7 @@ try {
 
   // v3.94 FIX Audit #8: Always include User-Agent header (Nominatim ToS requirement)
   // v4.08 FIX: Use runtime version from EXPECTED_VERSION instead of hardcoded
-  var _appVer = (typeof EXPECTED_VERSION !== 'undefined') ? EXPECTED_VERSION : '5.58';
+  var _appVer = (typeof EXPECTED_VERSION !== 'undefined') ? EXPECTED_VERSION : '5.67';
   var _defaultHeaders = { 'User-Agent': 'QuoVadis-TripApp/' + _appVer + ' (family-trip-pwa)' };
 
   function _drain() {
@@ -1254,6 +1254,28 @@ function checkOwnerStatus() {
             setTimeout(_trySubmitPending, 1500);
           }
           document.addEventListener('visibilitychange', _onVisResume);
+
+          // v5.62 (QV-006 follow-up): the 'approved' custom claim set by the
+          // owner's setUserApproved call doesn't reach an already-issued ID
+          // token — normally the client only picks it up on its next natural
+          // refresh (up to ~1h later). The owner can't force a REMOTE client
+          // to refresh; only the client's own device can call getIdToken(true).
+          // So: watch our own approval status live, and as soon as it flips
+          // to true, refresh our own token right here — no waiting, no need
+          // for the user to log out/in. Detaches itself once done.
+          var _approvedLiveRef = firebase.database().ref('trips/' + FAMILY_ID + '/approvedUsers/' + _uid);
+          var _approvedLiveCb = function(snap) {
+            if (!snap.exists()) return;
+            _approvedLiveRef.off('value', _approvedLiveCb);
+            firebase.auth().currentUser.getIdToken(true).then(function() {
+              _qvLog.info('[Auth] Approval detected — ID token force-refreshed, storage access active immediately.');
+              window._userApproved = true;
+              try { if (window.HomeVariants && window.HomeVariants.rerender) window.HomeVariants.rerender(); } catch (e) {}
+            }).catch(function(e) {
+              console.warn('[Auth] Forced token refresh after approval failed (will pick up on next natural refresh):', e.message || e);
+            });
+          };
+          _approvedLiveRef.on('value', _approvedLiveCb);
         })();
       }
 
@@ -1895,7 +1917,7 @@ function initRouteMap() {
         var target = document.getElementById('tab-' + tabId);
         if (!target) return; // e.g. tab-natura doesn't exist in EN yet
         window._lazyContentLoaded[tabId] = true;
-        var url = './content-' + tabId + '-' + LANG3 + '.html?v=5.58';
+        var url = './content-' + tabId + '-' + LANG3 + '.html?v=5.67';
         fetch(url, { cache: 'no-store' })
             .then(function(res) { if (!res.ok) throw new Error('HTTP ' + res.status); return res.text(); })
             .then(function(html) {
@@ -1947,7 +1969,7 @@ function initRouteMap() {
         if (typeof WIKI_LINKS === 'undefined' && !window._wikiLinksLoading) {
             window._wikiLinksLoading = true;
             var s = document.createElement('script');
-            s.src = './wiki-links.js?v=5.58';
+            s.src = './wiki-links.js?v=5.67';
             s.defer = true;
             s.onload = function() { _qvLog.info('[Lazy] wiki-links.js loaded'); };
             document.head.appendChild(s);
@@ -2348,14 +2370,23 @@ document.addEventListener('DOMContentLoaded', function() {
     // ─── Hard Refresh Utility ───
     function hardRefresh() {
         var freshUrl = (window.location.pathname.indexOf('index_es') > -1 ? 'index_es.html' : window.location.pathname.indexOf('index_en') > -1 ? 'index_en.html' : 'index.html') + '?_v=' + Date.now();
+        // v5.64 FIX (QV-005): this used to unregister EVERY service worker and
+        // delete EVERY cache on the origin, not just Quo Vadis's own — fine in
+        // practice today (nothing else is hosted on this origin), but needlessly
+        // destructive and a real risk if that ever changes. Now only touches
+        // this app's own SW scope and 'quo-vadis-' prefixed caches.
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.getRegistrations().then(function(registrations) {
-                var promises = registrations.map(function(r) { return r.unregister(); });
+                var ownScope = new URL('./', window.location.href).href;
+                var promises = registrations
+                    .filter(function(r) { return r.scope === ownScope; })
+                    .map(function(r) { return r.unregister(); });
                 return Promise.all(promises);
             }).then(function() {
                 if ('caches' in window) {
                     return caches.keys().then(function(names) {
-                        return Promise.all(names.map(function(n) { return caches.delete(n); }));
+                        return Promise.all(names.filter(function(n) { return n.indexOf('quo-vadis-') === 0; })
+                            .map(function(n) { return caches.delete(n); }));
                     });
                 }
             }).then(function() {
@@ -19938,6 +19969,16 @@ window.injectAllWikiLinks = function() {
           var userName = users[uid] ? (users[uid].name || users[uid].email || uid) : uid;
           showConfirm((LANG3 === 'es' ? 'Bloquear globalmente ' : isEN ? 'Globally ban ' : 'Bannare globalmente ') + userName + '?', function() {
             bannedRef.child(uid).set(true).then(function() {
+              // v5.61 FIX (QV-006): also clear the 'approved' claim so a
+              // banned user loses Storage access immediately, not just the
+              // RTDB-visible parts of the app.
+              var setApproved = firebase.app().functions('europe-west1').httpsCallable('setUserApproved');
+              return setApproved({ uid: uid, approved: false });
+            }).then(function() {
+              if (window.showToast) showToast(LANG3 === 'es' ? 'Usuario bloqueado globalmente' : isEN ? 'User banned globally' : 'Utente bannato globalmente', 'success');
+              renderAdminUsers();
+            }).catch(function(err) {
+              console.error('[ban] setUserApproved error:', err);
               if (window.showToast) showToast(LANG3 === 'es' ? 'Usuario bloqueado globalmente' : isEN ? 'User banned globally' : 'Utente bannato globalmente', 'success');
               renderAdminUsers();
             });
@@ -19963,18 +20004,19 @@ window.injectAllWikiLinks = function() {
           var u = users[uid] || {};
           var userName = u.name || u.email || uid;
           showConfirm((LANG3 === 'es' ? 'Aprobar ' : isEN ? 'Approve ' : 'Approvare ') + userName + '?', function() {
-            approvedRef.child(uid).set({
-              email: u.email || '',
-              displayName: u.name || '',
-              photoURL: u.photo || '',
-              approvedAt: firebase.database.ServerValue.TIMESTAMP
-            }).then(function() {
-              // Remove from pendingUsers if present
-              return pendingRef.child(uid).remove();
-            }).then(function() {
+            // v5.61 FIX (QV-006): approval now goes through a Cloud Function
+            // that ALSO sets the 'approved' custom claim on the user's Auth
+            // token — a direct RTDB write here (the old behavior) updated
+            // approvedUsers but never touched the claim, so Storage access
+            // silently stayed open to anyone merely signed in, approved or not.
+            var setApproved = firebase.app().functions('europe-west1').httpsCallable('setUserApproved');
+            setApproved({ uid: uid, approved: true, email: u.email || '', displayName: u.name || '', photoURL: u.photo || '' }).then(function() {
               if (window.showToast) showToast(LANG3 === 'es' ? '¡Usuario aprobado!' : isEN ? 'User approved!' : 'Utente approvato!', 'success');
               renderAdminUsers();
               renderAdminPending();
+            }).catch(function(err) {
+              console.error('[setUserApproved] error:', err);
+              if (window.showToast) showToast(LANG3 === 'es' ? 'Error al aprobar' : isEN ? 'Approval failed' : 'Approvazione fallita', 'error');
             });
           });
         });
@@ -20125,16 +20167,15 @@ window.injectAllWikiLinks = function() {
         btn.addEventListener('click', function() {
           var uid = btn.dataset.uid;
           var userData = users[uid];
-          approvedRef.child(uid).set({
-            email: userData.email || '',
-            displayName: userData.displayName || '',
-            photoURL: userData.photoURL || '',
-            approvedAt: firebase.database.ServerValue.TIMESTAMP
-          }).then(function() {
-            return pendingRef.child(uid).remove();
-          }).then(function() {
+          // v5.61 FIX (QV-006): see the other .admin-inline-approve handler
+          // above for why this goes through setUserApproved now.
+          var setApproved = firebase.app().functions('europe-west1').httpsCallable('setUserApproved');
+          setApproved({ uid: uid, approved: true, email: userData.email || '', displayName: userData.displayName || '', photoURL: userData.photoURL || '' }).then(function() {
             if (window.showToast) showToast(LANG3 === 'es' ? '¡Usuario aprobado!' : isEN ? 'User approved!' : 'Utente approvato!', 'success');
             renderAdminPending();
+          }).catch(function(err) {
+            console.error('[setUserApproved] error:', err);
+            if (window.showToast) showToast(LANG3 === 'es' ? 'Error al aprobar' : isEN ? 'Approval failed' : 'Approvazione fallita', 'error');
           });
         });
       });
@@ -21758,7 +21799,14 @@ window.injectAllWikiLinks = function() {
       if (e.date) dates[e.date] = true;
     });
 
-    var numDays = Object.keys(dates).length || 1;
+    // v5.60 FIX: numDays used to count only days that have at least one
+    // recorded expense — a day with zero spending (e.g. a driving day, or a
+    // free activity) silently disappeared from the denominator instead of
+    // counting as a €0 day, inflating the reported daily average. Use actual
+    // trip days elapsed instead, so a spend-free day correctly pulls the
+    // average down rather than not existing.
+    var _tripDayIdx = (typeof getCurrentTripDay === 'function') ? getCurrentTripDay() : -1;
+    var numDays = (_tripDayIdx >= 0) ? (_tripDayIdx + 1) : (Object.keys(dates).length || 1);
     var avgDay = totalEur / numDays;
 
     // Find top category
@@ -22001,7 +22049,24 @@ window.injectAllWikiLinks = function() {
       dailyTotals[e.date] = (dailyTotals[e.date] || 0) + eur;
     });
 
-    var days = Object.keys(dailyTotals).sort();
+    // v5.60 FIX: this used to plot only days that have a recorded expense —
+    // a spend-free day (driving, free activities) just disappeared from the
+    // chart instead of showing as a €0 bar, same issue as the daily average
+    // above. Build the full elapsed-day range and fill in 0 for the rest.
+    var days;
+    var _tripDayIdx2 = (typeof getCurrentTripDay === 'function') ? getCurrentTripDay() : -1;
+    if (_tripDayIdx2 >= 0 && typeof TRIP_START !== 'undefined' && window.localDateStr) {
+      days = [];
+      for (var di = 0; di <= _tripDayIdx2; di++) {
+        var d = new Date(TRIP_START);
+        d.setDate(d.getDate() + di);
+        var key = window.localDateStr(d);
+        days.push(key);
+        if (!(key in dailyTotals)) dailyTotals[key] = 0;
+      }
+    } else {
+      days = Object.keys(dailyTotals).sort();
+    }
     if (days.length < 2) return;
 
     var maxVal = Math.max.apply(null, days.map(function(d) { return dailyTotals[d]; }));
