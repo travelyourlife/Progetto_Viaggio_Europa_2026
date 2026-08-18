@@ -147,9 +147,11 @@
     return { db: db, uid: user.uid, familyId: familyId, name: user.displayName || 'Furgone' };
   }
 
-  function todayStr() {
-    var d = new Date();
+  function todayStrFor(d) {
     return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  }
+  function todayStr() {
+    return todayStrFor(new Date());
   }
 
   // v2.58: delegates to window._haversineKm (data.js) — single canonical implementation
@@ -167,6 +169,39 @@
 
   function startBackgroundTracking() {
     if (bgGeoActive) return;
+    // v5.85 (QV-033): attempt to recover any points saved to localStorage by
+    // a previous session's failed final flush, grouping by their own date
+    // just like the live flush does. Best-effort — if this also fails, the
+    // points stay in localStorage for the next attempt rather than being lost.
+    try {
+      var recovered = JSON.parse(localStorage.getItem('qv_gps_recovery') || '[]');
+      if (recovered.length > 0) {
+        var recRefs = getFirebaseRefs();
+        if (recRefs) {
+          var byDateRec = {};
+          recovered.forEach(function(pt) {
+            var d = pt.time ? todayStrFor(new Date(pt.time)) : todayStr();
+            if (!byDateRec[d]) byDateRec[d] = [];
+            byDateRec[d].push(pt);
+          });
+          var recoveryPromises = Object.keys(byDateRec).map(function(dateKey) {
+            var flushPath = 'trips/' + recRefs.familyId + '/tracks/' + dateKey + '/points';
+            var updates = {};
+            byDateRec[dateKey].forEach(function(pt) {
+              var key = recRefs.db.ref(flushPath).push().key;
+              updates[key] = pt;
+            });
+            return recRefs.db.ref(flushPath).update(updates);
+          });
+          Promise.all(recoveryPromises).then(function() {
+            localStorage.removeItem('qv_gps_recovery');
+            console.log('[CapGPS] Recovered ' + recovered.length + ' point(s) from a previous failed flush');
+          }).catch(function(e) {
+            console.warn('[CapGPS] Recovery flush failed, will retry next start:', e.message);
+          });
+        }
+      }
+    } catch (e) { /* best effort only */ }
     if (!BackgroundGeolocation) {
       if (window.showToast) window.showToast((typeof LANG3 !== 'undefined' && LANG3 === 'es') ? 'GPS: Plugin no disponible' : (typeof isEN !== 'undefined' && isEN) ? 'GPS: Plugin not available' : 'GPS: Plugin non disponibile', 'error');
       return;
@@ -304,9 +339,17 @@
         if (!window._lastCountryCheck || (now - window._lastCountryCheck) >= 600000) {
           window._lastCountryCheck = now;
           (function(refPath, cLat, cLng) {
-            fetch('https://nominatim.openstreetmap.org/reverse?lat=' + cLat + '&lon=' + cLng + '&format=json&zoom=3', {
-              headers: { 'User-Agent': 'QuoVadis-TripApp/3.89' }
-            }).then(function(r) { return r.json(); }).then(function(data) {
+            // v5.95 FIX (QV-042): was a raw fetch(), bypassing the shared
+            // 1100ms-queued _nominatimFetch wrapper that every other Nominatim
+            // call in the app already goes through — this GPS-driven check
+            // could fire concurrently with those and get rate-limited (429)
+            // independently. Routed through the same queue now; the 10-minute
+            // self-throttle above stays as a second, complementary limit.
+            var geoUrl = 'https://nominatim.openstreetmap.org/reverse?lat=' + cLat + '&lon=' + cLng + '&format=json&zoom=3';
+            var geoPromise = window._nominatimFetch
+              ? window._nominatimFetch(geoUrl, { headers: { 'User-Agent': 'QuoVadis-TripApp/3.89' } })
+              : fetch(geoUrl, { headers: { 'User-Agent': 'QuoVadis-TripApp/3.89' } }).then(function(r) { return r.json(); });
+            geoPromise.then(function(data) {
               if (data && data.address && data.address.country_code) {
                 var cc = data.address.country_code.toUpperCase();
                 var nameMap = { 'IT':'Italia','AT':'Austria','DE':'Germania','CH':'Svizzera','FR':'Francia','ES':'Spagna','PT':'Portogallo','BE':'Belgio','NL':'Paesi Bassi','LU':'Lussemburgo','HR':'Croazia','SI':'Slovenia','CZ':'Rep. Ceca','PL':'Polonia','HU':'Ungheria','SK':'Slovacchia','DK':'Danimarca','SE':'Svezia','NO':'Norvegia','FI':'Finlandia','EE':'Estonia','LV':'Lettonia','LT':'Lituania' };
@@ -329,15 +372,43 @@
           if (!buffer || buffer.length === 0) return;
           var flushRefs = getFirebaseRefs();
           if (!flushRefs) return;
-          var flushPath = 'trips/' + flushRefs.familyId + '/tracks/' + todayStr() + '/points';
-          // Multi-path update: push all buffered points in a single write
-          var updates = {};
-          for (var i = 0; i < buffer.length; i++) {
-            var key = flushRefs.db.ref(flushPath).push().key;
-            updates[key] = buffer[i];
-          }
-          flushRefs.db.ref(flushPath).update(updates)
-            .catch(function(e) { console.warn('[CapGPS] Flush track failed:', e.message); });
+          // v5.85 FIX (QV-033 + QV-034, same buffer/flush mechanism):
+          // - QV-033: this used to clear window._gpsTrackBuffer immediately
+          //   after starting update(), not after it actually succeeded — a
+          //   network failure (very plausible mid-trip) silently discarded
+          //   the whole buffer with only a console.warn nobody ever sees.
+          //   Now the buffer being flushed is only cleared on confirmed
+          //   success; on failure, those points go back into the live
+          //   buffer (prepended, so points added meanwhile aren't lost
+          //   either) and are retried on the next 60s flush.
+          // - QV-034: this used to group ALL buffered points under a single
+          //   todayStr() computed at FLUSH time, not per-point acquisition
+          //   time — a point captured just before midnight but flushed just
+          //   after could be saved under the wrong day. Now grouped by each
+          //   point's own .time field.
+          var byDate = {};
+          buffer.forEach(function(pt) {
+            var d = pt.time ? todayStrFor(new Date(pt.time)) : todayStr();
+            if (!byDate[d]) byDate[d] = [];
+            byDate[d].push(pt);
+          });
+          var toFlush = buffer.slice(); // snapshot of what we're attempting
+          window._gpsTrackBuffer = []; // new points captured during the write land here, untouched
+          var writePromises = Object.keys(byDate).map(function(dateKey) {
+            var flushPath = 'trips/' + flushRefs.familyId + '/tracks/' + dateKey + '/points';
+            var updates = {};
+            byDate[dateKey].forEach(function(pt) {
+              var key = flushRefs.db.ref(flushPath).push().key;
+              updates[key] = pt;
+            });
+            return flushRefs.db.ref(flushPath).update(updates);
+          });
+          Promise.all(writePromises).then(function() {
+            console.log('[CapGPS] Flushed ' + toFlush.length + ' track points across ' + Object.keys(byDate).length + ' day(s)');
+          }).catch(function(e) {
+            console.warn('[CapGPS] Flush track failed, re-queueing ' + toFlush.length + ' point(s) for retry:', e.message);
+            window._gpsTrackBuffer = toFlush.concat(window._gpsTrackBuffer);
+          });
           // Update session km once per flush
           flushRefs.db.ref('trips/' + flushRefs.familyId + '/liveSession/' + flushRefs.uid + '/todayKm').set(bgTodayKm)
             .catch(function(e) { console.warn('[CapGPS] Flush km failed:', e.message); });
@@ -347,8 +418,6 @@
               lat: bgLastLat, lng: bgLastLng, heading: 0, ts: Date.now(), name: flushRefs.name
             }).catch(function(e) { console.warn('[CapGPS] Flush lastPosition failed:', e.message); });
           }
-          window._gpsTrackBuffer = [];
-          console.log('[CapGPS] Flushed ' + buffer.length + ' track points');
         }, 60000); // 60 seconds (v2.48: was 30s, reduced writes by 50%)
       }
 
@@ -392,16 +461,43 @@
     if (window._gpsTrackBuffer && window._gpsTrackBuffer.length > 0) {
       var flushRefs = getFirebaseRefs();
       if (flushRefs) {
-        var flushPath = 'trips/' + flushRefs.familyId + '/tracks/' + todayStr() + '/points';
-        var updates = {};
-        for (var i = 0; i < window._gpsTrackBuffer.length; i++) {
-          var key = flushRefs.db.ref(flushPath).push().key;
-          updates[key] = window._gpsTrackBuffer[i];
-        }
-        flushRefs.db.ref(flushPath).update(updates);
-        console.log('[CapGPS] Final flush: ' + window._gpsTrackBuffer.length + ' points');
+        // v5.85 FIX (QV-033 + QV-034): same fix as the periodic flush above —
+        // group by each point's own acquisition date, and only clear the
+        // buffer once the write is confirmed, restoring it on failure so a
+        // stop-tracking action during a network hiccup doesn't silently lose
+        // the final batch of real GPS points.
+        var stopBuffer = window._gpsTrackBuffer.slice();
+        var byDateStop = {};
+        stopBuffer.forEach(function(pt) {
+          var d = pt.time ? todayStrFor(new Date(pt.time)) : todayStr();
+          if (!byDateStop[d]) byDateStop[d] = [];
+          byDateStop[d].push(pt);
+        });
+        window._gpsTrackBuffer = [];
+        Object.keys(byDateStop).forEach(function(dateKey) {
+          var flushPath = 'trips/' + flushRefs.familyId + '/tracks/' + dateKey + '/points';
+          var updates = {};
+          byDateStop[dateKey].forEach(function(pt) {
+            var key = flushRefs.db.ref(flushPath).push().key;
+            updates[key] = pt;
+          });
+          flushRefs.db.ref(flushPath).update(updates).catch(function(e) {
+            console.warn('[CapGPS] Final flush failed for ' + dateKey + ', re-queueing:', e.message);
+            window._gpsTrackBuffer = (byDateStop[dateKey] || []).concat(window._gpsTrackBuffer);
+            // v5.85: the periodic flush interval is already cleared by the
+            // time we get here (tracking has stopped), so nothing will ever
+            // retry window._gpsTrackBuffer again this session. Persist to
+            // localStorage as a last-resort recovery point instead of
+            // letting it disappear the moment the tab/app closes.
+            try {
+              var recovered = JSON.parse(localStorage.getItem('qv_gps_recovery') || '[]');
+              recovered = recovered.concat(byDateStop[dateKey] || []);
+              localStorage.setItem('qv_gps_recovery', JSON.stringify(recovered));
+            } catch (e2) { /* best effort only */ }
+          });
+        });
+        console.log('[CapGPS] Final flush: ' + stopBuffer.length + ' points across ' + Object.keys(byDateStop).length + ' day(s)');
       }
-      window._gpsTrackBuffer = [];
     }
 
     // Update Firebase session

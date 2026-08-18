@@ -64,12 +64,12 @@
     <link rel="apple-touch-icon" sizes="152x152" href="./icon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="./icon.png">
     <link rel="apple-touch-icon" sizes="167x167" href="./icon.png">
-    <title>Quo Vadis — V5.67</title>
+    <title>Quo Vadis — V6.05</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
-    <link rel="stylesheet" href="style.css?v=5.67">
-    <link rel="stylesheet" href="home-variants.css?v=5.67">
-    <link rel="stylesheet" href="unified-map.css?v=5.67">
-    <link rel="stylesheet" href="modern-pages.css?v=5.67">
+    <link rel="stylesheet" href="style.css?v=6.05">
+    <link rel="stylesheet" href="home-variants.css?v=6.05">
+    <link rel="stylesheet" href="unified-map.css?v=6.05">
+    <link rel="stylesheet" href="modern-pages.css?v=6.05">
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" crossorigin="">
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" crossorigin="">
 <!-- Firebase SDK (compat mode for single-file app) -->
@@ -87,7 +87,7 @@
 // Se la rete cade a metà update, l'app resta usabile con la versione vecchia
 // invece di bloccarsi (fix strutturale del bug emerso nella 5.11).
 (function(){
-  var EXPECTED_VERSION = "5.67";
+  var EXPECTED_VERSION = "6.05";
   window.IS_PROD = true; // disabilita debug overlay in produzione
   window.__EXPECTED_VERSION__ = EXPECTED_VERSION;
   if(!navigator.serviceWorker) return;
@@ -109,17 +109,17 @@
     if(reloading) return;
     reloading = true;
     showUpdateToast();
-    // Solo ORA cancelliamo le vecchie cache: sappiamo che il nuovo SW è pronto.
-    caches.keys().then(function(keys){
-      return Promise.all(keys.map(function(k){ return caches.delete(k); }));
-    }).catch(function(){}).then(function(){
-      if(newReg && newReg.waiting){
-        newReg.waiting.postMessage({type:'SKIP_WAITING'});
-      }
-      setTimeout(function(){
-        window.location.href = window.location.href.split('?')[0] + '?v=' + Date.now();
-      }, 600);
-    });
+    // v5.73 FIX (QV-007): removed the client-side blanket cache.delete() —
+    // sw.js's own 'activate' handler already correctly rotates old caches
+    // while preserving CACHE_NAME/IMAGE_CACHE_NAME. Doing it here too wiped
+    // the just-populated new cache before activate could run, leaving no
+    // offline fallback if the reload below hit a network hiccup.
+    if(newReg && newReg.waiting){
+      newReg.waiting.postMessage({type:'SKIP_WAITING'});
+    }
+    setTimeout(function(){
+      window.location.href = window.location.href.split('?')[0] + '?v=' + Date.now();
+    }, 600);
   }
 
   function tryInstallNewVersion(){
@@ -222,22 +222,22 @@
   }, 6000);
 })();
 </script>
-<script src="data.js?v=5.67" defer></script>
-<script src="days-data.js?v=5.67" defer></script>
-<script src="days-renderer.js?v=5.67" defer></script>
+<script src="data.js?v=6.05" defer></script>
+<script src="days-data.js?v=6.05" defer></script>
+<script src="days-renderer.js?v=6.05" defer></script>
 <!-- wiki-links.js: lazy-loaded on first open of Culture/Activity tab (34KB) — parity with index.html -->
-<script src="weather-coords.js?v=5.67" defer></script>
+<script src="weather-coords.js?v=6.05" defer></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
 <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js" crossorigin="" defer></script>
-<script src="poi-data.js?v=5.67" defer></script>
-<script src="app.js?v=5.67" defer></script>
-<script src="curiosita-data.js?v=5.67" defer></script>
+<script src="poi-data.js?v=6.05" defer></script>
+<script src="app.js?v=6.05" defer></script>
+<script src="curiosita-data.js?v=6.05" defer></script>
 <script>window.QV_CURIOSITA_SERVER_SIDE = true; window.QV_RECAP_SERVER_SIDE = true;</script>
-<script src="curiosita-scheduler.js?v=5.67" defer></script>
-<script src="quiz-fun.js?v=5.67" defer></script>
-<script src="unified-map.js?v=5.67" defer></script>
-<script src="city-itineraries-ui.js?v=5.67" defer></script>
-<script src="home-variants.js?v=5.67" defer></script>
+<script src="curiosita-scheduler.js?v=6.05" defer></script>
+<script src="quiz-fun.js?v=6.05" defer></script>
+<script src="unified-map.js?v=6.05" defer></script>
+<script src="city-itineraries-ui.js?v=6.05" defer></script>
+<script src="home-variants.js?v=6.05" defer></script>
 </head>
 <body class="on-home">
 
@@ -245,7 +245,7 @@
 <div class="splash-screen" id="splash">
     <img src="./icon.png" alt="" class="splash-logo">
     <div class="splash-title">Quo Vadis</div>
-    <div class="splash-sub">55 days · 14 countries · 12,000 km</div>
+    <div class="splash-sub">59 days · 15 countries · 12,000 km</div>
 </div>
 
 <!-- ─── Offline Banner ─── -->
@@ -387,7 +387,7 @@
     <span style="font-size:24px;">🗺️</span>
     <div>
       <div style="font-weight:700;font-size:15px;">Our route</div>
-      <div id="route-banner-stats" style="font-size:12px;color:var(--text-muted,#64748b);">D <span id="hs-day">0</span>/55 · <span id="hs-km">0</span> km · <span id="hs-countries">0</span>/14 countries · <span id="hs-checkins">0</span> check-ins</div>
+      <div id="route-banner-stats" style="font-size:12px;color:var(--text-muted,#64748b);">D <span id="hs-day">0</span>/55 · <span id="hs-km">0</span> km · <span id="hs-countries">0</span>/15 countries · <span id="hs-checkins">0</span> check-ins</div>
     </div>
   </div>
   <span style="font-size:20px;color:var(--text-muted,#64748b);">⛶</span>
@@ -399,7 +399,7 @@
   <!-- Single row: label + detail on the left · percentage on the right -->
   <div id="minibar-header-row" style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:10px;flex-wrap:wrap;cursor:pointer;-webkit-tap-highlight-color:transparent;">
     <span style="font-size:14px;color:var(--text-color,#1a1a2e);min-width:0;line-height:1.4;">
-      <span id="minibar-label" style="font-weight:600;">Departure in 12 days</span><span id="minibar-sep" style="color:var(--text-muted,#64748b);"> · </span><span id="minibar-detail" style="color:var(--text-muted,#64748b);" data-trip-meta="summaryEN">55 days · 14 countries · 12,000 km</span>
+      <span id="minibar-label" style="font-weight:600;">Departure in 12 days</span><span id="minibar-sep" style="color:var(--text-muted,#64748b);"> · </span><span id="minibar-detail" style="color:var(--text-muted,#64748b);" data-trip-meta="summaryEN">59 days · 15 countries · 12,000 km</span>
     </span>
     <span id="minibar-pct" style="font-size:14px;font-weight:700;color:#3b82f6;display:none;white-space:nowrap;">0%</span>
   </div>
@@ -461,7 +461,7 @@
 <h2 id="sintesi">📋 Summary — Crew and Vehicle</h2>
 <p>👨‍👩‍👧‍👦 <strong>Crew:</strong> 2 adults + 2 children (8 and 6 years old)</p>
 <p>🚐 <strong>Vehicle:</strong> self-sufficient camper van (LiFePo4 + 5 kg gas cylinder)</p>
-<p>📅 <strong>Period:</strong> 25/06/2026 (afternoon) → 18/08/2026 (evening) — <strong>55 days</strong></p>
+<p>📅 <strong>Period:</strong> 25/06/2026 (afternoon) → 22/08/2026 (evening) — <strong>59 days</strong></p>
 <p>🛣️ <strong>Total km:</strong> ~12,100 km</p>
 <p>🌑 <strong>Key event:</strong> 🌒 <strong>Total Solar Eclipse — 12/08/2026</strong>, area <strong>Palencia (🇪🇸)</strong>, totality ~8:29 pm local, Sun at ~11° above West horizon</p>
 <p>🎯 <strong>Trip focus:</strong> nature, parks and museums for children, scenic roads (🛣️), total eclipse, thermal experiences, fishing 🎣, trekking 🥾</p>
@@ -1433,7 +1433,7 @@
 <li class="task-item"><input type="checkbox" data-idx="piano-skyttelpass"> <strong>Order SkyttelPASS tag</strong> (4–6 weeks before) — <a href="https://skyttelpass.no/en/order-tag/" target="_blank" rel="noopener noreferrer">skyttelpass.no</a> (NOK 200 (~€19), 20% discount on tolls + 10% on ferries)</li>
 <li class="task-item"><input type="checkbox" data-idx="piano-autopass-ferje"> Activate AutoPASS ferje prepayment agreement — <a href="https://autopassferje.no/en/" target="_blank" rel="noopener noreferrer">autopassferje.no</a> (deposit NOK 3,600 (~€333), 50% discount on internal ferries)</li>
 <li class="task-item"><input type="checkbox" data-idx="piano-copenhagen-card"> Buy Copenhagen Card 48h online — <a href="https://copenhagencard.com/" target="_blank" rel="noopener noreferrer">copenhagencard.com</a> (~€268 for 4 pax, includes Tivoli+Experimentarium+transport)</li>
-<li class="task-item"><input type="checkbox" data-idx="piano-polizza-sanitaria"> Supplemental health insurance 55 days + 2 minors (TEAM valid, but extra policy for repatriation)</li>
+<li class="task-item"><input type="checkbox" data-idx="piano-polizza-sanitaria"> Supplemental health insurance 59 days + 2 minors (TEAM valid, but extra policy for repatriation)</li>
 <li class="task-item"><input type="checkbox" data-idx="piano-triangolo-gilet"> Warning triangle + reflective vest (mandatory in many countries)</li>
 </ul>
 <hr>
@@ -1510,7 +1510,7 @@
 <p>Parents' mobile number</p>
 <hr>
 <h3 id="note-bombola-gas">⛽ Gas Cylinder Notes</h3>
-<p>The 5 kg cylinder lasts ~2-3 weeks with daily cooking. For 55 days at least 2-3 refills are needed.</p>
+<p>The 5 kg cylinder lasts ~2-3 weeks with daily cooking. For 59 days at least 2-3 refills are needed.</p>
 <table class="no-responsive">
 <thead>
 <tr>
@@ -1633,7 +1633,7 @@
 <td data-label="Max">€950</td>
 </tr>
 <tr>
-<td data-label="Item">🍽️ Food (55 days × 4)</td>
+<td data-label="Item">🍽️ Food (59 days × 4)</td>
 <td data-label="Min">€3,200</td>
 <td data-label="Max">€4,200</td>
 </tr>
@@ -1680,7 +1680,7 @@
 </blockquote>
 <p>🎯 <strong>Food in Scandinavia:</strong> food prices in Norway/Finland/Denmark are 50-100% higher than Italy. Cook in the van as much as possible! Cheap supermarkets: Rema 1000, Kiwi (NO), Lidl (FI/DK).</p>
 <blockquote>
-<p><strong>Laundry:</strong> estimate 6-8 washes in 55 days (~€50 total, included in "Miscellaneous"). Campsites with washing machines: check on Park4Night.</p>
+<p><strong>Laundry:</strong> estimate 6-8 washes in 59 days (~€50 total, included in "Miscellaneous"). Campsites with washing machines: check on Park4Night.</p>
 </blockquote>
 <hr>
 <h2 id="valute">💱 Currencies — Approximate Exchange Rates</h2>
@@ -2673,7 +2673,7 @@
         <span class="pos-stat-icon">🌍</span>
         <div class="pos-stat-number" id="stat-countries">0</div>
         <div class="pos-stat-label">Countries</div>
-        <div class="pos-stat-sub">/ 14</div>
+        <div class="pos-stat-sub">/ 15</div>
     </div>
     <div class="pos-stat-card-v2 pos-stat-clickable" data-scroll-target="pos-garmin-card" title="Go to Activities">
         <span class="pos-stat-icon">🥾</span>
@@ -3427,7 +3427,7 @@
 <script>
 // Load home-variants_en.html templates into the page
 (function(){
-  fetch('./home-variants_en.html?v=5.67').then(function(r){return r.text();}).then(function(html){
+  fetch('./home-variants_en.html?v=6.05').then(function(r){return r.text();}).then(function(html){
     var div = document.getElementById('hv-templates');
     if(div) div.innerHTML = html;
     // Move templates to document body for proper <template> access
@@ -3437,8 +3437,8 @@
 })();
 </script>
 <!-- Debug Overlay (v2.47 diagnostic) -->
-<script src="debug-overlay.js?v=5.67" defer></script>
+<script src="debug-overlay.js?v=6.05" defer></script>
 <!-- Capacitor GPS Bridge (only activates inside native app, ignored in browser) -->
-<script src="capacitor-gps-bridge.js?v=5.67" defer></script>
+<script src="capacitor-gps-bridge.js?v=6.05" defer></script>
 </body>
 </html>

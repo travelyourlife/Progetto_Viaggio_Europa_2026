@@ -5,7 +5,7 @@
                 ".read": "auth != null && (auth.uid === 'RxlVlsfeaEeSwFUVYbKQujEsbBo1' || auth.uid === 'Mh8BOeFPnFe7WObcsUoP6wyRgPw1' || root.child('trips/' + $familyId + '/ownerUsers/' + auth.uid).val() === true || (root.child('trips/' + $familyId + '/approvedUsers/' + auth.uid).exists() && !root.child('trips/' + $familyId + '/bannedUsers/' + auth.uid).exists()))",
                 ".write": "auth != null && (auth.uid === 'RxlVlsfeaEeSwFUVYbKQujEsbBo1' || auth.uid === 'Mh8BOeFPnFe7WObcsUoP6wyRgPw1' || root.child('trips/' + $familyId + '/ownerUsers/' + auth.uid).val() === true)",
                 "ownerUsers": {
-                    ".read": "auth != null",
+                    ".read": "auth != null && (auth.uid === 'RxlVlsfeaEeSwFUVYbKQujEsbBo1' || auth.uid === 'Mh8BOeFPnFe7WObcsUoP6wyRgPw1' || root.child('trips/' + $familyId + '/ownerUsers/' + auth.uid).val() === true)",
                     ".write": "auth != null && (auth.uid === 'RxlVlsfeaEeSwFUVYbKQujEsbBo1' || auth.uid === 'Mh8BOeFPnFe7WObcsUoP6wyRgPw1')",
                     "$uid": {
                         ".read": "auth != null && auth.uid === $uid"
@@ -38,6 +38,20 @@
                     "curiositaMeta": {
                         ".read": "auth != null && (auth.uid === 'RxlVlsfeaEeSwFUVYbKQujEsbBo1' || auth.uid === 'Mh8BOeFPnFe7WObcsUoP6wyRgPw1' || root.child('trips/' + $familyId + '/ownerUsers/' + auth.uid).val() === true)",
                         ".write": "auth != null && (auth.uid === 'RxlVlsfeaEeSwFUVYbKQujEsbBo1' || auth.uid === 'Mh8BOeFPnFe7WObcsUoP6wyRgPw1' || root.child('trips/' + $familyId + '/ownerUsers/' + auth.uid).val() === true)"
+                    },
+                    "history": {
+                        ".read": "auth != null && (auth.uid === 'RxlVlsfeaEeSwFUVYbKQujEsbBo1' || auth.uid === 'Mh8BOeFPnFe7WObcsUoP6wyRgPw1' || root.child('trips/' + $familyId + '/ownerUsers/' + auth.uid).val() === true || (root.child('trips/' + $familyId + '/approvedUsers/' + auth.uid).exists() && !root.child('trips/' + $familyId + '/bannedUsers/' + auth.uid).exists()))",
+                        ".write": "auth != null && (auth.uid === 'RxlVlsfeaEeSwFUVYbKQujEsbBo1' || auth.uid === 'Mh8BOeFPnFe7WObcsUoP6wyRgPw1' || root.child('trips/' + $familyId + '/ownerUsers/' + auth.uid).val() === true)",
+                        ".indexOn": ["createdAt"]
+                    },
+                    "readState": {
+                        "$uid": {
+                            ".read": "auth != null && auth.uid === $uid",
+                            ".write": "auth != null && auth.uid === $uid && (root.child('trips/' + $familyId + '/ownerUsers/' + auth.uid).val() === true || (root.child('trips/' + $familyId + '/approvedUsers/' + auth.uid).exists() && !root.child('trips/' + $familyId + '/bannedUsers/' + auth.uid).exists()))",
+                            "$notifId": {
+                                ".validate": "newData.val() === null || newData.val() === 'read' || newData.val() === 'dismissed'"
+                            }
+                        }
                     }
                 },
                 "lastPosition": {
@@ -88,7 +102,7 @@
                     ".read": "auth != null && (root.child('trips/' + $familyId + '/approvedUsers/' + auth.uid).exists() || root.child('trips/' + $familyId + '/ownerUsers/' + auth.uid).val() === true)",
                     "$tipId": {
                         ".write": "auth != null && ((!data.exists() && newData.child('uid').val() === auth.uid) || (data.exists() && (data.child('uid').val() === auth.uid || root.child('trips/' + $familyId + '/ownerUsers/' + auth.uid).val() === true))) && (root.child('trips/' + $familyId + '/approvedUsers/' + auth.uid).exists() || root.child('trips/' + $familyId + '/ownerUsers/' + auth.uid).val() === true)",
-                        ".validate": "newData.val() === null || (newData.hasChildren(['uid','lat','lng','text','timestamp']) && newData.child('text').isString() && newData.child('text').val().length <= 120)"
+                        ".validate": "newData.val() === null || (newData.hasChildren(['uid','lat','lng','text','timestamp']) && newData.child('text').isString() && newData.child('text').val().length <= 120 && newData.child('lat').isNumber() && newData.child('lat').val() >= -90 && newData.child('lat').val() <= 90 && newData.child('lng').isNumber() && newData.child('lng').val() >= -180 && newData.child('lng').val() <= 180 && newData.child('timestamp').isNumber())"
                     }
                 },
                 "playlist": {
@@ -160,13 +174,13 @@
                 ".write": "auth != null && (auth.uid === 'RxlVlsfeaEeSwFUVYbKQujEsbBo1' || auth.uid === 'Mh8BOeFPnFe7WObcsUoP6wyRgPw1' || root.child('trips/viaggio-europa-2026/ownerUsers/' + auth.uid).val() === true)"
             },
             "typing": {
-                ".read": "auth != null",
+                ".read": "auth != null && (auth.uid === 'RxlVlsfeaEeSwFUVYbKQujEsbBo1' || auth.uid === 'Mh8BOeFPnFe7WObcsUoP6wyRgPw1' || root.child('trips/' + $familyId + '/ownerUsers/' + auth.uid).val() === true || (root.child('trips/' + $familyId + '/approvedUsers/' + auth.uid).exists() && !root.child('trips/' + $familyId + '/bannedUsers/' + auth.uid).exists()))",
                 "$uid": {
                     ".write": "auth != null && (auth.uid === $uid || auth.uid === 'RxlVlsfeaEeSwFUVYbKQujEsbBo1' || auth.uid === 'Mh8BOeFPnFe7WObcsUoP6wyRgPw1' || root.child('trips/viaggio-europa-2026/ownerUsers/' + auth.uid).val() === true)"
                 }
             },
             "presence": {
-                ".read": "auth != null",
+                ".read": "auth != null && (auth.uid === 'RxlVlsfeaEeSwFUVYbKQujEsbBo1' || auth.uid === 'Mh8BOeFPnFe7WObcsUoP6wyRgPw1' || root.child('trips/' + $familyId + '/ownerUsers/' + auth.uid).val() === true || (root.child('trips/' + $familyId + '/approvedUsers/' + auth.uid).exists() && !root.child('trips/' + $familyId + '/bannedUsers/' + auth.uid).exists()))",
                 "$uid": {
                     ".write": "auth != null && (auth.uid === $uid || auth.uid === 'RxlVlsfeaEeSwFUVYbKQujEsbBo1' || auth.uid === 'Mh8BOeFPnFe7WObcsUoP6wyRgPw1' || root.child('trips/viaggio-europa-2026/ownerUsers/' + auth.uid).val() === true)"
                 }

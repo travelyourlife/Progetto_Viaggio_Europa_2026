@@ -9934,547 +9934,503 @@ var DAYS_DATA = [
     "narrativeES": "<strong>⚠️ CRÍTICO:</strong> Sol a ~11° de altura → se requiere horizonte Oeste despejado. Nada de árboles, edificios, colinas. Spot identificado el día anterior (G46). Usar <strong>PhotoPills</strong> (AR) para verificar la trayectoria del sol en el spot.<br><strong>🌧️ Plan B meteorológico:</strong> Si las previsiones 48h antes muestran nubes en Palencia, desplazarse hacia <strong>León</strong> o <strong>Valladolid</strong> (ambas en la línea de la totalidad, a 1-1,5h de distancia).<br>🎯 Día libre hasta las 19:00, luego posicionamiento en el spot elegido ayer<br>🎯 <strong>Filtros solares</strong> para todos (gafas certificadas ISO 12312-2)<br>🌑 Inicio del eclipse parcial: ~19:34 · Totalidad: ~20:29 · Fin: ~21:15"
   },
   {
-    "id": "g50",
-    "date": "13/08",
-    "title": "Palencia → Costa Brava",
-    "flags": "🇪🇸",
-    "country": "ES",
-    "region": "spagna",
-    "km": 755,
-    "hours": "8h 45m",
-    "tolls": "Caselli ~€25 (via Zaragoza, AP-2/AP-7)",
-    "tollLinks": [],
-    "meteo": {
-      "lat": 42.2871,
-      "lon": 3.2903,
-      "high": 30,
-      "low": 18,
-      "cond": "Bello e caldo",
-      "daylight": "14h di luce",
-      "condEN": "Nice and warm",
-      "condES": "Agradable y cálido",
-      "daylightEN": "14h of daylight",
-      "daylightES": "14h de luz"
-    },
-    "narrative": "🚗 Arrivo Cadaqués nel pomeriggio\n🚗 Partenza mattina presto dopo la notte dell'eclissi",
-    "highlights": [
-      {
-        "icon": "🌲",
-        "title": "Cap de Creus",
-        "text": "punta più orientale della penisola iberica, paesaggio lunare",
-        "maps": null,
-        "star": false,
-        "familyFriendly": false,
-        "titleEN": "Cap de Creus",
-        "titleES": "Cap de Creus",
-        "textEN": "easternmost point of the Iberian Peninsula, lunar landscape",
-        "textES": "punto más oriental de la península ibérica, paisaje lunar"
-      }
-    ],
-    "food": [
-      {
-        "type": "street",
-        "title": "Cadaqués street food",
-        "text": "<em>Tongas Pizza</em> (Riera de Sant Vicenç 8) — pizza take-away ~€10-12. <em>Sa Creperia</em> (Av. Caritat Serinyana) — crêpes + frozen yogurt ~€5-8, i bambini impazziscono! Gelato artigianale al porto ~€3-4.",
-        "beer": null,
-        "titleEN": "Cadaqués street food",
-        "titleES": "Comida callejera en Cadaqués",
-        "textEN": "<em>Tongas Pizza</em> (Riera de Sant Vicenç 8) — take-away pizza ~€10-12. <em>Sa Creperia</em> (Av. Caritat Serinyana) — crêpes + frozen yogurt ~€5-8, the kids go wild! Artisanal gelato at the harbor ~€3-4.",
-        "textES": "<em>Tongas Pizza</em> (Riera de Sant Vicenç 8) — pizza para llevar ~€10-12. <em>Sa Creperia</em> (Av. Caritat Serinyana) — crêpes + yogur helado ~€5-8, ¡a los niños les encanta! Helado artesanal en el puerto ~€3-4."
-      },
-      {
-        "type": "market",
-        "title": "Mercato",
-        "titleEN": "Market",
-        "text": "Mercat de Cadaqués (Riera de Sant Vicenç) — solo lunedì mattina 8:30-13:00.",
-        "schedule": "solo lunedì mattina 8:30-13:00",
-        "maps": null,
-        "titleES": "Mercado",
-        "textEN": "Mercat de Cadaqués (Riera de Sant Vicenç) — only Monday morning 8:30-13:00.",
-        "textES": "Mercat de Cadaqués (Riera de Sant Vicenç) — sólo lunes por la mañana 8:30-13:00.",
-        "scheduleEN": "only Monday morning 8:30-13:00",
-        "scheduleES": "sólo lunes por la mañana 8:30-13:00"
-      }
-    ],
-    "scooter": null,
-    "waterSports": null,
-    "trekking": null,
-    "fishing": null,
-    "events": [],
-    "alternatives": [],
-    "kids": [
-      {
-        "name": "Piscina o spiaggia",
-        "desc": "Dopo oltre 7 ore di viaggio, l'attività migliore è rilassarsi nella piscina del campeggio o in spiaggia in Costa Brava. Per i giorni successivi, il parco acquatico Aquabrava a Roses è altamente consigliato",
-        "maps": "https://maps.google.com/?q=Aquabrava+Roses",
-        "nameEN": "Pool or beach",
-        "nameES": "Piscina o playa",
-        "descEN": "After more than 7 hours of driving, the best activity is to relax in the campsite pool or on the Costa Brava beach. For the following days, the Aquabrava waterpark in Roses is highly recommended.",
-        "descES": "Tras más de 7 horas de viaje, la mejor actividad es relajarse en la piscina del camping o en la playa de la Costa Brava. Para los días siguientes, el parque acuático Aquabrava en Roses está muy recomendado."
-      }
-    ],
-    "practical": {
-      "parking": [
-        {
-          "name": "Camping Las Dunas (Sant Pere Pescador)",
-          "address": "Sant Pere Pescador",
-          "maps": "https://maps.google.com/?q=42.16098,3.10777",
-          "price": "~€60-80/notte",
-          "notes": "Elettricità, acqua, WiFi, piscina enorme, accesso alla spiaggia, parco giochi.",
-          "nameEN": "Camping Las Dunas (Sant Pere Pescador)",
-          "nameES": "Camping Las Dunas (Sant Pere Pescador)",
-          "addressEN": "Sant Pere Pescador",
-          "addressES": "Sant Pere Pescador",
-          "notesEN": "Electricity, water, WiFi, huge pool, beach access, playground.",
-          "notesES": "Electricidad, agua, WiFi, piscina enorme, acceso a la playa, zona de juego.",
-          "priceEN": "~€60-80/night",
-          "priceES": "~€60-80/noche"
-        },
-        {
-          "name": "Area Camper Roses",
-          "address": "Roses",
-          "maps": "https://maps.google.com/?q=42.2686,3.1619",
-          "price": "~€15-20/notte",
-          "notes": "Servizi camper di base, vicino al centro.",
-          "nameEN": "Area Camper Roses",
-          "nameES": "Area Camper Roses",
-          "addressEN": "Roses",
-          "addressES": "Roses",
-          "notesEN": "Basic motorhome services, close to town.",
-          "notesES": "Servicios básicos para autocaravanas, cerca del centro.",
-          "priceEN": "~€15-20/night",
-          "priceES": "~€15-20/noche"
-        }
-      ],
-      "fuel": "Repsol, Cepsa, BP, Galp, diesel ~€1.48-1.55/L. Nessun tratto isolato senza carburante su questo percorso principale.",
-      "grocery": [
-        {
-          "name": "Mercadona, Consum, Lidl, Aldi, Carrefour (Costa Brava)",
-          "location": "Costa Brava",
-          "maps": "https://maps.google.com/?q=Supermercati+Costa+Brava",
-          "nameEN": "Mercadona, Consum, Lidl, Aldi, Carrefour (Costa Brava)",
-          "nameES": "Mercadona, Consum, Lidl, Aldi, Carrefour (Costa Brava)",
-          "locationEN": "Costa Brava",
-          "locationES": "Costa Brava"
-        }
-      ],
-      "laundry": {
-        "text": "Camping Las Dunas o Lavandería Autoservicio (L'Escala o Roses)",
-        "maps": "https://maps.google.com/?q=Lavanderia+Autoservicio+Roses",
-        "textEN": "Camping Las Dunas or self-service laundromat (L'Escala or Roses)",
-        "textES": "Camping Las Dunas o lavandería autoservicio (L'Escala o Roses)"
-      },
-      "camper": {
-        "text": "Servizio completo nei campeggi e aree camper consigliati (carico acqua, scarico acque grigie/nere)",
-        "maps": "https://maps.google.com/?q=Camper+service+Costa+Brava",
-        "textEN": "Full service at the recommended campsites and motorhome areas (water refill, grey/black water discharge)",
-        "textES": "Servicio completo en los campings y áreas de autocaravanas recomendados (llenado de agua, vaciado de aguas grises/negras)"
-      },
-      "emergency": {
-        "name": "Hospital de Figueres",
-        "maps": "https://maps.google.com/?q=Hospital+de+Figueres+Figueres",
-        "phones": "112",
-        "notes": "Attenzione al traffico sulla AP-7 in estate; mettere al sicuro gli oggetti di valore nelle aree di sosta.",
-        "nameEN": "Hospital de Figueres",
-        "nameES": "Hospital de Figueres",
-        "notesEN": "Watch out for traffic on the AP-7 in summer; secure valuables in rest areas.",
-        "notesES": "Atención al tráfico en la AP-7 en verano; guarda los objetos de valor en las áreas de descanso."
-      },
-      "budget": "~€250-300/giorno",
-      "fuelEN": "Repsol, Cepsa, BP, Galp, diesel ~€1.48-1.55/L. No isolated stretches without fuel on this main route.",
-      "fuelES": "Repsol, Cepsa, BP, Galp, diesel ~€1.48-1.55/L. No hay tramos aislados sin combustible en esta ruta principal.",
-      "budgetEN": "~€250-300/day",
-      "budgetES": "~€250-300/día"
-    },
-    "titleEN": "Palencia → Costa Brava",
-    "titleES": "Palencia → Costa Brava",
-    "tollsEN": "Tolls ~€25 (via Zaragoza, AP-2/AP-7)",
-    "tollsES": "Peajes ~€25 (vía Zaragoza, AP-2/AP-7)",
-    "narrativeEN": "🚗 Arrival in Cadaqués in the afternoon\n🚗 Departure early morning after the night of the eclipse",
-    "narrativeES": "🚗 Llegada a Cadaqués por la tarde\n🚗 Salida temprano por la mañana después de la noche del eclipse"
+  "id": "g50",
+  "date": "13/08",
+  "title": "Palencia \u2192 San Sebasti\u00e1n",
+  "titleEN": "Palencia \u2192 San Sebasti\u00e1n",
+  "titleES": "Palencia \u2192 San Sebasti\u00e1n",
+  "flags": "\ud83c\uddea\ud83c\uddf8",
+  "country": "ES",
+  "region": "spagna",
+  "km": 300,
+  "hours": "3h",
+  "tolls": "Gratis",
+  "tollsEN": "Free",
+  "tollsES": "Gratis",
+  "tollLinks": [],
+  "meteo": {
+    "lat": 43.3183,
+    "lon": -1.9812,
+    "high": 26,
+    "low": 17,
+    "cond": "Clima atlantico, possibili rovesci",
+    "condEN": "Atlantic climate, possible showers",
+    "condES": "Clima atlantico, posibles chubascos",
+    "daylight": "14h di luce",
+    "daylightEN": "14h of daylight",
+    "daylightES": "14h de luz"
   },
+  "narrative": "Trasferimento verso la costa basca, tappa intermedia prima del confine francese.",
+  "narrativeEN": "Transfer to the Basque coast, an intermediate stop before the French border.",
+  "narrativeES": "Traslado a la costa vasca, parada intermedia antes de la frontera francesa.",
+  "highlights": [
+    {
+      "icon": "\ud83c\udfd6\ufe0f",
+      "title": "Playa de la Concha",
+      "titleEN": "La Concha beach",
+      "titleES": "Playa de la Concha",
+      "text": "una delle spiagge cittadine piu belle d'Europa, baia a forma di conchiglia",
+      "textEN": "one of the most beautiful city beaches in Europe, shell-shaped bay",
+      "textES": "una de las playas urbanas mas bellas de Europa, bahia con forma de concha",
+      "maps": null, "star": false, "familyFriendly": false
+    },
+    {
+      "icon": "\ud83c\udf7d\ufe0f",
+      "title": "Parte Vieja",
+      "titleEN": "Parte Vieja (Old Town)",
+      "titleES": "Parte Vieja",
+      "text": "centro storico famoso per i pintxos, la versione basca delle tapas",
+      "textEN": "old town famous for pintxos, the Basque take on tapas",
+      "textES": "casco antiguo famoso por los pintxos, la version vasca de las tapas",
+      "maps": null, "star": false, "familyFriendly": false
+    }
+  ],
+  "food": [], "scooter": null, "waterSports": null, "trekking": null, "fishing": null,
+  "events": [], "alternatives": [], "kids": [], "practical": null, "rentals": [], "fishingDetail": null
+},
   {
-    "id": "g51",
-    "date": "14/08",
-    "title": "Costa Brava (relax)",
-    "flags": "🇪🇸",
-    "country": "ES",
-    "region": "spagna",
-    "km": 30,
-    "hours": "—",
-    "tolls": "Gratis",
-    "tollLinks": [],
-    "meteo": {
-      "lat": 42.2871,
-      "lon": 3.2903,
-      "high": 29,
-      "low": 20,
-      "cond": "Bello e caldo",
-      "daylight": "14h di luce",
-      "condEN": "Beautiful and warm",
-      "condES": "Bonito y cálido",
-      "daylightEN": "14h of daylight",
-      "daylightES": "14h de luz"
-    },
-    "narrative": "",
-    "highlights": [
-      {
-        "icon": "🏛️",
-        "title": "Cadaqués",
-        "text": "borgo di Dalí",
-        "maps": "https://maps.google.com/?q=Cadaqués+Spain",
-        "star": false,
-        "familyFriendly": false,
-        "titleEN": "Cadaqués",
-        "titleES": "Cadaqués",
-        "textEN": "Dalí village",
-        "textES": "pueblo de Dalí"
-      },
-      {
-        "icon": "🌲",
-        "title": "Cap de Creus",
-        "text": "punto più orientale della penisola iberica",
-        "maps": null,
-        "star": false,
-        "familyFriendly": false,
-        "titleEN": "Cap de Creus",
-        "titleES": "Cap de Creus",
-        "textEN": "easternmost point of the Iberian Peninsula",
-        "textES": "punto más oriental de la península ibérica"
-      }
-    ],
-    "food": [
-      {
-        "type": "street",
-        "title": "Cucina catalana",
-        "titleEN": "Catalan cuisine",
-        "text": "<em>Pa amb tomàquet</em> (pane con pomodoro e olio), <em>fideuà</em> (simile alla paella ma con pasta), <em>suquet de peix</em> (zuppa di pesce), <em>anxoves de l'Escala</em> (acciughe pregiate) e <em>crema catalana</em> per finire.",
-        "beer": "Vini DO Empordà, prodotti proprio nell'entroterra della Costa Brava.",
-        "titleES": "Cocina catalana",
-        "textEN": "<em>Pa amb tomàquet</em> (bread with tomato and oil), <em>fideuà</em> (similar to paella but with noodles), <em>suquet de peix</em> (fish soup), <em>anxoves de l'Escala</em> (fine anchovies) and <em>crema catalana</em> to finish.",
-        "textES": "<em>Pa amb tomàquet</em> (pan con tomate y aceite), <em>fideuà</em> (similar a la paella pero con fideos), <em>suquet de peix</em> (sopa de pescado), <em>anxoves de l'Escala</em> (anchoas de calidad) y <em>crema catalana</em> para terminar.",
-        "beerEN": "DO Empordà wines, produced right in the interior of the Costa Brava.",
-        "beerES": "Vinos DO Empordà, producidos en el interior de la Costa Brava."
-      },
-      {
-        "type": "market",
-        "title": "Mercati e spesa",
-        "titleEN": "Markets and shopping",
-        "text": "Mercati locali di pesce e prodotti freschi nei paesi costieri; supermercati Mercadona/Consum per la spesa.",
-        "schedule": null,
-        "maps": null,
-        "titleES": "Mercados y compras",
-        "textEN": "Local fish markets and fresh produce in the coastal towns; Mercadona/Consum supermarkets for groceries.",
-        "textES": "Mercados locales de pescado y productos frescos en los pueblos costeros; supermercados Mercadona/Consum para la compra."
-      }
-    ],
-    "scooter": null,
-    "waterSports": "🏄 <strong>Noleggi:</strong> kayak guidato Costa Brava (~€30-40/persona) e SUP (~€15/h) → <a href=\"#noleggi\">vedi noleggi</a>\n🎢 <strong>Parco acquatico:</strong> <em>Water World Lloret de Mar</em> — il più grande parco acquatico della Costa Brava! Scivoli, piscine onde, area bambini. ~€35/adulto, ~€22/bambino (4-10 anni). Aperto giu-set 10:00-18:00. 45 min da Cadaqués — <a href=\"https://maps.google.com/?q=Water+World+Lloret+de+Mar\" target=\"_blank\" rel=\"noopener\">📍 Maps</a>",
-    "trekking": null,
-    "fishing": "scogliere di Cap de Creus o molo di Cadaqués — orata, sarago, spigola. ⚠️ Serve <strong>licencia de pesca marítima recreativa</strong> (~€43/3 anni online su <a href=\"https://www.fishinglicensespain.com\" target=\"_blank\" rel=\"noopener noreferrer\">fishinglicensespain.com</a>).",
-    "events": [],
-    "alternatives": [
-      {
-        "text": "<strong>Camargue</strong> (se preferite natura a mare) → vedi <a href=\"#b9\">➕ dettagli</a>",
-        "textEN": "<strong>Camargue</strong> (if you prefer nature over the sea) → see <a href=\"#b9\">➕ details</a>",
-        "textES": "<strong>Camargue</strong> (si preferís naturaleza al mar) → ver <a href=\"#b9\">➕ detalles</a>"
-      }
-    ],
-    "kids": [
-      {
-        "name": "Casa-Museo Salvador Dalí",
-        "desc": "Visita la Casa-Museo Salvador Dalí nella vicina Portlligat (prenota con largo anticipo)",
-        "maps": "https://maps.google.com/?q=Casa-Museo+Salvador+Dalí+Portlligat",
-        "nameEN": "Salvador Dalí House-Museum",
-        "nameES": "Casa-Museo Salvador Dalí",
-        "descEN": "Visit the Salvador Dalí House-Museum in nearby Portlligat (book well in advance)",
-        "descES": "Visita la Casa-Museo Salvador Dalí en la cercana Portlligat (reserva con mucha antelación)"
-      },
-      {
-        "name": "Spiagge di Cadaqués",
-        "desc": "Goditi una giornata in spiaggia nelle principali spiagge di Cadaqués o fai una breve passeggiata lungo il sentiero costiero (Camí de Ronda) per viste panoramiche e un gelato nel centro storico",
-        "maps": "https://maps.google.com/?q=Cadaqués+beach",
-        "nameEN": "Beaches of Cadaqués",
-        "nameES": "Playas de Cadaqués",
-        "descEN": "Enjoy a day on the main beaches of Cadaqués or take a short walk along the coastal path (Camí de Ronda) for panoramic views and an ice cream in the old town",
-        "descES": "Disfruta de un día en las principales playas de Cadaqués o haz una breve caminata por el sendero costero (Camí de Ronda) para vistas panorámicas y un helado en el casco antiguo"
-      }
-    ],
-    "practical": {
-      "parking": [
-        {
-          "name": "WeCamp Cadaqués",
-          "address": "Campeggio ecologico con piazzole per camper, elettricità, acqua, piscina e WiFi.",
-          "maps": "https://maps.google.com/?q=42.2914,3.2842",
-          "price": "~€45-90/notte",
-          "notes": "(Alternativa: Parking Riera de Sant Vicenç — <a href=\"https://maps.google.com/?q=42.2895,3.2758\" target=\"_blank\" rel=\"noopener\">📍 Maps</a> · ~€50/giorno in alta stagione, parcheggio base asfaltato vicino al centro).",
-          "nameEN": "WeCamp Cadaqués",
-          "nameES": "WeCamp Cadaqués",
-          "addressEN": "Eco campsite with pitches for motorhomes, electricity, water, pool and WiFi.",
-          "addressES": "Camping ecológico con parcelas para autocaravanas, electricidad, agua, piscina y WiFi.",
-          "notesEN": "(Alternative: Parking Riera de Sant Vicenç — <a href=\"https://maps.google.com/?q=42.2895,3.2758\" target=\"_blank\" rel=\"noopener\">📍 Maps</a> · ~€50/day in high season, basic paved parking close to the center).",
-          "notesES": "(Alternativa: Parking Riera de Sant Vicenç — <a href=\"https://maps.google.com/?q=42.2895,3.2758\" target=\"_blank\" rel=\"noopener\">📍 Maps</a> · ~€50/día en temporada alta, aparcamiento básico asfaltado cerca del centro).",
-          "priceEN": "~€45-90/night",
-          "priceES": "~€45-90/noche"
-        }
-      ],
-      "fuel": "Repsol, Cepsa, BP, diesel ~€1.48-1.55/L. Fai il pieno a Roses o Figueres prima della strada tortuosa per Cadaqués.",
-      "grocery": [
-        {
-          "name": "Spar o Condis a Cadaqués (Bonpreu/Esclat, Caprabo, Mercadona a Figueres/Roses)",
-          "location": "Cadaqués",
-          "maps": "https://maps.google.com/?q=Spar+Cadaqués",
-          "nameEN": "Spar or Condis in Cadaqués (Bonpreu/Esclat, Caprabo, Mercadona in Figueres/Roses)",
-          "nameES": "Spar o Condis en Cadaqués (Bonpreu/Esclat, Caprabo, Mercadona en Figueres/Roses)",
-          "locationEN": "Cadaqués",
-          "locationES": "Cadaqués"
-        }
-      ],
-      "laundry": {
-        "text": "WeCamp Cadaqués (o Lavaxpres/Bugaderia nella regione)",
-        "maps": "https://maps.google.com/?q=WeCamp+Cadaqués",
-        "textEN": "WeCamp Cadaqués (or Lavaxpres/laundromat in the region)",
-        "textES": "WeCamp Cadaqués (o Lavaxpres/Lavandería en la región)"
-      },
-      "camper": {
-        "text": "WeCamp Cadaqués (servizi completi per gli ospiti)",
-        "maps": "https://maps.google.com/?q=WeCamp+Cadaqués",
-        "textEN": "WeCamp Cadaqués (full services for guests)",
-        "textES": "WeCamp Cadaqués (servicios completos para los huéspedes)"
-      },
-      "emergency": {
-        "name": "Hospital Universitari Dr. Josep Trueta a Girona",
-        "maps": "https://maps.google.com/?q=Hospital+Universitari+Dr.+Josep+Trueta+Girona",
-        "phones": "112",
-        "notes": null,
-        "nameEN": "Hospital Universitari Dr. Josep Trueta in Girona",
-        "nameES": "Hospital Universitari Dr. Josep Trueta en Girona"
-      },
-      "budget": "~€130-160/giorno",
-      "fuelEN": "Repsol, Cepsa, BP, diesel ~€1.48-1.55/L. Fill up in Roses or Figueres before the winding road to Cadaqués.",
-      "fuelES": "Repsol, Cepsa, BP, diésel ~€1.48-1.55/L. Llena el depósito en Roses o Figueres antes de la carretera sinuosa hacia Cadaqués.",
-      "budgetEN": "~€130-160/day",
-      "budgetES": "~€130-160/día"
-    },
-    "rentals": [
-      {
-        "icon": "🛶",
-        "title": "Noleggio kayak — Costa Brava",
-        "titleEN": "Kayak rental — Costa Brava",
-        "text": "<a href=\"https://www.kayakadventure.cat/en/\" target=\"_blank\" rel=\"noopener\">Kayak Adventure</a>. ~€30-40/persona. Tour guidato 2.5h, double kayak, bambini ≤13.",
-        "titleES": "Alquiler de kayak — Costa Brava",
-        "textEN": "<a href=\"https://www.kayakadventure.cat/en/\" target=\"_blank\" rel=\"noopener\">Kayak Adventure</a>. ~€30-40/person. 2.5h guided tour, double kayak, children ≤13.",
-        "textES": "<a href=\"https://www.kayakadventure.cat/en/\" target=\"_blank\" rel=\"noopener\">Kayak Adventure</a>. ~€30-40/persona. Tour guiado 2,5h, kayak doble, niños ≤13."
-      },
-      {
-        "icon": "🏄",
-        "title": "Noleggio SUP — Costa Brava",
-        "titleEN": "SUP Rental — Costa Brava",
-        "text": "Noleggi lungo spiaggia. ~€15/h. Disponibile ovunque.",
-        "titleES": "Alquiler de SUP — Costa Brava",
-        "textEN": "Rentals along the beach. ~€15/h. Available everywhere.",
-        "textES": "Alquileres a lo largo de la playa. ~€15/h. Disponibles en todas partes."
-      }
-    ],
-    "fishingDetail": {
-      "zone": "Spagna — Costa Brava",
-      "license": "Licencia de pesca marítima.",
-      "spots": [
-        {
-          "name": "Cap de Creus, molo Cadaqués",
-          "text": "Orata, spigola.",
-          "nameEN": "Cap de Creus, Cadaqués pier",
-          "nameES": "Cap de Creus, muelle de Cadaqués",
-          "textEN": "gilthead bream, sea bass.",
-          "textES": "dorada, lubina."
-        }
-      ],
-      "zoneEN": "Spain — Costa Brava",
-      "zoneES": "España — Costa Brava",
-      "licenseEN": "Maritime fishing license.",
-      "licenseES": "Licencia de pesca marítima."
-    },
-    "titleEN": "Costa Brava (relax)",
-    "titleES": "Costa Brava (relajación)",
-    "tollsEN": "Free",
-    "tollsES": "Gratis",
-    "waterSportsEN": "🏄 <strong>Rentals:</strong> guided kayak on the Costa Brava (~€30-40/person) and SUP (~€15/h) → <a href=\"#noleggi\">see rentals</a>\n🎢 <strong>Water park:</strong> <em>Water World Lloret de Mar</em> — the largest water park on the Costa Brava! Slides, wave pools, kids area. ~€35/adult, ~€22/child (4-10 years). Open Jun-Sep 10:00-18:00. 45 min from Cadaqués — <a href=\"https://maps.google.com/?q=Water+World+Lloret+de+Mar\" target=\"_blank\" rel=\"noopener\">📍 Maps</a>",
-    "waterSportsES": "🏄 <strong>Alquileres:</strong> kayak guiado Costa Brava (~€30-40/persona) y SUP (~€15/h) → <a href=\"#noleggi\">ver alquileres</a>\n🎢 <strong>Parque acuático:</strong> <em>Water World Lloret de Mar</em> — ¡el parque acuático más grande de la Costa Brava! Toboganes, piscinas de olas, zona infantil. ~€35/adulto, ~€22/niño (4-10 años). Abierto jun-sep 10:00-18:00. 45 min desde Cadaqués — <a href=\"https://maps.google.com/?q=Water+World+Lloret+de+Mar\" target=\"_blank\" rel=\"noopener\">📍 Maps</a>",
-    "fishingEN": "cliffs of Cap de Creus or the pier of Cadaqués — gilthead bream, white seabream, sea bass. ⚠️ You need <strong>recreational sea fishing license</strong> (~€43/3 years online at <a href=\"https://www.fishinglicensespain.com\" target=\"_blank\" rel=\"noopener noreferrer\">fishinglicensespain.com</a>).",
-    "fishingES": "acantilados de Cap de Creus o el muelle de Cadaqués — dorada, sargo, lubina. ⚠️ Se necesita <strong>licencia de pesca marítima recreativa</strong> (~€43/3 años en línea en <a href=\"https://www.fishinglicensespain.com\" target=\"_blank\" rel=\"noopener noreferrer\">fishinglicensespain.com</a>)."
+  "id": "g51",
+  "date": "14/08",
+  "title": "San Sebastián → Pau (Pirenei)",
+  "titleEN": "San Sebastián → Pau (Pyrenees)",
+  "titleES": "San Sebastián → Pau (Pirineos)",
+  "flags": "🇪🇸→🇫🇷",
+  "country": "FR",
+  "region": "francia",
+  "km": 163,
+  "hours": "1h 50m",
+  "tolls": "Caselli Francia ~€8-10 (A63/A64)",
+  "tollsEN": "France tolls ~€8-10 (A63/A64)",
+  "tollsES": "Peajes Francia ~€8-10 (A63/A64)",
+  "tollLinks": [],
+  "meteo": {
+    "lat": 43.2951,
+    "lon": -0.3708,
+    "high": 27,
+    "low": 15,
+    "cond": "Bello, clima di piedimonte",
+    "condEN": "Fine, foothill climate",
+    "condES": "Bueno, clima de piedemonte",
+    "daylight": "13h di luce",
+    "daylightEN": "13h of daylight",
+    "daylightES": "13h de luz"
   },
+  "narrative": "Trasferimento verso i Pirenei francesi.",
+  "narrativeEN": "Transfer to the French Pyrenees.",
+  "narrativeES": "Traslado a los Pirineos franceses.",
+  "highlights": [
+    {
+      "icon": "🏔️",
+      "title": "Boulevard des Pyrénées",
+      "titleEN": "Boulevard des Pyrénées",
+      "titleES": "Boulevard des Pyrénées",
+      "text": "passeggiata panoramica con vista sulle vette pirenaiche, voluta da Napoleone nel 1808",
+      "textEN": "panoramic promenade with views of the Pyrenean peaks, commissioned by Napoleon in 1808",
+      "textES": "paseo panorámico con vistas a los picos pirenaicos, encargado por Napoleón en 1808",
+      "maps": null,
+      "star": false,
+      "familyFriendly": false
+    },
+    {
+      "icon": "🏰",
+      "title": "Château de Pau",
+      "titleEN": "Château de Pau",
+      "titleES": "Château de Pau",
+      "text": "castello rinascimentale, luogo di nascita di Enrico IV — arazzi e arredi d'epoca",
+      "textEN": "Renaissance castle, birthplace of Henry IV — tapestries and period furnishings",
+      "textES": "castillo renacentista, lugar de nacimiento de Enrique IV — tapices y mobiliario de época",
+      "maps": null,
+      "star": false,
+      "familyFriendly": false
+    }
+  ],
+  "food": [],
+  "scooter": null,
+  "waterSports": null,
+  "trekking": null,
+  "fishing": null,
+  "events": [],
+  "alternatives": [],
+  "kids": [],
+  "practical": null,
+  "rentals": [],
+  "fishingDetail": null
+},
   {
-    "id": "g52",
-    "date": "15/08",
-    "title": "Costa Brava → Costa Azzurra",
-    "titleEN": "Costa Brava → French Riviera",
-    "flags": "🇪🇸→🇫🇷",
-    "country": "FR",
-    "region": "francia",
-    "km": 600,
-    "hours": "7h",
-    "tolls": "Caselli Francia ~€30",
-    "tollLinks": [],
-    "meteo": {
-      "lat": 43.5528,
-      "lon": 7.0174,
-      "high": 30,
-      "low": 18,
-      "cond": "Molto bello",
-      "daylight": "14h di luce",
-      "condEN": "Very beautiful",
-      "condES": "Muy bonito",
-      "daylightEN": "14h of daylight",
-      "daylightES": "14h de luz"
-    },
-    "narrative": "⚠️ <strong>FERRAGOSTO = BOLLINO NERO!</strong> Traffico intensissimo su autostrade francesi e spagnole. Partire alle 6:00 o considerare sosta intermedia in Provenza.\n🎯 Mare e relax",
-    "highlights": [],
-    "food": [
-      {
-        "type": "street",
-        "title": "Cucina nizzarda/provenzale",
-        "titleEN": "Niçoise/Provençal cuisine",
-        "text": "<em>Socca</em> (farinata di ceci, da mangiare calda nei chioschi del Vieux Nice ~€3-4), <em>pan-bagnat</em> (panino con tonno, uova, verdure ~€6-8), <em>pissaladière</em> (focaccia con cipolle e acciughe), <em>salade niçoise</em>, <em>ratatouille</em>, <em>tapenade</em> e <em>aïoli</em>.",
-        "beer": null,
-        "titleES": "Cocina nizzarda/provenzale",
-        "textEN": "<em>Socca</em> (chickpea flatbread, to eat hot at the Vieux Nice stalls ~€3-4), <em>pan-bagnat</em> (sandwich with tuna, eggs, vegetables ~€6-8), <em>pissaladière</em> (focaccia with onions and anchovies), <em>salade niçoise</em>, <em>ratatouille</em>, <em>tapenade</em> and <em>aïoli</em>.",
-        "textES": "<em>Socca</em> (tortita de harina de garbanzo, para comer caliente en los puestos del Vieux Nice ~€3-4), <em>pan-bagnat</em> (bocadillo con atún, huevos, verduras ~€6-8), <em>pissaladière</em> (focaccia con cebollas y anchoas), <em>salade niçoise</em>, <em>ratatouille</em>, <em>tapenade</em> y <em>aïoli</em>."
-      },
-      {
-        "type": "market",
-        "title": "Mercati provenzali",
-        "titleEN": "Provençal markets",
-        "text": "Cours Saleya a Nizza (frutta, fiori, olive, formaggi) e i mercati dei paesi costieri: ottimi per la spesa e i prodotti locali.",
-        "schedule": null,
-        "maps": "Cours Saleya Nice",
-        "titleES": "Mercados provenzales",
-        "textEN": "Cours Saleya a Nizza (fruit, flowers, olives, cheeses) and the markets of the coastal towns: great for shopping and local products.",
-        "textES": "Cours Saleya a Nizza (fruta, flores, aceitunas, quesos) y los mercados de los pueblos costeros: ideales para comprar y para los productos locales."
-      }
-    ],
-    "scooter": "🛴 <strong>Monopattini:</strong> lungomari e passeggiate a mare, ideale la sera → <a href=\"#noleggi\">vedi noleggi</a>",
-    "waterSports": "Spiagge e calette lungo la Costa Azzurra: nuoto, snorkeling e SUP/kayak a noleggio nelle località balneari (Saint-Tropez, Sainte-Maxime, Cannes). Acque generalmente calme in estate → <a href=\"#noleggi\">vedi noleggi</a>",
-    "trekking": null,
-    "fishing": "🎣 <strong>Pesca:</strong> moli della Costa Azzurra (Antibes, Cannes, Menton) — orata, sarago, muggine. GRATIS in mare (Francia, pesca da riva in mare senza licenza).",
-    "events": [],
-    "alternatives": [
-      {
-        "text": "<strong>Camargue</strong> (fenicotteri, cavalli bianchi) → vedi <a href=\"#b9\">➕ dettagli</a>",
-        "textEN": "<strong>Camargue</strong> (flamingos, white horses) → see <a href=\"#b9\">➕ details</a>",
-        "textES": "<strong>Camargue</strong> (flamencos, caballos blancos) → ver <a href=\"#b9\">➕ detalles</a>"
-      }
-    ],
-    "kids": [
-      {
-        "name": "Spiaggia Villeneuve-Loubet",
-        "desc": "Pomeriggio rilassante in spiaggia a Villeneuve-Loubet o in piscina nel campeggio dopo il lungo viaggio.",
-        "maps": "https://maps.google.com/?q=Spiaggia+Villeneuve-Loubet",
-        "nameEN": "Spiaggia Villeneuve-Loubet",
-        "nameES": "Playa Villeneuve-Loubet",
-        "descEN": "Relaxing afternoon on the beach at Villeneuve-Loubet or in the campsite pool after the long drive.",
-        "descES": "Tarde relajante en la playa de Villeneuve-Loubet o en la piscina del camping después del largo viaje."
-      },
-      {
-        "name": "Marineland ad Antibes",
-        "desc": "Marineland ad Antibes è un'ottima opzione nelle vicinanze per i bambini.",
-        "maps": "https://maps.google.com/?q=Marineland+Antibes",
-        "nameEN": "Marineland ad Antibes",
-        "nameES": "Marineland en Antibes",
-        "descEN": "Marineland ad Antibes is a great nearby option for kids.",
-        "descES": "Marineland en Antibes es una excelente opción cercana para los niños."
-      }
-    ],
-    "practical": {
-      "parking": [
-        {
-          "name": "Camping de La Vieille Ferme (Villeneuve-Loubet)",
-          "address": "Villeneuve-Loubet",
-          "maps": "https://maps.google.com/?q=43.6264,7.1236",
-          "price": "~€60/notte",
-          "notes": "Elettricità, acqua, WiFi, piscina, parco giochi, area di servizio camper. Alternativa: Camping Les Cigales (Mandelieu-la-Napoule).",
-          "nameEN": "Camping de La Vieille Ferme (Villeneuve-Loubet)",
-          "nameES": "Camping de La Vieille Ferme (Villeneuve-Loubet)",
-          "addressEN": "Villeneuve-Loubet",
-          "addressES": "Villeneuve-Loubet",
-          "notesEN": "Electricity, water, WiFi, pool, playground, camper service area. Alternative: Camping Les Cigales (Mandelieu-la-Napoule).",
-          "notesES": "Electricidad, agua, WiFi, piscina, parque infantil, área de servicio para autocaravanas. Alternativa: Camping Les Cigales (Mandelieu-la-Napoule).",
-          "priceEN": "~€60/night",
-          "priceES": "~€60/noche"
-        }
-      ],
-      "fuel": "Repsol, Cepsa (Spagna), TotalEnergies, Esso, Carrefour, E.Leclerc (Francia), diesel ~€1.48-1.55/L (ES) / ~€1.85-1.92/L (FR). Fai il pieno in Spagna prima del confine, il diesel è più economico. Nessun tratto isolato.",
-      "grocery": [
-        {
-          "name": "Carrefour, E.Leclerc, Auchan, Casino, Lidl",
-          "location": "Villeneuve-Loubet",
-          "maps": "https://maps.google.com/?q=Supermercati+Villeneuve-Loubet",
-          "nameEN": "Carrefour, E.Leclerc, Auchan, Casino, Lidl",
-          "nameES": "Carrefour, E.Leclerc, Auchan, Casino, Lidl",
-          "locationEN": "Villeneuve-Loubet",
-          "locationES": "Villeneuve-Loubet"
-        }
-      ],
-      "laundry": {
-        "text": "Lavanderia nel campeggio o Wash'n Dry (Villeneuve-Loubet/Antibes)",
-        "maps": "https://maps.google.com/?q=Wash'n+Dry+Villeneuve-Loubet",
-        "textEN": "Laundry at the campsite or Wash'n Dry (Villeneuve-Loubet/Antibes)",
-        "textES": "Lavandería en el camping o Wash'n Dry (Villeneuve-Loubet/Antibes)"
-      },
-      "camper": {
-        "text": "Carico/scarico nel campeggio o stazioni \"Flot Bleu\" nelle aree di sosta (Aires) sull'autostrada A8",
-        "maps": "https://maps.google.com/?q=Flot+Bleu+A8+France",
-        "textEN": "Fill/drain at the campsite or \"Flot Bleu\" stations in rest areas (Aires) on the A8 motorway",
-        "textES": "Carga/descarga en el camping o estaciones \"Flot Bleu\" en las áreas de servicio (Aires) en la autopista A8"
-      },
-      "emergency": {
-        "name": "Centre Hospitalier d'Antibes",
-        "maps": "https://maps.google.com/?q=Centre+Hospitalier+Antibes",
-        "phones": "112",
-        "notes": "Attenzione: traffico molto intenso sulla A8 per le festività. Assicurati che il camper sia ben chiuso nelle aree di sosta per evitare furti.",
-        "nameEN": "Centre Hospitalier d'Antibes",
-        "nameES": "Centre Hospitalier d'Antibes",
-        "notesEN": "Warning: very heavy traffic on the A8 during holidays. Make sure the camper is well locked in rest areas to avoid theft.",
-        "notesES": "Atención: tráfico muy intenso en la A8 durante las fiestas. Asegúrate de que la autocaravana esté bien cerrada en las áreas de descanso para evitar robos."
-      },
-      "budget": "~€250-300/giorno",
-      "fuelEN": "Repsol, Cepsa (Spain), TotalEnergies, Esso, Carrefour, E.Leclerc (France), diesel ~€1.48-1.55/L (ES) / ~€1.85-1.92/L (FR). Fill up in Spain before the border, diesel is cheaper. No isolated stretches.",
-      "fuelES": "Repsol, Cepsa (España), TotalEnergies, Esso, Carrefour, E.Leclerc (Francia), diesel ~€1.48-1.55/L (ES) / ~€1.85-1.92/L (FR). Haz el depósito en España antes de la frontera, el diésel es más barato. Ningún tramo aislado.",
-      "budgetEN": "~€250-300/giorno",
-      "budgetES": "~€250-300/giorno"
-    },
-    "fishingDetail": {
-      "zone": "Francia — Costa Azzurra",
-      "license": "Pesca da riva GRATIS, nessuna licenza.",
-      "spots": [
-        {
-          "name": "Moli di Antibes, Cannes, Menton",
-          "text": "Orata, sarago. GRATIS.",
-          "nameEN": "Piers of Antibes, Cannes, Menton",
-          "nameES": "Molos de Antibes, Cannes, Menton",
-          "textEN": "Orata, sarago. FREE.",
-          "textES": "Orata, sarago. GRATIS."
-        }
-      ],
-      "zoneEN": "Francia — Costa Azzurra",
-      "zoneES": "Francia — Costa Azzurra",
-      "licenseEN": "Shore fishing FREE, no license required.",
-      "licenseES": "Pesca desde la orilla GRATIS, no se requiere licencia."
-    },
-    "titleES": "Costa Brava → Costa Azzurra",
-    "tollsEN": "Tolls Francia ~€30",
-    "tollsES": "Peajes Francia ~€30",
-    "narrativeEN": "⚠️ <strong>FERRAGOSTO = BLACK ALERT!</strong> Very heavy traffic on French and Spanish motorways. Depart at 6:00 or consider an intermediate stop in Provence.\n🎯 Sea and relaxation",
-    "narrativeES": "⚠️ <strong>FERRAGOSTO = ALERTA NEGRA!</strong> Tráfico muy intenso en autopistas francesas y españolas. Salir a las 6:00 o considerar una parada intermedia en Provenza.\n🎯 Mar y relax",
-    "scooterEN": "🛴 <strong>E-scooters:</strong> seafront promenades and waterfront walks, ideal in the evening → <a href=\"#noleggi\">see rentals</a>",
-    "scooterES": "🛴 <strong>Patinetes eléctricos:</strong> paseos por el paseo marítimo y la orilla, ideal por la noche → <a href=\"#noleggi\">ver alquileres</a>",
-    "waterSportsEN": "Beaches and coves along the Costa Azzurra: swimming, snorkeling and SUP/kayak rentals in the seaside resorts (Saint-Tropez, Sainte-Maxime, Cannes). Waters generally calm in summer → <a href=\"#noleggi\">see rentals</a>",
-    "waterSportsES": "Playas y calas a lo largo de la Costa Azzurra: natación, snorkel y alquiler de SUP/kayak en las localidades de playa (Saint-Tropez, Sainte-Maxime, Cannes). Aguas generalmente tranquilas en verano → <a href=\"#noleggi\">ver alquileres</a>",
-    "fishingEN": "🎣 <strong>Fishing:</strong> piers of the Costa Azzurra (Antibes, Cannes, Menton) — gilthead bream, seabream, mullet. FREE at sea (France, shore fishing at sea without a license).",
-    "fishingES": "🎣 <strong>Pesca:</strong> muelles de la Costa Azzurra (Antibes, Cannes, Menton) — dorada, sargo, lisa. GRATIS en mar (Francia, pesca desde la orilla en mar sin licencia)."
+  "id": "g52",
+  "date": "15/08",
+  "title": "Pau (Pirenei Francesi)",
+  "titleEN": "Pau (French Pyrenees)",
+  "titleES": "Pau (Pirineos Franceses)",
+  "flags": "🇫🇷",
+  "country": "FR",
+  "region": "francia",
+  "km": 20,
+  "hours": "—",
+  "tolls": "Gratis",
+  "tollsEN": "Free",
+  "tollsES": "Gratis",
+  "tollLinks": [],
+  "meteo": {
+    "lat": 43.2951,
+    "lon": -0.3708,
+    "high": 28,
+    "low": 15,
+    "cond": "Bello, clima di piedimonte",
+    "condEN": "Fine, foothill climate",
+    "condES": "Bueno, clima de piedemonte",
+    "daylight": "13h di luce",
+    "daylightEN": "13h of daylight",
+    "daylightES": "13h de luz"
   },
+  "narrative": "Giornata dedicata a Pau e ai dintorni pirenaici.",
+  "narrativeEN": "Day dedicated to Pau and the surrounding Pyrenees.",
+  "narrativeES": "Día dedicado a Pau y los alrededores pirenaicos.",
+  "highlights": [
+    {
+      "icon": "🌲",
+      "title": "Parc Beaumont",
+      "titleEN": "Parc Beaumont",
+      "titleES": "Parc Beaumont",
+      "text": "parco cittadino con laghetto, prati e alberi secolari — ideale per una pausa in famiglia",
+      "textEN": "city park with a small lake, lawns and centuries-old trees — great for a family break",
+      "textES": "parque de la ciudad con lago, césped y árboles centenarios — ideal para un descanso en familia",
+      "maps": null,
+      "star": false,
+      "familyFriendly": false
+    },
+    {
+      "icon": "⛰️",
+      "title": "Valle di Ossau",
+      "titleEN": "Ossau Valley",
+      "titleES": "Valle de Ossau",
+      "text": "escursione in quota (facoltativa) verso il Pic du Midi d'Ossau, ben visibile dal Boulevard",
+      "textEN": "optional excursion up toward the Pic du Midi d'Ossau, clearly visible from the Boulevard",
+      "textES": "excursión opcional hacia el Pic du Midi d'Ossau, bien visible desde el Boulevard",
+      "maps": null,
+      "star": false,
+      "familyFriendly": false
+    }
+  ],
+  "food": [],
+  "scooter": null,
+  "waterSports": null,
+  "trekking": null,
+  "fishing": null,
+  "events": [],
+  "alternatives": [],
+  "kids": [],
+  "practical": null,
+  "rentals": [],
+  "fishingDetail": null
+},
   {
-    "id": "g53",
-    "date": "16/08",
+  "id": "g53",
+  "date": "16/08",
+  "title": "Pau → Carcassonne",
+  "titleEN": "Pau → Carcassonne",
+  "titleES": "Pau → Carcassonne",
+  "flags": "🇫🇷",
+  "country": "FR",
+  "region": "francia",
+  "km": 280,
+  "hours": "2h 45m",
+  "tolls": "Caselli Francia ~€15-20",
+  "tollsEN": "France tolls ~€15-20",
+  "tollsES": "Peajes Francia ~€15-20",
+  "tollLinks": [],
+  "meteo": {
+    "lat": 43.213,
+    "lon": 2.3491,
+    "high": 30,
+    "low": 17,
+    "cond": "Caldo, tipico dell'entroterra occitano",
+    "condEN": "Warm, typical of the Occitan hinterland",
+    "condES": "Cálido, típico del interior occitano",
+    "daylight": "13h di luce",
+    "daylightEN": "13h of daylight",
+    "daylightES": "13h de luz"
+  },
+  "narrative": "Trasferimento verso Carcassonne.",
+  "narrativeEN": "Transfer to Carcassonne.",
+  "narrativeES": "Traslado a Carcassonne.",
+  "highlights": [
+    {
+      "icon": "🏰",
+      "title": "Cité médiévale di Carcassonne",
+      "titleEN": "Carcassonne medieval Cité",
+      "titleES": "Cité medieval de Carcassonne",
+      "text": "prima occhiata alla fortezza UNESCO al tramonto, con le sue 52 torri e 3 km di mura",
+      "textEN": "first glimpse of the UNESCO fortress at sunset, with its 52 towers and 3 km of walls",
+      "textES": "primer vistazo a la fortaleza UNESCO al atardecer, con sus 52 torres y 3 km de murallas",
+      "maps": null,
+      "star": false,
+      "familyFriendly": false
+    }
+  ],
+  "food": [],
+  "scooter": null,
+  "waterSports": null,
+  "trekking": null,
+  "fishing": null,
+  "events": [],
+  "alternatives": [],
+  "kids": [],
+  "practical": null,
+  "rentals": [],
+  "fishingDetail": null
+},
+  {
+  "id": "g54",
+  "date": "17/08",
+  "title": "Carcassonne",
+  "titleEN": "Carcassonne",
+  "titleES": "Carcassonne",
+  "flags": "🇫🇷",
+  "country": "FR",
+  "region": "francia",
+  "km": 15,
+  "hours": "—",
+  "tolls": "Gratis (accesso alla Cité libero e gratuito)",
+  "tollsEN": "Free (access to the Cité is free)",
+  "tollsES": "Gratis (acceso a la Cité gratuito)",
+  "tollLinks": [],
+  "meteo": {
+    "lat": 43.213,
+    "lon": 2.3491,
+    "high": 31,
+    "low": 18,
+    "cond": "Caldo, tipico dell'entroterra occitano",
+    "condEN": "Warm, typical of the Occitan hinterland",
+    "condES": "Cálido, típico del interior occitano",
+    "daylight": "13h di luce",
+    "daylightEN": "13h of daylight",
+    "daylightES": "13h de luz"
+  },
+  "narrative": "Giornata intera nella Cité medievale, patrimonio UNESCO.",
+  "narrativeEN": "Full day in the medieval Cité, UNESCO World Heritage.",
+  "narrativeES": "Día completo en la Cité medieval, patrimonio UNESCO.",
+  "highlights": [
+    {
+      "icon": "🏰",
+      "title": "Château Comtal e bastioni",
+      "titleEN": "Château Comtal and ramparts",
+      "titleES": "Château Comtal y murallas",
+      "text": "fortezza nel cuore della Cité, sede storica dei visconti Trencavel — visita guidata dei bastioni",
+      "textEN": "fortress at the heart of the Cité, historic seat of the Trencavel viscounts — guided tour of the ramparts",
+      "textES": "fortaleza en el corazón de la Cité, sede histórica de los vizcondes Trencavel — visita guiada de las murallas",
+      "maps": null,
+      "star": false,
+      "familyFriendly": false
+    },
+    {
+      "icon": "⛪",
+      "title": "Basilica di Saint-Nazaire",
+      "titleEN": "Basilica of Saint-Nazaire",
+      "titleES": "Basílica de Saint-Nazaire",
+      "text": "gioiello gotico-romanico dentro le mura, vetrate tra le più belle dell'Occitania",
+      "textEN": "Gothic-Romanesque gem inside the walls, some of the finest stained glass in Occitania",
+      "textES": "joya gótico-románica dentro de las murallas, vidrieras entre las más bellas de Occitania",
+      "maps": null,
+      "star": false,
+      "familyFriendly": false
+    },
+    {
+      "icon": "🌙",
+      "title": "Remparts et Lumières",
+      "titleEN": "Remparts et Lumières light show",
+      "titleES": "Remparts et Lumières",
+      "text": "spettacolo serale di luci sulle mura che racconta la storia della città — gratuito, adatto a famiglie",
+      "textEN": "evening light show on the walls telling the city's history — free, family-friendly",
+      "textES": "espectáculo nocturno de luces en las murallas que narra la historia de la ciudad — gratuito, apto para familias",
+      "maps": null,
+      "star": false,
+      "familyFriendly": false
+    }
+  ],
+  "food": [],
+  "scooter": null,
+  "waterSports": null,
+  "trekking": null,
+  "fishing": null,
+  "events": [],
+  "alternatives": [],
+  "kids": [],
+  "practical": null,
+  "rentals": [],
+  "fishingDetail": null
+},
+  {
+  "id": "g55",
+  "date": "18/08",
+  "title": "Carcassonne → Costa Azzurra",
+  "titleEN": "Carcassonne → French Riviera",
+  "titleES": "Carcassonne → Costa Azul",
+  "flags": "🇫🇷",
+  "country": "FR",
+  "region": "francia",
+  "km": 472,
+  "hours": "4h 30m",
+  "tolls": "Caselli Francia ~€35-40",
+  "tollsEN": "France tolls ~€35-40",
+  "tollsES": "Peajes Francia ~€35-40",
+  "tollLinks": [],
+  "meteo": {
+    "lat": 43.5528,
+    "lon": 7.0174,
+    "high": 29,
+    "low": 20,
+    "cond": "Molto bello e caldo",
+    "condEN": "Very fine and warm",
+    "condES": "Muy bueno y cálido",
+    "daylight": "13h di luce",
+    "daylightEN": "13h of daylight",
+    "daylightES": "13h de luz"
+  },
+  "narrative": "Trasferimento verso la Costa Azzurra, per tre giorni di relax.",
+  "narrativeEN": "Transfer to the French Riviera, for three relaxing days.",
+  "narrativeES": "Traslado a la Costa Azul, para tres días de relax.",
+  "highlights": [
+    {
+      "icon": "🏖️",
+      "title": "Arrivo in Costa Azzurra",
+      "titleEN": "Arrival on the French Riviera",
+      "titleES": "Llegada a la Costa Azul",
+      "text": "inizio di 3 giorni di relax lungo la costa mediterranea francese",
+      "textEN": "start of 3 relaxing days along the French Mediterranean coast",
+      "textES": "inicio de 3 días de relax en la costa mediterránea francesa",
+      "maps": null,
+      "star": false,
+      "familyFriendly": false
+    }
+  ],
+  "food": [],
+  "scooter": null,
+  "waterSports": null,
+  "trekking": null,
+  "fishing": null,
+  "events": [],
+  "alternatives": [],
+  "kids": [],
+  "practical": null,
+  "rentals": [],
+  "fishingDetail": null
+},
+  {
+  "id": "g56",
+  "date": "19/08",
+  "title": "Costa Azzurra (relax)",
+  "titleEN": "French Riviera (relax)",
+  "titleES": "Costa Azul (relax)",
+  "flags": "🇫🇷",
+  "country": "FR",
+  "region": "francia",
+  "km": 20,
+  "hours": "—",
+  "tolls": "Gratis",
+  "tollsEN": "Free",
+  "tollsES": "Gratis",
+  "tollLinks": [],
+  "meteo": {
+    "lat": 43.5528,
+    "lon": 7.0174,
+    "high": 29,
+    "low": 21,
+    "cond": "Molto bello e caldo",
+    "condEN": "Very fine and warm",
+    "condES": "Muy bueno y cálido",
+    "daylight": "13h di luce",
+    "daylightEN": "13h of daylight",
+    "daylightES": "13h de luz"
+  },
+  "narrative": "Giornata di relax in Costa Azzurra.",
+  "narrativeEN": "Relaxing day on the French Riviera.",
+  "narrativeES": "Día de relax en la Costa Azul.",
+  "highlights": [
+    {
+      "icon": "🏖️",
+      "title": "Spiagge della Costa Azzurra",
+      "titleEN": "Beaches of the French Riviera",
+      "titleES": "Playas de la Costa Azul",
+      "text": "giornata di mare e relax lungo la costa tra Nizza e Villefranche-sur-Mer",
+      "textEN": "day at the beach and relaxing along the coast between Nice and Villefranche-sur-Mer",
+      "textES": "día de playa y relax en la costa entre Niza y Villefranche-sur-Mer",
+      "maps": null,
+      "star": false,
+      "familyFriendly": false
+    }
+  ],
+  "food": [],
+  "scooter": null,
+  "waterSports": null,
+  "trekking": null,
+  "fishing": null,
+  "events": [],
+  "alternatives": [],
+  "kids": [],
+  "practical": null,
+  "rentals": [],
+  "fishingDetail": null
+},
+  {
+  "id": "g57",
+  "date": "20/08",
+  "title": "Costa Azzurra (relax)",
+  "titleEN": "French Riviera (relax)",
+  "titleES": "Costa Azul (relax)",
+  "flags": "🇫🇷",
+  "country": "FR",
+  "region": "francia",
+  "km": 20,
+  "hours": "—",
+  "tolls": "Gratis",
+  "tollsEN": "Free",
+  "tollsES": "Gratis",
+  "tollLinks": [],
+  "meteo": {
+    "lat": 43.5528,
+    "lon": 7.0174,
+    "high": 29,
+    "low": 21,
+    "cond": "Molto bello e caldo",
+    "condEN": "Very fine and warm",
+    "condES": "Muy bueno y cálido",
+    "daylight": "13h di luce",
+    "daylightEN": "13h of daylight",
+    "daylightES": "13h de luz"
+  },
+  "narrative": "Secondo giorno di relax in Costa Azzurra.",
+  "narrativeEN": "Second relaxing day on the French Riviera.",
+  "narrativeES": "Segundo día de relax en la Costa Azul.",
+  "highlights": [
+    {
+      "icon": "🚤",
+      "title": "Villefranche-sur-Mer o Cap Ferrat",
+      "titleEN": "Villefranche-sur-Mer or Cap Ferrat",
+      "titleES": "Villefranche-sur-Mer o Cap Ferrat",
+      "text": "baia pittoresca e sentieri costieri, tra le zone più belle della Costa Azzurra",
+      "textEN": "picturesque bay and coastal trails, among the most beautiful spots on the Riviera",
+      "textES": "bahía pintoresca y senderos costeros, entre las zonas más bellas de la Costa Azul",
+      "maps": null,
+      "star": false,
+      "familyFriendly": false
+    }
+  ],
+  "food": [],
+  "scooter": null,
+  "waterSports": null,
+  "trekking": null,
+  "fishing": null,
+  "events": [],
+  "alternatives": [],
+  "kids": [],
+  "practical": null,
+  "rentals": [],
+  "fishingDetail": null
+},
+  {
+    "id": "g58",
+    "date": "21/08",
     "title": "Costa Azzurra → Genova",
     "titleEN": "French Riviera → Genoa",
     "flags": "🇫🇷→🇮🇹",
@@ -10662,260 +10618,8 @@ var DAYS_DATA = [
     "fishingES": "Liguria — pesca en mar libre sin licencia (solo desde la orilla/muelle) → <a href=\"#pesca-italia\">detalles del lugar</a>"
   },
   {
-    "id": "g54",
-    "date": "17/08",
-    "title": "Genova",
-    "titleEN": "Genoa",
-    "flags": "🇮🇹",
-    "country": "IT",
-    "region": "italia",
-    "km": 0,
-    "hours": null,
-    "tolls": null,
-    "tollLinks": [],
-    "meteo": {
-      "lat": 44.4056,
-      "lon": 8.9463,
-      "high": 29,
-      "low": 21,
-      "cond": "Caldo",
-      "daylight": "14h di luce",
-      "condEN": "Warm",
-      "condES": "Caluroso",
-      "daylightEN": "14h of daylight",
-      "daylightES": "14h de luz"
-    },
-    "narrative": "Giornata stanziale",
-    "highlights": [
-      {
-        "icon": "🌲",
-        "title": "Porto Antico",
-        "titleEN": "Old Port",
-        "text": "(area Renzo Piano) — Biosfera + Città dei Bambini",
-        "maps": null,
-        "star": false,
-        "familyFriendly": false,
-        "titleES": "Porto Antico",
-        "textEN": "(Renzo Piano area) — Biosfera + Città dei Bambini",
-        "textES": "(área Renzo Piano) — Biosfera + Città dei Bambini"
-      },
-      {
-        "icon": "🏛️",
-        "title": "Boccadasse",
-        "text": "— borgo di pescatori, gelato",
-        "maps": null,
-        "star": false,
-        "familyFriendly": false,
-        "titleEN": "Boccadasse",
-        "titleES": "Boccadasse",
-        "textEN": "— fishing village, gelato",
-        "textES": "— pueblo de pescadores, gelato"
-      },
-      {
-        "icon": "🌲",
-        "title": "Passeggiata lungomare Corso Italia",
-        "titleEN": "Corso Italia seafront promenade",
-        "text": "",
-        "maps": null,
-        "star": false,
-        "familyFriendly": false,
-        "titleES": "Paseo marítimo Corso Italia"
-      }
-    ],
-    "food": [
-      {
-        "type": "street",
-        "title": "Genova street food",
-        "titleEN": "Genoa street food",
-        "text": "<em>Antica Sciamadda</em> (Via San Giorgio 14R) — farinata + panissa ~€3-5, istituzione dal 1700! <em>Antico Forno della Casana</em> (Vico Casana) — focaccia genovese ~€2-3 a porzione. <em>Friggitoria San Giorgio</em> (Piazza Caricamento 12R, fronte Acquario) — cartoccio fritto misto ~€8.",
-        "beer": null,
-        "titleES": "Street food de Genova",
-        "textEN": "<em>Antica Sciamadda</em> (Via San Giorgio 14R) — farinata + panissa ~€3-5, institution since 1700! <em>Antico Forno della Casana</em> (Vico Casana) — focaccia genovese ~€2-3 per serving. <em>Friggitoria San Giorgio</em> (Piazza Caricamento 12R, in front of Acquario) — cartoccio fritto misto ~€8.",
-        "textES": "<em>Antica Sciamadda</em> (Via San Giorgio 14R) — farinata + panissa ~€3-5, institución desde 1700! <em>Antico Forno della Casana</em> (Vico Casana) — focaccia genovese ~€2-3 por porción. <em>Friggitoria San Giorgio</em> (Piazza Caricamento 12R, frente al Acquario) — cartoccio fritto misto ~€8."
-      },
-      {
-        "type": "market",
-        "title": "Mercato Orientale MOG",
-        "titleEN": "Oriental Market MOG",
-        "text": "(Via XX Settembre 75R) — street food + prodotti freschi.",
-        "schedule": "Mar-Dom",
-        "maps": null,
-        "titleES": "Mercato Orientale MOG",
-        "textEN": "(Via XX Settembre 75R) — street food + fresh produce.",
-        "textES": "(Via XX Settembre 75R) — street food + productos frescos.",
-        "scheduleEN": "Tue-Sun",
-        "scheduleES": "Mar-Dom"
-      }
-    ],
-    "scooter": null,
-    "waterSports": null,
-    "trekking": null,
-    "fishing": "molo di Boccadasse o diga foranea del Porto Antico — occhiata, sarago, muggine. GRATIS in mare (Italia, pesca da riva senza licenza).",
-    "events": [],
-    "alternatives": [],
-    "kids": [
-      {
-        "name": "Acquario di Genova",
-        "desc": "",
-        "maps": "https://maps.google.com/?q=Acquario+di+Genova",
-        "nameEN": "Acquario di Genova",
-        "nameES": "Acquario di Genova"
-      },
-      {
-        "name": "Città dei bambini",
-        "desc": "(museo interattivo)",
-        "maps": "https://maps.google.com/?q=Città+dei+bambini+Genova",
-        "nameEN": "Città dei bambini",
-        "nameES": "Città dei bambini",
-        "descEN": "(interactive museum)",
-        "descES": "(museo interactivo)"
-      },
-      {
-        "name": "Molte attività per bambini nell'area del Porto Antico.",
-        "desc": "",
-        "maps": null,
-        "nameEN": "Many activities for children in the Porto Antico area.",
-        "nameES": "Muchas actividades para niños en el área de Porto Antico."
-      }
-    ],
-    "practical": {
-      "parking": [
-        {
-          "name": "Area Sosta Camper a Genova di Pons",
-          "address": "",
-          "maps": "https://maps.google.com/?q=44.3932,9.0080",
-          "price": "~€24/notte",
-          "notes": "Servizi inclusi.",
-          "nameEN": "Area Sosta Camper a Genova di Pons",
-          "nameES": "Area Sosta Camper a Genova di Pons",
-          "notesEN": "Services included.",
-          "notesES": "Servicios incluidos.",
-          "priceEN": "~€24/night",
-          "priceES": "~€24/noche"
-        },
-        {
-          "name": "Caravan Park La Vesima",
-          "address": "",
-          "maps": "https://maps.google.com/?q=Caravan+Park+La+Vesima+Genova",
-          "price": null,
-          "notes": "",
-          "nameEN": "Caravan Park La Vesima",
-          "nameES": "Caravan Park La Vesima"
-        }
-      ],
-      "fuel": "Eni, Q8, IP, Esso, diesel ~€1.85-1.95/L. Nessun tratto isolato senza carburante nella regione di Genova.",
-      "grocery": [
-        {
-          "name": "Coop, Carrefour, Lidl, Doro a Genova",
-          "location": "",
-          "maps": "https://maps.google.com/?q=Supermercato+Genova",
-          "nameEN": "Coop, Carrefour, Lidl, Doro in Genova",
-          "nameES": "Coop, Carrefour, Lidl, Doro en Genova"
-        }
-      ],
-      "laundry": {
-        "text": "Lavanderia Self Service LavaPiù o Speed Queen, Genova",
-        "maps": "https://maps.google.com/?q=Lavanderia+Self+Service+Genova",
-        "textEN": "Self-service laundry LavaPiù or Speed Queen, Genova",
-        "textES": "Lavandería autoservicio LavaPiù o Speed Queen, Genova"
-      },
-      "camper": {
-        "text": "Area Sosta Camper Il Poggio o Caravan Park La Vesima",
-        "maps": "https://maps.google.com/?q=Camper+service+Genova",
-        "textEN": "Motorhome parking area Il Poggio or Caravan Park La Vesima",
-        "textES": "Área de estacionamiento para autocaravanas Il Poggio o Caravan Park La Vesima"
-      },
-      "emergency": {
-        "name": "Ospedale San Martino, Genova",
-        "maps": "https://maps.google.com/?q=Ospedale+San+Martino+Genova",
-        "phones": "112",
-        "notes": "",
-        "nameEN": "Ospedale San Martino, Genova",
-        "nameES": "Ospedale San Martino, Genova"
-      },
-      "budget": "~€120-150/giorno",
-      "fuelEN": "Eni, Q8, IP, Esso, diesel ~€1.85-1.95/L. No isolated stretches without fuel in the Genova region.",
-      "fuelES": "Eni, Q8, IP, Esso, diesel ~€1.85-1.95/L. No hay tramos aislados sin combustible en la región de Genova.",
-      "budgetEN": "~€120-150/day",
-      "budgetES": "~€120-150/día"
-    },
-    "fishingDetail": {
-      "zone": "Italia — Genova",
-      "license": "Pesca da riva GRATIS, nessuna licenza.",
-      "spots": [
-        {
-          "name": "Molo di Boccadasse / diga Porto Antico",
-          "text": "Occhiata, sarago, muggine.",
-          "nameEN": "Molo di Boccadasse / Porto Antico breakwater",
-          "nameES": "Molo di Boccadasse / dique de Porto Antico",
-          "textEN": "Occhiata, sarago, muggine.",
-          "textES": "Occhiata, sarago, muggine."
-        }
-      ],
-      "zoneEN": "Italia — Genova",
-      "zoneES": "Italia — Genova",
-      "licenseEN": "Shore fishing FREE, no license required.",
-      "licenseES": "Pesca desde la orilla GRATIS, no se necesita licencia."
-    },
-    "cityTour": {
-      "city": "Genova",
-      "distance": "~3 km centro storico (saliscendi e caruggi)",
-      "duration": "3–4h",
-      "walking": [
-        {
-          "name": "Via Garibaldi e Palazzi dei Rolli",
-          "text": "la \"Strada Nuova\" con i palazzi nobiliari patrimonio UNESCO (Palazzo Rosso, Bianco, Tursi)",
-          "maps": "Via Garibaldi Genova",
-          "nameEN": "Via Garibaldi and Palazzi dei Rolli",
-          "nameES": "Via Garibaldi y Palazzi dei Rolli",
-          "textEN": "the \"Strada Nuova\" with the noble palaces, a UNESCO heritage (Palazzo Rosso, Bianco, Tursi)",
-          "textES": "la \"Strada Nuova\" con los palacios nobiliarios, Patrimonio de la UNESCO (Palazzo Rosso, Bianco, Tursi)"
-        },
-        {
-          "name": "Caruggi",
-          "text": "il dedalo di vicoli del più grande centro storico medievale d'Europa, tra botteghe e sacchetti di focaccia",
-          "maps": "Caruggi Genova",
-          "nameEN": "Caruggi",
-          "nameES": "Caruggi",
-          "textEN": "the maze of alleys of the largest medieval historic centre in Europe, among shops and bags of focaccia",
-          "textES": "el laberinto de callejones del mayor centro histórico medieval de Europa, entre tiendas y bolsas de focaccia"
-        },
-        {
-          "name": "Cattedrale di San Lorenzo",
-          "text": "il duomo a fasce bianche e nere, nel cuore della città vecchia",
-          "maps": "Cattedrale San Lorenzo Genova",
-          "nameEN": "Cattedrale di San Lorenzo",
-          "nameES": "Cattedrale di San Lorenzo",
-          "textEN": "the duomo with white and black bands, in the heart of the old town",
-          "textES": "el duomo de franjas blancas y negras, en el corazón del casco antiguo"
-        },
-        {
-          "name": "Porto Antico e Acquario",
-          "text": "l'area waterfront ridisegnata da Renzo Piano, con l'Acquario (il più grande d'Italia) e il Bigo panoramico",
-          "maps": "Porto Antico Genova",
-          "nameEN": "Porto Antico and Acquario",
-          "nameES": "Porto Antico y Acquario",
-          "textEN": "the waterfront area redesigned by Renzo Piano, with the Acquario (the largest in Italy) and the panoramic Bigo",
-          "textES": "el área del waterfront rediseñada por Renzo Piano, con el Acquario (el más grande de Italia) y el Bigo panorámico"
-        }
-      ],
-      "scooter": "Il fronte mare del Porto Antico è piano e percorribile in monopattino; nei caruggi (stretti e in saliscendi) conviene andare a piedi.",
-      "cityEN": "Genova",
-      "cityES": "Genova",
-      "durationEN": "3–4h",
-      "durationES": "3–4h",
-      "scooterEN": "The seafront of the Porto Antico is flat and rideable by scooter; in the caruggi (narrow and sloping) it's better to go on foot.",
-      "scooterES": "El frente marítimo del Porto Antico es llano y se puede recorrer en patinete; en los caruggi (estrechos y con subidas y bajadas) conviene ir a pie."
-    },
-    "titleES": "Genova",
-    "narrativeEN": "Day in one place",
-    "narrativeES": "Día en un solo lugar",
-    "fishingEN": "molo di Boccadasse o diga foranea del Porto Antico — occhiata, sarago, muggine. FREE at sea (Italia, shore fishing without a license).",
-    "fishingES": "molo di Boccadasse o diga foranea del Porto Antico — occhiata, sarago, muggine. GRATIS en el mar (Italia, pesca desde la orilla sin licencia)."
-  },
-  {
-    "id": "g55",
-    "date": "18/08",
+    "id": "g59",
+    "date": "22/08",
     "title": "Genova → Selvazzano",
     "titleEN": "Genoa → Selvazzano",
     "flags": "🇮🇹",
@@ -10940,9 +10644,9 @@ var DAYS_DATA = [
     "narrative": "Rientro a casa. <strong>Fine del viaggio!</strong> Partenza dopo colazione, arrivo nel primo pomeriggio.",
     "highlights": [
       {
-        "text": "Ultimo tratto autostradale Genova → Selvazzano: rientro a casa dopo 55 giorni e ~12.000 km",
-        "textEN": "Last highway stretch Genova → Selvazzano: returning home after 55 days and ~12.000 km",
-        "textES": "Último tramo de autopista Genova → Selvazzano: regreso a casa tras 55 días y ~12.000 km"
+        "text": "Ultimo tratto autostradale Genova → Selvazzano: rientro a casa dopo 59 giorni e ~12.000 km",
+        "textEN": "Last highway stretch Genova → Selvazzano: returning home after 59 days and ~12.000 km",
+        "textES": "Último tramo de autopista Genova → Selvazzano: regreso a casa tras 59 días y ~12.000 km"
       },
       {
         "text": "Sosta consigliata per una focaccia ligure prima di lasciare la costa",

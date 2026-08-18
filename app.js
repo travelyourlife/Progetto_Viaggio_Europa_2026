@@ -323,6 +323,45 @@ if (typeof firebaseConfig === 'undefined') { var firebaseConfig = {}; }
 // TRIP_END is defined in data.js (2026-08-18T23:59:59). Safety guard only:
 if (typeof TRIP_END === 'undefined') { var TRIP_END = new Date(TRIP_START.getTime() + (TRIP_DAYS - 1) * 86400000); }
 
+// v5.93 FIX (QV-045 + QV-046): three separate logout implementations existed
+// (top bar, Home button, Altro tab) with inconsistent cleanup — the Home
+// button did neither Firebase listener detach nor any FCM cleanup, and NONE
+// of the three ever removed the fcm_tokens/{uid}/{deviceId} record. Since
+// the deviceId itself persists in localStorage across logout/login, the
+// SAME device reused it for a different account on next login — leaving
+// the old uid's token record (and its role) live and still eligible to
+// receive pushes targeted at that old role, even though a different person
+// might now be using the device. Centralized here: remove the token record
+// FIRST (must happen before signOut — the write rule requires
+// auth.uid === $uid, which stops being true the instant signOut resolves),
+// then detach listeners, sign out, toast, reload.
+window.performLogout = function(onDone) {
+  var user = (typeof firebase !== 'undefined' && firebase.auth) ? firebase.auth().currentUser : null;
+  var deviceId = (typeof KEYS !== 'undefined' && KEYS.DEVICE_ID) ? localStorage.getItem(KEYS.DEVICE_ID) : null;
+  var cleanupPromise = (user && deviceId && typeof firebase !== 'undefined' && firebase.database)
+    ? firebase.database().ref('fcm_tokens/' + user.uid + '/' + deviceId).remove().catch(function(e) {
+        console.warn('[Logout] FCM token cleanup failed (continuing anyway):', e.message);
+      })
+    : Promise.resolve();
+  cleanupPromise.then(function() {
+    return firebase.auth().signOut();
+  }).then(function() {
+    if (typeof window.detachFirebaseListeners === 'function') {
+      window.detachFirebaseListeners('chat');
+      window.detachFirebaseListeners('diario');
+      window.detachFirebaseListeners('posizione');
+      window.detachFirebaseListeners('admin');
+      window.detachFirebaseListeners('home');
+    }
+    if (window.showToast) showToast(LANG3 === 'es' ? 'Desconectado' : isEN ? 'Signed out' : 'Disconnesso', 'info');
+    if (typeof onDone === 'function') onDone();
+    setTimeout(function() { window.location.reload(); }, 500);
+  }).catch(function(err) {
+    console.error('[Logout] Error:', err.message);
+    if (window.showToast) showToast(LANG3 === 'es' ? 'Error al cerrar sesión' : isEN ? 'Sign out failed' : 'Disconnessione fallita', 'error');
+  });
+};
+
 function getCurrentTripDay() {
   // v1.84: Session-only override (no localStorage persistence)
   if (typeof window._dayOverride === 'number') return window._dayOverride;
@@ -380,6 +419,22 @@ window.__gotoTodayDay = function() {
   }
 };
 
+// v6.03 FIX (QV-051): shared safe-parse helper — the local loadLocal() a
+// couple thousand lines below already does this, but it's scoped to just
+// one module and not reusable elsewhere. Two realtime listener callbacks
+// (Check-in and Zaino sync) call JSON.parse(localStorage...) with no
+// try/catch at all — a corrupted or partially-written value (interrupted
+// write, manual edit, stale legacy format) would throw and abort the whole
+// sync callback instead of just that one read.
+function safeJsonParse(str, fallback) {
+  try {
+    var parsed = JSON.parse(str);
+    return parsed == null ? fallback : parsed;
+  } catch (e) {
+    return fallback;
+  }
+}
+
 // Escape HTML to prevent XSS in user-generated content
 function escapeHtml(str) {
   if (str == null || str === '') return '';
@@ -423,7 +478,7 @@ try {
 
   // v3.94 FIX Audit #8: Always include User-Agent header (Nominatim ToS requirement)
   // v4.08 FIX: Use runtime version from EXPECTED_VERSION instead of hardcoded
-  var _appVer = (typeof EXPECTED_VERSION !== 'undefined') ? EXPECTED_VERSION : '5.67';
+  var _appVer = (typeof EXPECTED_VERSION !== 'undefined') ? EXPECTED_VERSION : '6.05';
   var _defaultHeaders = { 'User-Agent': 'QuoVadis-TripApp/' + _appVer + ' (family-trip-pwa)' };
 
   function _drain() {
@@ -636,7 +691,28 @@ window.computeTotalKm = function(callback) {
       db.ref('trips/' + FAMILY_ID + '/tracks/' + today + '/points').once('value', function(tSnap) {
         var trackKm = window._kmFromTrackPoints ? window._kmFromTrackPoints(tSnap.val()) : 0;
         totalKm += Math.max(todaySummaryKm, liveTodayKm, trackKm);
-        callback(totalKm);
+        // v5.70 IMPROVEMENT: identify elapsed trip days with NO dailySummaries
+        // entry at all (nothing tracked, e.g. both GPSLogger and in-app
+        // tracking forgotten) and sum their PLANNED km (already in
+        // DAYS_DATA[i].km, no extra network call needed) as a separate,
+        // clearly-labeled estimate. Never merged into totalKm above.
+        var estimatedKm = 0, estimatedDays = 0;
+        try {
+          var _curDay = (typeof getCurrentTripDay === 'function') ? getCurrentTripDay() : -1;
+          if (_curDay >= 0 && typeof DAYS_DATA !== 'undefined' && window.localDateStr) {
+            for (var _di = 0; _di <= _curDay; _di++) {
+              var _d = new Date(TRIP_START);
+              _d.setDate(_d.getDate() + _di);
+              var _key = window.localDateStr(_d);
+              if (_key === today) continue; // today handled above via live/track data
+              if (!summaries[_key] && DAYS_DATA[_di] && typeof DAYS_DATA[_di].km === 'number') {
+                estimatedKm += DAYS_DATA[_di].km;
+                estimatedDays++;
+              }
+            }
+          }
+        } catch (e) { /* stats-only, never block the real total on failure */ }
+        callback(totalKm, estimatedKm, estimatedDays);
       });
     });
   });
@@ -1078,6 +1154,16 @@ var isOwner = false;
 // v2.13: Track whether user is a hardcoded (super) owner vs dynamic owner
 var isHardcodedOwner = false;
 var _dynamicOwners = {}; // cache of ownerUsers from database
+// v5.77 FIX (QV-024): for a DYNAMIC (non-hardcoded) owner, the ownerUsers
+// database check is async, but the ban-check + pending-request-submit logic
+// used to run immediately after, using whatever isOwner was BEFORE that
+// check resolved — a dynamic owner could briefly look like a non-owner and
+// have a pending access request auto-submitted for themselves before the
+// real answer came back. This flag is only set true once isOwner is final
+// for the current auth event (synchronously for hardcoded owners, inside
+// the ownerUsers callback for dynamic ones); _trySubmitPending() below
+// waits for it instead of racing ahead on a stale value.
+window._ownerCheckSettled = false;
 function checkOwnerStatus() {
   if (typeof firebase !== 'undefined' && firebase.auth) {
     // v5.38: fast-path — firebase.auth().currentUser is synchronous and is
@@ -1094,6 +1180,7 @@ function checkOwnerStatus() {
         firebaseUser = _cachedUser;
         isHardcodedOwner = true;
         isOwner = true;
+        window._ownerCheckSettled = true;
         try { localStorage.setItem('qv-owner-hint', '1'); } catch(e) {}
         _qvLog.info('[Auth] Owner mode (hardcoded, instant from cached session): ' + _cachedUser.displayName);
         AuthManager._notify(_cachedUser, true);
@@ -1107,6 +1194,7 @@ function checkOwnerStatus() {
       isHardcodedOwner = !!(user && typeof OWNER_UIDS !== 'undefined' && OWNER_UIDS.indexOf(user.uid) !== -1);
       if (isHardcodedOwner) {
         isOwner = true;
+        window._ownerCheckSettled = true;
         try { localStorage.setItem('qv-owner-hint', '1'); } catch(e) {}
         _qvLog.info('[Auth] Owner mode (hardcoded): ' + user.displayName);
         // v2.11 FIX: Auto-reset simulated role on Owner login
@@ -1126,6 +1214,7 @@ function checkOwnerStatus() {
         firebase.database().ref('trips/' + FAMILY_ID + '/ownerUsers/' + user.uid).once('value', function(ownerSnap) {
           if (ownerSnap.exists() && ownerSnap.val() === true) {
             isOwner = true;
+            window._ownerCheckSettled = true;
             try { localStorage.setItem('qv-owner-hint', '1'); } catch(e) {}
             _qvLog.info('[Auth] Owner mode (dynamic): ' + user.displayName);
             try {
@@ -1140,6 +1229,7 @@ function checkOwnerStatus() {
             updateProtectedTabsUI(user);
           } else {
             isOwner = false;
+            window._ownerCheckSettled = true;
             try { localStorage.removeItem('qv-owner-hint'); } catch(e) {}
             _qvLog.info('[Auth] Authenticated but not owner: ' + user.email);
             // v2.48: Notify AuthManager for non-owner authenticated user
@@ -1149,6 +1239,7 @@ function checkOwnerStatus() {
           }
         }).catch(function(err) {
           console.error('[Auth] Owner check failed:', err);
+          window._ownerCheckSettled = true;
           // v2.48: On error, still notify with non-owner so tabs don't stay locked forever
           AuthManager._notify(user, false);
           window.dispatchEvent(new CustomEvent('authStateChanged', { detail: { user: user, isOwner: false } }));
@@ -1156,6 +1247,7 @@ function checkOwnerStatus() {
         });
       } else {
         isOwner = false;
+        window._ownerCheckSettled = true;
         try { localStorage.removeItem('qv-owner-hint'); } catch(e) {}
         // v2.48: Notify AuthManager for logout
         AuthManager._notify(null, false);
@@ -1202,6 +1294,15 @@ function checkOwnerStatus() {
           // Retries automatically on visibilitychange/resume if the write fails.
           function _trySubmitPending() {
             if (window._pendingSubmitDone) return;
+            // v5.77 FIX (QV-024): don't submit a pending request until the
+            // owner check has genuinely settled — a dynamic (non-hardcoded)
+            // owner could otherwise get one auto-submitted for themselves
+            // during the brief async window before ownerUsers confirms them.
+            // isOwner itself is also re-checked as a second safety net.
+            if (!window._ownerCheckSettled || isOwner) {
+              setTimeout(_trySubmitPending, 300);
+              return;
+            }
             var _approvedRef = firebase.database().ref('trips/' + FAMILY_ID + '/approvedUsers/' + _uid);
             var _pendingRef = firebase.database().ref('trips/' + FAMILY_ID + '/pendingUsers/' + _uid);
             // Single read: check if already approved (needed for UI state)
@@ -1642,10 +1743,19 @@ window.openMapFullscreen = function openMapFullscreen(mapInstance, title) {
                 }
             }, 200);
         }
-        function closeFs2() {
+        var _fsClosed2 = false;
+        function closeFs2(skipHistoryBack) {
+            // v5.90 FIX (QV-039): same fix as closeFs() above — centralized,
+            // idempotent cleanup instead of only removing the keydown
+            // listener inside its own Escape handler.
+            if (_fsClosed2) return;
+            _fsClosed2 = true;
+            document.removeEventListener('keydown', onEsc2);
             fsMap.remove(); overlay.remove(); document.body.style.overflow = '';
             window._mapFsOpen = false;
-            if (history.state && history.state.mapFsOpen) history.back();
+            // v6.03 FIX (QV-050): same fix as closeFs() above — see there for
+            // the full explanation.
+            if (!skipHistoryBack && history.state && history.state.mapFsOpen) history.back();
         }
         window._mapFsOpen = true;
         window._closeMapFs = closeFs2;
@@ -1654,7 +1764,7 @@ window.openMapFullscreen = function openMapFullscreen(mapInstance, title) {
         closeBtnEl2.addEventListener('click', closeFs2);
         // v2.34 FIX: Also handle touchend for reliable mobile close
         closeBtnEl2.addEventListener('touchend', function(e) { e.preventDefault(); closeFs2(); });
-        function onEsc2(e) { if (e.key === 'Escape') { closeFs2(); document.removeEventListener('keydown', onEsc2); } }
+        function onEsc2(e) { if (e.key === 'Escape') closeFs2(); }
         document.addEventListener('keydown', onEsc2);
         return;
     }
@@ -1747,11 +1857,7 @@ window.openMapFullscreen = function openMapFullscreen(mapInstance, title) {
             }).then(function(latlngs) {
                 if (!fsMap || !fsMap._container) return; // fullscreen closed meanwhile
                 if (latlngs && latlngs.length > 1) {
-                    var hl = L.polyline(latlngs, {
-                        color: '#e53e3e', weight: 4, opacity: 0.75,
-                        _isHistoricalTrack: true
-                    }).addTo(fsMap);
-                    hl._isHistoricalTrack = true;
+                    window._drawHistoricalTrackWithRuns(fsMap, latlngs, { color: '#e53e3e', weight: 4, opacity: 0.75 });
                 }
             }).catch(function(e) { if (window._qvLog) window._qvLog.warn('[FS] historical tracks error', e); });
                 } catch (e) { if (window._qvLog) window._qvLog.warn('[FS] historical tracks setup error', e); }
@@ -1828,14 +1934,33 @@ window.openMapFullscreen = function openMapFullscreen(mapInstance, title) {
         }
     }, 200);
 
-    function closeFs() {
+    var _fsClosed = false;
+    function closeFs(skipHistoryBack) {
+        // v5.90 FIX (QV-039): the keydown listener was only ever removed
+        // inside its own Escape handler — closing via the X button or touch
+        // called closeFs() directly and left it registered. Every
+        // open→close-with-X cycle stacked one more handler holding a
+        // reference to this (now-removed) fsMap. Cleanup centralized here,
+        // and this function made idempotent (safe if called twice, e.g. the
+        // X button AND a subsequent Escape on the same close).
+        if (_fsClosed) return;
+        _fsClosed = true;
+        document.removeEventListener('keydown', onEsc);
         fsMap.remove();
         overlay.remove();
         document.body.style.overflow = '';
         window._mapFsOpen = false;
         // Refresh original map
         if (mapInstance) setTimeout(function() { mapInstance.invalidateSize(); }, 100);
-        if (history.state && history.state.mapFsOpen) history.back();
+        // v6.03 FIX (QV-050): popstate (the device Back button) used to
+        // bypass this whole function — calling it directly would trigger a
+        // SECOND history.back() on top of the one that just fired, so the
+        // popstate handler removed the overlay by hand instead, skipping
+        // fsMap.remove() and the Escape-listener cleanup above entirely
+        // (leaking the Leaflet instance every time Back was used to close
+        // fullscreen). skipHistoryBack lets popstate call this real cleanup
+        // without causing that double-pop.
+        if (!skipHistoryBack && history.state && history.state.mapFsOpen) history.back();
     }
     window._mapFsOpen = true;
     window._closeMapFs = closeFs;
@@ -1845,7 +1970,7 @@ window.openMapFullscreen = function openMapFullscreen(mapInstance, title) {
     // v2.34 FIX: Also handle touchend for reliable mobile close
     closeBtnEl.addEventListener('touchend', function(e) { e.preventDefault(); closeFs(); });
     // Escape key
-    function onEsc(e) { if (e.key === 'Escape') { closeFs(); document.removeEventListener('keydown', onEsc); } }
+    function onEsc(e) { if (e.key === 'Escape') closeFs(); }
     document.addEventListener('keydown', onEsc);
 };
 function initRouteMap() {
@@ -1917,7 +2042,7 @@ function initRouteMap() {
         var target = document.getElementById('tab-' + tabId);
         if (!target) return; // e.g. tab-natura doesn't exist in EN yet
         window._lazyContentLoaded[tabId] = true;
-        var url = './content-' + tabId + '-' + LANG3 + '.html?v=5.67';
+        var url = './content-' + tabId + '-' + LANG3 + '.html?v=6.05';
         fetch(url, { cache: 'no-store' })
             .then(function(res) { if (!res.ok) throw new Error('HTTP ' + res.status); return res.text(); })
             .then(function(html) {
@@ -1969,7 +2094,7 @@ function initRouteMap() {
         if (typeof WIKI_LINKS === 'undefined' && !window._wikiLinksLoading) {
             window._wikiLinksLoading = true;
             var s = document.createElement('script');
-            s.src = './wiki-links.js?v=5.67';
+            s.src = './wiki-links.js?v=6.05';
             s.defer = true;
             s.onload = function() { _qvLog.info('[Lazy] wiki-links.js loaded'); };
             document.head.appendChild(s);
@@ -2202,15 +2327,18 @@ function initRouteMap() {
                 window._routeMapTrackLines = [];
 
                 if (continuousLatLngs && continuousLatLngs.length > 1) {
-                    var line = L.polyline(
-                        continuousLatLngs,
-                        { color: '#e53e3e', weight: 4, opacity: 0.75, lineJoin: 'round' }
-                    ).addTo(routeMapInstance);
-                    window._routeMapTrackLines.push(line);
+                    window._routeMapTrackLines = window._drawHistoricalTrackWithRuns(
+                        routeMapInstance, continuousLatLngs,
+                        { color: '#e53e3e', weight: 4, opacity: 0.75 }
+                    );
                 }
 
                 // v4.31: keep historical tracks visible at low zoom (European scale).
                 // Thicken on zoom-out, thin on zoom-in, mirroring the Live map.
+                // v5.70: now weight/opacity-only per zoom, applied ON TOP of the
+                // real/estimated distinction (dashArray, base opacity cut) instead
+                // of overwriting it — estimated stretches stay visually distinct
+                // at every zoom level, not just on first draw.
                 (function() {
                     function _rmHistStyleForZoom(z) {
                         var w = z >= 10 ? 4 : z >= 7 ? 5 : z >= 5 ? 6 : 7;
@@ -2219,7 +2347,13 @@ function initRouteMap() {
                     }
                     function _rmApplyHistStyle() {
                         var st = _rmHistStyleForZoom(routeMapInstance.getZoom());
-                        window._routeMapTrackLines.forEach(function(line) { line.setStyle(st); });
+                        window._routeMapTrackLines.forEach(function(line) {
+                            if (line._isEstimated) {
+                                line.setStyle({ weight: Math.max(2, st.weight - 1.5), opacity: Math.min(st.opacity, 0.55) });
+                            } else {
+                                line.setStyle(st);
+                            }
+                        });
                     }
                     _rmApplyHistStyle();
                     if (!routeMapInstance._historicalZoomListenerAdded) {
@@ -2431,7 +2565,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         } else {
             dayEl.textContent = '✅';
-            infoEl.innerHTML = LANG3 === 'es' ? '<strong>¡Viaje completado!</strong><br>' + TRIP_DAYS + ' días · 14 países · 12.000 km' : isEN ? '<strong>Trip completed!</strong><br>' + TRIP_DAYS + ' days · 14 countries · 12,000 km' : '<strong>Viaggio completato!</strong><br>' + TRIP_DAYS + ' giorni · 14 paesi · 12.000 km';
+            infoEl.innerHTML = LANG3 === 'es' ? '<strong>¡Viaje completado!</strong><br>' + TRIP_DAYS + ' días · 15 países · 12.000 km' : isEN ? '<strong>Trip completed!</strong><br>' + TRIP_DAYS + ' days · 15 countries · 12,000 km' : '<strong>Viaggio completato!</strong><br>' + TRIP_DAYS + ' giorni · 15 paesi · 12.000 km';
             if (progressFill) progressFill.style.width = '100%';
             if (progressText) progressText.textContent = LANG3 === 'es' ? '¡Completado!' : isEN ? 'Completed!' : 'Completato!';
         }
@@ -2542,7 +2676,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // v2.73: dettaglio card unificata.
-        // Pre-partenza: lascia TRIP_META (summary "55 giorni · 14 paesi · 12.000 km").
+        // Pre-partenza: lascia TRIP_META (summary "59 giorni · 15 paesi · 12.000 km").
         // Durante il viaggio: la label già mostra "Giorno X/55 — Titolo", quindi il
         // dettaglio mostra solo i km percorsi oggi (evita la ridondanza "G X/55").
         var miniSep = document.getElementById('minibar-sep');
@@ -3488,13 +3622,17 @@ document.addEventListener('DOMContentLoaded', function() {
     window.addEventListener('popstate', function(e) {
         // Priority 0: Close fullscreen map
         if (window._mapFsOpen && window._closeMapFs) {
-            window._mapFsOpen = false;
             var closeFn = window._closeMapFs;
-            window._closeMapFs = null;
-            // Remove the overlay directly without triggering another history.back()
-            var overlay = document.querySelector('.map-fs-overlay');
-            if (overlay) overlay.remove();
-            document.body.style.overflow = '';
+            // v6.03 FIX (QV-050): this used to bypass closeFn() entirely —
+            // removing the overlay by hand to avoid a second history.back()
+            // — which meant fsMap.remove() (the actual Leaflet instance
+            // teardown) and the Escape-listener cleanup never ran when the
+            // device Back button was used to close fullscreen, only when the
+            // X button or Escape key was used. Now calls the same real
+            // cleanup function (already idempotent, QV-039), just telling it
+            // to skip its own history.back() since popstate already consumed
+            // that history entry.
+            closeFn(true);
             return;
         }
         // Priority 1: Close overlays (side menu removed in v3.52)
@@ -3855,7 +3993,15 @@ document.addEventListener('DOMContentLoaded', function() {
     // ─── localStorage persistence (Zaino) ───
     var STORAGE_KEY = KEYS.PROGRESS;
     function loadProgress() {
-        var data = null; try { data = JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch(e) {} if (!data) return;
+        // v5.76 FIX (QV-023): read the newer of the two keys instead of only
+        // KEYS.PROGRESS — mirrors the saveProgress fix above, so a device
+        // that only ever received a KEYS.ZAINO update (e.g. from the remote
+        // listener before this fix existed) still shows the right state.
+        var dataA = null, dataB = null;
+        try { dataA = JSON.parse(localStorage.getItem(KEYS.PROGRESS)); } catch(e) {}
+        try { dataB = JSON.parse(localStorage.getItem(KEYS.ZAINO)); } catch(e) {}
+        var data = (dataB && (!dataA || (dataB.ts || 0) > (dataA.ts || 0))) ? dataB : dataA;
+        if (!data) return;
         if (data.checks) { document.querySelectorAll('input[type="checkbox"][data-idx]').forEach(function(cb) { if (data.checks[cb.getAttribute('data-idx')]) cb.checked = true; }); }
 
     }
@@ -3863,7 +4009,19 @@ document.addEventListener('DOMContentLoaded', function() {
         var data = { checks: {}, ts: Date.now() };
         document.querySelectorAll('input[type="checkbox"][data-idx]').forEach(function(cb) { if (cb.checked) data.checks[cb.getAttribute('data-idx')] = true; });
         data.totalItems = document.querySelectorAll('#tab-zaino input[type="checkbox"][data-idx]').length;
-        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); if(window.firebaseSyncZaino) window.firebaseSyncZaino(data); } catch(e) {}
+        // v5.76 FIX (QV-023): this used to write only KEYS.PROGRESS, while the
+        // Firebase first-sync merge (elsewhere in this file) compares
+        // timestamps against KEYS.ZAINO — a different, separately-updated key
+        // that only the remote listener touched. An offline edit here never
+        // reached KEYS.ZAINO, so on reconnect the merge could see a stale
+        // local timestamp, decide the remote was newer, and silently discard
+        // the real offline changes. Writing both keys with the same data/ts
+        // keeps them from ever diverging.
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            localStorage.setItem(KEYS.ZAINO, JSON.stringify(data));
+            if(window.firebaseSyncZaino) window.firebaseSyncZaino(data);
+        } catch(e) {}
     }
     loadProgress();
     // Disable checkboxes for non-owners (respects role simulation)
@@ -3920,13 +4078,29 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
         // v2.58: cap todayPoints to prevent unbounded memory growth on long driving days
         var MAX_TRACK_POINTS = 5000; // ~250km at 50m/point — well above any single day
         // v2.58: safe push that drops oldest points when limit is reached
-        function pushTrackPoint(pt) {
+        // v5.75 FIX (QV-020/QV-019): pushTrackPoint now optionally ALSO
+        // push()es the point to Firebase individually and immediately —
+        // append-only, exactly like real live GPS points already are saved
+        // elsewhere in this module. This replaces the old pattern where the
+        // OSRM gap-estimation code called trackRef.set(todayPoints) with the
+        // WHOLE in-memory array: that overwrote the entire remote node,
+        // silently discarding older real points once the 5000-point cap had
+        // already truncated the local buffer (QV-020) — and since it used a
+        // snapshot of todayPoints taken after an async OSRM round-trip, a
+        // concurrent live GPS point pushed to Firebase during that wait could
+        // be clobbered by the overwrite too (QV-019). Both are avoided by
+        // never touching the whole node — only ever push()ing new points.
+        function pushTrackPoint(pt, alsoSaveToFirebase) {
             if (todayPoints.length >= MAX_TRACK_POINTS) {
                 // Drop oldest 10% to avoid O(n) shifts on every push
                 todayPoints.splice(0, Math.floor(MAX_TRACK_POINTS * 0.1));
                 console.warn('[Tracking] todayPoints capped at', MAX_TRACK_POINTS, '— dropped oldest 10%');
             }
             todayPoints.push(pt);
+            if (alsoSaveToFirebase) {
+                var _tRef = getFamilyRef('tracks/' + todayStr() + '/points');
+                if (_tRef) _tRef.push(pt).catch(function(e) { console.warn('[Track] push failed:', e.message); });
+            }
         }
         var checkins = {};
 
@@ -3989,18 +4163,23 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                         var gapTime = lastPt.time || Date.now();
                         var timeStep = timeDiff / (coords.length || 1);
                         coords.forEach(function(c, i) {
-                            pushTrackPoint({ lat: c[1], lng: c[0], speed: 0, heading: 0, time: gapTime + (i * timeStep), estimated: true });
+                            pushTrackPoint({ lat: c[1], lng: c[0], speed: 0, heading: 0, time: gapTime + (i * timeStep), estimated: true }, true);
                         });
                         // Update Firebase
                         var sessKmRef = getFamilyRef('liveSession/' + (firebaseUser ? firebaseUser.uid : 'driver') + '/todayKm');
                         if (sessKmRef) sessKmRef.set(todayKm);
-                        var trackRef = getFamilyRef('tracks/' + todayStr() + '/points');
-                        if (trackRef) trackRef.set(todayPoints).catch(function(e) { console.warn("[Track] set failed:", e.message); });
                         showToast((LANG3 === 'es' ? '🛣️ Estimado ' : isEN ? '🛣️ Estimated ' : '🛣️ Stimati ') + gapKm.toFixed(1) + ' km ' + (LANG3 === 'es' ? 'por hueco de GPS' : isEN ? 'for GPS gap' : 'per buco GPS'), 'info');
                     } else {
                         // Fallback: use straight-line distance
                         todayKm += straightDist;
                         _qvLog.info('[GPS Gap] OSRM unreasonable, using straight-line: ' + straightDist.toFixed(1) + ' km');
+                        // v5.100 FIX (QV-021): this branch used to update todayKm
+                        // only in memory — if the app closed/suspended before the
+                        // next successful gap-fill or the tracking stop, Firebase
+                        // never saw these km at all. Persist here too, same as
+                        // the success branch above.
+                        var sessKmRefFallback = getFamilyRef('liveSession/' + (firebaseUser ? firebaseUser.uid : 'driver') + '/todayKm');
+                        if (sessKmRefFallback) sessKmRefFallback.set(todayKm);
                     }
                 } else {
                     // v4.80 FIX: OSRM no route = likely ferry/sea crossing. Do NOT add km.
@@ -4011,6 +4190,10 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                 // Fallback: use straight-line if OSRM fails
                 todayKm += straightDist;
                 console.warn('[GPS Gap] OSRM failed, using straight-line: ' + straightDist.toFixed(1) + ' km', err);
+                // v5.100 FIX (QV-021): same persist as the branch above — the
+                // catch() path had the identical gap.
+                var sessKmRefCatch = getFamilyRef('liveSession/' + (firebaseUser ? firebaseUser.uid : 'driver') + '/todayKm');
+                if (sessKmRefCatch) sessKmRefCatch.set(todayKm);
             });
         }
 
@@ -4716,7 +4899,18 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                 var tipIcon = L.divIcon({ className: '', html: '<div style="background:#f59e0b;width:14px;height:14px;border-radius:50%;border:2px solid white;box-shadow:0 1px 3px rgba(0,0,0,0.3);font-size:9px;text-align:center;line-height:14px;">\uD83D\uDCA1</div>', iconSize: [18,18], iconAnchor: [9,9] });
                 Object.keys(tips).forEach(function(k) {
                     var t = tips[k];
-                    if (!t.lat || !t.lng) return;
+                    // v5.86 FIX (QV-035): "!t.lat || !t.lng" only caught falsy
+                    // values (0, null, undefined) — a non-numeric string would
+                    // pass this check, then throw inside L.marker([...]),
+                    // which stops this whole forEach and silently breaks
+                    // rendering for every OTHER valid tip too. Now checks
+                    // real finite numbers in valid geographic ranges, and the
+                    // marker creation itself is wrapped in try/catch as a
+                    // second line of defense against any legacy bad record
+                    // saved before the QV-035 Rules fix existed.
+                    if (!Number.isFinite(t.lat) || !Number.isFinite(t.lng) ||
+                        t.lat < -90 || t.lat > 90 || t.lng < -180 || t.lng > 180) return;
+                    try {
                     var popup = '<strong>' + escapeHtml(t.text || t.title || '') + '</strong>';
                     popup += '<br><small style="color:#6b7280;">da ' + escapeHtml(t.authorName || 'Follower') + '</small>';
                     // v4.01: Owner or author can delete
@@ -4738,6 +4932,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                     });
                     if (_mapTipsVisible) m.addTo(map);
                     _mapTipMarkers.push(m);
+                    } catch (e) { console.warn('[MapTips] Skipped malformed tip', k, e.message); }
                 });
             });
         }
@@ -4934,16 +5129,16 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                     _historicalTrackLines = [];
 
                     if (continuousLatLngs && continuousLatLngs.length > 1) {
-                        var line = L.polyline(continuousLatLngs, {
-                            color: '#e53e3e', weight: 4, opacity: 0.75,
-                            _isHistoricalTrack: true
-                        }).addTo(map);
-                        line._isHistoricalTrack = true; // v4.61: robust flag on the layer object
-                        _historicalTrackLines.push(line);
+                        _historicalTrackLines = window._drawHistoricalTrackWithRuns(
+                            map, continuousLatLngs,
+                            { color: '#e53e3e', weight: 4, opacity: 0.75 }
+                        );
                     }
 
                     // v4.31: keep historical tracks visible at low zoom (European scale).
                     // At z<=6 a 3-4px line disappears; thicken on zoom-out, thin on zoom-in.
+                    // v5.70: preserve the real/estimated distinction through zoom changes
+                    // instead of overwriting it uniformly.
                     function _histStyleForZoom(z) {
                         var w = z >= 10 ? 4 : z >= 7 ? 5 : z >= 5 ? 6 : 7;
                         var o = z >= 10 ? 0.75 : 0.85;
@@ -4951,7 +5146,13 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                     }
                     function _applyHistStyle() {
                         var st = _histStyleForZoom(map.getZoom());
-                        _historicalTrackLines.forEach(function(line) { line.setStyle(st); });
+                        _historicalTrackLines.forEach(function(line) {
+                            if (line._isEstimated) {
+                                line.setStyle({ weight: Math.max(2, st.weight - 1.5), opacity: Math.min(st.opacity, 0.55) });
+                            } else {
+                                line.setStyle(st);
+                            }
+                        });
                     }
                     // Apply immediately for the current zoom (before any zoom event)
                     _applyHistStyle();
@@ -5416,7 +5617,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                         }
                     }
                 } else {
-                    pushTrackPoint(pt);
+                    pushTrackPoint(pt, true); // v5.100 FIX (QV-022): first point of a session was memory-only before
                 }
 
                 // Update live position in Firebase
@@ -5639,7 +5840,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                                 }
                             }
                         } else {
-                            pushTrackPoint(pt);
+                            pushTrackPoint(pt, true); // v5.100 FIX (QV-022): first point of a session was memory-only before
                         }
                         // Update live position
                         var liveRef = getFamilyRef('live/' + (firebaseUser ? firebaseUser.uid : 'driver'));
@@ -5845,7 +6046,11 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                                 sumRef.update({ country: LANG3 === 'es' ? (_offlineCountry.nameEs || _offlineCountry.name) : isEN ? _offlineCountry.name : _offlineCountry.nameIt, countryCode: _offlineCountry.code });
                             } else {
                                 var _geoUrl = 'https://nominatim.openstreetmap.org/reverse?format=json&lat=' + _lastPtGeo.lat + '&lon=' + _lastPtGeo.lng + '&zoom=5&accept-language=' + (LANG3 === 'es' ? 'es' : isEN ? 'en' : 'it');
-                                fetch(_geoUrl).then(function(r) { return r.json(); }).then(function(data) {
+                                // v5.95 FIX (QV-042): this was the one remaining direct fetch()
+                                // to Nominatim in app.js — every other call site already goes
+                                // through _nominatimFetch (1100ms queue, rate-limit safe). This
+                                // one could race ahead of the queue and get 429'd independently.
+                                window._nominatimFetch(_geoUrl).then(function(data) {
                                     if (data && data.address) {
                                         var cc = (data.address.country_code || '').toUpperCase();
                                         var cn = data.address.country || '';
@@ -7103,7 +7308,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
                         }
                     }
                 } else {
-                    pushTrackPoint(pt);
+                    pushTrackPoint(pt, true); // v5.100 FIX (QV-022): first point of a session was memory-only before
                 }
 
                 // Update live position in Firebase
@@ -8452,14 +8657,71 @@ function _fillGapsOSRM(points) {
             .catch(function() { seg.latlngs = _linearInterp(seg.from, seg.to); return seg; });
     });
 
+    // v5.70 IMPROVEMENT: used to flatten everything into one plain coordinate
+    // array, losing which parts were real GPS points vs. OSRM-estimated fill.
+    // Now returns an ordered list of "runs" so callers can draw estimated
+    // stretches with a visually distinct style instead of an identical solid
+    // line indistinguishable from real tracking.
     return Promise.all(osrmPromises).then(function(resolved) {
-        var result = [];
-        resolved.forEach(function(seg) { if (seg.latlngs) result = result.concat(seg.latlngs); });
-        return result;
+        var runs = [];
+        resolved.forEach(function(seg) {
+            if (!seg.latlngs || !seg.latlngs.length) return;
+            var last = runs[runs.length - 1];
+            if (last && last.type === seg.type) {
+                // merge consecutive same-type segments into one continuous run
+                last.latlngs = last.latlngs.concat(seg.latlngs);
+            } else {
+                runs.push({ type: seg.type, latlngs: seg.latlngs.slice() });
+            }
+        });
+        // Backward-compatible flat array (some older callers may still expect
+        // a plain array) alongside the new structured 'runs' list.
+        var flat = [];
+        runs.forEach(function(r) { flat = flat.concat(r.latlngs); });
+        flat.runs = runs; // non-enumerable-ish extra property, doesn't break Array consumers
+        return flat;
     });
 }
 window._fillGapsOSRM = _fillGapsOSRM;
 window._linearInterp = _linearInterp;
+
+// v5.70 IMPROVEMENT: draws the historical track honoring the real/estimated
+// distinction from _fillGapsOSRM's .runs — 'direct' (real GPS/GPX-derived
+// points) as the normal solid red line, 'osrm' (a gap bridged by an
+// estimated road route, e.g. a day with no tracking at all) as a lighter,
+// dashed line, so it reads at a glance as "the app's best guess", not as an
+// equally-certain recorded path. Falls back to one plain solid line if
+// .runs isn't present (defensive — should always be there from this function).
+window._drawHistoricalTrackWithRuns = function(map, latlngsOrRuns, baseStyle) {
+    if (!map || typeof L === 'undefined') return [];
+    var runs = (latlngsOrRuns && latlngsOrRuns.runs) ? latlngsOrRuns.runs
+        : [{ type: 'direct', latlngs: latlngsOrRuns || [] }];
+    var style = baseStyle || { color: '#e53e3e', weight: 4, opacity: 0.75 };
+    var layers = [];
+    runs.forEach(function(run) {
+        if (!run.latlngs || run.latlngs.length < 2) return;
+        var isEstimated = run.type === 'osrm';
+        var layer = L.polyline(run.latlngs, {
+            color: style.color,
+            weight: isEstimated ? Math.max(2, style.weight - 1.5) : style.weight,
+            opacity: isEstimated ? Math.min(style.opacity, 0.55) : style.opacity,
+            dashArray: isEstimated ? '6,8' : null,
+            className: isEstimated ? 'qv-track-estimated' : 'qv-track-real'
+        }).addTo(map);
+        layer._isHistoricalTrack = true;
+        layer._isEstimated = isEstimated;
+        if (isEstimated) {
+            layer.bindTooltip(
+                LANG3 === 'es' ? 'Tramo estimado (sin seguimiento GPS ese día)' :
+                isEN ? 'Estimated stretch (no GPS tracking that day)' :
+                'Tratto stimato (nessun tracciamento GPS quel giorno)',
+                { sticky: true }
+            );
+        }
+        layers.push(layer);
+    });
+    return layers;
+};
 
 // ─── v4.32: Flatten per-day points into ONE chronological array ───
 // Previously each day was gap-filled and drawn as a separate polyline, so the
@@ -8978,7 +9240,7 @@ async function fetchForecast(lat, lon, date, _retry) {
   _checkinsRef.on('value', function(snapshot) {
     const remoteData = snapshot.val();
     if (!remoteData) return;
-    const localData = JSON.parse(localStorage.getItem(CI_KEY) || '{}');
+    const localData = safeJsonParse(localStorage.getItem(CI_KEY) || '{}', {});
     let changed = false;
     Object.keys(remoteData).forEach(function(key) {
       if (!localData[key] || (remoteData[key].ts > (localData[key].ts || 0))) {
@@ -9061,7 +9323,7 @@ async function fetchForecast(lat, lon, date, _retry) {
   _zainoRef.on('value', function(snapshot) {
     var remoteZaino = snapshot.val();
     if (!remoteZaino) return;
-    var localZaino = JSON.parse(localStorage.getItem(ZAINO_KEY) || '{}');
+    var localZaino = safeJsonParse(localStorage.getItem(ZAINO_KEY) || '{}', {});
     var finalState;
 
     if (_zainoFirstSync) {
@@ -10699,18 +10961,7 @@ window.injectAllWikiLinks = function() {
     if (user) {
       // Show logout option via custom modal
       showConfirm((LANG3 === 'es' ? 'Conectado como: ' : isEN ? 'Logged in as: ' : 'Connesso come: ') + (user.displayName || user.email) + '\n\n' + (LANG3 === 'es' ? '¿Cerrar sesión?' : isEN ? 'Sign out?' : 'Disconnettersi?'), function() {
-        firebase.auth().signOut().then(function() {
-          // Fix #2: Clean up all Firebase listeners on logout to prevent memory leaks & data exposure
-          if (typeof window.detachFirebaseListeners === 'function') {
-            window.detachFirebaseListeners('chat');
-            window.detachFirebaseListeners('diario');
-            window.detachFirebaseListeners('posizione');
-            window.detachFirebaseListeners('admin');
-            window.detachFirebaseListeners('home');
-          }
-          showToast(LANG3 === 'es' ? 'Desconectado' : isEN ? 'Signed out' : 'Disconnesso', 'info');
-          setTimeout(function() { window.location.reload(); }, 500);
-        });
+        window.performLogout();
       });
     } else {
       // Sign in with Google — unified method handles browser/PWA/standalone
@@ -10747,10 +10998,9 @@ window.injectAllWikiLinks = function() {
     homeAuth.addEventListener('click', function() {
       var user = (typeof firebase !== 'undefined' && firebase.auth) ? firebase.auth().currentUser : null;
       if (user) {
-        // Logged in → direct signOut (v3.82 fix: don't rely on hidden authBtn.click())
-        firebase.auth().signOut().then(function() {
-          if (window.showToast) showToast(LANG3 === 'es' ? 'Desconectado' : isEN ? 'Signed out' : 'Disconnesso', 'info');
-        });
+        // Logged in → direct signOut via shared performLogout (was a bare
+        // signOut() with no listener detach or FCM cleanup — QV-045/046)
+        window.performLogout();
       } else {
         // Not logged in → call doGoogleSignIn directly (v3.62 fix: don't rely on hidden authBtn.click())
         doGoogleSignIn(function(u) {
@@ -11232,11 +11482,25 @@ window.injectAllWikiLinks = function() {
   function markRead(id) {
     if (readState[id]) return;
     readState[id] = 'read';
-    if (readStateRef) readStateRef.child(id).set('read');
+    // v5.89 FIX (QV-038): Rules had no explicit rule for readState/{uid},
+    // falling back to the parent's owner-only write — an approved
+    // non-owner's write was silently rejected server-side while the UI
+    // optimistically updated in-memory state anyway, so the notification
+    // looked read/dismissed until the next reload reverted it. Added the
+    // missing rule (self-write, approved-and-not-banned, value restricted
+    // to read/dismissed); this .catch() also reverts the optimistic update
+    // on any residual failure so the UI doesn't lie about the real state.
+    if (readStateRef) readStateRef.child(id).set('read').catch(function(e) {
+      console.warn('[Notif] Failed to persist read state for', id, e.message);
+      delete readState[id];
+    });
   }
   function markDismissed(id) {
     readState[id] = 'dismissed';
-    if (readStateRef) readStateRef.child(id).set('dismissed');
+    if (readStateRef) readStateRef.child(id).set('dismissed').catch(function(e) {
+      console.warn('[Notif] Failed to persist dismissed state for', id, e.message);
+      delete readState[id];
+    });
   }
 
   // --- Badge update ---
@@ -12465,7 +12729,7 @@ window.injectAllWikiLinks = function() {
   var _placeNotified = false;
   var _placeReverseCache = {};
   var _placeReverseCacheKeys = []; // v2.63: track insertion order for LRU eviction
-  var _PLACE_CACHE_MAX = 300;      // cap at 300 entries (~55 days × ~5 new coords/day)
+  var _PLACE_CACHE_MAX = 300;      // cap at 300 entries (~59 days × ~5 new coords/day)
   function _placeReverseCacheSet(key, value) {
     if (!_placeReverseCache[key]) {
       _placeReverseCacheKeys.push(key);
@@ -14557,6 +14821,7 @@ window.injectAllWikiLinks = function() {
       return '<a href="' + safeUrl + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(cleaned) + '</a>' + escapeHtml(trailing);
     });
   }
+  window.linkify = linkify; // v5.79: expose so diary post rendering can reuse it too
 
   // v4.22: delegated handler — internal app links (#tab-...) inside chat messages
   // navigate within the app instead of opening a new browser tab / reloading.
@@ -15111,17 +15376,7 @@ window.injectAllWikiLinks = function() {
       var user = firebase.auth().currentUser;
       if (!user) return;
       showConfirm((LANG3 === 'es' ? 'Conectado como: ' : isEN ? 'Logged in as: ' : 'Connesso come: ') + (user.displayName || user.email) + '\n\n' + (LANG3 === 'es' ? '¿Cerrar sesión?' : isEN ? 'Sign out?' : 'Disconnettersi?'), function() {
-        firebase.auth().signOut().then(function() {
-          if (typeof window.detachFirebaseListeners === 'function') {
-            window.detachFirebaseListeners('chat');
-            window.detachFirebaseListeners('diario');
-            window.detachFirebaseListeners('posizione');
-            window.detachFirebaseListeners('admin');
-            window.detachFirebaseListeners('home');
-          }
-          showToast(LANG3 === 'es' ? 'Desconectado' : isEN ? 'Signed out' : 'Disconnesso', 'info');
-          setTimeout(function() { window.location.reload(); }, 500);
-        });
+        window.performLogout();
       });
     });
   }
@@ -16738,7 +16993,7 @@ window.injectAllWikiLinks = function() {
         date: today,
         customLabel: 'Pre-viaggio',
         customType: 'recap',
-        text: LANG3 === 'es' ? '¡La ruta está lista! 55 días, 14 países, 12.000 km en una furgoneta con toda la familia.' : isEN ? 'The route is ready! 55 days, 14 countries, 12,000 km in a van with the whole family.' : 'Il percorso \u00e8 pronto! 55 giorni, 14 paesi, 12.000 km in furgone con tutta la famiglia.',
+        text: LANG3 === 'es' ? '¡La ruta está lista! 59 días, 15 países, 12.000 km en una furgoneta con toda la familia.' : isEN ? 'The route is ready! 59 days, 15 countries, 12,000 km in a van with the whole family.' : 'Il percorso \u00e8 pronto! 59 giorni, 15 paesi, 12.000 km in furgone con tutta la famiglia.',
         draft: true,
         createdAt: firebase.database.ServerValue.TIMESTAMP
       }
@@ -16977,7 +17232,7 @@ window.injectAllWikiLinks = function() {
           var isTranslated = false;
           if (typeof LANG3 !== 'undefined' && LANG3 === 'es' && entry.textEs) { displayText = entry.textEs; isTranslated = true; }
           else if (isEN && entry.textEn) { displayText = entry.textEn; isTranslated = true; }
-          html += '    <p class="diario-text" data-entry-key="' + key + '">' + escapeHtml(displayText) + '</p>';
+          html += '    <p class="diario-text" data-entry-key="' + key + '">' + (window.linkify ? window.linkify(escapeHtml(displayText)) : escapeHtml(displayText)) + '</p>';
           // v2.21: Auto-translation disclaimer with toggle to see original
           if (isTranslated) {
             var translatedText = (typeof LANG3 !== 'undefined' && LANG3 === 'es') ? (entry.textEs || '') : (entry.textEn || '');
@@ -20308,7 +20563,15 @@ window.injectAllWikiLinks = function() {
           var pushOn = userPrefs.push !== false;   // default true
 
           html += '<div style="background:var(--bg-alt,#f5f5f5);border-radius:12px;padding:12px 16px;margin-bottom:10px;">';
-          html += '<div style="font-weight:600;font-size:14px;margin-bottom:8px;">' + name + '</div>';
+          // v5.87 FIX (QV-036): 'name' comes from approvedUsers[uid].displayName,
+          // a value the user set themselves while still pending (self-write,
+          // up to 100 chars) that survives approval unchanged. It was being
+          // concatenated straight into innerHTML — a displayName like
+          // "<img src=x onerror=...>" would execute the moment an owner
+          // opened this notification-preferences admin section. escapeHtml
+          // closes this; also hardened server-side in setUserApproved (see
+          // functions/index.js) as a second line of defense.
+          html += '<div style="font-weight:600;font-size:14px;margin-bottom:8px;">' + escapeHtml(name) + '</div>';
           html += '<div style="display:flex;justify-content:space-between;align-items:center;">';
           // In-App toggle with label
           html += '<div style="display:flex;align-items:center;gap:8px;">';
@@ -20568,11 +20831,23 @@ window.injectAllWikiLinks = function() {
 
     // Real km is fetched separately (may need a Firebase round-trip)
     if (typeof window.computeTotalKm === 'function') {
-      window.computeTotalKm(function(totalKm) {
+      window.computeTotalKm(function(totalKm, estimatedKm, estimatedDays) {
         var kmEl = document.getElementById('riepilogo-stats-km');
         if (!kmEl) return;
         var kmStr = Math.round(totalKm).toLocaleString(LANG3 === 'es' ? 'es-ES' : isEN ? 'en-GB' : 'it-IT');
-        kmEl.innerHTML = '🛣️ <strong>' + kmStr + ' km</strong> ' + kmLabel;
+        var html = '🛣️ <strong>' + kmStr + ' km</strong> ' + kmLabel;
+        // v5.70 IMPROVEMENT: show untracked days as a separate, explicitly
+        // labeled estimate — never silently merged into the real total above.
+        if (estimatedDays > 0) {
+          var estStr = Math.round(estimatedKm).toLocaleString(LANG3 === 'es' ? 'es-ES' : isEN ? 'en-GB' : 'it-IT');
+          var estLabel = LANG3 === 'es'
+            ? ' + ~' + estStr + ' km estimados (' + estimatedDays + ' día' + (estimatedDays > 1 ? 's' : '') + ' sin seguimiento)'
+            : isEN
+            ? ' + ~' + estStr + ' km estimated (' + estimatedDays + ' day' + (estimatedDays > 1 ? 's' : '') + ' with no tracking)'
+            : ' + ~' + estStr + ' km stimati (' + estimatedDays + ' giorn' + (estimatedDays > 1 ? 'i' : 'o') + ' senza tracciamento)';
+          html += '<br><span style="font-size:13px;color:var(--text-muted,#64748b);">' + estLabel + '</span>';
+        }
+        kmEl.innerHTML = html;
       });
     }
   }
@@ -22292,4 +22567,43 @@ window.injectAllWikiLinks = function() {
       });
     });
   });
+})();
+
+// ─── TRACKING REMINDER (v5.70 IMPROVEMENT) ───────────────────────────────
+// If a trip day is well underway (>2h since local midnight, giving time for
+// the morning routine) and the app's own in-app live tracking isn't active,
+// nudge the owner once — never more than once per calendar day, so it
+// doesn't nag. Important limit: this can only see the in-app tracking
+// state; it has no way to know whether the separate GPSLogger Android app
+// is running, so the reminder mentions both rather than claiming certainty
+// about GPSLogger specifically.
+(function() {
+    'use strict';
+    function checkAndRemind() {
+        try {
+            if (typeof window.isOwner === 'undefined' || !window.isOwner) return; // owner only
+            var currentDay = (typeof getCurrentTripDay === 'function') ? getCurrentTripDay() : -1;
+            if (currentDay < 0 || (typeof TRIP_DAYS !== 'undefined' && currentDay >= TRIP_DAYS)) return; // not during the trip
+            var now = new Date();
+            if (now.getHours() < 2) return; // too early, give the morning routine time
+            var todayKey = window.localDateStr ? window.localDateStr() : now.toISOString().slice(0, 10);
+            var seenKey = 'qv_tracking_reminder_' + todayKey;
+            try { if (localStorage.getItem(seenKey)) return; } catch (e) {}
+            var active = window._isLiveTrackingActive && window._isLiveTrackingActive();
+            if (active) return;
+            try { localStorage.setItem(seenKey, '1'); } catch (e) {}
+            if (window.showToast) {
+                showToast(
+                    LANG3 === 'es'
+                        ? '📍 ¿Seguimiento activado hoy? Revisa el botón "Tracking" en Inicio (y GPSLogger si lo usas).'
+                        : isEN
+                        ? '📍 Tracking on for today? Check the "Tracking" button on Home (and GPSLogger if you use it).'
+                        : '📍 Tracciamento attivo per oggi? Controlla il pulsante "Tracking" in Home (e GPSLogger se lo usi).',
+                    'info', 8000
+                );
+            }
+        } catch (e) { /* never block anything on a reminder failing */ }
+    }
+    // Give auth/tracking-state modules time to initialize before the first check.
+    setTimeout(checkAndRemind, 6000);
 })();

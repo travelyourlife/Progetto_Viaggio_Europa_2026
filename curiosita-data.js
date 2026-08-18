@@ -18,18 +18,18 @@ var CURIOSITA_DATA = [
   {
     "day": -25,
     "emoji": "📦",
-    "text": "Un viaggio di 55 giorni in camper richiede in media 70-90 litri d'acqua potabile a bordo per famiglia: per questo i camper hanno serbatoi da 100+ litri.",
+    "text": "Un viaggio di 59 giorni in camper richiede in media 70-90 litri d'acqua potabile a bordo per famiglia: per questo i camper hanno serbatoi da 100+ litri.",
     "source": "ADAC Camping",
     "textEN": "A 55-day camper trip requires on average 70-90 litri d'acqua potabile a bordo per famiglia: per questo i camper hanno serbatoi da 100+ litri.",
-    "textES": "Un viaje de 55 días en camper requiere de media 70-90 litri d'acqua potabile a bordo per famiglia: per questo i camper hanno serbatoi da 100+ litri."
+    "textES": "Un viaje de 59 días en camper requiere de media 70-90 litri d'acqua potabile a bordo per famiglia: per questo i camper hanno serbatoi da 100+ litri."
   },
   {
     "day": -24,
     "emoji": "🌍",
-    "text": "Attraverserete 14 paesi in 55 giorni — una media di un paese nuovo ogni 4 giorni! Quanti passaporti servirebbero senza l'UE?",
+    "text": "Attraverserete 15 paesi in 59 giorni — una media di un paese nuovo ogni 4 giorni! Quanti passaporti servirebbero senza l'UE?",
     "source": "Calcolo itinerario",
-    "textEN": "You'll cross 14 countries in 55 days — an average of a new country every 4 days! How many passports would you need without the EU?",
-    "textES": "Atravesaréis 14 países en 55 días — ¡una media de un país nuevo cada 4 días! ¿Cuántos pasaportes harían falta sin la UE?"
+    "textEN": "You'll cross 15 countries in 59 days — an average of a new country every 4 days! How many passports would you need without the EU?",
+    "textES": "Atravesaréis 15 países en 59 días — ¡una media de un país nuevo cada 4 días! ¿Cuántos pasaportes harían falta sin la UE?"
   },
   {
     "day": -24,
@@ -42,10 +42,10 @@ var CURIOSITA_DATA = [
   {
     "day": -24,
     "emoji": "💶",
-    "text": "Dei 14 paesi del viaggio, non tutti usano l'euro: Polonia (złoty), Danimarca (corona danese) e Norvegia (corona norvegese) hanno valute proprie.",
+    "text": "Dei 15 paesi del viaggio, non tutti usano l'euro: Polonia (złoty), Danimarca (corona danese) e Norvegia (corona norvegese) hanno valute proprie.",
     "source": "European Central Bank",
-    "textEN": "Of the 14 countries on the trip, not all use the euro: Poland (złoty), Denmark (Danish krone) and Norway (Norwegian krone) have their own currencies.",
-    "textES": "De los 14 países del viaje, no todos usan el euro: Polonia (złoty), Dinamarca (corona danesa) y Noruega (corona noruega) tienen monedas propias."
+    "textEN": "Of the 15 countries on the trip, not all use the euro: Poland (złoty), Denmark (Danish krone) and Norway (Norwegian krone) have their own currencies.",
+    "textES": "De los 15 países del viaje, no todos usan el euro: Polonia (złoty), Dinamarca (corona danesa) y Noruega (corona noruega) tienen monedas propias."
   },
   {
     "day": -23,
@@ -266,10 +266,10 @@ var CURIOSITA_DATA = [
   {
     "day": -14,
     "emoji": "🚐",
-    "text": "Il vostro camper percorrerà una media di 222 km al giorno — come andare da Padova a Firenze ogni singolo giorno per 55 giorni!",
+    "text": "Il vostro camper percorrerà una media di 222 km al giorno — come andare da Padova a Firenze ogni singolo giorno per 59 giorni!",
     "source": "Calcolo itinerario",
-    "textEN": "Your camper will average 222 km per day — like driving from Padova to Firenze every single day for 55 days!",
-    "textES": "Vuestro camper recorrerá una media de 222 km al día — ¡como ir de Padova a Firenze cada día durante 55 días!"
+    "textEN": "Your camper will average 222 km per day — like driving from Padova to Firenze every single day for 59 days!",
+    "textES": "Vuestro camper recorrerá una media de 222 km al día — ¡como ir de Padova a Firenze cada día durante 59 días!"
   },
   {
     "day": -14,
@@ -578,10 +578,10 @@ var CURIOSITA_DATA = [
   {
     "day": -1,
     "emoji": "🚐",
-    "text": "Domani si parte! 55 giorni, 14 paesi, 12.000 km. L'avventura della vita inizia tra poche ore!",
+    "text": "Domani si parte! 59 giorni, 15 paesi, 12.000 km. L'avventura della vita inizia tra poche ore!",
     "source": "Quo Vadis",
-    "textEN": "We're leaving tomorrow! 55 days, 14 countries, 12.000 km. The adventure of a lifetime starts in a few hours!",
-    "textES": "¡Mañana salimos! 55 días, 14 países, 12.000 km. ¡La aventura de la vida comienza en unas pocas horas!"
+    "textEN": "We're leaving tomorrow! 59 days, 15 countries, 12.000 km. The adventure of a lifetime starts in a few hours!",
+    "textES": "¡Mañana salimos! 59 días, 15 países, 12.000 km. ¡La aventura de la vida comienza en unas pocas horas!"
   },
   {
     "day": -1,
@@ -594,10 +594,10 @@ var CURIOSITA_DATA = [
   {
     "day": -1,
     "emoji": "🗺️",
-    "text": "14 paesi, 4 mari e 2 oceani vi aspettano: dall'Adriatico al Baltico, dall'Artico al Mediterraneo. Si parte!",
+    "text": "15 paesi, 4 mari e 2 oceani vi aspettano: dall'Adriatico al Baltico, dall'Artico al Mediterraneo. Si parte!",
     "source": "Quo Vadis",
-    "textEN": "14 countries, 4 seas and 2 oceans await you: from the Adriatico to the Baltico, from the Artico to the Mediterraneo. Let's go!",
-    "textES": "14 países, 4 mares y 2 océanos os esperan: del Adriatico al Baltico, del Artico al Mediterraneo. ¡Se parte!"
+    "textEN": "15 countries, 4 seas and 2 oceans await you: from the Adriatico to the Baltico, from the Artico to the Mediterraneo. Let's go!",
+    "textES": "15 países, 4 mares y 2 océanos os esperan: del Adriatico al Baltico, del Artico al Mediterraneo. ¡Se parte!"
   },
   {
     "day": 0,
@@ -1898,10 +1898,10 @@ var CURIOSITA_DATA = [
   {
     "day": 48,
     "emoji": "🌑",
-    "text": "L'eclissi del 12 agosto 2026 sarà totale per ~1 min 50 sec a Palencia. La prossima eclissi totale visibile dalla Spagna sarà nel 2090 — tra 64 anni!",
+    "text": "L'eclissi del 12 agosto 2026 sarà totale per ~1 min 50 sec a Palencia. La prossima eclissi totale visibile dalla Spagna sarà il 2 agosto 2027 — tra appena un anno, parte del \"trio iberico\" 2026-2027-2028!",
     "source": "NASA Eclipse Predictions",
-    "textEN": "The eclipse on 12 August 2026 will be total for ~1 min 50 sec at Palencia. The next total eclipse visible from Spain will be in 2090 — in 64 years!",
-    "textES": "El eclipse del 12 agosto 2026 será total durante ~1 min 50 sec en Palencia. El próximo eclipse total visible desde España será en 2090 — ¡dentro de 64 años!"
+    "textEN": "The eclipse on 12 August 2026 will be total for ~1 min 50 sec at Palencia. The next total eclipse visible from Spain will be on 2 August 2027 — just a year away, part of the \"Iberian trio\" 2026-2027-2028!",
+    "textES": "El eclipse del 12 agosto 2026 será total durante ~1 min 50 sec en Palencia. El próximo eclipse total visible desde España será el 2 de agosto de 2027 — dentro de apenas un año, ¡parte del \"trío ibérico\" 2026-2027-2028!"
   },
   {
     "day": 48,
@@ -2042,10 +2042,10 @@ var CURIOSITA_DATA = [
   {
     "day": 53,
     "emoji": "📊",
-    "text": "In 55 giorni avete attraversato 7 fusi orari (da UTC+1 a UTC+3 e ritorno), 4 mari (Adriatico, Baltico, Artico, Mediterraneo) e 2 oceani (Atlantico e Artico).",
+    "text": "In 59 giorni avete attraversato 7 fusi orari (da UTC+1 a UTC+3 e ritorno), 4 mari (Adriatico, Baltico, Artico, Mediterraneo) e 2 oceani (Atlantico e Artico).",
     "source": "Calcolo itinerario",
-    "textEN": "In 55 days you crossed 7 time zones (from UTC+1 to UTC+3 and back), 4 seas (Adriatico, Baltico, Artico, Mediterraneo) and 2 oceans (Atlantico and Artico).",
-    "textES": "En 55 días habéis atravesado 7 husos horarios (de UTC+1 a UTC+3 y de vuelta), 4 mares (Adriatico, Baltico, Artico, Mediterraneo) y 2 océanos (Atlantico y Artico)."
+    "textEN": "In 59 days you crossed 7 time zones (from UTC+1 to UTC+3 and back), 4 seas (Adriatico, Baltico, Artico, Mediterraneo) and 2 oceans (Atlantico and Artico).",
+    "textES": "En 59 días habéis atravesado 7 husos horarios (de UTC+1 a UTC+3 y de vuelta), 4 mares (Adriatico, Baltico, Artico, Mediterraneo) y 2 océanos (Atlantico y Artico)."
   },
   {
     "day": 53,
@@ -2066,10 +2066,10 @@ var CURIOSITA_DATA = [
   {
     "day": 54,
     "emoji": "🏠",
-    "text": "Dopo 55 giorni, ~12.000 km e 14 paesi, il cerchio si chiude. La parola \"nostos\" (ritorno) + \"algos\" (dolore) dà \"nostalgia\" — ma voi tornate con 55 giorni di ricordi!",
+    "text": "Dopo 59 giorni, ~12.000 km e 15 paesi, il cerchio si chiude. La parola \"nostos\" (ritorno) + \"algos\" (dolore) dà \"nostalgia\" — ma voi tornate con 59 giorni di ricordi!",
     "source": "Etimologia greca",
-    "textEN": "After 55 days, ~12,000 km and 14 countries, the circle closes. The word \"nostos\" (return) + \"algos\" (pain) gives \"nostalgia\" — but you return with 55 days of memories!",
-    "textES": "Tras 55 días, ~12.000 km y 14 países, el círculo se cierra. La palabra \"nostos\" (retorno) + \"algos\" (dolor) da \"nostalgia\" — ¡pero volvéis con 55 días de recuerdos!"
+    "textEN": "After 59 days, ~12,000 km and 15 countries, the circle closes. The word \"nostos\" (return) + \"algos\" (pain) gives \"nostalgia\" — but you return with 59 days of memories!",
+    "textES": "Tras 59 días, ~12.000 km y 15 países, el círculo se cierra. La palabra \"nostos\" (retorno) + \"algos\" (dolor) da \"nostalgia\" — ¡pero volvéis con 59 días de recuerdos!"
   },
   {
     "day": 54,

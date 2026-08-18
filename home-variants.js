@@ -539,7 +539,17 @@
       var _dayTitle = (_lang3 === 'es' && dayData.titleES) ? dayData.titleES : (_lang3 === 'en' && dayData.titleEN) ? dayData.titleEN : (dayData.title || '');
       var titleParts = _dayTitle.split('→');
       var destination = titleParts.length > 1 ? titleParts[titleParts.length - 1].trim() : titleParts[0].trim();
-      data.city = destination;
+      // v5.71 IMPROVEMENT: this used to set data.city to the day's PLANNED
+      // destination (parsed from the itinerary title) as an "instant
+      // placeholder" — but if the live /currentLocation update never arrives
+      // (or arrives without a .city field yet, e.g. reverse-geocoding still
+      // in progress), that planned city stays on screen looking like a
+      // confirmed real position, even though it was never true (reported:
+      // showing "Palencia" while actually in Burgos). Neutral placeholder
+      // instead; the live listener below fills in the real value, or falls
+      // back to the last REAL known position with an honest "updated Xh
+      // ago" rather than ever showing the plan as if it were fact.
+      data.city = tripActive ? '…' : destination;
 
       // Country from region
       var countryMap = _lang3 === 'es' ? {
@@ -721,7 +731,7 @@
       data.distanceFromHome = '';
     } else {
       var _td = (typeof TRIP_DAYS !== 'undefined') ? TRIP_DAYS : 55;
-      data.progressText = _dayPrefix + (currentDay + 1) + '/' + _td + ' \u00b7 ' + data.totalKm + ' km \u00b7 ' + data.totalCountries + _hvT('/14 paesi', '/14 countries', '/14 pa\u00edses');
+      data.progressText = _dayPrefix + (currentDay + 1) + '/' + _td + ' \u00b7 ' + data.totalKm + ' km \u00b7 ' + data.totalCountries + _hvT('/15 paesi', '/15 countries', '/15 pa\u00edses');
       data.kmBar = Math.min(100, Math.round((parseInt(data.totalKm.replace(/\./g, '')) || 0) / 12000 * 100));
       data.lastUpdate = '';
 
@@ -796,7 +806,7 @@
       data.storyHeroBg = placeholderPhotos[randIdx];
       data.photoBg = placeholderPhotos[(randIdx + 1) % placeholderPhotos.length];
       data.photoCaption = _en ? 'Trip preview' : 'Anteprima del viaggio';
-      data.photoMeta = (typeof window.TRIP_META !== 'undefined') ? window.TRIP_META.summaryIT : '55 giorni · 14 paesi · 12.000 km';
+      data.photoMeta = (typeof window.TRIP_META !== 'undefined') ? window.TRIP_META.summaryIT : '59 giorni · 15 paesi · 12.000 km';
       data.photoCount = placeholderPhotos.length;
     }
 
@@ -1212,7 +1222,7 @@
       html += '    <div class="hv-diary-preview-time">' + (lang === 'es' ? 'Salida en ' + daysUntilStr : lang === 'en' ? 'Departure in ' + daysUntilStr : 'Partenza tra ' + daysUntilStr) + '</div>';
       html += '  </div>';
       html += '</div>';
-      html += '<div class="hv-diary-preview-highlight">\u2b50 ' + (lang === 'es' ? '55 d\u00edas, 14 pa\u00edses, 12.000 km en furgoneta con toda la familia!' : lang === 'en' ? '55 days, 14 countries, 12,000 km in a van with the whole family!' : '55 giorni, 14 paesi, 12.000 km in furgone con tutta la famiglia!') + '</div>';
+      html += '<div class="hv-diary-preview-highlight">\u2b50 ' + (lang === 'es' ? '55 d\u00edas, 15 pa\u00edses, 12.000 km en furgoneta con toda la familia!' : lang === 'en' ? '59 days, 15 countries, 12,000 km in a van with the whole family!' : '59 giorni, 15 paesi, 12.000 km in furgone con tutta la famiglia!') + '</div>';
       if (latestPost && latestPost.text) {
         var bodyText = (latestPost.text || '').substring(0, 120);
         html += '<div class="hv-diary-preview-text">' + escHtml(bodyText) + '</div>';
@@ -1751,43 +1761,52 @@
 
     // Calculate date for the current day
     var dayDate = new Date(tripStart.getTime() + currentDay * 86400000);
-    var dateStr = dayDate.toISOString().split('T')[0];
+    // v5.91 FIX (QV-040): toISOString() uses UTC — between 00:00-01:59 local
+    // (CEST, summer) the UTC date is still yesterday, so the weather request
+    // for the current/fallback day could silently ask Open-Meteo for the
+    // wrong date. window.localDateStr() (already used everywhere else in
+    // this session's fixes) formats in the actual local date instead.
+    var dateStr = window.localDateStr ? window.localDateStr(dayDate) : dayDate.toISOString().split('T')[0];
 
     // Check if within forecast range (16 days from today)
     var daysUntil = Math.ceil((dayDate - now) / 86400000);
     if (daysUntil > 16 || daysUntil < -1) {
       // If day override is active, use today's date as fallback to show format
       if (typeof window._dayOverride === 'number') {
-        dateStr = now.toISOString().split('T')[0];
+        dateStr = window.localDateStr ? window.localDateStr(now) : now.toISOString().split('T')[0];
       } else {
         return; // Out of forecast range
       }
     }
 
-    var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + lat + '&longitude=' + lon +
-      '&daily=temperature_2m_max,temperature_2m_min,weathercode,sunrise,sunset,precipitation_probability_max,windspeed_10m_max' +
-      '&start_date=' + dateStr + '&end_date=' + dateStr + '&timezone=auto';
+    // v6.02 FIX (QV-048): was a raw fetch(url).then(r => r.json()) — no
+    // timeout (a slow/hung connection would leave this pending forever) and
+    // no check that the response was even successful before parsing it as
+    // JSON. app.js already has fetchForecast() built exactly for this
+    // (fetchWithTimeout, resp.ok check, retry-once, caching) — reused here
+    // instead of duplicating that logic a second time.
+    var _fetchWeather = window.fetchForecast
+      ? window.fetchForecast(lat, lon, dateStr)
+      : fetch('https://api.open-meteo.com/v1/forecast?latitude=' + lat + '&longitude=' + lon +
+          '&daily=temperature_2m_max,temperature_2m_min,weathercode,sunrise,sunset,precipitation_probability_max,windspeed_10m_max' +
+          '&start_date=' + dateStr + '&end_date=' + dateStr + '&timezone=auto').then(function(r) { return r.json(); })
+          .then(function(data) { return data.daily && data.daily.temperature_2m_max ? {
+            high: Math.round(data.daily.temperature_2m_max[0]), low: Math.round(data.daily.temperature_2m_min[0]),
+            code: data.daily.weathercode[0], sunrise: '', sunset: '', daylight: ''
+          } : null; });
 
-    fetch(url).then(function(r) { return r.json(); }).then(function(data) {
-      if (!data.daily || !data.daily.temperature_2m_max) return;
+    _fetchWeather.then(function(result) {
+      if (!result) return;
 
-      var high = Math.round(data.daily.temperature_2m_max[0]);
-      var low = Math.round(data.daily.temperature_2m_min[0]);
-      var code = data.daily.weathercode[0];
+      var high = result.high;
+      var low = result.low;
+      var code = result.code;
       var wIcon = weatherCodeToIcon(code);
 
-      // Sunrise/sunset
-      var daylightStr = '';
-      if (data.daily.sunrise && data.daily.sunset) {
-        var rise = new Date(data.daily.sunrise[0]);
-        var set = new Date(data.daily.sunset[0]);
-        var diffMs = set - rise;
-        var hours = Math.floor(diffMs / 3600000);
-        var mins = Math.round((diffMs % 3600000) / 60000);
-        var riseFmt = rise.getHours().toString().padStart(2,'0') + ':' + rise.getMinutes().toString().padStart(2,'0');
-        var setFmt = set.getHours().toString().padStart(2,'0') + ':' + set.getMinutes().toString().padStart(2,'0');
-        daylightStr = riseFmt + '–' + setFmt + ' (' + hours + 'h' + (mins > 0 ? ' ' + mins + 'm' : '') + ')';
-      }
+      // Sunrise/sunset — fetchForecast() already returns these pre-formatted
+      var daylightStr = (result.sunrise && result.sunset)
+        ? result.sunrise + '–' + result.sunset + (result.daylight ? ' (' + result.daylight + ')' : '')
+        : '';
 
       // Update hero elements
       var container = document.getElementById('hv-container');
@@ -1841,19 +1860,26 @@
     // Fetch weather for next stop
     var tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
-    var tomorrowStr = tomorrow.toISOString().split('T')[0];
-    var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + nextCoord.lat +
-      '&longitude=' + nextCoord.lng +
-      '&daily=temperature_2m_max,weathercode' +
-      '&timezone=auto&start_date=' + tomorrowStr + '&end_date=' + tomorrowStr;
+    // v5.91 FIX (QV-040): same UTC-vs-local fix — "tomorrow's weather" is the
+    // most visible case, since 00:00-01:59 CEST would otherwise silently ask
+    // for a date that's still today in UTC terms.
+    var tomorrowStr = window.localDateStr ? window.localDateStr(tomorrow) : tomorrow.toISOString().split('T')[0];
+    // v6.02 FIX (QV-048): same fix as today's weather above — reuse
+    // fetchForecast() instead of a raw, unprotected fetch().
+    var _fetchTomorrowWeather = window.fetchForecast
+      ? window.fetchForecast(nextCoord.lat, nextCoord.lng, tomorrowStr)
+      : fetch('https://api.open-meteo.com/v1/forecast?latitude=' + nextCoord.lat +
+          '&longitude=' + nextCoord.lng + '&daily=temperature_2m_max,weathercode' +
+          '&timezone=auto&start_date=' + tomorrowStr + '&end_date=' + tomorrowStr)
+          .then(function(r) { return r.json(); })
+          .then(function(data) { return data.daily && data.daily.temperature_2m_max ?
+            { high: Math.round(data.daily.temperature_2m_max[0]), code: data.daily.weathercode[0] } : null; });
 
-    fetch(url).then(function(r) { return r.json(); }).then(function(data) {
-      if (data.daily && data.daily.temperature_2m_max) {
-        var tMax = Math.round(data.daily.temperature_2m_max[0]);
-        var wCode = data.daily.weathercode[0];
-        var wIcon = weatherCodeToIcon(wCode);
+    _fetchTomorrowWeather.then(function(result) {
+      if (result) {
+        var wIcon = weatherCodeToIcon(result.code);
         var nextWeatherEls = container.querySelectorAll('[data-hv="nextStopWeather"]');
-        nextWeatherEls.forEach(function(el) { el.textContent = wIcon + ' ' + tMax + '°C'; });
+        nextWeatherEls.forEach(function(el) { el.textContent = wIcon + ' ' + result.high + '°C'; });
       }
     }).catch(function() { /* Fail silently */ });
   }
@@ -1916,19 +1942,53 @@
     window._hvCurrentLocRef.on('value', function(snap) {
       var cl = snap.val();
       if (cl && cl.lat && cl.lng) {
-        // v5.46 FIX: this used to only update the displayed city if data was
-        // < 24h old (v4.01), silently leaving the initial TRIP_COORDS-based
-        // placeholder (the PLANNED city, not the real one) on screen whenever
-        // it wasn't. That's the exact same bug the 60min→24h change was meant
-        // to fix, just with a longer gap (32h) than the new threshold covers.
-        // The Posizione tab never had this gate — it always shows the real
-        // last-known position with an honest "updated Xh ago" instead of
-        // hiding it. Home now does the same: always show the real city.
         var container = document.getElementById('hv-container');
-        if (container && cl.city) {
-          container.querySelectorAll('[data-hv="city"]').forEach(function(el) { el.textContent = cl.city; });
-          if (cl.country) { container.querySelectorAll('[data-hv="country"]').forEach(function(el) { el.textContent = cl.country; }); }
-          if (cl.flag) { container.querySelectorAll('[data-hv="flag"]').forEach(function(el) { el.textContent = cl.flag; }); }
+        // v5.71 IMPROVEMENT: show how old the real position is, instead of
+        // silently presenting it (or, worse, a never-true planned city) as
+        // if it were current. Matches the "tratto stimato" / "km stimati"
+        // honesty pattern used elsewhere in the app.
+        function _hvSetCityWithAge(city, country, flag, updatedAt) {
+          if (!container || !city) return;
+          var ageLabel = '';
+          if (updatedAt) {
+            var ageMin = Math.round((Date.now() - updatedAt) / 60000);
+            if (ageMin >= 60) {
+              var ageH = Math.round(ageMin / 60);
+              ageLabel = _hvT(' · aggiornato ' + ageH + 'h fa', ' · updated ' + ageH + 'h ago', ' · actualizado hace ' + ageH + 'h');
+            } else if (ageMin >= 15) {
+              ageLabel = _hvT(' · aggiornato ' + ageMin + 'min fa', ' · updated ' + ageMin + 'min ago', ' · actualizado hace ' + ageMin + 'min');
+            } // fresher than 15 min: no age label, reads as "now"
+          }
+          container.querySelectorAll('[data-hv="city"]').forEach(function(el) { el.textContent = city; });
+          if (country) container.querySelectorAll('[data-hv="country"]').forEach(function(el) { el.textContent = country; });
+          if (flag) container.querySelectorAll('[data-hv="flag"]').forEach(function(el) { el.textContent = flag; });
+          container.querySelectorAll('[data-hv="cityAge"]').forEach(function(el) { el.textContent = ageLabel; });
+        }
+
+        if (cl.city) {
+          _hvSetCityWithAge(cl.city, cl.country, cl.flag, cl.updatedAt);
+        } else if (typeof FAMILY_ID !== 'undefined') {
+          // No city on /currentLocation yet (reverse-geocode still pending).
+          // v5.71 correction: dailySummaries only ever stores .country /
+          // .countryCode (verified in app.js — no .city field is written
+          // there), so the honest fallback is at country level, not city —
+          // still far better than showing a specific city that was never real.
+          firebase.database().ref('trips/' + FAMILY_ID + '/dailySummaries')
+            .orderByKey().limitToLast(3).once('value', function(dsSnap) {
+              var ds = dsSnap.val() || {};
+              var keys = Object.keys(ds).sort();
+              for (var i = keys.length - 1; i >= 0; i--) {
+                var entry = ds[keys[i]];
+                if (entry && entry.country) {
+                  var entryDate = new Date(keys[i] + 'T12:00:00');
+                  var cc = entry.countryCode;
+                  var flag = cc ? String.fromCodePoint(0x1F1E6 + cc.charCodeAt(0) - 65) + String.fromCodePoint(0x1F1E6 + cc.charCodeAt(1) - 65) : '';
+                  var genericCity = _hvT('In viaggio', 'On the road', 'De viaje');
+                  _hvSetCityWithAge(genericCity, entry.country, flag, entryDate.getTime());
+                  break;
+                }
+              }
+            });
         }
         // v4.04: restMode — show overnight status + next day preview
         var _enRest = (typeof isEN !== 'undefined' && isEN);

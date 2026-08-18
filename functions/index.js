@@ -44,6 +44,7 @@ const { setGlobalOptions, params } = require('firebase-functions/v2');
 const { defineSecret } = require('firebase-functions/params');
 const logger = require('firebase-functions/logger');
 const admin  = require('firebase-admin');
+const crypto = require('crypto'); // QV-014: cryptographically random OAuth state tokens
 
 admin.initializeApp();
 
@@ -62,6 +63,40 @@ const OWNER_UIDS = [
   'RxlVlsfeaEeSwFUVYbKQujEsbBo1',  // Tommaso
   'Mh8BOeFPnFe7WObcsUoP6wyRgPw1',  // Secondary owner
 ];
+
+// QV-025 FIX: shared owner check, matching the exact predicate already used
+// consistently in database.rules.json and in setUserApproved. Checks the
+// hardcoded list first (no database read needed for the common case), then
+// falls back to the ownerUsers/{uid} node for dynamic owners.
+async function isOwnerUid(uid) {
+  if (!uid) return false;
+  if (OWNER_UIDS.includes(uid)) return true;
+  const snap = await db.ref(`trips/${FAMILY_ID}/ownerUsers/${uid}`).once('value');
+  return snap.val() === true;
+}
+
+// QV-032 FIX: dailyCountdown, eveningNextStage and morningWeatherPush each
+// used to push() a new notification unconditionally on every run — their
+// `tag` field (e.g. "weather-2026-08-10") already had exactly the right
+// content to dedupe on, but was only ever used as FCM payload metadata, not
+// as an actual idempotency key. A scheduler retry or re-execution could
+// queue (and send) the same notification twice. This claims a deterministic
+// job key atomically — via the same create-if-absent transaction pattern
+// already proven in curiositaDispatcher — before ever pushing to the queue;
+// a second call with the same jobKey is a safe no-op.
+async function queueNotificationOnce(jobKey, payload) {
+  const jobRef = db.ref(`trips/${FAMILY_ID}/notifications/jobs/${jobKey}`);
+  const claimResult = await jobRef.transaction((current) => {
+    if (current) return; // abort — already claimed/sent
+    return { claimedAt: Date.now() };
+  });
+  if (!claimResult.committed) {
+    logger.log(`[QueueOnce] Skipped — job "${jobKey}" already claimed.`);
+    return false;
+  }
+  await db.ref(`trips/${FAMILY_ID}/notifications/queue`).push(payload);
+  return true;
+}
 
 
 // ═══════════════════════════════════════════════════════════
@@ -87,7 +122,13 @@ const EXPENSE_SUBCATEGORIES = {
 // Uses date-keyed path: rateLimits/{uid}/{functionName}/{YYYY-MM-DD}
 // No external cron needed — old date keys are naturally ignored.
 async function checkRateLimit(uid, functionName, maxPerDay) {
-  const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+  // v6.02 FIX (QV-047): was new Date().toISOString().slice(0,10) — UTC date,
+  // so the daily counter rolled over at 01:00 CET / 02:00 CEST local time,
+  // not at Italian midnight. Reuses getRomeDateStr() (defined further down
+  // in this file, but function declarations are hoisted — already used
+  // consistently by the trip-related scheduled functions) for the same
+  // Europe/Rome date the rest of the app shows the user.
+  const today = getRomeDateStr(new Date()); // YYYY-MM-DD, Europe/Rome
   const ref = db.ref(`rateLimits/${uid}/${functionName}/${today}`);
   // v4.10 FIX (P0 #2): atomic increment via transaction to remove the
   // read-then-write race condition (two rapid calls could both read 0 and
@@ -104,7 +145,13 @@ async function checkRateLimit(uid, functionName, maxPerDay) {
 
 // ═══════════════════════════════════════════════════════════
 const TRIP_START_STR = '2026-06-25T00:00:00+02:00';
-const TRIP_DAYS = 55;
+const TRIP_DAYS = 59;
+// v5.96: allineato al client — rientro posticipato al 22/08. Verificate PRIMA
+// di questo cambio tutte le funzioni schedulate che usano TRIP_DAYS: hanno
+// già controlli di esistenza e ripieghi sicuri (il meteo mattutino/serale usa
+// la posizione GPS reale come ripiego se manca TRIP_COORDS[tripDay]; il
+// riepilogo serale del giorno dopo usa un'etichetta generica "Giorno X" se
+// manca l'itinerario reale) — nessun rischio di errore per G56-G59.
 
 /**
  * Read the admin notification schedule config from Firebase.
@@ -142,96 +189,117 @@ exports.processNotificationQueue = onValueCreated(
   async (event) => {
     const snap = event.data;
     const payload = snap.val();
-    if (!payload || payload.sent) return null;
+    // v5.79 FIX (QV-026): this used to check payload.sent and lock with
+    // sent:true BEFORE any token was read or FCM was called — an error
+    // anywhere after the lock (RTDB read, FCM call, timeout) left the queue
+    // entry permanently marked as sent even though nothing was delivered,
+    // with no way to tell the difference or retry. Now the lock only claims
+    // a 'processing' status; 'sent' is set at the very end, only after FCM
+    // actually responds, and any failure explicitly marks 'failed' instead
+    // of leaving the ambiguous old sent:true.
+    if (!payload || payload.status === 'sent' || payload.status === 'processing') return null;
 
     // Atomic lock to prevent double-send on CF retries
     const lockResult = await snap.ref.transaction(data => {
-      if (!data || data.sent) return; // abort — already locked
-      return { ...data, sent: true, sentAt: Date.now() };
+      if (!data || data.status === 'sent' || data.status === 'processing') return; // abort — already locked/sent
+      return { ...data, status: 'processing', processingAt: Date.now() };
     });
     if (!lockResult.committed) {
-      logger.log('[Push] Skipped — already locked by another invocation');
+      logger.log('[Push] Skipped — already locked or sent by another invocation');
       return null;
     }
 
-    const { title, body, target, url, tag, senderUid } = payload;
-    const familyId = event.params.familyId;
+    try {
+      const { title, body, target, url, tag, senderUid } = payload;
+      const familyId = event.params.familyId;
 
-    // QV-011/012/013 FIX: device.role is written by the client (Rules only
-    // validate the 'token' field, per QV-012), so any user could set their
-    // own role to 'owner' in fcm_tokens/{uid}/{device} and receive
-    // owner-targeted pushes. Also, a pending (unapproved) user was being
-    // classified as 'family' client-side with no approvedUsers/bannedUsers
-    // check at all (QV-013). Fix: derive the real role server-side, once per
-    // uid, from the same authoritative nodes the Realtime Database Rules
-    // themselves trust — never from the client-supplied device.role.
-    const [ownerUsersSnap, approvedUsersSnap, bannedUsersSnap] = await Promise.all([
-      db.ref(`trips/${familyId}/ownerUsers`).once('value'),
-      db.ref(`trips/${familyId}/approvedUsers`).once('value'),
-      db.ref(`trips/${familyId}/bannedUsers`).once('value'),
-    ]);
-    const ownerUsersVal = ownerUsersSnap.val() || {};
-    const approvedUsersVal = approvedUsersSnap.val() || {};
-    const bannedUsersVal = bannedUsersSnap.val() || {};
-    function realRoleFor(uid) {
-      if (bannedUsersVal[uid]) return 'visitor'; // banned = not a member, regardless of anything else
-      if (OWNER_UIDS.includes(uid) || ownerUsersVal[uid] === true) return 'owner';
-      if (approvedUsersVal[uid]) return 'family';
-      return 'visitor'; // pending or unknown — never 'family'/'owner'
-    }
+      // QV-011/012/013 FIX: device.role is written by the client (Rules only
+      // validate the 'token' field, per QV-012), so any user could set their
+      // own role to 'owner' in fcm_tokens/{uid}/{device} and receive
+      // owner-targeted pushes. Also, a pending (unapproved) user was being
+      // classified as 'family' client-side with no approvedUsers/bannedUsers
+      // check at all (QV-013). Fix: derive the real role server-side, once per
+      // uid, from the same authoritative nodes the Realtime Database Rules
+      // themselves trust — never from the client-supplied device.role.
+      const [ownerUsersSnap, approvedUsersSnap, bannedUsersSnap] = await Promise.all([
+        db.ref(`trips/${familyId}/ownerUsers`).once('value'),
+        db.ref(`trips/${familyId}/approvedUsers`).once('value'),
+        db.ref(`trips/${familyId}/bannedUsers`).once('value'),
+      ]);
+      const ownerUsersVal = ownerUsersSnap.val() || {};
+      const approvedUsersVal = approvedUsersSnap.val() || {};
+      const bannedUsersVal = bannedUsersSnap.val() || {};
+      function realRoleFor(uid) {
+        if (bannedUsersVal[uid]) return 'visitor'; // banned = not a member, regardless of anything else
+        if (OWNER_UIDS.includes(uid) || ownerUsersVal[uid] === true) return 'owner';
+        if (approvedUsersVal[uid]) return 'family';
+        return 'visitor'; // pending or unknown — never 'family'/'owner'
+      }
 
-    // Load all FCM tokens
-    const tokensSnap = await db.ref('fcm_tokens').once('value');
-    const allTokens  = tokensSnap.val() || {};
+      // Load all FCM tokens
+      const tokensSnap = await db.ref('fcm_tokens').once('value');
+      const allTokens  = tokensSnap.val() || {};
 
-    const tokens = [];
+      const tokens = [];
 
-    Object.entries(allTokens).forEach(([uid, devices]) => {
-      // Never notify the sender
-      if (senderUid && uid === senderUid) return;
+      Object.entries(allTokens).forEach(([uid, devices]) => {
+        // Never notify the sender
+        if (senderUid && uid === senderUid) return;
 
-      const role = realRoleFor(uid); // server-derived — device.role is ignored entirely
+        const role = realRoleFor(uid); // server-derived — device.role is ignored entirely
 
-      Object.values(devices).forEach(device => {
-        if (!device || !device.token) return;
+        Object.values(devices).forEach(device => {
+          if (!device || !device.token) return;
 
-        // Target filter
-        if (target === 'owner'   && role !== 'owner')  return;
-        if (target === 'family'  && role === 'visitor') return;
-        if (target === 'chat') {
-          if (!device.chatNotif) return;
-          if (role === 'visitor') return;
-        }
-        // target === 'all' → everyone
+          // Target filter
+          if (target === 'owner'   && role !== 'owner')  return;
+          if (target === 'family'  && role === 'visitor') return;
+          if (target === 'chat') {
+            if (!device.chatNotif) return;
+            if (role === 'visitor') return;
+          }
+          // target === 'all' → everyone
 
-        tokens.push(device.token);
+          tokens.push(device.token);
+        });
       });
-    });
 
-    if (tokens.length === 0) {
-      logger.log(`[Push] No eligible tokens for target="${target}"`);
-      return null;
-    }
+      if (tokens.length === 0) {
+        logger.log(`[Push] No eligible tokens for target="${target}"`);
+        await snap.ref.update({ status: 'sent', sentAt: Date.now(), successCount: 0, failureCount: 0, note: 'no eligible tokens' });
+        // v5.88 FIX (QV-037): the drawer reads notifications/history, but
+        // nothing in the project ever wrote to it — confirmed by a full
+        // search. Write it here too (not just the success path below) so
+        // a push with zero eligible recipients (e.g. the sender is the only
+        // approved user right now) still shows up in the sender's own
+        // in-app history instead of vanishing entirely.
+        await db.ref(`trips/${familyId}/notifications/history/${event.params.notifId}`).set({
+          type: payload.type || 'generic', title: title || 'Quo Vadis', body: body || '',
+          target: target || 'all', url: url || './', tag: tag || 'default',
+          senderUid: senderUid || null, createdAt: payload.createdAt || Date.now(), source: payload.source || 'app',
+        });
+        return null;
+      }
 
-    // Deduplicate tokens
-    const uniqueTokens = [...new Set(tokens)];
+      // Deduplicate tokens
+      const uniqueTokens = [...new Set(tokens)];
 
-    const message = {
-      notification: { title: title || 'Quo Vadis', body: body || '' },
-      data: { url: url || './', tag: tag || 'default', type: payload.type || 'generic' },
-      webpush: {
-        notification: {
-          icon:  '/Progetto_Viaggio_Europa_2026/icon-maskable-192.png',
-          badge: '/Progetto_Viaggio_Europa_2026/icon-maskable-192.png',
-          tag:   tag || 'default',
+      const message = {
+        notification: { title: title || 'Quo Vadis', body: body || '' },
+        data: { url: url || './', tag: tag || 'default', type: payload.type || 'generic' },
+        webpush: {
+          notification: {
+            icon:  '/Progetto_Viaggio_Europa_2026/icon-maskable-192.png',
+            badge: '/Progetto_Viaggio_Europa_2026/icon-maskable-192.png',
+            tag:   tag || 'default',
+          },
+          fcm_options: { link: url || './' }
         },
-        fcm_options: { link: url || './' }
-      },
-      tokens: uniqueTokens,
-    };
+        tokens: uniqueTokens,
+      };
 
-    const response = await admin.messaging().sendEachForMulticast(message);
-    logger.log(`[Push] Sent ${response.successCount}/${uniqueTokens.length} — type=${payload.type}`);
+      const response = await admin.messaging().sendEachForMulticast(message);
+      logger.log(`[Push] Sent ${response.successCount}/${uniqueTokens.length} — type=${payload.type}`);
 
     // A1.2/A1.3 FIX: Collect all stale tokens first, then do a single read + batch delete
     const invalid = ['registration-token-not-registered', 'invalid-registration-token'];
@@ -257,13 +325,46 @@ exports.processNotificationQueue = onValueCreated(
           }
         });
       });
-      if (Object.keys(updates).length > 0) {
-        await db.ref().update(updates);
-        logger.log(`[Push] Removed ${Object.keys(updates).length} stale token(s)`);
+        if (Object.keys(updates).length > 0) {
+          await db.ref().update(updates);
+          logger.log(`[Push] Removed ${Object.keys(updates).length} stale token(s)`);
+        }
       }
-    }
 
-    return null;
+      // v5.79 (QV-026): only now, after FCM has actually responded, mark the
+      // queue entry as genuinely sent — with real delivery counts, not just
+      // "we attempted this and locked it".
+      await snap.ref.update({
+        status: 'sent',
+        sentAt: Date.now(),
+        successCount: response.successCount,
+        failureCount: response.failureCount,
+      });
+      // v5.88 FIX (QV-037): same history write as the no-tokens path above —
+      // stable ID (the queue item's own key) so it can't be double-recorded
+      // on a retry, and a shape matching exactly what the client's drawer
+      // listener expects (verified against app.js's firebaseNotifs.push()).
+      await db.ref(`trips/${familyId}/notifications/history/${event.params.notifId}`).set({
+        type: payload.type || 'generic', title: title || 'Quo Vadis', body: body || '',
+        target: target || 'all', url: url || './', tag: tag || 'default',
+        senderUid: senderUid || null, createdAt: payload.createdAt || Date.now(), source: payload.source || 'app',
+      });
+      return null;
+    } catch (err) {
+      // v5.79 (QV-026): anything that throws between the lock and the FCM
+      // response used to leave the entry stuck at sent:true forever, looking
+      // successful when nothing was delivered. Now it's explicitly marked
+      // failed, with the error recorded — honest state instead of a silent
+      // permanent loss, even though this doesn't build the full retry/lease
+      // scheduler the audit's fix suggests (out of scope for this pass).
+      logger.error('[Push] Failed to send:', err.message || err);
+      await snap.ref.update({
+        status: 'failed',
+        failedAt: Date.now(),
+        error: (err && err.message) ? String(err.message).slice(0, 500) : 'unknown error',
+      }).catch(() => {});
+      return null;
+    }
   });
 
 
@@ -293,16 +394,30 @@ exports.publishScheduledPosts = onSchedule(
     });
 
     for (const [key, entry] of toPublish) {
-      await db.ref(`trips/${FAMILY_ID}/diary/${key}`).update({
-        draft:     null,
-        publishAt: null,
-        publishedAt: now,
+      // v5.92 FIX (QV-041): this used to update() the entry unconditionally,
+      // then push() a notification as a separate step — two overlapping
+      // invocations (scheduler overlap, manual retrigger) could both read
+      // the same draft before either updated it, both publish it, and both
+      // queue a notification; a crash between update() and push() published
+      // the post with no notification ever sent. Fixed with an atomic
+      // per-entry claim: the transaction only "wins" if draft is still true,
+      // so a second concurrent invocation for the same entry becomes a safe
+      // no-op instead of a duplicate publish+notify.
+      const claimResult = await db.ref(`trips/${FAMILY_ID}/diary/${key}`).transaction((current) => {
+        if (!current || current.draft !== true) return; // abort — already published or gone
+        return { ...current, draft: null, publishAt: null, publishedAt: now };
       });
+      if (!claimResult.committed) {
+        logger.log(`[ScheduledPublish] Skipped ${key} — already claimed by another invocation.`);
+        continue;
+      }
       logger.log(`[ScheduledPublish] Published: ${FAMILY_ID}/diary/${key} — "${entry.title || ''}"`);
       totalPublished++;
 
-      const notifRef = db.ref(`trips/${FAMILY_ID}/notifications/queue`);
-      await notifRef.push({
+      // v5.92 (QV-041): deterministic key (diary-published-{key}) via the
+      // same queueNotificationOnce helper already proven for QV-032 — a
+      // retry of this whole function can't re-queue the same notification.
+      await queueNotificationOnce(`diary-published-${key}`, {
         type:      'diary_published',
         title:     '\ud83d\udcd6 Nuovo post nel diario',
         body:      entry.title || 'Un nuovo aggiornamento è disponibile nel diario.',
@@ -310,7 +425,6 @@ exports.publishScheduledPosts = onSchedule(
         url:       './#tab-diario',
         tag:       'diary_published',
         createdAt: now,
-        sent:      false,
       });
     }
 
@@ -330,12 +444,9 @@ exports.translatePost = onCall(
     }
     // v4.02: Rate limit — max 50 translations per user per day
     await checkRateLimit(request.auth.uid, 'translatePost', 50);
-    const { text, key, familyId } = request.data || {};
-    if (!text || !key || !familyId) {
-      throw new HttpsError('invalid-argument', 'text, key, and familyId required.');
-    }
-    if (text.length > 5000) {
-      throw new HttpsError('invalid-argument', 'Text too long (max 5000 chars).');
+    const { key, familyId } = request.data || {};
+    if (!key || !familyId) {
+      throw new HttpsError('invalid-argument', 'key and familyId required.');
     }
     const uid = request.auth.uid;
     if (!OWNER_UIDS.includes(uid)) {
@@ -351,23 +462,44 @@ exports.translatePost = onCall(
         throw new HttpsError('permission-denied', 'Not a member of this trip.');
       }
     }
+    // v5.82 FIX (QV-030): this used to trust `text`/`title` straight from the
+    // client and save whatever was sent to diary/{key}.textEn/titleEn — an
+    // approved (non-owner) member could pass an arbitrary key belonging to
+    // ANY post plus arbitrary text, overwriting someone else's translation
+    // with content that was never actually posted. Now the canonical text
+    // and title are read server-side from the real diary record; the client
+    // only gets to pick targetLang, which is legitimate (just a language
+    // choice, not sensitive content).
+    const realKey = key.includes('__title') ? key.replace('__title', '') : key;
+    const postSnap = await db.ref(`trips/${familyId}/diary/${realKey}`).once('value');
+    const post = postSnap.val();
+    if (!post) {
+      throw new HttpsError('not-found', 'Diary post not found.');
+    }
+    const text = post.text || '';
+    const title = post.title || '';
+    if (!text) {
+      throw new HttpsError('failed-precondition', 'Post has no text to translate.');
+    }
+    if (text.length > 5000) {
+      throw new HttpsError('invalid-argument', 'Text too long (max 5000 chars).');
+    }
     try {
       const { Translate } = require('@google-cloud/translate').v2;
       const translate = new Translate();
       // v4.87: support target language (default EN, also ES)
       // v4.94: also translate title if provided
       const targetLang = request.data.targetLang || 'en';
-      const title = request.data.title || '';
       const [translation] = await translate.translate(text, targetLang);
       const fieldName = targetLang === 'es' ? 'textEs' : 'textEn';
       const titleField = targetLang === 'es' ? 'titleEs' : 'titleEn';
       const updates = { [fieldName]: translation };
-      // Translate title if provided and key doesn't contain '__title' (avoid double-save)
+      // Translate title if the real post has one and key doesn't contain '__title' (avoid double-save)
       if (title && !key.includes('__title')) {
         const [titleTranslation] = await translate.translate(title, targetLang);
         updates[titleField] = titleTranslation;
       }
-      await db.ref(`trips/${familyId}/diary/${key}`).update(updates);
+      await db.ref(`trips/${familyId}/diary/${realKey}`).update(updates);
       return { [fieldName]: translation, ...(updates[titleField] ? { [titleField]: updates[titleField] } : {}) };
     } catch (err) {
       throw new HttpsError('internal', 'Translation failed: ' + err.message);
@@ -386,13 +518,32 @@ exports.notifyNewPendingUser = onValueCreated(
   async (event) => {
     const pending  = event.data.val();
     const familyId = event.params.familyId;
+    const uid      = event.params.uid;
     const name     = (pending && pending.displayName) || 'Qualcuno';
+
+    // v5.81 FIX (QV-028): a client can write their own pendingUsers/{uid}
+    // node (needed for the legitimate first-request flow), so deleting and
+    // recreating it could re-trigger this push every time, with no
+    // server-side rate limit — a notification-spam vector from an
+    // authenticated-but-unapproved account. Atomic per-uid cooldown (1h)
+    // before queuing the push; a rapid delete+recreate loop no longer
+    // generates repeated notifications to the owner.
+    const cooldownRef = db.ref(`trips/${familyId}/pendingNotifyCooldown/${uid}`);
+    const cooldownResult = await cooldownRef.transaction((last) => {
+      if (last && (Date.now() - last) < 60 * 60 * 1000) return; // abort — notified within the last hour
+      return Date.now();
+    });
+    if (!cooldownResult.committed) {
+      logger.log(`[PendingUser] Skipped push for ${uid} — notified within the last hour already.`);
+      return null;
+    }
+
     const notifRef = db.ref(`trips/${familyId}/notifications/queue`);
     await notifRef.push({
       type: 'pending_access', title: '\ud83d\udd14 Nuova richiesta di accesso',
       body: `${name} vuole unirsi al viaggio. Apri Admin per approvare.`,
       target: 'owner', url: './#tab-admin', tag: 'pending_access',
-      createdAt: Date.now(), sent: false,
+      createdAt: Date.now(),
     });
     return null;
   });
@@ -447,7 +598,7 @@ exports.dailyCountdown = onSchedule(
       body = `Countdown: mancano ${daysUntil} giorni al 25 giugno!`;
     }
 
-    await db.ref(`trips/${FAMILY_ID}/notifications/queue`).push({
+    await queueNotificationOnce(`countdown-${getRomeDateStr(now)}`, {
       type: 'countdown',
       title: title,
       body: body,
@@ -455,7 +606,6 @@ exports.dailyCountdown = onSchedule(
       url: './',
       tag: `countdown-${getRomeDateStr(now)}`,
       createdAt: Date.now(),
-      sent: false,
       source: 'scheduler',
     });
 
@@ -709,7 +859,7 @@ const CURIOSITA = [
   { day: 47, emoji: '✝️', text: 'Il Cristo del Otero a Palencia è alto 20 metri — fu la seconda statua di Cristo più alta del mondo quando fu costruita nel 1931 (dopo il Corcovado di Rio).' },
   { day: 47, emoji: '🏛️', text: 'Palencia ha la prima università della Spagna, fondata nel 1208 — 10 anni prima di Salamanca. Fu chiusa dopo soli 55 anni e dimenticata dalla storia.' },
   { day: 47, emoji: '🌾', text: 'La Meseta castigliana intorno a Palencia è il "granaio della Spagna" — campi di grano a perdita d\'occhio a 800m di altitudine, con tramonti spettacolari.' },
-  { day: 48, emoji: '🌑', text: 'L\'eclissi del 12 agosto 2026 sarà totale per ~1 min 50 sec a Palencia. La prossima eclissi totale visibile dalla Spagna sarà nel 2090 — tra 64 anni!' },
+  { day: 48, emoji: '🌑', text: 'L\'eclissi del 12 agosto 2026 sarà totale per ~1 min 50 sec a Palencia. La prossima eclissi totale visibile dalla Spagna sarà il 2 agosto 2027 — tra appena un anno, parte del "trio iberico" 2026-2027-2028!' },
   { day: 48, emoji: '⭐', text: 'Durante la totalità dell\'eclissi vedrete la corona solare — un alone di plasma a 2 milioni di gradi, visibile solo quando la Luna copre il disco solare.' },
   { day: 48, emoji: '🌡️', text: 'Durante un\'eclissi totale la temperatura può calare di 5-10°C in pochi minuti — gli animali si confondono e pensano sia notte!' },
   { day: 49, emoji: '🗿', text: 'Cap de Creus è il punto più orientale della penisola iberica — le sue rocce erose dal vento ispirarono i paesaggi surreali di Salvador Dalí.' },
@@ -1273,7 +1423,7 @@ exports.eveningNextStage = onSchedule(
     const title = `\ud83d\udee3\ufe0f Domani: ${nextRoute}`;
     const body = nextKm ? `${nextKm} di viaggio` : 'Controlla i dettagli nell\'app';
 
-    await db.ref(`trips/${FAMILY_ID}/notifications/queue`).push({
+    await queueNotificationOnce(`next-stage-${todayStr}`, {
       type: 'next_stage',
       title: title,
       body: body,
@@ -1281,7 +1431,6 @@ exports.eveningNextStage = onSchedule(
       url: './#tab-giorni',
       tag: `next-stage-${todayStr}`,
       createdAt: Date.now(),
-      sent: false,
       source: 'scheduler',
     });
 
@@ -1424,7 +1573,7 @@ exports.morningWeatherPush = onSchedule(
       body += ` \u00b7 \ud83d\udca8 ${weather.wind} km/h`;
     }
 
-    await db.ref(`trips/${FAMILY_ID}/notifications/queue`).push({
+    await queueNotificationOnce(`weather-${todayStr}`, {
       type: 'morning_weather',
       title: title,
       body: body,
@@ -1432,7 +1581,6 @@ exports.morningWeatherPush = onSchedule(
       url: './',
       tag: `weather-${todayStr}`,
       createdAt: Date.now(),
-      sent: false,
       source: 'scheduler',
     });
 
@@ -1721,6 +1869,31 @@ exports.autoTranslateDiary = onValueWritten(
 
     if (Object.keys(updates).length === 0) {
       logger.log('[AutoTranslate] No successful translations');
+      return null;
+    }
+
+    // v5.94 FIX (QV-052): a rapid A→B→C edit sequence can overlap two
+    // invocations of this function — if the one translating the OLDER text
+    // (B) finishes AFTER the one translating the newer text (C), it would
+    // still run update() and overwrite C's correct translation with one
+    // that no longer matches the current source text. Guard (using the
+    // audit's own suggested patch, adapted to this function's real field
+    // names — customLabel/text/highlight, not "title"): re-read the record
+    // right before writing, and drop any field whose source has changed
+    // since this invocation captured `after`.
+    const currentSnap = await db.ref(`trips/${FAMILY_ID}/diary/${event.params.entryId}`).once('value');
+    const current = currentSnap.val();
+    if (!current) return null; // entry was deleted in the meantime
+
+    if (updates.textEn !== undefined && current.text !== after.text) delete updates.textEn;
+    if (updates.textEs !== undefined && current.text !== after.text) delete updates.textEs;
+    if (updates.titleEn !== undefined && current.customLabel !== after.customLabel) delete updates.titleEn;
+    if (updates.titleEs !== undefined && current.customLabel !== after.customLabel) delete updates.titleEs;
+    if (updates.highlightEn !== undefined && current.highlight !== after.highlight) delete updates.highlightEn;
+    if (updates.highlightEs !== undefined && current.highlight !== after.highlight) delete updates.highlightEs;
+
+    if (Object.keys(updates).length === 0) {
+      logger.log('[AutoTranslate] Source changed since this translation started — discarding stale result');
       return null;
     }
 
@@ -2070,16 +2243,19 @@ Return ONLY valid JSON, no markdown formatting.`;
 // 15. updateUserDisplayName — onCall: admin updates a user's displayName
 // ═══════════════════════════════════════════════════════════════════════
 exports.updateUserDisplayName = onCall({ memory: '256MiB' }, async (request) => {
-  // Only allow admin (owner) to call this
+  // Only allow the trip owner to call this
   if (!request.auth) {
     throw new HttpsError('unauthenticated', 'Must be logged in.');
   }
 
   const callerUid = request.auth.uid;
-  const roleSnap = await db.ref(`users/${callerUid}/role`).once('value');
-  const role = roleSnap.val();
-  if (role !== 'owner' && role !== 'admin') {
-    throw new HttpsError('permission-denied', 'Only admin can update display names.');
+  // v5.78 FIX (QV-025): this used to read users/{uid}/role — a path nothing
+  // in the project ever writes to, confirmed by a full search. That check
+  // could never pass, so even a genuine owner would be rejected. Replaced
+  // with the shared isOwnerUid() helper (OWNER_UIDS + ownerUsers node),
+  // the same predicate used everywhere else owner status is checked.
+  if (!(await isOwnerUid(callerUid))) {
+    throw new HttpsError('permission-denied', 'Only the trip owner can update display names.');
   }
 
   const { uid, displayName } = request.data;
@@ -2117,7 +2293,10 @@ exports.setUserApproved = onCall({ memory: '256MiB' }, async (request) => {
   if (!request.auth) {
     throw new HttpsError('unauthenticated', 'Must be logged in.');
   }
-  if (!OWNER_UIDS.includes(request.auth.uid)) {
+  // v5.78: use the shared isOwnerUid() helper — this used to check only
+  // OWNER_UIDS directly, missing the dynamic-owner (ownerUsers node)
+  // fallback that other owner checks in this file already have.
+  if (!(await isOwnerUid(request.auth.uid))) {
     throw new HttpsError('permission-denied', 'Only the trip owner can approve or remove members.');
   }
 
@@ -2128,6 +2307,13 @@ exports.setUserApproved = onCall({ memory: '256MiB' }, async (request) => {
   if (typeof approved !== 'boolean') {
     throw new HttpsError('invalid-argument', 'approved must be true or false.');
   }
+  // v5.87 FIX (QV-036 defense-in-depth): displayName is set by the user
+  // themselves while pending and survives into approvedUsers unchanged. One
+  // admin render site was found concatenating it straight into innerHTML
+  // (fixed client-side too), but rather than trust every current and future
+  // render site to remember escapeHtml, strip HTML-dangerous characters at
+  // the point it's actually written — so the stored value itself is inert.
+  const safeDisplayName = (displayName || '').replace(/[<>&"']/g, '').slice(0, 100);
 
   try {
     // The custom claim is what Storage Rules actually check. It's merged
@@ -2140,7 +2326,7 @@ exports.setUserApproved = onCall({ memory: '256MiB' }, async (request) => {
     if (approved) {
       await familyRef.child(`approvedUsers/${uid}`).set({
         email: email || '',
-        displayName: displayName || '',
+        displayName: safeDisplayName,
         photoURL: photoURL || '',
         approvedAt: admin.database.ServerValue.TIMESTAMP,
       });
@@ -2319,8 +2505,10 @@ exports.stravaSyncManual = onCall({
   memory: '256MiB',
   secrets: [stravaClientSecret],
 }, async (request) => {
-  // Only owners can trigger manual sync
-  if (!request.auth || !OWNER_UIDS.includes(request.auth.uid)) {
+  // v5.81 FIX (QV-029): was OWNER_UIDS-only, so a dynamic owner (who can
+  // administer everything else via ownerUsers) got permission-denied here
+  // specifically. Now uses the same shared isOwnerUid() check as everywhere else.
+  if (!request.auth || !(await isOwnerUid(request.auth.uid))) {
     throw new HttpsError('permission-denied', 'Only owners can trigger Strava sync.');
   }
 
@@ -2343,6 +2531,34 @@ exports.stravaSyncManual = onCall({
 // This endpoint exchanges the authorization code for tokens and stores them in RTDB.
 // ─────────────────────────────────────────────────────────────────────────────
 
+// QV-014 FIX: the callback used to accept ANY valid Strava authorization code
+// with no correlation to a flow actually started by the owner, and no auth
+// check at all on the request itself — a classic login-CSRF/account
+// substitution setup (someone else's Strava code exchanged and stored as if
+// it were the owner's connection). Fix: this callable generates a
+// cryptographically random, single-use, 10-minute state token bound to the
+// calling owner's uid *before* redirecting to Strava; the callback below now
+// requires and verifies that exact token before exchanging anything.
+exports.getStravaAuthUrl = onCall({ memory: '256MiB' }, async (request) => {
+  if (!request.auth || !OWNER_UIDS.includes(request.auth.uid)) {
+    throw new HttpsError('permission-denied', 'Only owners can connect Strava.');
+  }
+  const state = crypto.randomBytes(24).toString('hex');
+  await db.ref(`stravaOAuthState/${state}`).set({
+    uid: request.auth.uid,
+    createdAt: Date.now(),
+    used: false,
+  });
+  const redirectUri = 'https://europe-west1-viaggio-europa-2026.cloudfunctions.net/stravaOAuthCallback';
+  const authUrl = 'https://www.strava.com/oauth/authorize' +
+    '?client_id=' + STRAVA_CLIENT_ID +
+    '&redirect_uri=' + encodeURIComponent(redirectUri) +
+    '&response_type=code' +
+    '&scope=activity:read_all' +
+    '&state=' + state;
+  return { url: authUrl };
+});
+
 exports.stravaOAuthCallback = onRequest({
   region: 'europe-west1',
   memory: '256MiB',
@@ -2352,6 +2568,7 @@ exports.stravaOAuthCallback = onRequest({
   try {
     const code = req.query.code;
     const error = req.query.error;
+    const state = req.query.state;
 
     if (error) {
       logger.warn('[Strava OAuth] User denied access:', error);
@@ -2363,6 +2580,28 @@ exports.stravaOAuthCallback = onRequest({
       res.status(400).send('<html><body><h2>Missing authorization code.</h2></body></html>');
       return;
     }
+
+    // QV-014 FIX: verify the state token generated by getStravaAuthUrl.
+    // Reject anything without a valid, unexpired (10 min), single-use state —
+    // this is what stops the callback from accepting a code that wasn't part
+    // of a flow the owner actually started.
+    if (!state) {
+      logger.warn('[Strava OAuth] Callback rejected: missing state parameter.');
+      res.status(400).send('<html><body><h2>Missing or invalid authorization request.</h2><p>Please restart the connection from the app.</p></body></html>');
+      return;
+    }
+    const stateRef = db.ref(`stravaOAuthState/${state}`);
+    const stateResult = await stateRef.transaction((current) => {
+      if (!current || current.used) return; // abort — unknown or already-used state
+      if (Date.now() - current.createdAt > 10 * 60 * 1000) return; // abort — expired (10 min TTL)
+      return { ...current, used: true, usedAt: Date.now() };
+    });
+    if (!stateResult.committed) {
+      logger.warn('[Strava OAuth] Callback rejected: invalid, expired, or already-used state.');
+      res.status(400).send('<html><body><h2>This authorization link is invalid or has expired.</h2><p>Please restart the connection from the app.</p></body></html>');
+      return;
+    }
+    stateRef.remove().catch(() => {}); // best-effort cleanup, not required for security (already marked used)
 
     // Exchange authorization code for tokens
     const tokenResp = await fetch('https://www.strava.com/oauth/token', {
@@ -2399,13 +2638,30 @@ exports.stravaOAuthCallback = onRequest({
 
     logger.log('[Strava OAuth] Authorization successful for athlete:', data.athlete ? data.athlete.id : 'unknown');
 
+    // v5.100 FIX (QV-015): firstname/lastname come straight from Strava's
+    // API response — external data the athlete controls on their own
+    // Strava profile, interpolated directly into this HTML response with
+    // no escaping. Same class of issue as QV-036 (stored XSS via a
+    // user-controlled name), here in the OAuth success page instead of
+    // the Admin panel.
+    function _escapeHtml(str) {
+      if (str == null) return '';
+      return String(str)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+    const athleteName = data.athlete ? _escapeHtml(data.athlete.firstname) + ' ' + _escapeHtml(data.athlete.lastname) : 'Unknown';
+
+    // Extra hardening per the audit's own suggestion: a restrictive CSP on
+    // this one response, on top of the escaping above.
+    res.set('Content-Security-Policy', "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'");
     // Return a success page that auto-closes
     res.status(200).send(`
       <html>
       <head><meta charset="utf-8"><title>Strava Connected</title></head>
       <body style="font-family:system-ui;text-align:center;padding:40px;">
         <h2>✅ Strava connected successfully!</h2>
-        <p>Athlete: <strong>${data.athlete ? data.athlete.firstname + ' ' + data.athlete.lastname : 'Unknown'}</strong></p>
+        <p>Athlete: <strong>${athleteName}</strong></p>
         <p>You can close this window and return to Quo Vadis.</p>
         <script>setTimeout(function(){ window.close(); }, 3000);</script>
       </body>
@@ -2512,7 +2768,6 @@ exports.syncOrphanAuthUsers = onSchedule(
       url: './#tab-admin',
       tag: 'orphan_sync',
       createdAt: Date.now(),
-      sent: false,
     });
 
     return null;

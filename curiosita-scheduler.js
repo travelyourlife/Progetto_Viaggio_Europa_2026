@@ -20,8 +20,13 @@
   // Fasce orarie (ora locale del dispositivo). Una curiosità per fascia.
   // slot 0 = mattino, slot 1 = pomeriggio, slot 2 = sera.
   var SLOT_HOURS = [9, 14, 19];
-  // Ultimo giorno (incluso) in cui inviare le curiosità: 18 agosto 2026.
-  var CURIOSITA_END_DATE = '2026-08-18';
+  // Ultimo giorno (incluso) in cui inviare le curiosità: 22 agosto 2026.
+  // v6.04: esteso da 18 a 22 agosto insieme al rientro posticipato. I giorni
+  // G56-G59 non hanno ancora curiosità dedicate in CURIOSITA_DATA — verificato
+  // che getCuriositaForDay() ricada già in sicurezza sui giorni vicini
+  // (±1..±5) quando non trova nulla per il giorno esatto, quindi questa
+  // estensione non rischia di rompere nulla anche senza aggiungere contenuto nuovo.
+  var CURIOSITA_END_DATE = '2026-08-22';
   // Compat: mantenuto per eventuali riferimenti esterni.
   var NOTIFICATION_HOUR = SLOT_HOURS[0];
 
