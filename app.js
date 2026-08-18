@@ -478,7 +478,7 @@ try {
 
   // v3.94 FIX Audit #8: Always include User-Agent header (Nominatim ToS requirement)
   // v4.08 FIX: Use runtime version from EXPECTED_VERSION instead of hardcoded
-  var _appVer = (typeof EXPECTED_VERSION !== 'undefined') ? EXPECTED_VERSION : '6.05';
+  var _appVer = (typeof EXPECTED_VERSION !== 'undefined') ? EXPECTED_VERSION : '6.06';
   var _defaultHeaders = { 'User-Agent': 'QuoVadis-TripApp/' + _appVer + ' (family-trip-pwa)' };
 
   function _drain() {
@@ -2042,7 +2042,7 @@ function initRouteMap() {
         var target = document.getElementById('tab-' + tabId);
         if (!target) return; // e.g. tab-natura doesn't exist in EN yet
         window._lazyContentLoaded[tabId] = true;
-        var url = './content-' + tabId + '-' + LANG3 + '.html?v=6.05';
+        var url = './content-' + tabId + '-' + LANG3 + '.html?v=6.06';
         fetch(url, { cache: 'no-store' })
             .then(function(res) { if (!res.ok) throw new Error('HTTP ' + res.status); return res.text(); })
             .then(function(html) {
@@ -2094,7 +2094,7 @@ function initRouteMap() {
         if (typeof WIKI_LINKS === 'undefined' && !window._wikiLinksLoading) {
             window._wikiLinksLoading = true;
             var s = document.createElement('script');
-            s.src = './wiki-links.js?v=6.05';
+            s.src = './wiki-links.js?v=6.06';
             s.defer = true;
             s.onload = function() { _qvLog.info('[Lazy] wiki-links.js loaded'); };
             document.head.appendChild(s);
@@ -7972,7 +7972,8 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             if (!match) return;
             const day = parseInt(match[1]);
             let region = '';
-            // v2.63 FIX: ranges updated for 55-day itinerary (G5 Riga rest day added)
+            // v6.06 FIX: ranges updated for the 59-day itinerary (rientro posticipato
+            // al 22/08 — Pirenei/Pau + Carcassonne + Costa Azzurra estesa aggiunti).
             // G1-G3: Central Europe (Austria, Poland)
             // G4-G7: Baltic States (Lithuania, Latvia x2, Estonia)
             // G8-G16: Finland (Lappeenranta → Kilpisjärvi)
@@ -7980,8 +7981,9 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             // G36-G40: Denmark (Copenhagen + Legoland)
             // G41: Germany (Brema)
             // G42-G44: France (Amiens, Loire)
-            // G45-G51: Spain (San Sebastián → Costa Brava)
-            // G52-G55: Return (French Riviera, Genova, home)
+            // G45-G50: Spain (San Sebastián → Palencia → San Sebastián)
+            // G51-G57: France (San Sebastián→Pau crossing, Pau, Carcassonne, Côte d'Azur)
+            // G58-G59: Return (Costa Azzurra→Genova, Genova→Selvazzano/home)
             if (day <= 3) region = 'central';
             else if (day <= 7) region = 'baltic';
             else if (day <= 16) region = 'finland';
@@ -7989,8 +7991,8 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             else if (day <= 40) region = 'denmark';
             else if (day <= 41) region = 'germany';
             else if (day <= 44) region = 'france';
-            else if (day <= 51) region = 'spain';
-            else if (day <= 52) region = 'france';
+            else if (day <= 50) region = 'spain';
+            else if (day <= 57) region = 'france2';
             else region = 'return';
             h.setAttribute('data-region', region);
         });
@@ -8034,6 +8036,7 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             denmark: { flags: '🇩🇰', it: 'Danimarca', en: 'Denmark', es: 'Dinamarca' },
             germany: { flags: '🇩🇪', it: 'Germania', en: 'Germany', es: 'Alemania' },
             france:  { flags: '🇫🇷', it: 'Francia', en: 'France', es: 'Francia' },
+            france2: { flags: '🇫🇷', it: 'Francia', en: 'France', es: 'Francia' },
             spain:   { flags: '🇪🇸', it: 'Spagna', en: 'Spain', es: 'España' },
             'return': { flags: '🇮🇹', it: 'Ritorno', en: 'Return', es: 'Regreso' }
         };
@@ -8080,8 +8083,9 @@ var NORMAL_INTERVAL = 10000;  // 10s — precisione normale
             { id: 'denmark', flags: '🇩🇰', it: 'Danimarca', en: 'Denmark', es: 'Dinamarca', days: 'G36-G40', daysEn: 'D36-D40' },
             { id: 'germany', flags: '🇩🇪', it: 'Germania', en: 'Germany', es: 'Alemania', days: 'G41', daysEn: 'D41' },
             { id: 'france',  flags: '🇫🇷', it: 'Francia', en: 'France', es: 'Francia', days: 'G42-G44', daysEn: 'D42-D44' },
-            { id: 'spain',   flags: '🇪🇸', it: 'Spagna', en: 'Spain', es: 'España', days: 'G45-G51', daysEn: 'D45-D51' },
-            { id: 'return',  flags: '🇮🇹', it: 'Ritorno', en: 'Return', es: 'Regreso', days: 'G52-G55', daysEn: 'D52-D55' }
+            { id: 'spain',   flags: '🇪🇸', it: 'Spagna', en: 'Spain', es: 'España', days: 'G45-G50', daysEn: 'D45-D50' },
+            { id: 'france2', flags: '🇫🇷', it: 'Francia', en: 'France', es: 'Francia', days: 'G51-G57', daysEn: 'D51-D57' },
+            { id: 'return',  flags: '🇮🇹', it: 'Ritorno', en: 'Return', es: 'Regreso', days: 'G58-G59', daysEn: 'D58-D59' }
         ];
 
         // Scroll lock flag to prevent IntersectionObserver from interfering during programmatic scrolls

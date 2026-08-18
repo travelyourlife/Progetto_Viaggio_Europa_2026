@@ -290,7 +290,7 @@
     }
     _dataLoading = true;
     var s = document.createElement('script');
-    s.src = './city-itineraries.js?v=6.05';
+    s.src = './city-itineraries.js?v=6.06';
     s.defer = true;
     s.onload = function () { _dataLoading = false; cb(); };
     s.onerror = function () {
