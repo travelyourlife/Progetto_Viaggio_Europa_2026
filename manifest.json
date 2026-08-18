@@ -21,13 +21,13 @@
         {
             "name": "Itinerario / Itinerary",
             "short_name": "Itinerario",
-            "url": "./index.html#tab-giorni",
+            "url": "./index.html#tab-itinerary",
             "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
         },
         {
             "name": "Mappa Live / Live Map",
             "short_name": "Live",
-            "url": "./index.html#tab-posizione",
+            "url": "./index.html#tab-live",
             "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
         },
         {

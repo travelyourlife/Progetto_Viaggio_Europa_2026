@@ -26,7 +26,7 @@ var messaging = firebase.messaging();
 // ─── CACHING CONFIG ───
 // ═══════════════════════════════════════════════════════════════
 
-const CACHE_NAME = 'quo-vadis-v6.06';
+const CACHE_NAME = 'quo-vadis-v5.67';
 const IMAGE_CACHE_NAME = 'quo-vadis-images-v1';
 const IMAGE_CACHE_LIMIT = 80;
 const STATIC_ASSETS = [
@@ -34,15 +34,15 @@ const STATIC_ASSETS = [
   './index.html',
   './index_en.html',
   './index_es.html',
-  './style.css?v=6.06',
-  './data.js?v=6.06',
-  './days-data.js?v=6.06',
-  './days-renderer.js?v=6.06',
+  './style.css?v=5.67',
+  './data.js?v=5.67',
+  './days-data.js?v=5.67',
+  './days-renderer.js?v=5.67',
   // wiki-links.js: NOT precached — lazy-loaded on first open of Cultura/Attività tab
   // content-{cultura,natura,attivita,cibo}-{it,en,es}.html: NOT precached (v5.14) —
   // lazy-loaded on first open of each tab, fetched fresh each time (cache: no-store)
-  './weather-coords.js?v=6.06',
-  './app.js?v=6.06',
+  './weather-coords.js?v=5.67',
+  './app.js?v=5.67',
   './manifest.json',
   './icon.png',
   './icon-192.png',
@@ -51,22 +51,22 @@ const STATIC_ASSETS = [
   './icon-maskable-512.png',
   './icons/van-marker.svg',
   './firebase-messaging-sw.js',
-  './capacitor-gps-bridge.js?v=6.06',
+  './capacitor-gps-bridge.js?v=5.67',
   './offline.html',
   './home-variants.html',
   './home-variants_en.html',
   './home-variants_es.html',
   './home-variants.css',
-  './home-variants.js?v=6.06',
-  './unified-map.js?v=6.06',
+  './home-variants.js?v=5.67',
+  './unified-map.js?v=5.67',
   './unified-map.css',
-  './poi-data.js?v=6.06',
+  './poi-data.js?v=5.67',
   './modern-pages.css',
-  './curiosita-data.js?v=6.06',
-  './curiosita-scheduler.js?v=6.06',
-  './quiz-fun.js?v=6.06',
+  './curiosita-data.js?v=5.67',
+  './curiosita-scheduler.js?v=5.67',
+  './quiz-fun.js?v=5.67',
   // city-itineraries.js: NOT precached (v5.25) — lazy-loaded on first open of Itinerari città tab
-  './city-itineraries-ui.js?v=6.06',
+  './city-itineraries-ui.js?v=5.67',
   // debug-overlay.js: rimosso — caricato on-demand solo da Admin
   // v2.70: immagini placeholder per Home offline
   './img/placeholder/bridge-coast.jpg',
@@ -211,23 +211,7 @@ function networkFirst(request) {
     return networkResponse;
   }).catch(function() {
     return caches.match(request).then(function(cached) {
-      if (cached) return cached;
-      // v5.99 FIX (QV-044): this used to go straight to a bare 503 if the
-      // exact request URL wasn't in cache — e.g. '/' or 'index.html?x=1'
-      // with a query string that doesn't exactly match the precached entry.
-      // staleWhileRevalidate() already had a proper app-shell fallback chain
-      // for navigation requests (cached → index.html → offline.html → 503);
-      // networkFirst() is what ACTUALLY handles HTML/root navigations (see
-      // the routing above), so it's the one that needed this, not the other
-      // way around. Same fallback chain, ported here.
-      if (request.mode === 'navigate') {
-        return caches.match('./index.html').then(function(shellPage) {
-          return shellPage || caches.match('./offline.html').then(function(offlinePage) {
-            return offlinePage || new Response('Offline', { status: 503 });
-          });
-        });
-      }
-      return new Response('Offline', { status: 503 });
+      return cached || new Response('Offline', { status: 503 });
     });
   });
 }
